@@ -1,4 +1,6 @@
 ---
+import { For } from "solid-js";
+
 const links = [
   ["Blog", "/blog"],
   ["Book", "https://learningtypescript.com"],
@@ -6,23 +8,19 @@ const links = [
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
 ];
-
-console.log("my pathname is", Astro.url.pathname);
 ---
 
 <header>
   <a class={Astro.url.pathname.length <= 1 && "current"} href="/">Josh Goldberg</a>
   <div class="links">
-    {
-      links.map(([text, href]) => (
+    <For each={links}>{([text, href]) => (
         <a
           class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
           href={href}
         >
           {text}
         </a>
-      ))
-    }
+      )}</For>
   </div>
 </header>
 

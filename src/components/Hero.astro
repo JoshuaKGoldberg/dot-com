@@ -1,11 +1,9 @@
 ---
-export interface HeroProps {
-    // contentOrientation?: "left" | "right";
-    content: JSX.Element;
+export interface Props {
     image: string;
 }
 
-const { content, image, title } = Astro.props;
+const { image } = Astro.props;
 ---
 
 <div class="hero">
