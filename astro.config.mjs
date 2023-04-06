@@ -5,8 +5,8 @@ import { remarkReadingTime } from "./remark-reading-time.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [solidJs()],
-  markdown: {
-    remarkPlugins: [remarkReadingTime],
-  },
+	integrations: [solidJs()],
+	markdown: {
+		remarkPlugins: [remarkReadingTime],
+	},
 });

@@ -1,18 +1,18 @@
 .root {
-  display: flex;
-  justify-content: center;
-  margin: 3.5rem 0;
+	display: flex;
+	justify-content: center;
+	margin: 3.5rem 0;
 }
 
 button {
-  background: none;
-  border: none;
-  font-size: var(--fontSizeMedium);
-  font-weight: var(--fontWeightBold);
-  cursor: pointer;
+	background: none;
+	border: none;
+	font-size: var(--fontSizeMedium);
+	font-weight: var(--fontWeightBold);
+	cursor: pointer;
 }
 
 .current {
-  color: var(--colorEmphasized);
-  text-decoration: var(--textDecorationWavy);
+	color: var(--colorEmphasized);
+	text-decoration: var(--textDecorationWavy);
 }

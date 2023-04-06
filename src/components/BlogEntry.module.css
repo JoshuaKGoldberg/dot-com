@@ -1,31 +1,31 @@
 .blogEntry {
-  margin: auto;
-  display: flex;
-  gap: 1rem;
+	margin: auto;
+	display: flex;
+	gap: 1rem;
 }
 
 .imageArea {
-  background-size: cover;
-  border-radius: 100%;
-  display: block;
-  height: 5rem;
-  width: 5rem;
+	background-size: cover;
+	border-radius: 100%;
+	display: block;
+	height: 5rem;
+	width: 5rem;
 }
 
 .title {
-  font-size: var(--fontSizeMedium);
-  font-weight: var(--fontWeightMedium);
+	font-size: var(--fontSizeMedium);
+	font-weight: var(--fontWeightMedium);
 }
 
 .description {
-  font-weight: var(--fontWeightLight);
-  font-style: italic;
-  margin: 0.5rem 0;
+	font-weight: var(--fontWeightLight);
+	font-style: italic;
+	margin: 0.5rem 0;
 }
 
 .tidbits {
-  font-size: var(--fontSizeSmall);
-  font-weight: var(--fontWeightLight);
-  display: flex;
-  gap: 1rem;
+	font-size: var(--fontSizeSmall);
+	font-weight: var(--fontWeightLight);
+	display: flex;
+	gap: 1rem;
 }
