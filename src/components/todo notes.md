@@ -34,3 +34,14 @@ $ pnpm astro sync
 11:16:08 AM [content] "blog" is not a collection. Check your content config for typos.
 11:16:08 AM [content] Types generated 322ms
 ```
+
+I thought this should work, rendering JSX for solid in .astro
+but a bug for me to file is that the line number is offset (file is ~26 lines line)
+3d71c6c..297fe38
+
+```
+ error   Expected ">" but found "posts"
+  File:
+    /Users/josh/repos/joshuakgoldberg-dot-com-next/src/pages/blog.astro:36:37
+^C%
+```

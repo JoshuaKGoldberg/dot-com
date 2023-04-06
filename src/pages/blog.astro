@@ -1,25 +1,12 @@
 ---
 import { getCollection } from "astro:content";
 
-import { BlogEntryList } from "../components/BlogEntryList";
-import TabsAndContent from "../components/TabsAndContent";
+import { BlogTabsAndContent } from "../components/BlogTabsAndContent";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const allBlogPosts = await getCollection("blog");
-
-const defaultValue = "All";
 ---
 
 <BaseLayout>
-  <TabsAndContent
-    client:load
-    defaultValue={defaultValue}
-    sections={{
-      [defaultValue]: <BlogEntryList posts={allBlogPosts} />,
-      Interpersonal: "and a two",
-      Personal: "and a two",
-      Tech: "and a two",
-      "TypeScript Contribution Diary": "and a two",
-    }}
-  />
+  <BlogTabsAndContent client:load posts={allBlogPosts} />
 </BaseLayout>
