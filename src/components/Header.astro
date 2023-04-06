@@ -1,76 +1,30 @@
 ---
-import MainArea from "./MainArea.astro";
-
-const links = [
-  ["Blog", "/blog"],
-  ["Book", "https://learningtypescript.com"],
-  ["Projects", "/projects"],
-  ["Speaking", "/speaking"],
-  ["Sponsor", "/sponsor"],
-] as const;
+import HeaderLinks from "./HeaderLinks.astro";
+import Text from "./Text.astro";
 ---
 
-<MainArea as="header">
+<Text as="header" fontWeight="bold">
   <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
     >Josh Goldberg</a
   >
-  <div class="links">
-    {
-      links.map(([text, href]) => (
-        <a
-          class:list={[
-            "link",
-            Astro.url.pathname.startsWith(href) && "current",
-          ]}
-          href={href}
-        >
-          {text}
-        </a>
-      ))
-    }
-  </div>
-</MainArea>
+  <HeaderLinks />
+</Text>
 
 <style>
-  @layer base, header;
+  header {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    gap: 1rem;
+    padding: 2rem;
+    justify-content: space-between;
+    font-size: var(--fontSizeMedium);
+  }
 
-  @layer header {
+  @media (min-width: 819px) {
     header {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      font-weight: bold;
-      gap: 1rem;
-      padding: 2rem;
-      justify-content: space-between;
-      font-size: var(--fontSizeMedium);
-    }
-
-    .links {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .current {
-      color: var(--colorEmphasized);
-      position: relative;
-    }
-
-    /* todo: make this actually good */
-    .current::after {
-      content: " ";
-      height: 1.5rem;
-      display: block;
-      position: absolute;
-      background: url("/squiggly.svg");
-      background-size: cover;
-      width: 100%;
-    }
-
-    @media (min-width: 819px) {
-      header {
-        flex-direction: row;
-      }
+      flex-direction: row;
     }
   }
 </style>

@@ -11,16 +11,35 @@ const fontSizes = {
 
 export type FontSize = keyof typeof fontSizes;
 
+const fontWeights = {
+  light: "fontWeightLight",
+  demi: "fontWeightDemi",
+  book: "fontWeightBook",
+  bold: "fontWeightBold",
+};
+
+export type FontWeight = keyof typeof fontWeights;
+
 export interface Props {
   as: keyof JSX.IntrinsicElements;
   class?: string;
-  fontSize: FontSize;
+  fontSize?: FontSize;
+  fontWeight?: FontWeight;
 }
 
-const { as: As, fontSize, ...rest } = Astro.props;
+const { as: As, fontSize, fontWeight, ...rest } = Astro.props;
 ---
 
-<As {...rest} class:list={[fontSizes[fontSize], rest.class]}><slot /></As>
+<As
+  {...rest}
+  class:list={[
+    fontSize && fontSizes[fontSize],
+    fontWeight && fontWeights[fontWeight],
+    rest.class,
+  ]}
+>
+  <slot />
+</As>
 
 <style>
   .fontSizeMedium {
@@ -41,5 +60,25 @@ const { as: As, fontSize, ...rest } = Astro.props;
 
   .fontSizeTitleSecondary {
     font-size: var(--fontSizeTitleSecondary);
+  }
+
+  .fontWeightLight {
+    font-weight: var(--fontWeightLight);
+    text-rendering: optimizelegibility;
+  }
+
+  .fontWeightDemi {
+    font-weight: var(--fontWeightDemi);
+    text-rendering: geometricPrecision;
+  }
+
+  .fontWeightBook {
+    font-weight: var(--fontWeightBook);
+    text-rendering: geometricPrecision;
+  }
+
+  .fontWeightBold {
+    font-weight: var(--fontWeightBold);
+    text-rendering: geometricPrecision;
   }
 </style>

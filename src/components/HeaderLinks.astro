@@ -1,0 +1,49 @@
+---
+const links = [
+  ["Blog", "/blog"],
+  ["Book", "https://learningtypescript.com"],
+  ["Projects", "/projects"],
+  ["Speaking", "/speaking"],
+  ["Sponsor", "/sponsor"],
+] as const;
+---
+
+<div class:list={["links", Astro.props.class]}>
+  {
+    links.map(([text, href]) => (
+      <a
+        class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
+        href={href}
+      >
+        {text}
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  @layer base, links;
+
+  @layer links {
+    .links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .current {
+      color: var(--colorEmphasized);
+      position: relative;
+    }
+
+    /* todo: make this actually good */
+    .current::after {
+      content: " ";
+      height: 1.5rem;
+      display: block;
+      position: absolute;
+      background: url("/squiggly.svg");
+      background-size: cover;
+      width: 100%;
+    }
+  }
+</style>

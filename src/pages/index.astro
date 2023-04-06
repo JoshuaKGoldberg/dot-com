@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Text from "../components/Text.astro";
+import HeaderLinks from "../components/HeaderLinks.astro";
 
 const socials = [
   ["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
@@ -14,8 +15,10 @@ const socials = [
 
 <BaseLayout>
   <Hero image="/me-fancy.png">
-    <Text as="h1" fontSize="title-primary">Hi! I'm Josh.</Text>
-    <Text as="p" fontSize="subtitle">
+    <Text as="h1" fontSize="title-primary" fontWeight="bold">
+      Hi! I'm Josh.
+    </Text>
+    <Text as="p" class="subtitle" fontSize="subtitle" fontWeight="bold">
       I'm an open source maintainer
       <br />
       in the TypeScript ecosystem.
@@ -30,11 +33,47 @@ const socials = [
       }
     </div>
   </Hero>
+  <div class="about">
+    <Text as="h2" fontSize="large" fontWeight="bold">About</Text>
+    <Text as="p" fontSize="medium" fontWeight="light">
+      I work to make web development better,
+      <br />
+      most notably on typescript-eslint: the tooling
+      <br />
+      that lets ESLint and Prettier run on TypeScript code.
+    </Text>
+    <Text as="p" fontSize="medium" fontWeight="light">
+      I’m the author of Learning TypeScript (O’Reilly),
+      <br />
+      a Microsoft MVP for developer technologies,
+      <br />
+      and an active conference speaker.
+    </Text>
+    <HeaderLinks class="links" />
+  </div>
 </BaseLayout>
 
 <style>
+  .subtitle {
+    margin: 1.75rem 0;
+  }
+
   .socials {
     display: flex;
     gap: 1rem;
+  }
+
+  .about {
+    display: flex;
+    gap: 2rem;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 5rem;
+    text-align: center;
+  }
+
+  .links {
+    font-size: var(--fontSizeMedium);
+    margin: auto;
   }
 </style>
