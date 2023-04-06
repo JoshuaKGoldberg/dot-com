@@ -25,7 +25,7 @@ Each of the following sections is a key area I'm going to invest my time in for 
 - [Community Engagement](#community-engagement)
 - [Education Content](#education-content)
 
-![Cat reading a newspaper meme. Caption: "I should finish my New Years resolutions"](./i-should-finish-my-new-years-resolutions.png)
+![Cat reading a newspaper meme, captioned: "I should finish my New Years resolutions"](./i-should-finish-my-new-years-resolutions.png)
 
 <em style="display:block;margin-bottom:2rem;text-align:center;">
 I know this blog post is long, overly detailed, and three and a half months late.
@@ -73,7 +73,7 @@ What are the minimum expectations for each tier?
 How does each tier get paid?
 All questions I hope we have answered this year.
 
-### [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package)
+### [joshuakgoldberg-dot-com-next](https://github.com/JoshuaKGoldberg/joshuakgoldberg-dot-com-next)
 
 > Objective: Make the best starter template for single-package TypeScript Node repositories.
 
@@ -109,7 +109,7 @@ Maintainers such as myself are expected to work on free software used by compani
 
 I believe part of solving this issue should be getting more companies to sponsor open source.
 Many companies -especially those without high visibility in developer communities- have no budget for sponsoring their open source dependencies.
-Oftentimes many or all of the employees in those companies -especially the financial decisionmakers- aren't familiar with open source or why they should sponsor it.
+Oftentimes many or all of the employees in those companies -especially the financial decision-makers- aren't familiar with open source or why they should sponsor it.
 
 I'd like to create a set of resources tailored towards convincing various groups of people to contribute to open source.
 Those groups can include: developers, developers managers, financiers, marketers, and so on.
@@ -123,13 +123,13 @@ I don't exclusively work on my larger visibility projects: I also have a collect
 These utilities serve several purposes:
 
 - They're legitimately useful projects that I want to exist
-- They help me dogfood the core tooling I work on, particularly typescript-eslint and template-typescript-node-package
+- They help me dogfood the core tooling I work on, particularly typescript-eslint and joshuakgoldberg-dot-com-next
 - They broaden my reach and get my face (and sponsorship link) in front of more people
 
 The plan for these is:
 
 - Audit the list of repositories I want to maintain or archive, then update my GitHub README.md profile to mention them
-- Once I feel [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package) is ready, adopt it in all these packages
+- Once I feel [joshuakgoldberg-dot-com-next](https://github.com/JoshuaKGoldberg/joshuakgoldberg-dot-com-next) is ready, adopt it in all these packages
 - Add some kind of demo to each of them
 - Make sure each has `good first issue`s always available so I can suggest them to developers interested in trying out contributing to open source
 
@@ -334,7 +334,7 @@ When I do eventually have time to work on it, I'd like to:
 
 I'll still act as a maintainer for the project this year, of course.
 I'll still triage issues and review & merge pull requests.
-But beyond onboarding it to my template-typescript-node-package I don't plan on working on major features or overhauls.
+But beyond onboarding it to my joshuakgoldberg-dot-com-next I don't plan on working on major features or overhauls.
 
 My end goal for the library is to make it reliably good enough that people use it as the first step in converting a project from JavaScript to TypeScript.
 

@@ -1,0 +1,16 @@
+jobs:
+  spelling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/prepare
+      - run: pnpm lint:spelling
+
+name: Lint Spelling
+
+on:
+  pull_request: ~
+
+  push:
+    branches:
+      - main
