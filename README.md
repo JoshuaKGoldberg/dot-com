@@ -1,6 +1,9 @@
 <h1 align="center">JoshuaKGoldberg Dot Com Next</h1>
 
-<p align="center">Personal site for Josh Goldberg. Hooray! ✨</p>
+<p align="center">
+    Personal site for Josh Goldberg.
+    Hooray! ✨
+</p>
 
 <p align="center">
 <small>
