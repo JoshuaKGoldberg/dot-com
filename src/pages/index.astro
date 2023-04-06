@@ -67,6 +67,12 @@ const socials = [
     gap: 1rem;
   }
 
+  @media (prefers-color-scheme: dark) {
+    .socials img {
+      filter: invert() hue-rotate(180deg);
+    }
+  }
+
   .about {
     display: flex;
     gap: 2rem;
