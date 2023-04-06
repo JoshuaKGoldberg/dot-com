@@ -7,11 +7,11 @@ const links = [
   ["Projects", "/projects"],
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
-];
+] as const;
 ---
 
 <header>
-  <a class={Astro.url.pathname.length <= 1 && "current"} href="/">Josh Goldberg</a>
+  <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/">Josh Goldberg</a>
   <div class="links">
     <For each={links}>{([text, href]) => (
         <a
