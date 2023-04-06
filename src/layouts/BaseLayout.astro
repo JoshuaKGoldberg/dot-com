@@ -20,53 +20,121 @@ import Header from "../components/Header.astro";
 
 <style is:global>
   @font-face {
-    font-family: 'NeutrafaceText';
-    src: url('/fonts/NeutrafaceText.otf') format('otf');
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Light.woff2") format("woff2");
+    font-weight: lighter;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Light Italic.woff2") format("woff2");
+    font-weight: lighter;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Demi.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
     font-display: swap;
   }
 
-  * {
-    box-sizing: border-box;
-    font-family: 'NeutrafaceText', sans-serif;
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Demi Italic.woff2") format("woff2");
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
   }
 
-  :root {
-    --mainWidth: 819px;
-
-    --color-emphasized: #1170d0;
-    --color-foreground: #082138;
-
-    --font-size-medium: 1.5rem;
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Book.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
   }
 
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    width: 100%;
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Book Italic.woff2") format("woff2");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
   }
 
-  body {
-    background: linear-gradient(194.16deg, #F1FBFD -0.57%, #F3FFF9 89.93%);
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/Neutraface Text Bold Italic.woff2") format("woff2");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
   }
 
   @layer base {
-    body, :link, :visited {
-      color: var(--color-foreground);
-      text-decoration: none;
+    * {
+      box-sizing: border-box;
+      font-family: "NeutrafaceText", sans-serif;
     }
-  }
 
-  @media (prefers-color-scheme: dark) {
     :root {
-      --color-emphasized: #50a1f3;
-      --color-foreground: #e2edf6;
+      --mainWidth: 819px;
+
+      --color-background-bottom: #f3fff9;
+      --color-background-top: #f1fbfd;
+      --color-emphasized: #1170d0;
+      --color-foreground: #082138;
+
+      --font-size-medium: 1.5rem;
+
+      --font-weight-light: lighter;
+      --font-weight-demi: normal;
+      --font-weight-book: 500;
+      --font-weight-bold: 700;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
     }
 
     body {
-      background: linear-gradient(194.16deg, #0B2935 -0.57%, #051413 89.93%);
+      background: linear-gradient(
+        194.16deg,
+        var(--color-background-top) -0.5%,
+        var(--color-background-bottom) 90%
+      );
+    }
+
+    body,
+    :link,
+    :visited {
+      color: var(--color-foreground);
+      text-decoration: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-background-top: #0b2935;
+        --color-background-bottom: #051413;
+        --color-emphasized: #50a1f3;
+        --color-foreground: #e2edf6;
+      }
     }
   }
 </style>

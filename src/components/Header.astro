@@ -9,20 +9,27 @@ const links = [
   ["Sponsor", "/sponsor"],
 ] as const;
 
-console.log('got em', { links })
+console.log("got em", { links });
 ---
 
 <header>
-  <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/">Josh Goldberg</a>
+  <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
+    >Josh Goldberg</a
+  >
   <div class="links">
-<For each={links}>{([text, href]) => (
+    {
+      links.map(([text, href]) => (
         <a
-          class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
+          class:list={[
+            "link",
+            Astro.url.pathname.startsWith(href) && "current",
+          ]}
           href={href}
         >
           {text}
         </a>
-      )}</For> 
+      ))
+    }
   </div>
 </header>
 
@@ -60,7 +67,7 @@ console.log('got em', { links })
       height: 1.5rem;
       display: block;
       position: absolute;
-      background: url('/squiggly.svg');
+      background: url("/squiggly.svg");
       background-size: cover;
       width: 100%;
     }
