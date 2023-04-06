@@ -21,3 +21,16 @@ when the page is no longer broken, put something to that effect in the terminal
 ---
 
 autofixer didn't auto-import <For />
+
+not a fan of this error message
+(thanks Elian for mentioning cause - content/blog is empty
+
+```shell
+$ pnpm astro sync
+
+> joshuakgoldberg-dot-com-next@0.0.1 astro /Users/josh/repos/joshuakgoldberg-dot-com-next
+> astro "sync"
+
+11:16:08 AM [content] "blog" is not a collection. Check your content config for typos.
+11:16:08 AM [content] Types generated 322ms
+```

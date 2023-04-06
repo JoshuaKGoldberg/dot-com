@@ -1,8 +1,11 @@
 ---
+import BlogEntry from "../components/BlogEntry.astro";
 import TabsAndContent from "../components/TabsAndContent";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const allPosts = await Astro.glob("../../blog/*/index.md");
+import { getCollection } from "astro:content";
+
+const allBlogPosts = await getCollection("blog");
 
 const defaultValue = "All";
 
@@ -18,10 +21,12 @@ const sections = {
 <BaseLayout>
   <TabsAndContent client:load defaultValue={defaultValue} sections={sections} />
   {
-    allPosts.map((post) => (
-      <li>
-        <a href={post.url}>{post.frontmatter.title}</a>
-      </li>
-    ))
+    allBlogPosts.map((post) => {
+      return (
+        <li>
+          <BlogEntry post={post} />
+        </li>
+      );
+    })
   }
 </BaseLayout>
