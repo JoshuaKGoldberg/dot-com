@@ -3,13 +3,15 @@ const links = [
   ["Blog", "/blog"],
   ["Book", "https://learningtypescript.com"],
   ["Projects", "/projects"],
+  ["Speaking", "/speaking"],
+  ["Sponsor", "/sponsor"],
   // todo
-] as const;
+];
 ---
 
 <header>
-  <span>Joshypoo McSwaggins</span>
-  <div>
+  <a href="/">Josh Goldberg</a>
+  <div class="links">
     {
       links.map(([text, href]) => (
         <a
@@ -25,8 +27,26 @@ const links = [
 
 <style>
   header {
+    align-items: center;
     display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    gap: 1rem;
     justify-content: space-between;
+    margin: auto;
+    max-width: var(--mainWidth);
+    padding: 1rem 2rem;
     width: 100%;
+  }
+
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (min-width: 819px) {
+    header {
+      flex-direction: row;
+    }
   }
 </style>

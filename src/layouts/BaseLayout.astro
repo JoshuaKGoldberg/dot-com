@@ -17,3 +17,22 @@ import Header from "../components/Header.astro";
     <Footer />
   </body>
 </html>
+
+<style is:global>
+  @font-face {
+    font-family: "NeutrafaceText";
+    src: url("/fonts/NeutrafaceText.otf") format("otf");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: "NeutrafaceText";
+  }
+
+  :root {
+    --var-mainWidth: 819px;
+  }
+</style>
