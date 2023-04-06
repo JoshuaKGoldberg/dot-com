@@ -1,7 +1,10 @@
-li {
-  list-style-type: none;
+ul {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  padding-left: 0;
 }
 
-ul {
-  padding-left: 0;
+li {
+  list-style-type: none;
 }

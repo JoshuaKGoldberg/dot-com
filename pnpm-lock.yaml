@@ -11,6 +11,8 @@ specifiers:
   eslint-plugin-jsx-a11y: ^6.7.1
   eslint-plugin-simple-import-sort: ^10.0.0
   eslint-plugin-solid: ^0.12.0
+  mdast-util-to-string: ^3.2.0
+  reading-time: ^1.5.0
   solid-js: ^1.4.3
   typescript: ^5.0.3
 
@@ -24,6 +26,8 @@ dependencies:
   eslint-plugin-jsx-a11y: 6.7.1_eslint@8.37.0
   eslint-plugin-simple-import-sort: 10.0.0_eslint@8.37.0
   eslint-plugin-solid: 0.12.0_vwh6htx42aidho2qgfca5u5rwm
+  mdast-util-to-string: 3.2.0
+  reading-time: 1.5.0
   solid-js: 1.7.2
 
 devDependencies:
@@ -3586,6 +3590,10 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: 2.3.1
+    dev: false
+
+  /reading-time/1.5.0:
+    resolution: {integrity: sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==}
     dev: false
 
   /regenerator-runtime/0.13.11:
