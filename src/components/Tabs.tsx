@@ -6,8 +6,8 @@ import styles from "./Tabs.module.css";
 export interface TabsProps {
   currentValue: string;
   defaultValue: string;
-  onValueChange: (value: string) => void;
   labels: string[];
+  onValueChange: (value: string) => void;
 }
 
 export default function (props: TabsProps) {
