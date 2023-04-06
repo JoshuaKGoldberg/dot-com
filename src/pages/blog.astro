@@ -2,14 +2,26 @@
 import TabsAndContent from "../components/TabsAndContent";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
+const allPosts = await Astro.glob("../../blog/*/index.md");
+
 const defaultValue = "All";
 
 const sections = {
   [defaultValue]: "and a one",
-  Moar: "and a two",
+  Interpersonal: "and a two",
+  Personal: "and a two",
+  Tech: "and a two",
+  "TypeScript Contribution Diary": "and a two",
 };
 ---
 
 <BaseLayout>
   <TabsAndContent client:load defaultValue={defaultValue} sections={sections} />
+  {
+    allPosts.map((post) => (
+      <li>
+        <a href={post.url}>{post.frontmatter.title}</a>
+      </li>
+    ))
+  }
 </BaseLayout>

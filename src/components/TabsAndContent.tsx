@@ -15,11 +15,11 @@ export interface TabsAndContentProps {
 
 export default function TabsAndContent(props: TabsAndContentProps) {
   const [getValue, setValue] = createSignal(props.defaultValue);
-  // (ryan is gonna yell at me if he sees this because it should be value)
 
   return (
     <>
       <Tabs
+        currentValue={getValue()}
         defaultValue={props.defaultValue}
         onValueChange={setValue}
         labels={Object.keys(props.sections)}
