@@ -1,5 +1,5 @@
-import { For } from "solid-js";
 import type { CollectionEntry } from "astro:content";
+import { For } from "solid-js";
 
 import { BlogEntry } from "./BlogEntry";
 import styles from "./BlogEntryList.module.css";

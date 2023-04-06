@@ -1,7 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 
-import TabsAndContent from "./TabsAndContent";
 import { BlogEntryList } from "./BlogEntryList";
+import TabsAndContent from "./TabsAndContent";
 
 const defaultValue = "All";
 

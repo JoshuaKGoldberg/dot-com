@@ -1,5 +1,6 @@
 import { Tabs } from "@kobalte/core";
 import { For } from "solid-js";
+
 import styles from "./Tabs.module.css";
 
 export interface TabsProps {

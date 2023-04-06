@@ -6,6 +6,10 @@ const links = [
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
 ] as const;
+
+export interface Props {
+  class?: string;
+}
 ---
 
 <div class:list={["links", Astro.props.class]}>

@@ -45,3 +45,14 @@ but a bug for me to file is that the line number is offset (file is ~26 lines li
     /Users/josh/repos/joshuakgoldberg-dot-com-next/src/pages/blog.astro:36:37
 ^C%
 ```
+
+tseslint borks on .astro files?
+
+````
+
+TypeError: Cannot read properties of undefined (reading 'parent')
+Occurred while linting /Users/josh/repos/joshuakgoldberg-dot-com-next/src/components/MainArea.astro:12
+Rule: "@typescript-eslint/no-unsafe-assignment"
+    at Object.getContextualType (/Users/josh/repos/joshuakgoldberg-dot-com-next/node_modules/.pnpm/@typescript-eslint+type-utils@5.57.1_vwh6htx42aidho2qgfca5u5rwm/node_modules/@typescript-eslint/type-utils/dist/getContextualType.js:35:25)
+    ```
+````

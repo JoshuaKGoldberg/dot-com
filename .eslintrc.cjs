@@ -14,15 +14,24 @@ module.exports = {
   root: true,
   overrides: [
     {
-      // Define the configuration for `.astro` file.
       files: ["*.astro"],
-      // Allows Astro components to be parsed.
       parser: "astro-eslint-parser",
-      // Parse the script in `.astro` as TypeScript by adding the following configuration.
-      // It's the setting you need when using TypeScript.
       parserOptions: {
         parser: "@typescript-eslint/parser",
         extraFileExtensions: [".astro"],
+      },
+      rules: {
+        "@typescript-eslint/no-unsafe-assignment": "off",
+      },
+    },
+    {
+      extends: ["plugin:solid/typescript"],
+      files: ["*.tsx"],
+    },
+    {
+      files: ["./src/env.d.ts"],
+      rules: {
+        "@typescript-eslint/triple-slash-reference": "off",
       },
     },
   ],
@@ -31,11 +40,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:astro/recommended",
-    "plugin:solid/typescript",
-    // todo: enable jsx-a11y
   ],
   rules: {
-    // todo: simple-import-sort
-    "no-undef": "off",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
 };
