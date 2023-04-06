@@ -8,19 +8,21 @@ const links = [
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
 ] as const;
+
+console.log('got em', { links })
 ---
 
 <header>
   <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/">Josh Goldberg</a>
   <div class="links">
-    <For each={links}>{([text, href]) => (
+<For each={links}>{([text, href]) => (
         <a
           class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
           href={href}
         >
           {text}
         </a>
-      )}</For>
+      )}</For> 
   </div>
 </header>
 
