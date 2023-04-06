@@ -16,6 +16,7 @@
     "lint:packages": "pnpm-deduplicate --list",
     "lint:spelling": "cspell \"**\" \".github/**/*\"",
     "lint": "eslint . --max-warnings 0 --report-unused-disable-directives",
+    "prepare": "husky install",
     "preview": "astro preview",
     "start": "astro dev"
   },
@@ -36,7 +37,9 @@
     "eslint-plugin-solid": "^0.12.0",
     "eslint-plugin-typescript-sort-keys": "^2.3.0",
     "eslint-plugin-yml": "^1.5.0",
+    "husky": "^8.0.3",
     "knip": "^2.8.2",
+    "lint-staged": "^13.2.0",
     "markdownlint": "^0.28.1",
     "markdownlint-cli": "^0.33.0",
     "mdast-util-to-string": "^3.2.0",
