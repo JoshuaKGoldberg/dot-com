@@ -51,6 +51,18 @@ console.log("my pathname is", Astro.url.pathname);
 
     .current {
       color: var(--color-emphasized);
+      position: relative;
+    }
+
+    /* todo: make this actually good */
+    .current::after {
+      content: " ";
+      height: 1.5rem;
+      display: block;
+      position: absolute;
+      background: url('/squiggly.svg');
+      background-size: cover;
+      width: 100%;
     }
 
     @media (min-width: 819px) {
