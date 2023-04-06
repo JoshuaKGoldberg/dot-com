@@ -1,0 +1,15 @@
+---
+import TabsAndContent from "../components/TabsAndContent";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const defaultValue = "All";
+
+const sections = {
+  [defaultValue]: "and a one",
+  Moar: "and a two",
+};
+---
+
+<BaseLayout>
+  <TabsAndContent client:load defaultValue={defaultValue} sections={sections} />
+</BaseLayout>

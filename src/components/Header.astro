@@ -1,0 +1,32 @@
+---
+const links = [
+  ["Blog", "/blog"],
+  ["Book", "https://learningtypescript.com"],
+  ["Projects", "/projects"],
+  // todo
+] as const;
+---
+
+<header>
+  <span>Joshypoo McSwaggins</span>
+  <div>
+    {
+      links.map(([text, href]) => (
+        <a
+          class:list={["link", href === Astro.url.pathname && "current"]}
+          href={href}
+        >
+          {text}
+        </a>
+      ))
+    }
+  </div>
+</header>
+
+<style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+</style>

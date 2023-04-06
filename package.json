@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "lint": "eslint . --max-warnings 0 --report-unused-disable-directives",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
@@ -10,6 +11,19 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^2.2.0"
+    "@astrojs/solid-js": "^2.1.0",
+    "@kobalte/core": "^0.8.2",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "astro": "^2.2.0",
+    "eslint-plugin-astro": "^0.26.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-solid": "^0.12.0",
+    "solid-js": "^1.4.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.37.0",
+    "typescript": "^5.0.3"
   }
 }
