@@ -1,0 +1,22 @@
+---
+import type { JSX } from "solid-js";
+
+export interface Props {
+  as: keyof JSX.IntrinsicElements;
+  class?: string;
+}
+
+const { as: As, ...rest } = Astro.props;
+---
+
+<As {...rest} class:list={["mainArea", rest.class]}><slot /></As>
+
+<style>
+  .mainArea {
+    margin: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    max-width: var(--mainWidth);
+    width: 100%;
+  }
+</style>

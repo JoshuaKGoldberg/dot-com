@@ -19,6 +19,54 @@ import Header from "../components/Header.astro";
 </html>
 
 <style is:global>
+  @import "./normalize.css";
+
+  @layer base {
+    :root {
+      --mainWidth: 1000px;
+
+      --colorBackgroundBottom: #f3fff9;
+      --colorBackgroundTop: #f1fbfd;
+      --colorEmphasized: #1170d0;
+      --colorForeground: #082138;
+
+      --fontSizeMedium: 1.5rem;
+      --fontSizeLarge: 2.5rem;
+      --fontSizeSubtitle: 1.75rem;
+      --fontSizeTitlePrimary: 4.5rem;
+      --fontSizeTitleSecondary: 3.5rem;
+
+      --fontWeightLight: lighter;
+      --fontWeightDemi: normal;
+      --fontWeightBook: 500;
+      --fontWeightBold: 700;
+    }
+
+    body {
+      background: linear-gradient(
+        194.16deg,
+        var(--colorBackgroundTop) -0.5%,
+        var(--colorBackgroundBottom) 90%
+      );
+    }
+
+    body,
+    :link,
+    :visited {
+      color: var(--colorForeground);
+      text-decoration: none;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --colorBackgroundTop: #0b2935;
+        --colorBackgroundBottom: #051413;
+        --colorEmphasized: #50a1f3;
+        --colorForeground: #e2edf6;
+      }
+    }
+  }
+
   @font-face {
     font-family: "NeutrafaceText";
     src: url("/fonts/Neutraface Text Light.woff2") format("woff2");
@@ -81,60 +129,5 @@ import Header from "../components/Header.astro";
     font-weight: 700;
     font-style: italic;
     font-display: swap;
-  }
-
-  @layer base {
-    * {
-      box-sizing: border-box;
-      font-family: "NeutrafaceText", sans-serif;
-    }
-
-    :root {
-      --mainWidth: 819px;
-
-      --color-background-bottom: #f3fff9;
-      --color-background-top: #f1fbfd;
-      --color-emphasized: #1170d0;
-      --color-foreground: #082138;
-
-      --font-size-medium: 1.5rem;
-
-      --font-weight-light: lighter;
-      --font-weight-demi: normal;
-      --font-weight-book: 500;
-      --font-weight-bold: 700;
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-
-    body {
-      background: linear-gradient(
-        194.16deg,
-        var(--color-background-top) -0.5%,
-        var(--color-background-bottom) 90%
-      );
-    }
-
-    body,
-    :link,
-    :visited {
-      color: var(--color-foreground);
-      text-decoration: none;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --color-background-top: #0b2935;
-        --color-background-bottom: #051413;
-        --color-emphasized: #50a1f3;
-        --color-foreground: #e2edf6;
-      }
-    }
   }
 </style>

@@ -1,16 +1,40 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from '../components/Hero.astro';
+import Hero from "../components/Hero.astro";
+import Text from "../components/Text.astro";
+
+const socials = [
+  ["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
+  ["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
+  ["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
+  ["Twitter", "https://twitter.com/JoshuaKGoldberg", "/icons/twitter.svg"],
+  ["YouTube", "https://youtube.com/@JoshuaKGoldberg", "/icons/youtube.svg"],
+] as const;
 ---
 
 <BaseLayout>
-    <Hero image="/me-fancy.png">
-        <h1>Hi! I'm Josh</h1>
-        <p>
-            I'm an open source maintainer
-            <br /> 
-            in the TypeScript ecosystem.
-        </p>
-        <!-- todo: modern day robinhood developer? -->
-    </Hero>
+  <Hero image="/me-fancy.png">
+    <Text as="h1" fontSize="title-primary">Hi! I'm Josh.</Text>
+    <Text as="p" fontSize="subtitle">
+      I'm an open source maintainer
+      <br />
+      in the TypeScript ecosystem.
+    </Text>
+    <div class="socials">
+      {
+        socials.map(([alt, href, src]) => (
+          <a href={href}>
+            <img alt={alt} src={src} />
+          </a>
+        ))
+      }
+    </div>
+  </Hero>
 </BaseLayout>
+
+<style>
+  .socials {
+    display: flex;
+    gap: 1rem;
+  }
+</style>

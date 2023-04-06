@@ -1,5 +1,5 @@
 ---
-import { For } from "solid-js";
+import MainArea from "./MainArea.astro";
 
 const links = [
   ["Blog", "/blog"],
@@ -8,11 +8,9 @@ const links = [
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
 ] as const;
-
-console.log("got em", { links });
 ---
 
-<header>
+<MainArea as="header">
   <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
     >Josh Goldberg</a
   >
@@ -31,7 +29,7 @@ console.log("got em", { links });
       ))
     }
   </div>
-</header>
+</MainArea>
 
 <style>
   @layer base, header;
@@ -43,21 +41,18 @@ console.log("got em", { links });
       flex-direction: column;
       font-weight: bold;
       gap: 1rem;
+      padding: 2rem;
       justify-content: space-between;
-      font-size: var(--font-size-medium);
-      margin: auto;
-      max-width: var(--mainWidth);
-      padding: 1rem 2rem;
-      width: 100%;
+      font-size: var(--fontSizeMedium);
     }
 
     .links {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
     }
 
     .current {
-      color: var(--color-emphasized);
+      color: var(--colorEmphasized);
       position: relative;
     }
 

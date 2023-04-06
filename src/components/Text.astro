@@ -1,0 +1,45 @@
+---
+import type { JSX } from "solid-js";
+
+const fontSizes = {
+  medium: "fontSizeMedium",
+  large: "fontSizeLarge",
+  subtitle: "fontSizeSubtitle",
+  "title-primary": "fontSizeTitlePrimary",
+  "title-secondary": "fontSizeTitleSecondary",
+};
+
+export type FontSize = keyof typeof fontSizes;
+
+export interface Props {
+  as: keyof JSX.IntrinsicElements;
+  class?: string;
+  fontSize: FontSize;
+}
+
+const { as: As, fontSize, ...rest } = Astro.props;
+---
+
+<As {...rest} class:list={[fontSizes[fontSize], rest.class]}><slot /></As>
+
+<style>
+  .fontSizeMedium {
+    font-size: var(--fontSizeMedium);
+  }
+
+  .fontSizeLarge {
+    font-size: var(--fontSizeLarge);
+  }
+
+  .fontSizeSubtitle {
+    font-size: var(--fontSizeSubtitle);
+  }
+
+  .fontSizeTitlePrimary {
+    font-size: var(--fontSizeTitlePrimary);
+  }
+
+  .fontSizeTitleSecondary {
+    font-size: var(--fontSizeTitleSecondary);
+  }
+</style>
