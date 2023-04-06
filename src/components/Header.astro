@@ -11,7 +11,7 @@ console.log("my pathname is", Astro.url.pathname);
 ---
 
 <header>
-  <a href="/">Josh Goldberg</a>
+  <a class={Astro.url.pathname.length <= 1 && "current"} href="/">Josh Goldberg</a>
   <div class="links">
     {
       links.map(([text, href]) => (
@@ -27,6 +27,8 @@ console.log("my pathname is", Astro.url.pathname);
 </header>
 
 <style>
+  @layer base, header;
+
   @layer header {
     header {
       align-items: center;
