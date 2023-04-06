@@ -3,11 +3,6 @@ import type { JSX } from "solid-js";
 
 import Tabs from "./Tabs";
 
-export interface TabsContentSection {
-  contents: JSX.Element;
-  label: string;
-}
-
 export interface TabsAndContentProps {
   defaultValue: string;
   sections: Record<string, JSX.Element>;
