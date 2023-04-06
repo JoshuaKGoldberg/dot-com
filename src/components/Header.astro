@@ -5,8 +5,9 @@ const links = [
   ["Projects", "/projects"],
   ["Speaking", "/speaking"],
   ["Sponsor", "/sponsor"],
-  // todo
 ];
+
+console.log("my pathname is", Astro.url.pathname);
 ---
 
 <header>
@@ -15,7 +16,7 @@ const links = [
     {
       links.map(([text, href]) => (
         <a
-          class:list={["link", href === Astro.url.pathname && "current"]}
+          class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
           href={href}
         >
           {text}
@@ -26,27 +27,34 @@ const links = [
 </header>
 
 <style>
-  header {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-    gap: 1rem;
-    justify-content: space-between;
-    margin: auto;
-    max-width: var(--mainWidth);
-    padding: 1rem 2rem;
-    width: 100%;
-  }
-
-  .links {
-    display: flex;
-    gap: 1rem;
-  }
-
-  @media (min-width: 819px) {
+  @layer header {
     header {
-      flex-direction: row;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+      gap: 1rem;
+      justify-content: space-between;
+      font-size: var(--font-size-medium);
+      margin: auto;
+      max-width: var(--mainWidth);
+      padding: 1rem 2rem;
+      width: 100%;
+    }
+
+    .links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .current {
+      color: var(--color-emphasized);
+    }
+
+    @media (min-width: 819px) {
+      header {
+        flex-direction: row;
+      }
     }
   }
 </style>

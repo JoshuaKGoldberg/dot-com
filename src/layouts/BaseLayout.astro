@@ -33,6 +33,40 @@ import Header from "../components/Header.astro";
   }
 
   :root {
-    --var-mainWidth: 819px;
+    --mainWidth: 819px;
+
+    --color-emphasized: #50a1f3;
+    --color-foreground: #082138;
+
+    --font-size-medium: 1.5rem;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  body {
+    background: linear-gradient(194.16deg, #F1FBFD -0.57%, #F3FFF9 89.93%);
+  }
+
+  @layer base {
+    body, :link, :visited {
+      color: var(color-foreground);
+      text-decoration: none;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-emphasized: #1170d0;
+      color-foreground: #e2edf6;
+    }
+
+    body {
+      background: linear-gradient(194.16deg, #0B2935 -0.57%, #051413 89.93%);
+    }
   }
 </style>
