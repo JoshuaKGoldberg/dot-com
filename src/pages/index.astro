@@ -1,5 +1,16 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from '../components/Hero.astro';
 ---
 
-<BaseLayout>hi stuff</BaseLayout>
+<BaseLayout>
+    <Hero image="/me-fancy.png">
+        <h1>Hi! I'm Josh</h1>
+        <p>
+            I'm an open source maintainer
+            <br /> 
+            in the TypeScript ecosystem.
+        </p>
+        <!-- todo: modern day robinhood developer? -->
+    </Hero>
+</BaseLayout>
