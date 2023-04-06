@@ -16,7 +16,7 @@ const socials = [
 <BaseLayout>
   <Hero image="/me-fancy.png">
     <Text as="h1" fontSize="title-primary" fontWeight="bold">
-      Hi! I'm Josh.
+      Hi! I'm <span class="wavy">Josh</span>.
     </Text>
     <Text as="p" class="subtitle" fontSize="subtitle" fontWeight="bold">
       I'm an open source maintainer
@@ -54,6 +54,10 @@ const socials = [
 </BaseLayout>
 
 <style>
+  .wavy {
+    text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
+  }
+
   .subtitle {
     margin: 1.75rem 0;
   }
