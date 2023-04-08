@@ -1,60 +1,74 @@
 ---
+const sizes = {
+	medium: "heroMedium",
+	large: "heroLarge",
+};
+
 export interface Props {
-  image: string;
+	image: string;
+	size?: keyof typeof sizes;
 }
 
-const { image } = Astro.props;
+const { image, size = "medium" } = Astro.props;
 ---
 
-<div class="hero">
-  <div class="half first">
-    <img alt="" src={image} />
-  </div>
-  <div class="half second">
-    <slot />
-  </div>
+<div class:list={["hero", size && sizes[size]]}>
+	<div class="half first">
+		<img alt="" src={image} />
+	</div>
+	<div class="half second">
+		<slot />
+	</div>
 </div>
 
 <style>
-  .hero {
-    display: flex;
-    margin: auto;
-    height: 30rem;
-    position: relative;
-    width: var(--widthFull);
-  }
+	.hero {
+		display: flex;
+		margin: auto;
+		height: 30rem;
+		position: relative;
+		width: var(--widthFull);
+	}
 
-  img {
-    display: none;
-  }
+	.heroMedium {
+		height: 20rem;
+	}
 
-  @media (min-width: 819px) {
-    .hero {
-      gap: 2rem;
-      margin-top: 5rem;
-    }
+	.heroLarge {
+		height: 30rem;
+	}
 
-    .half {
-      position: relative;
-    }
+	img {
+		display: none;
+	}
 
-    .half.first {
-      display: flex;
-      justify-content: flex-end;
-      width: 45%;
-    }
+	@media (min-width: 819px) {
+		.hero {
+			gap: 2rem;
+			margin-top: 5rem;
+		}
 
-    .half.second {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 55%;
-    }
+		.half {
+			position: relative;
+		}
 
-    img {
-      display: block;
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
+		.half.first {
+			display: flex;
+			justify-content: flex-end;
+			width: 45%;
+		}
+
+		.half.second {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			width: 55%;
+		}
+
+		img {
+			display: block;
+			max-width: 100%;
+			max-height: 100%;
+		}
+	}
 </style>

@@ -2,84 +2,78 @@
 import type { JSX } from "solid-js";
 
 const fontSizes = {
-  small: "fontSizeSmall",
-  medium: "fontSizeMedium",
-  large: "fontSizeLarge",
-  subtitle: "fontSizeSubtitle",
-  "title-primary": "fontSizeTitlePrimary",
-  "title-secondary": "fontSizeTitleSecondary",
+	small: "fontSizeSmall",
+	medium: "fontSizeMedium",
+	large: "fontSizeLarge",
+	subtitle: "fontSizeSubtitle",
+	"title-primary": "fontSizeTitlePrimary",
+	"title-secondary": "fontSizeTitleSecondary",
 };
 
 export type FontSize = keyof typeof fontSizes;
 
 const fontWeights = {
-  light: "fontWeightLight",
-  demi: "fontWeightDemi",
-  book: "fontWeightBook",
-  bold: "fontWeightBold",
+	light: "fontWeightLight",
+	medium: "fontWeightNormal",
+	bold: "fontWeightBold",
 };
 
 export type FontWeight = keyof typeof fontWeights;
 
 export interface Props {
-  as: keyof JSX.IntrinsicElements;
-  class?: string;
-  fontSize?: FontSize;
-  fontWeight?: FontWeight;
+	as: keyof JSX.IntrinsicElements;
+	class?: string;
+	fontSize?: FontSize;
+	fontWeight?: FontWeight;
 }
 
 const { as: As, fontSize, fontWeight, ...rest } = Astro.props;
 ---
 
 <As
-  {...rest}
-  class:list={[
-    fontSize && fontSizes[fontSize],
-    fontWeight && fontWeights[fontWeight],
-    rest.class,
-  ]}
+	{...rest}
+	class:list={[
+		fontSize && fontSizes[fontSize],
+		fontWeight && fontWeights[fontWeight],
+		rest.class,
+	]}
 >
-  <slot />
+	<slot />
 </As>
 
 <style>
-  .fontSizeMedium {
-    font-size: var(--fontSizeMedium);
-  }
+	.fontSizeMedium {
+		font-size: var(--fontSizeMedium);
+	}
 
-  .fontSizeLarge {
-    font-size: var(--fontSizeLarge);
-  }
+	.fontSizeLarge {
+		font-size: var(--fontSizeLarge);
+	}
 
-  .fontSizeSubtitle {
-    font-size: var(--fontSizeSubtitle);
-  }
+	.fontSizeSubtitle {
+		font-size: var(--fontSizeSubtitle);
+	}
 
-  .fontSizeTitlePrimary {
-    font-size: var(--fontSizeTitlePrimary);
-  }
+	.fontSizeTitlePrimary {
+		font-size: var(--fontSizeTitlePrimary);
+	}
 
-  .fontSizeTitleSecondary {
-    font-size: var(--fontSizeTitleSecondary);
-  }
+	.fontSizeTitleSecondary {
+		font-size: var(--fontSizeTitleSecondary);
+	}
 
-  .fontWeightLight {
-    font-weight: var(--fontWeightLight);
-    text-rendering: optimizeLegibility;
-  }
+	.fontWeightLight {
+		font-weight: var(--fontWeightLight);
+		text-rendering: optimizeLegibility;
+	}
 
-  .fontWeightDemi {
-    font-weight: var(--fontWeightDemi);
-    text-rendering: geometricPrecision;
-  }
+	.fontWeightNormal {
+		font-weight: var(--fontWeightNormal);
+		text-rendering: geometricPrecision;
+	}
 
-  .fontWeightBook {
-    font-weight: var(--fontWeightBook);
-    text-rendering: geometricPrecision;
-  }
-
-  .fontWeightBold {
-    font-weight: var(--fontWeightBold);
-    text-rendering: geometricPrecision;
-  }
+	.fontWeightBold {
+		font-weight: var(--fontWeightBold);
+		text-rendering: geometricPrecision;
+	}
 </style>

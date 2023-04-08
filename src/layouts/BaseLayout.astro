@@ -1,25 +1,27 @@
 ---
+import "@fontsource/league-spartan/variable.css";
+
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import MainArea from "../components/MainArea.astro";
 ---
 
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Joshypoo McSwaggins</title>
-  </head>
-  <MainArea as="body">
-    <Header />
-    <slot />
-    <Footer />
-  </MainArea>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Joshypoo McSwaggins</title>
+	</head>
+	<MainArea as="body">
+		<Header />
+		<slot />
+		<Footer />
+	</MainArea>
 
-  <style is:global>
-    @import "./normalize.css";
-    @import "./base.css";
-  </style>
+	<style is:global>
+		@import "./normalize.css";
+		@import "./base.css";
+	</style>
 </html>

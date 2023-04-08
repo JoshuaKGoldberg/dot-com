@@ -25,7 +25,7 @@ Each of the following sections is a key area I'm going to invest my time in for 
 - [Community Engagement](#community-engagement)
 - [Education Content](#education-content)
 
-![Cat reading a newspaper meme, captioned: "I should finish my New Years resolutions"](./i-should-finish-my-new-years-resolutions.png)
+![Cat reading a newspaper meme, captioned: "I should finish my New Years resolutions"](./_i-should-finish-my-new-years-resolutions.png)
 
 <em style="display:block;margin-bottom:2rem;text-align:center;">
 I know this blog post is long, overly detailed, and three and a half months late.

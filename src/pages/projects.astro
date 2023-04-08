@@ -1,0 +1,36 @@
+---
+import Hero from "../components/Hero.astro";
+import Text from "../components/Text.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+	<Hero image="/me-thumbs-up.png">
+		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bold">
+			Projects
+		</Text>
+		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
+			I primarily work on static analysis tooling for TypeScript -- projects
+			that scrutinize your code without running it.
+		</Text>
+		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
+			I also maintain smaller projects that assist with web development tooling
+			or adding emoji delighters to sites.
+		</Text>
+	</Hero>
+</BaseLayout>
+
+<style>
+	h1 {
+		margin-bottom: 1rem;
+	}
+
+	.wavy {
+		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
+	}
+
+	.subtitle {
+		margin-top: 2rem;
+		max-width: 24rem;
+	}
+</style>

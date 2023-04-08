@@ -2,10 +2,11 @@ lockfileVersion: 5.4
 
 specifiers:
   '@astrojs/solid-js': ^2.1.0
+  '@fontsource/league-spartan': ^4.5.13
   '@kobalte/core': ^0.8.2
   '@typescript-eslint/eslint-plugin': ^5.57.1
   '@typescript-eslint/parser': ^5.57.1
-  astro: ^2.2.0
+  astro: ^2.2.1
   cspell: ^6.31.1
   eslint: ^8.37.0
   eslint-plugin-astro: ^0.26.1
@@ -35,10 +36,11 @@ specifiers:
 
 dependencies:
   '@astrojs/solid-js': 2.1.0_solid-js@1.7.2
+  '@fontsource/league-spartan': 4.5.13
   '@kobalte/core': 0.8.2_solid-js@1.7.2
   '@typescript-eslint/eslint-plugin': 5.57.1_jwd5v5vphzanfmajybkjq25ld4
   '@typescript-eslint/parser': 5.57.1_vwh6htx42aidho2qgfca5u5rwm
-  astro: 2.2.0
+  astro: 2.2.1
   cspell: 6.31.1
   eslint-plugin-astro: 0.26.1_eslint@8.37.0
   eslint-plugin-deprecation: 1.4.1_vwh6htx42aidho2qgfca5u5rwm
@@ -86,6 +88,10 @@ packages:
     resolution: {integrity: sha512-VxSj3gh/UTB/27rkRCT7SvyGjWtuxUO7Jf7QqDduch7j/gr/uA5P/Q5I/4zIIrZjy2yQAKyKLoox2QI2mM/BSA==}
     dev: false
 
+  /@astrojs/compiler/1.3.1:
+    resolution: {integrity: sha512-xV/3r+Hrfpr4ECfJjRjeaMkJvU73KiOADowHjhkqidfNPVAWPzbqw1KePXuMK1TjzMvoAVE7E163oqfH3lDwSw==}
+    dev: false
+
   /@astrojs/language-server/0.28.3:
     resolution: {integrity: sha512-fPovAX/X46eE2w03jNRMpQ7W9m2mAvNt4Ay65lD9wl1Z5vIQYxlg7Enp9qP225muTr4jSVB5QiLumFJmZMAaVA==}
     hasBin: true
@@ -104,13 +110,13 @@ packages:
       vscode-uri: 3.0.7
     dev: false
 
-  /@astrojs/markdown-remark/2.1.3_astro@2.2.0:
+  /@astrojs/markdown-remark/2.1.3_astro@2.2.1:
     resolution: {integrity: sha512-Di8Qbit9p7L7eqKklAJmiW9nVD+XMsNHpaNzCLduWjOonDu9fVgEzdjeDrTVCDtgrvkfhpAekuNXrp5+w4F91g==}
     peerDependencies:
       astro: ^2.2.0
     dependencies:
       '@astrojs/prism': 2.1.1
-      astro: 2.2.0
+      astro: 2.2.1
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.2
       rehype-raw: 6.1.1
@@ -942,6 +948,10 @@ packages:
     resolution: {integrity: sha512-+sAUfpQ3Frz+VCbPCqj+cZzvEESy3fjSeT/pDWkYCWOBXYNNKZfuVsHuv8/JO2zze8+Eb/Q7a6hZVgzS81fLbQ==}
     dependencies:
       '@floating-ui/core': 1.2.5
+    dev: false
+
+  /@fontsource/league-spartan/4.5.13:
+    resolution: {integrity: sha512-GyF32dt1fw/TQlMJIHI5uPILRKldOENT5bQUzDDQIfeJMrXp/04Borcwmuqch5pqueAQ+di7fo204dgaZlCEjw==}
     dev: false
 
   /@gwhitney/detect-indent/7.0.1:
@@ -1862,8 +1872,8 @@ packages:
       - supports-color
     dev: false
 
-  /astro/2.2.0:
-    resolution: {integrity: sha512-7ggQHIyWadnjRY+Jo7nZmYF5xspeAWCjQV+fPkad7u86hj0qjhU+8WvCZI1q7cvJo9o0DMzaI+3vH1voIK7Czg==}
+  /astro/2.2.1:
+    resolution: {integrity: sha512-yYPRzh3su38bi3VBCKmYAUBkQSaFQMKFsu8JAVDzFRoGLbskJ/6JkDX2abSB9/iRug8GAKaH/FWxXOTzIsSQ7Q==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
     peerDependencies:
@@ -1872,9 +1882,9 @@ packages:
       sharp:
         optional: true
     dependencies:
-      '@astrojs/compiler': 1.3.0
+      '@astrojs/compiler': 1.3.1
       '@astrojs/language-server': 0.28.3
-      '@astrojs/markdown-remark': 2.1.3_astro@2.2.0
+      '@astrojs/markdown-remark': 2.1.3_astro@2.2.1
       '@astrojs/telemetry': 2.1.0
       '@astrojs/webapi': 2.1.0
       '@babel/core': 7.21.4

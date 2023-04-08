@@ -21,10 +21,11 @@
 	},
 	"dependencies": {
 		"@astrojs/solid-js": "^2.1.0",
+		"@fontsource/league-spartan": "^4.5.13",
 		"@kobalte/core": "^0.8.2",
 		"@typescript-eslint/eslint-plugin": "^5.57.1",
 		"@typescript-eslint/parser": "^5.57.1",
-		"astro": "^2.2.0",
+		"astro": "^2.2.1",
 		"cspell": "^6.31.1",
 		"eslint-plugin-astro": "^0.26.1",
 		"eslint-plugin-deprecation": "^1.4.1",
