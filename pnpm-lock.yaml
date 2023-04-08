@@ -7,6 +7,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.57.1
   '@typescript-eslint/parser': ^5.57.1
   astro: ^2.2.1
+  clsx: ^1.2.1
   cspell: ^6.31.1
   eslint: ^8.37.0
   eslint-plugin-astro: ^0.26.1
@@ -41,6 +42,7 @@ dependencies:
   '@typescript-eslint/eslint-plugin': 5.57.1_jwd5v5vphzanfmajybkjq25ld4
   '@typescript-eslint/parser': 5.57.1_vwh6htx42aidho2qgfca5u5rwm
   astro: 2.2.1
+  clsx: 1.2.1
   cspell: 6.31.1
   eslint-plugin-astro: 0.26.1_eslint@8.37.0
   eslint-plugin-deprecation: 1.4.1_vwh6htx42aidho2qgfca5u5rwm
@@ -2254,6 +2256,11 @@ packages:
   /clone/1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+    dev: false
+
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
     dev: false
 
   /color-convert/1.9.3:

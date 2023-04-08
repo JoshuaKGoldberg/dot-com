@@ -1,0 +1,34 @@
+.fontSizeMedium {
+	font-size: var(--fontSizeMedium);
+}
+
+.fontSizeLarge {
+	font-size: var(--fontSizeLarge);
+}
+
+.fontSizeSubtitle {
+	font-size: var(--fontSizeSubtitle);
+}
+
+.fontSizeTitlePrimary {
+	font-size: var(--fontSizeTitlePrimary);
+}
+
+.fontSizeTitleSecondary {
+	font-size: var(--fontSizeTitleSecondary);
+}
+
+.fontWeightLight {
+	font-weight: var(--fontWeightLight);
+	text-rendering: optimizeLegibility;
+}
+
+.fontWeightNormal {
+	font-weight: var(--fontWeightNormal);
+	text-rendering: geometricPrecision;
+}
+
+.fontWeightBold {
+	font-weight: var(--fontWeightBold);
+	text-rendering: geometricPrecision;
+}

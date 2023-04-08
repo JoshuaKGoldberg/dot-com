@@ -2,32 +2,6 @@ todo file
 
 typescript export: export interface Props {}
 
-## why so classname-y:
-
-<header class="astro-3EF6KSR2">
-  <span class="astro-3EF6KSR2">Joshypoo McSwaggins</span>
-  <div class="astro-3EF6KSR2">
-    <a class="link astro-3EF6KSR2" href="/blog">
-          Blog
-        </a><a class="link astro-3EF6KSR2" href="https://learningtypescript.com">
-          Book
-        </a><a class="link astro-3EF6KSR2" href="/projects">
-          Projects
-        </a>
-  </div>
-</header>
----
-
-I thought this should work, rendering JSX for solid in .astro
-but a bug for me to file is that the line number is offset (file is ~26 lines line)
-3d71c6c..297fe38
-
-```
- error   Expected ">" but found "posts"
-  File:
-    /Users/josh/repos/joshuakgoldberg-dot-com-next/src/pages/blog.astro:36:37
-^C%
-```
 
 tseslint borks on .astro files?
 
@@ -39,8 +13,6 @@ Rule: "@typescript-eslint/no-unsafe-assignment"
 ```
 
 file issue on knip and eventually re-enable
-
-https://yaml.org/faq.htm .yaml lol
 
 file issue on astro generator about markdwonlint discovered issues
 

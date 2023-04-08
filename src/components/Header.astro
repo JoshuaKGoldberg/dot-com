@@ -1,36 +1,36 @@
 ---
 import HeaderLinks from "./HeaderLinks.astro";
-import Text from "./Text.astro";
+import { Text } from "./Text";
 ---
 
 <Text as="header" fontWeight="bold">
-  <a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
-    >Josh Goldberg</a
-  >
-  <HeaderLinks />
+	<a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
+		>Josh Goldberg</a
+	>
+	<HeaderLinks />
 </Text>
 
 <style>
-  header {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-    gap: 1rem;
-    padding: 2rem;
-    justify-content: space-between;
-    font-size: var(--fontSizeMedium);
-  }
+	header {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		font-weight: bold;
+		gap: 1rem;
+		padding: 2rem;
+		justify-content: space-between;
+		font-size: var(--fontSizeMedium);
+	}
 
-  @media (min-width: 819px) {
-    header {
-      flex-direction: row;
-      padding: 2rem 0;
-    }
+	@media (min-width: 819px) {
+		header {
+			flex-direction: row;
+			padding: 2rem 0;
+		}
 
-    .current {
-      color: var(--colorEmphasized);
-      text-decoration: var(--textDecorationWavy);
-    }
-  }
+		.current {
+			color: var(--colorEmphasized);
+			text-decoration: var(--textDecorationWavy);
+		}
+	}
 </style>

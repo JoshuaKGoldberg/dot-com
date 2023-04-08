@@ -14,7 +14,7 @@
 
 .title {
 	font-size: var(--fontSizeMedium);
-	font-weight: var(--fontWeightMedium);
+	font-weight: var(--fontWeightBold);
 }
 
 .description {

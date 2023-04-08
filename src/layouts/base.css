@@ -28,8 +28,12 @@
 				var(--colorBackgroundBottom) 90%
 			)
 			fixed;
-		font-family: "League SpartanVariable", sans-serif;
 		line-height: 1.1;
+	}
+
+	body,
+	button {
+		font-family: "League SpartanVariable", sans-serif;
 	}
 
 	body,

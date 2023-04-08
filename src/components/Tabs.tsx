@@ -17,7 +17,7 @@ export default function (props: TabsProps) {
 			defaultValue={props.defaultValue}
 			onValueChange={props.onValueChange}
 		>
-			<Tabs.List>
+			<Tabs.List class={styles.list}>
 				<For each={props.labels}>
 					{(label) => (
 						<Tabs.Trigger
