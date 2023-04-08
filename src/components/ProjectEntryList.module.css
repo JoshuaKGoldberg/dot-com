@@ -1,0 +1,16 @@
+.h2 {
+	margin: 2rem 0;
+	text-align: center;
+}
+
+.projects {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	list-style-type: none;
+	padding: 0;
+}
+
+.projectEntry {
+	width: calc(50% - 1rem);
+}

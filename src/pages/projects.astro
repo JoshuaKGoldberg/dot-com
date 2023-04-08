@@ -1,11 +1,12 @@
 ---
 import Hero from "../components/Hero.astro";
+import { ProjectEntryList } from "../components/ProjectEntryList";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout>
-	<Hero image="/me-thumbs-up.png">
+	<Hero image="/images/me-thumbs-up.png">
 		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bold">
 			Projects
 		</Text>
@@ -18,6 +19,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 			or adding emoji delighters to sites.
 		</Text>
 	</Hero>
+
+	<ProjectEntryList />
 </BaseLayout>
 
 <style>

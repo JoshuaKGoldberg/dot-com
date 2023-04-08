@@ -1,0 +1,18 @@
+.projectEntry {
+	display: flex;
+	gap: 1rem;
+}
+
+.logo {
+	height: 5rem;
+	width: 5rem;
+}
+
+.contents {
+	display: flex;
+	flex-direction: column;
+}
+
+.description {
+	margin: 0.5rem 0 0.35rem;
+}

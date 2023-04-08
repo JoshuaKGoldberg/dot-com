@@ -12,7 +12,7 @@ export interface Props {
 const { image, size = "medium" } = Astro.props;
 ---
 
-<div class:list={["hero", size && sizes[size]]}>
+<div class:list={["hero", sizes[size]]}>
 	<div class="half first">
 		<img alt="" src={image} />
 	</div>

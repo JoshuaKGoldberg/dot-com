@@ -26,7 +26,7 @@ export type FontWeight = keyof typeof fontWeights;
 export interface TextProps {
 	as: keyof JSX.IntrinsicElements;
 	children: JSX.Element;
-	class?: string;
+	class?: string | undefined;
 	fontSize?: FontSize;
 	fontWeight?: FontWeight;
 }
