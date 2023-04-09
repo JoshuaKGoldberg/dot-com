@@ -1,18 +1,18 @@
-import { Project } from "../content/projects";
 import { Text } from "./Text";
 
 export interface ProjectSubEntryProps {
-	project: Project;
+	description: string;
+	title: string;
 }
 
 export function ProjectSubEntry(props: ProjectSubEntryProps) {
 	return (
 		<Text as="li" fontSize="small">
 			<Text as="span" fontWeight="bold">
-				{props.project.title}
+				{props.title}
 			</Text>
 			<Text as="span" fontWeight="light">
-				: {props.project.description}
+				: {props.description}
 			</Text>
 		</Text>
 	);

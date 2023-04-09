@@ -1,0 +1,12 @@
+---
+import { getCollection } from "astro:content";
+
+import { BlogTabsAndContent } from "../components/BlogTabsAndContent";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const allBlogPosts = await getCollection("blog");
+---
+
+<BaseLayout>
+	<BlogTabsAndContent client:load posts={allBlogPosts} />
+</BaseLayout>

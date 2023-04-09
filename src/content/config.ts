@@ -11,4 +11,22 @@ export const collections = {
 			title: z.string(),
 		}),
 	}),
+	projects: defineCollection({
+		schema: z.object({
+			category: z.string(),
+			description: z.string(),
+			image: z.string().optional(),
+			more: z
+				.array(
+					z.object({
+						description: z.string(),
+						title: z.string(),
+					})
+				)
+				.optional(),
+			role: z.string().optional(),
+			stars: z.number(),
+			title: z.string().optional(),
+		}),
+	}),
 };
