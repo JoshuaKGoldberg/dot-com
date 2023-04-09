@@ -1,11 +1,23 @@
+.subList {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	list-style-type: none;
+	padding-left: 0;
+}
+
 .projectEntry {
 	display: flex;
 	gap: 1rem;
 }
 
-.logo {
+.image {
 	height: 5rem;
 	width: 5rem;
+}
+
+.image[src$=".png"] {
+	image-rendering: pixelated;
 }
 
 .contents {

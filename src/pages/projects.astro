@@ -3,10 +3,11 @@ import Hero from "../components/Hero.astro";
 import { ProjectEntryList } from "../components/ProjectEntryList";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { projects } from "../content/projects";
 ---
 
 <BaseLayout>
-	<Hero image="/images/me-thumbs-up.png">
+	<Hero class="hero" image="/images/me-thumbs-up.png">
 		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bold">
 			Projects
 		</Text>
@@ -20,10 +21,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 		</Text>
 	</Hero>
 
-	<ProjectEntryList />
+	{
+		Object.entries(projects).map(([category, projects]) => (
+			<ProjectEntryList
+				category={category}
+				class="projectEntryList"
+				projects={projects}
+			/>
+		))
+	}
 </BaseLayout>
 
 <style>
+	.hero {
+		margin-bottom: 4rem;
+	}
+
 	h1 {
 		margin-bottom: 1rem;
 	}
@@ -35,5 +48,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 	.subtitle {
 		margin-top: 2rem;
 		max-width: 24rem;
+	}
+
+	.projectEntryList {
+		margin: 6rem 0;
 	}
 </style>

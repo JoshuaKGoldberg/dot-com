@@ -1,3 +1,7 @@
+.fontSizeSmaller {
+	font-size: var(--fontSizeSmaller);
+}
+
 .fontSizeSmall {
 	font-size: var(--fontSizeSmall);
 }

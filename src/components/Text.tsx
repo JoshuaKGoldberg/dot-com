@@ -5,6 +5,7 @@ import { Dynamic } from "solid-js/web";
 import styles from "./Text.module.css";
 
 const fontSizes = {
+	smaller: styles.fontSizeSmaller,
 	small: styles.fontSizeSmall,
 	medium: styles.fontSizeMedium,
 	large: styles.fontSizeLarge,
@@ -23,15 +24,17 @@ const fontWeights = {
 
 export type FontWeight = keyof typeof fontWeights;
 
-export interface TextProps {
-	as: keyof JSX.IntrinsicElements;
+export type TextProps<As extends keyof JSX.HTMLElementTags> = {
+	as: As;
 	children: JSX.Element;
 	class?: string | undefined;
 	fontSize?: FontSize;
 	fontWeight?: FontWeight;
-}
+} & JSX.HTMLElementTags[As];
 
-export function Text(props: TextProps) {
+export function Text<As extends keyof JSX.HTMLElementTags>(
+	props: TextProps<As>
+) {
 	const [knownProps, rest] = splitProps(props, [
 		"as",
 		"children",
@@ -40,6 +43,7 @@ export function Text(props: TextProps) {
 	]);
 
 	return (
+		// @ts-expect-error - Dynamic components in TypeScript are tough.
 		<Dynamic
 			component={props.as}
 			{...rest}

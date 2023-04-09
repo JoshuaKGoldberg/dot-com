@@ -5,14 +5,15 @@ const sizes = {
 };
 
 export interface Props {
+	class?: string | undefined;
 	image: string;
 	size?: keyof typeof sizes;
 }
 
-const { image, size = "medium" } = Astro.props;
+const { class: className, image, size = "medium" } = Astro.props;
 ---
 
-<div class:list={["hero", sizes[size]]}>
+<div class:list={["hero", sizes[size], className]}>
 	<div class="half first">
 		<img alt="" src={image} />
 	</div>
