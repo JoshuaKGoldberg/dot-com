@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-11-03
+href: https://2021.cascadiajs.com/speakers/josh-goldberg
 title: "From Takedown to TypeScript"
 event: "CascadiaJS 2021"
 links:

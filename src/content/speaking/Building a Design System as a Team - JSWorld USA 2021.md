@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-05-21
+href: https://usa.jsworldconference.com/
 title: "Building a Design System as a Team"
 event: "JSWorld USA 2021"
 links:

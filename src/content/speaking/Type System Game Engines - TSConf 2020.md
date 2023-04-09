@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2020-10-09
+href: https://tsconf.io/2020/speakers
 title: "Type System Game Engines"
 event: "TSConf 2020"
 links:

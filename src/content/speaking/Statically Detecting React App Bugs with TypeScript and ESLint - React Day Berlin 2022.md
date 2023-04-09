@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2022-12-02
+href: https://reactday.berlin/2022
 title: "Statically Detecting React App Bugs with TypeScript and ESLint"
 event: "React Day Berlin 2022"
 links:

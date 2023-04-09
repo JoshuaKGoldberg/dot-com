@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-02-22
+href: https://2021.frontenddeveloperlove.com
 title: "TypeScript for APIs"
 event: "JSWorld 2021"
 links:

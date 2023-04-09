@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-04-14
+href: https://portal.gitnation.org/events/react-summit-remote-edition-2021
 title: "Stories and Strategies from Converting to TypeScript"
 event: "React Summit 2021"
 links:

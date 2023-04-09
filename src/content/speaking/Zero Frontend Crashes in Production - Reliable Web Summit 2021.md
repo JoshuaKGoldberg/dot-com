@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-08-21
+href: https://reliablewebsummit.com/session/achieving-zero-frontend-crashes-in-production
 title: '"Zero" Frontend Crashes in Production'
 event: "Reliable Web Summit 2021"
 links:

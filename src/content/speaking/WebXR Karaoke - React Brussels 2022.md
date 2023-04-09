@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2022-10-14
+href: https://react.brussels
 title: "WebXR Karaoke"
 event: "React Brussels 2022"
 links:

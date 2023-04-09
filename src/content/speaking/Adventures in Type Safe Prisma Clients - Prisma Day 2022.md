@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2022-06-15
+href: https://www.prisma.io/day
 title: "Adventures in Type Safe Prisma Clients"
 event: "Prisma Day 2022"
 links:

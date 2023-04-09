@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2021-11-09
+href: https://geekle.us/schedule/react3
 title: "Seven Common Hooks Mistakes"
 event: "React Global Online Summit 2021"
 links:

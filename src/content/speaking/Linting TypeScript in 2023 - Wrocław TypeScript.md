@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2023-02-22
+href: https://www.meetup.com/wroctypescript/events/290894011
 title: "Linting TypeScript in 2023"
 event: "Wrocław TypeScript"
 links:

@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2022-04-20
+href: https://geekle.us/schedule/react2
 title: "Props, Mocks, and Context"
 event: "React Global Online Summit 2022"
 links:

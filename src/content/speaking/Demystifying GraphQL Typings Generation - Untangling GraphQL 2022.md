@@ -1,6 +1,7 @@
 ---
 category: Talks
 date: 2022-04-06
+href: https://hopin.com/events/untangling-graphql
 title: "Demystifying GraphQL Typings Generation"
 event: "Untangling GraphQL 2022"
 links:

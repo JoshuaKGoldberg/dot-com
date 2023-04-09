@@ -1,11 +1,5 @@
 {
-	"dictionaries": [
-		"css",
-		"html",
-		"node",
-		"npm",
-		"typescript"
-	],
+	"dictionaries": ["css", "html", "node", "npm", "typescript"],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -17,8 +11,11 @@
 		"ajafff",
 		"astro",
 		"astrojs",
+		"Cascadia",
 		"Chakra",
 		"classname",
+		"clsx",
+		"Codecademy",
 		"delighters",
 		"dogfoding",
 		"dogfood",
@@ -33,18 +30,26 @@
 		"Joshypoo",
 		"knip",
 		"kobalte",
+		"konami",
 		"konamimojisplosion",
 		"learningtypescript",
 		"learningypescript",
 		"mdast",
+		"Microfrontends",
 		"Nerdery",
 		"Neutraface",
+		"Newquay",
 		"packagejson",
 		"platformers",
+		"quickstart",
+		"Rearchitectures",
 		"runbooks",
+		"Scripties",
 		"SpriteMakr",
 		"Swaggins",
 		"triaging",
-		"tsconfigs"
+		"tsconfigs",
+		"typestat",
+		"Wrocław"
 	]
 }
