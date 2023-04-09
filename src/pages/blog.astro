@@ -7,6 +7,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const allBlogPosts = await getCollection("blog");
 ---
 
-<BaseLayout>
+<BaseLayout title="Blog">
 	<BlogTabsAndContent client:load posts={allBlogPosts} />
 </BaseLayout>

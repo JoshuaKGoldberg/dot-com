@@ -1,5 +1,6 @@
 ---
 import { CollectionEntry, getCollection } from "astro:content";
+
 import Hero from "../components/Hero.astro";
 import { ProjectEntryList } from "../components/ProjectEntryList";
 import { Text } from "../components/Text";
@@ -24,7 +25,7 @@ function byMoreOrStars(
 }
 ---
 
-<BaseLayout>
+<BaseLayout title="Projects">
 	<Hero class="hero" image="/images/me-thumbs-up.png">
 		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bolder">
 			Projects

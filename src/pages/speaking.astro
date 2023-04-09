@@ -1,14 +1,15 @@
 ---
 import { getCollection } from "astro:content";
+
 import Hero from "../components/Hero.astro";
+import { SpeakingTabsAndContent } from "../components/SpeakingTabsAndContent";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SpeakingTabsAndContent } from "../components/SpeakingTabsAndContent";
 
 const allSpeakings = await getCollection("speaking");
 ---
 
-<BaseLayout>
+<BaseLayout title="Speaking">
 	<Hero class="hero" image="/images/speaker.png">
 		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bolder">
 			Speaking

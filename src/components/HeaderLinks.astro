@@ -24,7 +24,7 @@ export interface Props {
 				class={clsx(["link", Astro.url.pathname.startsWith(href) && "current"])}
 				href={href}
 				fontWeight="bolder"
-				target={href.startsWith("http") ? "_blank" : undefined!}
+				{...(href.startsWith("http") && { target: "_blank" })}
 			>
 				{text}
 			</Text>
