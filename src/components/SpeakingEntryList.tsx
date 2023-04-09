@@ -4,7 +4,7 @@ import { For } from "solid-js";
 import { groupBy } from "../utils";
 import { SpeakingEntry } from "./SpeakingEntry";
 import styles from "./SpeakingEntryList.module.css";
-import TabsAndContent from "./TabsAndContent";
+import { SubHeading } from "./SubHeading";
 
 export interface SpeakingEntryListProps {
 	speakings: CollectionEntry<"speaking">[];
@@ -12,14 +12,26 @@ export interface SpeakingEntryListProps {
 
 export function SpeakingEntryList(props: SpeakingEntryListProps) {
 	return (
-		<ul class={styles.list}>
-			<For each={props.speakings}>
-				{(speaking) => (
-					<li class={styles.item}>
-						<SpeakingEntry speaking={speaking} />
-					</li>
-				)}
-			</For>
-		</ul>
+		<For
+			each={Object.entries(
+				groupBy(props.speakings, (speaking) => speaking.data.date.getFullYear())
+			).sort(([a], [b]) => +b - +a)}
+		>
+			{([year, speakings]) => (
+				<div>
+					<SubHeading>{year}</SubHeading>
+
+					<ul class={styles.list}>
+						<For each={speakings}>
+							{(speaking) => (
+								<li class={styles.item}>
+									<SpeakingEntry speaking={speaking} />
+								</li>
+							)}
+						</For>
+					</ul>
+				</div>
+			)}
+		</For>
 	);
 }

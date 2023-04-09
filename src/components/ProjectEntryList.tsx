@@ -4,7 +4,7 @@ import { For } from "solid-js";
 
 import { ProjectEntry } from "./ProjectEntry";
 import styles from "./ProjectEntryList.module.css";
-import { Text } from "./Text";
+import { SubHeading } from "./SubHeading";
 
 export interface ProjectEntryListProps {
 	category: string;
@@ -15,9 +15,7 @@ export interface ProjectEntryListProps {
 export function ProjectEntryList(props: ProjectEntryListProps) {
 	return (
 		<div class={clsx(styles.projectEntryList, props.class)}>
-			<Text as="h2" class={styles.h2} fontSize="small" fontWeight="light">
-				{props.category}
-			</Text>
+			<SubHeading>{props.category}</SubHeading>
 			<ul class={styles.projects}>
 				<For each={props.projects}>
 					{(project) => (
