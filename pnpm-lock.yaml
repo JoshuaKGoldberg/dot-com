@@ -7,6 +7,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.57.1
   '@typescript-eslint/parser': ^5.57.1
   astro: ^2.2.1
+  astro-konamimojisplosion: ^0.0.1
   clsx: ^1.2.1
   cspell: ^6.31.1
   eslint: ^8.37.0
@@ -43,6 +44,7 @@ dependencies:
   '@typescript-eslint/eslint-plugin': 5.57.1_jwd5v5vphzanfmajybkjq25ld4
   '@typescript-eslint/parser': 5.57.1_vwh6htx42aidho2qgfca5u5rwm
   astro: 2.2.1
+  astro-konamimojisplosion: 0.0.1
   clsx: 1.2.1
   cspell: 6.31.1
   eslint: 8.37.0
@@ -1888,6 +1890,13 @@ packages:
       semver: 7.3.8
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /astro-konamimojisplosion/0.0.1:
+    resolution: {integrity: sha512-uWymblytIHB7uIJR9irkuarD3aECX7s6kUpudriwYLi0EHEwgt1J/0PJm0V6tWcWWolfdi25kjuVd6B6yVLqmw==}
+    engines: {node: '>=18'}
+    dependencies:
+      konamimojisplosion: 0.5.2
     dev: false
 
   /astro/2.2.1:
