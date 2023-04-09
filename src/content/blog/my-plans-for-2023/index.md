@@ -1,12 +1,9 @@
 ---
+category: Personal
 date: 2023-03-23T01:23:45.117Z
 description: "How I'm going to make 2023 awesome."
 image: i-should-finish-my-new-years-resolutions.png
 minutesRead: "15 minutes" # todo: investigate plugin
-tags:
-  - open source
-  - personal
-  - resolutions
 title: "My Plans for 2023"
 ---
 

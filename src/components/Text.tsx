@@ -20,6 +20,7 @@ const fontWeights = {
 	light: styles.fontWeightLight,
 	medium: styles.fontWeightNormal,
 	bold: styles.fontWeightBold,
+	bolder: styles.fontWeightBolder,
 };
 
 export type FontWeight = keyof typeof fontWeights;

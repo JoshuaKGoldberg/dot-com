@@ -17,7 +17,8 @@
 
 		--fontWeightLight: 100;
 		--fontWeightMedium: normal;
-		--fontWeightBold: 700;
+		--fontWeightBold: 500;
+		--fontWeightBolder: 700;
 
 		--textDecorationWavy: underline wavy;
 	}

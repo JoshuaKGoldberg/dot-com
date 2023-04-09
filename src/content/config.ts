@@ -3,11 +3,11 @@ import { defineCollection, z } from "astro:content";
 export const collections = {
 	blog: defineCollection({
 		schema: z.object({
+			category: z.string(),
 			date: z.date(),
 			description: z.string(),
 			image: z.string(),
 			minutesRead: z.string(),
-			tags: z.array(z.string()),
 			title: z.string(),
 		}),
 	}),
@@ -27,6 +27,15 @@ export const collections = {
 			role: z.string().optional(),
 			stars: z.number(),
 			title: z.string().optional(),
+		}),
+	}),
+	speaking: defineCollection({
+		schema: z.object({
+			category: z.string(),
+			date: z.date(),
+			event: z.string().optional(),
+			links: z.record(z.string()),
+			title: z.string(),
 		}),
 	}),
 };

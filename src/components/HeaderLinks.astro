@@ -1,4 +1,8 @@
 ---
+import clsx from "clsx";
+
+import { Text } from "./Text";
+
 const links = [
 	["Blog", "/blog"],
 	["Book", "https://learningtypescript.com"],
@@ -15,13 +19,15 @@ export interface Props {
 <div class:list={["links", Astro.props.class]}>
 	{
 		links.map(([text, href]) => (
-			<a
-				class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
+			<Text
+				as="a"
+				class={clsx(["link", Astro.url.pathname.startsWith(href) && "current"])}
 				href={href}
-				target={href.startsWith("http") ? "_blank" : undefined}
+				fontWeight="bolder"
+				target={href.startsWith("http") ? "_blank" : undefined!}
 			>
 				{text}
-			</a>
+			</Text>
 		))
 	}
 </div>

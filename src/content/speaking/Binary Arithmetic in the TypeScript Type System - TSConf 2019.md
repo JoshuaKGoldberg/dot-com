@@ -1,0 +1,10 @@
+---
+category: Talks
+date: 2019-10-11
+title: "Binary Arithmetic in the TypeScript Type System"
+event: "TSConf 2019"
+links:
+  Blog: "https://blog.joshuakgoldberg.com/binary-arithmetic"
+  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvqNRDN6yLPZvYTb8KA?e=aNxTrY"
+  Video: "https://www.youtube.com/watch?v=7lyb22x9tcM"
+---

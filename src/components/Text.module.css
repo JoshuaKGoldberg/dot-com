@@ -40,3 +40,8 @@
 	font-weight: var(--fontWeightBold);
 	text-rendering: geometricPrecision;
 }
+
+.fontWeightBolder {
+	font-weight: var(--fontWeightBolder);
+	text-rendering: geometricPrecision;
+}

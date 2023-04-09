@@ -3,7 +3,7 @@ import HeaderLinks from "./HeaderLinks.astro";
 import { Text } from "./Text";
 ---
 
-<Text as="header" fontWeight="bold">
+<Text as="header" fontWeight="bolder">
 	<a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
 		>Josh Goldberg</a
 	>
@@ -15,7 +15,6 @@ import { Text } from "./Text";
 		align-items: center;
 		display: flex;
 		flex-direction: column;
-		font-weight: bold;
 		gap: 1rem;
 		padding: 2rem;
 		justify-content: space-between;

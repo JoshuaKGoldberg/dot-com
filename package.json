@@ -54,7 +54,10 @@
 	},
 	"devDependencies": {
 		"eslint": "^8.37.0",
-		"typescript": "^5.0.3"
+		"json-to-frontmatter-markdown": "^1.0.0",
+		"node-html-parser": "^6.1.5",
+		"typescript": "^5.0.3",
+		"xmldom": "^0.6.0"
 	},
 	"packageManager": "pnpm@7.31.0",
 	"engines": {

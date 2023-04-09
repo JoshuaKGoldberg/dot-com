@@ -1,28 +1,29 @@
 import type { CollectionEntry } from "astro:content";
 
+import { groupBy } from "../utils";
 import { BlogEntryList } from "./BlogEntryList";
 import TabsAndContent from "./TabsAndContent";
 
 const defaultValue = "All";
 
-export interface BlogEntryListProps {
+export interface BlogTabsAndContentProps {
 	posts: CollectionEntry<"blog">[];
 }
 
-export function BlogTabsAndContent(props: BlogEntryListProps) {
-	const filter = (tag: string) =>
-		props.posts.filter((post) => post.data.tags.includes(tag));
+export function BlogTabsAndContent(props: BlogTabsAndContentProps) {
+	// eslint-disable-next-line solid/reactivity
+	const grouped = groupBy(props.posts, (post) => post.data.category);
 
 	return (
 		<TabsAndContent
 			defaultValue={defaultValue}
 			sections={{
 				[defaultValue]: <BlogEntryList posts={props.posts} />,
-				Interpersonal: <BlogEntryList posts={filter("interpersonal")} />,
-				Personal: <BlogEntryList posts={filter("personal")} />,
-				Tech: <BlogEntryList posts={filter("tech")} />,
-				"TypeScript Contribution Diary": (
-					<BlogEntryList posts={filter("typescript contribution diary")} />
+				...Object.fromEntries(
+					Object.entries(grouped).map(([category, posts]) => [
+						category,
+						<BlogEntryList posts={posts} />,
+					])
 				),
 			}}
 		/>
