@@ -1,42 +1,43 @@
 ---
 const links = [
-  ["Blog", "/blog"],
-  ["Book", "https://learningtypescript.com"],
-  ["Projects", "/projects"],
-  ["Speaking", "/speaking"],
-  ["Sponsor", "/sponsor"],
+	["Blog", "/blog"],
+	["Book", "https://learningtypescript.com"],
+	["Projects", "/projects"],
+	["Speaking", "/speaking"],
+	["Sponsor", "/sponsor"],
 ] as const;
 
 export interface Props {
-  class?: string;
+	class?: string;
 }
 ---
 
 <div class:list={["links", Astro.props.class]}>
-  {
-    links.map(([text, href]) => (
-      <a
-        class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
-        href={href}
-      >
-        {text}
-      </a>
-    ))
-  }
+	{
+		links.map(([text, href]) => (
+			<a
+				class:list={["link", Astro.url.pathname.startsWith(href) && "current"]}
+				href={href}
+				target={href.startsWith("http") ? "_blank" : undefined}
+			>
+				{text}
+			</a>
+		))
+	}
 </div>
 
 <style>
-  @layer base, links;
+	@layer base, links;
 
-  @layer links {
-    .links {
-      display: flex;
-      gap: 1.5rem;
-    }
+	@layer links {
+		.links {
+			display: flex;
+			gap: 1.5rem;
+		}
 
-    .current {
-      color: var(--colorEmphasized);
-      text-decoration: var(--textDecorationWavy);
-    }
-  }
+		.current {
+			color: var(--colorEmphasized);
+			text-decoration: var(--textDecorationWavy);
+		}
+	}
 </style>
