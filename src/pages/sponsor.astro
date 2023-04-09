@@ -1,0 +1,83 @@
+---
+import HeaderLinks from "../components/HeaderLinks.astro";
+import Hero from "../components/Hero.astro";
+import { Text } from "../components/Text";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const socials = [
+	["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
+	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
+	["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
+	["Twitter", "https://twitter.com/JoshuaKGoldberg", "/icons/twitter.svg"],
+	["YouTube", "https://youtube.com/@JoshuaKGoldberg", "/icons/youtube.svg"],
+] as const;
+---
+
+<BaseLayout class="sponsor">
+	<Text as="h1" class="h1 wavy" fontSize="title-primary" fontWeight="bolder">
+		Please sponsor me. 💙
+	</Text>
+	<Text as="p" class="subtitle" fontSize="medium">
+		I’m a full time independent open source maintainer.<br />
+		That means I rely on sponsors to support my work.
+	</Text>
+	<Text as="p" class="subtitle" fontSize="medium">
+		If you or your company uses any project I work on,<br />
+		please consider supporting me financially.
+	</Text>
+	<Text as="p" class="subtitle" fontSize="medium">
+		Doing so makes ensures I can continue to work.
+		<br />
+		As thanks, I’ll put your info here and in my GitHub profile.
+	</Text>
+	<div class="ctas">
+		<Text
+			as="a"
+			class="cta large"
+			fontSize="subtitle"
+			fontWeight="bolder"
+			href="https://github.com/sponsors/JoshuaKGoldberg"
+		>
+			GitHub Sponsors
+		</Text>
+		<Text
+			as="a"
+			class="cta"
+			fontSize="subtitle"
+			fontWeight="bolder"
+			href="https://opencollective.com/typescript-eslint"
+		>
+			typescript-eslint Open Collective
+		</Text>
+	</div>
+</BaseLayout>
+
+<style>
+	.sponsor {
+		text-align: center;
+	}
+
+	.h1 {
+		margin: 4rem 0;
+	}
+
+	.wavy {
+		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
+	}
+
+	.subtitle {
+		margin: 1.75rem auto;
+	}
+
+	.ctas {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 4rem;
+	}
+
+	.cta::after {
+		content: "↗";
+	}
+</style>

@@ -2,8 +2,8 @@
 import type { JSX } from "solid-js";
 
 export interface Props {
-  as: keyof JSX.IntrinsicElements;
-  class?: string;
+	as: keyof JSX.IntrinsicElements;
+	class?: string | undefined;
 }
 
 const { as: As, ...rest } = Astro.props;
@@ -12,11 +12,11 @@ const { as: As, ...rest } = Astro.props;
 <As {...rest} class:list={["mainArea", rest.class]}><slot /></As>
 
 <style>
-  .mainArea {
-    margin: auto;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    max-width: var(--widthFull);
-    width: 100%;
-  }
+	.mainArea {
+		margin: auto;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		max-width: var(--widthFull);
+		width: 100%;
+	}
 </style>
