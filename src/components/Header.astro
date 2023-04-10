@@ -4,6 +4,9 @@ import { Text } from "./Text";
 ---
 
 <Text as="header" fontWeight="bolder">
+	<div class="floaty">
+		Work in progress! Expect missing content & lack of polish.
+	</div>
 	<a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
 		>Josh Goldberg</a
 	>
@@ -19,6 +22,15 @@ import { Text } from "./Text";
 		padding: 2rem;
 		justify-content: space-between;
 		font-size: var(--fontSizeMedium);
+	}
+
+	.floaty {
+		background: var(--colorEmphasized);
+		filter: invert();
+		padding: 0.25rem 0.5rem;
+		position: fixed;
+		right: 0;
+		top: 0;
 	}
 
 	@media (min-width: 819px) {
