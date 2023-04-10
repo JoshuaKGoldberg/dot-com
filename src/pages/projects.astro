@@ -2,9 +2,9 @@
 import { getCollection } from "astro:content";
 
 import Hero from "../components/Hero.astro";
+import { ProjectsTabsAndContent } from "../components/ProjectsTabsAndContent";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { ProjectsTabsAndContent } from "../components/ProjectsTabsAndContent";
 
 const allProjects = await getCollection("projects");
 ---
