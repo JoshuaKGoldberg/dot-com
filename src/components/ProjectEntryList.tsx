@@ -7,7 +7,7 @@ import styles from "./ProjectEntryList.module.css";
 import { SubHeading } from "./SubHeading";
 
 export interface ProjectEntryListProps {
-	category: string;
+	category?: string;
 	class?: string | undefined;
 	projects: CollectionEntry<"projects">[];
 }
@@ -15,7 +15,7 @@ export interface ProjectEntryListProps {
 export function ProjectEntryList(props: ProjectEntryListProps) {
 	return (
 		<div class={clsx(styles.projectEntryList, props.class)}>
-			<SubHeading>{props.category}</SubHeading>
+			{props.category && <SubHeading>{props.category}</SubHeading>}
 			<ul class={styles.projects}>
 				<For each={props.projects}>
 					{(project) => (
