@@ -1,0 +1,76 @@
+.squiggly {
+	background: none;
+	display: inline-block;
+	position: relative;
+	border: none;
+}
+
+.label,
+.title {
+	font-weight: inherit;
+	cursor: pointer;
+	text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
+	font-size: inherit;
+}
+
+.label {
+	position: absolute;
+}
+
+.triggered .label {
+	display: none;
+	visibility: none;
+}
+
+.squiggly:not(.triggered) .title {
+	opacity: 0;
+}
+
+.infoArea {
+	opacity: 0;
+	margin-top: 1rem;
+	position: absolute;
+	right: 0;
+	width: 50rem;
+	text-align: right;
+	line-height: 0;
+	transition: 250ms opacity;
+	transition-delay: 50ms;
+	visibility: hidden;
+}
+
+.squiggly:is(:hover, :focus, .triggered) .infoArea {
+	visibility: visible;
+	opacity: 1;
+}
+
+.info {
+	display: inline-block;
+	background: var(--colorBackgroundTop);
+	border: 1px solid var(--colorEmphasized);
+	box-shadow: 0 1px 2px var(--colorBackgroundTop);
+	color: var(--colorForeground);
+	font-family: monospace;
+	font-weight: var(--fontWeightLight);
+	padding: 1rem;
+	position: relative;
+	text-align: right;
+}
+
+.infoArea::after {
+	content: "";
+	display: block;
+	position: absolute;
+	background: linear-gradient(
+		315deg,
+		transparent calc(50% - 2px),
+		var(--colorBackgroundTop) calc(50% - 1px)
+	);
+	border: 1px solid var(--colorEmphasized);
+	border-width: 1px 0 0 1px;
+	top: calc(-0.5rem - 0.5px);
+	right: 1rem;
+	width: 1rem;
+	height: 1rem;
+	transform: rotate(45deg);
+}

@@ -1,6 +1,7 @@
 ---
 import HeaderLinks from "../components/HeaderLinks.astro";
 import Hero from "../components/Hero.astro";
+import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -16,7 +17,11 @@ const socials = [
 <BaseLayout>
 	<Hero image="/images/me-fancy.png" size="large">
 		<Text as="h1" fontSize="title-primary" fontWeight="bolder">
-			Hi! I'm <span class="wavy">Josh</span>.
+			Hi! I'm <Squiggly
+				client:load
+				info="a.k.a. JoshuaKGoldberg, because JoshGoldberg was taken :("
+				title="Josh"
+			/>.
 		</Text>
 		<Text as="p" class="subtitle" fontSize="subtitle" fontWeight="bold">
 			I'm an open source maintainer
@@ -54,10 +59,6 @@ const socials = [
 </BaseLayout>
 
 <style>
-	.wavy {
-		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
-	}
-
 	.subtitle {
 		margin: 1.75rem 0;
 	}

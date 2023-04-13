@@ -1,4 +1,5 @@
 ---
+import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -13,9 +14,14 @@ const socials = [
 ---
 
 <BaseLayout class="sponsor">
-	<Text as="h1" class="h1 wavy" fontSize="title-primary" fontWeight="bolder">
-		Please sponsor me. 💙
-	</Text>
+	<Squiggly
+		client:load
+		as="h1"
+		fontSize="title-primary"
+		fontWeight="bolder"
+		info="I really despise asking for money, but the bills don't pay themselves..."
+		title="Please sponsor me. 💙"
+	/>
 	<Text as="p" class="subtitle" fontSize="medium">
 		I’m a full time independent open source maintainer.<br />
 		That means I rely on sponsors to support my work.
@@ -58,10 +64,6 @@ const socials = [
 
 	.h1 {
 		margin: 4rem 0;
-	}
-
-	.wavy {
-		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
 	}
 
 	.subtitle {
