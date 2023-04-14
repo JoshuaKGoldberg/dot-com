@@ -14,8 +14,3 @@ button {
 	color: var(--colorForeground);
 	margin: 0 1rem;
 }
-
-.current {
-	color: var(--colorEmphasized);
-	text-decoration: var(--textDecorationWavy);
-}

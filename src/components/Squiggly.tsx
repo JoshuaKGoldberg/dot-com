@@ -54,7 +54,6 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			{/* @ts-expect-error - Dynamic components in TypeScript are tough. */}
 			<Text
 				{...textProps}
-				as="div"
 				class={styles.title}
 				tabIndex={0}
 				onFocus={() => setTriggered(true)}

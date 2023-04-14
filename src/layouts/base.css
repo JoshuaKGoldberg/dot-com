@@ -28,12 +28,18 @@
 	}
 
 	body {
-		background: radial-gradient(
-				ellipse at top,
-				var(--colorBackgroundTop) 35%,
-				var(--colorBackgroundBottom) 100%
-			)
-			no-repeat;
+		background: linear-gradient(
+					to bottom,
+					transparent 70%,
+					var(--colorBackgroundBottom) 100%
+				)
+				no-repeat,
+			radial-gradient(
+					ellipse at top,
+					var(--colorBackgroundTop) 15%,
+					var(--colorBackgroundBottom) 100%
+				)
+				no-repeat;
 		line-height: 1.1;
 		width: 100%;
 	}
@@ -55,7 +61,7 @@
 			--colorBackgroundBottom: #010404;
 			--colorBackgroundTop: #05111a;
 			--colorEmphasized: #50a1f3;
-			--colorForeground: #e2edf6;
+			--colorForeground: #d3dfe9;
 		}
 	}
 }
