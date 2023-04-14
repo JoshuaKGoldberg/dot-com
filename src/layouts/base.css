@@ -2,7 +2,7 @@
 	:root {
 		--widthFull: 1000px;
 
-		--colorBackgroundBottom: #f3fff9;
+		--colorBackgroundBottom: #f8fffc;
 		--colorBackgroundTop: #f7feff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #082138;
@@ -23,15 +23,19 @@
 		--textDecorationWavy: underline wavy;
 	}
 
+	html {
+		background: var(--colorBackgroundBottom);
+	}
+
 	body {
 		background: radial-gradient(
 				ellipse at top,
 				var(--colorBackgroundTop) 35%,
 				var(--colorBackgroundBottom) 100%
 			)
-			fixed;
-
+			no-repeat;
 		line-height: 1.1;
+		width: 100%;
 	}
 
 	body,
@@ -48,8 +52,8 @@
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--colorBackgroundTop: #061928;
-			--colorBackgroundBottom: #030e0e;
+			--colorBackgroundBottom: #010404;
+			--colorBackgroundTop: #05111a;
 			--colorEmphasized: #50a1f3;
 			--colorForeground: #e2edf6;
 		}

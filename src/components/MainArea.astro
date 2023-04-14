@@ -14,9 +14,7 @@ const { as: As, ...rest } = Astro.props;
 <style>
 	.mainArea {
 		margin: auto;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		max-width: var(--widthFull);
+		padding: 0 calc(calc(100% - var(--widthFull)) / 2);
 		width: 100%;
 	}
 </style>
