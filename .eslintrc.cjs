@@ -51,12 +51,6 @@ module.exports = {
 			files: ["*.tsx"],
 		},
 		{
-			files: ["./src/env.d.ts"],
-			rules: {
-				"@typescript-eslint/triple-slash-reference": "off",
-			},
-		},
-		{
 			files: ["**/*.{yml,yaml}"],
 			parser: "yaml-eslint-parser",
 			extends: ["plugin:yml/standard", "plugin:yml/prettier"],

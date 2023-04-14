@@ -1,15 +1,24 @@
 ---
 import HeaderLinks from "./HeaderLinks.astro";
+import { SquigglyIfActive } from "./SquigglyIfActive";
 import { Text } from "./Text";
+
+const title = "Josh Goldberg";
 ---
 
 <Text as="header" fontWeight="bolder">
 	<div class="floaty">
 		Work in progress! Expect missing content & lack of polish.
 	</div>
-	<a class:list={[Astro.url.pathname.length <= 1 && "current"]} href="/"
-		>Josh Goldberg</a
-	>
+
+	<SquigglyIfActive
+		active={Astro.url.pathname.length <= 1}
+		align="left"
+		as="a"
+		href="/"
+		info="That's me!"
+		title={title}
+	/>
 	<HeaderLinks />
 </Text>
 
@@ -38,11 +47,6 @@ import { Text } from "./Text";
 		header {
 			flex-direction: row;
 			padding: 2rem 0;
-		}
-
-		.current {
-			color: var(--colorEmphasized);
-			text-decoration: var(--textDecorationWavy);
 		}
 	}
 </style>

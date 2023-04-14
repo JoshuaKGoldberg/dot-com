@@ -1,22 +1,20 @@
 ---
-import HeaderLinks from "../components/HeaderLinks.astro";
-import Hero from "../components/Hero.astro";
+import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const socials = [
-	["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
-	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
-	["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
-	["Twitter", "https://twitter.com/JoshuaKGoldberg", "/icons/twitter.svg"],
-	["YouTube", "https://youtube.com/@JoshuaKGoldberg", "/icons/youtube.svg"],
-] as const;
 ---
 
 <BaseLayout class="sponsor">
-	<Text as="h1" class="h1 wavy" fontSize="title-primary" fontWeight="bolder">
-		Please sponsor me. 💙
-	</Text>
+	<Squiggly
+		as="h1"
+		align="left"
+		class="h1"
+		client:load
+		fontSize="title-primary"
+		fontWeight="bolder"
+		info="I really despise asking for money, but the bills don't pay themselves..."
+		title="Please sponsor me. 💙"
+	/>
 	<Text as="p" class="subtitle" fontSize="medium">
 		I’m a full time independent open source maintainer.<br />
 		That means I rely on sponsors to support my work.
@@ -59,10 +57,6 @@ const socials = [
 
 	.h1 {
 		margin: 4rem 0;
-	}
-
-	.wavy {
-		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
 	}
 
 	.subtitle {
