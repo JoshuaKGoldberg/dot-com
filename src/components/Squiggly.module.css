@@ -12,9 +12,17 @@
 	font-size: inherit;
 }
 
+@keyframes infiniscroll {
+	0% {
+		background-position: 0;
+	}
+	100% {
+		background-position: 0.4em;
+	}
+}
+
 .title::after {
 	background-image: url("/icons/squiggle.svg");
-	background-repeat: round;
 	background-size: contain;
 	content: "";
 	display: block;
@@ -23,6 +31,23 @@
 	margin-top: -0.25rem;
 	position: absolute;
 	width: 100%;
+}
+
+@media not (prefers-reduced-motion) {
+	.title::after {
+		animation: infiniscroll 0.5s paused infinite linear;
+		mask-image: linear-gradient(
+			90deg,
+			transparent 0%,
+			black 2%,
+			black 98%,
+			transparent 100%
+		);
+	}
+
+	.squiggly:is(:hover, :focus, :focus-within, .triggered) .title::after {
+		animation-play-state: running;
+	}
 }
 
 .infoArea {
