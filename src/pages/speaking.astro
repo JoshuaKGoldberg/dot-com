@@ -5,15 +5,22 @@ import Hero from "../components/Hero.astro";
 import { SpeakingTabsAndContent } from "../components/SpeakingTabsAndContent";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Squiggly } from "../components/Squiggly";
 
 const allSpeakings = await getCollection("speaking");
 ---
 
 <BaseLayout title="Speaking">
 	<Hero class="hero" image="/images/speaker.png">
-		<Text as="h1" class="wavy" fontSize="title-secondary" fontWeight="bolder">
-			Speaking
-		</Text>
+		<Squiggly
+			as="h1"
+			align="left"
+			class="wavy"
+			fontSize="title-secondary"
+			fontWeight="bolder"
+			info="My favorite talks are the TypeScript shenanigans ones..."
+			title="Speaking"
+		/>
 		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
 			I've been speaking at conferences since 2019 and now regularly present at
 			events worldwide.
@@ -38,10 +45,6 @@ const allSpeakings = await getCollection("speaking");
 </BaseLayout>
 
 <style>
-	.wavy {
-		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
-	}
-
 	.subtitle {
 		margin-top: 2rem;
 		max-width: 24rem;

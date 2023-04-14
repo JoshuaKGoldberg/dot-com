@@ -5,10 +5,18 @@ import { Text } from "./Text";
 import clsx from "clsx";
 import type { TextProps } from "./Text";
 
+const alignStyles = {
+	left: styles.left,
+	right: styles.right,
+};
+
+export type SquigglyAlign = "left" | "right";
+
 export type SquigglyProps<As extends keyof JSX.HTMLElementTags> = Omit<
 	TextProps<As>,
 	"children"
 > & {
+	align: SquigglyAlign;
 	info: string;
 	title: string;
 };
@@ -16,7 +24,12 @@ export type SquigglyProps<As extends keyof JSX.HTMLElementTags> = Omit<
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 	props: SquigglyProps<As>
 ) {
-	const [knownProps, textProps] = splitProps(props, ["class", "info", "title"]);
+	const [knownProps, textProps] = splitProps(props, [
+		"align",
+		"class",
+		"info",
+		"title",
+	]);
 
 	const idFromInfo = knownProps.info.replace(/[\W_]/g, "-").slice(0, 15);
 	const [getTriggered, setTriggered] = createSignal(false);
@@ -26,6 +39,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			aria-describedby={idFromInfo}
 			class={clsx([
 				styles.squiggly,
+				alignStyles[knownProps.align],
 				getTriggered() && styles.triggered,
 				knownProps.class,
 			])}

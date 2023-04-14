@@ -17,16 +17,24 @@
 	opacity: 0;
 	margin-top: 1rem;
 	position: absolute;
-	right: 0;
 	width: 50rem;
-	text-align: right;
 	line-height: 0;
 	transition: 250ms opacity;
 	transition-delay: 50ms;
 	visibility: hidden;
 }
 
-.squiggly:is(:hover, :focus, .triggered) .infoArea {
+.left .infoArea {
+	left: 0;
+	text-align: left;
+}
+
+.right .infoArea {
+	right: 0;
+	text-align: right;
+}
+
+.squiggly:is(:hover, :focus, :focus-within, .triggered) .infoArea {
 	visibility: visible;
 	opacity: 1;
 }
@@ -56,8 +64,15 @@
 	border: 1px solid var(--colorEmphasized);
 	border-width: 1px 0 0 1px;
 	top: calc(-0.5rem - 0.5px);
-	right: 1rem;
 	width: 1rem;
 	height: 1rem;
 	transform: rotate(45deg);
+}
+
+.left .infoArea::after {
+	left: 1rem;
+}
+
+.right .infoArea::after {
+	right: 1rem;
 }
