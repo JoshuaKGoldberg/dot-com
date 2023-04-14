@@ -15,7 +15,7 @@ const allSpeakings = await getCollection("speaking");
 		<Squiggly
 			as="h1"
 			align="left"
-			class="wavy"
+			class="h1"
 			fontSize="title-secondary"
 			fontWeight="bolder"
 			info="My favorite talks are the TypeScript shenanigans ones..."
@@ -45,6 +45,11 @@ const allSpeakings = await getCollection("speaking");
 </BaseLayout>
 
 <style>
+	.h1 {
+		display: inline-block;
+		position: relative;
+	}
+
 	.subtitle {
 		margin-top: 2rem;
 		max-width: 24rem;

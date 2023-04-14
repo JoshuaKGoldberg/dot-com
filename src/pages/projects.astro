@@ -15,7 +15,6 @@ const allProjects = await getCollection("projects");
 		<Squiggly
 			as="h1"
 			align="left"
-			class="wavy"
 			client:load
 			fontSize="title-secondary"
 			fontWeight="bolder"
@@ -36,10 +35,6 @@ const allProjects = await getCollection("projects");
 </BaseLayout>
 
 <style>
-	.wavy {
-		text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
-	}
-
 	.subtitle {
 		margin-top: 2rem;
 		max-width: 24rem;

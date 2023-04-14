@@ -1,21 +1,33 @@
 .squiggly {
 	background: none;
+	border: none;
 	display: inline-block;
 	position: relative;
-	border: none;
 }
 
 .label,
 .title {
 	font-weight: inherit;
 	cursor: pointer;
-	text-decoration: var(--textDecorationWavy) var(--colorEmphasized);
 	font-size: inherit;
+}
+
+.title::after {
+	background-image: url("/icons/squiggle.svg");
+	background-repeat: round;
+	background-size: contain;
+	content: "";
+	display: block;
+	height: 0.35em;
+	image-rendering: smooth;
+	margin-top: -0.25rem;
+	position: absolute;
+	width: 100%;
 }
 
 .infoArea {
 	opacity: 0;
-	margin-top: 1rem;
+	margin-top: 2rem;
 	position: absolute;
 	width: 50rem;
 	line-height: 0;

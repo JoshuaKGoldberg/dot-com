@@ -16,7 +16,7 @@ const socials = [
 
 <BaseLayout>
 	<Hero image="/images/me-fancy.png" size="large">
-		<Text as="h1" fontSize="title-primary" fontWeight="bolder">
+		<Text as="h1" class="h1" fontSize="title-primary" fontWeight="bolder">
 			Hi! I'm <Squiggly
 				as="span"
 				client:load
@@ -61,6 +61,10 @@ const socials = [
 </BaseLayout>
 
 <style>
+	.h1 {
+		line-height: 0.75;
+	}
+
 	.subtitle {
 		margin: 1.75rem 0;
 	}

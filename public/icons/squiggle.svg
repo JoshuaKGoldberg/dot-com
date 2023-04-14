@@ -1,0 +1,30 @@
+<svg
+	width="49"
+	height="45"
+	viewBox="0 0 50 45"
+	fill="none"
+	xmlns="http://www.w3.org/2000/svg"
+>
+	<mask
+		id="mask0_1_4"
+		style="mask-type: alpha"
+		maskUnits="userSpaceOnUse"
+		x="0"
+		y="0"
+		width="50"
+		height="45"
+	>
+		<rect width="50" height="45" fill="#D9D9D9" />
+	</mask>
+	<g mask="url(#mask0_1_4)">
+		<line x1="-5" y1="5" x2="30" y2="40" stroke="#00A3FF" stroke-width="14" />
+		<line
+			y1="-7"
+			x2="49"
+			y2="-7"
+			transform="matrix(0.7 -0.7 -0.7 -0.7 15 35)"
+			stroke="#00A3FF"
+			stroke-width="14"
+		/>
+	</g>
+</svg>
