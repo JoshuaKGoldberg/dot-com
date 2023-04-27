@@ -22,7 +22,7 @@
 	"dependencies": {
 		"@astrojs/solid-js": "^2.1.0",
 		"@fontsource/league-spartan": "^4.5.13",
-		"@kobalte/core": "^0.8.2",
+		"@kobalte/core": "^0.9.0",
 		"@typescript-eslint/eslint-plugin": "^5.57.1",
 		"@typescript-eslint/parser": "^5.57.1",
 		"astro": "^2.2.1",
