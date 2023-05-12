@@ -58,7 +58,7 @@
 		"typescript": "^5.0.3",
 		"yaml-eslint-parser": "^1.2.0"
 	},
-	"packageManager": "pnpm@7.31.0",
+	"packageManager": "pnpm@7.32.4",
 	"engines": {
 		"node": ">=18"
 	}
