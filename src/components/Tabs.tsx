@@ -12,7 +12,7 @@ export interface Tab {
 export interface TabsProps {
 	currentValue: string;
 	defaultValue: string;
-	onValueChange: (value: string) => void;
+	onChange: (value: string) => void;
 	tabs: Tab[];
 }
 
@@ -20,8 +20,8 @@ export default function (props: TabsProps) {
 	return (
 		<Tabs.Root
 			class={styles.root}
-			defaultValue={props.defaultValue}
-			onValueChange={props.onValueChange}
+			onChange={props.onChange}
+			value={props.currentValue}
 		>
 			<Tabs.List class={styles.list}>
 				<For each={props.tabs}>
