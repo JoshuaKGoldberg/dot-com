@@ -15,15 +15,18 @@ export interface ExternalLinksProps {
 export function ExternalLinks(props: ExternalLinksProps) {
 	return (
 		<div class={styles.externalLinks}>
-			<For each={props.links}>{(link) => (
-				<Text
-					as="a"
-					class={styles.externalLink}
-					fontSize="subtitle"
-					fontWeight="bolder"
-					{...link}
-				/>
-			)}</For>
+			<For each={props.links}>
+				{(link) => (
+					<Text
+						as="a"
+						class={styles.externalLink}
+						fontSize="subtitle"
+						fontWeight="bolder"
+						target="_blank"
+						{...link}
+					/>
+				)}
+			</For>
 		</div>
 	);
 }
