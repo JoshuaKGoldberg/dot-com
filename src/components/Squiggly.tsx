@@ -1,9 +1,9 @@
-import { JSX, createSignal, splitProps } from "solid-js";
+import clsx from "clsx";
+import { createSignal, JSX, splitProps } from "solid-js";
 
 import styles from "./Squiggly.module.css";
-import { Text } from "./Text";
-import clsx from "clsx";
 import type { TextProps } from "./Text";
+import { Text } from "./Text";
 
 const alignStyles = {
 	left: styles.left,
@@ -31,19 +31,22 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 		"title",
 	]);
 
-	const idFromInfo = knownProps.info.replace(/[\W_]/g, "-").slice(0, 15);
+	const idFromInfo = () => knownProps.info.replace(/[\W_]/g, "-").slice(0, 15);
 	const [getTriggered, setTriggered] = createSignal(false);
 	let myDiv!: HTMLDivElement;
 
 	const unTrigger = () => {
 		setTriggered(false);
-		myDiv.blur;
 		(myDiv.children[0] as HTMLElement).blur();
 	};
 
 	return (
+		// I'm not 100% confident I'm getting this right... but the
+		// tabIndex=0 on the Text along with onBlur and onFocus I
+		// hope is the right move for accessibility?
+		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
-			aria-describedby={idFromInfo}
+			aria-describedby={idFromInfo()}
 			class={clsx([
 				styles.squiggly,
 				alignStyles[knownProps.align],
@@ -70,7 +73,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			>
 				{knownProps.title}
 			</Text>
-			<div id={idFromInfo} class={styles.infoArea} role="tooltip">
+			<div id={idFromInfo()} class={styles.infoArea} role="tooltip">
 				<Text as="div" class={styles.info} fontSize="smaller">
 					{knownProps.info}
 				</Text>

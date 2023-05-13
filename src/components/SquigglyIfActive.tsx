@@ -1,4 +1,5 @@
 import { JSX, splitProps } from "solid-js";
+
 import { Squiggly, SquigglyProps } from "./Squiggly";
 import { Text } from "./Text";
 
@@ -12,11 +13,11 @@ export function SquigglyIfActive<As extends keyof JSX.HTMLElementTags>(
 ) {
 	const [knownProps, restProps] = splitProps(props, ["active", "title"]);
 
-	return knownProps.active ? (
+	return <>{knownProps.active ? (
 		// @ts-expect-error - Dynamic components in TypeScript are tough.
 		<Squiggly {...restProps} title={knownProps.title} />
 	) : (
 		// @ts-expect-error - Dynamic components in TypeScript are tough.
 		<Text {...restProps}>{knownProps.title}</Text>
-	);
+	)}</>;
 }

@@ -1,8 +1,8 @@
 import { Tabs } from "@kobalte/core";
 import { For } from "solid-js";
 
-import styles from "./Tabs.module.css";
 import { SquigglyIfActive } from "./SquigglyIfActive";
+import styles from "./Tabs.module.css";
 
 export interface Tab {
 	info: string;

@@ -1,5 +1,7 @@
-import { Text } from "./Text";
+import { For } from "solid-js";
+
 import styles from "./ExternalLinks.module.css";
+import { Text } from "./Text";
 
 export interface ExternalLink {
 	children: string;
@@ -13,7 +15,7 @@ export interface ExternalLinksProps {
 export function ExternalLinks(props: ExternalLinksProps) {
 	return (
 		<div class={styles.externalLinks}>
-			{props.links.map((link) => (
+			<For each={props.links}>{(link) => (
 				<Text
 					as="a"
 					class={styles.externalLink}
@@ -21,7 +23,7 @@ export function ExternalLinks(props: ExternalLinksProps) {
 					fontWeight="bolder"
 					{...link}
 				/>
-			))}
+			)}</For>
 		</div>
 	);
 }
