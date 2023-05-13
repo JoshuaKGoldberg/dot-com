@@ -12,15 +12,6 @@
 	font-size: inherit;
 }
 
-@keyframes infiniscroll {
-	0% {
-		background-position: 0;
-	}
-	100% {
-		background-position: 0.4em;
-	}
-}
-
 .title::after {
 	background-image: url("/icons/squiggle.svg");
 	background-size: contain;
@@ -35,7 +26,7 @@
 
 .infoArea {
 	opacity: 0;
-	margin-top: 2rem;
+	margin-top: calc(0.35em + 10px);
 	position: absolute;
 	width: 50rem;
 	line-height: 0;
