@@ -15,7 +15,14 @@ const socials = [
 ---
 
 <BaseLayout>
-	<Hero image="/images/me-fancy.png" size="large">
+	<Hero
+		class="hero"
+		image={{
+			dark: "/images/me-cat-dark.png",
+			light: "/images/me-cat-light.png",
+		}}
+		size="large"
+	>
 		<Text as="h1" class="h1" fontSize="title-primary" fontWeight="bolder">
 			Hi! I'm <Squiggly
 				as="span"
