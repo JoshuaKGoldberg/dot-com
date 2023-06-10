@@ -7,17 +7,13 @@ const title = "Josh Goldberg";
 ---
 
 <Text as="header" fontWeight="bolder">
-	<div class="floaty">
-		Work in progress! Expect missing content & lack of polish.
-	</div>
-
 	<SquigglyIfActive
 		active={Astro.url.pathname.length <= 1}
 		align="left"
 		as="a"
 		client:load
 		href="/"
-		info="That's me!"
+		info="a.k.a. @JoshuaKGoldberg, because @JoshGoldberg was taken :("
 		title={title}
 	/>
 	<HeaderLinks />
@@ -34,20 +30,9 @@ const title = "Josh Goldberg";
 		font-size: var(--fontSizeMedium);
 	}
 
-	.floaty {
-		background: var(--colorEmphasized);
-		color: var(--colorBackgroundBottom);
-		filter: invert();
-		padding: 0.25rem 0.5rem;
-		position: fixed;
-		right: 0;
-		top: 0;
-	}
-
 	@media (min-width: 819px) {
 		header {
 			flex-direction: row;
-			padding: 2rem 0;
 		}
 	}
 </style>

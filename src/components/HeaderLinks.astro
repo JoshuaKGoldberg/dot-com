@@ -16,9 +16,9 @@ const links = [
 	[
 		"Speaking",
 		"/speaking",
-		"I don't know why people pay money to hear me speak. It's weird.",
+		"Conferences, meetups, podcasts, and more.",
 	],
-	["Sponsor", "/sponsor", "Please give me money?"],
+	["Sponsor", "/sponsor", "Help open source continue to grow."],
 ] as const;
 
 export interface Props {
@@ -50,7 +50,10 @@ export interface Props {
 	@layer links {
 		.links {
 			display: flex;
-			gap: 1.5rem;
+			gap: 0.5rem 1.5rem;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: center;
 		}
 	}
 </style>

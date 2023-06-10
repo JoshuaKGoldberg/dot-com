@@ -16,7 +16,10 @@ export default function TabsAndContent(props: TabsAndContentProps) {
 			<Tabs
 				currentValue={getValue()}
 				defaultValue={props.defaultValue}
-				onChange={setValue}
+				onChange={(newValue) => {
+					console.log({ newValue });
+					setValue(newValue);
+				}}
 				tabs={Object.entries(props.sections).map(([title]) => ({
 					info: title,
 					title,

@@ -1,61 +1,55 @@
 ---
 import { ExternalLinks } from "../components/ExternalLinks";
-import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout class="sponsor">
-	<Text as="h1" class="h1" fontSize="title-primary" fontWeight="bolder">
-		Please sponsor your
-		<Squiggly
-			as="div"
-			align="left"
-			client:load
-			info="They don't have to be mine, just please sponsor someone."
-			title="open source dependencies."
+	<Text as="h1" class="h1" fontSize="title-secondary" fontWeight="bolder">
+		Please sponsor your<br />open source dependencies.
+	</Text>
+	<div class="contents">
+		<Text as="p" class="subtitle" fontSize="medium">
+			Open source software makes the world go round.<br />
+			Most projects are underfunded and maintainers underpaid.<br />
+			Consider donating directly and/or through an aggregate such as:
+		</Text>
+		<ExternalLinks
+			links={[
+				{
+					children: "StackAid",
+					href: "https://stackaid.us",
+				},
+				{
+					children: "Tidelift",
+					href: "https://tidelift.com",
+				},
+				{
+					children: "Thanks.dev",
+					href: "https://thanks.dev",
+				},
+			]}
 		/>
-	</Text>
-	<Text as="p" class="subtitle" fontSize="medium">
-		Open source software makes the world go round.<br />
-		Most projects are underfunded and maintainers underpaid.<br />
-		Consider donating directly and/or through an aggregate such as:
-	</Text>
-	<ExternalLinks
-		links={[
-			{
-				children: "StackAid",
-				href: "https://stackaid.us",
-			},
-			{
-				children: "Tidelift",
-				href: "https://tidelift.com",
-			},
-			{
-				children: "Thanks.dev",
-				href: "https://thanks.dev",
-			},
-		]}
-	/>
-	<Text as="p" class="subtitle" fontSize="medium">
-		If you or your company uses any project I work on,<br />
-		please consider supporting me financially.
-	</Text>
-	<ExternalLinks
-		links={[
-			{
-				children: "My GitHub Sponsors",
-				href: "https://github.com/sponsors/JoshuaKGoldberg",
-			},
-			{
-				children: "typescript-eslint Open Collective",
-				href: "https://opencollective.com/typescript-eslint",
-			},
-		]}
-	/>
-	<Text as="p" class="subtitle" fontSize="medium">
-		Preemptively, thanks. 💙
-	</Text>
+		<Text as="p" class="subtitle" fontSize="medium">
+			If you or your company uses any project I work on,<br />
+			please consider supporting me financially.
+		</Text>
+		<ExternalLinks
+			links={[
+				{
+					children: "My GitHub Sponsors",
+					href: "https://github.com/sponsors/JoshuaKGoldberg",
+				},
+				{
+					children: "typescript-eslint Open Collective",
+					href: "https://opencollective.com/typescript-eslint",
+				},
+			]}
+		/>
+		<Text as="p" class="subtitle" fontSize="medium">
+			Preemptively, thanks. 💙
+		</Text>
+	</div>
 </BaseLayout>
 
 <style>
@@ -64,10 +58,24 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 	}
 
 	.h1 {
-		margin: 4rem 0;
+		margin: 4rem 2rem;
+	}
+
+	.contents {
+		display: flex;
+		flex-direction: column;
+		gap: 4rem;
 	}
 
 	.subtitle {
-		margin: 1.75rem auto;
+		margin: 0;
+		line-height: 1.35;
 	}
+
+	@media (min-width: 819px) {
+		.contents {
+			gap: 6rem
+		}
+	}
+
 </style>

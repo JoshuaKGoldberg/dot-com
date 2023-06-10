@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import { createMemo } from "solid-js";
 
 import { groupBy } from "../utils";
 import { ProjectEntryList } from "./ProjectEntryList";
@@ -26,19 +27,20 @@ export interface ProjectsTabsAndContentProps {
 }
 
 export function ProjectsTabsAndContent(props: ProjectsTabsAndContentProps) {
-	const grouped = Object.entries(
-		groupBy(
-			// eslint-disable-next-line solid/reactivity
-			props.projects.sort(byMoreOrStars),
-			(project) => project.data.category
-		)
-	).sort(([a], [b]) => a.localeCompare(b));
+	const grouped = createMemo(() =>
+		Object.entries(
+			groupBy(
+				props.projects.sort(byMoreOrStars),
+				(project) => project.data.category
+			)
+		).sort(([a], [b]) => a.localeCompare(b))
+	);
 
 	return (
 		<TabsAndContent
 			defaultValue={defaultValue}
 			sections={{
-				[defaultValue]: grouped.map(([category, projects]) => (
+				[defaultValue]: grouped().map(([category, projects]) => (
 					<ProjectEntryList
 						category={category}
 						class="projectEntryList"
@@ -46,7 +48,7 @@ export function ProjectsTabsAndContent(props: ProjectsTabsAndContentProps) {
 					/>
 				)),
 				...Object.fromEntries(
-					grouped.map(([category, projects]) => [
+					grouped().map(([category, projects]) => [
 						category,
 						<ProjectEntryList projects={projects} />,
 					])

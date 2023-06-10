@@ -1,8 +1,12 @@
 .root {
-	display: flex;
 	font-weight: var(--fontWeightBold);
-	justify-content: center;
 	margin: 3.5rem 0;
+}
+
+.list {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 button {

@@ -18,6 +18,7 @@ export type SquigglyProps<As extends keyof JSX.HTMLElementTags> = Omit<
 > & {
 	align: SquigglyAlign;
 	info: string;
+	staticContent?: boolean;
 	title: string;
 };
 
@@ -28,6 +29,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 		"align",
 		"class",
 		"info",
+		"staticContent",
 		"title",
 	]);
 
@@ -40,6 +42,25 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 		(myDiv.children[0] as HTMLElement).blur();
 	};
 
+	const textChildren = (
+		// @ts-expect-error - Dynamic components in TypeScript are tough.
+		<Text
+			{...textProps}
+			class={styles.title}
+			onBlur={unTrigger}
+			onFocus={() => setTriggered(true)}
+		>
+			<span class={styles.titleContents}>{knownProps.title}</span>
+		</Text>
+	);
+
+	const children = () =>
+		props.staticContent ? (
+			<button class={styles.titleButton}>{textChildren}</button>
+		) : (
+			textChildren
+		);
+
 	return (
 		// I'm not 100% confident I'm getting this right... but the
 		// tabIndex=0 on the Text along with onBlur and onFocus I
@@ -49,6 +70,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			aria-describedby={idFromInfo()}
 			class={clsx([
 				styles.squiggly,
+				props.staticContent ? styles.squigglyStatic : styles.squigglyDynamic,
 				alignStyles[knownProps.align],
 				getTriggered() && styles.triggered,
 				knownProps.class,
@@ -63,16 +85,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			}}
 			ref={myDiv}
 		>
-			{/* @ts-expect-error - Dynamic components in TypeScript are tough. */}
-			<Text
-				{...textProps}
-				class={styles.title}
-				tabIndex={0}
-				onBlur={unTrigger}
-				onFocus={() => setTriggered(true)}
-			>
-				{knownProps.title}
-			</Text>
+			{children()}
 			<div id={idFromInfo()} class={styles.infoArea} role="tooltip">
 				<Text as="div" class={styles.info} fontSize="smaller">
 					{knownProps.info}

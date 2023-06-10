@@ -11,7 +11,7 @@ const allSpeakings = await getCollection("speaking");
 ---
 
 <BaseLayout title="Speaking">
-	<Hero class="hero" image="/images/speaker.png">
+	<Hero image="/images/speaking.png">
 		<Squiggly
 			as="h1"
 			align="left"
@@ -19,11 +19,12 @@ const allSpeakings = await getCollection("speaking");
 			fontSize="title-secondary"
 			fontWeight="bolder"
 			info="My favorite talks are the TypeScript shenanigans ones..."
+			staticContent
 			title="Speaking"
 		/>
 		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
-			I've been speaking at conferences since 2019 and now regularly
-			present at events worldwide.
+			I've been conference speaking since 2019 and now regularly
+			present worldwide.
 		</Text>
 		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
 			In 2023 I became a Microsoft MVP for my community education and

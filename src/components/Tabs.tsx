@@ -20,13 +20,27 @@ export default function (props: TabsProps) {
 	return (
 		<Tabs.Root
 			class={styles.root}
-			onChange={props.onChange}
+			onChange={(event) => {
+				console.log("Change event", event);
+				// props.onChange((event.target as HTMLButtonElement).value);
+			}}
+			onClick={(event) => {
+				console.log("Click event", event);
+			}}
 			value={props.currentValue}
 		>
 			<Tabs.List class={styles.list}>
 				<For each={props.tabs}>
 					{({ info, title }) => (
-						<Tabs.Trigger value={title}>
+						<Tabs.Trigger
+							onClick={(event) => {
+								console.log("Click event", event);
+							}}
+							onSelect={(event) => {
+								console.log("Select event", event);
+							}}
+							value={title}
+						>
 							<SquigglyIfActive
 								as="span"
 								active={title === props.currentValue}

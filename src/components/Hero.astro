@@ -22,10 +22,10 @@ const images =
 
 <div class:list={["hero", sizes[size], className]}>
 	<div class="half first">
-		<picture>
+		<picture >
 			<source srcset={images.dark} media="(prefers-color-scheme: dark)" />
 			<source srcset={images.light} media="(prefers-color-scheme: light)" />
-			<img src={images.light} />
+			<img alt="" src={images.light} />
 		</picture>
 	</div>
 	<div class="half second">
@@ -36,18 +36,11 @@ const images =
 <style>
 	.hero {
 		display: flex;
-		margin: auto;
-		height: 25rem;
+		justify-content: center;
+		margin: 3rem auto 5rem;
+		padding: 1rem 2rem;
+		text-align: center;
 		position: relative;
-		width: var(--widthFull);
-	}
-
-	.heroMedium {
-		height: 20rem;
-	}
-
-	.heroLarge {
-		height: 25rem;
 	}
 
 	picture {
@@ -59,6 +52,15 @@ const images =
 			gap: 2rem;
 			margin-top: 3rem;
 			margin-bottom: 5rem;
+			text-align: left;
+		}
+
+		.heroMedium {
+			height: 20rem;
+		}
+
+		.heroLarge {
+			height: 25rem;
 		}
 
 		.half {

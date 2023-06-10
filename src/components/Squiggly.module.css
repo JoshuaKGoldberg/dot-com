@@ -5,11 +5,30 @@
 	position: relative;
 }
 
+.squigglyDynamic {
+	--infoAreaMarginTop: calc(0.5em + 5px);
+}
+
+.squigglyStatic {
+	--infoAreaMarginTop: max(1.75rem, calc(0.25em + 5px));
+}
+
+.titleButton {
+	background: none;
+	border: none;
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+	padding: 0;
+	margin: 0;
+}
+
 .label,
 .title {
 	font-weight: inherit;
 	cursor: pointer;
 	font-size: inherit;
+	position: relative;
 }
 
 .title::after {
@@ -19,14 +38,20 @@
 	display: block;
 	height: 0.35em;
 	image-rendering: smooth;
-	margin-top: -0.25rem;
+	bottom: -0.175em;
 	position: absolute;
 	width: 100%;
 }
 
+.titleContents {
+	position: relative;
+	z-index: 1;
+}
+
 .infoArea {
 	opacity: 0;
-	margin-top: calc(0.35em + 10px);
+	margin-top: var(--infoAreaMarginTop);
+	max-width: calc(90vw - 2rem);
 	position: absolute;
 	width: 50rem;
 	line-height: 0;
@@ -42,24 +67,6 @@
 
 .right .infoArea {
 	right: 0;
-	text-align: right;
-}
-
-.squiggly:is(:hover, :focus, :focus-within, .triggered) .infoArea {
-	visibility: visible;
-	opacity: 1;
-}
-
-.info {
-	display: inline-block;
-	background: var(--colorBackgroundTop);
-	border: 1px solid var(--colorEmphasized);
-	box-shadow: 0 1px 2px var(--colorBackgroundTop);
-	color: var(--colorForeground);
-	font-family: monospace;
-	font-weight: var(--fontWeightLight);
-	padding: 1rem;
-	position: relative;
 	text-align: right;
 }
 
@@ -86,4 +93,29 @@
 
 .right .infoArea::after {
 	right: 1rem;
+}
+
+.titleButton {
+	margin-bottom: -0.5em;
+}
+
+.squiggly:is(:hover, :focus, :focus-within, .triggered) .infoArea,
+.squiggly:has(:hover) .infoArea {
+	visibility: visible;
+	opacity: 1;
+}
+
+.info {
+	display: inline-block;
+	background: var(--colorBackgroundTop);
+	border: 1px solid var(--colorEmphasized);
+	box-shadow: 0 1px 2px var(--colorBackgroundTop);
+	color: var(--colorForeground);
+	font-family: monospace;
+	font-weight: var(--fontWeightLight);
+	line-height: initial;
+	max-width: 90vw;
+	padding: 1rem;
+	position: relative;
+	text-align: right;
 }

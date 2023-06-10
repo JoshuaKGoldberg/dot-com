@@ -26,9 +26,10 @@ const socials = [
 		<Text as="h1" class="h1" fontSize="title-primary" fontWeight="bolder">
 			Hi! I'm <Squiggly
 				as="span"
-				client:load
 				align="right"
-				info="a.k.a. JoshuaKGoldberg, because JoshGoldberg was taken :("
+				client:load
+				info="That's me!"
+				staticContent
 				title="Josh"
 			/>.
 		</Text>
@@ -69,16 +70,22 @@ const socials = [
 
 <style>
 	.h1 {
-		line-height: 0.75;
+		line-height: 0.85;
+		margin-bottom: 4rem;
 	}
 
 	.subtitle {
 		margin: 1.75rem 0;
 	}
 
+	br {
+		display: none;
+	}
+
 	.socials {
 		display: flex;
 		gap: 1rem;
+		justify-content: center;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -92,12 +99,23 @@ const socials = [
 		gap: 2rem;
 		flex-direction: column;
 		margin: auto;
-		margin-top: 5rem;
+		padding: 1rem 2rem;
 		text-align: center;
 	}
 
 	.links {
 		font-size: var(--fontSizeMedium);
 		margin: 1rem auto 0;
+		padding: 0 2rem;
+	}
+
+	@media (min-width: 819px) {
+		.h1 {
+			margin-bottom: 1rem;
+		}
+
+		br {
+			display: initial;
+		}
 	}
 </style>
