@@ -5,7 +5,7 @@
 		"dist",
 		"node_modules",
 		"pnpm-lock.yaml",
-		"todo notes.txt"
+		"public",
 	],
 	"words": [
 		"ajafff",
@@ -16,6 +16,7 @@
 		"classname",
 		"clsx",
 		"Codecademy",
+		"cssnano",
 		"delighters",
 		"dogfoding",
 		"dogfood",
