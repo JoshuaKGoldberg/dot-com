@@ -1,9 +1,4 @@
 ---
-const sizes = {
-	medium: "heroMedium",
-	large: "heroLarge",
-};
-
 export interface ColorSchemeImages {
 	dark: string;
 	light: string;
@@ -12,15 +7,14 @@ export interface ColorSchemeImages {
 export interface Props {
 	class?: string | undefined;
 	image: string | ColorSchemeImages;
-	size?: keyof typeof sizes;
 }
 
-const { class: className, image, size = "medium" } = Astro.props;
+const { class: className, image} = Astro.props;
 const images =
 	typeof image === "string" ? { dark: image, light: image } : image;
 ---
 
-<div class:list={["hero", sizes[size], className]}>
+<div class:list={["hero", className]}>
 	<div class="half first">
 		<picture>
 			<source srcset={images.dark} media="(prefers-color-scheme: dark)" />
@@ -37,17 +31,9 @@ const images =
 	.hero {
 		display: flex;
 		margin: auto;
-		height: 30rem;
+		height: 20rem;
 		position: relative;
 		width: var(--widthFull);
-	}
-
-	.heroMedium {
-		height: 20rem;
-	}
-
-	.heroLarge {
-		height: 30rem;
 	}
 
 	picture {
@@ -58,7 +44,7 @@ const images =
 		.hero {
 			gap: 2rem;
 			margin-top: 5rem;
-			margin-bottom: 8rem;
+			margin-bottom: 7rem;
 		}
 
 		.half {
@@ -80,15 +66,17 @@ const images =
 		}
 
 		picture {
-			display: block;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			max-width: 100%;
 			max-height: 100%;
 			user-select: none;
 		}
 
 		img {
-			height: 100%;
-			width: 100%;
+			max-height: 100%;
+			max-width: 100%;
 		}
 	}
 </style>
