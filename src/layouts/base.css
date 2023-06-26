@@ -6,7 +6,6 @@
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #082138;
-		--colorShadow: #64aaef;
 
 		--fontSizeSmaller: 1rem;
 		--fontSizeSmall: 1.25rem;
@@ -60,7 +59,6 @@
 			--colorBackgroundTop: #071926;
 			--colorEmphasized: #50a1f3;
 			--colorForeground: #d3dfe9;
-			--colorShadow: #142b53;
 		}
 	}
 }
