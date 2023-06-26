@@ -5,20 +5,16 @@ const links = [
 	[
 		"Blog",
 		"https://blog.joshuakgoldberg.com",
-		"The blog currently known as 'Goldblog'.",
 	],
 	[
 		"Book",
 		"https://learningtypescript.com",
-		"Buy my book on TypeScript! Do it! Buy it! Now!",
 	],
 	["Projects", "/projects", "Assorted project work also seen on my GitHub."],
 	[
 		"Speaking",
 		"/speaking",
-		"I don't know why people pay money to hear me speak. It's weird.",
 	],
-	["Sponsor", "/sponsor", "Please give me money?"],
 ] as const;
 
 export interface Props {
@@ -28,18 +24,17 @@ export interface Props {
 
 <div class:list={["links", Astro.props.class]}>
 	{
-		links.map(([text, href, info]) => (
+		links.map(([text, href]) => (
 			<SquigglyIfActive
 				active={Astro.url.pathname.startsWith(href)}
 				as="a"
-				align="right"
 				class="link"
 				href={href}
 				fontWeight="bolder"
-				info={info}
 				{...(href.startsWith("http") && { target: "_blank" })}
-				title={text}
-			/>
+			>
+				{text}
+			</SquigglyIfActive>
 		))
 	}
 </div>

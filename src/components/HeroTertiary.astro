@@ -1,0 +1,20 @@
+---
+import { Text } from "../components/Text";
+---
+
+<Text as="p" class="tertiary" fontSize="small" fontWeight="light">
+    <slot />
+</Text>
+
+<style>
+	.tertiary {
+		margin: 1rem auto 0;
+		max-width: 24rem;
+	}
+
+	@media (min-width: 819px) {
+		.tertiary {
+			margin-left: 0;
+		}
+	}
+</style>

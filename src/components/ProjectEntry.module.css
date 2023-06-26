@@ -12,8 +12,8 @@
 }
 
 .image {
-	height: 5rem;
-	width: 5rem;
+	height: 3.5rem;
+	width: 3.5rem;
 }
 
 .image[src$=".png"] {
@@ -27,4 +27,11 @@
 
 .description {
 	margin: 0.5rem 0 0.35rem;
+}
+
+@media (min-width: 819px) {
+	.image {
+		height: 5rem;
+		width: 5rem;
+	}
 }

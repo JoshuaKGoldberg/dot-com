@@ -1,0 +1,21 @@
+---
+import { Text } from "../components/Text";
+---
+
+<Text as="p" class="secondary" fontSize="subtitle" fontWeight="bold">
+    <slot />
+</Text>
+
+<style>
+	.secondary {
+		max-width: 24rem;
+		margin: 2rem auto 0;
+	}
+
+
+	@media (min-width: 819px) {
+		.secondary {
+			margin-left: 0;
+		}
+	}
+</style>

@@ -18,12 +18,8 @@
 	font-size: var(--fontSizeSubtitle);
 }
 
-.fontSizeTitlePrimary {
-	font-size: var(--fontSizeTitlePrimary);
-}
-
-.fontSizeTitleSecondary {
-	font-size: var(--fontSizeTitleSecondary);
+.fontSizeTitle {
+	font-size: var(--fontSizeTitle);
 }
 
 .fontWeightLight {

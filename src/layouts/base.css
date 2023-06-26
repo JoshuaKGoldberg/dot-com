@@ -6,14 +6,14 @@
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #082138;
+		--colorShadow: #64aaef;
 
 		--fontSizeSmaller: 1rem;
 		--fontSizeSmall: 1.25rem;
 		--fontSizeMedium: 1.5rem;
-		--fontSizeLarge: 2.5rem;
+		--fontSizeLarge: 2rem;
 		--fontSizeSubtitle: 1.75rem;
-		--fontSizeTitlePrimary: 4.5rem;
-		--fontSizeTitleSecondary: 3.5rem;
+		--fontSizeTitle: 3.5rem;
 
 		--fontWeightLight: 100;
 		--fontWeightMedium: normal;
@@ -60,6 +60,7 @@
 			--colorBackgroundTop: #071926;
 			--colorEmphasized: #50a1f3;
 			--colorForeground: #d3dfe9;
+			--colorShadow: #142b53;
 		}
 	}
 }

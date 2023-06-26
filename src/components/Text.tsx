@@ -10,8 +10,7 @@ const fontSizes = {
 	medium: styles.fontSizeMedium,
 	large: styles.fontSizeLarge,
 	subtitle: styles.fontSizeSubtitle,
-	"title-primary": styles.fontSizeTitlePrimary,
-	"title-secondary": styles.fontSizeTitleSecondary,
+	title: styles.fontSizeTitle,
 };
 
 export type FontSize = keyof typeof fontSizes;

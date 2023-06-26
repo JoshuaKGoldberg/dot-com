@@ -2,29 +2,30 @@
 import { getCollection } from "astro:content";
 
 import Hero from "../components/Hero.astro";
-import { SpeakingTabsAndContent } from "../components/SpeakingTabsAndContent";
+import { SpeakingEntryList } from "../components/SpeakingEntryList";
 import { Squiggly } from "../components/Squiggly";
-import { Text } from "../components/Text";
+import HeroSecondary from "../components/HeroSecondary.astro";
+import HeroTertiary from "../components/HeroTertiary.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import BodyContents from "../components/BodyContents.astro";
 
 const allSpeakings = await getCollection("speaking");
 ---
 
 <BaseLayout title="Speaking">
-	<Hero class="hero" image="/images/speaking.png">
+	<Hero class="hero" image="/images/speaking.webp">
 		<Squiggly
 			as="h1"
-			align="left"
 			class="h1"
-			fontSize="title-secondary"
+			fontSize="title"
 			fontWeight="bolder"
-			info="My favorite talks are the TypeScript shenanigans ones..."
-			title="Speaking"
-		/>
-		<Text as="p" class="subtitle" fontSize="medium" fontWeight="light">
-			I've been speaking at conferences since 2019. In 2023 I became a Microsoft MVP.
-		</Text>
-		<Text as="p" class="subtitle" fontSize="small" fontWeight="light">
+		>
+			Speaking
+		</Squiggly>
+		<HeroSecondary>
+			I talk about static analysis, accessibility, and team culture.
+		</HeroSecondary>
+		<HeroTertiary>
 			Want me to speak at your event? Hooray!
 			<br />
 			Please see my <a
@@ -32,24 +33,18 @@ const allSpeakings = await getCollection("speaking");
 				href="https://github.com/JoshuaKGoldberg/speaker-rider"
 				>speaker rider</a
 			>.
-		</Text>
+		</HeroTertiary>
 	</Hero>
 
-	<SpeakingTabsAndContent
-		client:load
-		speakings={allSpeakings.sort((a, b) => +b.data.date - +a.data.date)}
-	/>
+	<BodyContents>
+	<SpeakingEntryList speakings={allSpeakings.sort((a, b) => +b.data.date - +a.data.date)} />
+	</BodyContents>
 </BaseLayout>
 
 <style>
 	.h1 {
 		display: inline-block;
 		position: relative;
-	}
-
-	.subtitle {
-		margin-top: 2rem;
-		max-width: 24rem;
 	}
 
 	.rider {

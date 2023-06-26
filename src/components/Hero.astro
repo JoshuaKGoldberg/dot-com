@@ -4,12 +4,12 @@ export interface ColorSchemeImages {
 	light: string;
 }
 
-export interface Props {
+interface Props {
 	class?: string | undefined;
 	image: string | ColorSchemeImages;
 }
 
-const { class: className, image} = Astro.props;
+const { class: className, image } = Astro.props;
 const images =
 	typeof image === "string" ? { dark: image, light: image } : image;
 ---
@@ -29,22 +29,29 @@ const images =
 
 <style>
 	.hero {
+		align-items: center;
 		display: flex;
-		margin: auto;
 		height: 20rem;
+		margin: auto;
 		position: relative;
 		width: var(--widthFull);
+		max-width: 100%;
+		text-align: center;
 	}
 
 	picture {
 		display: none;
 	}
 
+	.second {
+		width: 100%;
+	}
+
 	@media (min-width: 819px) {
 		.hero {
-			gap: 2rem;
-			margin-top: 5rem;
-			margin-bottom: 7rem;
+			gap: 2.5rem;
+			margin: 3.5rem 0 2rem;
+			text-align: left;
 		}
 
 		.half {
@@ -75,8 +82,12 @@ const images =
 		}
 
 		img {
+			border-radius: 100%;
+    		box-shadow: 0 2px 7px 3px var(--colorShadow);
+			height: 256px;
 			max-height: 100%;
 			max-width: 100%;
+			width: 256px;
 		}
 	}
 </style>

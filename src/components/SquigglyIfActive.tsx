@@ -1,23 +1,20 @@
 import { JSX, splitProps } from "solid-js";
 
-import { Squiggly, SquigglyProps } from "./Squiggly";
-import { Text } from "./Text";
+import { Squiggly } from "./Squiggly";
+import { Text, TextProps } from "./Text";
 
 export type SquigglyIfActiveProps<As extends keyof JSX.HTMLElementTags> =
-	SquigglyProps<As> & {
+	TextProps<As> & {
 		active: boolean;
 	};
 
 export function SquigglyIfActive<As extends keyof JSX.HTMLElementTags>(
 	props: SquigglyIfActiveProps<As>
 ) {
-	const [knownProps, restProps] = splitProps(props, ["active", "title"]);
+	const [knownProps, restProps] = splitProps(props, ["active"]);
+	// eslint-disable-next-line solid/reactivity
+	const Component = knownProps.active ? Squiggly : Text;
 
-	return <>{knownProps.active ? (
-		// @ts-expect-error - Dynamic components in TypeScript are tough.
-		<Squiggly {...restProps} title={knownProps.title} />
-	) : (
-		// @ts-expect-error - Dynamic components in TypeScript are tough.
-		<Text {...restProps}>{knownProps.title}</Text>
-	)}</>;
+	// @ts-expect-error -- Dynamic components in TypeScript are tough.
+	return <Component {...restProps} />;
 }

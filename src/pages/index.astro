@@ -1,11 +1,12 @@
 ---
-import HeaderLinks from "../components/HeaderLinks.astro";
+import BodyContents from "../components/BodyContents.astro";
 import Hero from "../components/Hero.astro";
 import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const socials = [
+	["bsky", "https://bsky.app/profile/joshuakgoldberg.com", "/icons/bsky.svg"],
 	["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
 	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
 	["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
@@ -17,50 +18,42 @@ const socials = [
 <BaseLayout>
 	<Hero
 		class="hero"
-		image= "/images/josh.png"
+		image= "/images/josh.webp"
 	>
-		<Text as="h1" class="h1" fontSize="title-primary" fontWeight="bolder">
+		<Text as="h1" class="h1" fontSize="title" fontWeight="bolder">
 			Hi! I'm <Squiggly
 				as="span"
 				client:load
-				align="right"
-				info="a.k.a. JoshuaKGoldberg, because JoshGoldberg was taken :("
-				title="Josh"
-			/>.
+			>Josh</Squiggly>.
 		</Text>
 		<Text as="p" class="subtitle" fontSize="subtitle" fontWeight="bold">
 			I'm an open source maintainer
 			<br />
 			in the TypeScript ecosystem.
 		</Text>
-		<div class="socials">
+		<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
 			{
 				socials.map(([alt, href, src]) => (
-					<a href={href}>
-						<img alt={alt} src={src} />
+					<a class="social" href={href}>
+						<img alt={alt} class="logo" src={src} />
+						{alt}
 					</a>
 				))
 			}
-		</div>
+		</Text>
 	</Hero>
-	<div class="about">
-		<Text as="h2" fontSize="large" fontWeight="bolder">About</Text>
+	<BodyContents class="about">
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I work to make web development better,
-			<br />
-			most notably on typescript-eslint: the tooling
-			<br />
-			that lets ESLint and Prettier run on TypeScript code.
+			I work to make web development better, most notably on typescript-eslint:
+			<br class="tabletUp" />
+			the tooling that lets ESLint and Prettier run on TypeScript code. 
 		</Text>
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I’m the author of Learning TypeScript (O’Reilly),
-			<br />
-			a Microsoft MVP for developer technologies,
-			<br />
-			and an active conference speaker.
+			I’m the author of Learning TypeScript (O’Reilly), a Microsoft MVP,
+			<br class="tabletUp" />
+			an international conference speaker, and a semiregular live code streamer.
 		</Text>
-		<HeaderLinks class="links" />
-	</div>
+	</BodyContents>
 </BaseLayout>
 
 <style>
@@ -74,7 +67,27 @@ const socials = [
 
 	.socials {
 		display: flex;
-		gap: 1rem;
+		flex-wrap: wrap;
+		gap: 0.75rem 1rem;
+		max-width: 20rem;
+		margin: auto;
+		justify-content: center;
+	}
+
+	.social {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.logo {
+		height: 1.25rem;
+		width: 1.25rem;
+	}
+
+
+	.tabletUp {
+		display: none;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -87,13 +100,18 @@ const socials = [
 		display: flex;
 		gap: 2rem;
 		flex-direction: column;
-		margin: auto;
-		margin-top: 5rem;
+		margin: 3.5rem 1rem 1rem;
 		text-align: center;
 	}
 
-	.links {
-		font-size: var(--fontSizeMedium);
-		margin: 1rem auto 0;
-	}
+	@media (min-width: 819px) {
+		.socials {
+			justify-content: flex-start;
+			margin-left: 0;
+		}
+		
+		.tabletUp {
+			display: block;
+		}
+	}	
 </style>
