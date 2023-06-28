@@ -12,8 +12,15 @@
 	width: 100%;
 }
 
+@media (min-width: 700px) {
+	.item {
+		--maxWidthBase: 50%;
+		max-width: calc(var(--maxWidthBase) - 1.5rem);
+	}
+}
+
 @media (min-width: 819px) {
 	.item {
-		max-width: calc(33% - 1.5rem);
+		--maxWidthBase: 33%;
 	}
 }
