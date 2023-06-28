@@ -9,7 +9,9 @@ const { class: className, image } = Astro.props;
 
 <div class:list={["hero", className]}>
 	<div class="half first">
-		<img alt="" src={image} />
+		<div class="imgArea">
+			<img alt="" src={image} />
+		</div>
 	</div>
 	<div class="half second">
 		<slot />
@@ -20,7 +22,6 @@ const { class: className, image } = Astro.props;
 	.hero {
 		align-items: center;
 		display: flex;
-		height: 20rem;
 		margin: auto;
 		position: relative;
 		width: var(--widthFull);
@@ -28,7 +29,7 @@ const { class: className, image } = Astro.props;
 		text-align: center;
 	}
 
-	picture {
+	.imgArea {
 		display: none;
 	}
 
@@ -39,6 +40,7 @@ const { class: className, image } = Astro.props;
 	@media (min-width: 819px) {
 		.hero {
 			gap: 2.5rem;
+		height: 20rem;
 			margin: 3.5rem 0 2rem;
 			text-align: left;
 		}
@@ -61,7 +63,7 @@ const { class: className, image } = Astro.props;
 			width: 55%;
 		}
 
-		picture {
+		.imgArea {
 			display: flex;
 			align-items: center;
 			justify-content: center;
