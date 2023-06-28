@@ -9,6 +9,11 @@
 
 .item {
 	margin-bottom: 1.5rem;
-	max-width: calc(33% - 1.5rem);
 	width: 100%;
+}
+
+@media (min-width: 819px) {
+	.item {
+		max-width: calc(33% - 1.5rem);
+	}
 }

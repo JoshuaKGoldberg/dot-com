@@ -6,6 +6,8 @@
 	padding: 0;
 }
 
-.projectEntry {
-	width: calc(50% - 1rem);
+@media (min-width: 819px) {
+	.projectEntry {
+		width: calc(50% - 1rem);
+	}
 }

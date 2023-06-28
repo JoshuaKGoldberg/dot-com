@@ -6,6 +6,8 @@
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #144249;
+		--colorForegroundExtra: #103237;
+		--colorSubtle: #d7e9ef;
 
 		--fontSizeSmaller: 1rem;
 		--fontSizeSmall: 1.25rem;
@@ -58,7 +60,9 @@
 			--colorBackgroundBottom: #041010;
 			--colorBackgroundTop: #071926;
 			--colorEmphasized: #50a1f3;
-			--colorForeground: #d3dfe9;
+			--colorForeground: #d1e2f1;
+			--colorForegroundExtra: #e1ecf4;
+			--colorSubtle: #041f31;
 		}
 	}
 }

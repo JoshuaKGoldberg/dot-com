@@ -1,26 +1,15 @@
 ---
-export interface ColorSchemeImages {
-	dark: string;
-	light: string;
-}
-
 interface Props {
 	class?: string | undefined;
-	image: string | ColorSchemeImages;
+	image: string;
 }
 
 const { class: className, image } = Astro.props;
-const images =
-	typeof image === "string" ? { dark: image, light: image } : image;
 ---
 
 <div class:list={["hero", className]}>
 	<div class="half first">
-		<picture>
-			<source srcset={images.dark} media="(prefers-color-scheme: dark)" />
-			<source srcset={images.light} media="(prefers-color-scheme: light)" />
-			<img alt="" src={images.light} />
-		</picture>
+		<img alt="" src={image} />
 	</div>
 	<div class="half second">
 		<slot />
@@ -87,6 +76,7 @@ const images =
 			max-height: 100%;
 			max-width: 100%;
 			width: 256px;
+			box-shadow: 0 7px 7px 3px var(--colorSubtle);
 		}
 	}
 </style>

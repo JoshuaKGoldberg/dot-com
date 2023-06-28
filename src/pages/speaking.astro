@@ -37,7 +37,7 @@ const allSpeakings = await getCollection("speaking");
 	</Hero>
 
 	<BodyContents>
-	<SpeakingEntryList speakings={allSpeakings.sort((a, b) => +b.data.date - +a.data.date)} />
+		<SpeakingEntryList speakings={allSpeakings.sort((a, b) => +b.data.date - +a.data.date)} />
 	</BodyContents>
 </BaseLayout>
 
