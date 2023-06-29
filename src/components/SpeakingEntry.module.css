@@ -5,6 +5,4 @@
 .links {
 	display: flex;
 	gap: 0.5rem;
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
 }

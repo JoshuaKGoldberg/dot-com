@@ -10,6 +10,7 @@ export const collections = {
 				.array(
 					z.object({
 						description: z.string(),
+						href: z.string(),
 						title: z.string(),
 					})
 				)

@@ -1,4 +1,5 @@
 ---
+import { Text } from './Text';
 export interface ColorSchemeImages {
 	dark: string;
 	light: string;
@@ -7,9 +8,10 @@ export interface ColorSchemeImages {
 interface Props {
 	class?: string | undefined;
 	image: string | ColorSchemeImages;
+	primary: string;
 }
 
-const { class: className, image } = Astro.props;
+const { class: className, image, primary } = Astro.props;
 const images =
 	typeof image === "string" ? { dark: image, light: image } : image;
 ---
@@ -23,6 +25,13 @@ const images =
 		</picture>
 	</div>
 	<div class="half second">
+		<Text
+			as="h1"
+			fontSize="title"
+			fontWeight="bolder"
+		>
+			{primary}
+		</Text>
 		<slot />
 	</div>
 </div>
@@ -36,6 +45,12 @@ const images =
 		width: var(--widthFull);
 		max-width: 100%;
 		text-align: center;
+	}
+
+	h1 {
+		color: var(--colorForegroundExtra);
+		line-height: 0.75;
+		text-shadow: 3px 3px 1px var(--colorSubtle);
 	}
 
 	picture {

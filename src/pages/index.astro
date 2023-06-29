@@ -1,7 +1,7 @@
 ---
 import BodyContents from "../components/BodyContents.astro";
 import Hero from "../components/Hero.astro";
-import { Squiggly } from "../components/Squiggly";
+import HeroSecondary from "../components/HeroSecondary.astro";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
@@ -22,15 +22,13 @@ const socials = [
 			dark: "/images/josh-dark.webp",
 			light: "/images/josh-light.webp",
 		}}
+		primary="Hi! I'm Josh."
 	>
-		<Text as="h1" class="h1" fontSize="title" fontWeight="bolder">
-			Hi! I'm <Squiggly as="span">Josh</Squiggly>.
-		</Text>
-		<Text as="p" class="subtitle" fontSize="subtitle" fontWeight="bold">
+		<HeroSecondary>
 			I'm an open source maintainer
 			<br />
 			in the TypeScript ecosystem.
-		</Text>
+		</HeroSecondary>
 		<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
 			{
 				socials.map(([alt, href, src]) => (
@@ -57,21 +55,12 @@ const socials = [
 </BaseLayout>
 
 <style>
-	.h1 {
-		color: var(--colorForegroundExtra);
-		line-height: 0.75;
-	}
-
-	.subtitle {
-		margin: 1.75rem 0;
-	}
-
 	.socials {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.75rem 1rem;
 		max-width: 20rem;
-		margin: auto;
+		margin: 1rem auto 0;
 		justify-content: center;
 	}
 

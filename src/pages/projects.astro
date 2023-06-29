@@ -6,7 +6,6 @@ import Hero from "../components/Hero.astro";
 import HeroSecondary from "../components/HeroSecondary.astro";
 import HeroTertiary from "../components/HeroTertiary.astro";
 import { ProjectsGrouped } from "../components/ProjectsGrouped";
-import { Squiggly } from "../components/Squiggly";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const allProjects = await getCollection("projects");
@@ -19,14 +18,8 @@ const allProjects = await getCollection("projects");
 			dark: "/images/projects-dark.webp",
 			light: "/images/projects-light.webp",
 		}}
+		primary="Projects"
 	>
-		<Squiggly
-			as="h1"
-			fontSize="title"
-			fontWeight="bolder"
-		>
-			Projects
-		</Squiggly>
 		<HeroSecondary>
 			I work primarly on open source tooling for TypeScript projects.
 		</HeroSecondary>
@@ -40,3 +33,11 @@ const allProjects = await getCollection("projects");
 		<ProjectsGrouped projects={allProjects} />
 	</BodyContents>
 </BaseLayout>
+
+<style>
+	h1 {
+		display: inline-block;
+		position: relative;
+		text-shadow: 3px 3px 1px var(--colorSubtle);
+	}
+</style>
