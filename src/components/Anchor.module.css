@@ -1,0 +1,16 @@
+.anchor {
+	display: inline-block;
+	position: relative;
+	text-decoration: none;
+}
+
+.anchor::after {
+	background: url("/icons/squiggle.svg") repeat-x;
+	background-size: contain;
+	content: "";
+	height: 0.2rem;
+	position: absolute;
+	width: 100%;
+	top: calc(100% - 0.25em);
+	left: 0;
+}

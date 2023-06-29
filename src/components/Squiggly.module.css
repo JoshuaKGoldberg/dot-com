@@ -1,8 +1,4 @@
-/* TODO: remove unused styles */
-
 .squiggly {
-	background: none;
-	border: none;
 	display: inline-block;
 	position: relative;
 }

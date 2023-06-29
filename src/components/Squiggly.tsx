@@ -1,5 +1,3 @@
-/* TODO: remove interactions... */
-
 import clsx from "clsx";
 import type { JSX } from "solid-js";
 
