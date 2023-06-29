@@ -7,13 +7,7 @@
 	position: relative;
 }
 
-.label,
-.title {
-	font-weight: inherit;
-	font-size: inherit;
-}
-
-.title::after {
+.squiggly::after {
 	background-image: url("/icons/squiggle.svg");
 	background-size: contain;
 	content: "";

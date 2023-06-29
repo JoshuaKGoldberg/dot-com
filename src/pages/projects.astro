@@ -16,7 +16,6 @@ const allProjects = await getCollection("projects");
 	<Hero class="hero" image="/images/projects.webp">
 		<Squiggly
 			as="h1"
-			client:load
 			fontSize="title"
 			fontWeight="bolder"
 		>
@@ -32,6 +31,6 @@ const allProjects = await getCollection("projects");
 	</Hero>
 
 	<BodyContents>
-		<ProjectsGrouped client:load projects={allProjects} />
+		<ProjectsGrouped projects={allProjects} />
 	</BodyContents>
 </BaseLayout>

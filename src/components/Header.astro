@@ -1,20 +1,20 @@
 ---
+import clsx from "clsx";
 import HeaderLinks from "./HeaderLinks.astro";
-import { SquigglyIfActive } from "./SquigglyIfActive";
+import { Squiggly } from "./Squiggly";
 import { Text } from "./Text";
 
 const title = "Josh Goldberg";
 ---
 
 <Text as="header" class="header" fontWeight="bolder">
-	<SquigglyIfActive
-		active={Astro.url.pathname.length <= 1}
+	<Squiggly
 		as="a"
-		client:load
+		class={clsx(Astro.url.pathname.length <= 1 && "squigglyActive")}
 		href="/"
 	>
 		{title}
-	</SquigglyIfActive>
+	</Squiggly>
 	<HeaderLinks />
 </Text>
 
@@ -29,10 +29,19 @@ const title = "Josh Goldberg";
 		font-size: var(--fontSizeMedium);
 	}
 
+	.squigglyActive {
+		display: none;
+	}
+
 	@media (min-width: 819px) {
 		.header {
 			flex-direction: row;
 		}
+
+		.squigglyActive {
+			display: initial;
+		}
+
 	}
 
 	@media (min-width: 1017px) {

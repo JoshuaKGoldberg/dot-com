@@ -1,5 +1,5 @@
 ---
-import { SquigglyIfActive } from "./SquigglyIfActive";
+import { RemoveIfActive } from "./RemovefActive";
 
 const links = [
 	[
@@ -25,7 +25,7 @@ export interface Props {
 <div class:list={["links", Astro.props.class]}>
 	{
 		links.map(([text, href]) => (
-			<SquigglyIfActive
+			<RemoveIfActive
 				active={Astro.url.pathname.startsWith(href)}
 				as="a"
 				class="link"
@@ -34,7 +34,7 @@ export interface Props {
 				{...(href.startsWith("http") && { target: "_blank" })}
 			>
 				{text}
-			</SquigglyIfActive>
+			</RemoveIfActive>
 		))
 	}
 </div>
