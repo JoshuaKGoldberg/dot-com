@@ -1,20 +1,18 @@
 ---
 import clsx from "clsx";
 import HeaderLinks from "./HeaderLinks.astro";
-import { Squiggly } from "./Squiggly";
 import { Text } from "./Text";
 
 const title = "Josh Goldberg";
 ---
 
 <Text as="header" class="header" fontWeight="bolder">
-	<Squiggly
-		as="a"
+	<a
 		class={clsx(Astro.url.pathname.length <= 1 && "squigglyActive")}
 		href="/"
 	>
 		{title}
-	</Squiggly>
+</a>
 	<HeaderLinks />
 </Text>
 

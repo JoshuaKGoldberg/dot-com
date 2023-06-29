@@ -13,7 +13,13 @@ const allProjects = await getCollection("projects");
 ---
 
 <BaseLayout title="Projects">
-	<Hero class="hero" image="/images/projects.webp">
+	<Hero
+		class="hero"
+		image={{
+			dark: "/images/projects-dark.webp",
+			light: "/images/projects-light.webp",
+		}}
+	>
 		<Squiggly
 			as="h1"
 			fontSize="title"

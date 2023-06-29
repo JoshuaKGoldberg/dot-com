@@ -18,7 +18,10 @@ const socials = [
 <BaseLayout>
 	<Hero
 		class="hero"
-		image= "/images/josh.webp"
+		image={{
+			dark: "/images/josh-dark.webp",
+			light: "/images/josh-light.webp",
+		}}
 	>
 		<Text as="h1" class="h1" fontSize="title" fontWeight="bolder">
 			Hi! I'm <Squiggly as="span">Josh</Squiggly>.

@@ -13,7 +13,13 @@ const allSpeakings = await getCollection("speaking");
 ---
 
 <BaseLayout title="Speaking">
-	<Hero class="hero" image="/images/speaking.webp">
+	<Hero
+		class="hero"
+		image={{
+			dark: "/images/speaking-dark.webp",
+			light: "/images/speaking-light.webp",
+		}}
+	>
 		<Squiggly
 			as="h1"
 			class="h1"
