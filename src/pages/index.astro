@@ -34,7 +34,7 @@ const socials = [
 		<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
 			{
 				socials.map(([alt, href, src]) => (
-					<a class="social" href={href}>
+					<a class="social" href={href} target="_blank">
 						<img alt={alt} class="logo" src={src} />
 						{alt}
 					</a>
