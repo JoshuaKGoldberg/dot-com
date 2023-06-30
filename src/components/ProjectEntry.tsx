@@ -27,7 +27,10 @@ export function ProjectEntry(props: ProjectEntryProps) {
 						as="a"
 						fontSize="medium"
 						fontWeight="bold"
-						href="hi.joshuakgoldberg.com"
+						href={
+							props.project.url ??
+							`https://github.com/JoshuaKGoldberg/${props.project.title}`
+						}
 					>
 						{props.project.data.title ?? props.project.slug}
 					</Text>

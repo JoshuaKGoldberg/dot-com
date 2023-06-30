@@ -13,5 +13,6 @@ more:
     href: https://github.com/budgielang/ts-budgie
     title: ts-budgie
 stars: 58
+url: https://github.com/budgielang/budgie
 title: Budgie
 ---
