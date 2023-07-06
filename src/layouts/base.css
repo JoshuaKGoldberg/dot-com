@@ -5,7 +5,6 @@
 		--colorEmphasized: #1170d0;
 		--colorForeground: #144249;
 		--colorForegroundExtra: #103237;
-		--colorGradientDirection: to bottom;
 		--colorSubtle: #d7e9ef;
 
 		--fontSizeSmaller: 1rem;
@@ -66,7 +65,6 @@
 			--colorForeground: #dae7f3;
 			--colorForegroundExtra: #e5edf3;
 			--colorSubtle: #052438;
-			--colorGradientDirection: to top;
 		}
 	}
 }
