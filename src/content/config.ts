@@ -6,6 +6,7 @@ export const collections = {
 			category: z.string(),
 			description: z.string(),
 			image: z.string().optional(),
+			links: z.record(z.string()).optional(),
 			more: z
 				.array(
 					z.object({

@@ -1,7 +1,9 @@
 import type { CollectionEntry } from "astro:content";
+import { For } from "solid-js";
 
 import { groupBy } from "../utils";
-import { ProjectEntryList } from "./ProjectEntryList";
+import { EntryList } from "./EntryList";
+import { ProjectEntry } from "./ProjectEntry";
 
 function byMoreOrStars(
 	a: CollectionEntry<"projects">,
@@ -23,19 +25,22 @@ export interface ProjectsGroupedProps {
 }
 
 export function ProjectsGrouped(props: ProjectsGroupedProps) {
-	const grouped = Object.entries(
-		groupBy(
-			// eslint-disable-next-line solid/reactivity
-			props.projects.sort(byMoreOrStars),
-			(project) => project.data.category
-		)
-	).sort(([a], [b]) => a.localeCompare(b));
-
-	return grouped.map(([category, projects]) => (
-		<ProjectEntryList
-			category={category}
-			class="projectEntryList"
-			projects={projects}
-		/>
-	));
+	return (
+		<For
+			each={Object.entries(
+				groupBy(
+					props.projects.sort(byMoreOrStars),
+					(project) => project.data.category
+				)
+			).sort(([a], [b]) => a.localeCompare(b))}
+		>
+			{([category, projects]) => (
+				<EntryList category={category}>
+					<For each={projects}>
+						{(project) => <ProjectEntry project={project} />}
+					</For>
+				</EntryList>
+			)}
+		</For>
+	);
 }

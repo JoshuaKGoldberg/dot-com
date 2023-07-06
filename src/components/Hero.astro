@@ -40,7 +40,10 @@ const images =
 	.hero {
 		align-items: center;
 		display: flex;
-		margin: 3rem auto 4rem;
+		flex-direction: column;
+		gap: 2rem;
+		margin: 1rem auto 4rem;
+		padding: 0 1rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
@@ -50,22 +53,20 @@ const images =
 	h1 {
 		color: var(--colorForegroundExtra);
 		line-height: 0.75;
-		text-shadow: 3px 3px 1px var(--colorSubtle);
+		text-shadow: var(--textShadow);
 	}
 
-	picture {
-		display: none;
+	img {
+		width: 10rem;
 	}
 
-	.second {
-		width: 100%;
-	}
-
-	@media (min-width: 819px) {
+	@media (min-width: 700px) {
 		.hero {
 			gap: 2.5rem;
 			height: 20rem;
+			flex-direction: row;
 			margin: clamp(1rem, 2.5vh, 3rem) 0 2rem;
+			padding: 0;
 			text-align: left;
 		}
 
@@ -76,6 +77,7 @@ const images =
 		.half.first {
 			display: flex;
 			justify-content: flex-end;
+			max-height: initial;
 			width: 45%;
 		}
 
@@ -88,12 +90,7 @@ const images =
 		}
 
 		picture {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			max-width: 100%;
-			max-height: 100%;
-			user-select: none;
+			transform: none;
 		}
 
 		img {

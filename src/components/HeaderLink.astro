@@ -1,0 +1,38 @@
+---
+import clsx from "clsx";
+import { Squiggly } from "./Squiggly";
+
+interface Props {
+	href: string;
+}
+
+const { href } = Astro.props;
+const active = href.length < 2
+	? Astro.url.pathname.length < 2
+	: Astro.url.pathname.startsWith(href);
+---
+
+<Squiggly
+	as="a"
+	class={clsx("link", active && "active")}
+	href={href}
+	fontSize="medium"
+	fontWeight="bolder"
+	{...(href.startsWith("http") && { target: "_blank" })}
+	variant={active ? "inactive" : "onHover"}
+>
+	<slot />
+</Squiggly>
+
+<style>
+	.link {
+		display: inline-block;
+	}
+
+	.active {
+		background: linear-gradient(var(--colorGradientDirection), var(--colorEmphasized), var(--colorForeground));
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		filter: drop-shadow(3px 3px 1px var(--colorSubtle));
+	}
+</style>

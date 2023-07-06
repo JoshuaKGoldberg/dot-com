@@ -1,0 +1,7 @@
+.entries {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2rem;
+	list-style-type: none;
+	padding: 0;
+}

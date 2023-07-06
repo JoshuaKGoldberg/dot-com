@@ -1,12 +1,11 @@
 @layer base {
 	:root {
-		--widthFull: 1000px;
-
 		--colorBackgroundBottom: #fcffff;
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #144249;
 		--colorForegroundExtra: #103237;
+		--colorGradientDirection: to bottom;
 		--colorSubtle: #d7e9ef;
 
 		--fontSizeSmaller: 1rem;
@@ -20,6 +19,10 @@
 		--fontWeightMedium: normal;
 		--fontWeightBold: 500;
 		--fontWeightBolder: 700;
+
+		--textShadow: 3px 3px 1px var(--colorSubtle);
+
+		--widthFull: 1000px;
 	}
 
 	html {
@@ -59,10 +62,11 @@
 		:root {
 			--colorBackgroundBottom: #041010;
 			--colorBackgroundTop: #071926;
-			--colorEmphasized: #50a1f3;
+			--colorEmphasized: #78b4f0;
 			--colorForeground: #dae7f3;
 			--colorForegroundExtra: #e5edf3;
 			--colorSubtle: #052438;
+			--colorGradientDirection: to top;
 		}
 	}
 }

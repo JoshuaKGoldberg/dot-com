@@ -3,14 +3,28 @@
 	position: relative;
 }
 
-.squiggly::after {
-	background-image: url("/icons/squiggle.svg");
+.squiggly.smaller {
+	--afterMarginTop: 0;
+}
+
+.squiggly.medium {
+	--afterMarginTop: -0.2em;
+}
+
+.squiggly:not(.inactive)::after {
+	background: url("/icons/squiggle.svg") repeat-x;
 	background-size: contain;
 	content: "";
 	display: block;
 	height: 0.35em;
 	image-rendering: smooth;
-	margin-top: -0.25rem;
+	margin-top: var(--afterMarginTop);
+	opacity: 0;
 	position: absolute;
+	transition: 280ms opacity;
 	width: 100%;
+}
+
+.squiggly:is(.alwaysActive, :focus, :hover):not(.inactive)::after {
+	opacity: 1;
 }

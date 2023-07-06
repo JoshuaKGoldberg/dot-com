@@ -14,7 +14,12 @@ const { as: As, ...rest } = Astro.props;
 <style>
 	.mainArea {
 		margin: auto;
-		padding: 0 calc(calc(100% - var(--widthFull)) / 2);
 		width: 100%;
+	}
+
+	@media (min-width: 1017px) {
+		.mainArea {
+			padding: 0 calc(calc(100% - var(--widthFull)) / 2);
+		}
 	}
 </style>

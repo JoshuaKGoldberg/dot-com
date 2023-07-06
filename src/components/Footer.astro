@@ -7,14 +7,15 @@ import { Text } from "./Text";
 	Made with 💖 in Philadelphia
 	<br />
 	using Astro, Solid, and TypeScript.
-	<small>
-		<Anchor
-			href="https://github.com/JoshuaKGoldberg/joshuakgoldberg-dot-com-next"
-			target="_blank"
-		>
-			view source
-		</Anchor>
-	</small>
+	<br />
+	<Anchor
+		class="anchor"
+		href="https://github.com/JoshuaKGoldberg/joshuakgoldberg-dot-com-next"
+		fontSize="small"
+		target="_blank"
+	>
+		view source
+	</Anchor>
 </Text>
 
 <style>
@@ -25,14 +26,12 @@ import { Text } from "./Text";
 		justify-self: flex-end;
 	}
 
-	small {
-		display: block;
-		margin-top: 0.5rem;
-	}
-
-	@media (min-width: 819px) {
-		footer {
-			padding-top: 5rem;
-		}
+	.anchor {
+		display: inline-block;
+		margin-top: 1rem;
+		background: linear-gradient(to bottom, var(--colorEmphasized), var(--colorForeground));
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		filter: drop-shadow(3px 3px 1px var(--colorSubtle));
 	}
 </style>

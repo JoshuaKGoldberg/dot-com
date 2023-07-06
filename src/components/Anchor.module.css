@@ -5,12 +5,5 @@
 }
 
 .anchor::after {
-	background: url("/icons/squiggle.svg") repeat-x;
-	background-size: contain;
-	content: "";
-	height: 0.2rem;
-	position: absolute;
-	width: 100%;
 	top: calc(100% - 0.2em);
-	left: 0;
 }

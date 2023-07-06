@@ -5,34 +5,3 @@
 	list-style-type: none;
 	padding-left: 0;
 }
-
-.projectEntry {
-	display: flex;
-	gap: 1rem;
-}
-
-.image {
-	height: 3.5rem;
-	width: 3.5rem;
-}
-
-.image[src$=".png"] {
-	image-rendering: pixelated;
-}
-
-.contents {
-	align-items: flex-start;
-	display: flex;
-	flex-direction: column;
-}
-
-.description {
-	margin: 0.5rem 0 0.35rem;
-}
-
-@media (min-width: 819px) {
-	.image {
-		height: 5rem;
-		width: 5rem;
-	}
-}

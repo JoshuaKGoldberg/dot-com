@@ -1,50 +1,77 @@
 ---
-import clsx from "clsx";
-import HeaderLinks from "./HeaderLinks.astro";
 import { Text } from "./Text";
+import HeaderLink from "./HeaderLink.astro";
 
-const title = "Josh Goldberg";
+const links = [
+	[
+		"Blog",
+		"https://blog.joshuakgoldberg.com",
+	],
+	[
+		"Book",
+		"https://learningtypescript.com",
+	],
+	["Projects", "/projects", "Assorted project work also seen on my GitHub."],
+	[
+		"Speaking",
+		"/speaking",
+	],
+] as const;
 ---
 
 <Text as="header" class="header" fontWeight="bolder">
-	<a
-		class={clsx(Astro.url.pathname.length <= 1 && "squigglyActive")}
-		href="/"
-	>
-		{title}
-</a>
-	<HeaderLinks />
+	<HeaderLink href="/">Josh Goldberg</HeaderLink>
+	<div class="links">
+		{
+			links.map(([text, href]) => {
+				return (
+					<HeaderLink	href={href}>
+						{text}
+					</HeaderLink>
+				);
+			})
+		}
+	</div>
 </Text>
 
 <style>
-	.header {
+	header {
 		align-items: center;
 		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+		flex-wrap: wrap;
+		gap: 0.5rem 3.5rem;
+		justify-content: center;
 		padding: 2rem;
-		justify-content: space-between;
-		font-size: var(--fontSizeMedium);
+		width: 100%;
+    	font-size: var(--fontSizeMedium);
+		text-align: center;
 	}
 
-	.squigglyActive {
-		display: none;
+	.links {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 0 1rem;
+		justify-content: center;
 	}
 
-	@media (min-width: 819px) {
-		.header {
-			flex-direction: row;
+	@media (min-width: 700px) {
+		header {
+			gap: 1.5rem;
+			justify-content: space-between;
 		}
 
-		.squigglyActive {
-			display: initial;
+		.links {
+			gap: 1.5rem;
+			justify-content: space-between;
 		}
-
 	}
 
 	@media (min-width: 1017px) {
-		.header {
+		header {
 			padding: 2rem 0;
 		}
+
 	}
 </style>

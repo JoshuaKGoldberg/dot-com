@@ -1,0 +1,53 @@
+.contentEntry {
+	display: flex;
+	gap: 1rem;
+}
+
+.image {
+	height: 3.5rem;
+	width: 3.5rem;
+}
+
+.image[src$=".png"] {
+	image-rendering: pixelated;
+}
+
+.contents {
+	align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+}
+
+.title {
+	margin-bottom: 0.15rem;
+}
+
+.description {
+	margin: 0.75rem 0 0.5rem;
+}
+
+.links {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.anchorLarger {
+	margin-top: 0.5rem;
+}
+
+@media (min-width: 700px) {
+	.contentEntry {
+		width: calc(50% - 1rem);
+	}
+
+	.image {
+		height: 5rem;
+		width: 5rem;
+	}
+}
+
+@media (min-width: 1017px) {
+	.contentEntry.widthsThird {
+		width: calc(32% - 1rem);
+	}
+}
