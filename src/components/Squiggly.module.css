@@ -16,7 +16,7 @@
 	background-size: contain;
 	content: "";
 	display: block;
-	height: 0.35em;
+	height: 0.25em;
 	image-rendering: smooth;
 	margin-top: var(--afterMarginTop);
 	opacity: 0;

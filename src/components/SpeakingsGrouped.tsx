@@ -17,9 +17,9 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 					props.speakings
 						// TODO: when I add in tabs, then I'll add in non-talks
 						.filter((speaking) => speaking.data.category === "Talks"),
-					(speaking) => speaking.data.date.getFullYear()
+					(speaking) => yearOrUpcoming(speaking.data.date)
 				)
-			).sort(([a], [b]) => +b - +a)}
+			).sort(([a], [b]) => (a === "Upcoming" ? -1 : +b - +a))}
 		>
 			{([year, speakings]) => (
 				<EntryList category={year}>
@@ -30,4 +30,10 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 			)}
 		</For>
 	);
+}
+
+const now = Date.now();
+
+function yearOrUpcoming(date: Date) {
+	return +date < now ? date.getFullYear() : "Upcoming";
 }

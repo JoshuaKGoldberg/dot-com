@@ -38,6 +38,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						fontSize="medium"
 						fontWeight="bold"
 						href={props.url}
+						target="_blank"
 					>
 						{props.title}
 					</Text>

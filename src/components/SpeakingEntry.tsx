@@ -9,11 +9,11 @@ export interface SpeakingEntryProps {
 export function SpeakingEntry(props: SpeakingEntryProps) {
 	return (
 		<ContentEntry
-			subtitle={props.speaking.data.event}
+			description={props.speaking.data.title}
 			links={
 				props.speaking.data.links && Object.entries(props.speaking.data.links)
 			}
-			title={props.speaking.data.title}
+			title={props.speaking.data.event}
 			url={props.speaking.data.href}
 			widths="third"
 		/>

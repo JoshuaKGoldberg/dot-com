@@ -26,6 +26,10 @@
 	margin: 0.75rem 0 0.5rem;
 }
 
+.title + .description {
+	margin-top: 0;
+}
+
 .links {
 	display: flex;
 	gap: 0.5rem;
