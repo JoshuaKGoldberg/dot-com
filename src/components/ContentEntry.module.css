@@ -41,7 +41,7 @@
 
 @media (min-width: 700px) {
 	.contentEntry {
-		width: calc(50% - 1rem);
+		width: calc(50% - 1.5rem);
 	}
 
 	.image {
@@ -52,6 +52,6 @@
 
 @media (min-width: 1017px) {
 	.contentEntry.widthsThird {
-		width: calc(32% - 1rem);
+		width: calc(32% - 1.5rem);
 	}
 }

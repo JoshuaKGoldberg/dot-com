@@ -1,8 +1,7 @@
 import type { CollectionEntry } from "astro:content";
-import { For } from "solid-js";
 
 import { groupBy } from "../utils";
-import { EntryList } from "./EntryList";
+import { GroupedEntries } from "./GroupedEntries";
 import { SpeakingEntry } from "./SpeakingEntry";
 
 export interface SpeakingsGroupedProps {
@@ -11,8 +10,8 @@ export interface SpeakingsGroupedProps {
 
 export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 	return (
-		<For
-			each={Object.entries(
+		<GroupedEntries
+			groups={Object.entries(
 				groupBy(
 					props.speakings
 						// TODO: when I add in tabs, then I'll add in non-talks
@@ -20,15 +19,8 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 					(speaking) => yearOrUpcoming(speaking.data.date)
 				)
 			).sort(([a], [b]) => (a === "Upcoming" ? -1 : +b - +a))}
-		>
-			{([year, speakings]) => (
-				<EntryList category={year}>
-					<For each={speakings}>
-						{(speaking) => <SpeakingEntry speaking={speaking} />}
-					</For>
-				</EntryList>
-			)}
-		</For>
+			renderEntry={(speaking) => <SpeakingEntry speaking={speaking} />}
+		/>
 	);
 }
 
