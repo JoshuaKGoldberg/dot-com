@@ -21,7 +21,7 @@ export function ExternalLinks(props: ExternalLinksProps) {
 						as="a"
 						class={styles.externalLink}
 						fontSize="subtitle"
-						fontWeight="bolder"
+						fontWeight="bold"
 						target="_blank"
 						{...link}
 					/>

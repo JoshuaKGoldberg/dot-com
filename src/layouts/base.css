@@ -8,15 +8,15 @@
 		--colorSubtle: #d7e9ef;
 
 		--fontSizeSmaller: 1rem;
-		--fontSizeSmall: 1.25rem;
+		--fontSizeSmall: 1.2rem;
 		--fontSizeMedium: 1.5rem;
 		--fontSizeLarge: 2rem;
 		--fontSizeSubtitle: 1.75rem;
 		--fontSizeTitle: 3.5rem;
 
-		--fontWeightLight: 100;
-		--fontWeightMedium: normal;
-		--fontWeightBold: 500;
+		--fontWeightLight: 300;
+		--fontWeightMedium: 500;
+		--fontWeightBold: 600;
 		--fontWeightBolder: 700;
 
 		--textShadow: 3px 3px 1px var(--colorSubtle);
@@ -26,6 +26,7 @@
 
 	html {
 		background: var(--colorBackgroundBottom);
+		scrollbar-gutter: stable;
 	}
 
 	body {
