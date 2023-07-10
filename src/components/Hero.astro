@@ -48,6 +48,8 @@ const images =
 		width: var(--widthFull);
 		max-width: 100%;
 		text-align: center;
+
+		--imageSize: 10rem;
 	}
 
 	h1 {
@@ -57,13 +59,15 @@ const images =
 	}
 
 	img {
-		width: 10rem;
+		width: var(--imageSize);
 	}
 
 	@media (min-width: 700px) {
 		.hero {
 			gap: 2.5rem;
 			height: 35vh;
+			min-height: calc(var(--imageSize) + 1rem);
+			max-height: 20rem;
 			flex-direction: row;
 			margin: clamp(1rem, 5vh, 7rem) 0 clamp(2rem, 7vh, 10rem);
 			padding: 0;
