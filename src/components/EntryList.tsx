@@ -16,6 +16,7 @@ export function EntryList(props: EntryListProps) {
 				class={styles.subHeading}
 				fontWeight="light"
 				fontSize="medium"
+				id={props.category.toLowerCase().replaceAll(/\s+/g, "-")}
 			>
 				{props.category}
 			</Text>

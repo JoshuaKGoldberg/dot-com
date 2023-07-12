@@ -60,12 +60,18 @@
 
 	@media (prefers-color-scheme: dark) {
 		:root {
-			--colorBackgroundBottom: #041010;
-			--colorBackgroundTop: #071926;
+			--colorBackgroundBottom: #141117;
+			--colorBackgroundTop: #071428;
 			--colorEmphasized: #78b4f0;
 			--colorForeground: #dae7f3;
 			--colorForegroundExtra: #e5edf3;
 			--colorSubtle: #052438;
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		html {
+			scroll-behavior: smooth;
 		}
 	}
 }

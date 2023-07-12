@@ -8,5 +8,6 @@
 
 .subHeading {
 	margin: clamp(4rem, 10vh, 7rem) auto 3rem;
+	scroll-margin-top: 2rem;
 	text-align: center;
 }
