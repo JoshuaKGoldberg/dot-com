@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import { Anchor } from "../components/Anchor";
 import BodyContents from "../components/BodyContents.astro";
 import Hero from "../components/Hero.astro";
 import HeroSecondary from "../components/HeroSecondary.astro";
@@ -24,8 +25,14 @@ const allProjects = await getCollection("projects");
 			I work primarily on open source tooling for TypeScript projects.
 		</HeroSecondary>
 		<HeroTertiary>
-			I also enjoy emoji-related delighters and the occasional
-			game engine or meta-language.
+			I also enjoy emojis and other shenanigans.
+			<br />
+			See more on my <Anchor
+				href="https://github.com/JoshuaKGoldberg"
+				target="_blank"
+			>
+				GitHub profile
+			</Anchor>.
 		</HeroTertiary>
 	</Hero>
 
