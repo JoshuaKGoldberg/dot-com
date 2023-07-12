@@ -10,18 +10,21 @@ export interface ProjectEntryProps {
 }
 
 export function ProjectEntry(props: ProjectEntryProps) {
-	const url =
+	const url = () =>
 		props.project.data.url ??
-		`https://github.com/JoshuaKGoldberg/${props.project.data.title}`;
+		`https://github.com/JoshuaKGoldberg/${props.project.slug}`;
 
 	return (
 		<ContentEntry
 			description={props.project.data.description}
 			image={props.project.data.image}
 			subtitle={props.project.data.role ?? "Creator & Maintainer"}
-			links={[["Repo", url], ...Object.entries(props.project.data.links ?? [])]}
+			links={[
+				["Repo", url()],
+				...Object.entries(props.project.data.links ?? []),
+			]}
 			title={props.project.data.title ?? props.project.slug}
-			url={url}
+			url={url()}
 			widths="half"
 		>
 			{props.project.data.more && (
