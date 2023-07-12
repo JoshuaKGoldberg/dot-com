@@ -21,7 +21,7 @@ import { Text } from "./Text";
 <style>
 	footer {
 		opacity: 0.75;
-		padding: 3.5rem 1rem 2rem;
+		padding: clamp(2.8rem, 5vh, 7rem) 1rem 2rem;
 		text-align: center;
 		justify-self: flex-end;
 	}
@@ -29,5 +29,11 @@ import { Text } from "./Text";
 	.anchor {
 		display: inline-block;
 		margin-top: 1rem;
+	}
+
+	@media (min-height: 900px) {
+		footer {
+			padding-top: max(3rem, 15vh);
+		}
 	}
 </style>
