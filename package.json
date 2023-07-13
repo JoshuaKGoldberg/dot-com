@@ -20,6 +20,7 @@
 		"start": "astro dev"
 	},
 	"dependencies": {
+		"@astrojs/prefetch": "^0.3.0",
 		"@astrojs/solid-js": "^2.2.0",
 		"@fontsource/league-spartan": "^4.5.13",
 		"@kobalte/core": "^0.9.6",
