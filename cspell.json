@@ -5,7 +5,7 @@
 		"dist",
 		"node_modules",
 		"pnpm-lock.yaml",
-		"public",
+		"public"
 	],
 	"words": [
 		"ajafff",

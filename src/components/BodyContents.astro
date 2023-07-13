@@ -5,13 +5,13 @@ interface Props {
 ---
 
 <div class:list={["bodyContents", Astro.props.class]}>
-    <slot />
+	<slot />
 </div>
 
 <style>
-    .bodyContents {
-        padding: 0 2rem;
-    }
+	.bodyContents {
+		padding: 0 2rem;
+	}
 
 	@media (min-width: 1017px) {
 		.bodyContents {

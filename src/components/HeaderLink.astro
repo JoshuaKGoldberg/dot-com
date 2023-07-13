@@ -7,9 +7,10 @@ interface Props {
 }
 
 const { href } = Astro.props;
-const active = href.length < 2
-	? Astro.url.pathname.length < 2
-	: Astro.url.pathname.startsWith(href);
+const active =
+	href.length < 2
+		? Astro.url.pathname.length < 2
+		: Astro.url.pathname.startsWith(href);
 ---
 
 <Squiggly
@@ -18,7 +19,7 @@ const active = href.length < 2
 	href={href}
 	fontSize="medium"
 	fontWeight="bolder"
-	{...(href.startsWith("http") && { target: "_blank" })}
+	{...href.startsWith("http") && { target: "_blank" }}
 	variant={active ? "inactive" : "onHover"}
 >
 	<slot />

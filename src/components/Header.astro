@@ -3,19 +3,10 @@ import { Text } from "./Text";
 import HeaderLink from "./HeaderLink.astro";
 
 const links = [
-	[
-		"Blog",
-		"https://blog.joshuakgoldberg.com",
-	],
-	[
-		"Book",
-		"https://learningtypescript.com",
-	],
+	["Blog", "https://blog.joshuakgoldberg.com"],
+	["Book", "https://learningtypescript.com"],
 	["Projects", "/projects", "Assorted project work also seen on my GitHub."],
-	[
-		"Speaking",
-		"/speaking",
-	],
+	["Speaking", "/speaking"],
 ] as const;
 ---
 
@@ -24,11 +15,7 @@ const links = [
 	<div class="links">
 		{
 			links.map(([text, href]) => {
-				return (
-					<HeaderLink	href={href}>
-						{text}
-					</HeaderLink>
-				);
+				return <HeaderLink href={href}>{text}</HeaderLink>;
 			})
 		}
 	</div>
@@ -43,7 +30,7 @@ const links = [
 		justify-content: center;
 		padding: 2rem;
 		width: 100%;
-    	font-size: var(--fontSizeMedium);
+		font-size: var(--fontSizeMedium);
 		text-align: center;
 	}
 
@@ -72,6 +59,5 @@ const links = [
 		header {
 			padding: 2rem 0;
 		}
-
 	}
 </style>
