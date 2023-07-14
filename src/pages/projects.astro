@@ -12,7 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const allProjects = await getCollection("projects");
 ---
 
-<BaseLayout title="Projects">
+<BaseLayout
+	description="I work primarily on open source tooling for TypeScript projects."
+	image="images/projects.png"
+	title="Projects"
+>
 	<Hero
 		class="hero"
 		image={{

@@ -12,7 +12,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const allSpeakings = await getCollection("speaking");
 ---
 
-<BaseLayout title="Speaking">
+<BaseLayout
+	description="I talk about static analysis, accessibility, and team culture."
+	image="images/speaking.png"
+	title="Speaking"
+>
 	<Hero
 		class="hero"
 		image={{
