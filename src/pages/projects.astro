@@ -3,8 +3,6 @@ import { getCollection } from "astro:content";
 
 import { Anchor } from "../components/Anchor";
 import BodyContents from "../components/BodyContents.astro";
-import Hero from "../components/Hero.astro";
-import HeroSecondary from "../components/HeroSecondary.astro";
 import HeroTertiary from "../components/HeroTertiary.astro";
 import { ProjectsGrouped } from "../components/ProjectsGrouped";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -14,31 +12,20 @@ const allProjects = await getCollection("projects");
 
 <BaseLayout
 	description="I work primarily on open source tooling for TypeScript projects."
-	image="images/projects.png"
+	primary="Projects"
+	secondary="I work primarily on open source tooling for TypeScript projects."
 	title="Projects"
 >
-	<Hero
-		class="hero"
-		image={{
-			dark: "/images/projects-dark.webp",
-			light: "/images/projects-light.webp",
-		}}
-		primary="Projects"
-	>
-		<HeroSecondary>
-			I work primarily on open source tooling for TypeScript projects.
-		</HeroSecondary>
-		<HeroTertiary>
-			I also enjoy emojis and other shenanigans.
-			<br />
-			See more on my <Anchor
-				href="https://github.com/JoshuaKGoldberg"
-				target="_blank"
-			>
-				GitHub profile
-			</Anchor>.
-		</HeroTertiary>
-	</Hero>
+	<HeroTertiary slot="tertiary">
+		I also enjoy emojis and other shenanigans.
+		<br />
+		See more on my <Anchor
+			href="https://github.com/JoshuaKGoldberg"
+			target="_blank"
+		>
+			GitHub profile
+		</Anchor>.
+	</HeroTertiary>
 
 	<BodyContents>
 		<ProjectsGrouped projects={allProjects} />

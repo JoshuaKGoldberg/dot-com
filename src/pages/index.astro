@@ -1,51 +1,18 @@
 ---
 import BodyContents from "../components/BodyContents.astro";
-import Hero from "../components/Hero.astro";
-import HeroSecondary from "../components/HeroSecondary.astro";
-import { Squiggly } from "../components/Squiggly";
+import Socials from "../components/Socials.astro";
 import { Text } from "../components/Text";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const socials = [
-	["bsky", "https://bsky.app/profile/joshuakgoldberg.com", "/icons/bsky.svg"],
-	["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
-	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
-	["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
-	["Twitter", "https://twitter.com/JoshuaKGoldberg", "/icons/twitter.svg"],
-	["YouTube", "https://youtube.com/@JoshuaKGoldberg", "/icons/youtube.svg"],
-] as const;
 ---
 
+<!-- image="images/josh.png" -->
 <BaseLayout
 	description="I'm an open source maintainer in the TypeScript ecosystem."
-	image="images/josh.png"
+	primary="Hi! I'm Josh."
+	secondary="I'm an open source maintainer in the TypeScript ecosystem."
+	slug="josh"
 >
-	<Hero
-		class="hero"
-		image={{
-			dark: "/images/josh-dark.webp",
-			light: "/images/josh-light.webp",
-		}}
-		primary="Hi! I'm Josh."
-	>
-		<HeroSecondary>
-			I'm an open source maintainer
-			<br />
-			in the TypeScript ecosystem.
-		</HeroSecondary>
-		<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
-			{
-				socials.map(([alt, href, src]) => (
-					<a class="social" href={href} target="_blank">
-						<img alt={alt} class="logo" src={src} />
-						<Squiggly as="span" fontSize="smaller" variant="onHover">
-							{alt}
-						</Squiggly>
-					</a>
-				))
-			}
-		</Text>
-	</Hero>
+	<Socials slot="tertiary" />
 	<BodyContents class="about">
 		<Text as="p" fontSize="medium" fontWeight="light">
 			I work to make web development better, most notably on typescript-eslint:
@@ -76,34 +43,8 @@ const socials = [
 </script>
 
 <style>
-	.socials {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 1rem;
-		max-width: 20rem;
-		margin: 1rem auto 0;
-		justify-content: center;
-	}
-
-	.social {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.logo {
-		height: 1.25rem;
-		width: 1.25rem;
-	}
-
 	.tabletUp {
 		display: none;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		.socials img {
-			filter: invert() hue-rotate(180deg);
-		}
 	}
 
 	.about {
@@ -115,13 +56,6 @@ const socials = [
 	}
 
 	@media (min-width: 700px) {
-		.socials {
-			display: grid;
-			grid-template-columns: auto auto auto;
-			grid-template-rows: auto auto;
-			margin-left: 0;
-		}
-
 		.tabletUp {
 			display: block;
 		}

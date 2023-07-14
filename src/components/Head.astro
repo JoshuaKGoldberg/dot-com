@@ -1,0 +1,107 @@
+---
+interface Props {
+	description: string;
+	image: string;
+	title: string | undefined;
+}
+
+const { description, image: imageRaw, title: titleRaw } = Astro.props;
+const image = new URL(imageRaw, Astro.site);
+const title = titleRaw ? `${titleRaw} | Josh Goldberg` : "Josh Goldberg";
+const keywords = [
+	"accessibility",
+	"developer",
+	"javascript",
+	"josh goldberg",
+	"open source",
+	"performance",
+	"react",
+	"typescript",
+	"web",
+];
+
+const metaPairs = [
+	{
+		content: description,
+		name: `description`,
+	},
+	{
+		content: keywords.join(),
+		name: `keywords`,
+	},
+	{
+		content: title,
+		property: `og:title`,
+	},
+	{
+		content: description,
+		property: `og:description`,
+	},
+	{
+		content: image,
+		property: `og:image`,
+	},
+	{
+		content: `website`,
+		property: `og:type`,
+	},
+	{
+		content: Astro.url,
+		property: `og:url`,
+	},
+	{
+		content: image,
+		name: `thumbnail`,
+	},
+	{
+		content: `summary`,
+		name: `twitter:card`,
+	},
+	{
+		content: Astro.site,
+		name: `twitter:domain`,
+	},
+	{
+		content: "Josh Goldberg",
+		name: `twitter:creator`,
+	},
+	{
+		content: image,
+		name: `twitter:image`,
+	},
+	{
+		content: `@JoshuaKGoldberg`,
+		name: `twitter:site`,
+	},
+	{
+		content: title,
+		name: `twitter:title`,
+	},
+	{
+		content: description,
+		name: `twitter:description`,
+	},
+];
+---
+
+<head>
+	<meta charset="utf-8" />
+	<link
+		href="/favicon-dark.svg"
+		media="(prefers-color-scheme: dark)"
+		rel="icon"
+		type="image/svg+xml"
+	/>
+	<link
+		href="/favicon.svg"
+		media="(prefers-color-scheme: light)"
+		rel="icon"
+		type="image/svg+xml"
+	/>
+	{metaPairs.map((meta) => <meta {...meta} />)}
+	<meta name="description" content={description} />
+	<meta name="keywords" content={keywords.join()} />
+	<meta name="generator" content={Astro.generator} />
+	<meta name="viewport" content="width=device-width" />
+	<title>{title}</title>
+</head>
