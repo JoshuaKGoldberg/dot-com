@@ -26,10 +26,11 @@ export const collections = {
 		schema: z.object({
 			category: z.string(),
 			date: z.date(),
-			event: z.string().optional(),
+			event: z.string(),
 			href: z.string(),
 			links: z.record(z.string()).optional(),
-			title: z.string(),
+			location: z.string().optional(),
+			title: z.string().optional(),
 		}),
 	}),
 };

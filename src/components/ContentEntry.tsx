@@ -18,7 +18,7 @@ export interface ContentEntryProps {
 	description?: string | undefined;
 	image?: string | undefined;
 	links?: [string, string][] | undefined;
-	subtitle?: string | undefined;
+	subtitle: string;
 	title: string;
 	url: string;
 	widths: ContentEntryWidths;
@@ -42,11 +42,9 @@ export function ContentEntry(props: ContentEntryProps) {
 					>
 						{props.title}
 					</Text>
-					{props.subtitle && (
-						<Text class={styles.subtitle} as="p" fontWeight="light">
-							{props.subtitle}
-						</Text>
-					)}
+					<Text class={styles.subtitle} as="p" fontWeight="light">
+						{props.subtitle}
+					</Text>
 					{props.description && (
 						<Text
 							as="div"
