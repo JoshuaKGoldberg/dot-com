@@ -17,7 +17,7 @@ export interface Props {
 
 const { class: className, description, image: imageRaw, title: titleRaw } = Astro.props;
 const image = new URL(imageRaw, Astro.site);
-const title = titleRaw ? `JG | ${titleRaw}` : "Josh Goldberg";
+const title = titleRaw ? `${titleRaw} | Josh Goldberg` : "Josh Goldberg";
 const keywords = [
 	"accessibility",
 	"developer",
