@@ -13,6 +13,10 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 			links={
 				props.speaking.data.links && Object.entries(props.speaking.data.links)
 			}
+			subtitle={props.speaking.data.date.toLocaleString("default", {
+				month: "short",
+				day: "numeric",
+			})}
 			title={props.speaking.data.event}
 			url={props.speaking.data.href}
 			widths="third"
