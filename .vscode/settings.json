@@ -16,6 +16,7 @@
 		"yaml"
 	],
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
+	"prettier.documentSelectors": ["**/*.astro"],
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"[astro]": {
 		"editor.defaultFormatter": "astro-build.astro-vscode"
