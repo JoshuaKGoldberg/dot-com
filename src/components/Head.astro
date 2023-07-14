@@ -5,7 +5,8 @@ interface Props {
 	title: string | undefined;
 }
 
-const { description, image: imageRaw, title: titleRaw } = Astro.props;
+const { description: descriptionRaw, image: imageRaw, title: titleRaw } = Astro.props;
+const description = `Hi! I'm Josh. ${descriptionRaw} This is my personal site, built with Astro, Solid, and TypeScript.`;
 const image = new URL(imageRaw, Astro.site);
 const title = titleRaw ? `${titleRaw} | Josh Goldberg` : "Josh Goldberg";
 const keywords = [
@@ -40,6 +41,10 @@ const metaPairs = [
 	{
 		content: image,
 		property: `og:image`,
+	},
+	{
+		content: image,
+		property: `og:image:secure_url`,
 	},
 	{
 		content: `website`,
