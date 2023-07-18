@@ -1,0 +1,48 @@
+/*
+Astro's default Shiki preset with theme: "css-variables" is nice,
+but doesn't highlight diff deleted/inserted lines differently.
+*/
+
+code .deleted {
+	color: var(--astro-code-color-deleted);
+}
+
+code .inserted {
+	color: var(--astro-code-color-inserted);
+}
+
+code .property {
+	color: var(--astro-code-token-keyword);
+}
+
+code .token.comment {
+	color: var(--astro-code-token-comment);
+}
+
+code .token.constant {
+	color: var(--astro-code-token-constant);
+}
+
+code .token.function {
+	color: var(--astro-code-token-function);
+}
+
+code .token.keyword {
+	color: var(--astro-code-token-keyword);
+}
+
+code .token.link {
+	color: var(--astro-code-token-link);
+}
+
+code .token.parameter {
+	color: var(--astro-code-token-parameter);
+}
+
+code .token.punctuation {
+	color: var(--astro-code-token-punctuation);
+}
+
+code .token.string {
+	color: var(--astro-code-token-string);
+}

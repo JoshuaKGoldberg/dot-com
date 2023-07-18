@@ -1,15 +1,22 @@
 ---
 import { Text } from "../components/Text";
+
+interface Props {
+	size?: 'normal' | 'wide';
+}
 ---
 
-<Text as="p" class="secondary" fontSize="subtitle" fontWeight="medium">
+<Text as="p" class:list={["secondary", Astro.props.size ?? 'normal']} fontSize="subtitle" fontWeight="medium">
 	<slot />
 </Text>
 
 <style>
 	.secondary {
-		max-width: 23rem;
 		margin: 1rem auto 2rem;
+	}
+
+	.secondary.normal {
+		max-width: 23rem;
 	}
 
 	@media (min-width: 700px) {

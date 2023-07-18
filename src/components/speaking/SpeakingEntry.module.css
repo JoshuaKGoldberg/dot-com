@@ -1,0 +1,8 @@
+.event {
+	margin: 0.35rem 0;
+}
+
+.links {
+	display: flex;
+	gap: 0.5rem;
+}

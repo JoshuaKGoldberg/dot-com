@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+
+import BodyContents from "../components/BodyContents.astro";
+import { BlogsGrouped } from "../components/blog/BlogsGrouped";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import HeroSecondary from "../components/HeroSecondary.astro";
+
+const blogs = await getCollection("blog");
+---
+
+<BaseLayout
+	description="I blog about static analysis, accessibility, and team culture."
+	slug="goldblog"
+	title="Goldblog"
+>
+	<BodyContents>
+		<Hero
+			image={{
+				alt: "todo",
+				src: `/images/blog/tiny-temp.jpg`
+			}}
+			primary="Goldblog"
+			variant="left"
+		>
+			<HeroSecondary size="wide">
+				A blog about open source, static analysis, and web development in general.
+			</HeroSecondary>
+		</Hero>
+		<BlogsGrouped blogs={blogs.sort((a, b) => +b.data.date - +a.data.date)} />
+	</BodyContents>
+</BaseLayout>

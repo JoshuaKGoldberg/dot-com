@@ -3,9 +3,14 @@ import { For, JSX } from "solid-js";
 
 import { Anchor } from "./Anchor";
 import styles from "./ContentEntry.module.css";
+import {
+	ContentEntryImage,
+	type ContentEntryImageProps,
+} from "./ContentEntryImage";
 import { Text } from "./Text";
 
 const widths = {
+	full: styles.widthsFull,
 	half: styles.widthsHalf,
 	third: styles.widthsThird,
 };
@@ -16,9 +21,9 @@ export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
 	description?: string | undefined;
-	image?: string | undefined;
+	image?: ContentEntryImageProps | undefined;
 	links?: [string, string][] | undefined;
-	subtitle: string;
+	subtitle: JSX.Element;
 	title: string;
 	url: string;
 	widths: ContentEntryWidths;
@@ -28,9 +33,7 @@ export function ContentEntry(props: ContentEntryProps) {
 	return (
 		<>
 			<li class={clsx(styles.contentEntry, widths[props.widths], props.class)}>
-				{props.image && (
-					<img alt="" class={styles.image} src={`/images/${props.image}`} />
-				)}
+				{props.image && <ContentEntryImage {...props.image} />}
 				<div class={styles.contents}>
 					<Text
 						as="a"
@@ -38,7 +41,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						fontSize="medium"
 						fontWeight="bold"
 						href={props.url}
-						target="_blank"
+						{...(props.url.startsWith("/") ? {} : { target: "_blank" })}
 					>
 						{props.title}
 					</Text>

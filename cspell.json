@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -49,6 +55,7 @@
 		"Rearchitectures",
 		"runbooks",
 		"Scripties",
+		"shiki",
 		"SpriteMakr",
 		"Swaggins",
 		"triaging",

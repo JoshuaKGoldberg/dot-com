@@ -1,0 +1,48 @@
+---
+import { getCollection, getEntry } from "astro:content";
+
+import BodyContents from "../../components/BodyContents.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import styles from "./slug.module.css";
+
+import "./code.css";
+import BlogHero from "../../components/blog/BlogHero.astro";
+
+export async function getStaticPaths() {
+	const blogs = await getCollection("blog");
+
+	return blogs.map((blog) => ({
+		params: { slug: blog.slug },
+	}));
+}
+
+const slug = Astro.params.slug!;
+const entry = await getEntry("blog", slug);
+if (!entry) {
+	return Astro.redirect("/404");
+}
+
+const rendered = await entry.render();
+---
+
+<BaseLayout
+	description={entry.data.description}
+	slug={entry.slug}
+	title={entry.data.title}
+>
+	<BodyContents>
+		<BlogHero
+			body={entry.body}
+			date={entry.data.date}
+			description={entry.data.description}
+			image={{
+				alt: entry.data.image.alt,
+				src: `/images/blog/${entry.data.image.src}`,
+			}}
+			title={entry.data.title}
+		/>
+	</BodyContents>
+	<article class={styles.article}>
+		<rendered.Content />
+	</article>
+</BaseLayout>

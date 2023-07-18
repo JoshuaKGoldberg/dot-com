@@ -4,13 +4,14 @@ import { getCollection } from "astro:content";
 import { Anchor } from "../components/Anchor";
 import BodyContents from "../components/BodyContents.astro";
 import HeroTertiary from "../components/HeroTertiary.astro";
-import { ProjectsGrouped } from "../components/ProjectsGrouped";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroLayout from "../layouts/HeroLayout.astro";
+import { ProjectsGrouped } from "../components/speaking/ProjectsGrouped";
 
 const allProjects = await getCollection("projects");
 ---
 
-<BaseLayout
+<HeroLayout
+	alt="Josh smiling and giving a thumbs up at a podium wearing a white shirt with a pineapple pattern"
 	description="I work primarily on open source tooling for TypeScript projects."
 	primary="Projects"
 	secondary="I work primarily on open source tooling for TypeScript projects."
@@ -30,4 +31,4 @@ const allProjects = await getCollection("projects");
 	<BodyContents>
 		<ProjectsGrouped projects={allProjects} />
 	</BodyContents>
-</BaseLayout>
+</HeroLayout>

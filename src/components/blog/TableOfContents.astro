@@ -1,0 +1,16 @@
+---
+interface Props {
+	class?: string | undefined;
+}
+---
+
+<div class:list={["tableOfContents", Astro.props.class]}>hi</div>
+
+<style>
+	.tableOfContents {
+		background: hotpink;
+		position: sticky;
+		top: 1rem;
+		display: block;
+	}
+</style>

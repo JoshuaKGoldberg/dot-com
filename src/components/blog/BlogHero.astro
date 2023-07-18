@@ -1,0 +1,43 @@
+---
+
+import Hero, { HeroImage } from "../Hero.astro";
+import HeroSecondary from "../HeroSecondary.astro";
+import HeroTertiary from "../HeroTertiary.astro";
+import { DateAndMinutes } from "./DateAndMinutes";
+import TableOfContents from "./TableOfContents.astro";
+
+interface Props {
+    body: string;
+    date: Date;
+    description: string;
+    image: HeroImage;
+    title: string;
+}
+---
+
+<div class="blogHero">
+    <Hero
+        image={Astro.props.image}
+        primary={Astro.props.title}
+        variant="left"
+    >
+        <HeroSecondary size="wide">
+            {Astro.props.description}
+        </HeroSecondary>
+        <HeroTertiary>
+            <DateAndMinutes
+                body={Astro.props.body}
+                date={Astro.props.date}
+                year="numeric"
+            />
+        </HeroTertiary>
+    </Hero>
+    <TableOfContents class="tableOfContents" />
+</div>
+
+<style>
+    .blogHero {
+        position: relative;
+        /* display: grid; */
+    }
+</style>

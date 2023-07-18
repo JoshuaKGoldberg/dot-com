@@ -3,13 +3,9 @@
 	gap: 1rem;
 }
 
-.image {
-	height: 3.5rem;
-	width: 3.5rem;
-}
-
-.image[src$=".png"] {
-	image-rendering: pixelated;
+.contentEntry.widthsFull {
+	max-width: var(--widthSlim);
+	margin: auto;
 }
 
 .contents {
@@ -40,13 +36,8 @@
 }
 
 @media (min-width: 700px) {
-	.contentEntry {
+	.contentEntry:not(.widthsFull) {
 		width: calc(50% - 1.5rem);
-	}
-
-	.image {
-		height: 5rem;
-		width: 5rem;
 	}
 }
 

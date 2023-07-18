@@ -4,49 +4,28 @@ import "@fontsource/league-spartan/variable.css";
 import Footer from "../components/Footer.astro";
 import Head from "../components/Head.astro";
 import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import HeroSecondary from "../components/HeroSecondary.astro";
 import MainArea from "../components/MainArea.astro";
 
 export interface Props {
 	class?: string | undefined;
 	description: string;
-	primary: string;
-	secondary: string;
-	slug?: string;
+	slug: string;
 	title?: string;
 }
 
 const {
 	class: className,
 	description,
-	primary,
-	secondary,
-	slug = primary,
+	slug,
 	title,
 } = Astro.props;
-
-const image = `images/${slug.toLowerCase()}`;
 ---
 
 <html lang="en">
-	<Head description={description} image={`${image}.png`} title={title} />
+	<Head description={description} image={`images/${slug}.png`} title={title} />
 	<MainArea as="body" class={className}>
 		<Header />
 		<main>
-			<Hero
-				class="hero"
-				image={{
-					dark: `/${image}-dark.webp`,
-					light: `/${image}-light.webp`,
-				}}
-				primary={primary}
-			>
-				<HeroSecondary>
-					{secondary}
-				</HeroSecondary>
-				<slot name="tertiary" />
-			</Hero>
 			<slot />
 		</main>
 		<Footer />
