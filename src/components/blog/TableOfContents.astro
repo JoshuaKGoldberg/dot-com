@@ -63,7 +63,6 @@ for (const heading of Astro.props.headings.slice(1)) {
 <style>
 	.root {
 		--gapVertical: 0.75rem;
-		max-height: calc(95vh - 2.5rem);
 		overflow-y: auto;
 		padding-left: 0;
 	}
@@ -96,11 +95,16 @@ for (const heading of Astro.props.headings.slice(1)) {
 	}
 
 	@media (min-width: 1017px) {
+		.root {
+			max-height: calc(100vh - 2.5rem);
+		}
+
 		@keyframes slideUp {
 			0% {
 				top: 0;
 			}
-			5%, 100% {
+			5%,
+			100% {
 				top: -3rem;
 			}
 		}
@@ -114,6 +118,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 			--widthLeftPadding: 3rem;
 			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
 			position: absolute;
+			bottom: 1rem;
 			top: 0;
 			opacity: 0.7;
 			transition: 280ms opacity;
