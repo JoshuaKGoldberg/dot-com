@@ -35,7 +35,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 	<input type="checkbox" value="Expand table of contents" />
 	<Squiggly as="span" fontSize="smaller">Table of Contents</Squiggly>
 </label>
-<div class="tableOfContents">
+<nav class="tableOfContents">
 	<ol class="tableRoot">
 		{
 			headingGroups.map(({ h2, h3s }) => (
@@ -58,7 +58,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 			))
 		}
 	</ol>
-</div>
+</nav>
 
 <style>
 	.toggle {
@@ -77,14 +77,9 @@ for (const heading of Astro.props.headings.slice(1)) {
 
 	.tableOfContents {
 		max-height: 0;
-		opacity: 0.7;
 		overflow: hidden;
-		transition: max-height var(--transitionSlow), opacity var(--transitionMedium);
+		transition: max-height var(--transitionSlow);
 		width: 100%;
-	}
-
-	.tableOfContents:hover:not(:has(a:hover)) {
-		opacity: 1;
 	}
 
 	.toggle:has(:checked) + .tableOfContents {
@@ -118,11 +113,11 @@ for (const heading of Astro.props.headings.slice(1)) {
 	}
 
 	a {
-		transition: var(--transitionMedium) color, var(--transitionMedium) opacity;
+		opacity: 0.7;
+		transition: var(--transitionMedium) opacity;
 	}
 
 	a:hover {
-		color: var(--colorEmphasized);
 		opacity: 1;
 	}
 
@@ -142,13 +137,12 @@ for (const heading of Astro.props.headings.slice(1)) {
 			left: calc(var(--widthSlim) + var(--widthLeftPadding));
 			max-height: initial;
 			position: absolute;
-			top: -2rem;
 		}
 
 		.tableRoot {
 			overflow-y: auto;
 			position: fixed;
-			top: 5rem;
+			top: 6rem;
 			width: var(--widthTableOfContents);
 			bottom: -0.9rem;
 			z-index: 1;

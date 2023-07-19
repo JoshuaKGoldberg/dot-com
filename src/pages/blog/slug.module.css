@@ -37,7 +37,7 @@
 }
 
 .article code {
-	font-size: 0.9em;
+	font-size: 0.8em;
 }
 
 .article pre {
@@ -46,6 +46,7 @@
 	line-height: 1.25;
 	margin: 0;
 	overflow-x: auto;
+	font-size: 0.9em;
 	padding: 1rem 1.5rem;
 	tab-size: 4;
 }
@@ -92,13 +93,17 @@
 }
 
 @media (min-width: 1017px) {
-	.hero {
-		max-width: calc(var(--widthSlim) + 4rem);
+	.top {
+		margin-top: 8rem;
 	}
 
 	.top::after {
 		margin-top: 2rem;
 		width: calc(100% - var(--widthTableOfContents));
+	}
+
+	.hero {
+		max-width: calc(var(--widthSlim) + 4rem);
 	}
 
 	.article {

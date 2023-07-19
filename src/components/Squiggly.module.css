@@ -21,7 +21,7 @@
 	margin-top: var(--afterMarginTop);
 	opacity: 0;
 	position: absolute;
-	transition: 280ms opacity;
+	transition: var(--transitionMedium) opacity;
 	width: 100%;
 }
 
