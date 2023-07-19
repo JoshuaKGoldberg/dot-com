@@ -97,6 +97,13 @@ for (const heading of Astro.props.headings.slice(1)) {
 			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
 			position: absolute;
 			top: 0;
+			opacity: 0.7;
+			transition: 280ms opacity;
+		}
+
+		.tableOfContents:focus-within,
+		.tableOfContents:hover {
+			opacity: 1;
 		}
 
 		.root {
