@@ -600,8 +600,3 @@ All three projects, like most open source projects, are underfunded and would ab
 - https://opencollective.com/typescript-eslint
 
 Remember: sponsorships are how open source projects are able to keep development going! ❤️
-
-```diff
-- removed last
-+ added last
-```

@@ -1,3 +1,15 @@
+.top {
+	margin-bottom: clamp(1.25rem, 2.5vw, 2.5rem);
+	padding-bottom: clamp(1rem, 2vw, 2rem);
+}
+
+.top::after {
+	content: "";
+	display: block;
+	width: calc(100% - var(--widthTableOfContents));
+	border-bottom: 1px solid var(--colorSubtle);
+}
+
 .article {
 	display: flex;
 	flex-direction: column;
@@ -27,10 +39,11 @@
 .article pre {
 	border: 1px solid var(--colorSubtle);
 	font-size: 0.9em;
-	padding: 1rem 1.5rem;
+	line-height: 1.25;
 	margin: 0;
-	tab-size: 4;
 	overflow-x: auto;
+	padding: 1rem 1.5rem;
+	tab-size: 4;
 }
 
 .article blockquote {
