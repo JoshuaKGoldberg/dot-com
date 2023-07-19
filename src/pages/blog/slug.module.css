@@ -83,11 +83,11 @@
 
 @media (min-width: 700px) {
 	.top {
-		/* margin-top: clamp(5rem, 10vw, 10rem); */
+		margin-top: 7rem;
 	}
 
 	.top::after {
-		margin: clamp(1.25rem, 2.5vw, 2.5rem) 0 clamp(1rem, 2vw, 2rem);
+		margin-bottom: 2rem;
 	}
 }
 
@@ -96,11 +96,8 @@
 		max-width: calc(var(--widthSlim) + 4rem);
 	}
 
-	.top {
-		/* margin-top: 10rem; */
-	}
-
 	.top::after {
+		margin-top: 2rem;
 		width: calc(100% - var(--widthTableOfContents));
 	}
 

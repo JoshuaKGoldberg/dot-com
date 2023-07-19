@@ -77,9 +77,14 @@ for (const heading of Astro.props.headings.slice(1)) {
 
 	.tableOfContents {
 		max-height: 0;
+		opacity: 0.7;
 		overflow: hidden;
-		transition: max-height 700ms;
+		transition: max-height var(--transitionSlow), opacity var(--transitionMedium);
 		width: 100%;
+	}
+
+	.tableOfContents:hover:not(:has(a:hover)) {
+		opacity: 1;
 	}
 
 	.toggle:has(:checked) + .tableOfContents {
@@ -113,37 +118,40 @@ for (const heading of Astro.props.headings.slice(1)) {
 	}
 
 	a {
-		transition: 280ms color;
+		transition: var(--transitionMedium) color, var(--transitionMedium) opacity;
 	}
 
 	a:hover {
 		color: var(--colorEmphasized);
+		opacity: 1;
+	}
+
+	@media (min-width: 700px) {
+		.toggle {
+			margin-top: 1.5rem;
+		}
 	}
 
 	@media (min-width: 1017px) {
+		.toggle {
+			display: none;
+		}
+
 		.tableOfContents {
 			--widthLeftPadding: 3rem;
-			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
+			left: calc(var(--widthSlim) + var(--widthLeftPadding));
+			max-height: initial;
 			position: absolute;
-			bottom: 1rem;
-			top: 5rem;
-			opacity: 0.7;
-			transition: 280ms opacity;
-			z-index: 1;
+			top: -2rem;
 		}
 
 		.tableRoot {
-			bottom: 0;
-			margin: 0;
-			padding: 0.25rem 0 0.25rem calc(var(--widthLeftPadding) / 2);
+			overflow-y: auto;
 			position: fixed;
 			top: 5rem;
-			width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
-		}
-
-		.tableOfContents:focus-within,
-		.tableOfContents:hover {
-			opacity: 1;
+			width: var(--widthTableOfContents);
+			bottom: -0.9rem;
+			z-index: 1;
 		}
 	}
 </style>
