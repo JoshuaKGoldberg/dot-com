@@ -7,6 +7,7 @@ import { DateAndMinutes } from "./DateAndMinutes";
 
 interface Props {
 	body: string;
+	class?: string | undefined;
 	date: Date;
 	description: string;
 	image: HeroImageProps;
@@ -14,10 +15,10 @@ interface Props {
 }
 ---
 
-<div class="blogHero">
+<div class:list={["blogHero", Astro.props.class]}>
 	<div class="left">
 		<div class="primary">
-			<HeroImage {...Astro.props.image} size="small" />
+			<HeroImage {...Astro.props.image} class="image" size="small" />
 			<div>
 				<HeroTitle>{Astro.props.title}</HeroTitle>
 				<HeroTertiary>
@@ -38,11 +39,25 @@ interface Props {
 
 <style>
 	.primary {
-		display: grid;
-		gap: 1.5rem;
-		grid-template-columns: auto auto;
-		margin-bottom: 2rem;
-		width: 100%;
+		/* display: grid; */
+		/* gap: 1.5rem; */
+		/* grid-template-columns: auto auto; */
+		/* margin-bottom: 2rem; */
+		/* width: 100%; */
+	}
+
+	.image {
+		float: right;
+	}
+
+	@media (min-width: 700px) {
+		.primary {
+			display: grid;
+			gap: 1.5rem;
+			grid-template-columns: auto auto;
+			margin-bottom: 2rem;
+			width: 100%;
+		}
 	}
 
 	@media (min-width: 1017px) {

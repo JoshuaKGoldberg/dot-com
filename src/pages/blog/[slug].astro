@@ -35,6 +35,7 @@ const rendered = await entry.render();
 		<TableOfContents headings={rendered.headings} />
 		<BlogHero
 			body={entry.body}
+			class={styles.hero}
 			date={entry.data.date}
 			description={entry.data.description}
 			image={{

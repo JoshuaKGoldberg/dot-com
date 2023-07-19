@@ -1,9 +1,9 @@
 .top::after {
+	border-bottom: 1px solid var(--colorSubtle);
 	content: "";
 	display: block;
-	width: calc(100% - var(--widthTableOfContents));
-	border-bottom: 1px solid var(--colorSubtle);
-	margin: clamp(1.25rem, 2.5vw, 2.5rem) 0 clamp(1rem, 2vw, 2rem);
+	margin-bottom: 1.5rem;
+	width: 100%;
 }
 
 .article {
@@ -13,7 +13,6 @@
 	gap: 1rem;
 	font-weight: 300;
 	line-height: 1.5;
-	max-width: calc(var(--widthSlim) + 4rem);
 }
 
 .article a {
@@ -78,8 +77,23 @@
 	margin-top: 0.5rem;
 }
 
-@media (min-width: 1071px) {
+@media (min-width: 700px) {
+	.top::after {
+		margin: clamp(1.25rem, 2.5vw, 2.5rem) 0 clamp(1rem, 2vw, 2rem);
+	}
+}
+
+@media (min-width: 1017px) {
+	.hero {
+		max-width: calc(var(--widthSlim) + 4rem);
+	}
+
+	.top::after {
+		width: calc(100% - var(--widthTableOfContents));
+	}
+
 	.article {
+		max-width: calc(var(--widthSlim) + 4rem);
 		margin: 0 var(--widthTableOfContents) 0 0;
 	}
 }
