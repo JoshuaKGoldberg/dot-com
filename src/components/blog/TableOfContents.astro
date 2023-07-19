@@ -55,6 +55,11 @@ for (const heading of Astro.props.headings.slice(1)) {
 	</ol>
 </div>
 
+<div id="container">
+	<div id="square"></div>
+	<div id="stretcher"></div>
+</div>
+
 <style>
 	.root {
 		--gapVertical: 0.75rem;
@@ -73,14 +78,13 @@ for (const heading of Astro.props.headings.slice(1)) {
 		margin-left: 1rem;
 		padding-left: 0;
 	}
-	
 
 	li {
 		list-style-type: none;
 	}
 
 	.root ol li:first-of-type {
-		margin-top:var(--gapVertical);
+		margin-top: var(--gapVertical);
 	}
 
 	a {
@@ -92,13 +96,28 @@ for (const heading of Astro.props.headings.slice(1)) {
 	}
 
 	@media (min-width: 1017px) {
+		@keyframes slideUp {
+			0% {
+				top: 0;
+			}
+			5%, 100% {
+				top: -7rem;
+			}
+		}
+
 		.tableOfContents {
+			animation-name: slideUp;
+			animation-duration: 1ms;
+			animation-direction: alternate;
+			animation-timeline: scroll(block nearest);
+
 			--widthLeftPadding: 3rem;
 			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
 			position: absolute;
 			top: 0;
 			opacity: 0.7;
 			transition: 280ms opacity;
+			z-index: 1;
 		}
 
 		.tableOfContents:focus-within,
