@@ -50,3 +50,9 @@ const rendered = await entry.render();
 		<rendered.Content />
 	</article>
 </BaseLayout>
+
+<script>
+	for (const pre of document.querySelectorAll("pre")) {
+		pre.tabIndex = 0;
+	}
+</script>
