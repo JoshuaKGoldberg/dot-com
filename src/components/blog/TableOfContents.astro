@@ -76,6 +76,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 	.root ol {
 		margin-left: 1rem;
 		padding-left: 0;
+		font-size: 90%;
 	}
 
 	li {
@@ -96,25 +97,15 @@ for (const heading of Astro.props.headings.slice(1)) {
 
 	@media (min-width: 1017px) {
 		.root {
-			max-height: calc(100vh - 10rem);
-		}
-
-		@keyframes slideUp {
-			0% {
-				top: 0;
-			}
-			5%,
-			100% {
-				top: -3rem;
-			}
+			bottom: 0;
+			margin: 0;
+			padding: 0.25rem 0 0.25rem calc(var(--widthLeftPadding) / 2);
+			position: fixed;
+			top: 5rem;
+			width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
 		}
 
 		.tableOfContents {
-			animation-name: slideUp;
-			animation-duration: 1ms;
-			animation-direction: alternate;
-			animation-timeline: scroll(block nearest);
-
 			--widthLeftPadding: 3rem;
 			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
 			position: absolute;
@@ -132,10 +123,6 @@ for (const heading of Astro.props.headings.slice(1)) {
 
 		.root {
 			border-left: 1px solid var(--colorSubtle);
-			margin: 0;
-			padding: 0.25rem 0 0.25rem calc(var(--widthLeftPadding) / 2);
-			position: fixed;
-			width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
 		}
 	}
 </style>

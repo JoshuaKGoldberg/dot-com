@@ -31,8 +31,8 @@ const rendered = await entry.render();
 	slug={entry.slug}
 	title={entry.data.title}
 >
+	<TableOfContents headings={rendered.headings} />
 	<BodyContents class={styles.top}>
-		<TableOfContents headings={rendered.headings} />
 		<BlogHero
 			body={entry.body}
 			class={styles.hero}
