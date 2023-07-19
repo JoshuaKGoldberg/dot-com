@@ -75,6 +75,42 @@ const links = [
 			margin-left: calc(var(--paddingExtraHorizontal) * -1);
 			width: calc(var(--widthFull) + calc(var(--paddingExtraHorizontal) * 2));
 			z-index: 1;
+			position: fixed;
+		}
+
+		.contents::after,
+		.contents::before {
+			bottom: -1rem;
+			content: "";
+			left: -1rem;
+			pointer-events: none;
+			position: absolute;
+			right: -1rem;
+		}
+
+		.contents::after {
+			top: 0;
+			backdrop-filter: blur(20px);
+			mask-image: linear-gradient(to bottom, black 50%, transparent);
+			z-index: -1;
+		}
+
+		.contents::before {
+			background: radial-gradient(
+						ellipse at top,
+						var(--colorBackgroundTop) 0,
+						transparent 100vh
+					)
+					no-repeat,
+				radial-gradient(
+						ellipse at top,
+						var(--colorBackgroundTop) 0,
+						transparent 100vh
+					)
+					no-repeat;
+			content: "";
+			filter: blur(15px);
+			top: -1.5rem;
 		}
 
 		.links {
