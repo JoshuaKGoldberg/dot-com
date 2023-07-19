@@ -5,39 +5,29 @@ import { Text } from "./Text";
 const links = [
 	["Blog", "/blog"],
 	["Book", "https://learningtypescript.com"],
-	["Projects", "/projects", "Assorted project work also seen on my GitHub."],
+	["Projects", "/projects"],
 	["Speaking", "/speaking"],
 ] as const;
 ---
 
 <Text as="header" class="header" fontWeight="bold">
-	<div class="contents">
-		<HeaderLink href="/">Josh Goldberg</HeaderLink>
-		<div class="links">
-			{
-				links.map(([text, href]) => {
-					return <HeaderLink href={href}>{text}</HeaderLink>;
-				})
-			}
-		</div>
+	<HeaderLink href="/">Josh Goldberg</HeaderLink>
+	<div class="links">
+		{
+			links.map(([text, href]) => {
+				return <HeaderLink href={href}>{text}</HeaderLink>;
+			})
+		}
 	</div>
 </Text>
 
 <style>
 	header {
-		font-size: var(--fontSizeMedium);
-		text-align: center;
-		width: 100%;
-		position: relative;
-	}
-
-	.contents {
-		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem 3.5rem;
-		padding: 2rem;
 		justify-content: center;
+		padding: 2rem;
 		width: 100%;
 	}
 
@@ -52,50 +42,33 @@ const links = [
 
 	@media (min-width: 700px) {
 		header {
-			height: 3.5rem;
-		}
-
-		.contents {
+			gap: 1.5rem;
 			justify-content: space-between;
-		}
-
-		.links {
-			justify-content: space-between;
-		}
-	}
-
-	@media (min-width: 1017px) {
-		header {
-			margin-bottom: 5rem;
-		}
-
-		.contents {
-			--paddingExtraHorizontal: 2rem;
-			--paddingVertical: 2rem;
-			margin-left: calc(var(--paddingExtraHorizontal) * -1);
-			width: calc(var(--widthFull) + calc(var(--paddingExtraHorizontal) * 2));
-			z-index: 1;
+			max-width: calc(var(--widthFull) - 1rem);
 			position: fixed;
+			z-index: 1;
 		}
 
-		.contents::after,
-		.contents::before {
+		header::after,
+		header::before {
+			--horizontalBlur: -3.5rem;
 			bottom: -1rem;
 			content: "";
-			left: -1rem;
+			filter: blur(1rem);
+			left: var(--horizontalBlur);
 			pointer-events: none;
 			position: absolute;
-			right: -1rem;
+			right: var(--horizontalBlur);
 		}
 
-		.contents::after {
-			top: 0;
+		header::after {
 			backdrop-filter: blur(20px);
 			mask-image: linear-gradient(to bottom, black 50%, transparent);
+			top: 0;
 			z-index: -1;
 		}
 
-		.contents::before {
+		header::before {
 			background: radial-gradient(
 						ellipse at top,
 						var(--colorBackgroundTop) 0,
@@ -109,12 +82,18 @@ const links = [
 					)
 					no-repeat;
 			content: "";
-			filter: blur(15px);
 			top: -1.5rem;
 		}
 
 		.links {
 			gap: 1.5rem;
+			justify-content: space-between;
+		}
+	}
+
+	@media (min-width: 1017px) {
+		header {
+			padding: 2rem 0;
 		}
 	}
 </style>
