@@ -1,3 +1,7 @@
+.top {
+	margin-top: 1.5rem;
+}
+
 .top::after {
 	border-bottom: 1px solid var(--colorSubtle);
 	content: "";
@@ -78,6 +82,10 @@
 }
 
 @media (min-width: 700px) {
+	.top {
+		/* margin-top: clamp(5rem, 10vw, 10rem); */
+	}
+
 	.top::after {
 		margin: clamp(1.25rem, 2.5vw, 2.5rem) 0 clamp(1rem, 2vw, 2rem);
 	}
@@ -86,6 +94,10 @@
 @media (min-width: 1017px) {
 	.hero {
 		max-width: calc(var(--widthSlim) + 4rem);
+	}
+
+	.top {
+		/* margin-top: 10rem; */
 	}
 
 	.top::after {
