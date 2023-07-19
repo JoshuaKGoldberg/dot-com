@@ -21,8 +21,8 @@
 
 		--textShadow: 3px 3px 1px var(--colorSubtle);
 
-		--widthFull: 1000px;
-		--widthSlim: 49rem;
+		--widthFull: 63rem;
+		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */

@@ -93,7 +93,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 
 	@media (min-width: 1017px) {
 		.tableOfContents {
-			--widthLeftPadding: 2rem;
+			--widthLeftPadding: 3rem;
 			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
 			position: absolute;
 			top: 0;
@@ -102,7 +102,7 @@ for (const heading of Astro.props.headings.slice(1)) {
 		.root {
 			border-left: 1px solid var(--colorSubtle);
 			margin: 0;
-			padding: 0.25rem 0 0.25rem 1rem;
+			padding: 0.25rem 0 0.25rem calc(var(--widthLeftPadding) / 2);
 			position: fixed;
 			width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
 		}
