@@ -1,16 +1,21 @@
 ---
-interface Props {
+export interface Props {
+	as: string;
 	class?: string | undefined;
 }
+
+
+const { as: As = 'div' } = Astro.props;
 ---
 
-<div class:list={["bodyContents", Astro.props.class]}>
+<As class:list={["bodyContents", Astro.props.class]}>
 	<slot />
-</div>
+</As>
 
 <style>
 	.bodyContents {
 		padding: 0 2rem;
+		position: relative;
 	}
 
 	@media (min-width: 1017px) {

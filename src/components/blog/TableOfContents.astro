@@ -1,16 +1,110 @@
 ---
+import type { MarkdownHeading } from "astro";
+import { Text } from "../Text";
+
 interface Props {
-	class?: string | undefined;
+	headings: MarkdownHeading[];
+}
+
+interface HeadingGroup {
+	h2: MarkdownHeading;
+	h3s: MarkdownHeading[];
+}
+
+const headingGroups: HeadingGroup[] = [
+	{
+		h2: Astro.props.headings[0],
+		h3s: [],
+	},
+];
+
+for (const heading of Astro.props.headings.slice(1)) {
+	if (heading.depth === 2) {
+		headingGroups.push({
+			h2: heading,
+			h3s: [],
+		});
+	} else {
+		headingGroups[headingGroups.length - 1].h3s.push(heading);
+	}
 }
 ---
 
-<div class:list={["tableOfContents", Astro.props.class]}>hi</div>
+<div class="tableOfContents">
+	<ol class="root">
+		{
+			headingGroups.map(({ h2, h3s }) => (
+				<li>
+					<Text as="a" fontWeight="light" href={`#${h2.slug}`}>
+						{h2.text}
+					</Text>
+					{h3s.length ? (
+						<ol>
+							{h3s.map((h3) => (
+								<li>
+									<Text as="a" fontWeight="light" href={`#${h3.slug}`}>
+										{h3.text}
+									</Text>
+								</li>
+							))}
+						</ol>
+					) : null}
+				</li>
+			))
+		}
+	</ol>
+</div>
 
 <style>
-	.tableOfContents {
-		background: hotpink;
-		position: sticky;
-		top: 1rem;
-		display: block;
+	.root {
+		--gapVertical: 0.75rem;
+		max-height: calc(90vh - 5rem);
+		overflow-y: auto;
+		padding-left: 0;
+	}
+
+	ol {
+		display: flex;
+		gap: var(--gapVertical);
+		flex-direction: column;
+	}
+
+	.root ol {
+		margin-left: 1rem;
+		padding-left: 0;
+	}
+	
+
+	li {
+		list-style-type: none;
+	}
+
+	.root ol li:first-of-type {
+		margin-top:var(--gapVertical);
+	}
+
+	a {
+		transition: 280ms color;
+	}
+
+	a:hover {
+		color: var(--colorEmphasized);
+	}
+
+	@media (min-width: 1017px) {
+		.tableOfContents {
+			--widthLeftPadding: 2rem;
+			left: calc(100% - var(--widthTableOfContents) + var(--widthLeftPadding));
+			position: absolute;
+			top: 0;
+		}
+
+		.root {
+			border-left: 1px solid var(--colorSubtle);
+			margin: 0;
+			padding: 0.25rem 0 0.25rem 1rem;
+			position: fixed;
+			width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
+		}
 	}
 </style>

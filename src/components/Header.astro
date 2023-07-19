@@ -11,27 +11,34 @@ const links = [
 ---
 
 <Text as="header" class="header" fontWeight="bold">
-	<HeaderLink href="/">Josh Goldberg</HeaderLink>
-	<div class="links">
-		{
-			links.map(([text, href]) => {
-				return <HeaderLink href={href}>{text}</HeaderLink>;
-			})
-		}
+	<div class="contents">
+		<HeaderLink href="/">Josh Goldberg</HeaderLink>
+		<div class="links">
+			{
+				links.map(([text, href]) => {
+					return <HeaderLink href={href}>{text}</HeaderLink>;
+				})
+			}
+		</div>
 	</div>
 </Text>
 
 <style>
 	header {
+		font-size: var(--fontSizeMedium);
+		text-align: center;
+		width: 100%;
+		position: relative;
+	}
+
+	.contents {
 		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem 3.5rem;
-		justify-content: center;
 		padding: 2rem;
+		justify-content: center;
 		width: 100%;
-		font-size: var(--fontSizeMedium);
-		text-align: center;
 	}
 
 	.links {
@@ -45,19 +52,37 @@ const links = [
 
 	@media (min-width: 700px) {
 		header {
-			gap: 1.5rem;
+			height: 3.5rem;
+		}
+
+		.contents {
 			justify-content: space-between;
 		}
 
 		.links {
-			gap: 1.5rem;
 			justify-content: space-between;
 		}
 	}
 
 	@media (min-width: 1017px) {
 		header {
-			padding: 2rem 0;
+			margin-bottom: 5rem;
+		}
+
+		.contents {
+			--paddingExtraHorizontal: 2rem;
+			--paddingVertical: 2rem;
+			background: linear-gradient(to bottom, var(--colorBackgroundTop) 70%, transparent);
+			padding: var(--paddingVertical) var(--paddingExtraHorizontal);
+			margin-left: calc(var(--paddingExtraHorizontal) * -1);
+			width: calc(var(--widthFull) + calc(var(--paddingExtraHorizontal) * 2));
+			z-index: 1;
+			position: fixed;
+		}
+	
+		.links {
+			gap: 1.5rem;
 		}
 	}
+
 </style>

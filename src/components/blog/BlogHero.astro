@@ -1,43 +1,58 @@
 ---
-
-import Hero, { HeroImage } from "../Hero.astro";
+import HeroImage, { Props as HeroImageProps } from "../HeroImage.astro";
 import HeroSecondary from "../HeroSecondary.astro";
 import HeroTertiary from "../HeroTertiary.astro";
+import HeroTitle from "../HeroTitle.astro";
 import { DateAndMinutes } from "./DateAndMinutes";
-import TableOfContents from "./TableOfContents.astro";
 
 interface Props {
-    body: string;
-    date: Date;
-    description: string;
-    image: HeroImage;
-    title: string;
+	body: string;
+	date: Date;
+	description: string;
+	image: HeroImageProps;
+	title: string;
 }
 ---
 
 <div class="blogHero">
-    <Hero
-        image={Astro.props.image}
-        primary={Astro.props.title}
-        variant="left"
-    >
-        <HeroSecondary size="wide">
-            {Astro.props.description}
-        </HeroSecondary>
-        <HeroTertiary>
-            <DateAndMinutes
-                body={Astro.props.body}
-                date={Astro.props.date}
-                year="numeric"
-            />
-        </HeroTertiary>
-    </Hero>
-    <TableOfContents class="tableOfContents" />
+	<div class="left">
+		<div class="primary">
+			<HeroImage {...Astro.props.image} size="small" />
+			<div>
+				<HeroTitle>{Astro.props.title}</HeroTitle>
+				<HeroTertiary>
+					<DateAndMinutes
+						body={Astro.props.body}
+						date={Astro.props.date}
+						year="numeric"
+					/>
+				</HeroTertiary>
+			</div>
+		</div>
+		<HeroSecondary size="wide">
+			{Astro.props.description}
+		</HeroSecondary>
+	</div>
+	<div class="details"></div>
 </div>
 
 <style>
-    .blogHero {
-        position: relative;
-        /* display: grid; */
-    }
+	.blogHero {
+		margin-bottom: clamp(2rem, 3vw, 3rem);
+	}
+
+	.primary {
+		display: grid;
+		gap: 1rem;
+		align-items: center;
+		grid-template-columns: auto auto;
+		width: 100%;
+		margin-bottom: 2rem;
+	}
+
+	@media (min-width: 1017px) {
+		.blogHero {
+			margin-right: var(--widthTableOfContents);
+		}
+	}
 </style>

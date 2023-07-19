@@ -22,13 +22,13 @@ const image = `images/${slug.toLowerCase()}`;
 	<Hero
 		image={{
 			alt: Astro.props.alt,
+			size: "large",
 			src: {
 				dark: `/${image}-dark.webp`,
 				light: `/${image}-light.webp`,
 			},
 		}}
 		primary={primary}
-		variant="centered"
 	>
 		<HeroSecondary>
 			{secondary}

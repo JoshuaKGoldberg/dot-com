@@ -23,6 +23,7 @@
 
 		--widthFull: 1000px;
 		--widthSlim: 49rem;
+		--widthTableOfContents: 15rem;
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */
 		--astro-code-color-background: transparent;

@@ -7,6 +7,7 @@ import styles from "./slug.module.css";
 
 import "./code.css";
 import BlogHero from "../../components/blog/BlogHero.astro";
+import TableOfContents from "../../components/blog/TableOfContents.astro";
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
@@ -30,19 +31,21 @@ const rendered = await entry.render();
 	slug={entry.slug}
 	title={entry.data.title}
 >
-	<BodyContents>
+	<BodyContents class={styles.top}>
+		<TableOfContents headings={rendered.headings} />
 		<BlogHero
 			body={entry.body}
 			date={entry.data.date}
 			description={entry.data.description}
 			image={{
 				alt: entry.data.image.alt,
+				size: "small",
 				src: `/images/blog/${entry.data.image.src}`,
 			}}
 			title={entry.data.title}
 		/>
 	</BodyContents>
-	<article class={styles.article}>
+	<BodyContents as="article" class={styles.article}>
 		<rendered.Content />
 	</article>
 </BaseLayout>

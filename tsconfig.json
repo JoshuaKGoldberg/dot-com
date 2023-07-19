@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
+		"noUncheckedIndexedAccess": false,
 		"target": "es2022"
 	},
 	"extends": "astro/tsconfigs/strictest"

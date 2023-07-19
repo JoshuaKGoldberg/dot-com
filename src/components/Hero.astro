@@ -1,54 +1,29 @@
 ---
-import { Text } from "./Text";
+import HeroImage, { Props as HeroImageProps } from "./HeroImage.astro";
+import HeroTitle from "./HeroTitle.astro";
 
-const variants = {
-	centered: "centered",
-	left: "left",
-}
-
-export type HeroVariant = keyof typeof variants;
-
-export interface ColorSchemeImages {
-	dark: string;
-	light: string;
-}
-
-export interface HeroImage {
-	alt: string;
-	src: string | ColorSchemeImages;
-}
-
-export interface Props {
+interface Props {
 	class?: string | undefined;
-	image: HeroImage;
+	image: HeroImageProps;
 	primary: string;
-	variant: HeroVariant;
 }
 
-const { class: className, image, primary } = Astro.props;
-const src =
-	typeof image.src === "string" ? { dark: image.src, light: image.src } : image.src;
 ---
 
-<div class:list={["hero", className, variants[Astro.props.variant]]}>
+<div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<picture>
-			<source srcset={src.dark} media="(prefers-color-scheme: dark)" />
-			<source srcset={src.light} media="(prefers-color-scheme: light)" />
-			<img alt={image.alt} src={src.light} />
-		</picture>
+		<HeroImage {...Astro.props.image} size="large">
 	</div>
 	<div class="half second">
-		<Text as="h1" fontSize="title" fontWeight="bolder">
-			{primary}
-		</Text>
+		<HeroTitle>
+			{Astro.props.primary}
+		</HeroTitle>
 		<slot />
 	</div>
 </div>
 
 <style>
 	.hero {
-		--imageSize: 10rem;
 		align-items: center;
 		display: flex;
 		flex-direction: column;
@@ -56,42 +31,21 @@ const src =
 		margin: 1rem auto 4rem;
 		padding: 0 1rem;
 		position: relative;
-		text-align: center;
-	}
-
-	.hero.centered {
-		--h1LineHeight: 0.75;
-		max-width: 100%;
-		margin: 1rem auto 4rem;
 		width: var(--widthFull);
-	}
+		max-width: 100%;
+		text-align: center;
 
-	.hero.left {
-		--h1LineHeight: 0.9;
-		margin: 2rem auto 0;
-		max-width: var(--widthSlim);
-	}
-
-	h1 {
-		color: var(--colorForegroundExtra);
-		line-height: var(--h1LineHeight);
-		text-shadow: var(--textShadow);
-	}
-
-	img {
-		user-select: none;
-		height: var(--imageSize);
-		width: var(--imageSize);
+		--imageSize: 10rem;
 	}
 
 	@media (min-width: 700px) {
 		.hero {
-			flex-direction: row;
 			gap: 2.5rem;
 			height: 35vh;
-			margin: clamp(1rem, 5vh, 7rem) 0 clamp(2rem, 7vh, 10rem);
-			max-height: 20rem;
 			min-height: calc(var(--imageSize) + 1rem);
+			max-height: 20rem;
+			flex-direction: row;
+			margin: clamp(1rem, 5vh, 7rem) 0 clamp(2rem, 7vh, 10rem);
 			padding: 0;
 			text-align: left;
 		}
@@ -104,9 +58,6 @@ const src =
 			display: flex;
 			justify-content: flex-end;
 			max-height: initial;
-		}
-
-		.centered .half.first {
 			width: 45%;
 		}
 
@@ -115,27 +66,7 @@ const src =
 			flex-direction: column;
 			align-items: flex-start;
 			justify-content: center;
-		}
-
-		.centered .half.second {
 			width: 55%;
-		}
-
-		picture {
-			transform: none;
-		}
-
-		img {
-			aspect-ratio: 1;
-			border-radius: 100%;
-			box-shadow: 0 7px 7px 3px var(--colorSubtle);
-		}
-
-		.centered img {
-			height: 256px;
-			max-height: 100%;
-			max-width: 100%;
-			width: 256px;
 		}
 	}
 </style>
