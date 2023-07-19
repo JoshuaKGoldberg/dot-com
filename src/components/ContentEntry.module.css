@@ -3,11 +3,6 @@
 	gap: 1rem;
 }
 
-.contentEntry.widthsFull {
-	max-width: var(--widthSlim);
-	margin: auto;
-}
-
 .contents {
 	align-items: flex-start;
 	display: flex;

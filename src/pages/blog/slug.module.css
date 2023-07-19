@@ -1,13 +1,9 @@
-.top {
-	margin-bottom: clamp(1.25rem, 2.5vw, 2.5rem);
-	padding-bottom: clamp(1rem, 2vw, 2rem);
-}
-
 .top::after {
 	content: "";
 	display: block;
 	width: calc(100% - var(--widthTableOfContents));
 	border-bottom: 1px solid var(--colorSubtle);
+	margin: clamp(1.25rem, 2.5vw, 2.5rem) 0 clamp(1rem, 2vw, 2rem);
 }
 
 .article {
@@ -22,6 +18,11 @@
 
 .article a {
 	text-decoration: underline;
+}
+
+.article h2,
+.article h3 {
+	scroll-margin-top: 7.5rem;
 }
 
 .article h2 {
@@ -71,6 +72,10 @@
 
 .article ul {
 	margin: 0;
+}
+
+.article li + li {
+	margin-top: 0.5rem;
 }
 
 @media (min-width: 1071px) {
