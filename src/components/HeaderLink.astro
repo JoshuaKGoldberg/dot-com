@@ -12,8 +12,6 @@ const active =
 	href.length < 2
 		? Astro.url.pathname.length < 2
 		: Astro.url.pathname.startsWith(href);
-
-console.log(Astro.url.pathname, { href, active });
 ---
 
 <Squiggly

@@ -20,6 +20,7 @@
 		"start": "astro dev"
 	},
 	"dependencies": {
+		"@astrojs/mdx": "^0.19.7",
 		"@astrojs/prefetch": "^0.3.0",
 		"@astrojs/solid-js": "^2.2.0",
 		"@fontsource/league-spartan": "^4.5.13",

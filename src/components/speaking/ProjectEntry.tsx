@@ -14,10 +14,6 @@ export function ProjectEntry(props: ProjectEntryProps) {
 		props.project.data.url ??
 		`https://github.com/JoshuaKGoldberg/${props.project.slug}`;
 
-	if (props.project.slug === "typestat") {
-		console.log(props.project, props.project.data.image);
-	}
-
 	return (
 		<ContentEntry
 			description={props.project.data.description}

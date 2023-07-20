@@ -1,0 +1,26 @@
+---
+export interface Props {
+	src: string;
+	title: string;
+}
+---
+
+<iframe
+	allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+	allowfullscreen
+	src={Astro.props.src}
+	height="315"
+	style={{ border: "0", margin: "auto" }}
+	title={Astro.props.title}
+	width="560"></iframe>
+
+<em
+	style={{
+		display: "block",
+		"margin-bottom": "2rem",
+		"text-align": "center",
+	}}
+>
+	<slot name="primary" />
+	<small><slot name="secondary" /></small>
+</em>
