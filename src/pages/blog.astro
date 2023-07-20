@@ -6,15 +6,14 @@ import { BlogsGrouped } from "../components/blog/BlogsGrouped";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import HeroSecondary from "../components/HeroSecondary.astro";
+import { description } from "../constants";
+import HeroTertiary from "../components/HeroTertiary.astro";
+import { Anchor } from "../components/Anchor";
 
 const blogs = await getCollection("blog");
 ---
 
-<BaseLayout
-	description="I blog about static analysis, accessibility, and team culture."
-	slug="goldblog"
-	title="Goldblog"
->
+<BaseLayout description={description} slug="goldblog" title="Goldblog">
 	<BodyContents>
 		<Hero
 			image={{
@@ -25,10 +24,18 @@ const blogs = await getCollection("blog");
 			primary="Goldblog"
 		>
 			<HeroSecondary size="normal">
-				A blog about open source, static analysis, and web development in
-				general.
+				{description}
 			</HeroSecondary>
+			<HeroTertiary>
+				I talk a lot.
+				Updates are shared online and posted to an RSS feed at <Anchor
+					href="/rss.xml"
+					target="_blank"
+				>
+					/rss.xml
+				</Anchor>.
+			</HeroTertiary>
 		</Hero>
-		<BlogsGrouped blogs={blogs.sort((a, b) => +b.data.date - +a.data.date)} />
+		<BlogsGrouped blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)} />
 	</BodyContents>
 </BaseLayout>

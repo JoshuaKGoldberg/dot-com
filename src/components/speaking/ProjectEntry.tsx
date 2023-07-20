@@ -13,6 +13,7 @@ export function ProjectEntry(props: ProjectEntryProps) {
 	const url = () =>
 		props.project.data.url ??
 		`https://github.com/JoshuaKGoldberg/${props.project.slug}`;
+	const title = () => props.project.data.title ?? props.project.slug;
 
 	return (
 		<ContentEntry
@@ -20,6 +21,7 @@ export function ProjectEntry(props: ProjectEntryProps) {
 			image={
 				props.project.data.image
 					? {
+							alt: `${title()} logo`,
 							src: props.project.data.image,
 							variant: "square",
 					  }
@@ -30,7 +32,7 @@ export function ProjectEntry(props: ProjectEntryProps) {
 				["Repo", url()],
 				...Object.entries(props.project.data.links ?? []),
 			]}
-			title={props.project.data.title ?? props.project.slug}
+			title={title()}
 			url={url()}
 			widths="half"
 		>

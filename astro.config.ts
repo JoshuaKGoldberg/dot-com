@@ -4,11 +4,12 @@ import solidJs from "@astrojs/solid-js";
 import { defineConfig } from "astro/config";
 import konamimojisplosion from "astro-konamimojisplosion";
 
-// https://astro.build/config
+import { site } from "./src/constants";
+
 export default defineConfig({
 	integrations: [konamimojisplosion(), solidJs(), prefetch(), mdx()],
 	markdown: {
 		syntaxHighlight: "prism",
 	},
-	site: "https://joshuakgoldberg.com",
+	site: site,
 });

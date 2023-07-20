@@ -12,7 +12,7 @@ export function BlogsGrouped(props: BlogsGroupedProps) {
 	return (
 		<GroupedEntries
 			groups={Object.entries(
-				groupBy(props.blogs, (blog) => blog.data.date.getFullYear())
+				groupBy(props.blogs, (blog) => blog.data.pubDate.getFullYear())
 			)}
 			renderEntry={(blog) => <BlogEntry blog={blog} />}
 		/>

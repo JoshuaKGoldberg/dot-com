@@ -1,13 +1,13 @@
 ---
-date: 2023-05-01
 description: "How I recommend getting your formatter, linter, and type checker to play together nicely."
 image:
   alt: Josh smiling on stage and giving a presentation showing the "Type Checking React (v2)" from the linked slides.
   src: react-miami-me-speaking.jpg
+pubDate: 2023-05-01
 tags: ["formatting", "eslint", "linting", "prettier", "react", "style"]
 title: "Configuring ESLint, Prettier, and TypeScript Together"
-
 ---
+
 import EmbeddedIframe from "../../components/blog/mdx/EmbeddedIframe.astro";
 
 _Static analysis_ is tooling that scrutinizes code without running it.
@@ -21,14 +21,19 @@ Static analysis tools tend to exist on a spectrum from speed to power:
 I recently [gave a talk at React Miami 2023](https://www.reactmiami.com/speakers/joshuagoldberg) about setting up ESLint and TypeScript for React that includes my recommendations.
 This blog post covers all the info in that talk: describing how to get started with each form of static analysis in JavaScript/TypeScript and some quick tips for using them effectively.
 
-<EmbeddedIframe
-	src="https://www.youtube-nocookie.com/embed/mPPZ-NUnR-4?start=25744"
->
-	<a href="https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743" slot="primary" target="_blank">
-		You can watch my talk along with all the other React Miami talks here on YouTube.
+{/* prettier-ignore */}
+<EmbeddedIframe src="https://www.youtube-nocookie.com/embed/mPPZ-NUnR-4?start=25744">
+	<a
+		href="https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743"
+		slot="primary"
+		target="_blank"
+	>
+		You can watch my talk along with all the other React Miami talks here on
+		YouTube.
 	</a>
 	<Fragment slot="secondary">
-		Photo credit <a href="https://twitter.com/Beccalytics" target="_blank">Rebecca Bakels</a>. 
+		Photo credit
+		<a href="https://twitter.com/Beccalytics" target="_blank">Rebecca Bakels</a>.
 		<a href="https://1drv.ms/p/s!AvUc1cvPrJnWvt0cjx-_PLIwDIzclw" target="_blank">See the PowerPoint slides here</a>.
 	</Fragment>
 </EmbeddedIframe>

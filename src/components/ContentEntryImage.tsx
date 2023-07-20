@@ -10,6 +10,7 @@ const variants = {
 export type ContentEntryImageVariant = keyof typeof variants;
 
 export interface ContentEntryImageProps {
+	alt: string;
 	src: string;
 	variant: ContentEntryImageVariant;
 }
@@ -17,7 +18,7 @@ export interface ContentEntryImageProps {
 export function ContentEntryImage(props: ContentEntryImageProps) {
 	return (
 		<img
-			alt=""
+			alt={props.alt}
 			class={clsx(styles.contentEntryImage, variants[props.variant])}
 			src={`/images/${props.src}`}
 		/>
