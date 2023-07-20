@@ -134,15 +134,17 @@ li:has(.back) {
 		--widthLeftPadding: 3rem;
 		visibility: unset;
 		left: calc(var(--widthSlim) + var(--widthLeftPadding));
-		max-height: initial;
+		overflow-y: auto;
 		position: absolute;
 	}
 
 	.tableRoot {
-		bottom: -0.9rem;
-		max-height: fit-content;
+		bottom: -1rem;
+		max-height: calc(100vh - 8rem);
+		height: max-content;
 		overflow-y: auto;
 		position: fixed;
+		scrollbar-gutter: stable;
 		top: 7rem;
 		width: var(--widthTableOfContents);
 		z-index: 1;
