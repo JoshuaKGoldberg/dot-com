@@ -24,6 +24,8 @@
 		--transitionMedium: 280ms;
 		--transitionSlow: 700ms;
 
+		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
+
 		--widthFull: 63rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;

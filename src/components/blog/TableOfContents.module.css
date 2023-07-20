@@ -120,12 +120,6 @@ li:has(.back) {
 }
 
 @media (min-width: 1017px) {
-	#top {
-		position: absolute;
-		top: -5rem;
-		scroll-margin-top: 5rem;
-	}
-
 	.toggle {
 		display: none;
 	}
@@ -139,14 +133,14 @@ li:has(.back) {
 	}
 
 	.tableRoot {
-		bottom: -1rem;
-		max-height: calc(100vh - 8rem);
+		top: calc(var(--heightMinimumFromHeader) - 2rem);
+		max-height: calc(100vh - var(--heightMinimumFromHeader) + 1rem);
 		height: max-content;
 		overflow-y: auto;
+		padding-right: 0.5rem;
 		position: fixed;
 		scrollbar-gutter: stable;
-		top: 7rem;
-		width: var(--widthTableOfContents);
+		width: calc(var(--widthTableOfContents) - var(--widthLeftPadding) + 1rem);
 		z-index: 1;
 	}
 
