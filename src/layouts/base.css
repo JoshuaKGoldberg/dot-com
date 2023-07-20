@@ -107,7 +107,8 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		html {
+		html,
+		body {
 			scroll-behavior: smooth;
 		}
 	}

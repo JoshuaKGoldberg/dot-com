@@ -1,15 +1,3 @@
-.top {
-	margin-top: 1.5rem;
-}
-
-.top::after {
-	border-bottom: 1px solid var(--colorSubtle);
-	content: "";
-	display: block;
-	margin-bottom: 1.5rem;
-	width: 100%;
-}
-
 .article {
 	display: flex;
 	flex-direction: column;
@@ -82,30 +70,7 @@
 	margin-top: 0.5rem;
 }
 
-@media (min-width: 700px) {
-	.top {
-		margin-top: 7rem;
-	}
-
-	.top::after {
-		margin-bottom: 2rem;
-	}
-}
-
 @media (min-width: 1017px) {
-	.top {
-		margin-top: 8rem;
-	}
-
-	.top::after {
-		margin-top: 2rem;
-		width: calc(100% - var(--widthTableOfContents));
-	}
-
-	.hero {
-		max-width: calc(var(--widthSlim) + 4rem);
-	}
-
 	.article {
 		max-width: calc(var(--widthSlim) + 4rem);
 		margin: 0 var(--widthTableOfContents) 0 0;

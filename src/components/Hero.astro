@@ -7,12 +7,11 @@ interface Props {
 	image: HeroImageProps;
 	primary: string;
 }
-
 ---
 
 <div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<HeroImage {...Astro.props.image} size="large">
+		<HeroImage {...Astro.props.image} size="large" />
 	</div>
 	<div class="half second">
 		<HeroTitle>

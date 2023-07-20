@@ -20,12 +20,13 @@ const blogs = await getCollection("blog");
 			image={{
 				alt: "todo",
 				size: "large",
-				src: `/images/blog/tiny-temp.jpg`
+				src: `/images/blog.jpg`,
 			}}
 			primary="Goldblog"
 		>
 			<HeroSecondary size="normal">
-				A blog about open source, static analysis, and web development in general.
+				A blog about open source, static analysis, and web development in
+				general.
 			</HeroSecondary>
 		</Hero>
 		<BlogsGrouped blogs={blogs.sort((a, b) => +b.data.date - +a.data.date)} />

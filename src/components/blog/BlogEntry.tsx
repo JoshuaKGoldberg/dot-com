@@ -8,6 +8,8 @@ export interface BlogEntryProps {
 }
 
 export function BlogEntry(props: BlogEntryProps) {
+	const url = () => `/blog/${props.blog.slug}`;
+
 	return (
 		<ContentEntry
 			description={props.blog.data.description}
@@ -19,7 +21,7 @@ export function BlogEntry(props: BlogEntryProps) {
 				<DateAndMinutes body={props.blog.body} date={props.blog.data.date} />
 			}
 			title={props.blog.data.title}
-			url={`/blog/${props.blog.slug}`}
+			url={url()}
 			widths="full"
 		/>
 	);

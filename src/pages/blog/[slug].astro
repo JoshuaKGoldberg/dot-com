@@ -3,11 +3,10 @@ import { getCollection, getEntry } from "astro:content";
 
 import BodyContents from "../../components/BodyContents.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import styles from "./slug.module.css";
 
-import "./code.css";
 import BlogHero from "../../components/blog/BlogHero.astro";
-import TableOfContents from "../../components/blog/TableOfContents.astro";
+import { TableOfContents } from "../../components/blog/TableOfContents";
+import BlogContent from "../../components/blog/BlogContent.astro";
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
@@ -31,10 +30,10 @@ const rendered = await entry.render();
 	slug={entry.slug}
 	title={entry.data.title}
 >
-	<BodyContents class={styles.top}>
+	<BodyContents class="top">
 		<BlogHero
 			body={entry.body}
-			class={styles.hero}
+			class="hero"
 			date={entry.data.date}
 			description={entry.data.description}
 			image={{
@@ -44,15 +43,42 @@ const rendered = await entry.render();
 			}}
 			title={entry.data.title}
 		/>
-		<TableOfContents headings={rendered.headings} />
+		<TableOfContents headings={rendered.headings} client:only />
 	</BodyContents>
-	<BodyContents as="article" class={styles.article}>
-		<rendered.Content />
-	</BodyContents>
+	<BlogContent rendered={rendered} />
 </BaseLayout>
 
-<script>
-	for (const pre of document.querySelectorAll("pre")) {
-		pre.tabIndex = 0;
+<style>
+	.top {
+		margin-top: 1.5rem;
 	}
-</script>
+
+	.top::after {
+		border-bottom: 1px solid var(--colorSubtle);
+		content: "";
+		display: block;
+		margin-bottom: 2.5rem;
+		width: 100%;
+	}
+
+	@media (min-width: 700px) {
+		.top {
+			margin-top: 9rem;
+		}
+
+		.top::after {
+			margin-bottom: 3rem;
+		}
+	}
+
+	@media (min-width: 1017px) {
+		.top::after {
+			margin: 3rem 0;
+			width: calc(100% - var(--widthTableOfContents));
+		}
+
+		.hero {
+			max-width: calc(var(--widthSlim) + 4rem);
+		}
+	}
+</style>

@@ -1,6 +1,7 @@
 ---
 import { Squiggly } from "../components/Squiggly";
 import { Text } from "../components/Text";
+import { SocialImage } from "./SocialImage";
 
 const socials = [
 	["bsky", "https://bsky.app/profile/joshuakgoldberg.com", "/icons/bsky.svg"],
@@ -16,7 +17,7 @@ const socials = [
 	{
 		socials.map(([alt, href, src]) => (
 			<a class="social" href={href} target="_blank">
-				<img alt={alt} class="logo" src={src} />
+				<SocialImage alt={alt} src={src} />
 				<Squiggly as="span" fontSize="smaller" variant="onHover">
 					{alt}
 				</Squiggly>
@@ -39,17 +40,6 @@ const socials = [
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
-	}
-
-	.logo {
-		height: 1.25rem;
-		width: 1.25rem;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		.socials img {
-			filter: invert() hue-rotate(180deg);
-		}
 	}
 
 	@media (min-width: 700px) {

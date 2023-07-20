@@ -1,0 +1,136 @@
+.toggle {
+	cursor: pointer;
+	background: none;
+	border: none;
+	float: left;
+
+	/* Compensates for the squiggly, so this is aligned on top of the horizontal bar */
+	margin-bottom: 0.125rem;
+}
+
+.toggle input {
+	display: none;
+}
+
+.tableOfContents {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height var(--transitionSlow);
+	width: 100%;
+}
+
+.toggle:has(:checked) + .tableOfContents {
+	max-height: 100vh;
+}
+
+.tableRoot {
+	--gapVertical: 0.75rem;
+	padding: 1rem 0 0.5rem;
+	width: 100%;
+}
+
+.ol {
+	display: flex;
+	gap: var(--gapVertical);
+	flex-direction: column;
+}
+
+.tableRoot .ol {
+	padding-left: 0;
+	font-size: 90%;
+}
+
+.li {
+	list-style-type: none;
+}
+
+.tableRoot .ol .li:first-of-type {
+	margin-top: var(--gapVertical);
+}
+
+.a {
+	border-left: 4px solid transparent;
+	padding-left: 4px;
+	display: inline-block;
+}
+
+.a,
+.back {
+	transition: var(--transitionMedium) margin-left,
+		var(--transitionMedium) opacity;
+}
+
+.a:not(.active),
+.back.active {
+	opacity: 0.7;
+}
+
+.a.active,
+.back:not(.active) {
+	opacity: 1;
+}
+
+.a:not(.active, .back) {
+	margin-left: -8px;
+}
+
+.active {
+	position: relative;
+}
+
+.a::before {
+	bottom: 0;
+	content: "";
+	display: block;
+	left: -4px;
+	position: absolute;
+	top: -3px;
+	transition: var(--transitionMedium) width, var(--transitionMedium) opacity;
+	width: 10px;
+	opacity: 0;
+}
+
+.active::before {
+	background: linear-gradient(
+		to bottom,
+		var(--colorEmphasized),
+		var(--colorForeground)
+	);
+	opacity: 1;
+	width: 4px;
+}
+
+@media (min-width: 700px) {
+	.toggle {
+		margin-top: 1.5rem;
+	}
+}
+
+@media (min-width: 1017px) {
+	#top {
+		position: absolute;
+		top: -5rem;
+		scroll-margin-top: 5rem;
+	}
+
+	.toggle {
+		display: none;
+	}
+
+	.tableOfContents {
+		--widthLeftPadding: 3rem;
+		left: calc(var(--widthSlim) + var(--widthLeftPadding));
+		max-height: initial;
+		position: absolute;
+	}
+
+	.tableRoot {
+		bottom: -0.9rem;
+		max-height: fit-content;
+		overflow-y: auto;
+		position: fixed;
+		top: 7rem;
+		width: var(--widthTableOfContents);
+		z-index: 1;
+	}
+}

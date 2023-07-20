@@ -2,11 +2,16 @@
 import { Text } from "../components/Text";
 
 interface Props {
-	size?: 'normal' | 'wide';
+	size?: "normal" | "wide";
 }
 ---
 
-<Text as="p" class:list={["secondary", Astro.props.size ?? 'normal']} fontSize="subtitle" fontWeight="medium">
+<Text
+	as="p"
+	class:list={["secondary", Astro.props.size ?? "normal"]}
+	fontSize="subtitle"
+	fontWeight="medium"
+>
 	<slot />
 </Text>
 
