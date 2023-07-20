@@ -43,21 +43,37 @@ export function TableOfContents(props: TableOfContentsProps) {
 	);
 
 	function updateActiveHeading() {
-		const { scrollTop } = document.body;
-		const headings = document.querySelectorAll<HTMLElement>("h2, h3");
+		const headings = Array.from(
+			document.querySelectorAll<HTMLElement>("h2, h3, h4")
+		);
 
-		if (scrollTop < headings[0].offsetTop / 2) {
+		// Case: If the first heading is within the top half of the screen, we're at the beginning
+		if (document.body.scrollTop < headings[0].offsetTop / 2) {
 			setActiveSlug(undefined);
 			return;
 		}
 
-		for (const heading of headings) {
-			// Allow 56px (4rem) of leeway for the heading in the scroll position
-			if (heading.offsetTop >= scrollTop - 56) {
-				setActiveSlug(heading.id);
+		// Case: if the last heading is within the top half of the screen, the article is done
+		if (
+			headings[headings.length - 1].getBoundingClientRect().top <
+			innerHeight / 2
+		) {
+			setActiveSlug(headings[headings.length - 1].id);
+			return;
+		}
+
+		// Case: if a next (i + 1) heading is beyond the 2/3 point of the screen, we're at i
+		const threshold = innerHeight / 3;
+
+		for (let i = 0; i < headings.length - 1; i += 1) {
+			if (headings[i + 1].getBoundingClientRect().top > threshold) {
+				setActiveSlug(headings[i].id);
 				return;
 			}
 		}
+
+		// Fallback: we've passed all other headings, so we're at the last one
+		setActiveSlug(headings[headings.length - 1].id);
 	}
 
 	createEffect(updateActiveHeading);

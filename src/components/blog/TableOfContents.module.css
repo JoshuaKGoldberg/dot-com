@@ -70,7 +70,7 @@ li:has(.back) {
 .a,
 .back {
 	transition: var(--transitionMedium) margin-left,
-		var(--transitionMedium) opacity;
+		var(--transitionMedium) padding-right, var(--transitionMedium) opacity;
 }
 
 .a:not(.active),
@@ -85,9 +85,11 @@ li:has(.back) {
 
 .a:not(.active, .back) {
 	margin-left: -8px;
+	padding-right: 8px;
 }
 
 .active {
+	padding-right: 0;
 	position: relative;
 }
 
@@ -137,10 +139,9 @@ li:has(.back) {
 		max-height: calc(100vh - var(--heightMinimumFromHeader) + 1rem);
 		height: max-content;
 		overflow-y: auto;
-		padding-right: 0.5rem;
 		position: fixed;
 		scrollbar-gutter: stable;
-		width: calc(var(--widthTableOfContents) - var(--widthLeftPadding) + 1rem);
+		width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
 		z-index: 1;
 	}
 

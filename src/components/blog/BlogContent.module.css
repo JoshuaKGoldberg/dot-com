@@ -11,9 +11,8 @@
 	text-decoration: underline;
 }
 
-.article h2,
-.article h3 {
-	scroll-margin-top: 7.5rem;
+.article :is(h2, h3, h4) {
+	scroll-margin-top: calc(var(--heightMinimumFromHeader) - 0.5rem);
 }
 
 .article h2 {
