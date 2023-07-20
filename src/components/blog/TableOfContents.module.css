@@ -9,17 +9,26 @@
 }
 
 .toggle input {
-	display: none;
+	opacity: 0;
+	width: 0;
+	position: absolute;
+}
+
+.toggle:focus-within {
+	outline: 2px solid var(--colorEmphasized);
+	outline-offset: 2px;
 }
 
 .tableOfContents {
+	visibility: hidden;
 	max-height: 0;
 	overflow: hidden;
-	transition: max-height var(--transitionSlow);
+	transition: max-height var(--transitionSlow), visibility var(--transitionSlow);
 	width: 100%;
 }
 
 .toggle:has(:checked) + .tableOfContents {
+	visibility: visible;
 	max-height: 100vh;
 }
 
@@ -42,6 +51,10 @@
 
 .li {
 	list-style-type: none;
+}
+
+li:has(.back) {
+	display: none;
 }
 
 .tableRoot .ol .li:first-of-type {
@@ -119,6 +132,7 @@
 
 	.tableOfContents {
 		--widthLeftPadding: 3rem;
+		visibility: unset;
 		left: calc(var(--widthSlim) + var(--widthLeftPadding));
 		max-height: initial;
 		position: absolute;
@@ -132,5 +146,9 @@
 		top: 7rem;
 		width: var(--widthTableOfContents);
 		z-index: 1;
+	}
+
+	li:has(.back) {
+		display: unset;
 	}
 }
