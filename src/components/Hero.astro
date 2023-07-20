@@ -23,30 +23,26 @@ interface Props {
 
 <style>
 	.hero {
-		align-items: center;
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		margin: 1rem auto 4rem;
-		padding: 0 1rem;
+		margin: clamp(1rem, 8vh, 8rem) auto;
+		padding: 0 2rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
-		text-align: center;
+	}
 
-		--imageSize: 10rem;
+	.first {
+		float: right;
 	}
 
 	@media (min-width: 700px) {
 		.hero {
+			align-items: center;
+			display: flex;
 			gap: 2.5rem;
 			height: 35vh;
-			min-height: calc(var(--imageSize) + 1rem);
-			max-height: 20rem;
 			flex-direction: row;
 			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(4rem, 7vh, 12rem);
 			padding: 0;
-			text-align: left;
 		}
 
 		.half {

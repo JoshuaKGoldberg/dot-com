@@ -27,11 +27,11 @@ const src =
 
 <style>
 	.heroImage.small {
-		--imageSize: 128px;
+		--imageSize: clamp(4rem, 12vw, 8rem);
 	}
 
 	.heroImage.large {
-		--imageSize: 160px;
+		--imageSize: clamp(8rem, 20vw, 10rem);
 	}
 
 	img {
@@ -43,14 +43,24 @@ const src =
 	}
 
 	@media (min-width: 700px) {
+		.heroImage.small {
+			--imageSize: 128px;
+		}
+
 		.heroImage.large {
-			--imageSize: 256px;
+			--imageSize: clamp(12rem, 32vw, 16rem);
 		}
 
 		img {
 			max-height: 100%;
 			max-width: 100%;
 			box-shadow: 0 7px 7px 3px var(--colorSubtle);
+		}
+	}
+
+	@media (min-width: 1017px) {
+		.heroImage.large {
+			--imageSize: 256px;
 		}
 	}
 </style>
