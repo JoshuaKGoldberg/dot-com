@@ -96,6 +96,8 @@
 
 			/* Note: some of these are unused in Prism, but would be in Shiki. */
 			--astro-code-color-text: #d3d6f0;
+			--astro-code-color-deleted: #f08080;
+			--astro-code-color-inserted: #70c27d;
 			--astro-code-token-comment: #85cab1;
 			--astro-code-token-constant: #d4d8f4;
 			--astro-code-token-function: #85b8ff;

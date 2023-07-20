@@ -192,7 +192,7 @@ Each rule may report on code it doesn't like, and each complaint may contain an 
 For example, if you enabled the [ESLint `logical-assignment-operators` rule](https://eslint.org/docs/latest/rules/logical-assignment-operators) on the snippet from _Formatting_, you'd receive a message and suggested fix like:
 
 ```diff
-- friend = friend || "me"
+- friend = friend || "me";
 + friend ||= "me";
 Assignment (=) can be replaced with operator assignment (||=).
 ```
