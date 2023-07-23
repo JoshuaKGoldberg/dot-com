@@ -1,0 +1,19 @@
+---
+import LabeledMedia from './LabeledMedia.astro';
+
+export interface Props {
+	description: string;
+	original?: string;
+	src: string;
+	title: string;
+}
+---
+
+<LabeledMedia
+	description={Astro.props.description}
+	original={Astro.props.original}
+>
+	<video autoplay muted loop title={Astro.props.title}>
+		<source src={Astro.props.src} />
+	</video>
+</LabeledMedia>

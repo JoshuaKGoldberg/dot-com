@@ -36,7 +36,7 @@ const rendered = await entry.render();
 			class="hero"
 			date={entry.data.pubDate}
 			description={entry.data.description}
-			image={{
+			image={entry.data.image && {
 				alt: entry.data.image.alt,
 				size: "small",
 				src: `/images/blog/${entry.data.image.src}`,
@@ -54,7 +54,7 @@ const rendered = await entry.render();
 	}
 
 	.top::after {
-		border-bottom: 1px solid var(--colorSubtle);
+		border-bottom: 1px solid var(--colorMedium);
 		content: "";
 		display: block;
 		margin-bottom: 2.5rem;
@@ -73,7 +73,7 @@ const rendered = await entry.render();
 
 	@media (min-width: 1017px) {
 		.top::after {
-			margin: 3rem 0;
+			margin: 2rem 0;
 			width: calc(100% - var(--widthTableOfContents));
 		}
 

@@ -13,15 +13,19 @@ export function BlogEntry(props: BlogEntryProps) {
 	return (
 		<ContentEntry
 			description={props.blog.data.description}
-			image={{
-				alt: props.blog.data.image.src,
-				src: `/blog/${props.blog.data.image.src}`,
-				variant: "round",
-			}}
+			image={
+				props.blog.data.image && {
+					alt: props.blog.data.image.src,
+					src: `/blog/${props.blog.data.image.src}`,
+					variant: "round",
+				}
+			}
 			subtitle={
 				<DateAndMinutes body={props.blog.body} date={props.blog.data.pubDate} />
 			}
-			title={props.blog.data.title}
+			title={props.blog.data.title
+				// TODO: use a markdown renderer
+				.replaceAll("`", "")}
 			url={url()}
 			widths="full"
 		/>

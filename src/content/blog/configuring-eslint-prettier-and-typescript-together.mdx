@@ -9,6 +9,9 @@ title: "Configuring ESLint, Prettier, and TypeScript Together"
 ---
 
 import EmbeddedIframe from "../../components/blog/mdx/EmbeddedIframe.astro";
+import LabeledVideo from "../../components/blog/mdx/LabeledVideo.astro";
+import otterCleaning from "../../assets/otter-cleaning.gif";
+import needsMoreLintRules from "../../assets/needs-more-lint-rules.gif";
 
 _Static analysis_ is tooling that scrutinizes code without running it.
 This is in contrast with _dynamic analysis_: tooling such as testing that executes your code and scrutinizes the result.
@@ -22,7 +25,10 @@ I recently [gave a talk at React Miami 2023](https://www.reactmiami.com/speakers
 This blog post covers all the info in that talk: describing how to get started with each form of static analysis in JavaScript/TypeScript and some quick tips for using them effectively.
 
 {/* prettier-ignore */}
-<EmbeddedIframe src="https://www.youtube-nocookie.com/embed/mPPZ-NUnR-4?start=25744">
+<EmbeddedIframe
+	src="https://www.youtube-nocookie.com/embed/mPPZ-NUnR-4?start=25744"
+	title="React Miami talk: Configuring ESLint, Prettier, and TypeScript Together"
+>
 	<a
 		href="https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743"
 		slot="primary"
@@ -83,21 +89,12 @@ Let's dig into the types of tools.
 
 ## Formatting
 
-<p style="text-align:center">
-	<img
-		alt="Cute otter cleaning itself in a body of water."
-		src="/images/blog/otter-cleaning.gif"
-	/>
-	<em style="display:block;text-align:center;">
-		<small>
-			Formatters clean your code. That's all they do. [
-			<a href="https://giphy.com/gifs/montereybayaquarium-face-otter-sea-1xlGfZ07Dq62jqKT9t">
-				image source
-			</a>
-			]
-		</small>
-	</em>
-</p>
+<LabeledVideo
+	alt="Cute otter cleaning itself in a body of water."
+	description="Formatters clean your code. That's all they do."
+	original="https://giphy.com/gifs/montereybayaquarium-face-otter-sea-1xlGfZ07Dq62jqKT9t"
+	src={otterCleaning}
+/>
 
 A formatter is a tool that reads in your source code, ignores your formatting, and suggests how to write it.
 For example, given this oddly formatted code block:
@@ -170,9 +167,9 @@ The only option I generally set in my configs is [changing `useTabs` to true](ht
 ## Linting
 
 <p style="text-align:center">
-	<img
+	<LabeledVideo
 		alt="Will Ferrel in SNL banging a cowbell behind the band in the 'needs more cowbell' sketch. Caption: 'NEEDS MORE LINT RULES'"
-		src="/images/blog/needs-more-lint-rules.gif"
+		src={needsMoreLintRules}
 	/>
 	<em style="display:block;text-align:center;">
 		<small>me irl</small>

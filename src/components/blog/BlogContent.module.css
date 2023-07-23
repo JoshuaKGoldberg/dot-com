@@ -61,12 +61,27 @@
 	);
 }
 
+.article hr {
+	border-color: var(--colorMedium);
+	border-width: 0 0 1px 0;
+	margin: 3rem auto 2rem;
+	width: 100%;
+}
+
 .article ul {
 	margin: 0;
 }
 
 .article li + li {
 	margin-top: 0.5rem;
+}
+
+.article label img {
+	max-width: 100%;
+}
+
+.article strong {
+	font-weight: bolder;
 }
 
 @media (min-width: 1017px) {

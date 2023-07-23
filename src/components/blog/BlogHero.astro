@@ -11,7 +11,7 @@ interface Props {
 	class?: string | undefined;
 	date: Date;
 	description: string;
-	image: HeroImageProps;
+	image?: HeroImageProps | undefined;
 	title: string;
 }
 ---
@@ -19,15 +19,25 @@ interface Props {
 <div class:list={["blogHero", Astro.props.class]}>
 	<div class="left">
 		<div class="primary">
-			<HeroImage {...Astro.props.image} class="image" size="small" />
+			{
+				Astro.props.image && (
+					<HeroImage {...Astro.props.image} class="image" size="small" />
+				)
+			}
 			<div>
-				<HeroTitle>{Astro.props.title}</HeroTitle>
+				<HeroTitle>
+					{
+						Astro.props.title
+							// TODO: use a markdown renderer
+							.replaceAll("`", "")
+					}
+				</HeroTitle>
 				<HeroTertiary>
 					<DateAndMinutes
 						body={Astro.props.body}
 						date={Astro.props.date}
 						year="numeric"
-						>
+					>
 						<BlogShare
 							description={Astro.props.description}
 							url={Astro.url}
@@ -52,10 +62,13 @@ interface Props {
 	@media (min-width: 700px) {
 		.primary {
 			display: grid;
-			gap: 1.5rem;
-			grid-template-columns: auto auto;
 			margin-bottom: 2rem;
 			width: 100%;
+		}
+
+		.primary:has(.image) {
+			gap: 1.5rem;
+			grid-template-columns: min-content auto;
 		}
 	}
 

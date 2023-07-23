@@ -1,0 +1,50 @@
+---
+export interface Props {
+	description?: string | string[];
+	original?: string | undefined;
+}
+
+const descriptions =
+	Astro.props.description === undefined || Array.isArray(Astro.props.description)
+		? Astro.props.description
+		: [Astro.props.description];
+---
+
+<label class="labeled-media-media">
+	<slot />
+	<small class="labeled-media-small">
+		{
+			descriptions && descriptions.map((description) => (
+				<span class="labeled-media-description">{description}</span>
+			))
+		}
+		{
+			Astro.props.original && (
+				<em class="labeled-media-original">
+					<a href={Astro.props.original} target="_blank">
+						original
+					</a>
+				</em>
+			)
+		}
+	</small>
+</label>
+
+<style is:inline>
+	.labeled-media-media {
+		text-align: center;
+	}
+
+	.labeled-media-small {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.labeled-media-original::after {
+		content: "]";
+	}
+
+	.labeled-media-original::before {
+		content: "[";
+	}
+</style>

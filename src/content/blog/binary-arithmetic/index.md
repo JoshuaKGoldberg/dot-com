@@ -1,0 +1,498 @@
+---
+pubDate: 2019-10-11
+description: "Just for fun, what if we represented binary values purely within TypeScript's logical type system?"
+download: https://1drv.ms/p/s!AvUc1cvPrJnWvqNRDN6yLPZvYTb8KA?e=aNxTrY
+image:
+  alt: TODO
+  src: TODO
+title: Binary Arithmetic in the TypeScript Type System
+---
+
+_(updated 10/19 with typo fixes)_
+
+## Preamble
+
+Throughout the tech stacks and projects you could work on, the idea of a _language_ is constant.
+Language describes how reality should be.
+
+JavaScript describes how to create objects and manipulate them in an environment such as a browser, Node, or Deno.
+TypeScript contains that JavaScript language _and_ a types language to describe the shapes your objects an be.
+
+Take this `Movie` description:
+
+```ts
+type Movie = {
+	name: string;
+	rating: number;
+};
+```
+
+We're declaring in the TypeScript type system that all "Movie" objects must have two properties:
+
+- A `name` property of type `string`
+- A `rating` property of type `number`
+
+This TypeScript snippet contains JavaScript code declaring the creation of a `movie` variable and type system code declaring the type of that variable to be `Movie`:
+
+```ts
+const movie: Movie = {
+	name: "This is Spinal Tap",
+	rating: 11,
+};
+```
+
+Cool.
+
+The type system can also represent _"it's one of these"_ (_union_) types such as this `RawId`:
+
+```ts
+type RawId = number | string;
+```
+
+Anything of type RawId may be either a `number` _or_ a `string`.
+In this snippet, the `id` variable is happy as either of those:
+
+```ts
+let id: RawId;
+
+id = 123;
+id = "abc";
+```
+
+...but if we give it something else, the type system complains:
+
+```ts
+// Type 'number' is not assignable to type 'RawId'
+id = false;
+```
+
+Also cool.
+
+## Goals
+
+The end goal of this rant is to implement binary arithmetic in the TypeScript type system.
+That means we'll have to:
+
+1. Create types representing computer **bits**
+2. Create types representing **operations** performed on those bits
+3. Perform **fancy** operations on those types
+
+## Bits
+
+To start:
+
+```ts
+type Bit = 0 | 1;
+```
+
+Variables of type `Bit` can be _either_ the number `0` or the number `1`.
+
+Given a `myBit` variable declared of type `Bit`, these values are fine:
+
+```ts
+let bit: Bit;
+
+bit = 0;
+bit = 1;
+```
+
+...but, as with the `id` variable above, values not of type `Bit` (`0` or `1`) are not allowed:
+
+```ts
+// Type 'number' is not assignable to type 'Bit'.
+myBit = 2;
+myBit = 1 + 1;
+```
+
+### Bit Values
+
+We can also represent the more specific bit values of `0` and `1` within the type system.
+Just as we declared a general `Bit` type to represent anything that's either of those, we can declare types to be those specific values:
+
+```ts
+type BitZero = 0;
+type BitOne = 1;
+```
+
+Those types exist only within the type system.
+If you wanted to think of the operations we're running here as having equivalents in plain old JavaScript, the equivalent would be:
+
+```js
+const BitZero = 0;
+const BitOne = 1;
+```
+
+## Generic Types
+
+In some cases we'll want to describe a new type based off a previous type.
+
+```ts
+type BitFlip<T> = T extends 0 ? 1 : 0;
+```
+
+This `BitFlip` type is a _generic_, or _templated_ type.
+
+- If the original type `T` is `0`, then the new type is `1`.
+- Otherwise, the new type is `0`.
+
+We'll use "extends" as a sort-of-equal operator.
+_(It's more of a "can be described by" operator.)_
+
+Given a usage of `BitFlip`, we can clue in to what it'll result in by filling in the code:
+
+1. `type BitOne = BitFlip<0>;`
+2. `type BitOne = 0 extends 0 ? 1 : 0;`
+3. `type BitOne = 1;`
+
+### Type Phrasing
+
+Another way of looking at the these types could be to translate them to functional TypeScript code.
+If a generic type takes in a previous type, then we can consider those equivalent to arguments passed to a function.
+The new type could be the returned value from that function.
+
+```ts
+function BitFlip(T) {
+	return T === 0 ? 1 : 0;
+}
+```
+
+Voila!
+Subsequent examples here will come with both the type system and traditional code variants.
+
+## Type Safety
+
+Problem: how do we restrict the input types... of our `type`s?
+
+Suppose someone passes an invalid template type to `BitFlip`:
+
+```ts
+// We probably want some kind of type// system complaint, right?
+type Wat = BitFlip<"Nope">;
+```
+
+Types allow '`extends`' with generics to limit what you're allowed to give them.
+If we add an `extends Bit` to the `BitFlip`'s `T`:
+
+```ts
+type BitFlip<T extends Bit> = T extends 0 ? 1 : 0;
+```
+
+...we'll be told by the type system when we pass the wrong types in:
+
+```ts
+// Type '"Nope"' does not satisfy the constraint 'Bit'.
+type Wat = BitFlip<"Nope">;
+```
+
+That's the equivalent of adding a parameter type declaration to a regular function.
+
+```ts
+function BitFlip(T: Bit) {
+	return T === 0 ? 1 : 0;
+}
+```
+
+## Tuple Types!
+
+Generics can take in multiple templated types.
+Each is allowed its own `extends` clause.
+
+Even better, we can perform operations such as `extends` on "tuple" types, which arefixed-length arrays containing types at specific indices:
+
+```ts
+type BitAnd<A extends Bit, B extends Bit> = [A, B] extends [1, 1] ? 1 : 0;
+```
+
+In other words, the `BitAnd` type takes in two bits: `A` and `B`.
+If `[A, B]` is `[1, 1]` (so both `A` and `B` are `1`), then the resultant type is `1`.
+In any other case the resultant type is `0`.
+
+```ts
+function BitAnd(A: Bit, B: Bit) {
+	return A === 1 && B === 1 ? 1 : 0;
+}
+```
+
+In _other_ other words, the returned type is `1` if both `A` and `B` are, and `0` otherwise.
+
+## Bit Addition
+
+We're getting closer to binary arithmetic!
+First: how do you add two bits (`0 | 1`)?
+
+- If both are `0`, the sum is `0`.
+- If one is `0` and the other is `1`, the sum is `1`.
+- If both are `1`, the sum is `0`, with a `1` carried over to the next bit.
+
+Let's show that in code:
+
+```ts
+// Output: [Sum, Carry]
+type BitAdd<A extends Bit, B extends Bit> = [A, B] extends [0, 0]
+	? [0, 0]
+	: [A, B] extends [1, 0] | [0, 1]
+	? [1, 0]
+	: [0, 1];
+```
+
+Wowee.
+
+Amusingly, the type system version of `BitAdd` is a little bit more concise than its JavaScript equivalent:
+
+```js
+function BitAdd(A: Bit, B: Bit) {
+	if (A === 0 && B === 0) return [0, 0];
+	if (A === 0 && B === 1) return [1, 0];
+	if (A === 1 && B === 0) return [0, 1];
+	return [0, 1];
+}
+```
+
+## Introducing Integers
+
+An “eight bit integer” is an integer value represented using... eight bits!
+
+The value of an `Int8` is the sum of its bits, where each bit contributes twice as much as the previous to the total.
+
+- If all bits are `0`, the value is `0`.
+- If the first bit is `1`, the value is `1`.
+- If the second bit is `1`, the value is `2`.
+- If the first and second bits are `1`, the value is `1+2 = 3`.
+- If the third bit is `1`, the value is `4`.
+
+```ts
+type Int8 = [Bit, Bit, Bit, Bit, Bit, Bit, Bit, Bit];
+```
+
+Tada! 🎉
+
+```ts
+type Zero = [0, 0, 0, 0, 0, 0, 0, 0];
+type One = [1, 0, 0, 0, 0, 0, 0, 0];
+type Two = [0, 1, 0, 0, 0, 0, 0, 0];
+type Three = [1, 1, 0, 0, 0, 0, 0, 0];
+type Four = [0, 0, 1, 0, 0, 0, 0, 0];
+// ...and so on...
+```
+
+It's getting tedious to type out these values using all 8 bits manually.
+There's an easier way to generate them...
+
+## Mapped Types
+
+A "mapped type" is one that transforms the properties of some input type. It... maps them!
+I want to make a "ZeroOut" helper that takes in an original array of bits and converts all its values to 0.
+
+```ts
+type ZeroOut<Ints extends Bit[]> = {
+	[Index in keyof Ints]: 0;
+};
+```
+
+Seen in JavaScript:
+
+```js
+function ZeroOut(Ints: Bit[]) {
+	return Ints.map(() => 0);
+}
+```
+
+`Array#map` and our mapped types come from the same term – to _map_ from one type to another.
+_Map!_
+
+### More Mapping
+
+Taking mapped types one step further, we can replace just a subset of an original type.
+This mapped type uses conditional logic to swap out some bits from an original, input array of bits.
+
+```ts
+type ReplaceBits<Bits extends Bit[], Replacements extends Bit[]> = {
+	[Index in keyof Bits]: Index extends keyof Replacements
+		? Replacements[Index]
+		: Bits[Index];
+};
+```
+
+Running through the logic in order:
+
+1. `Bits` and `Replacements` are input types, both of which must be describable as `Bit[]`s
+2. The resultant type maps over the `Index`ed values in `Bits`
+3. Each of the new, mapped values is one of two things:
+   1. If the `Index` exists in the `Replacements` array, we'll use that (replacing) value
+   2. If not, use the original value under `Bits[Index]`
+
+```ts
+type One = ReplaceBits<Zero, [1]>; // [1, 0, 0, 0, 0, 0, 0, 0]
+type Two = ReplaceBits<Zero, [0, 1]>; // [0, 1, 0, 0, 0, 0, 0, 0]
+type Three = ReplaceBits<Zero, [1, 1]>; // [1, 1, 0, 0, 0, 0, 0, 0]
+```
+
+In JavaScript:
+
+```js
+function ReplaceBits(Bits: Bit[], Replacements: Bit[]) {
+	return Bits.map((Original, Index) => {
+		return Index in Object.keys(Replacements) ? Replacements[Index] : Original;
+	});
+}
+```
+
+## Addition with Bits
+
+As with decimal (10) based addition, numbers overflow as “carries” to the next column.
+Since this is binary, you can overflow a 1.
+
+Suppose you wanted to add `110` to `111`.
+
+- The smallest bit (index 0) is `0 + 1 = 1`, with nothing carried over
+- The index 1 bit is `1 + 1 = 0`, with `1` carried over
+- The index 2 bit is `1 + 1 + 1` because of that `1` carried over, making it `1` with another `1` carried over
+- The index 3 bit is `1` from being carried over
+
+`110 + 111 = 1101`.
+
+Representing each column's three bits of addition in the type system:
+
+```ts
+// Output: [Sum, Carry]
+type BitAddThree<A extends Bit, B extends Bit, C extends Bit> = [
+	A,
+	B,
+	C
+] extends [0, 0, 0]
+	? [0, 0]
+	: [A, B, C] extends [1, 0, 0] | [0, 1, 0] | [0, 0, 1]
+	? [1, 0]
+	: [A, B, C] extends [1, 1, 0] | [1, 0, 1] | [0, 1, 1]
+	? [0, 1]
+	: [1, 1];
+```
+
+If you think that's a mouthful, take a look at the JavaScript equivalent:
+
+```js
+function BitAddThree(A: Bit, B: Bit, C: Bit) {
+	if (A === 0 && B === 0 && C === 0) return [0, 0];
+	if (
+		(A === 1 && B === 0 && C === 0) ||
+		(A === 0 && B === 1 && C === 0) ||
+		(A === 0 && B === 0 && C === 1)
+	)
+		return [1, 0];
+	if (
+		(A === 1 && B === 1 && C === 0) ||
+		(A === 1 && B === 0 && C === 1) ||
+		(A === 0 && B === 1 && C === 1)
+	)
+		return [0, 1];
+	return [1, 1];
+}
+```
+
+## Getting Ready to Rock! 🤘
+
+...how do we set up bit adds of all columns in our input binary?
+
+Also, adding eight bits together means we might have to carry a bit from index `0` to `1`, then from index `1` to `2`, etc. all the way to the last bit.
+
+...how do we store variables in our types?
+
+### Helper: Get [Sum, Carry]s of Two Int8s
+
+In theory, we could add our bit columns together by mapping the known shared keys from them, `0` through `8`, to the `BitAdd` of the those two bits.
+
+```ts
+// Output: [[Sum, Carry], [Sum, Carry], [Sum, Carry], ...]
+type BitAdds<A extends Int8, B extends Int8> = {
+	[P in 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7]: BitAdd<A[P], B[P]>;
+};
+```
+
+Seeing this in JavaScript, it's a little cleaner:
+
+```js
+function BitAdds(A: Int8, B: Int8) {
+	return [0, 1, 2, 3, 4, 5, 6, 7, 8].map((P) => BitAdd(A[P], B[P]));
+}
+```
+
+_(this utility isn't necessary for the final result - it's just cool)_
+
+### Generic Parameter Defaults
+
+We'll use a quirk of generics to store variables within a type.
+
+```ts
+type ContrivedExample<
+	A extends Bit,
+	B extends Bit,
+	C extends BitAnd<A, B> = BitAnd<A, B>
+> = [A, B, C];
+```
+
+The `C` generic is the equivalent of a variable:
+
+- We restrict it to the `BitAnd<A, B>` type with `extends`
+- and if not provided, it defaults to `BitAnd<A, B>` with `=`
+
+Tl;dr: `C = BitAnd<A, B>`.
+
+## We're Almost Ready!
+
+So exciting!
+We're _almost_ ready to implement 8 bit integer additions in the type system.
+
+Before we get into the TypeScript implementation, here's the JavaScript equivalent for reference:
+
+```js
+function Int8Add(A: Int8, B: Int8) {
+	// Grab the Sum and Carry for the result's first bit
+	const At0 = BitAdd(A[0], B[0]);
+
+	// The result at each index is the Sum from that index + the previous Carry.
+	const At1 = BitAddThree(A[1], B[1], At0[1]);
+	const At2 = BitAddThree(A[2], B[2], At1[1]);
+	const At3 = BitAddThree(A[3], B[3], At2[1]);
+	const At4 = BitAddThree(A[4], B[4], At3[1]);
+	const At5 = BitAddThree(A[5], B[5], At4[1]);
+	const At6 = BitAddThree(A[6], B[6], At5[1]);
+	const At7 = BitAddThree(A[7], B[7], At6[1]);
+
+	return [At0[0], At1[0], At2[0], At3[0], At4[0], At5[0], At6[0], At7[0]];
+}
+```
+
+...and now, 8 bit binary arithmetic in the TypeScript type system! ✨
+
+```ts
+type Int8Add<
+	A extends Int8,
+	B extends Int8,
+	// Grab the Sum and Carry for the result's first bit
+	At0 extends BitAdd<A[0], B[0]> = BitAdd<A[0], B[0]>,
+	// The result at each index is the Sum from that index + the previous Carry.
+	At1 extends BitAddThree<A[1], B[1], At0[1]> = BitAddThree<A[1], B[1], At0[1]>,
+	At2 extends BitAddThree<A[2], B[2], At1[1]> = BitAddThree<A[2], B[2], At1[1]>,
+	At3 extends BitAddThree<A[3], B[3], At2[1]> = BitAddThree<A[3], B[3], At2[1]>,
+	At4 extends BitAddThree<A[4], B[4], At3[1]> = BitAddThree<A[4], B[4], At3[1]>,
+	At5 extends BitAddThree<A[5], B[5], At4[1]> = BitAddThree<A[5], B[5], At4[1]>,
+	At6 extends BitAddThree<A[6], B[6], At5[1]> = BitAddThree<A[6], B[6], At5[1]>,
+	At7 extends BitAddThree<A[7], B[7], At6[1]> = BitAddThree<A[7], B[7], At6[1]>
+> = [At0[0], At1[0], At2[0], At3[0], At4[0], At5[0], At6[0], At7[0]];
+```
+
+We did it!
+
+## Next Steps
+
+Extra credit: what else can you make with this?
+
+- `BitSubtract`?
+- `Int8Multiply`?
+
+Even better, use your knowledge for good: contribute to [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/)!
+
+- Is your library missing? Add it?
+- Are your types wrong? Fix them!
+
+Thanks for reading!

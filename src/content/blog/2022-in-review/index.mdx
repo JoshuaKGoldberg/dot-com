@@ -1,0 +1,212 @@
+---
+description: "Looking back at a pivotal year in my open source career."
+image:
+  alt: Me smiling happily with my mouth open while giving a talk on stage
+  src: me-laughing-on-stage.jpg
+pubDate: 2023-01-07
+tags: ["conferences", "open source", "recap", "speaking", "year in review"]
+title: "2022 In Review"
+---
+
+import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import buckleUpBonehead from "./buckle-up-bonehead.gif";
+import meLaughingOnStage from "./me-laughing-on-stage.jpg";
+
+Wow.
+I can't believe 2022 is over.
+And I can't believe how _much_ happened last year.
+
+12 months ago, I lived in Brooklyn and was gainfully employed in a dream job (Staff Frontend Developer) on a dream team (Web Platform) in my favorite tech education company (Codecademy).
+I knew I was going to leave the company at the end of January but wasn't sure what my self-employment life would look like.
+I was still working on my _Learning TypeScript_ book, hoping to get back into in-person conferences.
+
+Now, I'm a totally different dream job (full time open source developer) living in Philadelphia.
+I've gotten a bunch of work done on my open source projects such as typescript-eslint and TypeStat.
+_Learning TypeScript_ was released, I've spoken at several great in-person conferences, and I have multiple exciting ones lined up for 2023 already.
+What a year!
+
+<LabeledMedia description="Me speaking at LeadDev 2022 in Berlin. Fun patterns on solid color shirts is definitely still my vibe.">
+	<img
+		alt="Me laughing and speaking with a conference mic on my face, wearing a white t-shirt with small pink flamingos, holding a cup of water"
+		src={meLaughingOnStage.src}
+	/>
+</LabeledMedia>
+
+I like looking back at large time periods and the major events that happened during them.
+It's useful to reflect back on what the most important happenings were, and to learn from any missed opportunities or mistakes.
+Let's do that now for my 2022.
+
+## Biggest Accomplishments
+
+Out of all that happened in 2022, here's a list of my favorite highlights.
+
+### Conference Speaking
+
+Conferences -especially in-person ones- are great!
+You get to attend talks by and chat with wonderful people from all over the industry.
+I can't get enough of them.
+
+2022 was the year I really went big on speaking at in-person conferences.
+I talked in Berlin _(twice!)_, Brussels, Newquay, and Raleigh in the second half of the year.
+And at each and every one of those conferences, I met people in person who I still have interactions with online months later.
+Amazing.
+
+Talking in-person at conferences is its own skill that I'm working on.
+You can see me get more comfortable with enunciation, stage presence, and storytelling as the months went on.
+I'm excited to keep getting better as a speaker - and hopefully keynote something in 2023.
+
+> See my [How I Apply to Conferences](../how-i-apply-to-conferences) post for more information on talking at conferences.
+
+### Minimum Wage in Open Source
+
+Yup.
+One of my biggest accomplishments in 2022 was minimum wage.
+The USA federal minimum wage is $7.25/hour, or about $1,250 a month / $15,000 a year.
+
+My open source salary is about $1,700 a month / $20,400 a year:
+
+- ~$1,400 a month from typescript-eslint's revenue: mostly via [Open Collective](https://opencollective.com/typescript-eslint), with additional bits from [Tidelift](https://tidelift.com), [StackAid](https://stackaid.us), and [Thanks.dev](http://thanks.dev)
+- ~$300 a month from [my personal GitHub Sponsors](https://github.com/sponsors/joshuakgoldberg)
+
+For context, I was earning more than ten times that amount in base salary alone in industry.
+Which is how I was able to build up savings to go full time open source in the first place.
+
+Separately, I had three other sources of income:
+
+- ~$1,500 a month on average from _Learning TypeScript_ royalties
+- ~$27,000 from consulting, which I've mostly stopped to focus on open source
+- My wife is a Director of Agile Delivery with a real salary; she supports me
+
+All this is to say: I'm not poor and am not complaining about my financial situation.
+But!
+You should absolutely still sponsor me to work on open source because the current income levels aren't long-term sustainable.
+
+### typescript-eslint
+
+The biggest push I participated in was developer advocacy and software development for [typescript-eslint.io](https://typescript-eslint.io).
+typescript-eslint is a crucial piece of the TypeScript ecosystem: it's what allows tools such as ESlint and Prettier to work with TypeScript.
+Yet most TypeScript developers aren't familiar with typescript-eslint enough to use its recommended preset configurations.
+
+My primary goals around typescript-eslint in 2022 were:
+
+- Documentation: continuously adding to, reorganizing, and refining typescript-eslint.io.
+- Organizational: documenting common contributing & maintenance tasks, and increasing funding sponsorships
+- Paper cuts: fixing common user pains and longstanding bugs & feature requests
+- v6: Crunching on breaking changes for our upcoming v6 major release
+
+2022 was a great year for typescript-eslint.
+And I'm seriously looking forward to releasing v6 and getting more work done in the new year.
+
+> [Here's a query for all merged typescript-eslint PRs that I created in 2022](https://github.com/typescript-eslint/typescript-eslint/pulls?q=is%3Apr+author%3AJoshuaKGoldberg+created%3A2022-01-01..2023-01-01+is%3Amerged).
+
+### template-typescript-node-package
+
+Have you ever felt like you can't keep track of all the different things you could (or should) set up for a new repository?
+Formatting, linting, semantic releases, spell checking, testing, type checking...
+
+I started [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package) out of necessity in the fall and dove into into earnest in the winter.
+Soon it will be the basis for all of my emphasized personal open source projects.
+The template itself is pretty small (barely 1.5k lines of code and configuration) but serves as a really good basis for a TypeScript package.
+
+If you want a good template for a basic TypeScript application, I'd encourage you to try it out!
+
+### TypeStat
+
+[TypeStat](https://github.com/JoshuaKGoldberg/TypeStat) is the coolest project I work on.
+It is (to my knowledge) the most advanced static JavaScript-to-TypeScript converter available in open source as of 2022.
+I didn't make much progress on it this year ([more on that later](#typestat-instability)), but I did land a few nice things:
+[revamped logging](https://github.com/JoshuaKGoldberg/TypeStat/pull/1034), [infinite wave detection](https://github.com/JoshuaKGoldberg/TypeStat/pull/1056), and [creating a TSConfig via the CLI](https://github.com/JoshuaKGoldberg/TypeStat/pull/1065) to name a few.
+
+> [Here's a query for all merged TypeStat PRs that I created in 2022](https://github.com/JoshuaKGoldberg/TypeStat/pulls?q=is%3Apr+author%3AJoshuaKGoldberg+created%3A2022-01-01..2023-01-01+is%3Amerged).
+
+### Shipping _Learning TypeScript_
+
+I wrote a book! 🙌
+
+_[Learning TypeScript](https://www.learningtypescript.com)_ is the culmination of a year's journey into book authorship.
+O'Reilly first contacted me about writing it in May of 2021.
+I started writing it in June of 2021, and production completed the first week of June.
+
+Writing a book is tough.
+It was a year-long commitment to keep writing - and then also continuously improving based on editor feedback and my own proofreading.
+I must have spent at least 300 hours in total working on it.
+Getting _Learning TypeScript_ released was a massive relief.
+
+I'm _mostly_ satisfied with how the book came out.
+The last few weeks before production completion were pretty hectic and allowed more typos into the book than I wanted.
+But the overall flow of the book -how it explains topics and how it orders those explanations- makes me happy.
+
+## Missed Opportunities
+
+As fun as 2022 was, I missed out on some key areas of growth.
+Hindsight is 20/20 and I do wish I'd have had the time and focus to invest in these things more.
+
+### Community Building
+
+I've never been a community builder, developer advocate, or any role like that before.
+But now that I'm working on open source projects full-time, community building is actually a significant part of my duties.
+And I'm very much out of my league.
+
+In particular, I've found myself struggling with:
+
+- Attracting & keeping repeat maintainers on any of my projects
+- Building bridges between typescript-eslint and adjacent projects in the web ecosystem
+- Creating a presence on Twitch (or knowing what to do with viewers)
+
+Technical contributions in open source are all fine and good, but it's the _community_-oriented projects that go the furthest.
+I hope I can grow in this area through 2023.
+
+### Content Creation
+
+I get asked whether I'm going to create video walkthroughs of _Learning TypeScript_ or other general TypeScript content.
+I would have loved to become a go-to resource for learning TypeScript and other web development topics...
+
+...but I don't have the time.
+I'm limited in what I'm able to engage with on pressing commitments in my personal life throughout the year.
+And there's not enough time left over to do a good job both on open source and on creating good educational content.
+
+So, I opted out of being a "content creator".
+No SEO-first blog articles on common user pains; no YouTube _"Learn X with Josh!"_ tutorials; nothing like that.
+Ah well.
+
+### Networking
+
+I've been to dozens of conferences -in-person and virtual- but still feel only beginner-level at socializing with people there.
+Idle chit chat is fine, but following up with people after conferences?
+Turning connections into long-term professional partnerships, even mentorships?
+I'm truly lost.
+
+It's a little dissapointing looking back at all the great people I've met this year and haven't stayed in touch with.
+I hope to do better at this in 2023.
+
+### TypeStat Instability
+
+I'm hopeful that getting TypeStat to a stable, relatively usable 1.0 will drastically reduce the development costs for many projects converting to TypeScript.
+Sadly, it's not there yet.
+Two negatives have been dragging TypeStat since its inception in 2018:
+
+- I haven't had consistent time to get it to a stable place
+- I haven't been able to find anybody else to work on it with me
+
+Finding people who are confident in the TypeScript APIs that TypeStat uses _and_ who have time to contribute is quite difficult.
+It doesn't help that TypeStat is a hodgepodge of many hardcoded logical variations that I've been meaning to rearchitect en masse since 2019.
+
+Unless something drastically changes, TypeStat will remain in its barely-working-sort-of state for quite a while.
+😢
+
+## Closing Thoughts
+
+Open source is a gigantic playground that I've only barely started to explore.
+2022 was a fun year that's positioned me to go deeper in 2023.
+Look forward to lots more stuff from me in the coming months!
+🥳
+
+<LabeledMedia
+	description="How it feels to look at 2023. A full year of open source shenanigans"
+	original="https://giphy.com/gifs/peacocktv-peacock-buckle-up-bonehead-CpyfM1h1qLgWECSBxf"
+>
+	<img
+		alt="Bruce Campbell in medieval armor intensely saying 'buckle up, bonehead"
+		src={buckleUpBonehead.src}
+	/>
+</LabeledMedia>

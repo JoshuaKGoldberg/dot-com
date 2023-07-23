@@ -8,7 +8,9 @@ export async function get(context: APIContext) {
 		customData: `<language>en-us</language>`,
 		description: description,
 		site: context.site?.toString() ?? site,
-		items: await pagesGlobToRssItems(import.meta.glob("../content/blog/*.mdx")),
+		items: await pagesGlobToRssItems(
+			import.meta.glob("../content/blog/**/*.mdx")
+		),
 		title: "Goldblog",
 	});
 }

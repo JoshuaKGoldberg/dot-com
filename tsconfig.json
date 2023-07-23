@@ -2,6 +2,8 @@
 	"compilerOptions": {
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
+		"moduleResolution": "Bundler",
+		"exactOptionalPropertyTypes": false,
 		"noUncheckedIndexedAccess": false,
 		"target": "es2022"
 	},
