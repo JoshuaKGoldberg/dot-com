@@ -7,18 +7,15 @@ pubDate: 2021-06-22
 title: "TypeScript Contribution Diary: Improved errors for empty DOM interfaces"
 ---
 
-import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
 import libraryNunon from "./library-lunon.jpg";
 
-<LabeledMedia
+<LabeledImage
+	alt="Bibliothèque de l'Assemblée Nationale (Lunon)"
 	description="The Library of the Palais Bourbon in Paris"
 	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
->
-	<img
-		alt="Bibliothèque de l'Assemblée Nationale (Lunon)"
-		src={libraryNunon.src}
-	/>
-</LabeledMedia>
+	src={libraryNunon.src}
+/>
 
 ## Problem Statement
 

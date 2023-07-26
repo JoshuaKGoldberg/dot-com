@@ -42,6 +42,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 		undefined
 	);
 
+	// TODO: Is this available on npm? If not, perhaps I should publish it?
 	function updateActiveHeading() {
 		const headings = Array.from(
 			document.querySelectorAll<HTMLElement>("h2, h3, h4")

@@ -7,15 +7,14 @@ image:
 title: "No Unattainable Intelligence"
 ---
 
-import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
 import smort from "./smort.png";
 
-<LabeledMedia description="My favorite meme symbolizing the difference between perceived and actual intelligence.">
-	<img
-		alt="Meme of distorted head looking stupid over a background of bright galaxies. Caption: 'Smort'"
-		src={smort.src}
-	/>
-</LabeledMedia>
+<LabeledImage
+	alt="Meme of distorted head looking stupid over a background of bright galaxies. Caption: 'Smort'"
+	description="My favorite meme symbolizing the difference between perceived and actual intelligence."
+	src={smort.src}
+/>
 
 Smart people are everywhere.
 Everybody has a unique blend of knowledge and skill.

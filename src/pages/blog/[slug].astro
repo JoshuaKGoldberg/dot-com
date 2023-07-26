@@ -15,6 +15,8 @@ export async function getStaticPaths() {
 	}));
 }
 
+// TODO: find or file an issue?
+// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const slug = Astro.params.slug!;
 const entry = await getEntry("blog", slug);
 if (!entry) {

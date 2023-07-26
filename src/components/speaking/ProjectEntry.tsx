@@ -24,6 +24,8 @@ export function ProjectEntry(props: ProjectEntryProps) {
 							alt: `${title()} logo`,
 							src: props.project.data.image,
 							variant: "square",
+							// TODO: find or file an issue?
+							// eslint-disable-next-line no-mixed-spaces-and-tabs
 					  }
 					: undefined
 			}

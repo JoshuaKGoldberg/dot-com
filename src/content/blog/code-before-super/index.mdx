@@ -7,32 +7,19 @@ image:
 title: "TypeScript Contribution Diary: Allowing Code in Constructors Before `super()`"
 ---
 
-import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
 import cake from "./cake.jpg";
 
-<LabeledMedia description="Me speaking at Prisma Day 2022 in Berlin. Fun patterns on solid color shirts is my vibe now.">
-	<img
-		alt="Fancy blue and white circular cake with text 'Happy 3rd Birthday, #293374' and 'Bump for PR review please!' above the TypeScript logo"
-		src={cake.src}
-	/>
-</LabeledMedia>
-
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-	A cake I ordered to commemorate the pull request being open for three years. [
-	<a
-		href="https://twitter.com/JoshuaKGoldberg/status/1481654056422567944"
-		title="Cake tweet"
-	>
-		tweet
-	</a>
-	]
-	<br />
-	<small>
-		I'd wanted to send it to the TypeScript team, but Daniel Rosenwasser
-		informed me the team was still remote for COVID in January of 2022. I ended
-		up eating an unhealthy amount of the cake myself.
-	</small>
-</em>
+<LabeledImage
+	alt="Fancy blue and white circular cake with text 'Happy 3rd Birthday, #293374' and 'Bump for PR review please!' above the TypeScript logo"
+	description="A cake I ordered to commemorate the pull request being open for three years."
+	note="I'd wanted to send it to the TypeScript team, but Daniel Rosenwasser informed me the team was still remote for COVID in January of 2022. I ended up eating an unhealthy amount of the cake myself."
+	original={{
+		href: "https://twitter.com/JoshuaKGoldberg/status/1481654056422567944",
+		text: "tweet",
+	}}
+	src={cake.src}
+/>
 
 [#8277: Always allow code before super call when it does not use "this"](https://github.com/microsoft/TypeScript/issues/8277) is one of TypeScript's oldest highly-upvoted issues.
 It asks for more leniency in allowing code before a `super()` call inside a class constructor.

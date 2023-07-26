@@ -115,7 +115,7 @@ If your image already is labeled via existing text, use aria-labelledby to indic
 Providing labels in HTML elements has the additional advantage of surfacing text to automatic translation services (demos+explanation).
 
 Element Semantics
-HTML elements have semantic meaning. A <p> tag indicates a paragraph of content. What does this element semantically mean to you?
+HTML elements have semantic meaning. A `<p>` tag indicates a paragraph of content. What does this element semantically mean to you?
 
 ```html
 <div>Submit</div>
@@ -131,7 +131,7 @@ Now look at this one:
 
 👌 now that's a semantically understandable element.
 
-Browsers work best when you use the right HTML elements for what they're meant to do. Attaching onClick listeners and the like to regular <div>s is bad practice because those elements don't receive Tab focus by default. Enter s only apply to focused elements.
+Browsers work best when you use the right HTML elements for what they're meant to do. Attaching onClick listeners and the like to regular `<div>`s is bad practice because those elements don't receive Tab focus by default. Enter s only apply to focused elements.
 
 Even if you make your non-interactive element focusable with tabIndex="0", you'll still have to add custom event listeners for Enter s. So please, for your own sake, use the right HTML elements for the job.
 

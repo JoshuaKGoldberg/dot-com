@@ -3,8 +3,8 @@ import HeaderLink from "./HeaderLink.astro";
 import { Text } from "./Text";
 
 const links = [
-	["Blog", "/blog"],
 	["Book", "https://learningtypescript.com"],
+	["Blog", "/blog"],
 	["Projects", "/projects"],
 	["Speaking", "/speaking"],
 ] as const;
@@ -37,7 +37,6 @@ const links = [
 		flex-direction: row;
 		flex-wrap: wrap;
 		gap: 0 1rem;
-		/* justify-content: center; */
 	}
 
 	@media (min-width: 700px) {

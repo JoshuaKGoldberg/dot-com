@@ -8,7 +8,7 @@ tags: ["conferences", "open source", "recap", "speaking", "year in review"]
 title: "2022 In Review"
 ---
 
-import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
 import buckleUpBonehead from "./buckle-up-bonehead.gif";
 import meLaughingOnStage from "./me-laughing-on-stage.jpg";
 
@@ -25,12 +25,11 @@ I've gotten a bunch of work done on my open source projects such as typescript-e
 _Learning TypeScript_ was released, I've spoken at several great in-person conferences, and I have multiple exciting ones lined up for 2023 already.
 What a year!
 
-<LabeledMedia description="Me speaking at LeadDev 2022 in Berlin. Fun patterns on solid color shirts is definitely still my vibe.">
-	<img
-		alt="Me laughing and speaking with a conference mic on my face, wearing a white t-shirt with small pink flamingos, holding a cup of water"
-		src={meLaughingOnStage.src}
-	/>
-</LabeledMedia>
+<LabeledImage
+	alt="Me laughing and speaking with a conference mic on my face, wearing a white t-shirt with small pink flamingos, holding a cup of water"
+	description="Me speaking at LeadDev 2022 in Berlin. Fun patterns on solid color shirts is definitely still my vibe."
+	src={meLaughingOnStage.src}
+/>
 
 I like looking back at large time periods and the major events that happened during them.
 It's useful to reflect back on what the most important happenings were, and to learn from any missed opportunities or mistakes.
@@ -201,12 +200,9 @@ Open source is a gigantic playground that I've only barely started to explore.
 Look forward to lots more stuff from me in the coming months!
 🥳
 
-<LabeledMedia
+<LabeledImage
+	alt="Bruce Campbell in medieval armor intensely saying 'buckle up, bonehead"
 	description="How it feels to look at 2023. A full year of open source shenanigans"
 	original="https://giphy.com/gifs/peacocktv-peacock-buckle-up-bonehead-CpyfM1h1qLgWECSBxf"
->
-	<img
-		alt="Bruce Campbell in medieval armor intensely saying 'buckle up, bonehead"
-		src={buckleUpBonehead.src}
-	/>
-</LabeledMedia>
+	src={buckleUpBonehead.src}
+/>
