@@ -1,26 +1,29 @@
 ---
 description: "A quick syntax parsing improvement for incorrectly formatted enums."
 image:
-  alt: TODO
-  src: TODO
+  alt: "'Petit verdot', or 'Colon', French grapes"
+  src: colon-grapes.jpg
 pubDate: 2019-10-21
 title: "TypeScript Contribution Diary: Improved Syntax Error for Enum Member Colons"
 ---
 
-!["Petit verdot", or "Colon", French grapes](./colon.jpg)
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import colonGrapes from "./colon-grapes.jpg";
 
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-"Petit verdot", or "Colon", French grapes. Get it? Ha...
-<br />
-<small>
-File copied from Wikipedia under the Creative Commons Attribution 2.0 Generic license. [<a href="https://en.wikipedia.org/wiki/File:01_Petit_verdot.jpg" rel="noopener noreferrer" target="_blank">source</a>]
-</small>
-</em>
+<LabeledImage
+	description="'Petit verdot', or 'Colon', French grapes. Get it? Ha..."
+	original="https://en.wikipedia.org/wiki/File:01_Petit_verdot.jpg"
+	alt="'Petit verdot', or 'Colon', French grapes"
+	src={colonGrapes}
+/>
 
 <em>
-I've been contributing to TypeScript, working my way up from small error reporting nitpicks to real syntactic and control flow improvements.
-These blog posts are documentation of the steps I took to figure out what to do for these contributions & then do them.
-If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
+	I've been contributing to TypeScript, working my way up from small error
+	reporting nitpicks to real syntactic and control flow improvements. These blog
+	posts are documentation of the steps I took to figure out what to do for these
+	contributions & then do them. If you're thinking of contributing to TypeScript
+	or other large open source libraries, I hope seeing how to delve into a giant
+	foreign monolith is of some help!
 </em>
 
 _Previous post: [Identifiers after Numeric Literals](https://medium.com/@joshuakgoldberg/typescript-contribution-diary-errors-for-identifiers-after-numeric-literals-130e3d77a1df)_

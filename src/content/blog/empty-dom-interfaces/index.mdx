@@ -1,21 +1,24 @@
 ---
 description: "Glorious hardcoding of a better error message if someone forgets to include the 'dom' lib option."
 image:
-  alt: TODO
-  src: TODO
+  alt: The Library of the Palais Bourbon in Paris
+  src: library-lunon.jpg
 pubDate: 2021-06-22
 title: "TypeScript Contribution Diary: Improved errors for empty DOM interfaces"
 ---
 
-![Bibliothèque de l'Assemblée Nationale (Lunon)](./library.jpg)
+import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import libraryNunon from "./library-lunon.jpg";
 
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-The Library of the Palais Bourbon in Paris
-<br />
-<small>
-File copied from Wikipedia under the Creative Commons Attribution 2.0 Generic license. [<a href="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg" rel="noopener noreferrer" target="_blank">source</a>]
-</small>
-</em>
+<LabeledMedia
+	description="The Library of the Palais Bourbon in Paris"
+	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
+>
+	<img
+		alt="Bibliothèque de l'Assemblée Nationale (Lunon)"
+		src={libraryNunon.src}
+	/>
+</LabeledMedia>
 
 ## Problem Statement
 
@@ -180,6 +183,8 @@ function everyContainedType(type: Type, f: (t: Type) => boolean): boolean {
 
 Now that I was testing against individual type names, I simplified the regular expression a bit:
 
+{/* spell-checker: disable */}
+
 ```ts
 function containerSeemstoBeEmptyDomElement(containingType: Type): boolean {
 	return (
@@ -197,6 +202,8 @@ function containerSeemstoBeEmptyDomElement(containingType: Type): boolean {
 	);
 }
 ```
+
+{/* spell-checker: enable */}
 
 > Confused by that regular expression?
 > Skip to the [bottom](#regular-expressions-explained) of this post for an explanation!
@@ -218,10 +225,14 @@ I [sent a new PR](https://github.com/microsoft/TypeScript/pull/43007) and [asked
 The first review feedback I got was pretty easy to resolve.
 Do you see the difference?
 
+{/* spell-checker: disable */}
+
 ```diff
 - containerSeemstoBeEmptyDomElement(containingType)
 + containerSeemsToBeEmptyDomElement(containingType)
 ```
+
+{/* spell-checker: enable */}
 
 🤦.
 

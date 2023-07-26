@@ -1,8 +1,5 @@
 ---
 description: "Explaining why using useEffect to initialize values is dangerous."
-image:
-  alt: TODO
-  src: TODO
 pubDate: 2021-09-08
 title: "useEffect Pet Peeve: Side Effects, Not Initialization"
 ---
@@ -115,7 +112,7 @@ We fixed the crash! 🎉
 Any version of React running on the client will update the DOM extremely quickly after first render.
 If your app _only_ runs on the client browser, you likely will never notice any flicker of the initial, wrong message on your screen.
 
-Unfortunately for us, the first render of a React component can be quite important for a production webiste.
+Unfortunately for us, the first render of a React component can be quite important for a production website.
 [Static site generation (SSG)](https://nextjs.org/docs/basic-features/pages#static-generation-recommended) and [server-side rendering (SSR)](https://nextjs.org/docs/basic-features/pages#server-side-rendering) are popular and important performance solutions for code.
 This first-render bug means the statically rendered version of the website will have the wrong first value.
 So this bug is still something you'll probably want to fix.

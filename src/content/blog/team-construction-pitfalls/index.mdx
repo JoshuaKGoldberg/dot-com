@@ -1,23 +1,23 @@
 ---
 description: "How misbalanced or poorly positioned teams restrict their developers in both the short and long term."
 image:
-  alt: TODO
-  src: TODO
+  alt: The Death of Socrates (painting)
+  src: death-of-socrates.jpg
 pubDate: 2021-01-23
 title: "Team Construction Pitfalls"
 ---
 
-<span style="display:block;margin-bottom:2rem;text-align:center;">
-<img alt="The Death of Socrates (painting)" src="./socrates.jpg" />
-<small>
-The Death of Socrates: the "gadfly" of Athens [<a aria-label="The Death of Socrates Wikipedia source" href="https://en.wikipedia.org/wiki/File:David_-_The_Death_of_Socrates.jpg">source</a>]
-</small>
-</span>
+import LabeledMedia from "../../../components/blog/mdx/LabeledMedia.astro";
+import deathOfSocrates from "./death-of-socrates.jpg";
+import aladdinAndJasmine from "./aladdin-and-jasmine.gif";
+import hamstersSwarming from "./hamsters-swarming.gif";
 
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-“I know that I know nothing.” - Socrates, paraphrased by Plato, paraphrased
-<br />
-</em>
+<LabeledMedia
+	description="“I know that I know nothing.” - Socrates, paraphrased by Plato, paraphrased"
+	original="https://en.wikipedia.org/wiki/File:David_-_The_Death_of_Socrates.jpg"
+>
+	<img alt="The Death of Socrates (painting)" src={deathOfSocrates.src} />
+</LabeledMedia>
 
 How does it happen that a fresh new product team can sometimes create tech debt before its first release?
 
@@ -31,7 +31,7 @@ In this blog post, I will provide vague anecdotal observations and associated re
 3. Don't undervalue tech debt in long term planning
 
 My intent is to describe how unfortunate situations and timing can force developers to make unfortunate choices they otherwise wouldn't have made.
-Each anecdote is an anonymized amalgamation of real occurences I've repeatedly observed and/or participated in.
+Each anecdote is an anonymized amalgamation of real occurrences I've repeatedly observed and/or participated in.
 
 ## Preamble: Junior verses Senior
 
@@ -45,13 +45,14 @@ For the sake of easier writing, let's consider "junior" to be people who haven't
 
 ## 1. Overstocking Junior Developers
 
-<span style="display:block;margin-bottom:2rem;text-align:center;">
-<img alt="Hamsters swarming" src="./hamsters.gif" />
-<br />
-<small style="line-height:1;">
-Despite the context, these are not implied to be junior developers. They're <em>frontend</em> developers being shown a new framework. [<a aria-label="Hamsters swarming (source)" href="https://giphy.com/gifs/running-hamster-11Ss9q3F4zf5VC">source</a>]
-</small>
-</span>
+{/* TODO: markdown description ... */}
+
+<LabeledMedia
+	description="Despite the context, these are not implied to be junior developers. They're _frontend_ developers being shown a new framework."
+	original="https://giphy.com/gifs/running-hamster-11Ss9q3F4zf5VC"
+>
+	<img alt="Hamsters swarming" src={hamstersSwarming.src} />
+</LabeledMedia>
 
 > Anecdote: two junior developers on a relatively new team were tasked with creating a new variation of an existing, tech-debt-heavy page.
 > They gave an initial dev estimate, started working on code, and quickly realized they'd need help to overcome a greater-than-expected amount of existing tech debt.
@@ -97,17 +98,19 @@ When an organization adds new developers, it is unhealthy to ask them to create 
 To truly onboard an developer onto a team takes months or more of having them work in the existing codebases with the existing developers.
 Thus, it is unhealthy to spin off a new team solely with new team members, regardless of their general experience level.
 
-<span style="display:block;margin:3rem 2rem 2rem;text-align:center;">
-<img alt="Aladdin and Jasmine on the flying carpet" src="./aladdin.gif" />
-<br />
-<small>
-How "senior" developers feel explaining why their opinions are best. [<a aria-label="Aladdin and Jasmine on the flying carpet (source)" href="https://giphy.com/gifs/disney-aladdin-princess-jasmine-a-whole-new-world-WUu9EGdSEImJy">source</a>]
-</small>
-</span>
+<LabeledMedia
+	description="How 'senior' developers feel explaining why their opinions are best"
+	original="https://giphy.com/gifs/disney-aladdin-princess-jasmine-a-whole-new-world-WUu9EGdSEImJy"
+>
+	<img
+		alt="Aladdin and Jasmine on the flying carpet"
+		src={aladdinAndJasmine.src}
+	/>
+</LabeledMedia>
 
 When you match area experts with developers new to the organization, both sides benefit.
 Area experts can inform the new developers on existing areas of investment and/or tech debt that should be factored into their work, along with why structures were set up that way.
-New developers can bring fresh ideas and a healthy set of scepticism to a project, then work with the area experts in improving code accordingly.
+New developers can bring fresh ideas and a healthy set of skepticism to a project, then work with the area experts in improving code accordingly.
 
 ## 3. "Aggressive Goals"
 

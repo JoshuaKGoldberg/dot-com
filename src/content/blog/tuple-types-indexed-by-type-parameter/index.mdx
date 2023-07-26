@@ -22,7 +22,7 @@ import jerryCatwalk from "./jerry-catwalk.jpg";
 [#50875: Spread operator results in incorrect types when used with tuples](https://github.com/microsoft/TypeScript/issues/50875) was filed on TypeScript in September of 2022.
 It states that when trying to use a `...` spread operator on a tuple type (a type representing a fixed-size array), TypeScript slips up trying to understand what type the result would be.
 
-That issue's original code is pretty knarly and has a lot to read through.
+That issue's original code is pretty gnarly and has a lot to read through.
 By removing unnecessary code I was able to trim it down to three important lines of code:
 
 ```ts
@@ -101,7 +101,7 @@ My goal was to try to find where TypeScript tries to understand the `[N]` access
 <details>
 <summary>The call stack steps inside have a lot of nested function calls. If you have the time, I'd encourage you to pop TypeScript into your own VS Code debugger and follow along.</summary>
 
-1. [`isDeclarationNameOrImportPropertyName`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L43193) evalutates to `true`, so TypeScript calls to...
+1. [`isDeclarationNameOrImportPropertyName`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L43193) evaluates to `true`, so TypeScript calls to...
 2. [`getTypeOfSymbol`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L43196): `symbol.flags & (SymbolFlags.Variable | SymbolFlags.Property)` is true, so [`getTypeOfVariableOrParameterOrProperty`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9761) is called, which calls to...
 3. [`getTypeOfVariableOrParameterOrPropertyWorker`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9775): `ts.isBindingElement(declaration)` is true, so TypeScript calls to...
 4. [`getWidenedTypeForVariableLikeDeclaration`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9350): which calls to...
@@ -162,6 +162,8 @@ Nice!
 I added the original bug report as a test case: ([`tests/cases/compiler/spreadTupleAccessedByTypeParameter.ts`](https://github.com/JoshuaKGoldberg/TypeScript/blob/9066ba9cefd7b2a402de402006135295d8802d08/tests/cases/compiler/spreadTupleAccessedByTypeParameter.ts)).
 Then upon running tests and accepting new baselines, I was surprised to see changes to the baseline for an existing test, [`tests/baselines/reference/narrowingDestructuring.types`](https://github.com/JoshuaKGoldberg/TypeScript/blob/9066ba9cefd7b2a402de402006135295d8802d08/tests/baselines/reference/narrowingDestructuring.types):
 
+{/* spell-checker: disable */}
+
 ```ts
 function farr<T extends [number, string, string] | [string, number, number]>(
 	x: T
@@ -172,6 +174,8 @@ function farr<T extends [number, string, string] | [string, number, number]>(
 	}
 }
 ```
+
+{/* spell-checker: enable */}
 
 ```diff
     const [head, ...tail] = x;

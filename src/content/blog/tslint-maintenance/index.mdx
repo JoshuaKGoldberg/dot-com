@@ -1,11 +1,11 @@
 ---
 description: "Maintaining TSLint was a wonderful mixed bag of shenanigans. Let's talk about it."
-image:
-  alt: TODO
-  src: TODO
 pubDate: 2019-11-19
 title: "Thoughts as a TSLint Maintainer"
 ---
+
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import assholesEverywhere from "./assholes-everywhere.png";
 
 > Howdy!
 > This blog post is a personal reflection on my experiences working with TSLint.
@@ -90,11 +90,13 @@ Ideally, everybody plays nice and understands that both sides want what's best f
 Yet, open source software is built over the internet.
 Do you know what type of people inhabit the internet?
 
-!["Assholes, assholes everywhere" captioned meme of Buzz and Woody from Toy Story](./assholes-everywhere.png)
+{/* TODO: <strong>seems</strong> */}
 
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-This meme usage is inaccurate: it's really that people have the best intentions, but when viewed through the limited lens of the internet, everyone <strong>seems</strong> like an asshole...
-</em>
+<LabeledImage
+	description="This meme usage is inaccurate: it's really that people have the best intentions, but when viewed through the limited lens of the internet, everyone _seems_ like an asshole..."
+	alt="'Assholes, assholes everywhere' captioned meme of Buzz and Woody from Toy Story"
+	src={assholesEverywhere}
+/>
 
 I'll admit I made mistakes and was the "asshole" plenty of times throughout my maintenance tenure:
 

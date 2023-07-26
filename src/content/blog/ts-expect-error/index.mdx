@@ -1,15 +1,11 @@
 ---
 description: "Adding a new comment directive to the TypeScript compiler."
-image:
-  alt: TODO
-  src: TODO
 pubDate: 2020-07-12
 title: "TypeScript Contribution Diary: // @ts-expect-error"
 ---
 
 <em style="display:block;margin-bottom:2rem;text-align:center;">
-“To expect the unexpected shows a thoroughly modern intellect.” - Oscar Wilde
-<br />
+	“To expect the unexpected shows a thoroughly modern intellect.” - Oscar Wilde
 </em>
 
 _Previous post: [Improved Syntax Error for Enum Member Colons](http://blog.joshuakgoldberg.com/enum-commas)_
@@ -53,7 +49,7 @@ I figured I'd want to understand:
 ### Reading Comment Directives
 
 I first ran a search in TypeScript's `src/` for `// @ts-ignore`.
-The most relevant looking result was on the comments desribing a [`shouldReportDiagnostic`](https://github.com/Microsoft/TypeScript/blob/b9c0999a2a4139b8803829503a3e9f64baacdff3/src/compiler/program.ts#L1775) function.
+The most relevant looking result was on the comments describing a [`shouldReportDiagnostic`](https://github.com/Microsoft/TypeScript/blob/b9c0999a2a4139b8803829503a3e9f64baacdff3/src/compiler/program.ts#L1775) function.
 
 ```ts
 /**
@@ -99,10 +95,14 @@ I figured there were two things the code would need to do to remember the commen
 
 ### Retrieving Comment Directives
 
+{/* spell-checker: disable */}
+
 TypeScript's `parser.ts` was [previously known to me](../enum-commas) as the place that parses raw text into AST nodes.
 I ran searches for `scanComment`, `scanSingleLine`, `scan(.*)omment`, and similar comment-related things but didn't find anything useful.
 The closest `comment`-related search result I could find was `processCommentPragmas`, but that didn't look like it was related to any prior `@ts-ignore` logic.
 Looks like nothing was explicitly handling the single line comments.
+
+{/* spell-checker: enable */}
 
 I next looked to the scanner itself in `scanner.ts` to see how comment literals were handled.
 That was more fruitful.
@@ -125,7 +125,7 @@ Looking closer at the logic in `scan`:
 I added a basic test to check whether a comment matched one of the two comment directives:
 
 ```ts
-const commentText = text.slice(tokenos, pos);
+const commentText = text.slice(tokenPos, pos);
 if (commentText.includes("@ts-expect-error")) {
 	console.log("Yay!", commentText);
 }
@@ -406,7 +406,7 @@ Oh dear.
 Two locations in TypeScript were using the now-deleted `shouldReportDiagnostic` function to filter out diagnostics disabled by comment directives.
 They actually looked pretty similar to each other:
 
-- `getProgramDiagnostics` was looping over two [two arrays of diagnotics](https://github.com/microsoft/TypeScript/pull/36014/files#diff-942ae3cd2a8bbd85ed86a60cd7c43307R485) to create an output array of filtered diagnostics.
+- `getProgramDiagnostics` was looping over two [two arrays of diagnostics](https://github.com/microsoft/TypeScript/pull/36014/files#diff-942ae3cd2a8bbd85ed86a60cd7c43307R485) to create an output array of filtered diagnostics.
 - `getBindAndCheckDiagnosticsForFileNoCache` was looping over [several potentially undefined arrays of diagnostics](https://github.com/microsoft/TypeScript/pull/36014/files#diff-08a3cc4f1f9a51dbb468c2810f5229d3L1753) to... also create an output array of filtered diagnostics!
 
 ...so that's great!
@@ -476,7 +476,7 @@ Now I do.
 
 Did you know this was the standard way to write `// @ts-ignore` comments prior to TypeScript 3.9?
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 ```tsx
 {/*
 // @ts-ignore */}
@@ -494,7 +494,7 @@ The changes to more more realistically parse single line comments actually "brok
 
 My followup [pull request to allow comment directives to be multiline](https://github.com/microsoft/TypeScript/pull/38228) added the new comment directive parsing logic to multiline comments as well, so the above `.tsx` code snippet can now be rewritten as:
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 ```tsx
 {/* @ts-ignore */}
 <MissingRequiredProp />

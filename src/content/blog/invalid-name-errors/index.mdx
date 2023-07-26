@@ -1,21 +1,21 @@
 ---
 description: "Improving the first error message emitted for invalid variable identifiers."
 image:
-  alt: TODO
-  src: TODO
+  alt: "Photo of Bud Abbott and Lou Costello from their NBC Radio program"
+  src: abbot-and-costello.jpg
 pubDate: 2020-09-15
 title: "TypeScript Contribution Diary: Improved Errors on Invalid Variable Names"
 ---
 
-![Photo of Bud Abbott and Lou Costello from their NBC Radio program](./Abbott_and_Costello_circa_1940s.jpg)
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import abbotAndCostello from "./abbot-and-costello.jpg";
 
-<em style="display:block;margin-bottom:2rem;text-align:center;">
-Photo of Bud Abbott and Lou Costello from their NBC Radio program.
-<br />
-<small>
-File copied from Wikipedia under the Creative Commons Attribution 2.0 Generic license. [<a href="https://en.wikipedia.org/wiki/Abbott_and_Costello#/media/File:Abbott_and_Costello_circa_1940s.JPG" rel="noopener noreferrer" target="_blank">source</a>]
-</small>
-</em>
+<LabeledImage
+	description="Photo of Bud Abbott and Lou Costello from their NBC Radio program"
+	original="https://en.wikipedia.org/wiki/Abbott_and_Costello#/media/File:Abbott_and_Costello_circa_1940s.JPG"
+	alt="Photo of Bud Abbott and Lou Costello from their NBC Radio program"
+	src={abbotAndCostello}
+/>
 
 ## Problem Statement
 
@@ -29,7 +29,7 @@ const case = "123";
 ```
 
 If your guess focused on the `case` keyword not being allowed as a variable name and was anything like _`'case' is not allowed as a variable declaration name`_, then congrats, you win!
-If not, that's ok, because TypeScript <4.1 emits three instances of not-so-informative error message:
+If not, that's ok, because TypeScript &lt;4.1 emits three instances of not-so-informative error message:
 
 ```ts
 const case = 123;
@@ -299,5 +299,5 @@ You can now experience these slightly improved error messages in the nightly bui
 I still want to make list parsing more tolerant of invalid identifiers, so I filed [#40317](https://github.com/microsoft/TypeScript/issues/40317).
 Hopefully we'll get to have a sequel to this post discussing resolving that followup!
 
-Lastly, many thanks to [@DanielRossenwaser](https://github.com/DanielRosenwasser) for the quick & informative PR reviews.
+Lastly, many thanks to [@DanielRosenwasser](https://github.com/DanielRosenwasser) for the quick & informative PR reviews.
 Much appreciated!

@@ -17,7 +17,8 @@
 		"lint:packages": "pnpm dedupe --check",
 		"lint:spelling": "cspell \"**\" \".github/**/*\"",
 		"preview": "astro preview",
-		"start": "astro dev"
+		"start": "astro dev",
+		"tsc": "tsc"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^0.19.7",
