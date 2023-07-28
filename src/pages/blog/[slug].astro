@@ -37,6 +37,7 @@ const rendered = await entry.render();
 			class="hero"
 			date={entry.data.pubDate}
 			description={entry.data.description}
+			download={entry.data.download}
 			image={entry.data.image && {
 				alt: entry.data.image.alt,
 				size: "small",

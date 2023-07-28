@@ -5,6 +5,7 @@ export const collections = {
 	blog: defineCollection({
 		schema: rssSchema.extend({
 			description: z.string(),
+			download: z.string().optional(),
 			image: z
 				.object({
 					alt: z.string(),

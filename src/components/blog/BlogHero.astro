@@ -11,6 +11,7 @@ interface Props {
 	class?: string | undefined;
 	date: Date;
 	description: string;
+	download?: string | undefined;
 	image?: HeroImageProps | undefined;
 	title: string;
 }
@@ -51,12 +52,29 @@ interface Props {
 			{Astro.props.description}
 		</HeroSecondary>
 	</div>
-	<div class="details"></div>
+	{
+		Astro.props.download && (
+			<div class="download">
+				💾
+				<a
+					href={Astro.props.download}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					Download the slides here!
+				</a>
+			</div>
+		)
+	}
 </div>
 
 <style>
 	.image {
 		float: right;
+	}
+
+	.download {
+		margin-top: 1.5rem;
 	}
 
 	@media (min-width: 700px) {
