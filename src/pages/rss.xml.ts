@@ -6,7 +6,7 @@ import { description, site } from "../constants";
 export async function get(context: APIContext) {
 	return rss({
 		customData: `<language>en-us</language>`,
-		description: description,
+		description,
 		site: context.site?.toString() ?? site,
 		items: await pagesGlobToRssItems(
 			// TODO: find or file an issue?

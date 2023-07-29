@@ -36,5 +36,7 @@ const blogs = await getCollection("blog");
 			</HeroTertiary>
 		</Hero>
 	</BodyContents>
-	<BlogsGrouped blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)} />
+	<BlogsGrouped
+		blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)}
+	/>
 </BaseLayout>

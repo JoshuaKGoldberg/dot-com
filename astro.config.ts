@@ -7,9 +7,6 @@ import konamimojisplosion from "astro-konamimojisplosion";
 import { site } from "./src/constants";
 
 export default defineConfig({
-	experimental: {
-		assets: true,
-	},
 	image: {
 		service: sharpImageService(),
 	},
@@ -17,5 +14,5 @@ export default defineConfig({
 	markdown: {
 		syntaxHighlight: "prism",
 	},
-	site: site,
+	site,
 });
