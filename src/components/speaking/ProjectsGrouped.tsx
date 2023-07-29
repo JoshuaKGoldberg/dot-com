@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 
 import { groupBy } from "~/utils";
+
 import { GroupedEntries } from "../GroupedEntries";
 import { ProjectEntry } from "./ProjectEntry";
 

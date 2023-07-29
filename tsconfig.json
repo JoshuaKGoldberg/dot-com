@@ -4,10 +4,10 @@
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",
+		"noUncheckedIndexedAccess": false,
 		"paths": {
 			"~/*": ["src/*"]
 		},
-		"noUncheckedIndexedAccess": false,
 		"target": "es2022"
 	},
 	"extends": "astro/tsconfigs/strictest"
