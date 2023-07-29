@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"exactOptionalPropertyTypes": false,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",
