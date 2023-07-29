@@ -1,7 +1,8 @@
 import type { CollectionEntry } from "astro:content";
 import { For } from "solid-js";
 
-import { groupBy } from "../../utils";
+import { groupBy } from "~/utils";
+
 import { EntryList } from "../EntryList";
 import { GroupedEntries } from "../GroupedEntries";
 import { SpeakingEntry } from "./SpeakingEntry";

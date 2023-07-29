@@ -1,9 +1,13 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",
 		"noUncheckedIndexedAccess": false,
+		"paths": {
+			"~/*": ["src/*"]
+		},
 		"target": "es2022"
 	},
 	"extends": "astro/tsconfigs/strictest"
