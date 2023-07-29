@@ -7,7 +7,7 @@ image:
   src: rick-astley.png
 ---
 
-import rickAstleyDancing from "./rick-astley-dancing.gif";
+import { LoopedVideo } from "../../../components/blog/mdx/LoopedVideo";
 
 > This blog post does not contain any surprise rickrolls.
 > It's a safe space.
@@ -21,7 +21,10 @@ Making a webpage that can effectively rickroll any arbitrary visitor was a surpr
 Modern web browsers restrict autoplaying audio and video, complicating the art of the sudden rickroll surprise.
 This blog post details how and why my site works the way it does in celebration of April Fools' Day 2022.
 
-<img alt="Rick Astley Dancing" src={rickAstleyDancing.src} />
+<LoopedVideo
+	src="/images/blog/rick-astley-dancing.webm"
+	title="Rick Astley dancing in the Never Gonna Give You Up music video"
+/>
 
 > You can peek the source code on [github.com/JoshuaKGoldberg/standards-compliant-rickroll](https://github.com/JoshuaKGoldberg/standards-compliant-rickroll).
 

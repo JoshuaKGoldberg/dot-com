@@ -9,10 +9,7 @@ title: "Configuring ESLint, Prettier, and TypeScript Together"
 ---
 
 import EmbeddedIframe from "../../../components/blog/mdx/EmbeddedIframe.astro";
-import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
-import april from "./april.gif";
-import needsMoreLintRules from "./needs-more-lint-rules.gif";
-import otterCleaning from "./otter-cleaning.gif";
+import LabeledVideo from "../../../components/blog/mdx/LabeledVideo.astro";
 
 _Static analysis_ is tooling that scrutinizes code without running it.
 This is in contrast with _dynamic analysis_: tooling such as testing that executes your code and scrutinizes the result.
@@ -90,11 +87,11 @@ Let's dig into the types of tools.
 
 ## Formatting
 
-<LabeledImage
+<LabeledVideo
 	alt="Cute otter cleaning itself in a body of water."
 	description="Formatters clean your code. That's all they do."
 	original="https://giphy.com/gifs/montereybayaquarium-face-otter-sea-1xlGfZ07Dq62jqKT9t"
-	src={otterCleaning}
+	src="/images/blog/otter-cleaning.webm"
 />
 
 A formatter is a tool that reads in your source code, ignores your formatting, and suggests how to write it.
@@ -167,10 +164,10 @@ The only option I generally set in my configs is [changing `useTabs` to true](ht
 
 ## Linting
 
-<LabeledImage
+<LabeledVideo
 	alt="Will Ferrel in SNL banging a cowbell behind the band in the 'needs more cowbell' sketch. Caption: 'NEEDS MORE LINT RULES'"
 	description="me irl"
-	src={needsMoreLintRules}
+	src="/images/blog/needs-more-lint-rules.webm"
 />
 
 A linter is a tool that runs a set of checks on your source code.
@@ -378,11 +375,11 @@ Although a linter can have rules tailored to formatting (e.g. [`indent`](https:/
 Formatting rules are evil, a waste of time to maintain, and not the right way to format your code.
 Use a dedicated formatter, please!
 
-<LabeledImage
+<LabeledVideo
 	alt="April Ludgate in Parks and Recreation putting her fingers to her forehead and looking exasperated and overwhelmed'"
 	description="me and all other linter maintainers irl having to deal with formatting rules"
 	original="https://giphy.com/gifs/parksandrec-episode-5-parks-and-recreation-rec-76Nahzjx4Y6WXP2APE"
-	src={april}
+	src="/images/blog/april.webm"
 />
 
 ## Type Checking

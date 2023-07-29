@@ -8,9 +8,8 @@ title: "Team Construction Pitfalls"
 ---
 
 import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "../../../components/blog/mdx/LabeledVideo.astro";
 import deathOfSocrates from "./death-of-socrates.jpg";
-import aladdinAndJasmine from "./aladdin-and-jasmine.gif";
-import hamstersSwarming from "./hamsters-swarming.gif";
 
 <LabeledImage
 	alt="The Death of Socrates (painting)"
@@ -45,14 +44,14 @@ For the sake of easier writing, let's consider "junior" to be people who haven't
 
 ## 1. Overstocking Junior Developers
 
-{/* TODO: markdown description ... */}
+{/* TODO: markdown for description? */}
 
-<LabeledImage
+<LabeledVideo
+	alt="A lot of hamsters, swarming"
 	description="Despite the context, these are not implied to be junior developers. They're _frontend_ developers being shown a new framework."
 	original="https://giphy.com/gifs/running-hamster-11Ss9q3F4zf5VC"
->
-	<img alt="Hamsters swarming" src={hamstersSwarming.src} />
-</LabeledImage>
+	src="/images/blog/hamsters-swarming.webm"
+/>
 
 > Anecdote: two junior developers on a relatively new team were tasked with creating a new variation of an existing, tech-debt-heavy page.
 > They gave an initial dev estimate, started working on code, and quickly realized they'd need help to overcome a greater-than-expected amount of existing tech debt.
@@ -98,11 +97,11 @@ When an organization adds new developers, it is unhealthy to ask them to create 
 To truly onboard an developer onto a team takes months or more of having them work in the existing codebases with the existing developers.
 Thus, it is unhealthy to spin off a new team solely with new team members, regardless of their general experience level.
 
-<LabeledImage
+<LabeledVideo
 	alt="Aladdin and Jasmine on the flying carpet"
 	description="How 'senior' developers feel explaining why their opinions are best"
 	original="https://giphy.com/gifs/disney-aladdin-princess-jasmine-a-whole-new-world-WUu9EGdSEImJy"
-	src={aladdinAndJasmine.src}
+	src="/images/blog/aladdin-and-jasmine.webm"
 />
 
 When you match area experts with developers new to the organization, both sides benefit.

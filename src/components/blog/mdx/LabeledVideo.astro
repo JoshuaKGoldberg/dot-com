@@ -1,8 +1,9 @@
 ---
 import LabeledMedia from './LabeledMedia.astro';
+import { LoopedVideo } from './LoopedVideo';
 
 export interface Props {
-	description: string;
+	description?: string;
 	original?: string;
 	src: string;
 	title: string;
@@ -13,7 +14,5 @@ export interface Props {
 	description={Astro.props.description}
 	original={Astro.props.original}
 >
-	<video autoplay muted loop title={Astro.props.title}>
-		<source src={Astro.props.src} />
-	</video>
+	<LoopedVideo client:visible src={Astro.props.src} title={Astro.props.title} />
 </LabeledMedia>
