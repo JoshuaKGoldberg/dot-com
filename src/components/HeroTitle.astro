@@ -1,0 +1,15 @@
+---
+import { Text } from "./Text";
+---
+
+<Text as="h1" fontSize="title" fontWeight="bolder">
+	<slot />
+</Text>
+
+<style>
+	h1 {
+		color: var(--colorForegroundExtra);
+		line-height: 0.85;
+		text-shadow: var(--textShadow);
+	}
+</style>

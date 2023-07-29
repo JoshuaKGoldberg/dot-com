@@ -1,0 +1,204 @@
+---
+pubDate: 2023-03-30
+description: "Fixing a slight bug in how TypeScript resolves type elements of tuple types indexed by type parameters."
+image:
+  alt: TODO
+  src: jerry-catwalk.jpg
+title: "TypeScript Contribution Diary: Tuple Types Indexed by a Type Parameter"
+---
+
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import jerryCatwalk from "./jerry-catwalk.jpg";
+
+<LabeledImage
+	alt="Black cat walking on a holiday light decorated railing towards the viewer, tail held high, looking at the viewer"
+	description="Jerry the cat showing both his head and tail."
+	src={jerryCatwalk}
+/>
+
+## Problem Statement
+
+[#50875: Spread operator results in incorrect types when used with tuples](https://github.com/microsoft/TypeScript/issues/50875) was filed on TypeScript in September of 2022.
+It states that when trying to use a `...` spread operator on a tuple type (a type representing a fixed-size array), TypeScript slips up trying to understand what type the result would be.
+
+That issue's original code is pretty gnarly and has a lot to read through.
+By removing unnecessary code I was able to trim it down to three important lines of code:
+
+```ts
+function test<N extends number>(singletons: ["a"][], i: N) {
+	const singleton = singletons[i];
+	//    ^? ["a"][][N]
+
+	const [, ...rest] = singleton;
+	//          ^? Actual: "a"[]
+	//           Expected: []
+}
+```
+
+Here's a [TypeScript playground of the bug report](https://www.typescriptlang.org/play?jsx=0&ts=4.9.4#code/GYVwdgxgLglg9mABFApgZygHgHKJQD1TABM1EwQBbAIxQCcA+ACjRjAHMAbFKBNALkQBtAOQBDEQF0hkgDSIYg7AEpEAbwBQiRBD5RErDt15IAvAbZcefITElbEAekfbtAPQD8Gh88QBVMAIABxRoFGIHXTAMYXkAOgS6dChJRHNDKxMfF1dc108NAF8gA).
+Walking through the code:
+
+- The type of `singletons` is an array of any size, where each element in the array is `["a"]`
+  - It could be: `[ ["a"] ]`, or `[ ["a"], ["a"] ]`, or `[ ["a"], ["a"], ["a"] ]`, etc.
+- The type of `singleton` should be `["a"]`: what you'd get by accessing any element `i` (`[N]`) under `singletons`'s type (`["a"][]`)
+- The type of `rest` is what you get if you remove the first element from the tuple `["a"]`, which amounts to _no elements_ (`[]`)
+
+...so if `rest` is supposed to be type `[]`, why is it somehow `"a"[]`?
+Something was going wrong with TypeScript's type checker.
+
+> Spoiler: here's the [resultant pull request](https://github.com/microsoft/TypeScript/pull/51037). ✨
+
+### Playing with Type Parameters
+
+Interestingly, if we change the `i` parameter's type from `N` to `number`, `rest`'s type is correctly inferred as `[]`:
+
+```ts
+function test(singletons: ["a"][], i: number) {
+	const singleton = singletons[i];
+	//    ^? ["a"]
+
+	const [, ...rest] = singleton;
+	//          ^? []
+}
+```
+
+You can play with a [TypeScript playground of the working non-generic `number`](https://www.typescriptlang.org/play?jsx=0&ts=4.9.4#code/GYVwdgxgLglg9mABFApgZygCjTMBzAGxSgTQC5EBtAcgENqBdShgGkRgrBAFsAjFAE4BKRAG8AUIkQRSURDnxESSALzzchYqUowGkxAHoDUqQD0A-OP1HEAVTAoAHgAcU0FABN9MsBipsAOiCBdCgGRDUFTWVrYxN4kwtxAF8gA).
+
+We can therefore deduce that the problem is from a generic type parameter being used to access an element in a tuple type.
+Interesting.
+
+### Playing with Rests
+
+I also played around with the reproduction by removing the `...` rest from the type.
+That got a type error to occur, as it should have:
+
+```ts
+function test<N extends number>(singletons: ["a"][], i: N) {
+	const singleton = singletons[i];
+	//    ^? ["a"][][N]
+
+	const [, rest] = singleton;
+	//       ~~~~
+	// Tuple type '["a"]' of length '1' has no element at index '1'.
+}
+```
+
+So TypeScript was still able to generally understand that `singleton`'s type is `["a"]`.
+We can therefore further deduce that the problem is from a generic type parameter being used to access a `...` spread of rest elements in a tuple type.
+Very interesting.
+
+## Digging Into The Checker
+
+At this point I wasn't sure where to go.
+I'd never worked in the parts of TypeScript that deal with rests and spreads.
+Nor had I dared try to touch code areas dealing with generic type parameters and type element accesses.
+
+I did, however, know that `getTypeOfNode` is the function called when TypeScript tries to figure out the type at a location (it's the main function called by [`checker.getTypeAtLocation`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L496)).
+I put a breakpoint at the start of `getTypeNode`, then ran TypeScript in `node --inspect-brk` mode on the bug report's code in the VS Code debugger.
+My goal was to try to find where TypeScript tries to understand the `[N]` access of the `["a"][]` type.
+
+<details>
+<summary>The call stack steps inside have a lot of nested function calls. If you have the time, I'd encourage you to pop TypeScript into your own VS Code debugger and follow along.</summary>
+
+1. [`isDeclarationNameOrImportPropertyName`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L43193) evaluates to `true`, so TypeScript calls to...
+2. [`getTypeOfSymbol`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L43196): `symbol.flags & (SymbolFlags.Variable | SymbolFlags.Property)` is true, so [`getTypeOfVariableOrParameterOrProperty`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9761) is called, which calls to...
+3. [`getTypeOfVariableOrParameterOrPropertyWorker`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9775): `ts.isBindingElement(declaration)` is true, so TypeScript calls to...
+4. [`getWidenedTypeForVariableLikeDeclaration`](https://github.com/microsoft/TypeScript/blob/96894db6cb5b7af6857b4d0c7f70f7d8ac782d51/src/compiler/checker.ts#L9350): which calls to...
+5. `getTypeForVariableLikeDeclaration`: `isBindingPattern(declaration.parent)` is `true`, so TypeScript calls to...
+6. `getTypeForBindingElement`: `checkMode` is `CheckMode.RestBindingElement` and `parentType` does exist.
+   - Calling `typeToString(parentType)` produces `'["a"][][N]'`.
+   - Because `parentType` exists, TypeScript calls to...
+7. `getBindingElementTypeFromParentType`: which seems to be the kind of _get an element based on the parent type_ code logic I'm looking for
+
+</details>
+
+I eventually stepped into the following block of code within `getBindingElementTypeFromParentType` function:
+
+```ts
+// If the parent is a tuple type, the rest element has a tuple type of the
+// remaining tuple element types. Otherwise, the rest element has an array type with same
+// element type as the parent type.
+type = everyType(parentType, isTupleType)
+	? mapType(parentType, (t) => sliceTupleType(t as TupleTypeReference, index))
+	: createArrayType(elementType);
+```
+
+`everyType(parentType, isTupleType)` was evaluating to `false`.
+Which feels wrong: the `parentType`, `["a"][][N]`, should be a tuple type!
+Accessing any element of `["a"][]` should give back `["a"]`, a tuple of length 1.
+
+### Resolving Base Constraints
+
+At this point I think I understood the issue.
+TypeScript was checking whether the `parentType` is a tuple type (or is a union of tuple types: hence the `everyType(...)`).
+But since `parentType` referred to a _generic type parameter_, `isTupleType` was returning `false`.
+
+What the code should have been doing was resolving the _base constraint_ of the parent type.
+Knowing that the type parameter `N extends number` means that `["a"][][N]` should always result in an `["a"]` tuple.
+
+I searched for `/base.*constraint/` to try to find how TypeScript code resolves base constraints.
+A function named `getBaseConstraintOfType` showed up a bunch of times.
+I changed the code to use `getBaseConstraintOfType(parentType)` for retrieving a parent type:
+
+```ts
+// If the parent is a tuple type, the rest element has a tuple type of the
+// remaining tuple element types. Otherwise, the rest element has an array type with same
+// element type as the parent type.
+const baseConstraint = getBaseConstraintOrType(parentType);
+type = everyType(baseConstraint, isTupleType)
+	? mapType(baseConstraint, (t) =>
+			sliceTupleType(t as TupleTypeReference, index)
+	  )
+	: createArrayType(elementType);
+```
+
+...and, voila!
+Running the locally built TypeScript showed the original bug was fixed.
+Nice!
+
+## Adding Tests
+
+I added the original bug report as a test case: ([`tests/cases/compiler/spreadTupleAccessedByTypeParameter.ts`](https://github.com/JoshuaKGoldberg/TypeScript/blob/9066ba9cefd7b2a402de402006135295d8802d08/tests/cases/compiler/spreadTupleAccessedByTypeParameter.ts)).
+Then upon running tests and accepting new baselines, I was surprised to see changes to the baseline for an existing test, [`tests/baselines/reference/narrowingDestructuring.types`](https://github.com/JoshuaKGoldberg/TypeScript/blob/9066ba9cefd7b2a402de402006135295d8802d08/tests/baselines/reference/narrowingDestructuring.types):
+
+{/* spell-checker: disable */}
+
+```ts
+function farr<T extends [number, string, string] | [string, number, number]>(
+	x: T
+) {
+	const [head, ...tail] = x;
+	if (x[0] === "number") {
+		const [head, ...tail] = x;
+	}
+}
+```
+
+{/* spell-checker: enable */}
+
+```diff
+    const [head, ...tail] = x;
+>head : string | number
+- >tail : (string | number)[]
++ >tail : [string, string] | [number, number]
+```
+
+The updated baseline is more correct!
+The type of `tail` (elements in `x` after `head`) indeed is `[string, string] | [number, number]`.
+My change improved an existing test baseline!
+Yay!
+🥳
+
+...and with tests working, I was able to send a pull request.
+[Fixed tuple types indexed by type parameter](https://github.com/microsoft/TypeScript/pull/51037). ✨
+
+### Improving a Test
+
+[@Andarist](https://github.com/Andarist) [commented on GitHub](https://github.com/microsoft/TypeScript/pull/51037/files#r987365768 "Andarist comment on GitHub") that the test probably meant to check `typeof x[0] === "number"`, not just `x[0] === "number"`.
+I ended up filing [#52410 narrowingDestructuring test missing a 'typeof' operator](https://github.com/microsoft/TypeScript/issues/52410) in writing this blog post.
+
+## Final Thanks
+
+Thanks to [@sandersn](https://github.com/sandersn) for reviewing and merging the PR from the TypeScript team's side.
+Additional thanks to [@Zamiell](https://github.com/Zamiell) for reporting the issue in the first place, and [@Andarist](https://github.com/Andarist) for posting helpful comments on the [resultant pull request](https://github.com/microsoft/TypeScript/pull/51037).
+Cheers! 🙌

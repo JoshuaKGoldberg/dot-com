@@ -48,6 +48,7 @@ export function Text<As extends keyof JSX.HTMLElementTags>(
 			component={props.as}
 			{...rest}
 			class={clsx([
+				styles.text,
 				knownProps.fontSize && fontSizes[knownProps.fontSize],
 				knownProps.fontWeight && fontWeights[knownProps.fontWeight],
 				rest.class,

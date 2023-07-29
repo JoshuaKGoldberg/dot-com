@@ -1,0 +1,118 @@
+---
+description: "Now that TSLint is being deprecated, let's look at the history of JavaScript and TypeScript linting."
+pubDate: 2019-11-19
+title: "TSLint to ESLint Part 1: Historical Context"
+---
+
+> Howdy!
+> This blog post talks about the historical context around migrating from TSLint to ESLint.
+> If you just want to understand how [tslint-to-eslint-config](https://github.com/typescript-eslint/tslint-to-eslint-config) migrates configurations from TSLint to ESLint with [@typescript-eslint](https://typescript-eslint.io), skip to [TSLint to ESLint Part 2: tslint-to-eslint-config](../tslint-to-eslint-config).
+
+## Vocabulary Base
+
+Before we talk about today's solutions for linters, let's talk a bit about the necessary vocabulary.
+
+- **JavaScript** (**JS**) is our favorite dynamic, quasi-functional, quasi-object-oriented language of the web.
+- **ECMAScript** (**ES**) is the specification upon which JavaScript is based... so really, it's a fancy way of saying JavaScript.
+- **TypeScript** (**TS**) is a superset of JavaScript that adds types.
+- **Linters** are programs that scan source code for common logic and style complaints.
+
+## Linters
+
+Today's accepted standard linter for JavaScript is [ESLint](https://eslint.org).
+It has great support for configuration, custom rules, editor plugins, and community rulesets... but we haven't always had such great tooling!
+The concept of a configurable linter is pretty recent in the grand scheme of JavaScript history.
+
+### JSLint
+
+The first popular JavaScript linter was [JSLint](https://jslint.com), released _way_ back in 2002 by Douglas Crockford.
+It was able to complain about basic style preferences such as odd whitespace amounts or where you declared your `var`s, using `===` instead of `==`, ...and not much more.
+There were no hooks for your own rules or configuring the checks outside of code comments.
+
+Recall that [Prettier](https://prettier.io), which _still_ isn't adopted by all major companies and teams (😡), wouldn't be released for another _15 years_.
+Getting stubborn developers to agree to use a nonconfigurable tool for style complaints was even more difficult back in 2002 than it is now.
+
+The [Prettier One Year Anniversary](https://prettier.io/blog/2018/01/10/1.10.0.html) blog post is a great summary of how those kinds of projects have grown over the last few years.
+
+### JSHint
+
+Fast forward to 2011 and JSLint was still not a particularly appreciated tool - in large part because of its extreme configuration rigidity.
+A configurable fork of JSLint named JSHint was released in 2011 by Anton Kovalyov, sparking a good deal more interest in the linting space.
+See [Anton's Explanatory Blog Post](https://medium.com/@anton/why-i-forked-jslint-to-jshint-73a72fd3612) for more on the historical context behind forking to JSHint.
+
+Although it was more configurable, JSHint still had a rigid, older codebase, and did not yet support user-written rules.
+You were still stuck with the default set.
+Yuck.
+
+### ESLint
+
+2013 saw the initial release of ESLint by Nicholas C. Zakas.
+_What a tool!_
+ESLint got right what JSLint and JSHint struggled with from the start - a skeleton core with separate, pluggable rules in and out of the base project.
+Its API allowed community-recommended configurations such as the [Airbnb config](https://www.npmjs.com/package/eslint-config-airbnb).
+
+See the [ESLint introduction post](https://humanwhocodes.com/blog/2013/07/16/introducing-eslint) for some amusing discussions around ESLint's creation:
+
+> _"And so I somewhat regrettably introduce ESLint"_- Nicholas C. Zakas, 2013
+
+### TSLint
+
+ESLint started with a wonderfully flexible infrastructure using representations of JavaScript code built on [Esprima](https://esprima.org), but what about code that wasn't strictly JavaScript?
+_What about TypeScript_?
+
+Developers at Palantir, a tech company with an interesting reputation, released an equivalent tool to ESHint/ESLint named [TSLint](https://palantir.github.io/tslint) in 2013 to go along with the then-fledgling TypeScript.
+
+TSLint didn't have the rich feature support or community backing of ESLint, but your alternative was to compile your code to JavaScript and run ESLint on the results... which killed off compatibility with many stylistic rules.
+_(TypeScript's emitted code can be messy and doesn't preserve many whitespace choices from its source.)_
+We managed.
+
+On the bright side, TSLint gained the ability to use TypeScript's type checking APIs in 2015!
+That allowed for a new, powerful class of rules that could use TypeScript types in addition to basic syntax for their checking.
+
+TSLint gained the ability to lint JavaScript files as well as TypeScript in 2016, making it a direct competitor to ESLint.
+
+## Killing TSLint
+
+On the surface, the tooling upgrade that enabled for killing off TSLint was when ESLint gained the ability to lint syntax extensions.
+We can now write plugins such as [typescript-eslint](https://typescript-eslint.io) for ESLint to run on TypeScript and other non-standard languages.
+
+TSLint's true killer was the TypeScript team itself announcing a switch from TSLint to ESLint support in late 2018.
+Palantir announced TSLint's deprecation plans in a [blog post](https://medium.com/palantir/tslint-in-2019-1a144c2317a9) the next month along with a [deprecation plan](https://github.com/palantir/issues/4534) on the GitHub TSLint issue tracker.
+
+There's no question about it: TSLint is dead.
+Long live ESLint.
+
+### Historical Notes
+
+The death of TSLint is a fascinating thing.
+Although the TypeScript switching to ESLint was the surface killer, I like to think there were a few communal issues that helped contribute to its lower community involvement.
+
+For starters, you can attribute some resentment against TSLint to the inconvenience of two competing linters in the JavaScript ecosystem.
+Every feature added to one linter would inevitably get requested on the other - and because of ESLint's greater community size and TypeScript's nascent popularity at the time, most features came to ESLint first and trickled into TSLint later - or not at all.
+What a maintenance burden!
+
+You could also blame, in part, the difficulties of promoting open source in a for-profit organization.
+TSLint went mostly or partially unmaintained for long periods several times through 2017 and 2018.
+
+You could _also_ blame, in part, the rising controversies behind its backing sponsor Palantir - a company with numerous data privacy and government involvement controversies, particularly around the U.S. Immigration and Customs Enforcement (ICE).
+TSLint gained internet interest in 2018 when a notable JavaScript community member flooded its GitHub issues with political issues ([example](https://github.com/palantir/tslint/issues/4141)).
+
+Did one or two of these maintenance issues cause the others?
+Was there one clear cause of decay, or a vicious cycle of community bleeding?
+If Clinton had defeated Trump and eased up on ICE raids, would we be talking about merging ESLint into a community-run TSLint?
+
+_No._
+As TypeScript is one of many expansions on JavaScript, using ESLint as the base makes architectural sense.
+
+We _might_ have seem a more difficult transition from a more fully-featured TSLint to ESLint, but that's all conjecture.
+Ultimately we'll never know.
+
+## What's Next?
+
+By now I hope you understand why TSLint is moving over for ESLint with typescript-eslint, and if you still use TSLint, you have some energy to spend migrating over.
+
+I wrote a cute little tool called [tslint-to-eslint-config](https://github.com/typescript-eslint/tslint-to-eslint-config) that generates an ESLint configuration using your existing TSLint configuration.
+Maybe it'll be useful for you!
+See the [next post in this series](../tslint-to-eslint-config) for an overview of how it works.
+
+Thanks for reading this far -- happy linting!

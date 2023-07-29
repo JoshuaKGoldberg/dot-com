@@ -1,0 +1,535 @@
+---
+description: "Corrects the missing function codefix to add type parameters when the function needs to be generic."
+pubDate: 2022-08-09
+title: 'TypeScript Contribution Diary: Type Parameters in the "Add Missing Function" Codefix'
+---
+
+I recently had the pleasure of joining [Dan Jutan](https://twitter.com/jutanium)'s Breaking Down the Web series of [Twitch streams](https://twitch.tv/jutanium "'jutanium' on Twitch") to talk about TypeScript.
+You can find the [recording on YouTube](https://www.youtube.com/watch?v=PxrCWHQU6gQ&ab_channel=DanJutan) ([main content start at 4:36](https://youtu.be/PxrCWHQU6gQ?t=276)).
+At [1:29:37](https://youtu.be/PxrCWHQU6gQ?t=5377), Dan used TypeScript's _Add Missing Function_ TypeScript codefix to add a missing `runEvilSideEffect` in the following code...
+
+```ts
+function returnSelf<T>(self: T) {
+	if (typeof self === "number") {
+		runEvilSideEffect(self);
+		// ^ Codefix: Add missing function declaration 'runEvilSideEffect'
+	}
+}
+```
+
+... and the function TypeScript added came with a type error!
+😱
+
+```ts
+function runEvilSideEffect(self: T & number) {
+	//                           ~ Cannot find name 'T'.
+	throw new Error("Function not implemented.");
+}
+```
+
+That `T` came from the `returnSelf<T>` type parameter, but the newly declared `runEvilSideEffect` function didn't declare its own `T`.
+
+Dan was kind enough to file [issue #49693: Add Missing Function Declaration: Does Not Correctly Declare Generic Function](https://github.com/Microsoft/TypeScript/issues/49693) on TypeScript to report the bug.
+
+I sent in [PR #49727: Account for type parameters in missing function codefix](https://github.com/Microsoft/TypeScript/pull/49727) a couple days later to fix the issue.
+Let's dig into how that PR works!
+
+## Finding the Codefix
+
+TypeScript stores the various codefixes that can be applied in a [`src/services/codefixes/` directory](https://github.com/Microsoft/TypeScript/tree/78e2bfd7126353a12b2c559ca1bcf441431d86b0/src/services/codefixes).
+But, quick filename searches for terms like "add function" or "missing" in that directory didn't show anything that seemed related.
+Which codefix was being applied in the first place?
+
+TypeScript stores all messages that get shown to users -include codefix labels- in its [`src/compiler/diagnosticMessages.json` file](https://github.com/Microsoft/TypeScript/tree/78e2bfd7126353a12b2c559ca1bcf441431d86b0/src/compiler/diagnosticMessages.json).
+They get transformed from text like _"`Add missing function declaration '...'`"_ to runtime values like `Diagnostics.add_missing_function_declaration_0`.
+I ran a search for that runtime value and saw a result in [`src/services/codefixes/fixAddMissingMember.ts`](https://github.com/Microsoft/TypeScript/tree/78e2bfd7126353a12b2c559ca1bcf441431d86b0/src/services/codefixes/fixAddMissingMember.ts).
+
+```ts
+if (info.kind === InfoKind.Function) {
+	const changes = textChanges.ChangeTracker.with(context, (t) =>
+		addFunctionDeclaration(t, context, info)
+	);
+	return [
+		createCodeFixAction(
+			fixMissingFunctionDeclaration,
+			changes,
+			[Diagnostics.Add_missing_function_declaration_0, info.token.text],
+			fixMissingFunctionDeclaration,
+			Diagnostics.Add_all_missing_function_declarations
+		),
+	];
+}
+```
+
+Found it!
+
+### Aside: Debugging TypeScript
+
+You can refer to [Andrew Branch's excellent "Debugging the TypeScript Codebase" post](https://blog.andrewbran.ch/debugging-the-type-script-codebase) as a reference for getting the TypeScript repo cloned and in a debuggable state locally.
+
+### Aside: Terminology Recap
+
+Before we dive into the function, I should explain the terminology I'm going to use:
+
+- **Arguments** are what's provided to a declaration, such as values passed to a function
+- **Parameters** are what's declared to receive arguments, such as a function's parameters
+
+Within those two terms:
+
+- **Type** arguments and parameters exist on generic function calls:
+  - **Type arguments** are what the types resolve to in the function call
+    - **Explicit type arguments** are when a call explicitly defines its arguments
+  - **Type parameters** are what the function has declared as its generic types
+- **Value** arguments and parameters exist on function calls that take in values:
+  - **Arguments** are the values provided to the function
+  - **Parameters** are what the function declares as its runtime parameters
+
+For example, in the following code snippet...
+
+```ts
+function withGenericValue<Value>(value: Value) {}
+
+withGenericValue<string>("");
+```
+
+- `<Value>` declares a single type parameter, `Value`, for the function declaration
+- `value: Value` declares a single (value) parameter, `value`, for the function declaration
+- `<string>` provides a single type argument, `string`, for the function call
+- `""` provides a single (value) argument, `""`, for the function call
+
+The distinction is important when discussing logic around function calls and declarations.
+
+## Exploring the Codefix
+
+Out of the two functions called in the earlier TypeScript source snippet:
+
+- `addFunctionDeclaration`: includes logic for creating nodes and inserting them into the page
+- `createCodeFixAction`: seemed to be a general-purpose function used in many codefixes
+
+`addFunctionDeclaration` was almost certainly the right place to go.
+It was calling to a `createSignatureDeclarationFromCallExpression` function, declared in [`src/services/codefixes/helpers.ts`](https://github.com/microsoft/TypeScript/blob/78e2bfd7126353a12b2c559ca1bcf441431d86b0/src/services/codefixes/helpers.ts#L279).
+
+That function is a little hefty -lots of calls to other functions- so it took me a little while to squint through it.
+I put a debugger breakpoint in it and looked at the values at runtime.
+The main points that seemed relevant were:
+
+1.  `types`: calling the `typeToAutoImportableTypeNode` function to create an array of `TypeNode`s to be inserted in the new function as parameters
+
+    - Looking through `typeToAutoImportableTypeNode`, it included logic to handle `import("...")...` nodes for types declared in other files
+
+2.  `typeParameters`: for each explicit type argument in the call, creating a type parameter node to be inserted in the new function
+
+    - Example input: the `T` in `myFunction<T>()`
+    - Example output: the `<T>` in `function myFunction<T>() {}`
+
+3.  `parameters`: for each argument in the call (e.g. the `value` in `myFunction(value)`, creating a parameter node to be inserted in the new function
+
+    - Example input: the `value` in `myFunction(value)`
+    - Example output: the `value: string` in `function myFunction(value: string) {}`
+
+At this point I still didn't fully understand how `createSignatureDeclarationFromCallExpression` worked, but could generally see how the parts I cared about came together:
+
+1. `types` was generated by retrieving the type of each argument
+2. `typeParameters` was generated by copying each _explicit type argument_
+3. `parameters` was generated by creating a parameter node for each argument node and its type in `types`
+4. The function combined all that information to print out a new function
+
+That _explicit type argument_ mention in `typeParameters` was key to the bug we'd seen.
+TypeScript was generating type parameters only for explicit type arguments.
+If the type of an argument was generic, TypeScript wouldn't know to create a new type parameter for it.
+
+## Fixing the Codefix
+
+Equipped with a barely-workable understanding of the original code, my goal was to make the code:
+
+1. Understand when the type of an argument included an existing generic parameter type
+2. Add any of those type arguments to the list of created type parameters
+
+### Detecting Existing Generics
+
+The existing logic for `types` called `checker.getTypeAtLocation` on each argument to get its type, and immediately passed that type to `typeToAutoImportableTypeNode`.
+I needed the code to additionally keep track of which of those types referenced a type argument.
+
+I split out the first bit of retrieving types into a new `instanceTypes` variable:
+
+```ts
+const instanceTypes = isJs
+	? []
+	: map(args, (arg) => checker.getTypeAtLocation(arg));
+```
+
+...then created a new `getArgumentTypesAndTypeParameters` function to return two values:
+
+- `argumentTypeNodes`: what was previously referred to as `types`
+- `argumentTypeParameters`: names of any existing type parameters referenced by types in `argumentTypeNodes`
+
+```ts
+const { argumentTypeNodes, argumentTypeParameters } =
+	getArgumentTypesAndTypeParameters(
+		checker,
+		importAdder,
+		instanceTypes
+		// (pass-through parameters omitted for brevity)
+	);
+```
+
+I used a `Set<string>` internally for the argument type parameters, to de-duplicate their names in case two arguments referred to the same type parameter name.
+
+```ts
+export function getArgumentTypesAndTypeParameters(
+	checker: TypeChecker,
+	importAdder: ImportAdder,
+	instanceTypes: Type[]
+	// (pass-through parameters omitted for brevity)
+) {
+	const argumentTypeNodes: TypeNode[] = [];
+	const argumentTypeParameters = new Set<string>();
+
+	for (const instanceType of instanceTypes) {
+		const argumentTypeNode = typeToAutoImportableTypeNode(
+			checker,
+			importAdder,
+			instanceType
+			// (pass-through arguments omitted for brevity)
+		);
+		if (!argumentTypeNode) {
+			continue;
+		}
+
+		argumentTypeNodes.push(argumentTypeNode);
+		const argumentTypeParameter = getFirstTypeParameterName(instanceType);
+
+		if (argumentTypeParameter) {
+			argumentTypeParameters.add(argumentTypeParameter);
+		}
+	}
+
+	return {
+		argumentTypeNodes,
+		argumentTypeParameters: arrayFrom(argumentTypeParameters.values()),
+	};
+}
+```
+
+#### Getting Type Parameter Names
+
+I also wrote a `getFirstTypeParameterName` function meant to determine if a type involved a type parameter, and return the name of that type parameter if so.
+Given a `type: Type`, it set up three cases:
+
+- If the type is an intersection type, return the first result from each of its sub-types (`type.types`) that is truthy
+- If the type is a type parameter itself (`type.flags & TypeFlags.TypeParameter`), return the `.getName()` of its `.getSymbol()`, if that all exists
+- Otherwise, return `undefined`, for no known name
+
+> You can think of a type's symbol as TypeScript's deeper understanding of a type.
+> A symbol is TypeScript's storage for what names are declared by various things.
+> For example, if a type indicates a value is an instance of a class, the backing symbol would contain class information such as lists of class members and constructor signatures.
+
+```ts
+function getFirstTypeParameterName(type: Type): string | undefined {
+	if (type.flags & TypeFlags.Intersection) {
+		for (const subType of (type as IntersectionType).types) {
+			const subTypeName = getFirstTypeParameterName(subType);
+			if (subTypeName) {
+				return subTypeName;
+			}
+		}
+	}
+
+	return type.flags & TypeFlags.TypeParameter
+		? type.getSymbol()?.getName()
+		: undefined;
+}
+```
+
+At this point, I had `instanceTypes`, `argumentTypeNodes`, and `argumentTypeParameters`: all the information needed to correct the printing of the new function!
+🚀
+
+### Printing Those Generics
+
+The previous logic to create new type arguments directly mapped `typeArguments` to type parameter declarations.
+The names of type parameters started alphabetically at `T`, `U`, etc. until the end of the alphabet, at which point they switched to `T1`, `T2`, etc.
+
+```ts
+const typeParameters =
+	isJs || typeArguments === undefined
+		? undefined
+		: map(typeArguments, (_, i) =>
+				factory.createTypeParameterDeclaration(
+					/*modifiers*/ undefined,
+					CharacterCodes.T + typeArguments.length - 1 <= CharacterCodes.Z
+						? String.fromCharCode(CharacterCodes.T + i)
+						: `T${i}`
+				)
+		  );
+```
+
+My new logic would need to account for the new `argumentTypeParameters` I'd created as well as the existing `typeArguments`.
+The logic for that ended up being a little tricky:
+
+- `argumentTypeParameters` included any number of type parameter names that needed to be printed
+- If `typeArguments` contained values, an additional number of type parameter names would need to be added
+  - The logic for this could use the same alphabetical logic as before, but should skip names already used by `argumentTypeParameters`
+
+I created a `usedNames` `Set<string>` to keep track of previously taken names.
+When `typeArguments` was copied over in a loop, I also created a `targetSize` loop bound for how large `usedNames` would have to get too.
+
+Here's what the function looked like at commit time:
+
+```ts
+function createTypeParametersForArguments(
+	argumentTypeParameters: string[],
+	typeArguments: NodeArray<TypeNode> | undefined
+) {
+	const usedNames = new Set(argumentTypeParameters);
+
+	if (typeArguments) {
+		for (
+			let i = 0, targetSize = usedNames.size + typeArguments.length;
+			usedNames.size < targetSize;
+			i += 1
+		) {
+			usedNames.add(
+				CharacterCodes.T + i <= CharacterCodes.Z
+					? String.fromCharCode(CharacterCodes.T + i)
+					: `T${i}`
+			);
+		}
+	}
+
+	return map(arrayFrom(usedNames.values()), (usedName) =>
+		factory.createTypeParameterDeclaration(/*modifiers*/ undefined, usedName)
+	);
+}
+```
+
+The `Set` trick is a nice way to guarantee string uniqueness.
+I was pleased with myself for finding ~an excuse~ a need to use it twice in this PR.
+
+### Initial Tests
+
+At this point, my code seemed to be working when I tried it out locally.
+It was time to write some tests!
+
+TypeScript stores many tests for codefixes and similar language service behavior in a [`tests/cases/fourslash/` directory](https://github.com/microsoft/TypeScript/tree/78e2bfd7126353a12b2c559ca1bcf441431d86b0/tests/cases/fourslash).
+The tests set up a virtual code file in code indented by four slashes (`////`, hence the name), then run actions and assertions on that virtual file with the TypeScript language service.
+
+For example, my first test:
+
+- Declared a source file with a `/*1*/` marker to indicate a spot inside it
+- Asked the language service to go that `1` market
+- Verified that a codefix with the expected new file content was available
+
+Here's what that test looked like:
+
+```ts
+/// <reference path='fourslash.ts' />
+
+// @noImplicitAny: true
+////function existing<T>(value: T) {
+////  const keyofTypeof = Object.keys(value)[0] as keyof T;
+////  added/*1*/(value);
+////}
+
+goTo.marker("1");
+verify.codeFix({
+	description: "Add missing function declaration 'added'",
+	index: 0,
+	newFileContent: `function existing<T>(value: T) {
+  const keyofTypeof = Object.keys(value)[0] as keyof T;
+  added(value);
+}
+function added<T>(value: T) {
+    throw new Error("Function not implemented.");
+}
+`,
+});
+```
+
+I added eight tests in total, exercising a few variations of explicit and/or implicit type arguments.
+The code looked about ready to send in as a pull request!
+
+## PR Review: Take One
+
+A [pull request review](https://github.com/microsoft/TypeScript/pull/49727#pullrequestreview-1042621054) came in a couple weeks after the PR.
+Most of the comments were pointing out small changes.
+A few did point out real gaps in the added or changed logic.
+Summarizing those gaps here:
+
+- [`getFirstTypeParameterName` should handle unions too](https://github.com/microsoft/TypeScript/pull/49727#discussion_r923923882)
+- [Type parameters may need constraints](https://github.com/microsoft/TypeScript/pull/49727#discussion_r923914557)
+
+### Handling Unions in `getFirstTypeParameterName`
+
+This one wasn't too bad to adjust for.
+I added `TypeFlags.Union |` and `UnionType |` to the bitwise check and type, respectively:
+
+```diff
+-if (type.flags & TypeFlags.Intersection) {
++if (type.flags & (TypeFlags.Union | TypeFlags.Intersection)) {
+-    for (const subType of (type as IntersectionType).types) {
++    for (const subType of (type as UnionType | IntersectionType).types) {
+```
+
+### Supporting type parameter constraints
+
+Type parameter constraints are the `extends` clause on a type parameter that limit it to only types assignable to the constraint.
+For example, in the following function declaration, the `Input` type parameter has a `string` constraint:
+
+```ts
+function onlyStrings<Input extends string>(input: Input) {}
+```
+
+Constraints support was a bit tricky.
+`createTypeParametersForArguments` would need to provide each parameter's constraints to `factory.createTypeParameterDeclaration`.
+That meant I'd need to store not just parameter names, but also their constraint.
+
+Most of the changes went inside [`getArgumentTypesAndTypeParameters` in the PR](https://github.com/microsoft/TypeScript/pull/49727/files#diff-880eafae481c815c3af893123092cc0d93305284d8e6d2200638e7d546123b6cR402 "`getArgumentTypesAndTypeParameters` function in the final PR"), along with a horde of comments I needed to add so I could keep track of what all the new variables did.
+After much tinkering with constraints and types, the main changes were:
+
+- [[Line 422](https://github.com/microsoft/TypeScript/pull/49727/files#diff-880eafae481c815c3af893123092cc0d93305284d8e6d2200638e7d546123b6cR422)]: `argumentTypeParameters`: switched to `Map<string, ArgumentTypeParameterAndConstraint | undefined>` storing type argument names to:
+  - `argumentType: Type`: the computed type for the type argument
+  - `constraint?: TypeNode`: the declared constraint relevant to the type argument, if its type referred to an existing type parameter that had a constraint.
+- [[Line 436](https://github.com/microsoft/TypeScript/pull/49727/files#diff-880eafae481c815c3af893123092cc0d93305284d8e6d2200638e7d546123b6cR436)] For instance types that are unions or intersections containing a type referring to a type parameter, create a new type node with an equivalent name instead of that original union.
+  - This handles the case of generated functions like `function added<T>(value: T | U & string) {}`: instead of the `T | U & string` union, a single `T` is better.
+- [[Line 462](https://github.com/microsoft/TypeScript/pull/49727/files#diff-880eafae481c815c3af893123092cc0d93305284d8e6d2200638e7d546123b6cR462)] For instance types that have a constraint (other than `{}` and similar anonymous object literals), remember that constraint in `argumentTypeParameters`.
+
+Over in `createTypeParametersForArguments`, its `argumentTypeParameters: string[]` parameter needed to also attach that `ArgumentTypeParameterAndConstraint` for each name.
+A `[string, ArgumentTypeParameterAndConstraint | undefined][]` parameter type was the quickest way to have each element in the array contain both a name and the optional extra info.
+
+```diff
+function createTypeParametersForArguments(
++    checker: TypeChecker,
+-    argumentTypeParameters: string[],
++    argumentTypeParameters: [
++        string,
++        ArgumentTypeParameterAndConstraint | undefined
++    ][],
+    typeArguments: NodeArray<TypeNode> | undefined
+) {
+```
+
+Adding the type checker parameter was also necessary in order to use those types.
+When computing how many new type names to parameter add (`usedNames`), the code was able to only count `typeArguments` that aren't the same computed argument type as any of the `argumentTypeParameters` [[Line 361](https://github.com/microsoft/TypeScript/pull/49727/files#diff-880eafae481c815c3af893123092cc0d93305284d8e6d2200638e7d546123b6cR361)].
+
+Doing so prevents the codefix from creating unused type parameters that act as duplicates of previous type parameters.
+For example, on code like `added/*1*/<T>(value, value);` ([`incompleteFunctionCallCodefixTypeParameterArgumentSame.ts`](https://github.com/microsoft/TypeScript/blob/ebd42abf9583a9f7dc367f61ba4f3a4bb654c010/tests/cases/fourslash/incompleteFunctionCallCodefixTypeParameterArgumentSame.ts)):
+
+- Expected output should look like: `function added<T>(value: T, value1: T) {`
+- Without the filter, it's instead: `function added<T, U>(value: T, value1: T) {`
+
+```ts
+const typeArgumentsWithNewTypes = typeArguments.filter(
+	(typeArgument) =>
+		!argumentTypeParameters.some(
+			(pair) =>
+				checker.getTypeAtLocation(typeArgument) === pair[1]?.argumentType
+		)
+);
+const targetSize = usedNames.size + typeArgumentsWithNewTypes.length;
+for (let i = 0; usedNames.size < targetSize; i += 1) {
+	usedNames.add(createTypeParameterName(i));
+}
+```
+
+With these edge cases seemingly working, I pushed it all up, merged upstream changes from the `main` branch, and re-requested review...
+
+## PR Review: Take Two
+
+...and it was accepted! 🎉
+
+This codefix improvement is now available in the TypeScript nightlies.
+It will be available in stable versions of TypeScript >=4.8.
+
+TypeScript will now be able to add missing functions without introducing type errors, even in the presence of type parameters:
+
+```ts
+function returnSelf<T>(self: T) {
+	if (typeof self === "number") {
+		runEvilSideEffect(self);
+		// ^ Codefix: Add missing function declaration 'runEvilSideEffect'
+	}
+}
+
+function runEvilSideEffect<T>(self: T) {
+	throw new Error("Function not implemented.");
+}
+```
+
+Wonderful! 🥳
+
+## P.S. Declined Refactors
+
+I also spotted and attempted a couple of refactors as a result of this PR.
+Neither of them ended up making their way into TypeScript, but I still think they're interesting and relevant enough to bring up.
+
+### One Teeny Refactor
+
+I noticed a potential for refactor while preparing the PR: `typeToAutoImportableTypeNode` was also called in a different codefix in [`extractSymbol.ts`](https://github.com/microsoft/TypeScript/tree/78e2bfd7126353a12b2c559ca1bcf441431d86b0/src/services/refactors/extractSymbol.ts#886).
+Both locations had code like:
+
+```ts
+// Widen the type so we don't emit nonsense annotations like "function fn(x: 3) {"
+type = checker.getBaseTypeOfLiteralType(type);
+```
+
+I figured a small cleanup to move that duplicated code inside `typeToAutoImportableTypeNode` would help reduce lines of code.
+
+```diff
+export function typeToAutoImportableTypeNode(
+    checker: TypeChecker,
+    importAdder: ImportAdder,
+-    type: Type,
++    instanceType: Type,
+    /* (more parameters omitted for brevity) */
+): TypeNode | undefined {
++    // Widen the type so we don't emit nonsense annotations like "function fn(x: 3) {"
++    const type = checker.getBaseTypeOfLiteralType(instanceType);
+```
+
+That change made it into the first few commits in the PR.
+Unfortunately, I had to revert it in [977328](https://github.com/microsoft/TypeScript/pull/49727/commits/977328020be92641fa6dd45fbf42ca5e2da26cac) after [b1d35a3](https://github.com/microsoft/TypeScript/pull/49727/commits/b1d35a3959d2cb8d6d9066b4628c81a9183be93a)'s merge from `main`.
+A separate PR, [#50004: fix(49964): Incorrect code generated by "add extends constraint" fix for multiple usages of the same type parameter](https://github.com/microsoft/TypeScript/pull/50004), happened to add another call to `typeToAutoImportableTypeNode` that did not widen types with `checker.getBaseTypeOfLiteralType`.
+
+Ah well.
+🤷
+
+### Many Teeny, Repeated Refactors
+
+These two lines of code from `getFirstTypeParameterName` irked me:
+
+```ts
+if (type.flags & TypeFlags.Intersection) {
+    for (const subType of (type as IntersectionType).types) {
+```
+
+Type assertions in TypeScript are often a sign that the type system isn't being told everything it needs to understand code.
+In this case, it didn't understand that `type.flags & TypeFlags.Intersection` meant the `type` is an `IntersectionType`.
+
+I'd seen similar patterns elsewhere in the TypeScript codebase.
+Refactoring all those cases would have been far too big a change for my little PR.
+
+I instead...
+
+1. Filed a [comment in the PR asking about type assertions](https://github.com/microsoft/TypeScript/pull/49727#discussion_r910199321)
+2. Filed [issue #500005: Code cleanup: isIntersectionType & similar internally](https://github.com/microsoft/TypeScript/issues/50005) after Nathan confirmed it seemed like a good idea
+3. Sent [PR #50010: Added some Type type predicates internally](https://github.com/microsoft/TypeScript/pull/50010) with the proposed changes applied to a few hundred locations
+4. Closed the PR after [performance testing](https://github.com/microsoft/TypeScript/pull/50010#issuecomment-1193355846) indicated it caused a ~3% performance loss
+
+Ah well.
+Sometimes you refactor the code, and sometimes limitations in V8 runtime optimization mean the existing code plays better with startup execution and/or JIT optimization.
+🤷
+
+## Wrapping Up
+
+This PR involved a lot of tricky logic around comparing and counting arguments and parameters.
+But with help from the TypeScript team and a lot of time spent tweaking the details, TypeScript's missing function codefix is now better equipped to handle generic functions.
+Hooray!
+
+Thanks again to...
+
+- [Dan Jutan](https://twitter.com/jutanium) for having me on the stream and taking the time to report this bug on TypeScript
+- [Jake Bailey](https://twitter.com/andhaveaniceday) for help with the type predicates PR
+- [Nathan Shively-Sanders](https://twitter.com/sanders_n) both for hopping on the stream to help us understand the bug and for reviewing & merging the PR
+  - And: for help reviewing [this blog post's PR](https://github.com/JoshuaKGoldberg/Goldblog/pull/349)!
+
+We did it! 🙌

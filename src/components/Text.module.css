@@ -1,3 +1,7 @@
+.text {
+	color: var(--colorForeground);
+}
+
 .fontSizeSmaller {
 	font-size: var(--fontSizeSmaller);
 }

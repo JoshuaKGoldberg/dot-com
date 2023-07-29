@@ -3,13 +3,14 @@ import HeaderLink from "./HeaderLink.astro";
 import { Text } from "./Text";
 
 const links = [
-	["Blog", "https://blog.joshuakgoldberg.com"],
 	["Book", "https://learningtypescript.com"],
-	["Projects", "/projects", "Assorted project work also seen on my GitHub."],
+	["Blog", "/blog"],
+	["Projects", "/projects"],
 	["Speaking", "/speaking"],
 ] as const;
 ---
 
+<div class="fader" role="presentation"></div>
 <Text as="header" class="header" fontWeight="bold">
 	<HeaderLink href="/">Josh Goldberg</HeaderLink>
 	<div class="links">
@@ -23,15 +24,12 @@ const links = [
 
 <style>
 	header {
-		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem 3.5rem;
-		justify-content: center;
+		justify-content: space-between;
 		padding: 2rem;
 		width: 100%;
-		font-size: var(--fontSizeMedium);
-		text-align: center;
 	}
 
 	.links {
@@ -40,13 +38,73 @@ const links = [
 		flex-direction: row;
 		flex-wrap: wrap;
 		gap: 0 1rem;
-		justify-content: center;
 	}
 
 	@media (min-width: 700px) {
 		header {
 			gap: 1.5rem;
 			justify-content: space-between;
+			max-width: calc(var(--widthFull) - 1rem);
+			position: fixed;
+			z-index: 1;
+		}
+
+		header::after,
+		header::before {
+			--horizontalBlur: -3.5rem;
+			bottom: -1rem;
+			content: "";
+			filter: blur(1rem);
+			left: var(--horizontalBlur);
+			pointer-events: none;
+			position: absolute;
+			right: var(--horizontalBlur);
+		}
+
+		header::after {
+			backdrop-filter: blur(20px);
+			mask-image: linear-gradient(to bottom, black 50%, transparent);
+			top: 0;
+			z-index: -1;
+		}
+
+		header::before {
+			background: radial-gradient(
+						ellipse at top,
+						var(--colorBackgroundTop) 0,
+						transparent 100vh
+					)
+					no-repeat,
+				radial-gradient(
+						ellipse at top,
+						var(--colorBackgroundTop) 0,
+						transparent 100vh
+					)
+					no-repeat;
+			content: "";
+			top: -1.5rem;
+		}
+
+		.fader {
+			background: linear-gradient(
+				to bottom,
+				var(--colorBackgroundTop),
+				transparent 70%
+			);
+			height: var(--heightMinimumFromHeader);
+			left: 5vw;
+			position: fixed;
+			right: 5vw;
+			top: 0;
+			user-select: none;
+			mask-image: linear-gradient(
+				to right,
+				transparent 0%,
+				white 10%,
+				white 90%,
+				transparent 100%
+			);
+			z-index: 1;
 		}
 
 		.links {

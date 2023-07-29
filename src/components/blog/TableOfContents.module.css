@@ -1,0 +1,151 @@
+.toggle {
+	cursor: pointer;
+	background: none;
+	border: none;
+	float: left;
+
+	/* Compensates for the squiggly, so this is aligned on top of the horizontal bar */
+	margin-bottom: 0.125rem;
+}
+
+.toggle input {
+	opacity: 0;
+	width: 0;
+	position: absolute;
+}
+
+.toggle:focus-within {
+	outline: 2px solid var(--colorEmphasized);
+	outline-offset: 2px;
+}
+
+.tableOfContents {
+	visibility: hidden;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height var(--transitionSlow), visibility var(--transitionSlow);
+	width: 100%;
+}
+
+.toggle:has(:checked) + .tableOfContents {
+	visibility: visible;
+	max-height: 100vh;
+}
+
+.tableRoot {
+	--gapVertical: 0.75rem;
+	padding: 1rem 0 0.5rem;
+	width: 100%;
+}
+
+.ol {
+	display: flex;
+	gap: var(--gapVertical);
+	flex-direction: column;
+}
+
+.tableRoot .ol {
+	padding-left: 0;
+	font-size: 90%;
+}
+
+.li {
+	list-style-type: none;
+}
+
+li:has(.back) {
+	display: none;
+}
+
+.tableRoot .ol .li:first-of-type {
+	margin-top: var(--gapVertical);
+}
+
+.a {
+	border-left: 4px solid transparent;
+	padding-left: 4px;
+	display: inline-block;
+}
+
+.a,
+.back {
+	transition: var(--transitionMedium) margin-left,
+		var(--transitionMedium) padding-right, var(--transitionMedium) opacity;
+}
+
+.a:not(.active),
+.back.active {
+	opacity: 0.7;
+}
+
+.a.active,
+.back:not(.active) {
+	opacity: 1;
+}
+
+.a:not(.active, .back) {
+	margin-left: -8px;
+	padding-right: 8px;
+}
+
+.active {
+	padding-right: 0;
+	position: relative;
+}
+
+.a::before {
+	bottom: 0;
+	content: "";
+	display: block;
+	left: -4px;
+	position: absolute;
+	top: -3px;
+	transition: var(--transitionMedium) width, var(--transitionMedium) opacity;
+	width: 10px;
+	opacity: 0;
+}
+
+.active::before {
+	background: linear-gradient(
+		to bottom,
+		var(--colorEmphasized),
+		var(--colorForeground)
+	);
+	opacity: 1;
+	width: 4px;
+}
+
+@media (min-width: 700px) {
+	.toggle {
+		margin-top: 1.5rem;
+	}
+}
+
+@media (min-width: 1017px) {
+	.toggle {
+		display: none;
+	}
+
+	.tableOfContents {
+		--widthLeftPadding: 3rem;
+		visibility: unset;
+		left: calc(var(--widthSlim) + var(--widthLeftPadding));
+		overflow-y: auto;
+		position: absolute;
+	}
+
+	.tableRoot {
+		top: calc(var(--heightMinimumFromHeader) - 2rem);
+		max-height: calc(100vh - var(--heightMinimumFromHeader) + 1rem);
+		height: max-content;
+		overflow-y: auto;
+		position: fixed;
+		scrollbar-gutter: stable;
+		width: calc(var(--widthTableOfContents) - var(--widthLeftPadding));
+		z-index: 1;
+	}
+
+	li:has(.back) {
+		display: unset;
+	}
+}

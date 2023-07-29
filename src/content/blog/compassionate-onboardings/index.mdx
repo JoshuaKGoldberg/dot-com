@@ -1,0 +1,140 @@
+---
+description: "How to use the energy of new employees to keep documentation up-to-date and useful."
+download: https://1drv.ms/p/s!AvUc1cvPrJnWvs4mHMwP9wz2158BmQ?e=ekEgda
+pubDate: 2020-06-11
+title: "Compassionate Onboardings as Developer Documentation"
+---
+
+> This is a blog post equivalent of a talk I gave at the [2020 Developer First](https://developer-first.com/josh-goldberg) conference.
+
+How many times have you seen a join a team eager to start coding, only to lose steam over several days of confusing onboarding process and poorly documented setup flows?
+How many times has that developer been _you_?
+
+Why is it so hard to make good onboarding documentation for new technical team members?
+Why is it even harder to keep those docs up-to-date?
+
+Let's start with a few overgeneralizations about developers and development teams.
+These won't hold always hold true, but I'm willing to bet they mostly apply to most of the teams you've interacted with...
+
+## Problem Statements
+
+**Most developers dislike writing documentation.** Most of us are weirdly bad at it, too.
+
+It's ironic because there are few things we love more than great documentation.
+You can point us to online docs for a code item we use and we'll tell you exactly why we love or hate about it.
+But if you ask us to write documentation, you're more likely to get an incomprehensible novel (or next to nothing) than something particularly usable.
+
+Personally, I think I'm actually ok at documentation, and there are certainly many who excel at it.
+But it's not a core competency many train on.
+
+**Most teams have sketchy onboarding processes.** Everybody _wants_ to be friendly and welcoming to newcomers, but I've rarely seen a team do a good job of extending their _personal_ friendliness into the realm of code introductions.
+
+If you're lucky, your team will have figured out the common build system issues that arise on first repository setup.
+But what about common architectural patterns and system design preferences?
+Tailored guides for particular services or code sections?
+Good luck!
+
+### Shared Complaints
+
+Both _documentation_ and _processes_ suffer from similar root difficulties:
+
+- No clear metrics or tests like in code
+- Quick depreciation of value
+- Capability is directly inverse to relatability
+
+Neither of them give the same precise satisfaction as developing a running system in code – it's all hand-wavy and person-based.
+Who wants to deal with people as their success metrics?
+
+They also depreciate in value as your foundational code changes.
+Having to update documents is an added tax for development that often doesn't get paid.
+
+More insidiously, the people who are most capable of creating documentation or onboardings (i.e.
+area owners) are the ones who need it the least.
+It's the quintessential **teaching paradox**: the more you know about an area, the less you can relate to newcomers.
+
+## Solution Strategies
+
+Out of all the strategies I've seen for dealing with these issues, these are a couple related ones in a narrow range that I've recently seen work well.
+
+### Expert Meetings
+
+To start, officialize the process of area experts spending time onboarding team members.
+Set up onboarding meetings between new team members and area experts as a regular part of your onboarding flow.
+
+This might seem like a time investment at first, but remember: it was probably happening anyway.
+This way, your new team members won't have trouble finding the right person to ask and won't feel as nervous taking up that person's time.
+
+If you further need to convince someone to lead a meeting, consider appealing to their ego as an "area owner".
+Onboardings are also a great way for developers to spread their own opinions amongst the new team members.
+
+### Meeting Documentation
+
+Now that your area experts are leading onboardings for new team members, have them jot down the information they go over in a shared location.
+We use Notion at Codecademy because it has great support for code blocks, tables, and nested hierarchies of contents.
+Anything said in the meeting should be considered a strong candidate to be documented.
+
+Permanent onboarding documentation is helpful for area experts to make it easier to collect and present the information needed for these onboardings.
+It's also helpful for general team members (particularly the new ones) so they can refer back to it.
+
+## Example Flow
+
+Here's a simplified version of the Onboardings table we have for Codecademy:
+
+| Name                        | Group      | Presenters            | Last Audit       |
+| --------------------------- | ---------- | --------------------- | ---------------- |
+| **Local Dev Setup**         | **First**  | _(prescheduled)_      | March 30, 2020   |
+| **Frontend Platform**       | Required   | Alex, Jake, Sarah     | March 28, 2020   |
+| **Infrastructure Overview** | Required   | Lydia, Timor          | April 14, 2020   |
+| **On Call & Monitoring**    | Required   | Brian, Lindsay        | February 7, 2020 |
+| **Accessibility**           | _Elective_ | Jasmine, Josh, Kip    | May 5, 2020      |
+| **Contentful**              | _Elective_ | Prith, Xavier         | March 10, 2020   |
+| **Event Data**              | _Elective_ | Andy, Cat, Doug       | Jan 20, 2020     |
+| **JavaScript Testing**      | _Elective_ | Hasan, Josh, Rebecca  | Feb 20, 2020     |
+| **Payment System**          | _Elective_ | Doug, Rebecca, Timor  | Jan 7, 2020      |
+| **Ruby Testing**            | _Elective_ | Ana, Michael          | April 15, 2020   |
+| **Static Sites**            | _Elective_ | Bana, Rebecca, Xavier | May 9, 2020      |
+
+Onboardings are grouped into whether they're required for all new team members or scheduled at their manager's discretion (for example, most frontend developers don't immediately need to spend time learning the internals of our payments system).
+
+We also keep track of the expected length of the onboarding and when it was last audited.
+Accountability around onboardings is helpful since not every team member might be bought into the system.
+It's also useful for documentation consumers to check how up-to-date any particular page is.
+
+## Pitfalls
+
+No system is perfect, and this one certainly has its pitfalls.
+
+### Team Buy-in
+
+As with any team-wide endeavor, you'll need to get the buy-in of your peers before doing anything.
+
+The worst way to introduce a new process would be to do only that.
+You need to first get shared buy-in from the rest of your team.
+Convince your peers that lack of documentation is a strong enough negative that it's worth setting up a system to deal with.
+Within the peers you can convince, who among them is passionate about the issue to work with you in dealing with it? If nobody strongly agrees with you, maybe this system isn't right for you?
+
+If you haven't yet finished _"How to Win Friends and Influence People"_ by Dale Carnegie, I'd highly recommend it.
+It proposes several great ways to build consensus and attract followers (among other things).
+
+### Maintenance and Leadership
+
+All systems require maintenance and leadership to keep running smoothly.
+Before committing to one long term, ask yourself: how many of your team members have long-term drive for it?
+
+As part of convincing your organization to adopt this new system, you need to understand how its costs compare to its benefits.
+One cost is leadership spending time and political clout encouraging area experts to fill out onboardings.
+That might not be a cost you're willing to pay.
+
+For transparency, at Codecademy we've only partially kept our onboardings table up-to-date.
+Our frontend area owners are bought in and tend to be consistent in updating onboardings.
+Our backend/infrastructure-focused groups haven't bought into this _particular_ system as much, and so their onboardings in the table aren't as polished or reliably up-to-date.
+That's totally fine!
+They have their own set of documentation and onboarding traditions.
+
+Every technical group is different and documents in its own way.
+
+## In Conclusion
+
+Onboarding new team members is a difficult, often draining task.
+The system in presented here is one that's worked for my team areas recently and might work for you.
+Maybe give it a try?

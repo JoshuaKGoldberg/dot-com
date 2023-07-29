@@ -2,12 +2,11 @@
 import BodyContents from "../components/BodyContents.astro";
 import Socials from "../components/Socials.astro";
 import { Text } from "../components/Text";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroLayout from "../layouts/HeroLayout.astro";
 ---
 
-<!-- image="images/josh.png" -->
-<BaseLayout
-	description="I'm an open source maintainer in the TypeScript ecosystem."
+<HeroLayout
+	alt="Josh's half-smiling happy face"
 	primary="Hi! I'm Josh."
 	secondary="I'm an open source maintainer in the TypeScript ecosystem."
 	slug="josh"
@@ -25,7 +24,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 			an international conference speaker, a mentor, and a live code streamer.
 		</Text>
 	</BodyContents>
-</BaseLayout>
+</HeroLayout>
 
 <script>
 	// Preserves legacy linking behavior from my old static HTML site.
@@ -51,8 +50,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 		display: flex;
 		gap: 2rem;
 		flex-direction: column;
-		margin: 2rem 1rem 1rem;
-		text-align: center;
+		margin: 2rem 0 1rem;
 	}
 
 	@media (min-width: 700px) {
@@ -62,6 +60,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 		.about {
 			margin-top: 3.5rem;
+			text-align: center;
 		}
 	}
 </style>

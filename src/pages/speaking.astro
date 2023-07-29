@@ -4,24 +4,24 @@ import { getCollection } from "astro:content";
 import { Anchor } from "../components/Anchor";
 import BodyContents from "../components/BodyContents.astro";
 import HeroTertiary from "../components/HeroTertiary.astro";
-import { SpeakingsGrouped } from "../components/SpeakingsGrouped";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import { SpeakingsGrouped } from "../components/speaking/SpeakingsGrouped";
+import HeroLayout from "../layouts/HeroLayout.astro";
 
 const allSpeakings = await getCollection("speaking");
 
 const now = Date.now();
 
 const previous = allSpeakings
-	.filter(speaking => +speaking.data.date < now)
+	.filter((speaking) => +speaking.data.date < now)
 	.sort((a, b) => +b.data.date - +a.data.date);
 
 const upcoming = allSpeakings
-	.filter(speaking => +speaking.data.date > now)
+	.filter((speaking) => +speaking.data.date > now)
 	.sort((a, b) => +a.data.date - +b.data.date);
 ---
 
-<BaseLayout
-	description="I talk about static analysis, accessibility, and team culture."
+<HeroLayout
+	alt="Josh looking up seriously wearing a dark blue shirt with a small pineapples and flamingos pattern"
 	primary="Speaking"
 	secondary="I talk about static analysis, accessibility, and team culture."
 	title="Speaking"
@@ -37,9 +37,6 @@ const upcoming = allSpeakings
 		</Anchor>.
 	</HeroTertiary>
 	<BodyContents>
-		<SpeakingsGrouped
-			previous={previous}
-			upcoming={upcoming}
-		/>
+		<SpeakingsGrouped previous={previous} upcoming={upcoming} />
 	</BodyContents>
-</BaseLayout>
+</HeroLayout>

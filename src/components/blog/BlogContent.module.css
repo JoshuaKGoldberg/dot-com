@@ -1,0 +1,92 @@
+.article {
+	display: flex;
+	flex-direction: column;
+	font-size: 1.35rem;
+	gap: 1rem;
+	font-weight: 300;
+	line-height: 1.5;
+}
+
+.article a {
+	text-decoration: underline;
+}
+
+.article :is(h2, h3, h4) {
+	scroll-margin-top: calc(var(--heightMinimumFromHeader) - 0.5rem);
+}
+
+.article h2 {
+	margin-top: 2rem;
+}
+
+.article h3 {
+	margin-top: 1rem;
+}
+
+.article code {
+	font-size: 0.8em;
+}
+
+.article pre {
+	border: 1px solid var(--colorSubtle);
+	font-size: 0.9em;
+	line-height: 1.25;
+	margin: 0;
+	overflow-x: auto;
+	font-size: 0.9em;
+	padding: 1rem 1.5rem;
+	tab-size: 4;
+}
+
+.article blockquote {
+	--blockBorderWidth: 6px;
+	font-style: italic;
+	margin-left: 0;
+	padding-left: calc(2rem - var(--blockBorderWidth));
+	position: relative;
+}
+
+.article blockquote::before {
+	content: "";
+	display: block;
+	position: absolute;
+	width: var(--blockBorderWidth);
+	height: 100%;
+	left: 0;
+	top: 0;
+	background: linear-gradient(
+		to bottom,
+		var(--colorEmphasized),
+		var(--colorForeground)
+	);
+}
+
+.article hr {
+	border-color: var(--colorMedium);
+	border-width: 0 0 1px 0;
+	margin: 3rem auto 2rem;
+	width: 100%;
+}
+
+.article ul {
+	margin: 0;
+}
+
+.article li + li {
+	margin-top: 0.5rem;
+}
+
+.article label img {
+	max-width: 100%;
+}
+
+.article strong {
+	font-weight: bolder;
+}
+
+@media (min-width: 1017px) {
+	.article {
+		max-width: calc(var(--widthSlim) + 4rem);
+		margin: 0 var(--widthTableOfContents) 0 0;
+	}
+}

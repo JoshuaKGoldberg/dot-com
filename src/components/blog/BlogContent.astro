@@ -1,0 +1,22 @@
+---
+import "./code.css";
+
+import type { Render } from "astro:content";
+
+import BodyContents from "../BodyContents.astro";
+import styles from "./BlogContent.module.css";
+
+export interface Props {
+	rendered: Awaited<Render[".md"]>;
+}
+---
+
+<BodyContents as="article" class={styles.article}>
+	<Astro.props.rendered.Content />
+</BodyContents>
+
+<script>
+	for (const pre of document.querySelectorAll("pre")) {
+		pre.tabIndex = 0;
+	}
+</script>

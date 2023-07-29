@@ -22,8 +22,7 @@ import { Text } from "./Text";
 <style>
 	footer {
 		opacity: 0.75;
-		padding: clamp(2.8rem, 5vh, 7rem) 1rem 2rem;
-		text-align: center;
+		padding: clamp(2.8rem, 5vmin, 7rem) 2rem 3rem;
 		justify-self: flex-end;
 	}
 
@@ -32,9 +31,15 @@ import { Text } from "./Text";
 		margin-top: 1rem;
 	}
 
+	@media (min-width: 700px) {
+		footer {
+			text-align: center;
+		}
+	}
+
 	@media (min-height: 938px) {
 		footer {
-			padding-top: max(3rem, 15vh);
+			padding-top: max(3rem, 13vmin);
 		}
 	}
 </style>

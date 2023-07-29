@@ -1,0 +1,32 @@
+---
+export interface Props {
+	src: string;
+	title: string;
+}
+---
+
+<iframe
+	allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+	allowfullscreen
+	class="embedded-iframe"
+	src={Astro.props.src}
+	height="315"
+	title={Astro.props.title}
+	width="560"></iframe>
+<em class="embedded-iframe-em">
+	<slot name="primary" />
+	<small><slot name="secondary" /></small>
+</em>
+
+<style is:inline>
+	.embedded-iframe {
+		border: 0;
+		margin: auto;
+	}
+
+	.embedded-iframe-em {
+		display: block;
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+</style>

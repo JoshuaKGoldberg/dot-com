@@ -1,0 +1,24 @@
+---
+import LabeledMedia, { MediaOriginal } from "./LabeledMedia.astro";
+
+export interface Props {
+	alt: string;
+	description: string | string[];
+	note?: string;
+	original?: string | MediaOriginal;
+	src: string | { src: string };
+}
+---
+
+<LabeledMedia
+	description={Astro.props.description}
+	note={Astro.props.note}
+	original={Astro.props.original}
+>
+	<img
+		alt={Astro.props.alt}
+		src={typeof Astro.props.src === "string"
+			? Astro.props.src
+			: Astro.props.src.src}
+	/>
+</LabeledMedia>

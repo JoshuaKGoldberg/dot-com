@@ -1,0 +1,18 @@
+---
+import LabeledMedia from "./LabeledMedia.astro";
+import { LoopedVideo } from "./LoopedVideo";
+
+export interface Props {
+	description?: string;
+	original?: string;
+	src: string;
+	title: string;
+}
+---
+
+<LabeledMedia
+	description={Astro.props.description}
+	original={Astro.props.original}
+>
+	<LoopedVideo client:visible src={Astro.props.src} title={Astro.props.title} />
+</LabeledMedia>

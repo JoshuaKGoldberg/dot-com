@@ -1,0 +1,54 @@
+---
+description: "Medium can eat it. I'm going open source with Gatsby!"
+image:
+  alt: TODO
+  src: medium-capture.png
+pubDate: 2019-09-13
+title: I'm Moving Blogs!
+---
+
+import mediumCapture from "./medium-capture.png";
+
+I first set up a Medium blog in 2016.
+Their code snippets and code blocks were visualized as dark grey text on a light gray background.
+That combination is unreadable for regular text and particularly unreadable for programming code, which should generally have colorful syntax highlighting.
+
+It's now 2019 and Medium's code highlighting has not changed one bit.
+Nothing in the slightest!
+Ugh.
+This is what code highlighting with Medium's code blocks looked like then and looks like today:
+
+<img alt="Medium code highlighting screenshot" src={mediumCapture} />
+
+This is code highlighting with Gatsby's [official PrismJS plugin](https://www.gatsbyjs.org/packages/gatsby-remark-prismjs):
+
+```typescript
+const greet = (name: string) => {
+	console.log(`Hello, ${name}!`);
+};
+```
+
+Wow!
+_So much better._
+
+### But What's Gatsby?
+
+Gatsby is a site generator for React.
+Meaning: you write your website template and content with React, and it handles all sorts of infrastructure work for you.
+
+This site you're on has the following written out manually:
+
+- React components and accompanying styles for the page layout
+- Markdown files for blog articles
+- That PrismJS plugin, as an npm dependency
+
+Gatsby manages the rest of the site:
+
+- Super duper fast Webpack rebuilds
+- Server-side rendering of pages, including SEO workings
+- Integrating plugins such as PrismJS and fancy image loading
+
+It's pretty nifty.
+I'm going to transfer my old Medium blog posts over to this new format,
+then replace the Medium content with links to the new site links.
+So long, Medium!

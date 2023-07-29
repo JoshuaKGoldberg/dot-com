@@ -1,74 +1,48 @@
 ---
-import { Text } from "./Text";
-export interface ColorSchemeImages {
-	dark: string;
-	light: string;
-}
+import HeroImage, { Props as HeroImageProps } from "./HeroImage.astro";
+import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
 	class?: string | undefined;
-	image: string | ColorSchemeImages;
+	image: HeroImageProps;
 	primary: string;
 }
-
-const { class: className, image, primary } = Astro.props;
-const images =
-	typeof image === "string" ? { dark: image, light: image } : image;
 ---
 
-<div class:list={["hero", className]}>
+<div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<picture>
-			<source srcset={images.dark} media="(prefers-color-scheme: dark)" />
-			<source srcset={images.light} media="(prefers-color-scheme: light)" />
-			<img alt="" src={images.light} />
-		</picture>
+		<HeroImage {...Astro.props.image} size="large" />
 	</div>
 	<div class="half second">
-		<Text as="h1" fontSize="title" fontWeight="bolder">
-			{primary}
-		</Text>
+		<HeroTitle>
+			{Astro.props.primary}
+		</HeroTitle>
 		<slot />
 	</div>
 </div>
 
 <style>
 	.hero {
-		align-items: center;
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		margin: 1rem auto 4rem;
-		padding: 0 1rem;
+		margin: clamp(2rem, 8vmin, 8rem) auto;
+		padding: 0 2rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
-		text-align: center;
-
-		--imageSize: 10rem;
 	}
 
-	h1 {
-		color: var(--colorForegroundExtra);
-		line-height: 0.75;
-		text-shadow: var(--textShadow);
-	}
-
-	img {
-		user-select: none;
-		width: var(--imageSize);
+	.first {
+		float: right;
 	}
 
 	@media (min-width: 700px) {
 		.hero {
+			align-items: center;
+			display: flex;
 			gap: 2.5rem;
 			height: 35vh;
-			min-height: calc(var(--imageSize) + 1rem);
-			max-height: 20rem;
 			flex-direction: row;
-			margin: clamp(1rem, 5vh, 7rem) 0 clamp(2rem, 7vh, 10rem);
+			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(4rem, 7vh, 12rem);
 			padding: 0;
-			text-align: left;
 		}
 
 		.half {
@@ -88,19 +62,6 @@ const images =
 			align-items: flex-start;
 			justify-content: center;
 			width: 55%;
-		}
-
-		picture {
-			transform: none;
-		}
-
-		img {
-			border-radius: 100%;
-			height: 256px;
-			max-height: 100%;
-			max-width: 100%;
-			width: 256px;
-			box-shadow: 0 7px 7px 3px var(--colorSubtle);
 		}
 	}
 </style>

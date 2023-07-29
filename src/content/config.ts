@@ -1,6 +1,20 @@
+import { rssSchema } from "@astrojs/rss";
 import { defineCollection, z } from "astro:content";
 
 export const collections = {
+	blog: defineCollection({
+		schema: rssSchema.extend({
+			description: z.string(),
+			download: z.string().optional(),
+			image: z
+				.object({
+					alt: z.string(),
+					src: z.string(),
+				})
+				// TODO: add images for older blog posts, then remove this .optional()
+				.optional(),
+		}),
+	}),
 	projects: defineCollection({
 		schema: z.object({
 			category: z.string(),

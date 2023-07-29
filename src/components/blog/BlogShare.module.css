@@ -1,0 +1,9 @@
+.shares {
+	display: inline-flex;
+	gap: 1rem;
+	margin-left: -0.25em;
+}
+
+.shares img {
+	vertical-align: text-bottom;
+}

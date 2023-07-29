@@ -1,0 +1,727 @@
+---
+description: "Just for fun, what if we crafted a board game purely within TypeScript's logical type system?"
+download: https://1drv.ms/p/s!AvUc1cvPrJnWvtEWI5Fd_5Va4n3ggg?e=XnppFL
+image:
+  alt: Smiling cat receiving head scratches next to a laptop showing VS Code
+  src: brad.jpg
+pubDate: 2020-10-05
+title: Type System Game Engines
+---
+
+import LabeledImage from "../../../components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "../../../components/blog/mdx/LabeledVideo.astro";
+import brad from "./brad.jpg";
+import definitelyTyped from "./definitely-typed.png";
+
+<LabeledImage
+	description="Here's a cute photo of a cat to start the blog post off right."
+	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
+	alt="Smiling cat receiving head scratches next to a laptop showing VS Code"
+	src={brad}
+/>
+
+## Preamble
+
+This is the companion blog post for my [TSConf 2020](https://tsconf.io) talk.
+At the end of it, we'll have figured out how to take a template string literal like this one, simulate a Tic Tac Toe game on it, figure out who the winner of that game is.
+
+```ts
+type Winner = TicTacToe<`
+    X 1 1
+    O 2 2
+    X 2 0
+    O 0 2
+    X 1 0
+    O 0 0
+    X 1 2
+`>;
+```
+
+> Just looking for the end result?
+> Skip down to **[the final product](#the-final-product)**.
+
+While our surface _agenda_ might be to implement silly type system games, our _purpose_ is to gain a better understanding of how the TypeScript type system works, how to use it to improve our development practices, and what to do with all this newfound information.
+
+The attached slides also include an introduction to type systems and a real-world example for each concept introduced before expanding the type system game engine using that concept.
+I've left those out of this blog post to keep it trim.
+
+<LabeledVideo
+	alt="Patrick Star saying 'hold your pinky up like this' and holding it up"
+	description="Buckle down, folks, and hold your pinkies up. We're going to explore some fancy types."
+	original="https://giphy.com/gifs/spongebob-rock-patrick-star-gk960SX0iuOWXQIcnW"
+	src="/images/blog/pinky-up.webm"
+/>
+
+## Conditional Generics
+
+<small>
+	👉{" "}
+	<a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#conditional-types">
+		TypeScript docs: Conditional Types
+	</a>
+</small>
+
+Our first type system exploration will be 'conditional generics', which are a technique for generating types based on the properties of other types.
+Conditional types _take in other types_ and spit out new types based on the original one.
+
+Take a look at this type:
+
+```ts
+type RockMatchup<Opponent> = Opponent extends "Rock"
+	? "Draw"
+	: Opponent extends "Paper"
+	? "Loss"
+	: "Win";
+```
+
+That's a description of how a player's Rock choice in a game of Tic Tac Toe works against its possible opponents.
+
+If the opponent is a `'Rock'`:
+
+```ts
+type Result = RockMatchup<"Rock">;
+// 'Draw'
+```
+
+...then the result is a `'Draw'`.
+If the opponent is `'Paper'`, the player's Rock loses; if the opponent is anything else (so, `'Scissors'`), the player's Rock wins.
+
+Fun fact: types may receive more than one generic.
+In this next snippet, we define the matchups for two players, with a bunch of nested checks for each of the nine possible results.
+
+```ts
+type RockPaperScissors<Player, Opponent> =
+	// Player is Rock
+	Player extends "Rock"
+		? Opponent extends "Rock"
+			? "Draw"
+			: Opponent extends "Paper"
+			? "Loss"
+			: "Win"
+		: // Player is Paper
+		Player extends "Paper"
+		? Opponent extends "Rock"
+			? "Win"
+			: Opponent extends "Paper"
+			? "Draw"
+			: "Loss"
+		: // Player is Scissors
+		Opponent extends "Rock"
+		? "Loss"
+		: Opponent extends "Paper"
+		? "Win"
+		: "Draw";
+```
+
+Amusing.
+
+## Type Members
+
+<small>
+	👉{" "}
+	<a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#index-types">
+		TypeScript docs: Index Types
+	</a>
+</small>
+
+Now that we've established how to add _logic_ to the type system, let's expand another dimension of type system logic by looking at nested types within types.
+
+The `keyof` operator in the type system takes in a type we need the keys of and spits back a union of just those keys.
+When a type is known to be a key of another type, you can use it to retrieve the corresponding member under that key.
+
+We can use `keyof` to declare our Tic Tac Toe matchups as a big type system object and index into it to find the matchups for our player and opponent:
+
+```ts
+type Matchups = {
+	Rock: {
+		Paper: "Loss";
+		Scissors: "Win";
+	};
+	Paper: {
+		Rock: "Win";
+		Scissors: "Loss";
+	};
+	Scissors: {
+		Rocker: "Loss";
+		Paper: "Win";
+	};
+};
+
+type RockPaperScissors<
+	Player extends keyof Matchups,
+	Opponent extends keyof Matchups
+> = Opponent extends keyof Matchups[Player]
+	? Matchups[Player][Opponent]
+	: "Draw";
+```
+
+That new and enhanced `RockPaperScissors` type takes in a `Player` and an `Opponent`, both of which must be one of the keys of `Matchups`: i.e. `'Rock'`, `'Paper'`, or `'Scissors'`.
+
+- If the `Opponent` type is one of the members of the `Matchup`'s listing under the Player, we go with that value.
+- Otherwise, we assume it's a `'Draw'`.
+
+```ts
+type Result = RockPaperScissors<"Paper", "Scissors">; // 'Loss'
+```
+
+The `extends` keyword in `RockPaperScissors` is important: it tells the type system that the generic type parameter must be that particular type, or a more specific version of it.
+
+<LabeledVideo
+	alt="Patrick Star riding a sea horse machine"
+	description="We're winding up to play with the type system."
+	original="https://giphy.com/gifs/patrick-ride-enjoying-jvbQuNWohvydW"
+	src="/images/blog/riding.webm"
+/>
+
+## Tuple Types
+
+<small>
+	👉{" "}
+	<a href="https://www.typescriptlang.org/docs/handbook/basic-types.html#tuple">
+		TypeScript docs: Tuple Types
+	</a>
+</small>
+
+We've explored logical types and members thereof.
+Now let's dig into arrays of types, also known as tuples.
+We'll be able to use these to declare full-on game boards: not just single-use logical comparisons.
+
+First, let's declare a couple of types:
+
+```ts
+type Cell = " " | "X" | "O";
+
+type TicTacToeBoard = [
+	[Cell, Cell, Cell],
+	[Cell, Cell, Cell],
+	[Cell, Cell, Cell]
+];
+```
+
+- `Cell` is the content of any slot on our game board: either the empty string (not yet placed), an `'X'`, or an '`O'`.
+- `TicTacToeBoard` is a tuple of tuples, representing a grid of spots on a 3x3 board.
+
+In other words, we now have a 3x3 board of cells! 🚀
+
+### Victory Conditions
+
+Using `Cell` and `TicTacToeBoard` as bases, we can create a conditional `Victory` type in the type system that takes in a board and returns a new type representing whether that board any of the three possible victory conditions for that board: three-in-a-row diagonally, horizontally, or vertically.
+
+```ts
+type Victory<Player, Board> = Board extends WinningBoard<Player> ? true : false;
+
+type WinningBoard<Player> =
+	| DiagonalVictory<Player>
+	| HorizontalVictory<Player>
+	| VerticalVictory<Player>;
+```
+
+The diagonal win condition for a player is hit when either of the diagonal lines on the board can only be that player's pieces.
+The Cell spots can be filled with anything, but the Player spots must be filled with only the player's pieces.
+
+```ts
+type DiagonalVictory<Player> =
+	| [[Player, any, any], [any, Player, any], [any, any, Player]]
+	| [[any, any, Player], [any, Player, any], [Player, any, any]];
+```
+
+Similarly, the horizontal victory check is satisfied only when one of the three rows in the board are known to contain only the player's pieces.
+
+```ts
+type HorizontalVictory<Player> =
+	| [[Player, Player, Player], [any, any, any], [any, any, any]]
+	| [[any, any, any], [Player, Player, Player], [any, any, any]]
+	| [[any, any, any], [any, any, any], [Player, Player, Player]];
+```
+
+Same with the vertical victory check and the board's columns.
+
+```ts
+type VerticalVictory<Player> =
+	| [[Player, any, any], [Player, any, any], [Player, any, any]]
+	| [[any, Player, any], [any, Player, any], [any, Player, any]]
+	| [[any, any, Player], [any, any, Player], [any, any, Player]];
+```
+
+Making use of the WinningBoard type, we can see that a WinAtStart check for a board comprised entirely of blanks is false.
+None of the 8 win conditions are satisfied by that board.
+
+```ts
+type StartingBoard = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]];
+
+type WinAtStart = Victory<"X", StartingBoard>;
+// false
+```
+
+If we add a few pieces and include a diagonal victory for the checked piece, however, our result becomes true.
+Success!
+
+```ts
+type HowAboutNow = Victory<
+	"O",
+	[["O", " ", "X"], ["X", "O", " "], [" ", "X", "O"]]
+>;
+// true
+```
+
+Taking our conditionals one step higher, we can check which player –if either– wins by seeing whether the board satisfies the victory condition for either of our known players.
+
+```ts
+type Winner<Board> = Victory<"X", Board> extends true
+	? "X"
+	: Victory<"O", Board> extends true
+	? "O"
+	: " ";
+
+type StartingWinner = Winner<StartingBoard>;
+// ' '
+
+type WinnerNow = Winner<[["O", " ", "X"], ["X", "O", " "], [" ", "X", "O"]]>;
+// 'O'
+```
+
+Nifty.
+
+<LabeledVideo
+	alt="Patrick Star sucking in many Krabby Patties"
+	description="Many of a thing is always better than one of it."
+	original="https://giphy.com/gifs/spongebob-squarepants-patrick-star-burgers-mVWOIgoVI7edW"
+	src="/images/blog/krabby-patties.webm"
+/>
+
+## Mapped Types
+
+<small>
+	👉{" "}
+	<a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#mapped-types">
+		TypeScript docs: Mapped Types
+	</a>
+</small>
+
+In this section, we'll introduce ways to transform all members of types in our type decision making, which will open the doors to much more grandiose dynamic type system type generation.
+
+Mapped types take in a list of keys, such as from a keyof operator, and create new type members based on them.
+
+For example, we can use mapped types to declare a Tic Tac Toe board in a bit more dynamic of a manner:
+
+```ts
+type TicTacToeBoard = {
+	[Row in 0 | 1 | 2]: {
+		[Column in 0 | 1 | 2]: Cell;
+	};
+};
+```
+
+Under this description, any object that has arrays under 0, 1, and 2 which themselves contain Cells under 0, 1, and 2 match the board.
+That'll come in handy later when we set up mapped types so weird that TypeScript forgets the result was supposed to be an array.
+
+In fact, this particular type is no longer describing an array, so checking for victory types above will need to switch to object descriptions (since declaring tuple types indicates the type _must_ be an array):
+
+```ts
+// Like this, but for all the board descriptions...
+{
+    0: { 0: Player, 1: any, 2: any },
+    1: { 0: any, 1: Player, 2: any },
+    2: { 0: any, 1: any, 2: Player },
+}
+```
+
+### Board Transitions
+
+Now that we know how to map all members of a type into a new type, we should be able to apply that technique to placing pieces on a Tic Tac Toe board.
+Given our starting board from before and a desire to place 'X' at row 0 / column 1, we should be able to use conditional mapped types to take in our board tuples and output a modified board.
+
+```ts
+type FirstMove = ["X", 0, 1];
+
+type AfterFirstMove = [[" ", "X", " "], [" ", " ", " "], [" ", " ", " "]];
+```
+
+This is how we can accomplish such a move in the type system:
+
+```ts
+type ReplaceInBoard<
+	Board extends TicTacToeBoard,
+	Replacement extends Cell,
+	RowPlace extends 0 | 1 | 2,
+	ColumnPlace extends 0 | 1 | 2
+> = {
+	[Row in 0 | 1 | 2]: {
+		[Column in 0 | 1 | 2]: [Row, Column] extends [RowPlace, ColumnPlace]
+			? Replacement
+			: Board[Row][Column];
+	};
+};
+```
+
+`ReplaceInBoard` takes in four type inputs:
+
+- `Board`: original board to work on
+- `Replacement`: new piece on the board
+- `RowPlace`: row index to place at
+- `ColumnPlace`: column index to place at
+
+It output a new object type where, for each member under rows 0-2 and columns 0-2, checking whether that's the same row and column to replace at:
+
+- If yes: use the new piece
+- If no: use the original board's piece
+
+I'll also note here that although our ReplaceInBoard type works, it's pushing the boundaries of what the type system is really intended for, so it loses just a little bit of clarity.
+TypeScript sees the resultant type as an object with number keys.
+
+```ts
+type AfterFirstMoveMap = ReplaceInBoard<StartingBoard, "X", 0, 1>;
+// {
+//     0: { 0: " "; 1: "X"; 2: " "; };
+//     1: { 0: " "; 1: " "; 2: " "; };
+//     2: { 0: " "; 1: " "; 2: " "; };
+// }
+```
+
+Still, the result is what we want: a new board based on the original with the move applied!
+
+<LabeledVideo
+	alt="Patrick Star going Super Saiyan"
+	description="We're leveling up! We can play games with ourselves now in the type system!"
+	original="https://giphy.com/gifs/zCtOatW0GOije"
+	src="/images/blog/super-saiyan.webm"
+/>
+
+## Inferred Types
+
+<small>
+	👉{" "}
+	<a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#type-inference-in-conditional-types">
+		TypeScript docs: Type Inference in Conditional Types
+	</a>
+</small>
+
+What I'd like to do now is take a starting board and an array of moves, then generate how the board should look after all of them have been applied.
+This'll let us simulate a full-on game of Tic Tac Toe based on the move inputs.
+
+This is difficult because there's no 'for loop' operator in the type system.
+We can't set up a type and imperatively modify it the way we would in, say, JavaScript.
+
+```ts
+type AllMoves = [["X", 0, 1], ["O", 2, 2]];
+
+type AfterAllMoves = [[" ", "X", " "], [" ", " ", " "], [" ", " ", "O"]];
+```
+
+TypeScript's type system is closer to a _functional_ language (or even a _logical_) one, which is to say nothing can be modified after creation, and all inferences must be made based on already defined truths.
+
+### Thinking Functionally
+
+If we were working in runtime code, we'd tackle this functional problem recursively.
+
+```ts
+type Move = [Cell, 0 | 1 | 2, 0 | 1 | 2];
+
+// There are two possibilities when calling our applyMoves function:
+function applyMoves(board: TicTacToeBoard, moves: Move[]) {
+	// 1. If the remaining moves are empty, we can return the board as-is
+	if (moves.length === 0) {
+		return board;
+	}
+
+	// 2. If there's at least one move to apply, we apply it,
+	//    then recurse on the new board with the remaining moves
+	const nextBoard = replaceInBoard(board, moves[0]);
+	const remainingMoves = moves.slice(1);
+
+	return applyMoves(nextBoard, remainingMoves);
+}
+```
+
+### Typing Functionally
+
+Our code in the type system looks a little different but amounts to the same result.
+
+```ts
+type Move = [Cell, 0 | 1 | 2, 0 | 1 | 2];
+
+type ApplyMoves<
+	Board extends TicTacToeBoard,
+	Moves extends Move[]
+> = Moves extends []
+	? Board
+	: ApplyMoves<
+			ReplaceInBoard<Board, Moves[0][0], Moves[0][1], Moves[0][2]>,
+			DropFirst<Moves>
+	  >;
+```
+
+- First, if the moves extends the empty array (so, if there are no more moves), the resultant type is the board itself.
+- Otherwise, we return a resultant type from `ApplyMoves`. That recursive type system call to `ApplyMoves` takes in the result of applying our first move to the board for a board, and all but the first move from our moves as its array of moves.
+
+The remaining moves are calculated using a `DropFirst` type that shows off why we just learned about inferred types.
+
+```ts
+type DropFirst<T extends unknown[]> = T extends [any, ...infer U] ? U : [];
+```
+
+DropFirst takes in a `T` that must be an array, then checks if it's possible for a remaining array (using the `...`, or spread, operator) to be inferred from all but the first list member.
+If that array is possible, it's the resultant type.
+If not, an empty array is returned.
+
+If we run our ApplyMoves type on our blank StartingBoard and an array type containing a couple of moves, we get back an output type with those two moves applied.
+
+```ts
+type TwoAppliedMoves = ApplyMoves<StartingBoard, [["X", 0, 1], ["O", 2, 2]]>;
+/*
+{
+    0: { 0: " "; 1: "X"; 2: " "; };
+    1: { 0: " "; 1: " "; 2: " "; };
+    2: { 0: " "; 1: " "; 2: "O"; };
+}
+*/
+```
+
+Amazing! Yes! Hooray! 🙌
+By harnessing the power of inferred types and joining them with recursive type definitions, we're able to apply a list of moves stored in the type system to a board.
+Our output board is the result of all those moves applied on top of each other.
+
+> By the way, directly recursive types like this are only available in TypeScript versions 4.1 and later.
+> Get excited for new TypeScript versions!
+
+<LabeledVideo
+	alt="Infinite recursion of zooming into Patrick Star's mouth"
+	description="Recursion! In the type system!"
+	original="https://giphy.com/gifs/spongebob-squarepants-endless-cartoon-3o7aCZDlmQZLe4Q4V2"
+	src="/images/blog/recursion.webm"
+/>
+
+## Template Literal Types
+
+The last major type system feature we'll look at is also a new one, and is in my opinion one of the stranger –though still very useful– additions to TypeScript. It's also only available on versions 4.1 later.
+
+Template literal types allow us to check for and extract substrings from inferred string types in the type system.
+I'd like to use them to take a starting board and an array of moves, then generate how the board should look after all of them have been applied.
+This'll let us simulate a full-on game of Tic Tac Toe based on the move inputs.
+
+```ts
+type GameResult = TicTacToe<`
+    X 1 1
+    O 2 2
+    X 2 0
+    O 0 2
+    X 1 0
+    O 0 0
+    X 1 2
+`>;
+```
+
+### Level One: Base Algorithm
+
+Keeping the type system's functional/logical nature in mind, here's my proposal for how we're going to tackle this `TicTacToe` type.
+
+1. First, we'll convert the raw moves description string into a list of move descriptions using a combination of the string template literal types we just saw and the recursive array building technique from applying move tuples.
+2. Next, we'll take the `ApplyMoves` type we already wrote out and pass the list of moves to it, to generate an end state board.
+3. Finally, we'll pass that end-state board to our already-written `Winner` type to get out the result of who wins.
+
+Here's how that type will look:
+
+```ts
+type TicTacToe<Moves extends string> = Winner<
+	ApplyMoves<StartingBoard, ParseRawMoves<Moves>>
+>;
+```
+
+We'll need to write that `ParseRawMoves` type.
+
+### Level Two: String Parsing
+
+In order to convert the raw moves list into an array of `Move`s, we'll need to use steps like the following:
+
+1. Split the steps into an array on `\n` endlines
+2. Filter those move lines into an array of usable `Move` tuples
+
+```ts
+type ParseRawMoves<Moves extends string> = CollectParsedRawMoves<
+	Split<Moves, "\n">,
+	[],
+	"X"
+>;
+```
+
+That introduces _two_ types we'll need to implement.
+
+### Level Three: String Splitting
+
+Finally, we get a real example in this blog post of using template literal types:
+
+```ts
+type Split<Text extends string, Splitter extends string> = Text extends ""
+	? []
+	: Text extends `${infer Prefix}${Splitter}${infer Suffix}`
+	? [Prefix, ...Split<Suffix, Splitter>]
+	: [Text];
+```
+
+Our `Split` type takes in a `Text` string and a `Splitter` string.
+If the text is empty, then we're done, it gives back an empty array.
+
+Otherwise, it checks for an instance of the `Splitter` string inside the `Text`, allowing any inferred `Prefix` string to come before it and any inferred `Suffix` string to come after it.
+
+Such is the nature of type system template literals: we can check for adherence to string literal types and _extract_ (infer) types as we need.
+
+If there is that inferred matching, the result is first whatever's before the `Splitter` string (`Prefix`), followed by a recursive call to split whatever's after the `Splitter` (`Suffix`).
+
+If the `Splitter` wasn't found, then this string can no longer be split: we return an array containing the all of the Text.
+
+### Level Four: Filtering
+
+Now that we can split the string on endlines, we've got one last challenge ahead of us: turning these lines into raw move descriptions.
+
+The full `CollectParsedRawMoves` type is a little hairy so I've split out a few pieces of logic into helpers shown here:
+
+```ts
+// Given a turn, switch to the next (other possible) turn
+type NextTurn<Turn> = Turn extends "X" ? "O" : "X";
+```
+
+```ts
+// Given a string description of a move, give back the number (int) equivalent
+// (useful because the inputs are raw strings, but outputs are numbers...)
+type IntToString<Int> = Int extends "0"
+	? 0
+	: Int extends "1"
+	? 1
+	: Int extends "2"
+	? 2
+	: never;
+```
+
+```ts
+// Applies the two above types to parse an input line like 'X 1 2'
+type ParseRawMove<Turn, RawRow, RawColumn> = [
+	Turn,
+	IntToString<RawRow>,
+	IntToString<RawColumn>
+];
+```
+
+Ok dokie!
+Here it is!
+`CollectParsedRawMoves`!
+A type that recursively goes through an array of raw move strings and turns them into our nice Move tuple types:
+
+```ts
+type CollectParsedRawMoves<
+	RawMoves extends string[],
+	Collected extends Move[],
+	Turn extends "X" | "O"
+> = RawMoves extends []
+	? Collected
+	: RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
+	? CollectParsedRawMoves<
+			DropFirst<RawMoves>,
+			[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
+			NextTurn<Turn>
+	  >
+	: CollectParsedRawMoves<DropFirst<RawMoves>, Collected, Turn>;
+```
+
+It's kind of big, so here's a version with inline comments:
+
+```ts
+// Our CollectParsedRawMoves type takes in:
+type CollectParsedRawMoves<
+	// * the array of raw moves,
+	RawMoves extends string[],
+	// * the collected moves thus far,
+	Collected extends Move[],
+	// * and a current turn to parse out of the next raw move.
+	Turn extends "X" | "O"
+> =
+	// If there are no more raw moves to parse out, it's done, hooray!...
+	RawMoves extends []
+		? // ...we can exit early by returning an empty array.
+		  Collected
+		: // If there is a next move to parse in our list of raw moves,
+		// it checks whether that move matches a usable pattern.
+		// There can be any amount of Pre text before the Turn string,
+		// followed by a space, the row, another space, the column,
+		// then any amount of Post text.
+		RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
+		? // If it did match, we can recursively continue with:
+		  CollectParsedRawMoves<
+				// * remaining moves yet to be parsed,
+				DropFirst<RawMoves>,
+				// * the previous collected moves, followed by this new move
+				//   (as parsed by our ParseRawMove helper),
+				[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
+				// * and the next turn.
+				NextTurn<Turn>
+		  >
+		: // If our raw move doesn't match the template, then we recurse:
+		  CollectParsedRawMoves<
+				// * still with the rest of the raw moves, but
+				DropFirst<RawMoves>,
+				// * the same collected moves list (no added one), and
+				Collected,
+				// * we retry the same move again.
+				Turn
+		  >;
+```
+
+...tada! 🎊
+
+### The Final Product
+
+<a
+	href="https://www.typescriptlang.org/play?ts=4.1.0-dev.20201004#code/C4TwDgpgBAwhA28oF4oHJ1QD7oBoZzQHk0BuAKHNEigDUBLAY2AHsAnEAHgAV4BDEBDYAaKACEWfNgBMAfCnGSZUCAA9gEAHbSAzlADq9TZqMBzCVOk9+gtvID8UYGwCu0AFxQAZn3g6IFFTg0IbGZhYy1gJC8qgAIvR8piyavgzM7Fy80XbYUAAS7PQAXinAaUysHFG28ji0QsBMFRnV2bWB1NAJSSktVVk2MQrkUGN5AN6j4+MADJ4TUPNQ7UKiAIyefJogogBMWztQAL7C0zNQm1CLy9u7l56rIlAHUHcnZxdjrzeH91d3faPIZsD7nE7gnBTL5LBawt47DZ-IErEFgmFXX4I-7AnIo96ncHjH7wp5I7H4o6EmbHShdApFUqacrwdIDGrDZCQ65EsbLLFkh6ovEvXG2dFfTHwwFCmWvAmfL4k26I2Wq+VUxVjWkzKG8+FYmUA9V-CUXKXLQVXQWvJ5mmbK5Fq+4akD2nXjPUw-nS1XGl2m6mSuEqnEU0XY+3EkNitZCm2x0FB7V04J0RrNVmVTIc3Jc3U870x4W2clywNamYWxNlk2R5MO4tWp2u93c6FfH2h8kJ+uV8bV8PWkGUt0N6PXX1h3sK8EesZezvFo0txNRsaDlfh21o8ffZd+1cloRtoI0UKaIScCJyEYzNk5tD4UQ3+RqDTaPTONz6qCOJ9oL+ngPtUxBoC+Si3u+Wi6E4rgQL+Mz-iQiHjJ4GBkKmNAACpMNhfCMNhLAQDeCgdmMADaABKLAAO5QEYSx5OseR7AAugsv4UTALDwC4AC2mgMUJszMaxHGwAg8AUDSFDHJ0aYAMrlGwTSaOYkFkeCXboeg5IYSiGEnDJA7FgZQrma8RnyeCjqYOBFl6RG1lyQpNBURAYD8IwEAAJKaDenDgqR0GflAuGEQRREkZBlYeV5BEQPxWjACo6gwXocCIHFdHZD5aUfrBok4CxOB7JWPF8YJeXQKFRViWVZyxIW4zUXRwlMSV4mcTCUDcbxAlCYxxWXN1qGUTRtGiJVg1sQVGV9ZNNXTQN1XeRAbHjRcjjxetyXMltMyeDebW0Wx-VVZobEmSmNlntAACyLAAG7QKg3FSaII2lS8X0NS811YdAACCYBeSAT2vToQUzCF6VhRF+GEcRN6VpDEB6HVejoxRm2xOC6OY-DsG47+jg3kBUCg+DhMw714y7Yl-mBajUCExRsznZzojs5zFHrGxPMvRjHPnexsj9jCcRsCwYAAGL0GwOjAJwhOyL+6v3VA0uywrSsq9h81hS4mgANaaHRmi4-jMyG1jfUygAdM7RheCeACqm29Y47uU7jbnQIpXn0Ab75G7BytsGYohB-AIcaKC9uR2YNvjNhYf22ggHe31Xswp46fqOHegAAYACQTK7J7cGwEBePQqjHBXsfx0ITeV5obugopLhePXjcl1tjgUTXdcN6IzuOy3Ks93349QNPCeyHn9NQJ4FGF8AgNa9wUj+FRfC0bThPF1AyfqanYyVfAEDMLvSsQNIB9H8L0O-tPquv6IaAADqaGgEsuKC1-ABcEsgA7hTwlFYin8oan3PqYdWMxUAXivL+am8AIavzpqvZSUg1IaUsJLL49996H2Pq-JBMIqFjHAUDKAAA5d82EXBsE0JwFhbDmqcKEpnfA4JkLZzQngTCWt-LACIspKO6lODiOauCcRp80CzCEV8RwsxKaKMzusVR9NHDrC2p4LRxM9BoD2Lo1eYxHB7EOsIy8r02AQNIRAZ+6MOGsM0KIZ+k0vGHxmoJS+fUeGiHEZI5wZhODeLohLKAoSWBSIic-fxmhl4QOvrfYAzin7kOwa41+8DwnqVxitRAGTH6nxxoLcKHilH4DyGBGhCg8lwPtqTHO6TmCP0ps0kWnNT7lw7l3FYtd248OOFACuVdQRRNouMyZncTxJNWpoduUyVgsGVscQeli-ywF4jfO+e9H49LfjsmYOt5aK2VpEnJUNAFnNapPDpGhpCiGcT09xbDfG0R8VAJZl1l7EPpkw9QPDPkpK2o03qnhnlZJOTgs5Fy9bXJOfch5ezSmdNebYsYPDIUQIAKLaA8joFw8BUqoERtAiAnBtnjFwKNDRMwiBMSZfS0aBjmWsvBAyliNiuWiQ0SXcBQA"
+	target="blank"
+>
+	View the full code solution on the TypeScript Playground.
+</a>
+
+There's a good bit of code!
+If you're feeling lost in the sea of new complex type syntax, that's great!
+Take some time off, come back to this blog or the slides, and persevere – you'll be able to get through it, and you'll have a more clear understanding of it all if you do.
+
+All concepts are new until you've had the time to play with them for a bit. Everything is complex until you get it.
+
+<LabeledVideo
+	alt="Patrick Star drooling and saying 'uhhh'"
+	description="Patrick Star trying to grasp template literal types."
+	original="https://giphy.com/gifs/patrick-spongebob-squarepants-sleepy-qQZAQQZP029NK"
+	src="/images/blog/uhhh.webm"
+/>
+
+## What's Next
+
+By now, you have at the very least a healthy appreciation for the power of TypeScript's type system, and ideally a better understanding of how to use it to boot.
+
+If you want to grow your type system chops a bit, the [Type Challenges](https://github.com/type-challenges/type-challenges) repository is a great place to up your game.
+It presents a series of increasingly difficult tasks in the type system for you to play with.
+
+### DefinitelyTyped
+
+Lastly, I'd like to give a friendly plug for [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped): the open source repository storing TypeScript type definitions for packages that don't ship with their own.
+
+It's a huge repository with _thousands_ of open issues, ready for you to tackle.
+If you use any JavaScript libraries that aren't (yet?) written in TypeScript, applying the fun concepts you saw here today to flesh them out is a wonderful way to spend your time.
+
+{/* TODO: "Hacktoberfest" used to link to https://hacktoberfest.digitalocean.com */}
+
+<LabeledImage
+	alt="Screen capture of DefinitelyTyped on GitHub"
+	description="This post's release month is even Hacktoberfest, a promotion wherein you get a free shirt for sending pull requests on GitHub. It's perfect! 💯"
+	src={definitelyTyped}
+/>
+
+## Closing Thoughts
+
+I'd love to see what fun advances in this game engine exploration you come up with.
+Please, [tag me @JoshuaKGoldberg](https://twitter.com/JoshuaKGoldberg) with your results!
+A few starting suggestions might be:
+
+- A win/loss calculator for a list of game strings?
+- Game AI to generate a next move?
+- Expanding to games like Connect Four, Checkers, Chess, or Boggle?
+- Ignoring whatever I say and doing something completely different!?
+
+Thanks for making it this far in the blog post.
+I hope it served some use to you in exploring the TypeScript type system!
+💖

@@ -1,0 +1,70 @@
+---
+export interface ColorSchemeImages {
+	dark: string;
+	light: string;
+}
+
+export interface Props {
+	alt: string;
+	class?: string | undefined;
+	size: "small" | "large";
+	src: string | ColorSchemeImages;
+}
+
+const src =
+	typeof Astro.props.src === "string"
+		? { dark: Astro.props.src, light: Astro.props.src }
+		: Astro.props.src;
+---
+
+<div class:list={["heroImage", Astro.props.class, Astro.props.size]}>
+	<picture>
+		<source srcset={src.dark} media="(prefers-color-scheme: dark)" />
+		<source srcset={src.light} media="(prefers-color-scheme: light)" />
+		<img alt={Astro.props.alt} class={Astro.props.size} src={src.light} />
+	</picture>
+</div>
+
+<style>
+	.heroImage,
+	img {
+		height: var(--imageSize);
+		width: var(--imageSize);
+	}
+
+	.heroImage.small {
+		--imageSize: clamp(4rem, 12vw, 8rem);
+	}
+
+	.heroImage.large {
+		--imageSize: clamp(8rem, 20vw, 10rem);
+	}
+
+	img {
+		border-radius: 100%;
+		box-shadow: 0 3px 7px 3px var(--colorSubtle);
+		user-select: none;
+	}
+
+	@media (min-width: 700px) {
+		.heroImage.small {
+			--imageSize: 128px;
+		}
+
+		.heroImage.large {
+			--imageSize: clamp(12rem, 32vw, 16rem);
+		}
+
+		img {
+			max-height: 100%;
+			max-width: 100%;
+			box-shadow: 0 3px 14px 0 var(--colorSubtle);
+		}
+	}
+
+	@media (min-width: 1017px) {
+		.heroImage.large {
+			--imageSize: 256px;
+		}
+	}
+</style>

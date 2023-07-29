@@ -1,0 +1,98 @@
+---
+import HeroImage, { Props as HeroImageProps } from "../HeroImage.astro";
+import HeroSecondary from "../HeroSecondary.astro";
+import HeroTertiary from "../HeroTertiary.astro";
+import HeroTitle from "../HeroTitle.astro";
+import { BlogShare } from "./BlogShare";
+import { DateAndMinutes } from "./DateAndMinutes";
+
+interface Props {
+	body: string;
+	class?: string | undefined;
+	date: Date;
+	description: string;
+	download?: string | undefined;
+	image?: HeroImageProps | undefined;
+	title: string;
+}
+---
+
+<div class:list={["blogHero", Astro.props.class]}>
+	<div class="left">
+		<div class="primary">
+			{
+				Astro.props.image && (
+					<HeroImage {...Astro.props.image} class="image" size="small" />
+				)
+			}
+			<div>
+				<HeroTitle>
+					{
+						Astro.props.title
+							// TODO: use a markdown renderer
+							.replaceAll("`", "")
+					}
+				</HeroTitle>
+				<HeroTertiary>
+					<DateAndMinutes
+						body={Astro.props.body}
+						date={Astro.props.date}
+						year="numeric"
+					>
+						<BlogShare
+							description={Astro.props.description}
+							url={Astro.url}
+							title={Astro.props.title}
+						/>
+					</DateAndMinutes>
+				</HeroTertiary>
+			</div>
+		</div>
+		<HeroSecondary size="wide">
+			{Astro.props.description}
+		</HeroSecondary>
+	</div>
+	{
+		Astro.props.download && (
+			<div class="download">
+				💾
+				<a
+					href={Astro.props.download}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					Download the slides here!
+				</a>
+			</div>
+		)
+	}
+</div>
+
+<style>
+	.image {
+		float: right;
+	}
+
+	.download {
+		margin-top: 1.5rem;
+	}
+
+	@media (min-width: 700px) {
+		.primary {
+			display: grid;
+			margin-bottom: 2rem;
+			width: 100%;
+		}
+
+		.primary:has(.image) {
+			gap: 1.5rem;
+			grid-template-columns: min-content auto;
+		}
+	}
+
+	@media (min-width: 1017px) {
+		.blogHero {
+			margin-right: var(--widthTableOfContents);
+		}
+	}
+</style>
