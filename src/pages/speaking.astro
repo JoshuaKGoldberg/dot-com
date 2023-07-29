@@ -8,6 +8,16 @@ import { SpeakingsGrouped } from "../components/speaking/SpeakingsGrouped";
 import HeroLayout from "../layouts/HeroLayout.astro";
 
 const allSpeakings = await getCollection("speaking");
+
+const now = Date.now();
+
+const previous = allSpeakings
+	.filter((speaking) => +speaking.data.date < now)
+	.sort((a, b) => +b.data.date - +a.data.date);
+
+const upcoming = allSpeakings
+	.filter((speaking) => +speaking.data.date > now)
+	.sort((a, b) => +a.data.date - +b.data.date);
 ---
 
 <HeroLayout
@@ -27,8 +37,6 @@ const allSpeakings = await getCollection("speaking");
 		</Anchor>.
 	</HeroTertiary>
 	<BodyContents>
-		<SpeakingsGrouped
-			speakings={allSpeakings.sort((a, b) => +b.data.date - +a.data.date)}
-		/>
+		<SpeakingsGrouped previous={previous} upcoming={upcoming} />
 	</BodyContents>
 </HeroLayout>
