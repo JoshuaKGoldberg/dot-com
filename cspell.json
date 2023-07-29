@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -196,6 +202,7 @@
 		"upvoted",
 		"verdot",
 		"WCAG",
+		"webm",
 		"webp",
 		"Wigham",
 		"wowee",
