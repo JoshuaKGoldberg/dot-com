@@ -10,6 +10,7 @@ const links = [
 ] as const;
 ---
 
+<div class="fader" role="presentation"></div>
 <Text as="header" class="header" fontWeight="bold">
 	<HeaderLink href="/">Josh Goldberg</HeaderLink>
 	<div class="links">
@@ -82,6 +83,28 @@ const links = [
 					no-repeat;
 			content: "";
 			top: -1.5rem;
+		}
+
+		.fader {
+			background: linear-gradient(
+				to bottom,
+				var(--colorBackgroundTop),
+				transparent
+			);
+			height: var(--heightMinimumFromHeader);
+			left: 5vw;
+			position: fixed;
+			right: 5vw;
+			top: 0;
+			user-select: none;
+			mask-image: linear-gradient(
+				to right,
+				transparent 0%,
+				white 10%,
+				white 90%,
+				transparent 100%
+			);
+			z-index: 1;
 		}
 
 		.links {

@@ -4,39 +4,31 @@ import { getCollection } from "astro:content";
 import { Anchor } from "../components/Anchor";
 import { BlogsGrouped } from "../components/blog/BlogsGrouped";
 import BodyContents from "../components/BodyContents.astro";
-import Hero from "../components/Hero.astro";
-import HeroSecondary from "../components/HeroSecondary.astro";
 import HeroTertiary from "../components/HeroTertiary.astro";
-import { description } from "../constants";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import { blogDescription } from "../constants";
+import HeroLayout from "../layouts/HeroLayout.astro";
 
 const blogs = await getCollection("blog");
 ---
 
-<BaseLayout description={description} slug="goldblog" title="Goldblog">
-	<BodyContents>
-		<Hero
-			image={{
-				alt: "todo",
-				size: "large",
-				src: `/images/blog.jpg`,
-			}}
-			primary="Goldblog"
+<HeroLayout
+	alt="Smiling cat receiving head scratches next to a laptop showing VS Code"
+	secondary={blogDescription}
+	primary="Goldblog"
+	title="Goldblog"
+>
+	<HeroTertiary slot="tertiary">
+		New posts are shared online and posted to an RSS feed at <Anchor
+			href="/rss.xml"
+			target="_blank"
 		>
-			<HeroSecondary size="normal">
-				{description}
-			</HeroSecondary>
-			<HeroTertiary>
-				New posts are shared online and posted to an RSS feed at <Anchor
-					href="/rss.xml"
-					target="_blank"
-				>
-					/rss.xml
-				</Anchor>.
-			</HeroTertiary>
-		</Hero>
+			/rss.xml
+		</Anchor>.
+	</HeroTertiary>
+
+	<BodyContents>
+		<BlogsGrouped
+			blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)}
+		/>
 	</BodyContents>
-	<BlogsGrouped
-		blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)}
-	/>
-</BaseLayout>
+</HeroLayout>

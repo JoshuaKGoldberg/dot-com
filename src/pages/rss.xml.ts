@@ -1,12 +1,12 @@
 import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 import type { APIContext } from "astro";
 
-import { description, site } from "../constants";
+import { blogDescription, site } from "../constants";
 
 export async function get(context: APIContext) {
 	return rss({
 		customData: `<language>en-us</language>`,
-		description,
+		description: blogDescription,
 		site: context.site?.toString() ?? site,
 		items: await pagesGlobToRssItems(
 			// TODO: find or file an issue?
