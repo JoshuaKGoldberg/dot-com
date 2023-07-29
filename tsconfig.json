@@ -1,8 +1,12 @@
 {
 	"compilerOptions": {
+		"baseUrl": ".",
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",
+		"paths": {
+			"~/*": ["src/*"]
+		},
 		"noUncheckedIndexedAccess": false,
 		"target": "es2022"
 	},

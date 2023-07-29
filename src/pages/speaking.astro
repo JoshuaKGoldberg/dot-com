@@ -1,10 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 
-import { Anchor } from "../components/Anchor";
-import BodyContents from "../components/BodyContents.astro";
-import HeroTertiary from "../components/HeroTertiary.astro";
-import { SpeakingsGrouped } from "../components/speaking/SpeakingsGrouped";
+import { Anchor } from "~/components/Anchor";
+import BodyContents from "~/components/BodyContents.astro";
+import HeroTertiary from "~/components/HeroTertiary.astro";
+import { SpeakingsGrouped } from "~/components/speaking/SpeakingsGrouped";
 import HeroLayout from "../layouts/HeroLayout.astro";
 
 const allSpeakings = await getCollection("speaking");
