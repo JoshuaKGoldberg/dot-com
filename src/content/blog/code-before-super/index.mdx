@@ -156,12 +156,12 @@ This issue seemed like it'd be both a good way to challenge my understanding of 
 
 ## Technical Overview
 
-The pull request was large enough that instead of describing them all here, I've moved its details into a separate blog post: [TypeScript Contribution Diary: Allowing Code in Constructors Before `super()` (Technical Overview)](https://blog.joshuakgoldberg.com/code-before-super-technical-overview).
+The pull request was large enough that instead of describing them all here, I've moved its details into a separate blog post: [TypeScript Contribution Diary: Allowing Code in Constructors Before `super()` (Technical Overview)](https://joshuakgoldberg.com/blog/code-before-super-technical-overview).
 
 There ended up being two areas of source code I had to change:
 
-- [Updating the Type Checker](https://blog.joshuakgoldberg.com/code-before-super-technical-overview#updating-the-type-checker): Adjusting TypeScript's type errors to be more lenient
-- [Updating Transformers](https://blog.joshuakgoldberg.com/code-before-super-technical-overview#updating-transformers): Adjusting output JavaScript for more varieties of constructors
+- [Updating the Type Checker](https://joshuakgoldberg.com/blog/code-before-super-technical-overview#updating-the-type-checker): Adjusting TypeScript's type errors to be more lenient
+- [Updating Transformers](https://joshuakgoldberg.com/blog/code-before-super-technical-overview#updating-transformers): Adjusting output JavaScript for more varieties of constructors
 
 You can also see the final pull request: [#29374: Allowed non-this, non-super code before super call in derived classes with property initializers](https://github.com/microsoft/TypeScript/pull/29374).
 
@@ -173,7 +173,7 @@ I don't "blame" the TypeScript team for taking a while to get to it.
 Most of my issues and pull requests to TypeScript are reviewed relatively quickly.
 This one was an outlier.
 
-See [Why Open Source Pull Requests Can Take A While](https://blog.joshuakgoldberg.com/open-source-pull-request-timing) for general context on why some pull requests in any project, especially larger pull requests in larger projects, may take a while.
+See [Why Open Source Pull Requests Can Take A While](https://joshuakgoldberg.com/blog/open-source-pull-request-timing) for general context on why some pull requests in any project, especially larger pull requests in larger projects, may take a while.
 
 My pull request additionally happened to target an area of code (ES2015 class transformers) that relatively fewer people -even within the TypeScript team- have deep expertise on.
 You can scan through the review comments left through the life of the pull request to see just how absurdly difficult it is to account for all of JavaScript's class constructor behaviors.
