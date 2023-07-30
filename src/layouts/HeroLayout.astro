@@ -13,9 +13,9 @@ export interface Props {
 	title?: string;
 }
 
-const { primary, secondary, slug = primary } = Astro.props;
+const { primary, secondary, slug = primary.toLowerCase() } = Astro.props;
 
-const image = `images/${slug.toLowerCase()}`;
+const image = `images/${slug}`;
 ---
 
 <BaseLayout {...Astro.props} description={primary} slug={slug}>
