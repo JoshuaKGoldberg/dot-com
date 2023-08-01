@@ -7,6 +7,9 @@ import konamimojisplosion from "astro-konamimojisplosion";
 import { site } from "./src/constants";
 
 export default defineConfig({
+	experimental: {
+		assets: true,
+	},
 	image: {
 		service: sharpImageService(),
 	},
