@@ -16,25 +16,26 @@ export const collections = {
 		}),
 	}),
 	projects: defineCollection({
-		schema: z.object({
-			category: z.string(),
-			description: z.string(),
-			image: z.string().optional(),
-			links: z.record(z.string()).optional(),
-			more: z
-				.array(
-					z.object({
-						description: z.string(),
-						href: z.string(),
-						title: z.string(),
-					})
-				)
-				.optional(),
-			role: z.string().optional(),
-			stars: z.number(),
-			url: z.string().optional(),
-			title: z.string().optional(),
-		}),
+		schema: ({ image }) =>
+			z.object({
+				category: z.string(),
+				description: z.string(),
+				image: image().optional(),
+				links: z.record(z.string()).optional(),
+				more: z
+					.array(
+						z.object({
+							description: z.string(),
+							href: z.string(),
+							title: z.string(),
+						})
+					)
+					.optional(),
+				role: z.string().optional(),
+				stars: z.number(),
+				url: z.string().optional(),
+				title: z.string().optional(),
+			}),
 	}),
 	speaking: defineCollection({
 		schema: z.object({

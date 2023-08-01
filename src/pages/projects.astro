@@ -35,6 +35,6 @@ const allProjects = await getCollection("projects");
 	</HeroTertiary>
 
 	<BodyContents>
-		<ProjectsGrouped projects={allProjects} />
+		<ProjectsGrouped client:load projects={allProjects} />
 	</BodyContents>
 </HeroLayout>

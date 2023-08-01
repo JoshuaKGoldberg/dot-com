@@ -1,7 +1,7 @@
 ---
 category: Biggest Projects
 description: The tooling that enables ESLint and Prettier to support TypeScript.
-image: typescript-eslint.svg
+image: ~/assets/typescript-eslint.svg
 links:
   Site: https://typescript-eslint.io
 role: Maintainer

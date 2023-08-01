@@ -21,8 +21,8 @@ export function ProjectEntry(props: ProjectEntryProps) {
 			image={
 				props.project.data.image
 					? {
+							...props.project.data.image,
 							alt: `${title()} logo`,
-							src: props.project.data.image,
 							variant: "square",
 							// TODO: find or file an issue?
 							// eslint-disable-next-line no-mixed-spaces-and-tabs

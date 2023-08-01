@@ -1,7 +1,7 @@
 ---
 category: Just for Fun
 description: A unified syntax that compiles into your favorite OOP languages.
-image: budgie.png
+image: ~/assets/budgie.png
 more:
   - description: Converts C# code to Budgie.
     href: https://github.com/budgielang/CS-Budgie
