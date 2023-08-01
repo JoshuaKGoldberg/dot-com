@@ -8,174 +8,177 @@ title: "TypeScript Contribution Diary: Pretty Error Counts"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import chromeTrailer from "./chrome-trailer.webp";
+import atacamaDesertNightSky from "./atacama-desert-night-sky.jpg";
+import found2ErrorsIn2Files from "./found-2-errors-in-2-files.webp";
+import tscPrettyWatchBefore from "./tsc-pretty-watch-before.webp";
+import tscPrettyWatch1Complaints from "./tsc-pretty-watch-1-complaints.webp";
+import tscPrettyWatch2ComplaintsPlain from "./tsc-pretty-watch-2-complaints-plain.webp";
+import tscPrettyWatchBlueMessage from "./tsc-pretty-watch-blue-message.webp";
+// import tscPrettyWatch from "./tsc-pretty-watch-.webp";
+//
+//{/*} <LabeledImage
+//	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, "
+//	description="Blue “message” message. Nowhere else does TypeScript use that. Odd."
+//	src={tscPrettyWatchBlueMessage}
+///> _/}
+
+{/* todo: https://en.wikipedia.org/wiki/Atacama_Desert link (needs Markdown) */}
+
+<LabeledImage
+	alt="Parked shiny chrome trailer outside with trees and a hill in the background."
+	description="The night sky in the Atacama Desert. It's pretty."
+	original="https://commons.wikimedia.org/wiki/File:VLT_Cerro_Paranal_Total_Lunar_Eclipse_21_December_2010.jpg#"
+	src={atacamaDesertNightSky}
+/>
 
 > I've started making contributions to TypeScript, working my way up from small error reporting nitpicks to (hopefully!) real syntactic and control flow improvements.
 > These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.
 > If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
 
-> Next post: Pretty Error Counts
+> Previous post: [Trailing Type Parameters](./typescript-contribution-diary-trailing-type-parameters)
 
-<LabeledImage
-	alt="Parked shiny chrome trailer outside with trees and a hill in the background."
-	description="Medium told me to add a high resolution image, so here's the closest relevant thing I could find. ✔️"
-	src={chromeTrailer}
-/>
+> Next post: [Identifiers after Numeric Literals](./typescript-contribution-diary-identifiers-after-numeric-literals)
 
 ## Problem Statement
 
-[TypeScript Issue 16152](https://github.com/Microsoft/TypeScript/issues/16152) (following [Prettier Issue 1820](https://github.com/prettier/prettier/issues/1820)): "trailing comma not allowed" error in type parameters.
-When you have a list of type parameters split across lines, some code styles and formatters would prefer you have a "trailing" comma after the last one to maintain consistency:
+TypeScript Issue 22124: [Provide summary of errors when in — pretty mode?](https://github.com/Microsoft/TypeScript/issues/22124)
+When refactoring large projects, the CLI output from compile runs (both from solo compiles and `--watch`) can build up pretty quickly.
+Every time I save a file it feels like the terminal is filling up with a giant sea of angry errors.
+It would be convenient to have an error around the lines of "`Found 43 errors in 21 files.`" at the bottom of each compile to help track progress.
 
-```ts
-export const myLambda = <
-	TFirstTemplate,
-	TSecondTemplate // [ts] Error: Trailing comma not allowed.
->() => {
-	/* ... */
-};
-```
+Here's what a `--pretty --watch` run with errors looks like now:
 
-That recently became a little more relevant because TypeScript added generic parameter defaults in addition to the existing extends clause.
-These giant syntax lists can be pretty hard to read unless split across lines:
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, but no error summary at the end"
+	src={tscPrettyWatchBefore}
+/>
 
-```ts
-export const createSourceNodeFromTemplateBinding = <
-	TTemplateBinding extends TemplateBinding = TemplateBinding,
-	TSourceNode extends SourceNode = SourceNode // comma here?
->(
-	templateBinding: TTemplateBinding
-) => {
-	/* ... */
-};
-```
-
-Something in TypeScript was complaining about those trailing commas.
+{/* TODO (markdown): 🌈 #humblebrag 🌈 */}
 
 _Time to debug!_
 
 ## Step 1: Where
 
-How does TypeScript create the complaint?
+_Where should TypeScript print the list of error messages?_
 
-The complaint string was "`Trailing comma not allowed.`".
-I ran a full text search on that string to see where it comes from.
-There were a bunch of files, so I limited it to `.ts` files in the src directory.
-Exactly one result: `src/compiler/diagnosticInformationMap.generated.ts`.
-This file contains a giant key-value pair of lines with message-looking things.
-Spacing the one I found out for readability:
+Presumably, there must be something that prints out each of the error messages in order.
+The messages only have some of this fancy formatting in `--pretty` mode, so I figured it'd be easier to look for whatever prints that stuff and see who calls it.
+Two unique, search-friendly features of `--pretty` printing are:
 
-```ts
-Trailing_comma_not_allowed: diag(
-    1009,
-    DiagnosticCategory.Error,
-    "Trailing_comma_not_allowed_1009",
-    "Trailing comma not allowed."),
+- `~` underlines underneath error messages
+- Special console colors
+
+I ran a search on "`~`" and found a few places in `src/compiler/program.ts`, all within a function named `formatDiagnosticsWithColorAndContext`.
+Perfect!
+
+I put a `console.log("Found", diagnostics.length, "errors");` at the bottom of `formatDiagnosticsWithColorAndContext` and ran the compiler on a project with two errors across two files to see the message being printed twice:
+
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, and 'Found 1 complaints' just before each of the two file complaints"
+	description="Awww..."
+	src={tscPrettyWatch1Complaints}
+/>
+
+So it looks like `formatDiagnosticsWithColorAndContext` gets run on every file.
+Not on every run.
+Not so perfect.
+😦
+
+A full-text search showed it only ever being called in `createDiagnosticReporter` in `src/compiler/watch.ts`.
+That is called by `createWatchCompilerHostOfConfigFile`, which passes it as a reportDiagnostic parameter to `createWatchCompilerHost`.
+Within _that_ function it's only ever used within a new function named `emitFilesAndReportErrorUsingBuilder`, which passes it to `emitFilesAndReportErrors`.
+
+I put the same console message in the new location and again ran the compiler on the same project.
+This time there was a single message at the end about two complaints:
+
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, and 'Found 2 complaints' without formatting after the list of type errors"
+	description="🎉🎉🎉"
+	src={tscPrettyWatch2ComplaintsPlain}
+/>
+
+Hooray!
+Found the place.
+
+## Step 2: How?
+
+_How to print all the errors?_
+
+I wanted to print both the count of errors and count of files.
+The first part seemed to already be solved by the count of diagnostics.
+Remaining to do was to count the unique file names from the diagnostics, create some kind of diagnostic message about the results, and print that message.
+
+### 2.1: Counting Unique File Names
+
+The `Diagnostic` type has a field `file: SourceFile | undefined` and the `SourceFile` type has a field `fileName: string`.
+I figured that was a reasonable source of information on file names.
+But counting them?
+
+Counting unique objects is generally optimally efficient in JavaScript with a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
+I ran full-text searches on `new Set` and `Set.from` but didn't find anything… which makes sense, as TypeScript works in environments that don't natively have Set.
+But surely there must be _something_ in TypeScript for counting unique objects? What about the slightly-older [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)?
+
+I tried again searching for `new Map` and found two generic, useful-looking functions at the top of `src/compiler/core.ts`:
+
+- `createDictionaryObject`
+- `createMap`
+
+> Maps are useful when you want a dictionary-like object but can't guarantee you won't have have to check edge case key names such as "`hasOwnProperty`".
+> That tends to happen when you're coding a superset of JavaScript.
+
+`createMap` uses `createDictionaryObject` internally to satisfy the `Map` interface.
+Looks like TypeScript polyfills `Map`.
+I haven't personally executed reliable performance tests to evaluate which is faster, but if TypeScript has a function to choose between the two options, I figured it would make sense to go along with whatever TypeScript used.
+
+Conclusion: use `createMap` to keep track of unique file names with errors.
+
+### 2.2: Localizing Error and File Counts
+
+The diagnostic messages stored by TypeScript in `diagnosticInformationMap.generated.ts` are string templates without any logic for pluralization logic.
+That's a little inconvenient as I wanted to print a different message in each of three singular/plural possibilities:
+
+- Single error, single file
+- Multiple errors, single file
+- Multiple errors, multiple files
+
+Three new strings it was.
+
+The [contribution guide's section on localization](https://github.com/microsoft/TypeScript/blob/b87e3018226262ea195a56abfb000a80b92c8f8c/CONTRIBUTING.md#localization) mentions that those strings come from `src/compiler/diagnosticMessages.json` and are generated by the `jake generate-diagnostics` command.
+For example:
+
+```json
+"Compilation complete. Watching for file changes.": {
+    "category": "Message",
+    "code": 6042
+},
 ```
 
-Using the context clues from the "diagnostic" word in the file's name and contents, this seems to be localized messages TypeScript can print out.
-💯
+The "`code`" field is interesting.
+There are codes around that compilation message from `6001` to `6190`, then gaps around. I assumed this was some kind of organization strategy and added the three new messages in `6191`-`6193`:
 
-Running a second full-text search on "`Trailing_comma_not_allowed`" found exactly one method: `checkGrammarForDisallowedTrailingComma`, in `src/compiler/checker.ts`.
-From that name I was pretty sure this was what I needed.
-I _also_ happened to remember reading in the (excellent) [Basarat Gitbook](https://basarat.gitbook.io/typescript/docs/compiler/overview.html) how the "[Checker](https://basarat.gitbooks.io/typescript/content/docs/compiler/checker.html)" in TypeScript is what validates types... and since this was in `checker.ts`, that felt good.
+- `Found_1_error_in_1_file: diag(6191, ...)`
+- `Found_0_errors_in_1_file: diag(6192, ...)`
+- `Found_0_errors_in_1_files: diag(6193, ...)`
 
-## Step 2: What?
+_Later, I thought to click the [Diagnostics guidelines link](https://github.com/Microsoft/TypeScript/wiki/Coding-guidelines#diagnostic-messages) in CONTRIBUTING.md..._
 
-What does TypeScript do to create the error?
+### 2.3 Diagnostics Printing
 
-I ran a third full-text search on `checkGrammarForDisallowedTrailingComma` and found 5 usages in `checker.ts`.
-They were under these functions:
+Other diagnostics in `emitFilesAndReportErrors` are printed via a function named `reportDiagnostic`.
+I tried using that to print the new summary message but got a different-looking message prefix:
 
-- `checkTupleType`
-- **`checkGrammarTypeParameterList`**
-- `checkGrammarTypeArguments`
-- `checkGrammarHeritageClause`
-- `checkGrammarVariableDeclarationList`
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, with a blue message before a diganostic saying 'Found 2 errors in 2 files.'"
+	description="Blue “message” message. Nowhere else does TypeScript use that. Odd."
+	src={tscPrettyWatchBlueMessage}
+/>
 
-A diligent programmer intent on learning all there is to know about TypeScript might go read and understand each of these... but I could tell from the name that `checkGrammarTypeParameterList` was _probably_ what I needed.
+Elsewhere, such as with the nice "`Compilation complete. ...`" message, the `reportWatchDiagnostic` function not available in `emitFilesAndReportErrors` was used.
+It was being created locally within `createWatchCompilerHost` but not passed through to (or visible within) `emitFilesAndReportErrors`.
+I changed `emitFilesAndReportErrors` to take it as a parameter (in addition to `system.newLine` to pass to the `reporter`) and use it:
 
-```ts
-function checkGrammarForDisallowedTrailingComma(
-	list: NodeArray<Node>
-): boolean {
-	if (list && list.hasTrailingComma) {
-		const start = list.end - ",".length;
-		const end = list.end;
-		return grammarErrorAtPos(
-			list[0],
-			start,
-			end - start,
-			Diagnostics.Trailing_comma_not_allowed
-		);
-	}
-}
-```
-
-Without knowing much about node arrays, list types, or any of the surrounding code, it looks like this was checking if the list `hasTrailingComma` and adding a grammar error if so.
-Exactly what I needed!
-✔️
-
-## Step 3: Fix
-
-I removed calling `checkGrammarForDisallowedTrailingComma` from `checkGrammarTypeParameterList`, rebuilt the compiler (_[here's how to rebuild the compiler](https://github.com/microsoft/TypeScript/blob/250065e55b8f2bb212cb9d19b191cfeb15184ee0/CONTRIBUTING.md#helpful-tasks)_), and pointed my VS Code to my built TypeScript (_[here's how to use a local TypeScript in VS Code](https://code.visualstudio.com/docs/typescript/typescript-compiling#_using-newer-typescript-versions)_).
-It worked!
-No IDE complaints for source files with trailing commas on type parameters!
-
-At this point, I was _spooked_: surely there must have been much more to do.
-TypeScript is huge!
-There _must_ be overcomplicated cruft everywhere.
-
-Turns out I was wrong: that was basically it.
-
-## Step 4: Verify
-
-TypeScript validates these checker behaviors with "baseline" tests.
-Each test consists of a source file of TypeScript (or JavaScript) code under `tests/cases/**` and corresponding expected details under `baselines/reference/**`.
-Manipulating them is documented in their [CONTRIBUTING.md](https://github.com/microsoft/TypeScript/blob/250065e55b8f2bb212cb9d19b191cfeb15184ee0/CONTRIBUTING.md#managing-the-baselines).
-
-I compiled & ran tests to discover exactly one failure:
-
-Test: `tests/cases/compiler/typeParameterListWithTrailingComma1.ts`
-
-```ts
-class C<T> {}
-```
-
-The test complaint was that there should have been an error in this, as per `tests/baselines/reference/typeParameterListWithTrailingComma1.errors.txt`.
-After my change there was no longer an error.
-
-💖 Perfect! 💖
-
-I marked the baseline as accepted and the rest of the tests passed.
-
-## Step 5: Pull Request
-
-[Allowed trailing commas in type parameter/argument lists by JoshuaKGoldberg · Pull Request #20599](https://github.com/Microsoft/TypeScript/pull/20599):
-
-> This change is only one source file and one error file... there must be something I'm missing!?
-> Fixes #16152
-
-At this point I was still pretty worried about the change being purely subtractive.
-DanielRosenwasser (a core TypeScript team member) and vjeux (the top committer to Prettier) responded to my post with the 😄 emoji and my fears completely melted away.
-
-Bonus points to vjeux and novjek for the 🎉 emoji.
-If you maintain any size repository, let this be a lesson for you: emojis make first-time contributing much less scary.
-Even though this wasn't my first TypeScript pull request, it was my first time changing the language itself (or anybody else's language), and I was feeling the imposter syndrome hard.
-This might sound like a joke, but it isn't: humanizing the process made it feel like it was geared for outsiders like me and not just dedicated full-time paid closed-source maintainers.
-Even the customary thanks from mhegazy (core TS team member who merged the PR) felt nice.
-😄
-
-I happened to send the pull request in the middle of December, so it wasn't until early January that it was merged in... but it got in without any complaints.
-
-## Takeaways
-
-1. Find-in-Files is the only IDE command you need.
-1. TypeScript is just like any large code base: daunting if you let it, approachable if you try.
-1. Code maintainers with senses of humor are best. 🌹
-
----
-
-Thanks for reading!
-I hope you got something out of this and to write more detailed posts on bigger contributions soon!
-😅
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing a message with 'Found 2 errors in 2 files' formatted the same way as normal messages."
+	description={'"Found 2 errors in 2 files."'}
+	src={found2ErrorsIn2Files}
+/>
