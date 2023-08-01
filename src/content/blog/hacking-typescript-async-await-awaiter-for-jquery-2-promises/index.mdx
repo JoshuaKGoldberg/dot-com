@@ -1,0 +1,372 @@
+---
+description: "Manipulating the details of TypeScript's emitted code to wrestle jQuery 2's older asynchronous constructs to work with modern `async`/`await`."
+pubDate: 2017-07-02
+title: 'Hacking TypeScript''s async/await __awaiter for jQuery 2''s "Promises"'
+---
+
+jQuery 2's Promises are like the crusty old grandparent your parents are scared to let near the kids for fear of them saying something bizarre.
+Sure, they might have have been great (even trailblazers!) in their day, but times have changed and they can't keep up.
+
+_(by "kids" I mean any reasonable modern JavaScript framework)_
+
+**Problem:** jQuery 2's "Promises" aren't [A+](https://promisesaplus.com) compliant (jQuery 3's are).
+My team at work is upgrading from jQuery 2 to jQuery 3 and it's taking a while.
+We're stuck with 2's for now.
+At the same time, we'd really like to use new Promise-based developments in JavaScript such as `async`/`await`.
+
+**Blessing:** we're on a transpiler ([TypeScript](https://github.com/Microsoft/TypeScript)) that converts shiny new features into plain old JavaScript.
+Let's take a look at how it does that with async/await and how we can hack it to work for us.
+
+_Spoiler: see the [resultant repository on GitHub](https://github.com/JoshuaKGoldberg/jquery-2-typescript-async-await-adapter)..._
+
+## (Re-)Intro to `async`/`await`
+
+Take a look at this [quick code sample on typescriptlang.org/playground](https://www.typescriptlang.org/play?target=1#code/MYewdgzgLgBFCm0YF4YEMIE8zBgCgEoUA+dAdzQEtYAFAJxAFtKJ4A6OxEAGwDd5CAbiA):
+
+```js
+const test = async () => await Promise.resolve();
+```
+
+That's a lot of outputted code!
+Before we dive headfirst into it, we should refresh how async/await works in the first place.
+
+At its core, marking a function as "asynchronous" indicates that the function is a _generator_ (a function that gets stopped and started continuously, with return values in-between) that happens to mostly return Promises.
+Generators themselves are conceptually straightforward:
+
+```js
+function* getSomeValues() {
+	yield "foo";
+	yield "bar";
+}
+
+// Logs "foo", then "bar"
+for (const value of getSomeValues()) {
+	console.log(value);
+}
+```
+
+Most readers see `getSomeValues()` as returning `"foo"` then returning `"bar"`.
+Astute generator-savvy nerds will know it's really a **state machine** that goes to a `return "foo"`; when iteration=0 and `return "bar"`; when iteration=1.
+
+You can think of that code as working similarly to:
+
+```js
+function getSomeValues() {
+	let timeCalled = -1;
+	function next() {
+		timeCalled += 1;
+		switch (timeCalled) {
+			case 0:
+				return {
+					value: "foo",
+				};
+			case 1:
+				return {
+					value: "bar",
+				};
+			default:
+				return {
+					done: true,
+				};
+		}
+	}
+	return { next };
+}
+// Logs "foo", then "bar"
+const iterator = getSomeValues();
+while (true) {
+	const { done, value } = iterator.next();
+	if (done) {
+		break;
+	}
+	console.log(value);
+}
+```
+
+`async`/`await` builds on top of this generator fanciness by providing a specialized syntax for generators that yield `Promise`s.
+"awaiting" an "asynchronous" generator is shorthand for saying that you want to capture the result of that `Promise` locally, `.then` continue with the function.
+
+See [this article on the asynchronous generators in JavaScript](https://ponyfoo.com/articles/understanding-javascript-async-await).
+This [article on how `async`/`await` is implemented in Python 3.5](https://snarky.ca/how-the-heck-does-async-await-work-in-python-3-5) is a pretty great if you're still curious.
+
+Anyway, back to the TypeScript output, there are three sections to explore:
+
+1. The **awaiter**
+1. The **generator**
+1. The original code
+
+### 1. The `__awaiter`
+
+This section of code takes a `Promise`-generating async function and spits out a `Promise` for its eventual result.
+The arguments given to it are important:
+
+```js
+function (thisArg, _arguments, P, generator) {
+	// ...
+}
+```
+
+- `thisArg` is the parent scope.
+  Uninteresting.
+- `arguments` will be passed to the awaited function.
+  Uninteresting.
+- `P` is the `Promise` class we'll be using.
+  We can see later on that it defaults to the global `Promise` via `(P || P = Promise)`.
+- `generator` is the `async`hronous generator (technically an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators)) that is trying to await something.
+  Presumably it should yield Promises.
+
+The function passed to `P` takes in `resolve`, `reject` and creates three functions before running generator:
+
+- `fulfilled` is run each time `generator` resolves a `value`.
+  It tries to run again using `step(generator.next(value))` inside a `try`/`catch`, and if that fails calls `reject`.
+  Moderately uninteresting.
+- `rejected` is run each time `generator` gives a rejection `value`.
+  It tries to yield the generator's throw logic using `step(generator["throw"](value))` inside a `try`/`catch`, and if that fails calls `reject`.
+  Moderately uninteresting.
+- `step` is where the magic happens.
+  It attempts to get the next value from `generator` using a `new P` `Promise` and the previous two functions until the result it's given is `.done`, at which point it calls `resolve`.
+
+Expanding `step` out and prettifying it a bit:
+
+```js
+function step(result) {
+	if (result.done) {
+		resolve(result.value);
+		return;
+	}
+	return new Promise(function (resolve) {
+		resolve(result.value);
+	}).then(fulfilled, rejected);
+}
+```
+
+That's the good stuff.
+
+`resolve(result.value)` is a pretty lovely piece of code.
+`result.value` is what we're given each time the asynchronous generator code (our `async` function) yields.
+It appears both when the function is `.done` and when it's still going.
+
+### 2. The \_\_generator
+
+tl;dr
+
+### 3. The original code
+
+...in `__awaiter`-ified form.
+The `a.label` it switches on is which iteration of the state machine / generator loop is being run.
+The `[number, any]` has a conveniently `/* commented */` label for what operation is happening at that iteration loop, followed by the operation taking place.
+
+Taking a small example function:
+
+```js
+async function example() {
+	// result.value will be promise
+	const promise = Promise.resolve("foo");
+	await promise;
+	// result.value will be "foo"
+	return "foo";
+}
+```
+
+Here's how it looks [transformed on the playground](https://www.typescriptlang.org/play?target=1#code/IYZwngdgxgBAZgV2gFwJYHsIwKYA9gC2ADgDbYAUAlDAN4CwAUDMzAPSswBO2ICJyAOgBuwEgmwwA7qhIkYAIwlFO6AqhDZGLGFEwhkMZavUSAvDAAKKtRoHcQ6EkIoAiOOnQvKAbi0tgksCoBkY22L4MfszsXDx8giJiEtKyChJuHi5RscgInFgZnhEAvkA):
+
+```js
+function example() {
+	return __awaiter(this, void 0, void 0, function () {
+		var promise;
+		return __generator(this, function (_a) {
+			switch (_a.label) {
+				case 0:
+					promise = Promise.resolve("foo");
+					return [4 /*yield*/, promise];
+				case 1:
+					_a.sent();
+					// result.value will be "foo"
+					return [2 /*return*/, "foo"];
+			}
+		});
+	});
+}
+```
+
+At this point, you might have a vague understanding of how the source code is transformed from an async function to a generator.
+
+_(Curious about the missing comment? See [TypeScript issue #15323](https://github.com/Microsoft/TypeScript/issues/15323).)_
+
+## Using jQuery 2's Promises instead of Promise
+
+Our first task for bending this mess to our will should be to get it to stop assuming a global `Promise` and start using jQuery 2's `JQueryPromise` instead.
+
+TypeScript's `__awaiter` starts with logic to not override any existing `__awaiter`: `var **awaiter = (this && this.**awaiter) || ...`.
+If we define our own, it'll override all of TypeScript's.
+
+```js
+// No existence check here!
+var __awaiter = function (/* ... */) {
+	// ...
+};
+```
+
+Instead of `P` and `new (P || (P = Promise))`, let's define a jQueryPromiseFactory and use it in our own custom `__awaiter`.
+
+```js
+function jQueryPromiseFactory(callback) {
+	var deferred = $.Deferred();
+	var promise = deferred.promise();
+	try {
+		callback(deferred.resolve, deferred.reject);
+	} catch (error) {
+		deferred.reject(error);
+	}
+	return promise;
+}
+```
+
+Using it instead of the passed `P` in `__awaiter` for the returned `P`...
+
+```js
+var __awaiter = function (thisArg, _arguments, _ignore, generator) {
+    return jQueryPromiseFactory(...);
+};
+```
+
+...and the `step` `P` later on...
+
+```js
+function step(result) {
+	if (result.done) {
+		resolve(result.value);
+		return;
+	}
+	return jQueryPromiseFactory(function (resolve) {
+		resolve(result.value);
+	}).then(fulfilled, rejected);
+}
+```
+
+Very cool.
+We've now tricked TypeScript into using `$.Deferred().promise()` instead of the global `Promise`.
+
+### Retrieving Awaited Values
+
+Right now, instead of getting back the awaited value when we await, we get `Object (state, always, ...)`.
+That `Object` is the `JQueryPromise` being yielded from the generator instead of the actual value.
+We'll have to instead return its resolved value.
+
+For readability, here's a cleaned up version of `__awaiter`'s body:
+
+```js
+return jQueryPromiseFactory(function (resolve, reject) {
+	function fulfilled(value) {
+		try {
+			step(generator.next(value));
+		} catch (e) {
+			reject(e);
+		}
+	}
+	function rejected(value) {
+		try {
+			step(generator["throw"](value));
+		} catch (e) {
+			reject(e);
+		}
+	}
+	function step(result) {
+		result.done
+			? resolve(result.value)
+			: jQueryPromiseFactory(function (resolve) {
+					resolve(result.value);
+			  }).then(fulfilled, rejected);
+	}
+	step((generator = generator.apply(thisArg, _arguments || [])).next());
+});
+```
+
+`result` is what's given to us by the generator.
+`result.done` is whether the generator has completed (we should `resolve` as finished) and `result.value` is the raw value of what was returned to us (above, first `promise` then `"bar"`).
+
+Since we know that `result.value` will sometimes be a `JQueryPromise` now, and `step` is the thing that asynchronously waits for the next iteration, this is where we should insert our logic to wait.
+Changing it to respect our ways:
+
+```js
+function step(result) {
+	// Part 1
+	if (!result.value || !result.value.then) {
+		resolve(result.value);
+		return;
+	}
+	// Part 2
+	result.value
+		.then(function (resolvedValue) {
+			fulfilled(resolvedValue);
+		})
+		.fail(function (rejectedError) {
+			rejected(rejectedError);
+		});
+}
+```
+
+`Part 1` checks for the case of the function being done, but does so by seeing if the result is a `.then`-able.
+
+`Part 2` now assumes that the result is a JQueryPromise, and uses the jQuery .then and .fail methods to call fulfilled or rejected as necessary.
+Note that jQuery 2 doesn't provide a .catch method.
+
+```js
+return jQueryPromiseFactory(function (resolve, reject) {
+	function fulfilled(value) {
+		try {
+			step(generator.next(value));
+		} catch (e) {
+			reject(e);
+		}
+	}
+	function rejected(value) {
+		try {
+			step(generator["throw"](value));
+		} catch (e) {
+			reject(e);
+		}
+	}
+	function step(result) {
+		// Part 1
+		if (!result.value || !result.value.then) {
+			resolve(result.value);
+			return;
+		}
+		// Part 2
+		result.value
+			.then(function (resolvedValue) {
+				fulfilled(resolvedValue);
+			})
+			.fail(function (rejectedError) {
+				rejected(rejectedError);
+			});
+	}
+	step((generator = generator.apply(thisArg, _arguments || [])).next());
+});
+```
+
+## Caveats
+
+You should move to jQuery 3.
+It has standards-compliant Promises.
+This library should only be used as a polyfill while your team works on the update.
+
+jQuery 2's `.then` is synchronous by default but can be asynchronous.
+Standards-compliant Promise implementations are always asynchronous.
+Don't structure your code assuming `.then` callbacks are run synchronously.
+
+Because `.then` is synchronous, if an error is thrown synchronously in a `JQueryPromise`, any subsequent code (including `await`s) will not be run.
+That means you can't use `await` within `try` blocks on this adapter.
+Put the risky logic in a non-`async` function instead.
+
+## In Conclusion
+
+Use this at your risk.
+I honestly don't know what kind of horrible things will happen when you try this out.
+We're just using it in test code for now because we're deathly terrified of never-before-seen bugs popping up in production.
+
+- github.com/joshuakgoldberg/jquery-2-typescript-async-await-adapter
+- `npm install jquery-2-typescript-async-await-adapter`
+
+If you're _really_ curious about how TypeScript does this stuff, their [generators.ts](https://github.com/Microsoft/TypeScript/blob/main/src/compiler/transformers/generators.ts) source code is a great thing to dive into.
