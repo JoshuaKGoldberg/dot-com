@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 
+import blogDark from "~/assets/blog-dark.webp"
+import blogLight from "~/assets/blog-light.webp"
 import { Anchor } from "~/components/Anchor";
 import { BlogsGrouped } from "~/components/blog/BlogsGrouped";
 import BodyContents from "~/components/BodyContents.astro";
@@ -14,6 +16,10 @@ const blogs = await getCollection("blog");
 
 <HeroLayout
 	alt="Smiling cat receiving head scratches next to a laptop showing VS Code"
+	asset={{
+		dark: blogDark,
+		light: blogLight,
+	}}
 	secondary={blogDescription}
 	primary="Goldblog"
 	title="Goldblog"
