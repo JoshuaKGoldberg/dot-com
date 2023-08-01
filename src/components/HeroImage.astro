@@ -21,6 +21,7 @@ const asset =
 		? { dark: Astro.props.asset, light: Astro.props.asset }
 		: Astro.props.asset;
 
+console.log({ asset }, 'hello world from', Astro.props)
 ---
 
 <div class:list={["heroImage", Astro.props.class, Astro.props.size]}>
