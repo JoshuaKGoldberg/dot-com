@@ -1,6 +1,6 @@
-import type { ImageMetadata } from "astro";
-import { Image } from "astro:assets";
+import { getImage } from "astro:assets";
 import clsx from "clsx";
+import { createEffect } from "solid-js";
 
 import styles from "./ContentEntryImage.module.css";
 
@@ -19,6 +19,8 @@ export interface ContentEntryImageProps {
 }
 
 export function ContentEntryImage(props: ContentEntryImageProps) {
+	// TODO: would be sweet to have like 'solid-astro-asset' thingy
+
 	return (
 		<img
 			alt={props.alt}
