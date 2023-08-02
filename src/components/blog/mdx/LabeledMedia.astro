@@ -5,6 +5,7 @@ export interface MediaOriginal {
 }
 
 export interface Props {
+	class?: string | undefined;
 	description?: string | string[];
 	note?: string | undefined;
 	original?: string | MediaOriginal | undefined;
@@ -24,7 +25,7 @@ const original =
 
 <label class="labeled-media-media">
 	<slot />
-	<small>
+	<small class="labeled-media-small">
 		{
 			descriptions?.map((description) => (
 				<span class="labeled-media-description">{description}</span>
@@ -45,16 +46,19 @@ const original =
 
 <style is:inline>
 	.labeled-media-media {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+		display: block;
+		margin: 1rem 0;
 		text-align: center;
 	}
 
-	.labeled-media-note {
+	.labeled-media-small {
 		display: block;
+		margin-top: 1rem;
+	}
+	.labeled-media-note {
 		font-size: 0.9em;
 		padding-bottom: 1rem;
+		width: 100%;
 	}
 
 	.labeled-media-original::after {

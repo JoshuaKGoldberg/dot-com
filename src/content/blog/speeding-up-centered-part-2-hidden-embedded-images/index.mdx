@@ -1,0 +1,147 @@
+---
+description: "Finding and removing giant unused assets hidden in marketing page to speed up that page's performance."
+image:
+  alt: "Screenshot of assorted small modules in a Webpack Bundle Analyzer FoamTree visualization"
+  src: centered-webpack-bundle-analyzer.png
+pubDate: 2023-08-07
+title: "Speeding Up Centered Part 2: Hidden Embedded Images"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import lighthousePerformanceDiagnosticsPayloads from "./lighthouse-performance-diganostics-payloads.png";
+import lighthousePerformanceOverviewAfter from "./lighthouse-performance-overview-after.png";
+import lighthousePerformanceOverviewBefore from "./lighthouse-performance-overview-before.png";
+import lighthousePerformanceLcpOpportunities from "./lighthouse-performance-lcp-opportunities.png";
+import webpackBundleAnalyzerClientBefore from "./webpack-bundle-analyzer-client-before.png";
+import webpackBundleAnalyzerClientAfter from "./webpack-bundle-analyzer-client-after.png";
+
+> This post is the second in a series of five performance improvements I made to the [Centered app](https://centered.app).
+> See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
+
+1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
+1. 👉 Hidden Embedded Images
+1. _Barrel Imports: coming soon!_
+1. _Unused Code Bloat: coming soon!_
+1. _Emoji Processing Time: coming soon!_
+
+## Issue 2: Hidden Images
+
+Many web apps from include a huge amount of code stored in shared libraries and inline assets imported into their bundled scripts.
+Those libraries and assets can be convenient for development - and even improve performance by reducing the total number of network requests.
+However, overloading the initial page bundle with too much code can also slow the page down.
+
+### 1. Identification
+
+The first tool used in many performance investigations is a [Chrome dev tools > Lighthouse performance audit](https://developer.chrome.com/docs/devtools/lighthouse).
+I'd skipped it in the previous investigation, so I ran it now to get an overview of a page's performance issues.
+
+<LabeledImage
+	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 17.6s Largest Contentful Paint (red), 1,020ms Total Blocking Time (red), 0.007 Cumulative Layout Shift (green), 9.5s Speed Index (red)."
+	note="An overall score of 36 with a >17s LCP is not ideal."
+	src={lighthousePerformanceOverviewBefore}
+/>
+
+In addition to overviews of key metrics, Lighthouse performance reports also include audits of likely ways to improve.
+The audits relevant to LCP in particular caught my eye:
+
+<LabeledImage
+	alt="LCP Opportunities and Diagnostics in the Lighthouse Performance report. Estimated Savings: 5.31s from Reduced Unused JavaScript; 2.56s from Preload Largest Contentful Paint Image. Diagnostics: Avoid enormous network payload s- total sive was 26,705 KiB."
+	note=">26,700KiB (>27MB) of code? Not ideal, and quite unusual."
+	src={lighthousePerformanceLcpOpportunities}
+/>
+
+I expanded the diagnostic to see the files breakdown.
+The page's `...pages/_app-<hash>.js` file was by far the biggest of the local scripts:
+
+<LabeledImage
+	alt="TODO TODO TODO TODO TODO TODO TODO"
+	note="Interesting that over 80% of the payload was all in the page's bundle."
+	src={lighthousePerformanceDiagnosticsPayloads}
+/>
+
+For reference, the average size of an entire webpage in 2022 was under 2.3KB[^1].
+That one page bundle alone was three times the size!
+
+What was causing the bundle to be so huge?
+
+### 2. Investigation
+
+Centered's app is built on [Next.js](https://nextjs.org) and uses [Webpack](https://webpack.js.org) integration to bundle code.
+One advantage of using popular frameworks such as Next.js and Webpack is that great tooling is often available for common development tasks such as performance investigations.
+
+The Next.js docs include a handy [Production Checklist](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist) guide with a [Reducing JavaScript Size](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist#reducing-javascript-size) section.
+The [Webpack Bundle Analyzer](https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer) linked on that page is particularly useful for visualizing what goes into your bundles.
+
+I ran the bundle analyzer on Centered, then opened the client bundle analysis:
+
+<LabeledImage
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 11.58 MB, and the biggest chunk is pages/_app at 9.05 MB. A very large GCalFeaturesIllustration.js is inside the app bundle"
+	note="Never before in my time as a performance investigator had I seen a single file in a page bundle be larger than the entire included node_modules."
+	src={webpackBundleAnalyzerClientBefore}
+/>
+
+Clearly, `GCalFeaturesIllustration.js` was an incredibly large file.
+It needed to be either shrunk in size or removed from the initial page load.
+
+### 3. Implementation
+
+I ran a [fuzzy file name search in VS Code](https://code.visualstudio.com/docs/editor/editingevolved#_quick-file-navigation) on `GCalFeaturesIllustration`.
+It found a single source file named `GCalFeaturesIllustration.tsx`.
+That file was exporting a `GCalFeaturesIllustration` React component containing a single `<svg>` element spanning over _six million_ characters of code.
+Nearly all of those characters came from `xlinkHref` embeds inside `<image>` tags.
+
+```svg
+<image
+	id="image0_5_758"
+	width="1740"
+	height="1161"
+	xlinkHref="data:image/png;base64, ...(thousands or millions of encoded image characters)..."
+/>
+```
+
+I had to wonder: where was the component being used?
+Depending on that usage, perhaps there'd be a way to shrink down the embedded images to a much smaller size?
+
+I [searched for all references](https://code.visualstudio.com/docs/languages/typescript#_code-navigation) to the `GCalFeaturesIllustration` component and found that it was used only in a `GCalSuggestionModal` component.
+That `GCalSuggestionModal` component was exported from the `index.ts` of a shared components package, but never used anywhere else!
+
+I deleted the `GCalSuggestionModal` and `GCalFeaturesIllustration` components locally, re-ran a production build, and opened it locally.
+The app worked flawlessly.
+
+### 4. Confirmation
+
+I checked the updated view of the analyzed webpack bundle to confirm the `GCalFeaturesIllustration` component was no longer present:
+
+<LabeledImage
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.28 MB, and the biggest chunk is pages/_app at 4.75 MB."
+	note="The large @fortawesome files were still troubling, but at least GCalFeaturesIllustration was gone..."
+	src={webpackBundleAnalyzerClientAfter}
+/>
+
+I next ran a Lighthouse performance audit on the updated app build.
+A few metrics did improve - though not as much as I'd hoped:
+
+<LabeledImage
+	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 17.6 Largest Contentful Paint (red), 950ms Total Blocking Time (red), 0.044 Cumulative Layout Shift (green), 6.7s Speed Index (red)."
+	note="LCP did shrink to about 13 seconds. That's still above a threshold such that the overall score didn't improve."
+	src={lighthousePerformanceOverviewAfter}
+/>
+
+Looks like while removing the one giant component did help, there were still many other large files to be removed.
+Work for another day.
+
+## In Conclusion
+
+Giant inline assets can easily slip into your asset bundles if you're not looking for them.
+Tools like [Webpack Bundle Analyzer](https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer) can visualize where space is taken up in your bundles, allowing you to scan for exceptionally large files.
+
+As always, verify your performance hunches with tooling such as a [Chrome dev tools > Lighthouse performance audit](https://developer.chrome.com/docs/devtools/lighthouse).
+You never know how far any improvement will take the page!
+
+### Coming Soon
+
+Deleting the largest offending file wasn't enough to fully save Centered's lighthouse performance score.
+The next two posts in this series will show off how we removed plenty more unnecessary files to get that performance score to a much better place.
+Look forward to them coming soon!
+
+[^1]: https://almanac.httparchive.org/en/2022/page-weight#request-bytes
