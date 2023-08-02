@@ -54,8 +54,8 @@ dependencies:
     specifier: ^8.42.0
     version: 8.42.0
   eslint-plugin-astro:
-    specifier: ^0.27.1
-    version: 0.27.1(eslint@8.42.0)
+    specifier: ^0.28.0
+    version: 0.28.0(eslint@8.42.0)
   eslint-plugin-deprecation:
     specifier: ^1.4.1
     version: 1.4.1(eslint@8.42.0)(typescript@5.1.3)
@@ -2553,6 +2553,7 @@ packages:
   /clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==}
     engines: {node: '>=0.8'}
+    requiresBuild: true
     dev: false
 
   /clsx@1.2.1:
@@ -3039,6 +3040,7 @@ packages:
 
   /defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==}
+    requiresBuild: true
     dependencies:
       clone: 1.0.4
     dev: false
@@ -3365,8 +3367,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /eslint-plugin-astro@0.27.1(eslint@8.42.0):
-    resolution: {integrity: sha512-xt02HVlj5lBoAPzYOKDfVa3swjFr2Vh0Rj6TsInWmfcmQcjEkDMnu9olUAF8Q+LqHr0wQr5z6GmcxJskSqOmjQ==}
+  /eslint-plugin-astro@0.28.0(eslint@8.42.0):
+    resolution: {integrity: sha512-fZ3B93nXLSXMmEYSAnHkDRBKDbUFuIkWj5CoKE4fxjPnE/EZEHu6zxtX2UJZeclJKu33Uf2mWdeCJKFufyracg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=7.0.0'
