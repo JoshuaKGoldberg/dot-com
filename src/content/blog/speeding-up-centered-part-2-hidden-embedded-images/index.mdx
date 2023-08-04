@@ -2,8 +2,8 @@
 description: "Finding and removing giant unused assets hidden in marketing page to speed up that page's performance."
 image:
   alt: "Screenshot of assorted small modules in a Webpack Bundle Analyzer FoamTree visualization"
-  src: centered-webpack-bundle-analyzer.png
-pubDate: 2023-08-07
+  src: centered-webpack-bundle-analyzer-1.png
+pubDate: 2023-08-07 10:00 GMT
 title: "Speeding Up Centered Part 2: Hidden Embedded Images"
 ---
 
@@ -113,7 +113,7 @@ The app worked flawlessly.
 I checked the updated view of the analyzed webpack bundle to confirm the `GCalFeaturesIllustration` component was no longer present:
 
 <LabeledImage
-	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.28 MB, and the biggest chunk is pages/_app at 4.75 MB."
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.28 MB, and the biggest chunk is pages/_app at 4.75 MB. By far the biggest chunks are large index.js files under node_modules/@fortawesome."
 	note="The large @fortawesome files were still troubling, but at least GCalFeaturesIllustration was gone..."
 	src={webpackBundleAnalyzerClientAfter}
 />
@@ -122,7 +122,7 @@ I next ran a Lighthouse performance audit on the updated app build.
 A few metrics did improve - though not as much as I'd hoped:
 
 <LabeledImage
-	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 17.6 Largest Contentful Paint (red), 950ms Total Blocking Time (red), 0.044 Cumulative Layout Shift (green), 6.7s Speed Index (red)."
+	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 13.2 Largest Contentful Paint (red), 950ms Total Blocking Time (red), 0.044 Cumulative Layout Shift (green), 6.7s Speed Index (red)."
 	note="LCP did shrink to about 13 seconds. That's still above a threshold such that the overall score didn't improve."
 	src={lighthousePerformanceOverviewAfter}
 />
@@ -141,7 +141,8 @@ You never know how far any improvement will take the page!
 ### Coming Soon
 
 Deleting the largest offending file wasn't enough to fully save Centered's lighthouse performance score.
-The next two posts in this series will show off how we removed plenty more unnecessary files to get that performance score to a much better place.
-Look forward to them coming soon!
+And why was an unused file even being loaded on the client in the first place?!
+
+The next post in this series will show off how we removed plenty more unnecessary files to get that performance score out of the red.
 
 [^1]: https://almanac.httparchive.org/en/2022/page-weight#request-bytes

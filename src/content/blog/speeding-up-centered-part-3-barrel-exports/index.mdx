@@ -1,0 +1,204 @@
+---
+description: "Automating changes to module imports to overcome the build system not correctly tree shaking barrel exports."
+image:
+  alt: "Screenshot of assorted small modules next to a large module in a Webpack Bundle Analyzer FoamTree visualization"
+  src: centered-webpack-bundle-analyzer-2.png
+pubDate: 2023-08-07 10:01 GMT
+title: "Speeding Up Centered Part 3: Barrel Exports"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import lighthousePerformanceOverviewAfter from "./lighthouse-performance-overview-after.png";
+import lighthousePerformanceOverviewBefore from "../speeding-up-centered-part-2-hidden-embedded-images/lighthouse-performance-overview-after.png";
+import webpackBundleAnalyzerBefore from "./webpack-bundle-analyzer-before.png";
+import webpackBundleAnalyzerAfterCodemod from "./webpack-bundle-analyzer-after-codemod.png";
+import webpackBundleAnalyzerAfterProLight from "./webpack-bundle-analyzer-after-pro-light.png";
+
+> This post is the third in a series of five performance improvements I made to the [Centered app](https://centered.app).
+> See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
+
+1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
+1. 👉 Barrel Exports
+1. _Unused Code Bloat: coming soon!_
+1. _Emoji Processing Time: coming soon!_
+
+## Issue 3: Barrel Exports
+
+In the previous Centered performance post, [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images), we saw one gigantic React component increase the client bundle size by multiple MB.
+But that component wasn't even used by any runtime - why was it impacting performance?
+And if this "unused" file was previously getting loaded, how many other unused node files were also being loaded?
+
+<LabeledImage
+	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 13.2 Largest Contentful Paint (red), 950ms Total Blocking Time (red), 0.044 Cumulative Layout Shift (green), 6.7s Speed Index (red)."
+	note="Recap: the Lighthouse performance report after removing the hidden embedded image in the previous post."
+	src={lighthousePerformanceOverviewBefore}
+/>
+### 1. Identification
+
+The `GCallSuggestionModal` component I'd deleted was only ever used once.
+It was exported from the `index.ts` of a shared components package.
+This is a pattern called _"barrel export"_[^1]: having one file export a collection of useful values and/or types.
+
+In theory, barrel exports shouldn't cause any performance issues.
+Modern bundlers generally _"tree shake"_[^2] away unused code.
+Unused files shouldn't increase client bundle size.
+
+However, I've previously seen issues with barrel exports and shared component packages.
+Bundlers don't understand every variant of built output code well enough to tree shake away unused exports.
+It looked like Centered was suffering from that issue: barrel-exported values weren't being tree-shaken out of client bundles.
+
+### 2. Investigation
+
+Looking back at the client bundle analysis, we can see some relatively huge barrel `index.js` files from within `node_modules/@fortawesome`:
+
+<LabeledImage
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.28 MB, and the biggest chunk is pages/_app at 4.75 MB. By far the biggest chunks are large index.js files under node_modules/@fortawesome."
+	note="Three giant index.js files from three separate fortawesome packages? That can't be right..."
+	src={webpackBundleAnalyzerBefore}
+/>
+
+I ran a search on `from '@fortawesome/` to see which of those modules with large chunks were being imported from:
+
+- `'@fortawesome/pro-light-svg-icons'`: 34 imports
+- `'@fortawesome/pro-regular-svg-icons'`: 145 imports
+- `'@fortawesome/pro-solid-svg-icons'`: 74 imports
+
+Seeing only 34 imports from `'@fortawesome/pro-light-svg-icons'` increased my confidence in my hypothesis that barrel imports weren't being tree shaken.
+I'd used fortawesome packages before and knew their icons to all be small and lean for performance.
+It felt bizarre that the largest chunk by far was coming from only a few dozen fortawesome icons.
+
+#### Testing the Hypothesis
+
+I was more confident in my hypothesis that barrel exports weren't being tree shaken, but still didn't have any evidence.
+To test the hypothesis, I manually changed the 34 `'@fortawesome/pro-light-svg-icons'` imports to instead directly import from individual component paths:
+
+```diff
+- import { faAbacus, faBaby } from '@fortawesome/pro-light-svg-icons'
++ import { faAbacus } from '@fortawesome/pro-light-svg-icons/faAbacus'
++ import { faBaby } from '@fortawesome/pro-light-svg-icons/faBaby'
+```
+
+...then I ran another production build with the Webpack Bundle Analyzer:
+
+<LabeledImage
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.29 MB, and the biggest chunk is pages/_app at 3.63 MB. Now only two fortawesome chunks are in the pages/_app bundle. A new light gray-blue colored chunk exists for @fortawesome/pro-light-svg-icons."
+	note="Note the new light gray-blue chunk for pro-light-svg-icons. Interesting that it still exists, but is no longer in the main page bundle."
+	src={webpackBundleAnalyzerAfterProLight}
+/>
+
+Great!
+Although the total chunk size was roughly the same, the main app bundle no longer included the chunk containing `node_modules/@fortawesome/pro-light-svg-icons`.
+That meant the hypothesis was correct: the app's build system wasn't tree shaking barrel exports of large shared packages.
+
+### 3. Implementation
+
+There are generally two ways to fix missing tree shaking for barrel exports:
+
+- Fix your build system to enable tree shaking of barrel exports _(generally the right way)_
+- Switch from barrel exports to manual _(the straightforward way)_
+
+In theory I would have liked to fix the build system...
+But I was doing this for fun and didn't want to spend too much time.
+Writing a small codemod to switch all `@fortawesome/*` barrel imports to importing from sub-paths was much more in my wheelhouse.
+
+#### ESLint Codemods
+
+My favorite way to write codemods is with [custom ESLint rules](https://eslint.org/docs/latest/extend/custom-rules).
+ESLint rules can both [`--fix` existing complaints](https://eslint.org/docs/latest/extend/custom-rules#applying-fixes) and prevent new complaints from popping up in the future.
+We certainly wouldn't want someone adding a new import from a barrel-exporting package and causing multiple MB to be added to the main client bundle.
+
+I wrote up a quick ESLint rule that:
+
+1. Finds all imports from sources starting with `@fortawesome` and ending with `-svg-icons`
+2. Reports an error on that import indicating you should import icons from their individual path
+3. Offers a fixer that replaces the import with those individual path imports
+
+Here's roughly that lint rule, with comments added:
+
+```js
+module.exports = {
+	create: function (context) {
+		return {
+			// This function will run on every import declaration that imports from
+			// a module matching "@fortawesome" + anything + "-svg-icons"
+			"ImportDeclaration[source.value=/^@fortawesome.*-svg-icons$/]"(node) {
+				// We always complain about those nodes...
+				context.report({
+					// ...and provide a fixer to correct them automatically
+					fix(fixer) {
+						const sourceCode = context.getSourceCode();
+						// The node's new text contains a new line for each specifier (imported item)
+						return fixer.replaceText(
+							node,
+							node.specifiers
+								.map((specifier) => {
+									// Name a new package for the old one + "/" + the specified name
+									const newImport = `${node.source.value}/${specifier.imported.name}`;
+
+									// Import the same specified item from the new package name
+									return `import { ${specifier.imported.name} } from '${newImport}'`;
+								})
+								.join("\n")
+						);
+					},
+					message: "Import fortawesome icons from their individual path.",
+					node,
+				});
+			},
+		};
+	},
+	meta: {
+		fixable: "code",
+	},
+};
+```
+
+I then configured ESLint to use that rule with [`eslint-plugin-local-rules`](https://github.com/cletusw/eslint-plugin-local-rules): the ESLint plugin that allows referencing rules on your local file system.
+That allowed me to run `npx eslint . --fix` on the Centered repository to use my rule.
+
+Webpack Bundle Analyzer's visualization of this new version showed even more improvement to the main page bundle:
+
+<LabeledImage
+	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 7.31 MB, and the biggest chunk is pages/_app at 1.62 MB. All three node_modules/@fortawesome modules have been moved to separate chunks."
+	note="1.62 MB for the main page bundle. That's starting to approach the realm of reasonable bundle sizing."
+	src={webpackBundleAnalyzerAfterCodemod}
+/>
+
+### 4. Confirmation
+
+As nice as it was to see the main page bundle shrinking, no performance investigation is complete without measuring the final application.
+I ran a Lighthouse performance audit on the new production build:
+
+<LabeledImage
+	alt="Lighthouse performance report of 51 (in the orange). 0.6 First Contentful Paint (green), 12.1 Largest Contentful Paint (red), 350ms Total Blocking Time (orange), 0.035 Cumulative Layout Shift (green), 5.4s Speed Index (red)."
+	note="LCP only shrunk by a second, but total blocking time was a third of its previous 950ms."
+	src={lighthousePerformanceOverviewAfter}
+/>
+
+What an interesting result!
+Although LCP was only slightly better, TBT was significantly improved.
+And the overall Performance score was finally orange (51) instead of red (36).
+I'll take it!
+
+## In Conclusion
+
+Modern bundlers should generally tree shake away most common import patterns, including barrel exports from shared packages.
+But when the bundler doesn't detect them (and you don't have the time to dive into transpilation settings), a codemod to switch to direct sub-path imports can be handy for reducing page bundle sizes.
+
+### Aside: Next.js 13.1
+
+Next.js actually improved their default barrel import detection in Next.js 13.1!
+You can read more in the [1.31 Release Notes > SWC Import Resolution](https://nextjs.org/blog/next-13-1#import-resolution-for-smaller-bundles).
+
+The changes I applied in I did in this investigation will be irrelevant once Centered upgrades to Next.js 13.1.
+At time of investigation, Centered was still on 13.0.
+Fun.
+
+### Coming Soon
+
+This work area brought the Lighthouse Performance score up to orange instead of red, but there was still more work to be done.
+The next two investigations will show a couple more touchups I applied to remove unused code and script work.
+
+[^1]: https://basarat.gitbook.io/typescript/main-1/barrel
+[^2]: https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking
