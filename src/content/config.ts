@@ -41,7 +41,7 @@ export const collections = {
 			category: z.string(),
 			date: z.date(),
 			event: z.string(),
-			href: z.string().optional(),
+			href: z.string(),
 			links: z.record(z.string()).optional(),
 			location: z.string().optional(),
 			title: z.string().optional(),
