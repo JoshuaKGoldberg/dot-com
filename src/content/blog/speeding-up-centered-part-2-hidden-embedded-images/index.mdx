@@ -8,7 +8,7 @@ title: "Speeding Up Centered Part 2: Hidden Embedded Images"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import lighthousePerformanceDiagnosticsPayloads from "./lighthouse-performance-diganostics-payloads.png";
+import lighthousePerformanceDiagnosticsPayloads from "./lighthouse-performance-diagnostics-payloads.png";
 import lighthousePerformanceOverviewAfter from "./lighthouse-performance-overview-after.png";
 import lighthousePerformanceOverviewBefore from "./lighthouse-performance-overview-before.png";
 import lighthousePerformanceLcpOpportunities from "./lighthouse-performance-lcp-opportunities.png";
@@ -45,7 +45,7 @@ In addition to overviews of key metrics, Lighthouse performance reports also inc
 The audits relevant to LCP in particular caught my eye:
 
 <LabeledImage
-	alt="LCP Opportunities and Diagnostics in the Lighthouse Performance report. Estimated Savings: 5.31s from Reduced Unused JavaScript; 2.56s from Preload Largest Contentful Paint Image. Diagnostics: Avoid enormous network payload s- total sive was 26,705 KiB."
+	alt="LCP Opportunities and Diagnostics in the Lighthouse Performance report. Estimated Savings: 5.31s from Reduced Unused JavaScript; 2.56s from Preload Largest Contentful Paint Image. Diagnostics: Avoid enormous network payload s- total size was 26,705 KiB."
 	note=">26,700KiB (>27MB) of code? Not ideal, and quite unusual."
 	src={lighthousePerformanceLcpOpportunities}
 />
