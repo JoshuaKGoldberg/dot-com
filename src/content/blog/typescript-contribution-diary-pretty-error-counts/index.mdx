@@ -9,18 +9,13 @@ title: "TypeScript Contribution Diary: Pretty Error Counts"
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import atacamaDesertNightSky from "./atacama-desert-night-sky.jpg";
+import errorSummaryResult from "./error-summary-result.webp";
 import found2ErrorsIn2Files from "./found-2-errors-in-2-files.webp";
+import found2ErrorsIn2FilesStartingCompilation from "./found-2-errors-in-2-files-starting-compilation.webp";
 import tscPrettyWatchBefore from "./tsc-pretty-watch-before.webp";
 import tscPrettyWatch1Complaints from "./tsc-pretty-watch-1-complaints.webp";
 import tscPrettyWatch2ComplaintsPlain from "./tsc-pretty-watch-2-complaints-plain.webp";
 import tscPrettyWatchBlueMessage from "./tsc-pretty-watch-blue-message.webp";
-// import tscPrettyWatch from "./tsc-pretty-watch-.webp";
-//
-//{/*} <LabeledImage
-//	alt="TypeScript --pretty --watch output showing colors on file locators and red squigglies, "
-//	description="Blue “message” message. Nowhere else does TypeScript use that. Odd."
-//	src={tscPrettyWatchBlueMessage}
-///> _/}
 
 {/* todo: https://en.wikipedia.org/wiki/Atacama_Desert link (needs Markdown) */}
 
@@ -115,7 +110,7 @@ I figured that was a reasonable source of information on file names.
 But counting them?
 
 Counting unique objects is generally optimally efficient in JavaScript with a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
-I ran full-text searches on `new Set` and `Set.from` but didn't find anything… which makes sense, as TypeScript works in environments that don't natively have Set.
+I ran full-text searches on `new Set` and `Set.from` but didn't find anything... which makes sense, as TypeScript works in environments that don't natively have Set.
 But surely there must be _something_ in TypeScript for counting unique objects? What about the slightly-older [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)?
 
 I tried again searching for `new Map` and found two generic, useful-looking functions at the top of `src/compiler/core.ts`:
@@ -182,3 +177,115 @@ I changed `emitFilesAndReportErrors` to take it as a parameter (in addition to `
 	description={'"Found 2 errors in 2 files."'}
 	src={found2ErrorsIn2Files}
 />
+
+Great that it printed!
+But— that screenshot of just the two messages was everything.
+Why no `"Starting compilation in watch mode..."`?
+
+I went up the call chain for printing messages through `createWatchStatusReporter` and found a `clearScreenIfNotWatchingForFileChanges` function clearing the screen on printing each diagnostic message if the message isn't the specific "`Starting compilation in watch mode...`" one.
+Spooky!
+👻
+
+I didn't understand why this function was made that way _(why not only clear the screen when starting a new compilation run?)_ and didn't feel comfortable changing it.
+Spooky behavior like that felt best left alone and asked about in the pull request.
+I added an array of allowed message codes to not clear on _(not TypeScript's `Map` shim because it only allows `string`s as keys)_.
+
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing a message with 'Found 2 errors in 2 files' formatted the same way as normal messages. This time, there's a 'Starting compilation in watch mode...' beforehand."
+	description="It lives! ...at the cost of some hardcoding."
+	src={found2ErrorsIn2FilesStartingCompilation}
+/>
+
+## Step 3: Cleanup
+
+emitFilesAndReportErrors was also being used by performCompilation in src/compiler/tsc.ts.
+I discovered this when I tried to compile and it yelled at me.
+That was a little surprising: why is the core tsc compiler using watch-specific logic?
+More spookiness...
+🤔
+
+I couldn't pass the added reporter in from `performCompilation` because that's of type `WatchStatusReporter`, which is only available in the code that deals with watching logic.
+That meant I would have to find a way to only report the new diagnostics in watch mode.
+After hackily fumbling around with optional parameters for a while I ended up cutting & pasting `emitFilesAndReportErrors` up into three functions:
+
+- `getProgramDiagnosticsAndEmit`: Retrieves diagnostics output and emit results from the program.
+- `reportDiagnosticErrors`: Outputs the traditional error reporting that already existed.
+- `summarizeDiagnosticsAcrossFiles`: Outputs the new summary message.
+
+`tsc` calls the first two; `watch` calls all three.
+
+## Step 4: Pull Request
+
+Normally before sending out a PR I would write unit tests validating the change.
+Always test your changes!
+However, because I didn't understand the screen clearing behavior, I decided to put up what I had at this point for code review and ask there.
+
+> [Added an errors summary for --pretty --watch results by JoshuaKGoldberg · Pull Request #22254](https://github.com/Microsoft/TypeScript/pull/22254)
+
+The first commit in that PR has everything I mentioned above: [e0d067b48f71e545c9bef49ad5fceb0a2a17a0ea](https://github.com/Microsoft/TypeScript/pull/22254/commits/e0d067b48f71e545c9bef49ad5fceb0a2a17a0ea).
+
+## Step 5: Feedback
+
+Someone _asked me to change things_!
+This didn't happen in the last contribution diary article's pull request…!
+😥!
+
+There were a few big pieces of initial feedback:
+
+- Diagnostics aren't necessarily attached to files, so it would be inaccurate to report them as across files.
+- Not all diagnostics are errors, so it would be inaccurate to count them all in the errors count.
+- It would be cleaner to just add another optional parameter to `emitFilesAndReportErrors` that reports the error summary.
+
+### 5.1: Removing File Counts
+
+Not needing to report file counts actually made my change easier.
+I removed the function that counted unique files with a Map.
+It was a little upsetting at first to not have needed knowledge from the createMap investigation... but on the bright side, I now knew more about TypeScript's internals than I would have otherwise.
+That's a good thing!
+😇
+
+### 5.2: Filtering Errors
+
+I had to ask for confirmation on how to filter out non-error diagnostic messages.
+The method was pretty simple:
+
+{/* prettier-ignore */}
+```ts
+diagnostics.filter(diagnostic.category === DiagnosticCategory.Error);
+```
+
+👉 _Protip: never be scared to ask for clarification on pull requests!_ 👈
+
+### 5.3 Optional Error Summarizer
+
+Specifically, the feedback was:
+
+> I would rather modify the existing `emitFilesAndReportErrors` to take additional parameter to summaryReporter which could either be `undefined | reporter` and if provided you write the summary using that reporter.
+
+An excuse to undo all the changes in `tsc.ts`!
+Perfect.
+
+### 5.4 Miscellaneous Feedback
+
+There were a couple small points left, but nothing major. One was a preemptive bug fix (fixed 😌) and the other was a unit test comment (unable to do for a technical reason).
+
+A merge from master, a couple of updates, and the PR was accepted!
+🙌
+
+<LabeledImage
+	alt="TypeScript --pretty --watch output showing a message with 'Found 1 error' formatted the same way as normal messages."
+	description="Available in the TypeScript nightlies: npm i -g typescript@next."
+	src={errorSummaryResult}
+/>
+
+## Takeaways
+
+- Find-In-Files, Find-All-References, Go-To-Definition are still best. 🥇
+- It's good to learn things, even if you don't use that knowledge immediately.
+- Reviewers want you to write your best code for the project. Listen to them!
+- Don't be afraid to ask for clarifications of reviewer comments if you need.
+- Don't be afraid to start a dialog with reviewers if you need.
+
+---
+
+Thanks for reading! I hope you got something out of it! 💖

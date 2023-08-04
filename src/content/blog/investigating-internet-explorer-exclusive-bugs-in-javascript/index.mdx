@@ -1,0 +1,315 @@
+---
+description: "IE users are users too!"
+pubDate: 2018-10-12
+title: "Investigating Internet Explorer Exclusive Bugs in JavaScript"
+---
+
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+In an era dominated by evergreen browsers such as Chrome, Edge, Firefox, and Safari, it's easy as web developers to assume our users are all on modern platforms.
+Developer tools for all these mainstays are good to great while those for older browsers, particularly IE, are not so good.
+Why bother fixing the _(often most painful)_ browser-specific bugs for platforms no sane user would consciously choose?
+
+Unfortunately, there are quite a few users stuck with IE for reasons out of their control, such as underfunded school districts without the IT resources to migrate or businesses with legacy IE ActiveX plugins.
+Don't forget how nontechnical the majority of consumer users are either; to many, the internet is the 'e' icon.
+Both types of users will blame you if your site doesn't work on their computer.
+
+<LabeledVideo
+	alt="Derek Zoolander and Hansel MacDonald from Zoolander (2001) looking confused next to an orange iMac."
+	description="Making inclusive products means designing for Derek Zoolander."
+	src="/images/blog/zoolander-computer.webm"
+/>
+
+## The Root Problems
+
+Internet Explorer and older versions of Edge sometimes don't provide callstack or line+column information on the global event listeners `window.onerror` and `window.addEventListener("error", ...)`.
+You get the basic error message, the file name, and nothing else.
+If you think your production crashes are hard to debug, imagine doing so without knowing which line is throwing an error!
+
+Furthermore, Internet Explorer is an inherently unstable environment.
+DOM APIs occasionally crash with `"Access denied."` errors, for example, and there's no client-side way we know of to predict when or why.
+
+My team at work develops a web app, Microsoft Sway ([sway.com](https://sway.com)), partially targeted to education users.
+We have to take the cost of supporting IE, which has gifted us a number of difficult technical challenges.
+In the rest of this article I'll summarize the techniques we used to overcome those challenges.
+
+### Solutions (tl;dr):
+
+- Wrap everything in a try/catch
+- Don't modify globals
+- Stress test
+- Log things
+- Sometimes give up
+- Enjoy the challenge
+
+## Wrapped Try/Catch
+
+IE's occasional lack of call stacks is, in my opinion, the most inconvenient developer issue for its bugs.
+One workaround is to wrap all operations in IE within a `try`/`catch` then log and rethrow any error in the `catch`.
+
+Something like:
+
+```js
+function logAndRethrow(operation) {
+	try {
+		operation();
+	} catch (error) {
+		log("Error caught:", error);
+		throw error;
+	}
+}
+```
+
+We ended up using `logAndRethrow` whenever we could start a new synchronous call stack.
+That includes:
+
+- Time APIs such as `setInterval` and `setTimeout`
+- Event handlers such as `.onclick`
+- Network request callbacks
+- Callbacks passed to external libraries that perform any of the above
+
+_This is why, if your library schedules its own events or listeners, it's useful for IE users to let us add our own schedulers._
+
+For example, instead of `setTimeout`:
+
+```js
+setTimeout(someAction, 1000);
+```
+
+We created our own `safeSetTimeout` too, which wraps any call to `setTimeout` with `logAndRethrow`:
+
+```js
+function safeSetTimeout(callback, delay) {
+	var args = [].slice.call(arguments, 2);
+	setTimeout(function () {
+		logAndRethrow(function () {
+			callback.apply(this, args);
+		});
+	}, delay);
+}
+```
+
+### Enforcing the Solution
+
+It's really hard to remember to `logAndRethrow`.
+Finding all the places we hooked into time, listener, or external APIs took a lot of scanning as it was, and we didn't want to repeat that regularly.
+For the cases of the global variables, at least we could do a find-all on "setInterval" and "setTimeout".
+Afterwards we used the [TSLint ban rule](https://palantir.github.io/tslint/rules/ban/) to completely prevent using the globals:
+
+```json
+{
+	"rules": {
+		"ban": [
+			true,
+			{
+				"name": ["setTimeout"],
+				"message": "Use safeSetTimeout for IE call stacks."
+			}
+		]
+	}
+}
+```
+
+A properly [dependency-injected](https://en.wikipedia.org/wiki/Dependency_injection) codebase _(unlike our older legacy code)_ will pass time-based APIs such as `setInterval` to its components instead of allowing them to use the globals.
+That's already a good idea to make it easier to pass stubbed versions of the time APIs with [Lolex](https://github.com/sinonjs/lolex) in tests.
+In our newer TypeScript code, in addition to always preferring our classes and methods taking in timing and other difficult-to-test APIs as dependencies, we don't include built-in DOM typings at all, which prevents anybody from using native DOM APIs.
+We instead redeclare typings for the APIs only in our root initialization logic:
+
+```ts
+declare type ISetTimeout = <TArgs extends any[]>(
+	callback: Function,
+	delay: number,
+	...args: TArgs
+) => number;
+
+/**
+ * @deprecated Use safePlatform.setTimeout for IE call stacks.
+ */
+declare const setTimeout: ISetTimeout;
+
+// (see safeSetTimeout declaration above)
+// Root application initialization logic
+initializeApplication({
+	setTimeout: safeSetTimeout,
+	// ...(other dependencies)
+});
+```
+
+## Don't Modify Globals
+
+A [John Resig post from 2008](https://johnresig.com/blog/getelementsbyclassname-pre-prototype-16/) and a [Juriy "kangax" Zaytse post from 2010](http://perfectionkills.com/whats-wrong-with-extending-the-dom/) mention bugs caused by newly added native implementations of APIs conflicting with extensions added by libraries such as JavaScript.
+Don't touch things you don't own.
+
+In our older code, we didn't know better, and we touched things we didn't own.
+For example:
+
+```js
+if (!Array.prototype.includes) {
+	Array.prototype.includes = function (item) {
+		return this.indexOf(item) !== -1;
+	};
+}
+```
+
+Fun fact: the recently added [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes) also allows an optional `fromIndex` to start searching from.
+Ours did not, so code using it would run differently on IE than Chrome or Edge.
+
+```js
+["foo"].includes("foo", 1); // true in IE for us; false in Chrome 47
+```
+
+To overcome, we switched to our own functions:
+
+```js
+function arrayIncludes(array, item) {
+	return array.indexOf(item) !== -1;
+}
+```
+
+### Browser Extensions
+
+Furthermore, occasional poorly coded browser extensions add or modify JavaScript values _in the page's global scope_.
+They'll add their own [jQuery without `noConflict`](https://api.jquery.com/jquery.noconflict), Prototype or other libraries that extend built-ins, or do what we did to extend built-ins on their own.
+We saw this more in Chrome because of how popular its extensions are but all browsers with extensions displayed some small amounts of this class of errors.
+They were difficult to find but when we realized we should be looking for "any error using Array methods that couldn't possibly make sense otherwise" and stopped touching things we didn't own, the errors counts went down.
+🤷‍
+
+We also had to ensure our global variables didn't conflict with extension values.
+Generic names such as `context` or `settings` are at risk of modification from browser extensions; it's better to prefer names such as `myAppContext` or `SwaySyncSettings`.
+
+## Stress Test
+
+After fixing bugs found by wrapping all our code, logging things, and avoiding global scope like the plague, we _still_ were seeing about a third of our IE-specific nondeterministic mystery bugs in user telemetry.
+_Agh!_
+
+Since the bugs only happened rarely and we had no idea what was causing them, the only remaining debugging possibility seemed to be to continuously perform actions on the Sway website over and over again and record any errors.
+We set up a simple test page with an `<iframe>` pointing to our site reloading every ten seconds and let it run for half an hour...
+
+...but no errors were found.
+😡
+
+Then again, at 30 minutes divided by 10 seconds, that was only 180 page reloads.
+Statistically, if an error were as common as 1 in 180 sessions, we probably would have seen it.
+Even changing to every 5 seconds over a full hour (720 reloads) wouldn't have been very many, so we changed the page to contain a dozen `<iframe>`s instead...
+
+...and it was _glorious_.
+Have you ever seen Internet Explorer try to render a page with multiple `<iframe>`s loading at once!
+It's _incredibly_ slow.
+The root page slows to a standstill and the browser UI thread goes unresponsive for seconds or minutes at a time.
+We had accidentally found an easy way to simulate users on ancient barely-functioning computers, letting us log a slew of never-before-reproduced errors.
+It was non-deterministic which particular errors would get logged by each page, but the existence of some was guaranteed.
+Finally!
+
+<LabeledVideo
+	alt="Derek Zoolander happily being branwashed by Mugatu's floating heads in Zoolander (2001)"
+	description="Happy."
+	original="https://giphy.com/gifs/zoolander-ac38RqTgQXYAM"
+	src="/images/blog/zoolander-happy.webm"
+/>
+
+We later added a test to our regularly-running integration tests to switch between pages rapidly a few dozen times.
+It's caught very few bugs (and annoyingly takes a long time to finish if test machines are slower than usual), but the ones it has caught would have been exceptionally difficult to discover otherwise.
+
+## Log Things
+
+Even with proper callstacks, bugs specific to IE are often different in nature from what we're used to dealing with in modern browsers.
+For example, we saw a particularly nasty set of crashes in our root page initialization logic that made no sense: something was defined in one area in most browsers but undefined when running in IE.
+Nobody could reproduce the error locally or understand its cause.
+It didn't help that the code was old and rather spaghetti-ish from a few years of refactoring.
+
+Eventually we resorted to what I affectionately called "console logging in production" and unaffectionately called "the stupidest debugging trick I've ever pulled":
+
+```js
+function logIfIE() {
+	if (browserIsIE()) {
+		log("IE-secific log:", arguments);
+	}
+}
+```
+
+Then, in the spaghetti initialization code, we constantly logged relevant values:
+
+```js
+function oversimplifiedSetupExample() {
+	window.someGlobalValue = createSomeGlobalValue();
+	logIfIE("Start example", someGlobalValue);
+	doFirstThings();
+	logIfIE("Continue example", someGlobalValue);
+	doOtherThings();
+	logIfIE("End example", someGlobalValue);
+}
+```
+
+The resultant overabundance of telemetry for where and when the relevant values were defined helped us narrow down the issue's potential causes.
+Eventually we realized it was from two asynchronous components dependent upon asynchronously initialized global values _(spaghetti code indeed!)_.
+Crashes were only on IE because other browsers were fast enough to run the values' setup fast enough to finish before the components would run.
+
+This technique isn't unique to IE debugging.
+Don't be afraid to temporarily add a few extra points of logging information if you think it'll help you help your users!
+A dozen logs containing basic telemetry messages and identifiers are probably a drop in the bucket compared to a single JavaScript library or image.
+
+## Sometimes Give Up
+
+The last IE issue we found a strategy for was the weird nondeterministic "`Access Denied.`" error it would sometimes throw trying to access an element.
+Suppose you have a form submission button that, when clicked, reads input elements:
+
+```js
+function sendInputValues() {
+	makeApiRequest({
+		foo: this.barInput.value,
+	});
+}
+submissionButton.onClick = sendInputValues;
+```
+
+Once in a blue moon in IE, it throws this error stack:
+
+```plaintext
+Error: Access Denied.
+    at sendInputValues:2:14
+    at onClick:45:67
+```
+
+In the specific case of a user event handler reading DOM elements, you can try redoing the action in case the access denial is intermittent:
+
+```js
+submissionButton.onClick = function () {
+	try {
+		sendInputValues();
+	} catch {
+		sendInputValues();
+	}
+};
+```
+
+_We didn't only retry if `error.message.indexOf("Access Denied.") !== -1` because IE would throw localized error messages, such as `"Accesso Denagado."` in Spanish._
+_What an incredibly terrible idea._
+
+The errors sometimes go away when you try again and sometimes don't.
+What can we do?
+
+Seriously, if you know how to handle this, let me know.
+None of us could figure out how to stop the error from being thrown, and it was frustrating as heck.
+
+Sometimes you have to give up.
+We really wanted to fix that last error but it was so rare and so impossible to reproduce, even with stress tests, there was nothing we could do.
+
+## Enjoy the Challenge
+
+It's easy to give up on IE users or ignore their bugs as not being reproducible.
+We did for years because there were easier bugs to fix; in terms of bang for buck, this was a pretty sub-par series of investigations.
+It was only funded because we'd fixed most of our other crashes and wanted to hone our quality for education users.
+
+It's also easy to let the pain of IE's developer tools sour day-to-day job enjoyment.
+Two years ago, I would never have thought I'd spend to much time in IE and IE-specific telemetry.
+There were multiple days early on in which I had to take long coffee breaks to overcome my irritation, but once I would calmed down and remembered to treat IE as the interesting technical challenge it is, the debugging flowed smoothly.
+
+Honestly, this kind of thing is fascinating.
+We take for granted the wonderful utilities given to us by modern browsers.
+It was weirdly refreshing to work without most of them.
+
+## Thanks
+
+Many thanks to my fellow web developers on Sway, particularly Shawn Lee for working with me on these ridiculous IE investigations and Jim Boulter for proofreading.
+
+You can grab related code snippets and a PowerPoint presentation here: https://github.com/JoshuaKGoldberg/internet-explorer-is-wonderful

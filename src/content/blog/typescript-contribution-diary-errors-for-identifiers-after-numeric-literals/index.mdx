@@ -1,0 +1,330 @@
+---
+description: "How I made TypeScript's parsing of name characters after numbers conform to the ECMAScript specification just a bit more strictly."
+pubDate: 2018-12-07
+title: "TypeScript Contribution Diary: Identifiers after Numeric Literals"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import drakeSpecSyntaxErrata from "./drake-spec-synta-errata.webp";
+import tsdevtest3inError from "./tsdevtest-3in-error.webp";
+import tsdevtestResult3 from "./tsdevtest-result-3.webp";
+import tsdevtestResult4 from "./tsdevtest-result-4.webp";
+import tsdevtestParseElementThrice from "./tsdevtest-parseElement-thrice.png";
+import tsdevtestTargetESNext from "./tsdevtest-target-esnext.webp";
+import tsdevtestVariousErrors from "./tsdevtest-various-errors.webp";
+
+> I've started making contributions to TypeScript, working my way up from small error reporting nitpicks to (hopefully!) real syntactic and control flow improvements.
+> These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.
+> If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
+
+> Previous post: [Pretty Error Counts](./typescript-contribution-diary-pretty-error-counts)
+
+<LabeledImage
+	alt="Meme of drake gesturing away from a first panel and happily pointing towards a second. First: 'User reported bugs or feature suggestions'. Second: 'ECMASAcript spec syntax errata'."
+	description="Admittedly, this contribution is not the most impactful."
+	src={drakeSpecSyntaxErrata}
+/>
+
+Problem Statement
+It's been a while since I poked into TypeScript and I had some free time, so I wanted to challenge myself.
+This contribution involved going a bit deeper into TypeScript parsing and scanning.
+To find the issue, I had searched for issues with both the [`Effort: Moderate`](https://github.com/Microsoft/TypeScript/labels/Effort%3A%20Moderate) and [`help wanted`](https://github.com/Microsoft/TypeScript/labels/help%20wanted) tags, then sorted by oldest ([issues query link](https://github.com/Microsoft/TypeScript/issues?q=is%3Aopen+label%3A%22Effort%3A+Moderate%22+label%3A%22help+wanted%22+sort%3Acreated-asc)).
+One from 2015 seemed interesting:
+
+> [#4702](https://github.com/Microsoft/TypeScript/issues/4702): IdentifierStart cannot occur following a NumericLiteral
+
+Rephrasing the issue post: according to the ECMA specification, section [11.8.3 — NumericLiterals](http://www.ecma-international.org/ecma-262/6.0/#sec-literals-numeric-literals), the _SourceCharacter_ after a _NumericLiteral_ must not be an _IdentifierStart_.
+For example:
+
+- **`3in`**: should become an error, not be considered the same as `3 in` _(referring to checking whether 3 exists in something)_
+- `let hasFour = 3in[null, null, null, null];` as an expansion of ☝
+
+### tl;dr
+
+You need a space between number literals (`3`) and identifiers or keywords (`a`, `in`).
+`3in` is bad; `3 in` is allowed.
+
+### Terminology
+
+What on Earth do those terms mean?
+
+- _**SourceCharacter**_: Skimming through the ECMA specification with Ctrl+F to find other places it's mentioned, it seem to refer to the characters in the source code — makes sense, given the name.
+- _**NumericLiteral**_: `ts.SyntaxKind.NumericLiteral` refers to numbers you type out, such as `123` _(regular floats)_, `1_234_567` _(floats with separators)_, and _1234n_ _([BigInts](https://github.com/tc39/proposal-bigint))_.
+  A "literal" generally refers to built-in primitive values such as booleans, numbers, or strings.
+- _**IdentifierStart**_: Generally refers to the name of something, such as a variable or class.
+  Let's interpret that in this context to mean any name is either some built-in keyword (such as `in`) or an identifier (such as `a`).
+
+For _NumericLiteral_ and _IdentifierStart_, you can see the equivalent `NumericLiteral` and `Identifier` nodes by copy & pasting into [ts-ast-viewer](https://ts-ast-viewer.com):
+
+```ts
+let value = 7;
+```
+
+It shows that `value` is an _Identifier_ node _(in this case, the name of a variable)_ and `7` is a _NumericLiteral_.
+
+If you copy a simple example like `3in[null]` into ts-ast-explorer, it shows a tree with nodes (and syntax highlighting) equivalent to `3 in [null]`.
+Looks like the goal for this issue is to add a check after the numeric literal to make sure there's not what could be the start of an identifier.
+
+## Enter the Compiler
+
+_How does TypeScript parse in a source file and convert that into an AST?_
+
+According to the [Basarat Gitbook](https://basarat.gitbooks.io/typescript/docs/compiler/overview.html), that's the well-named `src/parser.ts` and `src/scanner.ts` in the TypeScript source.
+
+- The **parser** is the driving force to understand a source file.
+  It uses the scanner to read in nodes, then puts them together as an AST.
+- The **scanner** is used by the parser each time a new node needs to be read into the tree and parsed.
+  It keeps track of the source text and character position within it.
+
+### Starting Point
+
+_How does TypeScript launch the parsing and scanning of a file?_
+
+Skimming through `parser.ts` in order, we see...
+
+1. A few type declarations, such as `enum Signature Flags`
+1. Public node utilities such as `visitNodes` and `forEachChild`
+1. A `createSourceFile` function that takes file name, text, and some other things to create a `SourceFile`
+
+...that seems promising!
+It also has some `performance.mark`ers around parsing, which we can assume help log timing around how long important operations take.
+Seems like a good place to look into.
+In order, this function:
+
+1. Calls to `Parser.parseSourceFile` _(that's a good sign too!)_, which...
+1. Calls `parseSourceFileWorker` for non-JSON files, which...
+1. Creates a new blank `sourceFile` with `createSourceFile`, processes pragmas, creates `sourceFile.statements` with `parseList`, and sets some metadata on the source file.
+
+I don't know or care about pragmas or miscellaneous source file metadata, but based on AST viewing websites, the `statements` property contains the root-level nodes of the file.
+`parseList` must therefore be the place that creates these nodes, so it must call things that parse nodes.
+
+`parseList` takes in a `parseElement` lambda that it passes to `parseListElement`, which will either call some `consumeNode` function or `parseElement`.
+
+_Question: which is relevant?_
+_Do we care about consumeNode or parseElement?_
+
+### Aside: Debugging
+
+At this point, someone capable with JavaScript tooling might attach debugger breakpoints and debug through TypeScript to answer that question.
+
+_Not me!_
+
+I just wanted to quickly modify the compiled TypeScript code and re-run it to print out which things are being used without having to worry about setting up debugging _(about which I am clueless)_.
+My setup instead consisted of:
+
+- `C:/Code/typescript`: A Git cloned repository for navigating the source.
+  I'd made it [globally npm linked](https://docs.npmjs.com/cli/v9/commands/npm-link) with `npm link` and built with `npm run build`.
+- `C:/Code/tsdevtest`: Stub project with a minimal `package.json` and `index.ts`.
+  I'd symlinked it to TypeScript with `npm link typescript`.
+
+`index.ts` contained a simple test case:
+
+```ts
+let hasFour = 3in[null]
+```
+
+With this setup, running `tsc index.ts` in `C:/Code/tsdevtest` uses `C:/Code/typescript/lib/tsc.js`.
+
+I also added the following line at the beginning of `createSourceFile`:
+
+```js
+global.wat = fileName === "index.ts";
+```
+
+That line creates a global variable named `wat` which is only true for files named `index.ts`.
+Later on in the code, running `wat && console.log(":)")` would only print while parsing `index.ts`.
+
+_This is useful because TypeScript will also compile files containing built-in types, such as `lib.d.ts`._
+_Running with `--noLib` removes them but results in "Cannot find global type Array" and similar errors if parsing succeeds._
+
+### Back to the Hunt
+
+...anyway, we wanted to see how nodes are parsed out of the source file, and were looking at `parseListElement` to see which sub-function it calls.
+I put a `wat && console.log("consumeNode")` before return `consumeNode(node)`; and a `wat && console.log("parseElement")` before `return parseElement();`.
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. There are three output lines of parseElement."
+	description="Three parseElements and no consumeNodes."
+	src={tsdevtestParseElementThrice}
+/>
+
+😲
+Only `parseElement` was being printed, so only `parseStatement` was being called to.
+It contains a `switch` statement that, depending on the value of `token()`, can call a bunch of different `parse*` functions, or default to `parseExpressionOrLabeledStatement`.
+
+The `token` function returns a variable named `currentToken`, of type `SyntaxKind`, so it seems safe to assume this is the current syntax kind being parsed.
+It's parsed with `scanner.scan`, which we know from the [Basarat Gitbook Scanner page](https://basarat.gitbook.io/typescript/overview/scanner) starts at the starting index of a node and finds the end of it.
+`scan` contains another switch statement over a `ch` variable, which is the character code of the _SourceCharacter_ being looked at.
+
+Given that the relevant contents for parsing start with `3in`, `ch` would have to be `"3".charCodeAt(0)`, or 51, for the start of parsing `3` as a NumericLiteral.
+`tsc.js` showed a `case 51`: as compiled from an equivalent line in `scanner.ts`: `case CharacterCodes._3:`.
+That line calls to `scanNumber`.
+
+...so the function that scans a number to be parsed is `scanNumber`.
+💪
+
+### Number Scanning
+
+_How does `scanNumber` scan source code into NumericLiterals?_
+
+`scanNumber` was about 50 lines of real code and kind of hard to understand.
+My first guesses squinting through its first three root-level `if` statements were that they, in order:
+
+1. Check if the number starts with a `.`, such as with .5
+1. Check if the number is a "scientific" number, meaning it starts with `E` or `e`, such as with `1e3` (1000)
+1. Check if the number has a `_` separator
+
+The last `if`/`else` pair checks whether the number is a decimal or scientific:
+
+- If either, it returns a numeric literal
+- If neither, it checks whether it's a BigInt before returning
+
+Awesome!
+Here is the one place where a _NumericLiteral_ may be created.
+Just be sure, I added a `wat && console.log("Result:", result)` at the end:
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. There is three output line, Result: 3."
+	description="Result: 3."
+	src={tsdevtestResult3}
+/>
+
+Confirmed.
+Great.
+
+## Checking for Identifiers
+
+_How can we know whether the next token is an identifier?_
+
+In theory, we could check if the character code of the next thing is an a-Z letter, but there are almost certainly esoteric rules around that.
+How does the scanner scan in an identifier, rather than a numeric literal?
+Presumably there must be some internal TypeScript logic that checks whether we're starting with an identifier?
+
+Going back to `scan`, the `default` case for any character code not handled as a special character immediately calls to an `isIdentifierStart` function.
+`isIdentifierStart` checks if the character code is within A-Z or a-z, is $ or \_ _(which are valid name starters)_, is a high-valued ASCII character, or is a unicode identifier.
+I don't know what those last two mean but that looks like the right place!
+
+### Reinforced Number Scanning
+
+Per a previous post of mine that included how to add diagnostics, I made a new diagnostic:
+
+```json
+"An identifier cannot follow a numeric literal.": {
+	"category": "Error",
+	"code": 1351
+},
+```
+
+...and in `scanNumber`, before the `if`/`else` returns, added:
+
+```js
+if (isIdentifierStart(text.charCodeAt(pos), languageVersion)) {
+	error(Diagnostics.An_identifier_cannot_follow_a_numeric_literal, pos, 1);
+}
+```
+
+Upon running `tsc index.ts`, voila!
+The error showed!
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. An error, 'An identifier cannot follow a numeric literal.', is reported on the 'i' after the 3 in let hasFour = 3in[null]"
+	description="It never stops feeling amazing to give myself errors."
+	src={tsdevtest3inError}
+/>
+
+## Test Time
+
+Per my previous post on [verifying parser changes](./typescript-contribution-diary-trailing-type-parameter), TypeScript has a "baselines" system where you check in source files with expected types and errors.
+I added a `tests/cases/compiler/identifierStartAfterNumericLiteral.ts` to explicitly test these changes:
+
+```ts
+let valueIn = 3in[null]
+```
+
+...but after re-running `jake baseline`, there were new errors found in a _bunch_ of files, such as `bigIntIndex.errors.txt`.
+😢
+
+...which reminded me, BigInts such as 1n are valid numbers I should verify still work.
+Adding a `3in[null]`, `3nin[null]`, `1e9`, and `1n` to index.ts:
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. Four raw logs: 3in[null], 3nin[null], 1e9, 1n. Three 'An identifier cannot follow a numeric literal' errors on the character after a number: 3in[null], 3nin[null], 1n."
+	description="Errors for bigints! That's not good."
+	src={tsdevtestVariousErrors}
+/>
+
+😕.
+It looks like TypeScript thought in the second and third cases that `n` was starting a new identifier instead of whatever was after the number.
+
+A few minutes of cursing and poking around `scanNumber` later, I noticed that `checkBigIntSuffix` increments `pos` for the case of it finding an n suffix.
+Brain blast!
+💡 Aha!
+We can't know what the end position of the number is until after we've scanned past any last `n`; checking for a subsequent _IdentifierStart_ therefore has to come after.
+
+I extracted the new logic into a `checkForIdentifierAfterNumericLiteral` method and called it immediately before each `return` in `scanNumber`.
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. Six raw logs: 3in[null], 3nin[null], 1e9, 1n, 1e9in[null], 1nin[null]. Four 'An identifier cannot follow a numeric literal' errors on the character after a number: 3in[null], 3nin[null], 1e9in[null], 1nin[null]."
+	description="✨ It all works! ✨"
+	src={tsdevtestResult4}
+/>
+
+## The Pull Request
+
+> [Added error for IdentifierStart immediately after a NumericLiteral by Josh Goldberg · Pull Request #28857](https://github.com/Microsoft/TypeScript/pull/28857):
+
+A couple pieces of feedback were given on the pull request:
+
+- The whole identifier, not the first character of it, should be complained on.
+- The error message was a little vague.
+
+Sounds reasonable.
+I updated the error message pretty simply.
+Expanding the red squiggly was a little less straightforward...
+
+### Full Identifier Complaints
+
+In order to have the error messages' span length contain the full identifier, it's necessary to know how long the identifier is.
+That necessitates reading in the identifier using whatever logic TypeScript would normally use.
+
+I didn't already know where to find this, but numbers are scanned in with `scanNumber`, it made sense to first check for `scanIdentifier`.
+
+...which doesn't exist...
+
+...but a `scanIdentifierParts` does exist, which consists of a `while` loop that continuously advances as long as it finds characters that match a function named `isIdentifierPart` or some complicated things following a character matching `CharacterCodes.backslash`.
+Seems legit.
+
+One issue with scanning for an identifier is that the `scanIdentifierParts` function updates `pos` normally, even though we didn't want to actually skip parsing the new identifier.
+I solved this by keeping track of `pos`' original value and restoring it after the function was called.
+
+I added a few test cases for identifiers of longer lengths and updated the PR.
+
+<LabeledImage
+	alt="Running 'type index.ts & tsc index.ts' in C:\Code\tsdevtest. Five raw logs: 12334in[null]; 1234of[null]; 1234nof[null]; 1234na[null]; 1234abcd[null];. Five subsequent 'An identifier cannot follow a numeric literal' errors on the character before [."
+	description="Available in the TypeScript nightlies: npm i -g typescript@next"
+	src={tsdevtestTargetESNext}
+/>
+
+The PR was merged in and a followup issue filed to help improve the diagnostic messages even more.
+Hooray!
+🎉
+
+_Maybe I'll tackle that other issue another day..._
+
+## Key Takeaways
+
+- It's totally fine, sometimes even better, to use console.log debugging in a pinch!
+  _(though I love debuggers for longer use)_
+- Understand your edge cases: numbers are complicated.
+- Pay attention to your error messages.
+
+It's worth it to help your users understand their exact errors.
+Thanks [danielrossenwaser](https://github.com/DanielRosenwasser) and [sheetalkamat](https://github.com/sheetalkamat) for the rapid reviews!
+
+### A Note on Streamlining
+
+It was commented to me after my last two posts that the progression of steps documented in them could make it appear that I effortlessly glided through the investigations linearly, without any real _"I'm stumped."_ moments.
+Not so!
+I intentionally omit dead ends in the from these blog posts because they would be seven times as long.
+I have little to no idea what I'm doing.
+💯
