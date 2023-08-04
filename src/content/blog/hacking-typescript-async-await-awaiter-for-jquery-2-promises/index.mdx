@@ -112,7 +112,7 @@ function (thisArg, _arguments, P, generator) {
   Uninteresting.
 - `P` is the `Promise` class we'll be using.
   We can see later on that it defaults to the global `Promise` via `(P || P = Promise)`.
-- `generator` is the `async`hronous generator (technically an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators)) that is trying to await something.
+- `generator` is the asynchronous generator (technically an [`Iterable`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators)) that is trying to await something.
   Presumably it should yield Promises.
 
 The function passed to `P` takes in `resolve`, `reject` and creates three functions before running generator:
