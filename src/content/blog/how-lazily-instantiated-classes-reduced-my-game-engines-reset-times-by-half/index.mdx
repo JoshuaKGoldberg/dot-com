@@ -1,0 +1,69 @@
+---
+description: "Using lazily instantiated, dynamic classes instead of hand-written functions to reduce unnecessary work during loads."
+image:
+  alt: "Screenshot of a Chrome devtools performance profile"
+  src: "fsp-game-loading-profile.png"
+pubDate: 2017-10-09
+title: "How lazily instantiated classes reduced my game engines' reset times by half"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import objectmakrAfter from "./objectmakr-after.webp";
+import objectmakrBefore from "./objectmakr-before.webp";
+
+A very long time ago, I made the decision to write my own game engine from scratch.
+If you want to get anything done well or in a reasonable amount of time it's a terrible idea, but it does serve as a great vehicle for exploring best practices in performance-critical code.
+
+One area of interest is how to describe large numbers of in-game object classes.
+I wanted to be able to add a class and its properties with as little code overhead as possible to avoid huge source files and maintenance difficulties.
+
+My solution was a module called ObjectMakr that stores the inheritance tree for classes and descriptions of each of their properties as POJOs (_Plain Old JavaScript Objects_).
+It then would create a class for each POJO description and extend as described in the inheritance tree.
+
+## The Problem
+
+Startup performance was _bad_ under this system.
+Well over half of the reset time was spent in ObjectMakr's instantiation.
+Using this screenshot of a captured performance profile, can you guess why?
+
+<LabeledImage
+	alt="Screenshot of a performance profile within a GameStartr class taking ~700ms. Most of the time is spent in FullScreenPokemon.resetModules, and within that ObjectMakr.processFunctions."
+	description="Before: ~400ms creating dynamic classes; ~700ms reset time total"
+	src={objectmakrBefore}
+/>
+
+In its original design, ObjectMakr processed _all_ class functions immediately.
+That's the big green chunk in the center.
+We're talking hundreds of dynamically generated `class` objects all being created and assigned properties before the game can do anything.
+_Terrible!_
+
+## The Change
+
+Important performance protip: minimize unused work.
+Out of those hundreds of objects, maybe a couple dozen would be used immediately.
+I changed ObjectMakr to only instantiate classes as needed, and voila! Reset performance was suddenly much better.
+
+<LabeledImage
+	alt="Screenshot of a performance profile within a GameStartr class taking ~300ms. Now, time is split within resetModules between createModuleSettings, UserWrapper, and Gameplay.startOptions."
+	description="After: ~1ms creating dynamic classes; ~300ms reset time total"
+	src={objectmakrAfter}
+/>
+
+## Lessons Learned
+
+### Use only what you need.
+
+Laziness is good.
+When designing startup flows, I like to think of each application component as a node in a directed acyclic graph ([DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph)).
+If you map out the components this way and do an exhaustive search starting from the “everything is ready!” state, you'll notice which parts are or aren't required to get there.
+
+### Probably don't write your own game engine.
+
+On the one hand, I've learned a _ton_ from it and have an intimate knowledge of all its ins and outs.
+On the other hand, there are plenty of great open source alternatives for every popular platform yet I've sunk way too much time into this thing.
+Were the learnings worth the time investment? Great question.
+
+---
+
+By the way, I have multiple game engine versions.
+The title doesn't have a typo!
