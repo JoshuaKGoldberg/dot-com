@@ -17,6 +17,10 @@ interface HeadingGroup {
 
 export function TableOfContents(props: TableOfContentsProps) {
 	const headingGroups = () => {
+		if (!props.headings.length) {
+			return [];
+		}
+
 		const groups: HeadingGroup[] = [
 			{
 				h2: props.headings[0],
@@ -47,6 +51,11 @@ export function TableOfContents(props: TableOfContentsProps) {
 		const headings = Array.from(
 			document.querySelectorAll<HTMLElement>("h2, h3, h4")
 		);
+
+		// Case: no headings at all!
+		if (!headings.length) {
+			return;
+		}
 
 		// Case: If the first heading is within the top half of the screen, we're at the beginning
 		if (document.body.scrollTop < headings[0].offsetTop / 2) {

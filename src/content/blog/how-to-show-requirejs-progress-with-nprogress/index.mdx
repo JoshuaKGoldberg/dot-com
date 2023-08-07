@@ -1,0 +1,129 @@
+---
+description: "Using the popular NProgress library to visualize load progress on sites built on the AMD RequireJS loader"
+pubDate: 2016-12-28
+title: "How to show RequireJS progress with NProgress"
+---
+
+> tl;dr: use the internal [onResourceLoad API](https://github.com/requirejs/requirejs/wiki/Internal-API:-onResourceLoad)
+
+NProgress is an adorable little library that easily makes a smoothly animated loading bar appear on top of a page.
+A lot of sites use it to convince the user that loading processes, for example, network requests or IO, will take a small amount of time.
+
+We've all seen logic similar to the following _(like on Medium and GitHub!)_:
+
+```js
+// Start showing a progress bar
+NProgress.start();
+
+// Make the user think we're continuously making progress
+const timer = setInterval(() => NProgress.inc(), 100);
+
+// Send a network request, and when it's done, hide the bar
+sendNetworkRequest().then(() => {
+	clearInterval(timer);
+	NProgress.stop();
+	doOtherWork();
+});
+```
+
+The beauty of the `.inc()` function is that it'll never actually make the bar reach the end.
+It's like [Achilles and the Tortoise](https://en.wikipedia.org/wiki/Zeno%27s_paradoxes#Achilles_and_the_tortoise) except instead of exploring the mathematical beauty of infinity it makes your users willing to wait for completion.
+
+One drawback of the timer approach is that it assumes the task finishes in a relatively predictable amount of time.
+That assumption can fall apart for network requests if the user has a slow connection.
+They'll see the progress bar continuously creep to the right while their computer keeps loading… and loading… and eventually the user loses faith in the loading bars altogether.
+Sad day.
+
+One drawback of the timer approach is that it assumes the task finishes in a relatively predictable amount of time.
+That assumption can fall apart for network requests if the user has a slow connection.
+They'll see the progress bar continuously creep to the right while their computer keeps loading… and loading… and eventually the user loses faith in the loading bars altogether.
+Sad day.
+
+If you _really_ want to get an accurate loading estimate, a few options are:
+
+- Calculate the user's estimated connection speed based on the average of each request's (data size / time taken)
+- Some fancy socket-based data pumping system where the client code controls events for data streams
+- On tasks with many network requests, increment your progress bar when each network request completes
+
+The first two are hard.
+Let's talk about the third.
+
+---
+
+RequireJS has an exposed "internal" API called [onResourceLoad](https://github.com/requirejs/requirejs/wiki/Internal-API:-onResourceLoad) that's fired whenever a resource loads.
+
+> "Internal" means it's subject to change at any time.
+> Please do be slightly worried about this method eventually changing or becoming deprecated.
+> It's very risqué.
+
+Instead of `.inc()`ing on an interval, we can `.inc()` on resource loads.
+
+```js
+// Start showing a progress bar
+NProgress.start();
+
+// Tell the user whenever we make progress
+requirejs.onResourceLoad = () => NProgress.inc());
+
+// Send a network request, and when it's done, hide the bar
+sendNetworkRequest().then(() => {
+    NProgress.stop();
+    delete requirejs.onResourceLoad;
+    doOtherWork();
+});
+```
+
+---
+
+_Problem: what happens if you have a lot of requests?_
+
+Well, `NProgress.inc()` has no way of knowing how many requests you have overall.
+With only a few of them running the loading bar feels reasonable, but when you get into the dozens it starts hanging near the end.
+Such scale requires a more intelligent progress bar.
+
+There are again a bunch of ways you could do this.
+Optimizing here for page load times with a lot of scripts, we'll want a way to compare how many scripts we've _completed_ against how many have _started_.
+
+RequireJS stores a _"context"_ object for your current user session that contains status for each resource being loaded.
+It happens to be the first argument passed to `onResourceLoad`.
+All we really need from it is the count of names (_started_ requests).
+
+```js
+// Start showing a progress bar
+NProgress.start();
+
+// Remember how many resources have been requested
+let completed = 0;
+let oldPercentage = 0;
+
+// Delay calculations so that if the first of a few resources has many dependencies,
+// we don't immediately jump far in the progress bar before starting their loads
+requirejs.onResourceLoad = (context) => {
+	setTimeout(() => {
+		// Don't run this logic if NProgress has finished since it was scheduled
+		if (!NProgress.status) {
+			return;
+		}
+
+		// Tell the user whenever we make progress (only on increased percentages)
+		const newPercentage =
+			(completed += 1) / Object.keys(context.defined).length;
+		if (newPercentage > oldPercentage) {
+			NProgress.set(newPercentage);
+			oldPercentage = newPercentage;
+		}
+	}, 100);
+};
+
+// Send a network request, and when it's done, hide the bar
+sendNetworkRequest().then(() => {
+	NProgress.stop();
+	delete requirejs.onResourceLoad;
+	doOtherWork();
+});
+```
+
+---
+
+I've started using variants of these for initial page loads on pages where dependencies aren't all bundled into one script.
+They're not exact measurements but they do feel like better representations of overall progress.

@@ -1,0 +1,324 @@
+---
+description: "Or: How to suddenly anger everybody, everywhere!"
+image:
+  alt: "Typical illustration in a 19th century book about Physiognomy (on the left: 'Utter despair', and on the right: 'Anger mixed with fear')"
+  src: "physiognomy-rage.jpg"
+pubDate: 2018-03-15
+title: "In Defense of 100% Unit Test Coverage"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import theNightmarePainting from "./the-nightmare-painting.jpg";
+import physiognomyRage from "./physiognomy-rage.jpg";
+
+<LabeledImage
+	alt="Typical illustration in a 19th century book about Physiognomy (on the left: 'Utter despair', and on the right: 'Anger mixed with fear')"
+	description="Common reactions to proposed test coverage requirements."
+	original="https://commons.wikimedia.org/wiki/File:Physiognomy.jpg"
+	src={physiognomyRage}
+/>
+
+## Preamble
+
+In this article, I'll bring up three arguments _in favor of_ 100% test coverage, three common arguments _against_ it, and a few testing protips.
+
+_Arguments in favor:_
+
+1. Encouraging testable components
+1. Encouraging collaboration
+1. Fringe benefit: 100% unit test coverage
+
+_Arguments against:_
+
+1. Marginal benefit increases
+1. Barrier to entry
+1. Misleading priorities
+
+I want to make two things very clear first:
+
+### All code, given time, is bad code
+
+The world of code is constantly changing.
+It would be egotistical to believe our code perfect, as that would imply we're done learning or changing.
+I'm incredibly grateful to the people who sat me down and told me exactly (and politely) why what I was writing was rubbish.
+
+Many articles — even this one — with opinions about the Correct Way To Write Good Code™ make it sound like some previous works are _bad code_.
+Maybe they were then; maybe they are now.
+So what?
+What's important is to _learn from your mistakes, successes, and peers_.
+
+### Code coverage is not a silver bullet
+
+There is no single Correct Way To Write Good Code™.
+Good techniques help, but hyperfocusing on a single methodology will only help you adhere to that singular narrow line of thought.
+As the [agile manifesto](https://en.wikipedia.org/wiki/Agile_software_development#The_Agile_Manifesto) recommends:
+
+> Individuals and interactions over processes and tools.
+
+That is to say, tools and processes are important, but it is more important to have competent people working together effectively.
+
+Still, we shouldn't discount a process or tool purely for not doing enough on its own.
+I don't skip a thick scarf in the winter for not keeping me warm without a coat (_it completes my outfit!_).
+Code coverage is _just one_ potential way to help keep your code tested.
+
+## Non-Goals
+
+I don't want to discuss whether we should _unit_ test instead of higher-level tests or whether we should write tests in the first place.
+If you're on a project that you truly believe doesn't need to be unit tested, fine: this post isn't for that project.
+If you don't believe in _unit_ tests in particular, this post _definitely_ isn't for you.
+If you don't believe in _any tests_, either you have never written a large, persistent project or you enjoy living in constant danger.
+
+<LabeledImage
+	alt="'The Nightmare' painting by Henry Fuseli.
+	A demon creature sits on top of a sleeping woman dressed in white.
+	Behind them, a horse with light gray eyes looks at them, in front of a red curtain."
+	description="What it's like to work in a large project without tests."
+	original="https://commons.wikimedia.org/wiki/File:Physiognomy.jpg"
+	src={theNightmarePainting}
+/>
+
+For a full discussion of how to properly write unit tests, read Roy Osherove's _The Art of Unit Testing_.
+It'll make you a better developer and a better person.
+
+## Arguments For
+
+### Encouraging Testable Components
+
+If your code is well written, it likely follows good coding principles such as [SOLID](https://en.wikipedia.org/wiki/SOLID).
+Your classes and functions should have single responsibilities; the implementation details of dependencies should be abstracted away by their interfaces; changes to one component's behavior shouldn't require obscure changes to the internals of others.
+
+Code that violates good coding principles likely violates good testability too: [god classes](https://en.wikipedia.org/wiki/God_object) are inherently difficult to capture all cases of; depending on implementation details of dependencies necessitates awkwardly implementation-specific tests...
+But does the reverse hold true? Does writing testable code imply adherence to SOLID? Surely there must be some overlap!
+
+If high coverage encourages well-separated components, and well-separated components are much easier with SOLID principles, then it follows that requiring high coverage is _a_ way of reinforcing SOLID.
+
+However you define code testability, your core principles for unit tests in particular should at least require the tests be small and single-minded.
+Otherwise they're not unit tests!
+Likewise for limiting external dependencies: tests that require external dependencies or many components likely aren't unit tests.
+
+We should note that complete coverage doesn't _enforce_ testable designs.
+There will always be ways for developers to write yucky god classes _(see "Misleading Priorities" below)_.
+Rather, complete coverage makes it more difficult to write and maintain those classes by increasing the roadblocks for any change that doesn't respect SOLID.
+It's natural selection, except instead of starving or being hunted to death, your code gets more and more frustrating to write.
+If you're having difficulties implementing 100% unit test coverage, you might just be exposing structural problems in your code.
+
+Conclusion 1: If your code isn't testable, it's probably not great to begin with.
+
+### Encouraging Collaboration
+
+Every junior developer I've ever seen join a team — me included — has started off their first feature with a giant 500+ line monstrosity of a class.
+Following the previous section, we know this to be bad.
+We must have a way of stopping these people from doing those terrible things, right?
+
+The answer is you and me.
+Great code is inherently difficult: folks new to code or your frameworks will likely need help Doing the Right Thing.
+Requiring all code be in this ideal testable form forces developers to reach out when they face issues.
+It's your job as someone who has read this post (ha) to help guide them towards the light.
+By helping them, you're increasing both their ability to work in your environment and the quality of your code.
+
+A necessary caveat for this point is to remember that we've all been junior developers.
+Don't go blazing into code reviews with hellfire and brimstone: be kind and nurture the new people.
+Nothing kills professional motivation or feeds the imposter syndrome quite like a senior developer or scrappy youngster telling you you're terrible.
+
+Conclusion 2: [A rising tide lifts all boats](https://en.wikipedia.org/wiki/A_rising_tide_lifts_all_boats).
+
+### Fringe benefit: 100% unit test coverage
+
+Requiring unit test coverage for everything at the very least ensures that you _try_ to unit test everything.
+Nothing can truly validate that code is doing what's intended like tests can.
+Team members leave; designs change; documentation becomes outdated and discarded.
+Untested code is _at least_ as likely to break as tested code.
+
+From another angle: unit tests provide a combination safety net & sample documentation source for your code.
+When looking at a section of code you haven't seen before, unit tests will always show at least one way of interacting with it.
+When you progress to changing that section, the unit tests will validate your changes haven't broken anything.
+100% coverage helps enforce you add tests to cover most or all of your sections.
+
+From a third angle: if you discover a bug and want to add a unit test for it, the only way to guarantee this is possible is to guarantee all code paths are at least reachable by unit tests.
+100% coverage is a good way to do that.
+
+Conclusion 3: Test all your code.
+
+## Arguments Against
+
+### Marginal benefit increases
+
+The [Pareto Principle](https://en.wikipedia.org/wiki/Pareto_principle) states that roughly 80% of effects come from 20% of causes.
+It's often applied to coding in that 80% of work comes from 20% of tasks.
+We tend to spend a small amount of time writing what we want to and most of the rest banging our faces into the keyboard over bugs or edge cases.
+
+Similarly, we can capture most of a system's behavior with a small number of tests, but expanding to all edge cases dramatically increases the amount of test work.
+The amount of work to increase test coverage to 100% from 80% is much more than to 80% from 0% _(and, likely, the same holds true for going to 100% from 95% compared to 95% from 80%)_.
+Some consider the extra work for complete coverage not worth the system improvements.
+
+### Barrier to entry
+
+Every code requirement, from unit tests to strict compiler flags to formatting rules, makes it more difficult to contribute.
+Trying to stamp out imperfections inherently makes it more difficult to achieve the minimum code quality bar.
+Developer fatigue can easily be exacerbated by adhering to seemingly arbitrary and near-useless extra rules.
+
+For example, I don't enforce 100% code coverage in most of my open source projects.
+Some are rapid prototypes where significant tests would be cumbersome.
+In others, most of the contributors are college students who don't know what a proper unit test is, let alone how to write one that follows SOLID principles.
+
+### Misleading priorities
+
+I've seen a lot of junior developers jump into test coverage debates using only this argument in favor of 100% coverage: _"It makes sure we test everything!"..._
+I honestly don't consider it reason enough alone to justify such a hard requirement.
+Just because you run a line of code doesn't mean it's tested.
+Tests could be only coincidentally running that line but really testing something else.
+100% unit test coverage alone does not enforce good tests, nor testable designs, nor good code in general.
+That's _your_ responsibility as code authors and reviewers.
+
+### Rebuttal?
+
+🤷‍ Up to you.
+
+Every project is a unique blend of conflicting shareholder and developer desires.
+Use critical thinking and be willing to change.
+The worst thing we can do here is blindly impose one project's requirements to another's opinions.
+
+_That being said, you should definitely add 100% code coverage, enable an extremely strict lint configuration, and convert to TypeScript because I know what's best for you and your code._
+🙃
+
+## Protips
+
+_"Encouraging Collaboration"_ argues that developers less familiar in an area often face knowledge-based limitations that could be resolved by more experienced developers.
+It would be irresponsible of me to make that claim without providing a few examples of common confusing cases.
+
+_(Code snippets are in TypeScript, but you can get the drift even if you've never written JavaScript or TypeScript before.)_
+
+### "Impossible" cases
+
+> TL;DR: obey the single responsibility principle.
+
+Pretending a _private_ `getHandler` is supposed to only be called with `"apple"` or `"banana"`:
+
+```js
+private getHandler(fruit: string): IHandler {
+    switch (fruit) {
+        case "apple":
+            return new AppleHandler();
+        case "banana":
+            return new BananaHandler();
+        // (imagine 24 other cases here)
+        default:
+            throw new Error("This should never be hit!");
+    }
+}
+```
+
+Some would say that we "need" that error code to enforce that the `fruit` parameter is correct.
+Since it's bad practice to test internals but generally impossible to hit this situation, you could conclude it's impossible to fully unit test this method...
+
+But adding never-to-be-run code is not the best way of handling this kind of validation!
+
+Let's take a step back and evaluate whether this _complex private method_ (often a red flag) violates the _[Single Responsibility Principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)_ to do something its class shouldn't be taking care of.
+Is creating a handler for a fruit part of that component's responsibilities? Likely not; that should be a separate class or function.
+
+```js
+const handlers = new Map<string, () => IHandler>([
+    ["apple", () => new AppleHandler()],
+    ["banana", () => new BananaHandler()],
+    // ...
+]);
+
+export const getHandler = (fruit: string) => {
+    const creator = handlers.get(fruit);
+    if (creator === undefined) {
+        throw new Error(`Unknown fruit: '${fruit}'.`);
+    }
+    return creator();
+};
+```
+
+Great!
+Now we can still throw an error for an unknown fruit in a testable way...
+and our code has been split up to better adhere to SOLID principles.
+
+That's why collaborative authoring is essential for well tested code.
+This method and many others are things you may gradually pick up as you see them or have them verbally ingrained into your brain via peer review.
+
+### Externalities
+
+> TL;DR: know when sections of code shouldn't be completely covered.
+
+Have you ever interacted with a library that requires you inherit one of their classes in order to use it?
+
+```js
+/**
+ * Extend me and pass instances to other parts of this library.
+ */
+declare abstract class AbstractHost {
+    protected act(action: IAction);
+}
+```
+
+Forcing you to extend the constructor is troublesome because it makes it impossible to test the sub-class without coincidentally calling the parent constructor.
+If the class does very little, such as set up dependency injections, that might be fine...
+but what if the parent class makes network calls, connects to databases, or performs other operations unfriendly to tests? Not good!
+Class extensions make it impossible to stub out the dependency on the library because you're _forced_ to include the library in your code.
+How would you stop that network call from happening when testing behavior intended to call `act`? You can't!
+Oh no!
+
+It's a sad fact of life that the universe contains _bad code_ (often written by _good developers_) you'll need to interact with, and you might need to unit test your sub-classes of that _bad code_.
+There are still things you can do to make it better!
+
+Sometimes the things you have deal with are so _bad_ you can't do the right thing.
+Maybe they dealt with external difficult-to-test systems.
+Maybe you wrote them years ago.
+Take the blow, minimize the damage, and be good when you can.
+In some scenarios it makes sense to mark parts of code as "untestable" _only_ for the case of dealing with external dependencies.
+Larger projects I've been on tend to have up to three sections excluded from code coverage reports:
+
+- Adapters: Interfaces on top of external or native code.
+- Externals: Compiled external code not distributed via package management.
+- Mains: Entry points for the application that call into native APIs.
+
+### Separate Test Responsibilities
+
+> TL;DR: unit tests should only test the component they're meant to.
+
+You have a component, `Parent`, whose sole responsibility is to contain multiple components of type `Child`.
+`Child` contains some basic text — maybe with a few edge cases.
+
+You write rudimentary "this doesn't crash" tests for both and some more advanced tests for `Parent` that exercise edge cases in `Child`.
+You've now achieved 100% unit test coverage for these new components.
+Hooray!...
+
+<LabeledVideo
+	alt="Todd Chavez from Bojack Horseman saying 'Hooray! ...question mark?'"
+	description="...question mark?"
+	original="https://giphy.com/gifs/netflix-bojack-horseman-JNrWNUUNZlIhG"
+	src="/images/blog/todd-hooray.webm"
+/>
+
+Unfortunately, you're no longer writing unit tests: these are more like integration tests.
+You've lost some of the benefits of focused unit tests:
+
+- `Child` changes may fail `Parent` tests, which will be confusing to debug.
+- `Child` logic tests go through logic in `Parent`, which adds extra work to writing test changes.
+- Most importantly, if we change `Child` to be allowed as children of other component types (and delete `Parent`), we would then have to move the logic in `Parent` testing `Child` into `Child`'s unit tests.
+  That's extra work when we're not changing Child at all!
+
+It's better to put the tests for each component in that component's tests in the first place.
+It might be a little more work to write more test scaffolding in the beginning, but in the long term you're buying more stability in your tests.
+
+## Takeaways
+
+1. All code, given time, is _bad code_.
+1. There is no silver bullet for good code.
+1. If your code isn't testable, it's probably not great to begin with.
+1. A rising tide lifts all boats.
+1. Test all your code.
+1. Exercise critical thinking.
+
+Many thanks to the kind humans who helped proofread this article!
+
+Chris Bevan, Derek Mehlhorn, Nayomi Mitchell, Ian Craig, Helen Anderson, Adam Reineke, Shawn Lee, Jesse Freitas: you're all superb teammates.
+🙌
+
+Also my parents.
+Solid grammar checking there.
+👌
