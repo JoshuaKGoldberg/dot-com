@@ -20,20 +20,28 @@ import webpackBundleAnalyzerClientAfter from "./webpack-bundle-analyzer-client-a
 
 1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
 1. 👉 Hidden Embedded Images
-1. _Barrel Imports: coming soon!_
+1. [Barrel Imports](./speeding-up-centered-part-3-barrel-imports)
 1. _Unused Code Bloat: coming soon!_
 1. _Emoji Processing Time: coming soon!_
 
 ## Issue 2: Hidden Images
 
-Many web apps from include a huge amount of code stored in shared libraries and inline assets imported into their bundled scripts.
-Those libraries and assets can be convenient for development - and even improve performance by reducing the total number of network requests.
+Most web apps today reuse a lot of code between different pages.
+Teams often create reusable packages containing shared components and media assets that can be imported into bundled scripts.
+
+Those packages can be convenient for development - and even improve performance by reducing the total number of network requests.
 However, overloading the initial page bundle with too much code can also slow the page down.
+
+I had a hunch when looking at the Centered app that it was including an excessive amount of code in client bundles.
+Even its relatively simple marketing pages seemed to be taking a long time to load.
+
+Time to investigate: was Centered including excess code, and if so, where was it coming from?
 
 ### 1. Identification
 
 The first tool used in many performance investigations is a [Chrome dev tools > Lighthouse performance audit](https://developer.chrome.com/docs/devtools/lighthouse).
 I'd skipped it in the previous investigation, so I ran it now to get an overview of a page's performance issues.
+The result showed the page in the "red", meaning it indeed was slow to load:
 
 <LabeledImage
 	alt="Lighthouse performance report of 36 (in the red). 0.6 First Contentful Paint (green), 17.6s Largest Contentful Paint (red), 1,020ms Total Blocking Time (red), 0.007 Cumulative Layout Shift (green), 9.5s Speed Index (red)."
@@ -138,11 +146,18 @@ Tools like [Webpack Bundle Analyzer](https://github.com/vercel/next.js/tree/cana
 As always, verify your performance hunches with tooling such as a [Chrome dev tools > Lighthouse performance audit](https://developer.chrome.com/docs/devtools/lighthouse).
 You never know how far any improvement will take the page!
 
-### Coming Soon
+### Up Next
 
 Deleting the largest offending file wasn't enough to fully save Centered's lighthouse performance score.
 And why was an unused file even being loaded on the client in the first place?!
 
-The next post in this series will show off how we removed plenty more unnecessary files to get that performance score out of the red.
+[Speeding Up Centered Part 3: Barrel Exports](./speeding-up-centered-part-3-barrel-exports) shows off how we removed plenty more unnecessary files to get that performance score out of the red.
+It produced much more encouraging performance improvements - would recommend reading on!
+
+1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
+1. 👉 Hidden Embedded Images
+1. [Barrel Imports](./speeding-up-centered-part-3-barrel-imports)
+1. _Unused Code Bloat: coming soon!_
+1. _Emoji Processing Time: coming soon!_
 
 [^1]: https://almanac.httparchive.org/en/2022/page-weight#request-bytes

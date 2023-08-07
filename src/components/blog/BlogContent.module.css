@@ -12,7 +12,7 @@
 }
 
 .article :is(h2, h3, h4) {
-	scroll-margin-top: calc(var(--heightMinimumFromHeader) - 0.5rem);
+	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
 .article h2 {
@@ -82,6 +82,11 @@
 
 .article strong {
 	font-weight: bolder;
+}
+
+.article sup a {
+	padding: 0 0.1rem 0 0.2rem;
+	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
 @media (min-width: 1017px) {

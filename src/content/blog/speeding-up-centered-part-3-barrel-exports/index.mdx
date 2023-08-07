@@ -38,7 +38,8 @@ And if this "unused" file was previously getting loaded, how many other unused n
 
 The `GCallSuggestionModal` component I'd deleted was only ever used once.
 It was exported from the `index.ts` of a shared components package.
-This is a pattern called _"barrel export"_[^1]: having one file export a collection of useful values and/or types.
+Re-exporting many components from one file is a pattern called _"barrel export"_[^1].
+It's commonly used to help establish a single, easy-to-find place for many useful values and/or types.
 
 In theory, barrel exports shouldn't cause any performance issues.
 Modern bundlers generally _"tree shake"_[^2] away unused code.
@@ -193,12 +194,12 @@ You can read more in the [1.31 Release Notes > SWC Import Resolution](https://ne
 
 The changes I applied in I did in this investigation will be irrelevant once Centered upgrades to Next.js 13.1.
 At time of investigation, Centered was still on 13.0.
-Fun.
 
 ### Coming Soon
 
 This work area brought the Lighthouse Performance score up to orange instead of red, but there was still more work to be done.
 The next two investigations will show a couple more touchups I applied to remove unused code and script work.
+Look forward to them in the next few weeks!
 
 [^1]: https://basarat.gitbook.io/typescript/main-1/barrel
 [^2]: https://developer.mozilla.org/en-US/docs/Glossary/Tree_shaking
