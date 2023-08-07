@@ -17,8 +17,18 @@ export interface Props {
 >
 	<img
 		alt={Astro.props.alt}
+		class="labeled-image"
 		src={typeof Astro.props.src === "string"
 			? Astro.props.src
 			: Astro.props.src.src}
 	/>
 </LabeledMedia>
+
+<style is:inline>
+	.labeled-image {
+		display: block;
+		margin: auto;
+		max-height: 25rem;
+		max-width: 100%;
+	}
+</style>
