@@ -80,11 +80,11 @@ One advantage of using popular frameworks such as Next.js and Webpack is that gr
 The Next.js docs include a handy [Production Checklist](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist) guide with a [Reducing JavaScript Size](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist#reducing-javascript-size) section.
 The [Webpack Bundle Analyzer](https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer) linked on that page is particularly useful for visualizing what goes into your bundles.
 
-I ran the bundle analyzer on Centered, then opened the client bundle analysis:
+I ran the bundle analyzer on Centered, then opened the client bundle analysis to see an absurdly large `GCalFeaturesIllustration` chunk:
 
 <LabeledImage
 	alt="Webpack Bundle Analyzer gzipped output FoamTree visualization. Total chunk size is 11.58 MB, and the biggest chunk is pages/_app at 9.05 MB. A very large GCalFeaturesIllustration.js is inside the app bundle"
-	note="Never before in my time as a performance investigator had I seen a single file in a page bundle be larger than the entire included node_modules."
+	note="Whoa. Never before in my time as a performance investigator had I seen a single file in a page bundle be larger than the entire included node_modules."
 	src={webpackBundleAnalyzerClientBefore}
 />
 
