@@ -37,9 +37,10 @@ And if this "unused" file was previously getting loaded, how many other unused n
 ### 1. Identification
 
 The `GCallSuggestionModal` component I'd deleted was only ever used once.
-It was exported from the `index.ts` of a shared components package.
-Re-exporting many components from one file is a pattern called _"barrel export"_[^1].
-It's commonly used to help establish a single, easy-to-find place for many useful values and/or types.
+It was exported from the `index.ts` of a shared components package, presumably with the intention that other packages could import it if needed.
+
+Re-exporting many components from one file is a pattern called _"barrel exports"_[^1].
+Barrel exports are commonly used to help establish a single, easy-to-find place for many useful values and/or types.
 
 In theory, barrel exports shouldn't cause any performance issues.
 Modern bundlers generally _"tree shake"_[^2] away unused code.
@@ -72,6 +73,8 @@ It felt bizarre that the largest chunk by far was coming from only a few dozen f
 #### Testing the Hypothesis
 
 I was more confident in my hypothesis that barrel exports weren't being tree shaken, but still didn't have any evidence.
+You've got to have real evidence before taking action on performance issues.
+
 To test the hypothesis, I manually changed the 34 `'@fortawesome/pro-light-svg-icons'` imports to instead directly import from individual component paths:
 
 ```diff
@@ -96,7 +99,7 @@ That meant the hypothesis was correct: the app's build system wasn't tree shakin
 
 There are generally two ways to fix missing tree shaking for barrel exports:
 
-- Fix your build system to enable tree shaking of barrel exports _(generally the right way)_
+- Fix your build system to enable tree shaking of barrel exports _(the right way)_
 - Switch from barrel exports to manual _(the straightforward way)_
 
 In theory I would have liked to fix the build system...

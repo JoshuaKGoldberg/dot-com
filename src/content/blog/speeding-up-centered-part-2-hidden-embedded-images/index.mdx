@@ -20,7 +20,7 @@ import webpackBundleAnalyzerClientAfter from "./webpack-bundle-analyzer-client-a
 
 1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
 1. 👉 Hidden Embedded Images
-1. [Barrel Imports](./speeding-up-centered-part-3-barrel-imports)
+1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
 1. _Unused Code Bloat: coming soon!_
 1. _Emoji Processing Time: coming soon!_
 
@@ -74,7 +74,7 @@ What was causing the bundle to be so huge?
 
 ### 2. Investigation
 
-Centered's app is built on [Next.js](https://nextjs.org) and uses [Webpack](https://webpack.js.org) integration to bundle code.
+Centered's app is built on [Next.js](https://nextjs.org) and uses [Webpack](https://webpack.js.org) to bundle code.
 One advantage of using popular frameworks such as Next.js and Webpack is that great tooling is often available for common development tasks such as performance investigations.
 
 The Next.js docs include a handy [Production Checklist](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist) guide with a [Reducing JavaScript Size](https://nextjs.org/docs/pages/building-your-application/deploying/production-checklist#reducing-javascript-size) section.
@@ -106,6 +106,9 @@ Nearly all of those characters came from `xlinkHref` embeds inside `<image>` tag
 	xlinkHref="data:image/png;base64, ...(thousands or millions of encoded image characters)..."
 />
 ```
+
+It seems we'd found our culprit.
+Millions of bits of data coming from those `<image>` tags was bloating the initial page bundle with unnecessary code.
 
 I had to wonder: where was the component being used?
 Depending on that usage, perhaps there'd be a way to shrink down the embedded images to a much smaller size?
@@ -156,7 +159,7 @@ It produced much more encouraging performance improvements - would recommend rea
 
 1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
 1. 👉 Hidden Embedded Images
-1. [Barrel Imports](./speeding-up-centered-part-3-barrel-imports)
+1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
 1. _Unused Code Bloat: coming soon!_
 1. _Emoji Processing Time: coming soon!_
 
