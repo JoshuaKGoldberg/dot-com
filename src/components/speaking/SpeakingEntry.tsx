@@ -16,6 +16,7 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 				props.speaking.data.date.toLocaleString("default", {
 					day: "numeric",
 					month: "short",
+					timeZone: "GMT",
 				}),
 				props.speaking.data.location,
 			]
