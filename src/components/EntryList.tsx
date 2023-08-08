@@ -14,8 +14,8 @@ export function EntryList(props: EntryListProps) {
 			<Text
 				as="h2"
 				class={styles.subHeading}
-				fontWeight="light"
 				fontSize="medium"
+				fontWeight="light"
 				id={props.category.toLowerCase().replaceAll(/\s+/g, "-")}
 			>
 				{props.category}

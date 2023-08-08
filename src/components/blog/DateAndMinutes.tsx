@@ -17,8 +17,8 @@ export function DateAndMinutes(props: DateAndMinutesProps) {
 	return (
 		<>
 			{props.date.toLocaleString("default", {
-				month: "short",
 				day: "numeric",
+				month: "short",
 				year: props.year,
 			})}
 			<span class={styles.between} />

@@ -17,7 +17,6 @@ export function ProjectEntry(props: ProjectEntryProps) {
 
 	return (
 		<ContentEntry
-			description={props.project.data.description}
 			image={
 				props.project.data.image
 					? {
@@ -29,11 +28,12 @@ export function ProjectEntry(props: ProjectEntryProps) {
 					  }
 					: undefined
 			}
-			subtitle={props.project.data.role ?? "Creator & Maintainer"}
 			links={[
 				["Repo", url()],
 				...Object.entries(props.project.data.links ?? []),
 			]}
+			description={props.project.data.description}
+			subtitle={props.project.data.role ?? "Creator & Maintainer"}
 			title={title()}
 			url={url()}
 			widths="half"

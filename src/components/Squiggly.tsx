@@ -6,8 +6,8 @@ import type { FontSize, TextProps } from "./Text";
 import { Text } from "./Text";
 
 const fontSizes: Record<string, string | undefined> = {
-	smaller: styles.smaller,
 	medium: styles.medium,
+	smaller: styles.smaller,
 };
 
 export type SquigglyFontSize = keyof typeof fontSizes;

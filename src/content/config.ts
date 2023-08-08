@@ -32,8 +32,8 @@ export const collections = {
 				.optional(),
 			role: z.string().optional(),
 			stars: z.number(),
-			url: z.string().optional(),
 			title: z.string().optional(),
+			url: z.string().optional(),
 		}),
 	}),
 	speaking: defineCollection({

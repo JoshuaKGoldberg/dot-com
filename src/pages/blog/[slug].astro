@@ -33,19 +33,19 @@ const rendered = await entry.render();
 >
 	<BodyContents class="top">
 		<BlogHero
-			body={entry.body}
-			class="hero"
-			date={entry.data.pubDate}
-			description={entry.data.description}
-			download={entry.data.download}
 			image={entry.data.image && {
 				alt: entry.data.image.alt,
 				size: "small",
 				src: `/images/blog/${entry.data.image.src}`,
 			}}
+			body={entry.body}
+			class="hero"
+			date={entry.data.pubDate}
+			description={entry.data.description}
+			download={entry.data.download}
 			title={entry.data.title}
 		/>
-		<TableOfContents headings={rendered.headings} client:only />
+		<TableOfContents client:only headings={rendered.headings} />
 	</BodyContents>
 	<BlogContent rendered={rendered} />
 </BaseLayout>
