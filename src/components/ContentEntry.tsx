@@ -45,7 +45,7 @@ export function ContentEntry(props: ContentEntryProps) {
 					>
 						{props.title}
 					</Text>
-					<Text class={styles.subtitle} as="p" fontWeight="light">
+					<Text as="p" class={styles.subtitle} fontWeight="light">
 						{props.subtitle}
 					</Text>
 					{props.description && (
@@ -59,7 +59,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						</Text>
 					)}
 					{props.links && (
-						<Text class={styles.links} as="p" fontWeight="light">
+						<Text as="p" class={styles.links} fontWeight="light">
 							<For each={props.links.sort(([a], [b]) => a.localeCompare(b))}>
 								{([text, href]) => (
 									<Anchor

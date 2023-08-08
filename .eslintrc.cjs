@@ -4,6 +4,7 @@ module.exports = {
 		"plugin:@typescript-eslint/recommended",
 		"plugin:astro/recommended",
 		"plugin:jsx-a11y/recommended",
+		"plugin:perfectionist/recommended-natural",
 		"plugin:regexp/recommended",
 		"plugin:typescript-sort-keys/recommended",
 	],
@@ -83,15 +84,13 @@ module.exports = {
 		"astro",
 		"deprecation",
 		"jsx-a11y",
+		"perfectionist",
 		"regexp",
 		"solid",
-		"simple-import-sort",
 		"typescript-sort-keys",
 	],
 	root: true,
 	rules: {
-		"simple-import-sort/imports": "error",
-		"simple-import-sort/exports": "error",
 		"deprecation/deprecation": "error",
 
 		// Stylistic concerns that don't interfere with Prettier

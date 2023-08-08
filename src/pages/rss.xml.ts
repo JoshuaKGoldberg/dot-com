@@ -1,5 +1,6 @@
-import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 import type { APIContext } from "astro";
+
+import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 
 import { blogDescription, site } from "../constants";
 
@@ -7,7 +8,6 @@ export async function get(context: APIContext) {
 	return rss({
 		customData: `<language>en-us</language>`,
 		description: blogDescription,
-		site: context.site?.toString() ?? site,
 		items: (
 			await pagesGlobToRssItems(
 				// TODO: find or file an issue?
@@ -18,6 +18,7 @@ export async function get(context: APIContext) {
 			...inner,
 			link: inner.link.replace(/^src\/content/, "").replace(/index.mdx$/, ""),
 		})),
+		site: context.site?.toString() ?? site,
 		title: "Goldblog",
 	});
 }

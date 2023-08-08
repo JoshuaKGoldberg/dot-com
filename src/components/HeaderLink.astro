@@ -17,9 +17,9 @@ const active =
 <Squiggly
 	as="a"
 	class={clsx("link", active && "active")}
-	href={href}
 	fontSize="medium"
 	fontWeight="bolder"
+	href={href}
 	{...href.startsWith("http") && { target: "_blank" }}
 	variant={active ? "inactive" : "onHover"}
 >

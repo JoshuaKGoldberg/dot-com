@@ -1,10 +1,9 @@
 ---
-import "./code.css";
-
 import type { Render } from "astro:content";
 
 import BodyContents from "../BodyContents.astro";
 import styles from "./BlogContent.module.css";
+import "./code.css";
 
 export interface Props {
 	rendered: Awaited<Render[".md"]>;

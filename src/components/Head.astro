@@ -110,10 +110,10 @@ const metaPairs = [
 		type="image/svg+xml"
 	/>
 	{metaPairs.map((meta) => <meta {...meta} />)}
-	<meta name="description" content={description} />
-	<meta name="keywords" content={keywords.join()} />
-	<meta name="generator" content={Astro.generator} />
-	<meta name="viewport" content="width=device-width" />
+	<meta content={description} name="description" />
+	<meta content={keywords.join()} name="keywords" />
+	<meta content={Astro.generator} name="generator" />
+	<meta content="width=device-width" name="viewport" />
 	<title>{title}</title>
 </head>
 
