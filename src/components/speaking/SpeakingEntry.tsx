@@ -15,8 +15,8 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 			}
 			subtitle={[
 				props.speaking.data.date.toLocaleString("default", {
-					month: "short",
 					day: "numeric",
+					month: "short",
 				}),
 				props.speaking.data.location,
 			]
