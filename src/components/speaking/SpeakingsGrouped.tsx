@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+
 import { For } from "solid-js";
 
 import { groupBy } from "~/utils";

@@ -87,13 +87,10 @@ module.exports = {
 		"perfectionist",
 		"regexp",
 		"solid",
-		"simple-import-sort",
 		"typescript-sort-keys",
 	],
 	root: true,
 	rules: {
-		"simple-import-sort/imports": "error",
-		"simple-import-sort/exports": "error",
 		"deprecation/deprecation": "error",
 
 		// Stylistic concerns that don't interfere with Prettier

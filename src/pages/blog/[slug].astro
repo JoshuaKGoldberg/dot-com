@@ -1,10 +1,10 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 
+import BodyContents from "~/components/BodyContents.astro";
 import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
 import { TableOfContents } from "~/components/blog/TableOfContents";
-import BodyContents from "~/components/BodyContents.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {

@@ -1,5 +1,6 @@
-import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 import type { APIContext } from "astro";
+
+import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 
 import { blogDescription, site } from "../constants";
 

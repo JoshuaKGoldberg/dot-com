@@ -1,8 +1,9 @@
 import clsx from "clsx";
 import { type JSX, splitProps } from "solid-js";
 
-import styles from "./Squiggly.module.css";
 import type { FontSize, TextProps } from "./Text";
+
+import styles from "./Squiggly.module.css";
 import { Text } from "./Text";
 
 const fontSizes: Record<string, string | undefined> = {

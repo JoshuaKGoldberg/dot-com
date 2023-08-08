@@ -1,5 +1,6 @@
-import readingTime from "reading-time";
 import type { JSX } from "solid-js/jsx-runtime";
+
+import readingTime from "reading-time";
 
 import styles from "./DateAndMinutes.module.css";
 
