@@ -9,15 +9,15 @@ import MainArea from "~/components/MainArea.astro";
 export interface Props {
 	class?: string | undefined;
 	description: string;
-	slug: string;
+	image: string;
 	title?: string;
 }
 
-const { class: className, description, slug, title } = Astro.props;
+const { class: className, description, image, title } = Astro.props;
 ---
 
 <html lang="en">
-	<Head description={description} image={`images/${slug}.png`} title={title} />
+	<Head description={description} image={image} title={title} />
 	<div id="#top"></div>
 	<MainArea as="body" class={className}>
 		<Header />
