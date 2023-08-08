@@ -7,11 +7,7 @@ interface Props {
 	title: string | undefined;
 }
 
-const {
-	description,
-	image: imageRaw,
-	title,
-} = Astro.props;
+const { description, image: imageRaw, title } = Astro.props;
 const image = new URL(imageRaw, Astro.site);
 const keywords = [
 	"accessibility",

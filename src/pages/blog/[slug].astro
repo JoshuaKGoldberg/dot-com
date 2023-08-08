@@ -28,7 +28,9 @@ const rendered = await entry.render();
 
 <BaseLayout
 	description={entry.data.description}
-	image={entry.data.image?.src ? `/images/blog/${entry.data.image.src}` : `/images/goldblog.png`}
+	image={entry.data.image?.src
+		? `/images/blog/${entry.data.image.src}`
+		: `/images/goldblog.png`}
 	title={`${entry.data.title} | Goldblog`}
 >
 	<BodyContents class="top">
