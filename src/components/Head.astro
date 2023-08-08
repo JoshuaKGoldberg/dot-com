@@ -7,14 +7,8 @@ interface Props {
 	title: string | undefined;
 }
 
-const {
-	description: descriptionRaw,
-	image: imageRaw,
-	title: titleRaw,
-} = Astro.props;
-const description = `Hi! I'm Josh. ${descriptionRaw} This is my personal site, built with Astro, Solid, and TypeScript.`;
+const { description, image: imageRaw, title } = Astro.props;
 const image = new URL(imageRaw, Astro.site);
-const title = titleRaw ? `${titleRaw} | Josh Goldberg` : "Josh Goldberg";
 const keywords = [
 	"accessibility",
 	"developer",

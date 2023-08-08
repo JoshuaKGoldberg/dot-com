@@ -24,12 +24,15 @@ if (!entry) {
 }
 
 const rendered = await entry.render();
+const image = entry.data.image?.src
+	? `/images/blog/${entry.data.image.src}`
+	: `/images/goldblog.png`;
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	slug={entry.slug}
-	title={entry.data.title}
+	image={image}
+	title={`${entry.data.title} | Goldblog`}
 >
 	<BodyContents class="top">
 		<BlogHero
