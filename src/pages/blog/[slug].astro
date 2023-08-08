@@ -24,13 +24,14 @@ if (!entry) {
 }
 
 const rendered = await entry.render();
+const image = entry.data.image?.src
+	? `/images/blog/${entry.data.image.src}`
+	: `/images/goldblog.png`;
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	image={entry.data.image?.src
-		? `/images/blog/${entry.data.image.src}`
-		: `/images/goldblog.png`}
+	image={image}
 	title={`${entry.data.title} | Goldblog`}
 >
 	<BodyContents class="top">
