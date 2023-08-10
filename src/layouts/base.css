@@ -86,10 +86,6 @@
 		text-decoration: none;
 	}
 
-	main {
-		position: relative;
-	}
-
 	@media (prefers-color-scheme: dark) {
 		:root {
 			--colorBackgroundBottom: #111117;
