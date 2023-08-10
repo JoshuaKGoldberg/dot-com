@@ -8,6 +8,9 @@ import Head from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
 import MainArea from "~/components/MainArea.astro";
 
+import "./normalize.css";
+import "./base.css";
+
 export interface Props {
 	class?: string | undefined;
 	description: string;
@@ -29,14 +32,4 @@ const { class: className, description, image, title } = Astro.props;
 		</main>
 		<Footer />
 	</MainArea>
-
-	<style is:global>
-		@import "./normalize.css";
-		@import "./base.css";
-	</style>
-	<style>
-		main {
-			position: relative;
-		}
-	</style>
 </html>
