@@ -1,5 +1,8 @@
 ---
 import "@fontsource/league-spartan/variable.css";
+// https://github.com/markteekman/accessible-astro-components/issues/51
+// @ts-expect-error
+import { SkipLinks } from 'accessible-astro-components'
 
 import Footer from "~/components/Footer.astro";
 import Head from "~/components/Head.astro";
@@ -20,8 +23,9 @@ const { class: className, description, image, title } = Astro.props;
 	<Head description={description} image={image} title={title} />
 	<div id="#top"></div>
 	<MainArea as="body" class={className}>
+		<SkipLinks />
 		<Header />
-		<main>
+		<main id="main-content">
 			<slot />
 		</main>
 		<Footer />

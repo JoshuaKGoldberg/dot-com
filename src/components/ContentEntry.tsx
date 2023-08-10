@@ -1,3 +1,5 @@
+// https://arethetypeswrong.github.io/?p=accessible-astro-components%402.1.0
+import { SkipLinks } from "accessible-astro-components";
 import { clsx } from "clsx";
 import { For, JSX } from "solid-js";
 
