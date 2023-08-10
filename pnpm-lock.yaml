@@ -29,6 +29,9 @@ dependencies:
   '@typescript-eslint/parser':
     specifier: ^6.0.0
     version: 6.0.0(eslint@8.42.0)(typescript@5.1.3)
+  accessible-astro-components:
+    specifier: ^2.1.0
+    version: 2.1.0
   astro:
     specifier: ^2.9.7
     version: 2.9.7(sharp@0.32.3)
@@ -1946,6 +1949,10 @@ packages:
 
   /@vscode/l10n@0.0.13:
     resolution: {integrity: sha512-A3uY356uOU9nGa+TQIT/i3ziWUgJjVMUrGGXSrtRiTwklyCFjGVWIOHoEIHbJpiyhDkJd9kvIWUOfXK1IkK8XQ==}
+    dev: false
+
+  /accessible-astro-components@2.1.0:
+    resolution: {integrity: sha512-QJ0qGeq9f7GnOwVcnkP8yoSoGbIQnu7nfjmLtmJR7zb30B8hdHQNRfu9yuHtxW1lLQGDNefErs8luxezxq+c8w==}
     dev: false
 
   /acorn-jsx@5.3.2(acorn@8.10.0):
