@@ -35,6 +35,9 @@ Quoting its lovely GitHub repository description:
 
 Cute.
 
+Knip looked like just the right tool for the job.
+It can sniff out unused files and package dependencies in just one command: `npx knip`.
+
 ### 2. Implementation
 
 I added `knip` as a `devDependency` in the Centered website package, then added a `knip.json` config file to let it know how to deal with the Next.js structure:
@@ -50,8 +53,7 @@ I added `knip` as a `devDependency` in the Centered website package, then added 
 ```
 
 I then ran `knip`.
-The results were pleasing.
-It found quite a few unused areas of code!
+The results were pleasing: it found quite a few unused areas of code!
 
 Quoting and summarizing its output:
 
