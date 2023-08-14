@@ -52,7 +52,7 @@ I added `knip` as a `devDependency` in the Centered website package, then added 
 }
 ```
 
-I then ran `knip`.
+I then ran `npx knip`.
 The results were pleasing: it found quite a few unused areas of code!
 
 Quoting and summarizing its output:
@@ -100,6 +100,7 @@ Doing has shaved off multiple percentage points from total file sizes, package m
 
 I'd highly recommend anybody reading this give [Knip](https://github.com/webpro/knip) a try.
 You can see it in action in my [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package).
+That package runs it in CI so that individual pull requests are verified to not cause any code or dependencies to become unused.
 
 ### Coming Soon
 
