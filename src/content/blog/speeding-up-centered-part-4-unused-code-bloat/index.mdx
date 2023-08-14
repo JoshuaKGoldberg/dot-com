@@ -86,12 +86,15 @@ Ah well.
 ## In Conclusion
 
 Sometimes your performance investigations will drastically speed up the page.
-Sometimes they do virtually nothing instead.
+Sometimes they do virtually nothing for page performance.
 Such is the nature of speculative performance work.
 
 Still, I think this set of changes was worth the investigation.
 Pruning away dead code is beneficial for projects in the long run.
 Dead code leads to slower builds, harder-to-understand codebases, and increased complexity of dependency trees.
+
+I've been on teams where introducing unused code detection removed _hundreds_ of files and _dozens_ of unused dependencies.
+Doing has shaved off multiple percentage points from total file sizes, package manager install times, and build times.
 
 I'd highly recommend anybody reading this give [Knip](https://github.com/webpro/knip) a try.
 You can see it in action in my [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package).
