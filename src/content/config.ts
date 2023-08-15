@@ -15,27 +15,6 @@ export const collections = {
 				.optional(),
 		}),
 	}),
-	projects: defineCollection({
-		schema: z.object({
-			category: z.string(),
-			description: z.string(),
-			image: z.string().optional(),
-			links: z.record(z.string()).optional(),
-			more: z
-				.array(
-					z.object({
-						description: z.string(),
-						href: z.string(),
-						title: z.string(),
-					})
-				)
-				.optional(),
-			role: z.string().optional(),
-			stars: z.number(),
-			title: z.string().optional(),
-			url: z.string().optional(),
-		}),
-	}),
 	speaking: defineCollection({
 		schema: z.object({
 			category: z.string(),

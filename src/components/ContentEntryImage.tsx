@@ -20,7 +20,7 @@ export function ContentEntryImage(props: ContentEntryImageProps) {
 		<img
 			alt={props.alt}
 			class={clsx(styles.contentEntryImage, variants[props.variant])}
-			src={`/images/${props.src}`}
+			src={props.src.startsWith("http") ? props.src : `/images/${props.src}`}
 		/>
 	);
 }

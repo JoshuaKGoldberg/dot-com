@@ -1,5 +1,5 @@
 ---
-import { getCollection } from "astro:content";
+import { projectCategories } from "joshuakgoldberg";
 
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
@@ -7,8 +7,6 @@ import HeroTertiary from "~/components/HeroTertiary.astro";
 import { ProjectsGrouped } from "~/components/speaking/ProjectsGrouped";
 
 import HeroLayout from "../layouts/HeroLayout.astro";
-
-const allProjects = await getCollection("projects");
 ---
 
 <HeroLayout
@@ -29,6 +27,6 @@ const allProjects = await getCollection("projects");
 	</HeroTertiary>
 
 	<BodyContents>
-		<ProjectsGrouped projects={allProjects} />
+		<ProjectsGrouped projectCategories={projectCategories} />
 	</BodyContents>
 </HeroLayout>

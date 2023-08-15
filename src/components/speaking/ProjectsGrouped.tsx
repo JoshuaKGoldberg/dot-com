@@ -1,38 +1,30 @@
-import type { CollectionEntry } from "astro:content";
-
-import { groupBy } from "~/utils";
+import type { Project, projectCategories } from "joshuakgoldberg";
 
 import { GroupedEntries } from "../GroupedEntries";
 import { ProjectEntry } from "./ProjectEntry";
 
-function byMoreOrStars(
-	a: CollectionEntry<"projects">,
-	b: CollectionEntry<"projects">
-) {
-	if (a.data.more && !b.data.more) {
+function byMoreOrStars(a: Project, b: Project) {
+	if (a.more && !b.more) {
 		return 1;
 	}
 
-	if (b.data.more && !a.data.more) {
+	if (b.more && !a.more) {
 		return -1;
 	}
 
-	return b.data.stars - a.data.stars;
+	return b.stars - a.stars;
 }
 
 export interface ProjectsGroupedProps {
-	projects: CollectionEntry<"projects">[];
+	projectCategories: typeof projectCategories;
 }
 
 export function ProjectsGrouped(props: ProjectsGroupedProps) {
 	return (
 		<GroupedEntries
-			groups={Object.entries(
-				groupBy(
-					props.projects.sort(byMoreOrStars),
-					(project) => project.data.category
-				)
-			).sort(([a], [b]) => a.localeCompare(b))}
+			groups={Object.entries(props.projectCategories).map(
+				([category, { projects }]) => [category, projects.sort(byMoreOrStars)]
+			)}
 			renderEntry={(project) => <ProjectEntry project={project} />}
 		/>
 	);

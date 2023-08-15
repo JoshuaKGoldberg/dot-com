@@ -1,4 +1,4 @@
-import type { CollectionEntry } from "astro:content";
+import type { Project, ProjectBase } from "joshuakgoldberg";
 
 import { For } from "solid-js";
 
@@ -7,22 +7,25 @@ import styles from "./ProjectEntry.module.css";
 import { ProjectSubEntry } from "./ProjectSubEntry";
 
 export interface ProjectEntryProps {
-	project: CollectionEntry<"projects">;
+	project: Project;
+}
+
+function projectUrl(project: ProjectBase) {
+	return project.url ?? `https://github.com/JoshuaKGoldberg/${project.repo}`;
+}
+
+function projectTitle(project: ProjectBase) {
+	return project.name ?? project.repo;
 }
 
 export function ProjectEntry(props: ProjectEntryProps) {
-	const url = () =>
-		props.project.data.url ??
-		`https://github.com/JoshuaKGoldberg/${props.project.slug}`;
-	const title = () => props.project.data.title ?? props.project.slug;
-
 	return (
 		<ContentEntry
 			image={
-				props.project.data.image
+				props.project.image
 					? {
-							alt: `${title()} logo`,
-							src: props.project.data.image,
+							alt: `${projectTitle(props.project)} logo`,
+							src: props.project.image,
 							variant: "square",
 							// TODO: find or file an issue?
 							// eslint-disable-next-line no-mixed-spaces-and-tabs
@@ -30,20 +33,26 @@ export function ProjectEntry(props: ProjectEntryProps) {
 					: undefined
 			}
 			links={[
-				["Repo", url()],
-				...Object.entries(props.project.data.links ?? []),
+				["Repo", projectUrl(props.project)],
+				...Object.entries(props.project.links ?? []),
 			]}
-			description={props.project.data.description}
-			subtitle={props.project.data.role ?? "Creator & Maintainer"}
-			title={title()}
-			url={url()}
+			description={props.project.description}
+			subtitle={props.project.role ?? "Creator & Maintainer"}
+			title={projectTitle(props.project)}
+			url={projectUrl(props.project)}
 			widths="half"
 		>
-			{props.project.data.more && (
+			{props.project.more && (
 				<li>
 					<ul class={styles.subList}>
-						<For each={props.project.data.more}>
-							{(more) => <ProjectSubEntry {...more} />}
+						<For each={props.project.more}>
+							{(more) => (
+								<ProjectSubEntry
+									description={more.description}
+									href={projectUrl(more)}
+									title={projectTitle(more)}
+								/>
+							)}
 						</For>
 					</ul>
 				</li>
