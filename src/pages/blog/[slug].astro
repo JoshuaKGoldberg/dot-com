@@ -6,10 +6,12 @@ import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
 import { TableOfContents } from "~/components/blog/TableOfContents";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import { createBlogTitle } from "~/components/blog/utils";
+
+const blogs = await getCollection("blog");
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
-
 	return blogs.map((blog) => ({
 		params: { slug: blog.slug },
 	}));
@@ -27,12 +29,14 @@ const rendered = await entry.render();
 const image = entry.data.image?.src
 	? `/images/blog/${entry.data.image.src}`
 	: `/images/goldblog.png`;
+
+const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={entry.data.description}
 	image={image}
-	title={`${entry.data.title} | Goldblog`}
+	title={`${title} ${entry.data.title} | Goldblog`}
 >
 	<BodyContents class="top">
 		<BlogHero
@@ -46,44 +50,55 @@ const image = entry.data.image?.src
 			date={entry.data.pubDate}
 			description={entry.data.description}
 			download={entry.data.download}
-			title={entry.data.title}
+			title={title}
 		/>
 		<TableOfContents client:only headings={rendered.headings} />
 	</BodyContents>
-	<BlogContent rendered={rendered} />
-</BaseLayout>
+	<BlogContent
+		rendered={rendered}
+		series={entry.data.series
+			? {
+					entries: blogs.filter(
+						(blog) => blog.data.series === entry.data.series
+					),
+					entry,
+					series: entry.data.series,
+			  }
+			: undefined}
+	/>
 
-<style>
-	.top {
-		margin-top: 1.5rem;
-	}
-
-	.top::after {
-		border-bottom: 1px solid var(--colorMedium);
-		content: "";
-		display: block;
-		margin-bottom: 2.5rem;
-		width: 100%;
-	}
-
-	@media (min-width: 700px) {
+	<style>
 		.top {
-			margin-top: var(--heightMinimumFromHeader);
+			margin-top: 1.5rem;
 		}
 
 		.top::after {
-			margin-bottom: 3rem;
-		}
-	}
-
-	@media (min-width: 1017px) {
-		.top::after {
-			margin: 2rem 0;
-			width: calc(100% - var(--widthTableOfContents));
+			border-bottom: 1px solid var(--colorMedium);
+			content: "";
+			display: block;
+			margin-bottom: 2.5rem;
+			width: 100%;
 		}
 
-		.hero {
-			max-width: calc(var(--widthSlim) + 4rem);
+		@media (min-width: 700px) {
+			.top {
+				margin-top: var(--heightMinimumFromHeader);
+			}
+
+			.top::after {
+				margin-bottom: 3rem;
+			}
 		}
-	}
-</style>
+
+		@media (min-width: 1017px) {
+			.top::after {
+				margin: 2rem 0;
+				width: calc(100% - var(--widthTableOfContents));
+			}
+
+			.hero {
+				max-width: calc(var(--widthSlim) + 4rem);
+			}
+		}
+	</style>
+</BaseLayout>
