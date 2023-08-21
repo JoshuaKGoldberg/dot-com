@@ -1,7 +1,8 @@
 ---
 description: "How I made TypeScript's parsing of name characters after numbers conform to the ECMAScript specification just a bit more strictly."
 pubDate: 2018-12-07
-title: "TypeScript Contribution Diary: Identifiers after Numeric Literals"
+series: "TypeScript Contribution Diary"
+title: "Identifiers after Numeric Literals"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
@@ -12,12 +13,6 @@ import tsdevtestResult4 from "./tsdevtest-result-4.webp";
 import tsdevtestParseElementThrice from "./tsdevtest-parseElement-thrice.png";
 import tsdevtestTargetESNext from "./tsdevtest-target-esnext.webp";
 import tsdevtestVariousErrors from "./tsdevtest-various-errors.webp";
-
-> I've started making contributions to TypeScript, working my way up from small error reporting nitpicks to (hopefully!) real syntactic and control flow improvements.
-> These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.
-> If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
-
-> Previous post: [Pretty Error Counts](./typescript-contribution-diary-pretty-error-counts)
 
 <LabeledImage
 	alt="Meme of drake gesturing away from a first panel and happily pointing towards a second. First: 'User reported bugs or feature suggestions'. Second: 'ECMAScript spec syntax errata'."

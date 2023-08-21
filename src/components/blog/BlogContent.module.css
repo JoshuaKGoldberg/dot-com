@@ -15,11 +15,11 @@
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
-.article h2 {
+.article > h2 {
 	margin-top: 2rem;
 }
 
-.article h3 {
+.article > h3 {
 	margin-top: 1rem;
 }
 
@@ -38,7 +38,7 @@
 	tab-size: 4;
 }
 
-.article blockquote {
+.article :is(aside, blockquote) {
 	--blockBorderWidth: 6px;
 	font-style: italic;
 	margin-left: 0;
@@ -46,7 +46,7 @@
 	position: relative;
 }
 
-.article blockquote::before {
+.article :is(aside, blockquote)::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -81,7 +81,7 @@
 }
 
 .article strong {
-	font-weight: bolder;
+	font-weight: var(--fontWeightBold);
 }
 
 .article sup a {
