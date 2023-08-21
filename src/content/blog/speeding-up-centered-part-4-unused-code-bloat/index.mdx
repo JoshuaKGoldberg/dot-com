@@ -1,0 +1,115 @@
+---
+description: "Using Knip to automatically detect unused files and dependencies in the Centered repository."
+image:
+  alt: "Zoomed in screenshot of a knip.json file showing 'entry' and 'ignore' string array entries"
+  src: knip-json.png
+pubDate: 2023-08-16 10:01 GMT
+title: "Speeding Up Centered Part 4: Unused Code Bloat"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
+> This post is the fourth in a series of five performance improvements I made to the [Centered app](https://centered.app).
+> See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
+
+1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
+1. 👉 _Unused Code Bloat_
+1. _Emoji Processing Time: coming soon!_
+
+## Issue 4: Unused Code Bloat
+
+The changes I'd made in the Centered performance post, [Barrel Exports](./speeding-up-centered-part-3-barrel-exports), improved Centered's tree shaking to defer loading portions of larger shared packages.
+But in the previous performance post, [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images), we'd seen how a single unused file significantly increased bundle size despite not being referenced anywhere.
+I had to wonder whether there were other unused files, and if so, whether they were contributing to load time.
+Even if their load was deferred, surely removing them would have some positive impact on page performance, right?
+
+### 1. Tooling
+
+It just so happens that I'd recently started using [Knip](https://github.com/webpro/knip) in many of my projects.
+Quoting its lovely GitHub repository description:
+
+> ✂️ Find unused files, dependencies and exports in your JavaScript and TypeScript projects.
+> Knip it before you ship it!
+
+Cute.
+
+Knip looked like just the right tool for the job.
+It can sniff out unused files and package dependencies in just one command: `npx knip`.
+
+### 2. Implementation
+
+I added `knip` as a `devDependency` in the Centered website package, then added a `knip.json` config file to let it know how to deal with the Next.js structure:
+
+```json
+{
+	// Page files are the app "entry" points that are always considered used
+	"entry": ["pages/**/*.tsx"],
+
+	// Ignore public assets that may be referenced by URI
+	"ignore": ["public"]
+}
+```
+
+I then ran `npx knip`.
+The results were pleasing: it found quite a few unused areas of code!
+
+Quoting and summarizing its output:
+
+- `Unused dependencies (18)`: `package.json` dependencies not transitively imported or referenced by any of the pages
+- `Unused files (50)`: source files also not transitively imported or referenced by any of the pages
+
+I uninstalled the unused dependencies and deleted the unused files.
+
+#### Bonus Deletion: Shared Components
+
+Knip is highly configurable and generally supports monorepos.
+In theory I could have enabled it on the entire Centered monorepo and configured it to understand that Centered's shared components package was only ever used internally.
+Doing so would have allowed it to catch unused shared components like the giant `GCallSuggestionModal` component I'd deleted.
+
+But, in the interest of time, I just ran a manual find-all-references on all components exported by the package.
+It found **34** unused components.
+I deleted them all.
+
+### 3. Confirmation
+
+Deleting files feels satisfying, but needs to be paired with confirmation on whether it changed anything.
+I ran the [Webpack Bundle Analyzer](https://github.com/vercel/next.js/tree/canary/packages/next-bundle-analyzer) on an updated production build.
+
+The results were not very impressive.
+The chunk sizes remained just about the same.
+Only a small handful of chunks changed, and no more than 1-2% of their total size.
+
+A Lighthouse performance audit confirmed that the page's score wasn't changed by the changes.
+
+Ah well.
+
+## In Conclusion
+
+Sometimes your performance investigations will drastically speed up the page.
+Sometimes they do virtually nothing for page performance.
+Such is the nature of speculative performance work.
+
+Still, I think this set of changes was worth the investigation.
+Pruning away dead code is beneficial for projects in the long run.
+Dead code leads to slower builds, harder-to-understand codebases, and increased complexity of dependency trees.
+
+I've been on teams where introducing unused code detection removed _hundreds_ of files and _dozens_ of unused dependencies.
+Doing has shaved off multiple percentage points from total file sizes, package manager install times, and build times.
+
+I'd highly recommend anybody reading this give [Knip](https://github.com/webpro/knip) a try.
+You can see it in action in my [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package).
+That package runs it in CI so that individual pull requests are verified to not cause any code or dependencies to become unused.
+
+### Coming Soon
+
+The next post in this series will be the final one, but I've been saving the best for last.
+It'll show how I discovered runtime code in a package wasting _multiple seconds_ on repeated work (!).
+Look forward to it later this month!
+
+1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
+1. 👉 _Unused Code Bloat_
+1. _Emoji Processing Time: coming soon!_
