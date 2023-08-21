@@ -8,6 +8,7 @@ title: "Speeding Up Centered Part 4: Unused Code Bloat"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 > This post is the fourth in a series of five performance improvements I made to the [Centered app](https://centered.app).
 > See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
@@ -55,12 +56,23 @@ I added `knip` as a `devDependency` in the Centered website package, then added 
 I then ran `npx knip`.
 The results were pleasing: it found quite a few unused areas of code!
 
+<LabeledVideo
+	alt="Running yarn knip on a repository, finding very many unused dependencies and files"
+	description="Running knip with almost no customizations in its knip.json file"
+	src="/images/blog/centered-knip.webm"
+/>
+
 Quoting and summarizing its output:
 
-- `Unused dependencies (18)`: `package.json` dependencies not transitively imported or referenced by any of the pages
 - `Unused files (50)`: source files also not transitively imported or referenced by any of the pages
+- `Unused dependencies (29)`: `package.json` `dependencies` entries not transitively imported or referenced by any of the pages
+- `Unused devDependencies (5)`: `package.json` `devDependencies` entries not transitively imported or referenced by any of the pages
+- `Unlisted dependencies (48)`: npm packages imported by files but not mentioned explicitly in `package.json`
+- `Unused exports (10)`: values exported by files but not imported anywhere else
+- `Unused exported types (2)`: types exported by files but not imported anywhere else
 
-I uninstalled the unused dependencies and deleted the unused files.
+I uninstalled the unused dependencies, removed the unused files, and deleted the unused types and values in code.
+Whoohoo! 🥳
 
 #### Bonus Deletion: Shared Components
 
