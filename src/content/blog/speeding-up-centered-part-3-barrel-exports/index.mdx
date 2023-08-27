@@ -15,17 +15,17 @@ import webpackBundleAnalyzerAfterCodemod from "./webpack-bundle-analyzer-after-c
 import webpackBundleAnalyzerAfterProLight from "./webpack-bundle-analyzer-after-pro-light.png";
 
 > This post is the third in a series of five performance improvements I made to the [Centered app](https://centered.app).
-> See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
+> See [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds) for more context.
 
-1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
-1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
 1. 👉 Barrel Exports
-1. [Unused Code Bloat](./speeding-up-centered-part-4-unused-code-bloat)
+1. [Unused Code Bloat](/blog/speeding-up-centered-part-4-unused-code-bloat)
 1. _Emoji Processing Time: coming soon!_
 
 ## Issue 3: Barrel Exports
 
-In the previous Centered performance post, [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images), we saw one gigantic React component increase the client bundle size by multiple MB.
+In the previous Centered performance post, [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images), we saw one gigantic React component increase the client bundle size by multiple MB.
 But that component wasn't even used by any runtime - why was it impacting performance?
 And if this "unused" file was previously getting loaded, how many other unused node files were also being loaded?
 
@@ -204,10 +204,10 @@ At time of investigation, Centered was still on 13.0.
 This work area brought the Lighthouse Performance score up to orange instead of red, but there was still more work to be done.
 The next two investigations will show a couple more touchups I applied to remove unused code and script work.
 
-1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
-1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
 1. 👉 Barrel Exports
-1. [Unused Code Bloat](./speeding-up-centered-part-4-unused-code-bloat)
+1. [Unused Code Bloat](/blog/speeding-up-centered-part-4-unused-code-bloat)
 1. _Emoji Processing Time: coming soon!_
 
 [^1]: https://basarat.gitbook.io/typescript/main-1/barrel
