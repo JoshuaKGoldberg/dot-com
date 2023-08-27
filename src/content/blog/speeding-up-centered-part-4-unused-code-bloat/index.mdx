@@ -11,18 +11,18 @@ import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 > This post is the fourth in a series of five performance improvements I made to the [Centered app](https://centered.app).
-> See [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds) for more context.
+> See [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds) for more context.
 
-1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
-1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
-1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](/blog/speeding-up-centered-part-3-barrel-exports)
 1. 👉 _Unused Code Bloat_
 1. _Emoji Processing Time: coming soon!_
 
 ## Issue 4: Unused Code Bloat
 
-The changes I'd made in the Centered performance post, [Barrel Exports](./speeding-up-centered-part-3-barrel-exports), improved Centered's tree shaking to defer loading portions of larger shared packages.
-But in the previous performance post, [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images), we'd seen how a single unused file significantly increased bundle size despite not being referenced anywhere.
+The changes I'd made in the Centered performance post, [Barrel Exports](/blog/speeding-up-centered-part-3-barrel-exports), improved Centered's tree shaking to defer loading portions of larger shared packages.
+But in the previous performance post, [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images), we'd seen how a single unused file significantly increased bundle size despite not being referenced anywhere.
 I had to wonder whether there were other unused files, and if so, whether they were contributing to load time.
 Even if their load was deferred, surely removing them would have some positive impact on page performance, right?
 
@@ -120,8 +120,8 @@ The next post in this series will be the final one, but I've been saving the bes
 It'll show how I discovered runtime code in a package wasting _multiple seconds_ on repeated work (!).
 Look forward to it later this month!
 
-1. [81 &lt;iframe&gt; Embeds](./speeding-up-centered-part-1-81-iframe-embeds)
-1. [Hidden Embedded Images](./speeding-up-centered-part-2-hidden-embedded-images)
-1. [Barrel Exports](./speeding-up-centered-part-3-barrel-exports)
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](/blog/speeding-up-centered-part-3-barrel-exports)
 1. 👉 _Unused Code Bloat_
 1. _Emoji Processing Time: coming soon!_

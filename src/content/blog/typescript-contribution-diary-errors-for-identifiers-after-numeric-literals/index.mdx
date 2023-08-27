@@ -17,7 +17,7 @@ import tsdevtestVariousErrors from "./tsdevtest-various-errors.webp";
 > These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.
 > If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
 
-> Previous post: [Pretty Error Counts](./typescript-contribution-diary-pretty-error-counts)
+> Previous post: [Pretty Error Counts](/blog/typescript-contribution-diary-pretty-error-counts)
 
 <LabeledImage
 	alt="Meme of drake gesturing away from a first panel and happily pointing towards a second. First: 'User reported bugs or feature suggestions'. Second: 'ECMAScript spec syntax errata'."
@@ -234,7 +234,7 @@ The error showed!
 
 ## Test Time
 
-Per my previous post on [verifying parser changes](./typescript-contribution-diary-trailing-type-parameter), TypeScript has a "baselines" system where you check in source files with expected types and errors.
+Per my previous post on [verifying parser changes](/blog/typescript-contribution-diary-trailing-type-parameter), TypeScript has a "baselines" system where you check in source files with expected types and errors.
 I added a `tests/cases/compiler/identifierStartAfterNumericLiteral.ts` to explicitly test these changes:
 
 ```ts
