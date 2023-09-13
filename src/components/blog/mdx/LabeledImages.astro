@@ -18,8 +18,8 @@ export interface Props {
 			Astro.props.images.map((image) => (
 				<img
 					alt={image.alt}
-					src={typeof image.src === "string" ? image.src : image.src.src}
 					class="labeled-image"
+					src={typeof image.src === "string" ? image.src : image.src.src}
 				/>
 			))
 		}
