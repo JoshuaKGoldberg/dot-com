@@ -1,0 +1,40 @@
+---
+import LabeledMedia from "./LabeledMedia.astro";
+
+export interface LabeledImage {
+	alt: string;
+	src: { src: string } | string;
+}
+
+export interface Props {
+	description: string;
+	images: [LabeledImage, LabeledImage];
+}
+---
+
+<LabeledMedia description={Astro.props.description}>
+	<div class="labeled-images">
+		{
+			Astro.props.images.map((image) => (
+				<img
+					alt={image.alt}
+					src={typeof image.src === "string" ? image.src : image.src.src}
+					class="labeled-image"
+				/>
+			))
+		}
+	</div>
+</LabeledMedia>
+
+<style is:inline>
+	.labeled-images {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	label .labeled-images img.labeled-image {
+		display: block;
+		margin: auto;
+		max-width: calc(50% - 0.25rem);
+	}
+</style>
