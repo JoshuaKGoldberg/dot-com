@@ -1,0 +1,191 @@
+---
+description: "Finding and eliminating thousands of calls to recreate a giant regular expression in a popular open source emoji plugin."
+image:
+  alt: "Grid of various skin tone emojis with red vertical pipe line characters between them."
+  src: emojis-regex.png
+pubDate: 2023-09-20 10:00 GMT
+title: "Speeding Up Centered Part 5: Emoji Processing"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledImages from "~/components/blog/mdx/LabeledImages.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+import lighthousePerformanceOverviewAfter from "./lighthouse-performance-overview-after.png";
+import lighthousePerformanceOverviewBefore from "./lighthouse-performance-overview-before.png";
+import lighthousePerformanceOverviewOriginal from "./lighthouse-performance-overview-original.png";
+import lighthousePerformanceProfileAfterLongTask from "./lighthouse-performance-profile-after-long-task.png";
+import lighthousePerformanceProfileBeforeLongTask from "./lighthouse-performance-profile-before-long-task.png";
+import sourceBeforeLineAnnotations from "./source-before-line-annotations.png";
+
+> This post is the fifth in a series of five performance improvements I made to the [Centered app](https://centered.app).
+> See [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds) for more context.
+
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](/blog/speeding-up-centered-part-3-barrel-exports)
+1. [Unused Code Bloat](/blog/speeding-up-centered-part-4-unused-code-bloat)
+1. 👉 _Emoji Processing_
+
+## Issue 5: Emoji Processing
+
+The previous few performance improvements I'd made for Centered were mostly focused on reducing the amount of data loaded on each page.
+But runtime performance -especially on page load- is important too.
+And while I'd improved the load performance of one page back in the [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds) work, I'd noticed an odd slowdown upon visiting any page.
+It was as if the page was performing multiple seconds of busywork before it could run any other scripts.
+
+<LabeledVideo
+	alt="Loading localhost:1701/app (Centered) for several seconds of spinner before app content appears."
+	description="Loading a local production build of Centered. Note the several seconds before populating with app content."
+	src="/images/blog/localhost-centered-loading-seconds.webm"
+/>
+
+This last performance improvement is my favorite of the bunch.
+I ended up finding a root cause embedded in a cross-section of interesting open source libraries.
+And, best of all, I was able to fix it for all users of the libraries.
+☺️
+
+### 1. Identification
+
+I popped open the Chrome dev tools _Performance_ tab and ran _[Start profiling and reload page](https://developer.chrome.com/docs/devtools/performance/reference/#record-load)_ on a local production build of Centered.
+The resultant flamegraph showed a lovely breakdown of how long function call took in code and who it called.
+
+<LabeledImage
+	alt="Performance flame chart loading the centered homepage. A 1.07 s long task is shown containing many anonymous functions with calls to e.toShort calling e.replaceAll."
+	description="Note the important lighthouse metrics all coming after the >1 second long task. Oof."
+	src={lighthousePerformanceProfileBeforeLongTask}
+/>
+
+Taking more than a second to run scripts on page startup is not good.
+It was also interesting that it seemed to be calling the same `toShort` and `replaceAll` repeatedly.
+Why was the code spending so much time in those functions?
+
+### 2. Investigation
+
+I drilled down to see the long task's contents coming from a package called `@draft-js-plugins/emoji`.
+[Draft.js](https://draftjs.org) is a popular text editor component for React.
+`@draft-js-plugins/emoji` is a plugin that, as the name suggests, adds rich emoji support.
+
+I opened that file in the Chrome dev tools _[Sources](https://developer.chrome.com/docs/devtools/sources)_ panel to see the line-by-line view of which lines in source code were taking up time:
+
+<LabeledImage
+	alt="Dev tools sources view of the previous code snippet. 1689.3 ms are in the line in ns.escapeRegExp. 378.4 ms are in the var search line in replaceAll. Other lines don't exceed 35 ms."
+	description="Interesting that the two lines containing complex regular expressions were the ones with the most time spent."
+	src={sourceBeforeLineAnnotations}
+/>
+
+Multiple seconds spent in two functions that seem to be processing/replacing text in strings?
+Exciting!
+Juicy bits of slow code like that are gold for performance investigations such as this one.
+They almost always end up with some straightforward optimization to avoid repeat work.
+
+#### Sharing the Enthusiasm
+
+I'd recently seen the excellent _[Speeding up the JavaScript ecosystem](https://marvinh.dev/blog/speeding-up-javascript-ecosystem)_ series of posts by [Marvin Hagemeister](https://marvinh.dev).
+Although Draft.js emoji plugins aren't as widely used as the other findings Marvin had blogged about, I still thought Marvin might find this interesting.
+I put together an [isolated reproduction](https://github.com/JoshuaKGoldberg/repros/tree/draft-js-emoji-plugin-emoji-toolkit-performance) and sent him an email describing the performance findings thus far.
+
+Marvin replied less than a day later expressing interest in the issue.
+I suggested we pair program on it and we hopped on a call within the hour.
+Marvin has a great deal of experience in performance investigations, so I was thrilled to get to learn from him.
+
+### 3. Implementation
+
+You can see Marvin's summary of the investigation in [Speeding up the JavaScript ecosystem - draft-js emoji plugin](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-5).
+Marvin does a great job of explaining the path of discovery.
+In short:
+
+1. `ns.escapeRegExp` was being called thousands of times
+2. Each of those calls always received the same argument from `ns.replaceAll`'s `find` parameter
+3. The culprit calling `ns.replaceAll` repeatedly was a parent `ns.toShort` function:
+   ```js
+   ns.toShort = function (str) {
+   	var find = ns.unicodeCharRegex();
+   	str = ns.replaceAll(str, find);
+   	return str;
+   };
+   ```
+4. The `find` variable's regular expression was huge -dozens of kB- and being recreated each time
+5. Caching the result of creating that regular expression saved over 90% of the time bloat (!)
+
+We sent the results to the [joypixels/emoji-toolkit](https://github.com/joypixels/emoji-toolkit) repository:
+
+- [perf: cache repeat regexp processing for toShort](https://github.com/joypixels/emoji-toolkit/pull/57) pull request
+- [Poor performance when calling toShort repeatedly (uncached repeated regexp processing)](https://github.com/joypixels/emoji-toolkit/issues/58) issue
+
+I attached a [Performance Profiles](https://github.com/joypixels/emoji-toolkit/files/11180719/Performance.Profiles.zip) zip folder to the emoji-toolkit issue showing the before & after performance profiles.
+The changes are glorious:
+
+- Before: ~2.5 seconds frame, with a ~2.23 seconds long task
+- After: ~383.3 milliseconds frame, with a ~127.28 milliseconds long task
+
+Marvin's post also mentions further improvements that could be done to shrink that time even more.
+For now, this improvement was quite nice!
+
+### 4. Confirmation
+
+[Open source pull requests can take a while](/blog/open-source-pull-request-timing).
+I used [patch-package](https://github.com/ds300/patch-package) to apply the changes locally in the meantime, then re-ran the production build and measured it locally with Lighthouse.
+
+The results were fantastic: an increase from 51 to 65% in the overall performance score!
+
+<LabeledImages
+	images={[
+		{
+			alt: "Lighthouse performance report of 51 (orange). 0.6 First Contentful Paint (green), 12.1s Largest Contentful Paint (red), 340ms Total Blocking Time (orange), 0.035 Cumulative Layout Shift (green), 5.4s Speed Index (red).",
+			src: lighthousePerformanceOverviewBefore,
+		},
+		{
+			alt: "Lighthouse performance report of 65 (orange). 0.6 First Contentful Paint (green), 7.0s Largest Contentful Paint (red), 110ms Total Blocking Time (green), 0.023 Cumulative Layout Shift (green), 4.4s Speed Index (red).",
+			src: lighthousePerformanceOverviewAfter,
+		},
+	]}
+	description="Lighthouse performance overviews. Note, too, the improvements in LCP, TBT, and Speed Index."
+/>
+
+I'm happy to say that Centered shipped the performance improvements in April of 2023 and [emoji-toolkit 8.0.0](https://github.com/joypixels/emoji-toolkit/releases/tag/8.0.0) released in August of 2023 with the performance fix.
+Cheers for a faster web! 🥳
+
+## In Conclusion
+
+I had a great time running these performance investigations.
+Over the course of the series, I got to uncover some hilariously huge embedded media, dive into Next.js barrel exports bundling, apply custom ESLint rules as codemods, and flex using unused code detection with Knip.
+And -best of all- I got to work with Marvin Hagemeister on improving a slowdown in a popular open source library.
+
+<LabeledImages
+	images={[
+		{
+			alt: "Lighthouse performance report of 36 (orange). 0.6 First Contentful Paint (green), 17.6s Largest Contentful Paint (red), 1,020ms Total Blocking Time (orange), 0.007 Cumulative Layout Shift (green), 9.5s Speed Index (red).",
+			src: lighthousePerformanceOverviewOriginal,
+		},
+		{
+			alt: "Lighthouse performance report of 65 (orange). 0.6 First Contentful Paint (green), 7.0s Largest Contentful Paint (red), 110ms Total Blocking Time (green), 0.023 Cumulative Layout Shift (green), 4.4s Speed Index (red).",
+			src: lighthousePerformanceOverviewAfter,
+		},
+	]}
+	description="Comparing the Lighthouse performance overview from before I started to how it looks now. An 1.8x improvement in overall score is not too shabby!"
+/>
+
+More work could of course be done to get that 65 score closer to 100, but that's a matter for someone else to take on.
+I'm satisfied with the sum of improvements to Centered.
+Getting to work on low-size, high-impact performance improvements is always a treat when I have the time for it.
+
+I hope you read these posts and get excited to run your own performance investigations.
+If you do, remember:
+
+- [Page performance matters for all sorts of important reasons](https://web.dev/why-speed-matters).
+- Both page load time and runtime speed impact how pages feel to users.
+- Performance regressions can easily slip in over time.
+- Always profile performance fixes using tools such as [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview).
+- Learn the libraries and frameworks your apps are built on.
+- Deleting unused code is a worthwhile goal on its own.
+- Try to avoid and/or cache areas of work that take a long time.
+
+Thanks for reading!
+💖
+
+1. [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds)
+1. [Hidden Embedded Images](/blog/speeding-up-centered-part-2-hidden-embedded-images)
+1. [Barrel Exports](/blog/speeding-up-centered-part-3-barrel-exports)
+1. [Unused Code Bloat](/blog/blog/speeding-up-centered-part-4-unused-code-bloat)
+1. 👉 _Emoji Processing_
