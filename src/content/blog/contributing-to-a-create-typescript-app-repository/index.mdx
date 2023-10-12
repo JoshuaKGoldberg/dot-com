@@ -157,7 +157,7 @@ Now, as you edit source files, equivalent output files should be made and contin
 ## Validating Changes
 
 I'd recommend trying out your changes locally to make sure they're working as you'd expect.
-Two common situations for repositores are:
+Two common situations for repositories are:
 
 - If the repository can be run in a terminal, try running your built files (most commonly, with a command like `node bin/index.js`)
 - If the repository is a dependency of another repository, try using [`pnpm link`](https://pnpm.io/cli/link) to try your changes locally
@@ -251,8 +251,8 @@ Be sure to read and `[x]` check all the
 
 ### Review Comments
 
-You can always add more changes aferwards by making a new commit and pushing it.
-The `-u origin` is no longer necessary for `git push` now that your local repostiory knows which remote the branch's commits should be pushed to:
+You can always add more changes to the pull request by making a new commit on the same branch and pushing it.
+The `-u origin` is no longer necessary for `git push` now that your local repository knows which remote the branch's commits should be pushed to:
 
 ```shell
 git add -A
@@ -269,7 +269,7 @@ Reviews that are waiting resolutions to commits are given the `status: waiting f
 Once you're ready to have the pull request looked at again, [re-request review](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews#re-requesting-a-review) from the maintainer(s) whose requests you feel are ready to be reviewed.
 The label should be removed automatically.
 
-If there are any comment threads you didn't resolve, such as from not knowing the right way to, post a respons to each specific comment thread.
+If there are any comment threads you didn't resolve, such as from not knowing the right way to, post a response to each specific comment thread.
 Otherwise there's no need to `@` tag any maintainers.
 You can mark any other comment threads as resolved.
 
@@ -315,7 +315,7 @@ Hooray!
 - I cloned a repository but now need to fork, how do I update?
 - My files aren't formatted on (save|commit)?
 - When should I use test snapshots?
-- How do I deal with merge conficts?
+- How do I deal with merge conflicts?
 - I sent a PR from `main`, how do I change the PR to be from a branch?
 - You merged a PR sent from `main`, how do I reset `main` back to the upstream's?
 - Why shouldn't I git force push
