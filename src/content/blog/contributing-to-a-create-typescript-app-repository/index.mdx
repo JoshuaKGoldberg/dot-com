@@ -1,0 +1,321 @@
+---
+description: "A thorough guide through the general flow of contributing to my create-typescript-app project or any repository scaffolded using it."
+image:
+  alt: "Logo of create-typescript-app: the TypeScript blue square with rounded corners, but a plus sign instead of 'TS'"
+  src: create-typescript-app.png
+pubDate: 2023-10-16
+tags:
+  [
+    "contributing",
+    "create-typescript-app",
+    "hacktoberfest",
+    "open source",
+    "static analysis",
+  ]
+title: "Contributing to a create-typescript-app Repository"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import vsCodeInstallRecommendedExtensions from "./vs-code-install-recommended-extensions.png";
+
+[create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) is a project of mine that provides a comprehensive template for any TypeScript repository.
+It scaffolds building, formatting, linting, releases, semantic versioning, and other commonly useful repository tooling in a standardized way.
+I use it for most of my open source projects now.
+
+One benefit of using a single template for many repositories is that each of those repositories ends up with a very similar contributing flow.
+Making changes, running tests, sending pull requests, and so on are all the same now across most of my repositories.
+This blog post is a comprehensive guide to the common activities you'll need to contribute to any of those repositories.
+
+## Prerequisites
+
+You'll need to install the following two tools on whatever computer/environment you want to develop on:
+
+- [Node.js](https://nodejs.org) to run JavaScript
+- [pnpm](https://pnpm.io): A alternative to Node's `npm` package manager that is generally much faster
+
+I recommend [VS Code](https://code.visualstudio.com) on your own computer because that's what I personally use and can help with the most.
+This blog post assumes you're using VS Code to keep the explanations straightforward.
+But if you feel more comfortable with a different setup, that's great too.
+Just make sure you're following the equivalent steps for your editor.
+
+My repositories also include a lot of additional tooling that you'll likely need to work with.
+You don't have to know any of the additional tooling already, but you should be able to read documentation, put forth a real effort to understand what the docs saying, and ask specific questions if you get stuck.
+
+Lastly, read the repository's contributing guide (`.github/CONTRIBUTING.md`) and development guide (`.github/DEVELOPMENT.md`).
+They'll tell you each of the commands used in that repository.
+
+> 💡 Whenever you use a tool for the first time, **read the tool's documentation**.
+> It will save you _so much time_ and make working much less confusing.
+
+### Git and GitHub Familiarity
+
+You don't need to be confident in Git or GitHub to contribute.
+I've included common steps to take in this guide.
+But it's helpful to understand vaguely what a "repository" is and what the difference between Git and GitHub are.
+At the very least, go through GitHub's _[Hello World](https://docs.github.com/en/get-started/quickstart/hello-world)_ and \_[Contributing to Projects](https://docs.github.com/en/get-started/quickstart/contributing-to-projects)\_ guides.
+
+## Finding an Issue
+
+The first step for almost all contributions is to find an open issue on the repository's issues page that is:
+
+- Marked as `accepting prs`: indicating it's something I'll accept a pull request for
+- Does not have an assignee: meaning no maintainer is planning on working on it
+
+Unless the change you'd like to make is an exceedingly small typo, please don't skip this step.
+Respecting the issue process gives several benefits:
+
+- It gives a repository's maintainer(s) the opportunity to provide useful advice
+- It makes sure contributors don't spend hours of work that won't be accepted
+- It keeps a discoverable, organized history of why changes were made
+
+I recommend finding an issue labeled `good first issue` if you've never worked in a particular repository before.
+Those issues are generally smaller, more self-contained ones that the maintainer(s) think should be good for first-timers.
+
+## Forking the Repository
+
+Unless you've been added as a collaborator or maintainer on someone else's repository, you won't have permissions to push branches to that repository on GitHub.
+You'll need to:
+
+1. [Fork the repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo) to your own account on GitHub
+2. [Clone that repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo#cloning-your-forked-repository) to wherever you want to develop from
+3. Tell your local repository clone about its "remotes" (online repositories it can pull from and/or push to):
+   - **Origin**: Your forked repository, which your local clone sees as its main source of truth (as in the, origin of your local repository's history)
+   - **Upstream**: The original repository (as in, its changes will flow "downstream" to your origin repository)
+
+Let's say your GitHub username was `YourUsername` and you wanted to contribute to the `create-typescript-app` repository owned by the `JoshuaKGoldberg` user on GitHub.
+You'd fork the repository and then run something like this:
+
+```shell
+git clone https://github.com/YourUsername/create-typescript-app
+cd create-typescript-app
+git remote add origin https://github.com/YourUsername/create-typescript-app
+git remote add upstream https://github.com/JoshuaKGoldberg/create-typescript-app
+```
+
+At this point, the terms we'd use to refer to your repositories would be:
+
+- **Local**: your computer's clone of `github.com/YourUsername/create-typescript-app`
+- **Origin**: referring to `github.com/YourUsername/create-typescript-app`
+- **Upstream**: referring to `github.com/JoshuaKGoldberg/create-typescript-app`
+
+Consider running `git remote -v` locally to see its list of remotes.
+You should see something like:
+
+```shell
+$ git remote -v
+origin  https://github.com/YourUsername/create-typescript-app (fetch)
+origin  https://github.com/YourUsername/create-typescript-app (push)
+upstream        https://github.com/JoshuaKGoldberg/create-typescript-eslint.git (fetch)
+upstream        https://github.com/JoshuaKGoldberg/create-typescript-eslint.git (push)
+```
+
+## Setting Up Your Workspace
+
+You'll now want to set up your workspace with the standard tools to develop with.
+Run the following two commands:
+
+1. `pnpm install`: to install required dependencies into the `node_modules/` directory
+2. The build command mentioned in `.github/DEVELOPMENT.md` (commonly, `pnpm build`): to make sure that installing succeeded
+
+A VS Code popup should have appeared in the bottom-right corner of the window suggesting you install some editor extensions.
+I'd highly recommend installing them.
+They'll give you real-time feedback as you edit files, which will save you a lot of time debugging issues.
+
+<LabeledImage
+	description="Screenshot of an extensions suggestion popup in VS Code."
+	src={vsCodeInstallRecommendedExtensions}
+/>
+
+You can see the list of a repository's extensions in `.vscode/extensions.json`.
+
+### Formatting On Save
+
+A `.vscode/settings.json` file exists with default settings to configure VS Code.
+Notably, it indicates that files should be auto-formatted on save with the Prettier extension.
+Try adding a few spaces after a `;` in a TypeScript source file such as `src/index.ts`, then saving.
+The spaces should be removed.
+
+You're now ready to start editing source files! 🎉
+
+## Building Changes
+
+The repository's `.github/DEVELOPMENT.md` should describe how to build source files into runnable output files.
+Commonly:
+
+```shell
+pnpm build --watch
+```
+
+I recommend also keeping the TypeScript compiler (`tsc`) running in a second, split terminal window as you make changes, so that you can get real-time updates from the type checker:
+
+```shell
+pnpm tsc --watch
+```
+
+Now, as you edit source files, equivalent output files should be made and continuously updated.
+
+## Validating Changes
+
+I'd recommend trying out your changes locally to make sure they're working as you'd expect.
+Two common situations for repositores are:
+
+- If the repository can be run in a terminal, try running your built files (most commonly, with a command like `node bin/index.js`)
+- If the repository is a dependency of another repository, try using [`pnpm link`](https://pnpm.io/cli/link) to try your changes locally
+  ```shell
+  # In the repository you're working on (say, create-typescript-app)
+  pnpm link --global
+  ```
+  ```shell
+  # In the repository consuming your repository
+  pnpm link create-typescript-app --global
+  ```
+
+The repository will also have automated tooling to validate changes.
+Those tools will also be describe in its `.github/DEVELOPMENT.md` file.
+
+Most repositories have the following commands:
+
+- `pnpm lint`: to run [ESLint](https://eslint.org)
+- `pnpm lint:knip`: to run [Knip](https://github.com/webpro/knip)
+- `pnpm lint:spelling`: to run [CSpell](https://cspell.org)
+
+### Running Tests
+
+Most repositories -mine included- generally ask that any changes to code logic should be accompanied by unit tests.
+Doing so makes sure that the logic is correct and stays correct as the repository changes over time.
+
+Tests can most commonly be run with something like:
+
+```shell
+pnpm test
+```
+
+#### Test Snapshots
+
+[Vitest snapshots](https://vitest.dev/guide/snapshot.html) are used in some repositories to help tests assert that some set of values is exactly what's expected.
+I generally use them when writing out the exact values would be annoying and cumbersome.
+You can generally update snapshots in repositories with a command like:
+
+```shell
+pnpm test -u
+```
+
+## Sending a Pull Request
+
+Once you've gotten as much confidence as you can in your changes, you'll want to send it in as a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) for review.
+It's best to create a separate branch for your changes instead of sending the pull request from your `main` branch.
+
+I recommend giving the first commit on that branch a message adhering to [conventional commits].
+New pull requests' titles must adhere to conventional commits, and when the branch has just one commit, they default to that commit's message.
+
+Continuing the `YourUsername/create-typescript-app` example:
+
+```shell
+# 1. Create a new branch named my-changes
+git checkout -b my-changes
+
+# 2. "Stage" (mark as ready to commit) all file changes
+git add -A
+
+# 3. Make a commit with all those files on the branch
+git commit -m "feat: your message here"
+
+# 4. Send the commit from your local to the origin
+git push -u origin my-changes
+```
+
+The last step should output a message with a URL to create a new pull request.
+It may look something like:
+
+```plaintext
+Enumerating objects: 1, done.
+Counting objects: 100% (1/1), done.
+Writing objects: 100% (1/1), 123 bytes | 123.45 KiB/s, done.
+Total 1 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'my-changes' on GitHub by visiting:
+remote:      https://github.com/JoshuaKGoldberg/create-typescript-app/pull/new/my-changes
+remote:
+To https://github.com/JoshuaKGoldberg/create-typescript-app
+ * [new branch]      my-changes -> my-changes
+branch 'my-changes' set up to track 'origin/my-changes'.
+```
+
+Click that link to visit the GitHub pull request creation page.
+Be sure to read and `[x]` check all the
+
+> Check the boxes with exactly `[x]`.
+> Not `[ x ]` or `[x ]` or `[ x]`.
+> Not `[✔️]` or `[✅]`.
+> Just `[x]`.
+
+### Review Comments
+
+You can always add more changes aferwards by making a new commit and pushing it.
+The `-u origin` is no longer necessary for `git push` now that your local repostiory knows which remote the branch's commits should be pushed to:
+
+```shell
+git add -A
+git commit -m "more changes etc etc"
+git push
+```
+
+> Please don't force push (`git push --force`) after a PR has been sent.
+> It's annoying to review changes over time if the history keeps changing.
+
+### Re-Requesting Review
+
+Reviews that are waiting resolutions to commits are given the `status: waiting for author` label.
+Once you're ready to have the pull request looked at again, [re-request review](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews#re-requesting-a-review) from the maintainer(s) whose requests you feel are ready to be reviewed.
+The label should be removed automatically.
+
+If there are any comment threads you didn't resolve, such as from not knowing the right way to, post a respons to each specific comment thread.
+Otherwise there's no need to `@` tag any maintainers.
+You can mark any other comment threads as resolved.
+
+## Pulling in Branch Changes
+
+After you send your pull request for review, a maintainer might make some changes on GitHub for you.
+For example, I might [sync the latest `main` into your branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) or [apply code review suggestions](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/incorporating-feedback-in-your-pull-request#applying-suggested-changes).
+
+Those changes will be made to your _origin_ repository on GitHub.
+You'll want to pull the changes into your _local_ repository:
+
+```shell
+git pull
+```
+
+## Pulling in Repository Changes
+
+When a pull request is merged _(yay!)_, a new ["squash merge"](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github#squashing-your-merge-commits) commit is made on the _upstream_ repository's `main` branch.
+That commit contains all the same file changes from the pull request - but is not the same commit hash as any of the _origin_ repository's.
+You'll want to pull the _upstream_ repository's new `main` commit into the `main` branches of both your _local_ and _origin_ repositories.
+
+One common way is to switch to the `main` branch locally, pull in the `upstream`'s new history, and then push to the _origin_:
+
+```shell
+git checkout main
+git pull upstream main
+git push
+```
+
+At this point, your pull request and all associated tasks should be complete!
+Everybody's `main` branch is up-to-date and contains all the changes.
+Hooray!
+
+## FAQs
+
+> I'll move these into a separate article soon!
+> Let me know: what other questions do you have?
+
+- I'm having a hard time, how do I ask for help?
+- Why are there so many steps?
+  - also have note about many of these being implicit in other repos
+- How confident in my changes should I be before sending a PR?
+- I cloned a repository but now need to fork, how do I update?
+- My files aren't formatted on (save|commit)?
+- When should I use test snapshots?
+- How do I deal with merge conficts?
+- I sent a PR from `main`, how do I change the PR to be from a branch?
+- You merged a PR sent from `main`, how do I reset `main` back to the upstream's?
+- Why shouldn't I git force push
