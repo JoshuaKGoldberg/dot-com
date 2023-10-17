@@ -26,7 +26,9 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 					groupBy(
 						props.previous
 							// TODO: when I add in tabs, then I'll add in non-talks
-							.filter((speaking) => speaking.data.category === "Talks"),
+							.filter((speaking) =>
+								["Documentaries", "Talks"].includes(speaking.data.category)
+							),
 						(speaking) => yearOrUpcoming(speaking.data.date)
 					)
 				).sort(([a], [b]) => (a === "Upcoming" ? -1 : +b - +a))}
