@@ -1,0 +1,232 @@
+---
+description: "FAQs for contributing to my create-typescript-app project or any repository scaffolded using it."
+image:
+  alt: "Logo of create-typescript-app: the TypeScript blue square with rounded corners, but a plus sign instead of 'TS'"
+  src: create-typescript-app.png
+pubDate: 2023-10-16
+tags:
+  [
+    "contributing",
+    "create-typescript-app",
+    "faqs",
+    "hacktoberfest",
+    "open source",
+    "static analysis",
+  ]
+title: "Contributing to a create-typescript-app Repository: FAQs"
+---
+
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
+> Work in progress pull request!
+> Please do send me feedback: here, on social media, or as comments in this pull request:
+> https://github.com/JoshuaKGoldberg/dot-com/pull/89
+> (I'll remove this notice before publishing)
+
+[create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) is a project of mine that provides a comprehensive template for any TypeScript repository.
+[Contributing to a create-typescript-app Repository](../contributing-to-a-create-typescript-app-repository) covers the general flow for contributing to those repositories.
+This article is a collection of the frequently asked questions (FAQs) for that flow.
+
+> Got your own question not covered here?
+> I'd be happy to answer it - let me know!
+
+## Asking Questions
+
+❤️ Definitely ask questions!
+The best way to do so depends on what you're working on.
+
+### How confident in my changes should I be before sending a PR?
+
+You don't have to be 100% confident in your changes.
+Do your best to get building, linting, and tests -including added unit tests- working as much as you can.
+
+See [I'm having a hard time, how do I ask for help?](#im-having-a-hard-time-how-do-i-ask-for-help) for asking questions.
+
+### I'm having a hard time, how do I ask for help?
+
+If the documentation on a repository is unclear about something, please file a docs issue on the repository's issue tracker.
+You're probably not the only person with that docs issue.
+Filing an issue puts that problem on the repository's issue tracker, which helps ensure it gets fixed.
+
+If you're confused reading an issue on an issue tracker, please ask for clarification on the issue.
+You're probably not the only person with that confusion.
+Asking on the public issue lets anybody else confused about the same point learn along with you.
+
+If you're working on a pull request, I'd recommend posting a comment thread on the file or line of code you want to ask for help with.
+A maintainer will answer the question as part of reviewing the pull request.
+Note that draft PRs generally aren't reviewed, so make sure the PR is un-drafted if you'd like your questions answered.
+
+For any other questions on repositories, see if the repository has a dedicated support forum, such as Discord.
+If it doesn't, and I'm a maintainer on the repository, you can reach out to me wherever you find me.
+My links are on the homepage of [joshuakgoldberg.com](https://joshuakgoldberg.com) and on my [GitHub @JoshuaKGoldberg profile](https://github.com/JoshuaKGoldberg).
+I look forward to hearing from you!
+
+## Git and GitHub
+
+The [GitHub docs](https://docs.github.com) are excellent for learning about both.
+Their [Set up Git](https://docs.github.com/en/get-started/quickstart/set-up-git) guide is particularly useful for working with it locally.
+
+### I cloned a upstream repository without forking
+
+That's ok!
+You'll need to update what your local repository thinks of as its "remotes" (remote repository equivalents).
+
+Run `git remote -v` to see all your remotes.
+You might see something like:
+
+```plaintext
+$ git remote -v
+origin  https://github.com/JoshuaKGoldberg/create-typescript-app.git (fetch)
+origin  https://github.com/JoshuaKGoldberg/create-typescript-app.git (push)
+```
+
+Use the following Git commands to rename the `origin` remote to `upstream`, then add your own `origin` after:
+
+```plaintext
+git remote rename origin upstream
+git remote add origin https://github.com/YourUsername/create-typescript-app
+```
+
+### I get 403 / permissions errors trying to `git push`
+
+Do you see anything like this?
+
+```plaintext
+$ git push -u origin my-branch
+remote: Permission to JoshuaKGoldberg/create-typescript-app.git denied to YourUsername.
+fatal: unable to access 'https://github.com/JoshuaKGoldberg/create-typescript-app.git/': The requested URL returned error: 403
+```
+
+If the "remote" being pushed to isn't a repository under your username, then you might have missed a [forking the repository step](/contributing-to-a-create-typescript-app-repository#forking-the-repository).
+Fork the repo, then see [I cloned a upstream repository without forking](i-cloned-a-upstream-repository-without-forking).
+
+If the "remote" being pushed to is a repository under your username, then your local Git might not have permissions to push to your account on GitHub.
+Consider using the [GitHub CLI](https://docs.github.com/en/github-cli/github-cli/about-github-cli) to make permissions settings easier to work with.
+
+### I sent a pull request from `main`, how do I change the pull request to be from a branch?
+
+I don't think there's a way to update what branch a PR is being sent from (its "head").
+I'd recommend creating a new branch with your changes, sending a new PR from that new branch, and closing the old PR from your `main`.
+The following Git commands will make a new branch (`my-new-branch`) on your local and origin repositories, then reset their `main` branch to the upstream's `main`.
+
+```shell
+git checkout -b my-new-branch main
+git push -u origin my-new-branch
+git checkout main
+git reset --hard upstream/main
+git push --force
+```
+
+### How do I reset my `main` back to the upstream's?
+
+Are you getting errors trying to update your local or origin repositories to the upstream?
+
+```plaintext
+$ git pull upstream main
+From https://github.com/JoshuaKGoldberg/create-typescript-app
+ * branch            main       -> FETCH_HEAD
+fatal: Not possible to fast-forward, aborting.
+```
+
+Those errors indicate that your local repository's `main` has its own commits not present on the upstream's.
+This is why I don't recommend sending PRs from a `main` branch.
+After a PR is merged into the `upstream` repository's `main`, its history will be different than your `main`s'.
+
+Run the `main`-related commands from [I sent a pull request from `main`, how do I change the pull request to be from a branch?](http://localhost:3000/blog/contributing-to-a-create-typescript-app-repository-faqs#i-sent-a-pull-request-from-main-how-do-i-change-the-pull-request-to-be-from-a-branch):
+
+```plaintext
+git checkout main
+git reset --hard upstream/main
+git push --force
+```
+
+### Why do you squash merge pull request branches?
+
+In short: I don't want to burden contributors with keeping clean Git histories.
+Squashing PRs means we don't care about the granular commits.
+We only need to care about the PR title, description, and latest files diff.
+
+In more detail: I prefer pull requests be small and single-purpose.
+It's very rare that a single PR is big enough that it would benefit from a clean commit history.
+This is especially true in the small-to-medium-sized projects targeted by `create-typescript-app`.
+
+Some repositories ask that pull requests have a clean Git history, meaning each commit has a discrete change and clear message explaining the change.
+Clean Git histories in a PR can make it easier to review the pull request.
+Merging a clean Git history into the default branch can make it easier for future developers to understand how the changes within the pull request came to be.
+
+One downside of keeping a clean Git history is that it requires pull request authors to do more work to keep the history clean.
+That's extra work even when the history doesn't need to be rewritten.
+And when it does need to be rewritten then developers not familiar with Git may have a hard time working with Git.
+
+### Why don't you want me to `git push --force` to a pull request branch?
+
+Most of the reasons why developers rewrite history in a PR branch involve curating a clean Git history.
+Per [Why do you squash merge pull request branches?](#why-do-you-squash-merge-pull-request-branches) that commit history is generally not necessary or asked for in my repositories.
+
+On the other hand, there are two main downsides to rorce pushing to an active pull request:
+
+- GitHub is not able to track changes across force pushes, which makes it take longer for maintainers perform incremental reviews
+- If a maintainer has checked out a branch locally, it can be inconvenient to pull in a new, conflicting history
+
+I personally also like showing how messy my Git history gets.
+I don't like the idea of new devlopers seeing a cleaned up history and thinking all experienced developers do work like that naturally.
+It's an unrealistic standard of code cleanliness.
+
+## Repository Tooling
+
+### My files aren't formatted on commit? Help?
+
+Did you run `pnpm install`?
+If dependencies were installed, the repository's tooling should have set up a Git commit hook to automatically format files with Prettier on save.
+
+1. If that didn't work, try removing the `node_modules/` directory and re-running `pnpm install`.
+2. If that passed but didn't fix the issue, try running `pnpm run prepare` manually.
+3. If that passed but didn't fix the issue, try filing an issue on the repository.
+
+### My files aren't formatted on save in VS Code? Help?
+
+Did you run `pnpm install` and install the [PRettier VS Code extension]?
+If dependencies were installed, the `editor.codeActionsOnSave` and `editor.defaultFormatter` settings from the repository's `.vscode/settings.json` file should be telling VS Code to format files when you save them.
+
+1. Try uninstalling the Prettier VS Code extension, installing it again, and then restarting VS Code.
+2. If that didn't work, try removing the `node_modules/` directory and re-running `pnpm install`.
+3. If that passed but didn't fix the issue, try filing an issue on the repository.
+
+### When should I use Vitest snapshots?
+
+See the [Vitest test snapshots docs](https://vitest.dev/guide/snapshot.html)
+In general, if there's some test value or function that would be inconvenient to manually craft test assertions for.
+Common cases include:
+
+- Checking what a function is called with, when the function may be called multiple times or with large objects
+- Checking a large object, string, or other piece of data matches an expected shap
+
+I generally prefer [`toMatchInlineSnapshot`](https://vitest.dev/api/expect.html#tomatchinlinesnapshot) so that the values are visible in the test itself.
+
+## Other
+
+### Why are there so many tools in your repositories?
+
+Because they're useful! 🙌
+
+I know that having to learn and work with so many tools can be painful.
+It takes time when you get started, slows down development when they complain, and generally make the repositories harder for new contributors to contribute to.
+That brings me pain.
+
+But!
+Each of the tools brings real benefit to the repository.
+The issues the prevent are things that often need to be flagged in pull requests - which means they often become bugs or typos discovered later.
+I believe these tools net save time by automating catching those issues.
+
+Furthermore, it's useful for the ecosystem for repositories to use th elatest and greatest in tooling.
+Using these tools provides valuable feedback for their projects and maintainers, which helps the industry learn and grow.
+That brings me joy.
+💓
+
+### Why is there so much to read in this guide?
+
+My repositories don't have much more to do in setup or contributing than most other repositories.
+I've just explicitly written out many of the things that are implicitly assumed in most repositories.
+Reading through the guide now will save you a ton of time later on.
+I promise.
