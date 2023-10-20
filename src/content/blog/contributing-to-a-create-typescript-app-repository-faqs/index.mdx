@@ -36,13 +36,13 @@ The best way to do so depends on what you're working on.
 You don't have to be 100% confident in your changes.
 Do your best to get building, linting, and tests -including added unit tests- working as much as you can.
 
-See [I'm having a hard time, how do I ask for help?](#im-having-a-hard-time-how-do-i-ask-for-help) for asking questions.
+See [I'm having a hard time, how do I ask for help?](#im-having-a-hard-time-how-do-i-ask-for-help) for more information.
 
 ### I'm having a hard time, how do I ask for help?
 
 If the documentation on a repository is unclear about something, please file a docs issue on the repository's issue tracker.
 You're probably not the only person with that docs issue.
-Filing an issue puts that problem on the repository's issue tracker, which helps ensure it gets fixed.
+Filing an issue helps ensure you get an answer and the docs get fixed.
 
 If you're confused reading an issue on an issue tracker, please ask for clarification on the issue.
 You're probably not the only person with that confusion.
@@ -56,6 +56,8 @@ For any other questions on repositories, see if the repository has a dedicated s
 If it doesn't, and I'm a maintainer on the repository, you can reach out to me wherever you find me.
 My links are on the homepage of [joshuakgoldberg.com](https://joshuakgoldberg.com) and on my [GitHub @JoshuaKGoldberg profile](https://github.com/JoshuaKGoldberg).
 I look forward to hearing from you!
+
+TODO HIT ME UP GIF
 
 ## Git and GitHub
 
@@ -83,6 +85,16 @@ git remote rename origin upstream
 git remote add origin https://github.com/YourUsername/create-typescript-app
 ```
 
+Running `git remote -v` again should show updated entries like:
+
+```plaintext
+$ git remote -v
+upstream  https://github.com/JoshuaKGoldberg/create-typescript-app.git (fetch)
+upstream  https://github.com/JoshuaKGoldberg/create-typescript-app.git (push)
+origin  https://github.com/YourUsername/create-typescript-app.git (fetch)
+origin  https://github.com/YourUsername/create-typescript-app.git (push)
+```
+
 ### I get 403 / permissions errors trying to `git push`
 
 Do you see anything like this?
@@ -93,8 +105,8 @@ remote: Permission to JoshuaKGoldberg/create-typescript-app.git denied to YourUs
 fatal: unable to access 'https://github.com/JoshuaKGoldberg/create-typescript-app.git/': The requested URL returned error: 403
 ```
 
-If the "remote" being pushed to isn't a repository under your username, then you might have missed a [forking the repository step](/contributing-to-a-create-typescript-app-repository#forking-the-repository).
-Fork the repo, then see [I cloned a upstream repository without forking](i-cloned-a-upstream-repository-without-forking).
+If the "remote" being pushed to isn't a repository under your username, then you might have missed a step in [forking the repository](/contributing-to-a-create-typescript-app-repository#forking-the-repository).
+Fork the repo on GitHub, then see [I cloned a upstream repository without forking](i-cloned-a-upstream-repository-without-forking).
 
 If the "remote" being pushed to is a repository under your username, then your local Git might not have permissions to push to your account on GitHub.
 Consider using the [GitHub CLI](https://docs.github.com/en/github-cli/github-cli/about-github-cli) to make permissions settings easier to work with.
@@ -103,7 +115,7 @@ Consider using the [GitHub CLI](https://docs.github.com/en/github-cli/github-cli
 
 I don't think there's a way to update what branch a PR is being sent from (its "head").
 I'd recommend creating a new branch with your changes, sending a new PR from that new branch, and closing the old PR from your `main`.
-The following Git commands will make a new branch (`my-new-branch`) on your local and origin repositories, then reset their `main` branch to the upstream's `main`.
+The following Git commands will make a new branch (`my-new-branch`) on your local and origin repositories, then reset each repository's `main` branch to the upstream's `main`.
 
 ```shell
 git checkout -b my-new-branch main
@@ -154,6 +166,8 @@ One downside of keeping a clean Git history is that it requires pull request aut
 That's extra work even when the history doesn't need to be rewritten.
 And when it does need to be rewritten then developers not familiar with Git may have a hard time working with Git.
 
+Therefore, I don't consider the benefits of a clean Git history to be worth the drawbacks in my repositories.
+
 ### Why don't you want me to `git push --force` to a pull request branch?
 
 Most of the reasons why developers rewrite history in a PR branch involve curating a clean Git history.
@@ -170,19 +184,23 @@ It's an unrealistic standard of code cleanliness.
 
 ## Repository Tooling
 
-### My files aren't formatted on commit? Help?
+### My files aren't formatted on commit
 
 Did you run `pnpm install`?
 If dependencies were installed, the repository's tooling should have set up a Git commit hook to automatically format files with Prettier on save.
 
-1. If that didn't work, try removing the `node_modules/` directory and re-running `pnpm install`.
+Here are a few other remediations:
+
+1. Try removing the `node_modules/` directory and re-running `pnpm install`.
 2. If that passed but didn't fix the issue, try running `pnpm run prepare` manually.
 3. If that passed but didn't fix the issue, try filing an issue on the repository.
 
-### My files aren't formatted on save in VS Code? Help?
+### My files aren't formatted on save in VS Code
 
-Did you run `pnpm install` and install the [PRettier VS Code extension]?
+Did you run `pnpm install` and install the [Prettier VS Code extension](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)?
 If dependencies were installed, the `editor.codeActionsOnSave` and `editor.defaultFormatter` settings from the repository's `.vscode/settings.json` file should be telling VS Code to format files when you save them.
+
+Here are a few other remediations:
 
 1. Try uninstalling the Prettier VS Code extension, installing it again, and then restarting VS Code.
 2. If that didn't work, try removing the `node_modules/` directory and re-running `pnpm install`.
@@ -190,7 +208,7 @@ If dependencies were installed, the `editor.codeActionsOnSave` and `editor.defau
 
 ### When should I use Vitest snapshots?
 
-See the [Vitest test snapshots docs](https://vitest.dev/guide/snapshot.html)
+See the [Vitest test snapshots docs](https://vitest.dev/guide/snapshot.html).
 In general, if there's some test value or function that would be inconvenient to manually craft test assertions for.
 Common cases include:
 
@@ -203,11 +221,13 @@ I generally prefer [`toMatchInlineSnapshot`](https://vitest.dev/api/expect.html#
 
 ### Why are there so many tools in your repositories?
 
-Because they're useful! 🙌
+Because they're useful!
+🙌
 
 I know that having to learn and work with so many tools can be painful.
 It takes time when you get started, slows down development when they complain, and generally make the repositories harder for new contributors to contribute to.
 That brings me pain.
+😬
 
 But!
 Each of the tools brings real benefit to the repository.
@@ -230,3 +250,8 @@ My repositories don't have much more to do in setup or contributing than most ot
 I've just explicitly written out many of the things that are implicitly assumed in most repositories.
 Reading through the guide now will save you a ton of time later on.
 I promise.
+
+---
+
+> Got your own question not covered here?
+> I'd be happy to answer it - let me know!
