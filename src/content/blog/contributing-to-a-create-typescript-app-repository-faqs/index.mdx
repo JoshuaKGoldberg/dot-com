@@ -173,13 +173,13 @@ Therefore, I don't consider the benefits of a clean Git history to be worth the 
 Most of the reasons why developers rewrite history in a PR branch involve curating a clean Git history.
 Per [Why do you squash merge pull request branches?](#why-do-you-squash-merge-pull-request-branches) that commit history is generally not necessary or asked for in my repositories.
 
-On the other hand, there are two main downsides to rorce pushing to an active pull request:
+On the other hand, there are two main downsides to force pushing to an active pull request:
 
 - GitHub is not able to track changes across force pushes, which makes it take longer for maintainers perform incremental reviews
 - If a maintainer has checked out a branch locally, it can be inconvenient to pull in a new, conflicting history
 
 I personally also like showing how messy my Git history gets.
-I don't like the idea of new devlopers seeing a cleaned up history and thinking all experienced developers do work like that naturally.
+I don't like the idea of new developers seeing a cleaned up history and thinking all experienced developers do work like that naturally.
 It's an unrealistic standard of code cleanliness.
 
 ## Repository Tooling
@@ -213,7 +213,7 @@ In general, if there's some test value or function that would be inconvenient to
 Common cases include:
 
 - Checking what a function is called with, when the function may be called multiple times or with large objects
-- Checking a large object, string, or other piece of data matches an expected shap
+- Checking a large object, string, or other piece of data matches an expected shape
 
 I generally prefer [`toMatchInlineSnapshot`](https://vitest.dev/api/expect.html#tomatchinlinesnapshot) so that the values are visible in the test itself.
 
@@ -234,7 +234,7 @@ Each of the tools brings real benefit to the repository.
 The issues they prevent are things that often need to be flagged in pull requests - which means they often become bugs or typos discovered later.
 I believe these tools net save time by automating catching those issues.
 
-Furthermore, it's useful for the ecosystem for repositories to use th elatest and greatest in tooling.
+Furthermore, it's useful for the ecosystem for repositories to use the latest and greatest in tooling.
 Using these tools provides valuable feedback for their projects and maintainers, which helps the industry learn and grow.
 That brings me joy.
 💓
