@@ -144,7 +144,7 @@ module.exports = {
 									// Import the same specified item from the new package name
 									return `import { ${specifier.imported.name} } from '${newImport}'`;
 								})
-								.join("\n")
+								.join("\n"),
 						);
 					},
 					message: "Import fortawesome icons from their individual path.",

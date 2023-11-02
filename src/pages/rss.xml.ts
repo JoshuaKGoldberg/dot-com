@@ -12,7 +12,7 @@ export async function get(context: APIContext) {
 			await pagesGlobToRssItems(
 				// TODO: find or file an issue?
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
-				import.meta.glob("../content/blog/**/*.mdx")
+				import.meta.glob("../content/blog/**/*.mdx"),
 			)
 		).map((inner) => ({
 			...inner,

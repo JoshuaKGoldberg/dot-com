@@ -53,7 +53,8 @@
 	}
 
 	body {
-		background: linear-gradient(
+		background:
+			linear-gradient(
 					to bottom,
 					transparent 70%,
 					var(--colorBackgroundBottom) 100%

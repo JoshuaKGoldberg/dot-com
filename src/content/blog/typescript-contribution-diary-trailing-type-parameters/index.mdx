@@ -30,7 +30,7 @@ When you have a list of type parameters split across lines, some code styles and
 ```ts
 export const myLambda = <
 	TFirstTemplate,
-	TSecondTemplate // [ts] Error: Trailing comma not allowed.
+	TSecondTemplate, // [ts] Error: Trailing comma not allowed.
 >() => {
 	/* ... */
 };
@@ -42,9 +42,9 @@ These giant syntax lists can be pretty hard to read unless split across lines:
 ```ts
 export const createSourceNodeFromTemplateBinding = <
 	TTemplateBinding extends TemplateBinding = TemplateBinding,
-	TSourceNode extends SourceNode = SourceNode // comma here?
+	TSourceNode extends SourceNode = SourceNode, // comma here?
 >(
-	templateBinding: TTemplateBinding
+	templateBinding: TTemplateBinding,
 ) => {
 	/* ... */
 };
@@ -97,7 +97,7 @@ A diligent programmer intent on learning all there is to know about TypeScript m
 
 ```ts
 function checkGrammarForDisallowedTrailingComma(
-	list: NodeArray<Node>
+	list: NodeArray<Node>,
 ): boolean {
 	if (list && list.hasTrailingComma) {
 		const start = list.end - ",".length;
@@ -106,7 +106,7 @@ function checkGrammarForDisallowedTrailingComma(
 			list[0],
 			start,
 			end - start,
-			Diagnostics.Trailing_comma_not_allowed
+			Diagnostics.Trailing_comma_not_allowed,
 		);
 	}
 }

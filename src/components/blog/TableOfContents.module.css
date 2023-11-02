@@ -23,7 +23,9 @@
 	visibility: hidden;
 	max-height: 0;
 	overflow: hidden;
-	transition: max-height var(--transitionSlow), visibility var(--transitionSlow);
+	transition:
+		max-height var(--transitionSlow),
+		visibility var(--transitionSlow);
 	width: 100%;
 }
 
@@ -69,8 +71,10 @@ li:has(.back) {
 
 .a,
 .back {
-	transition: var(--transitionMedium) margin-left,
-		var(--transitionMedium) padding-right, var(--transitionMedium) opacity;
+	transition:
+		var(--transitionMedium) margin-left,
+		var(--transitionMedium) padding-right,
+		var(--transitionMedium) opacity;
 }
 
 .a:not(.active),
@@ -100,7 +104,9 @@ li:has(.back) {
 	left: -4px;
 	position: absolute;
 	top: -3px;
-	transition: var(--transitionMedium) width, var(--transitionMedium) opacity;
+	transition:
+		var(--transitionMedium) width,
+		var(--transitionMedium) opacity;
 	width: 10px;
 	opacity: 0;
 }
