@@ -355,7 +355,7 @@ Representing each column's three bits of addition in the type system:
 type BitAddThree<A extends Bit, B extends Bit, C extends Bit> = [
 	A,
 	B,
-	C
+	C,
 ] extends [0, 0, 0]
 	? [0, 0]
 	: [A, B, C] extends [1, 0, 0] | [0, 1, 0] | [0, 0, 1]
@@ -423,7 +423,7 @@ We'll use a quirk of generics to store variables within a type.
 type ContrivedExample<
 	A extends Bit,
 	B extends Bit,
-	C extends BitAnd<A, B> = BitAnd<A, B>
+	C extends BitAnd<A, B> = BitAnd<A, B>,
 > = [A, B, C];
 ```
 
@@ -474,7 +474,7 @@ type Int8Add<
 	At4 extends BitAddThree<A[4], B[4], At3[1]> = BitAddThree<A[4], B[4], At3[1]>,
 	At5 extends BitAddThree<A[5], B[5], At4[1]> = BitAddThree<A[5], B[5], At4[1]>,
 	At6 extends BitAddThree<A[6], B[6], At5[1]> = BitAddThree<A[6], B[6], At5[1]>,
-	At7 extends BitAddThree<A[7], B[7], At6[1]> = BitAddThree<A[7], B[7], At6[1]>
+	At7 extends BitAddThree<A[7], B[7], At6[1]> = BitAddThree<A[7], B[7], At6[1]>,
 > = [At0[0], At1[0], At2[0], At3[0], At4[0], At5[0], At6[0], At7[0]];
 ```
 

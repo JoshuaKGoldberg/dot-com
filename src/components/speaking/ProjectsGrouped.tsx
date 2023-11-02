@@ -23,7 +23,7 @@ export function ProjectsGrouped(props: ProjectsGroupedProps) {
 	return (
 		<GroupedEntries
 			groups={Object.entries(props.projectCategories).map(
-				([category, { projects }]) => [category, projects.sort(byMoreOrStars)]
+				([category, { projects }]) => [category, projects.sort(byMoreOrStars)],
 			)}
 			renderEntry={(project) => <ProjectEntry project={project} />}
 		/>

@@ -147,7 +147,7 @@ I changed the code to use `getBaseConstraintOfType(parentType)` for retrieving a
 const baseConstraint = getBaseConstraintOrType(parentType);
 type = everyType(baseConstraint, isTupleType)
 	? mapType(baseConstraint, (t) =>
-			sliceTupleType(t as TupleTypeReference, index)
+			sliceTupleType(t as TupleTypeReference, index),
 	  )
 	: createArrayType(elementType);
 ```
@@ -165,7 +165,7 @@ Then upon running tests and accepting new baselines, I was surprised to see chan
 
 ```ts
 function farr<T extends [number, string, string] | [string, number, number]>(
-	x: T
+	x: T,
 ) {
 	const [head, ...tail] = x;
 	if (x[0] === "number") {

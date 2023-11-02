@@ -33,7 +33,7 @@ export type TextProps<As extends keyof JSX.HTMLElementTags> = {
 } & JSX.HTMLElementTags[As];
 
 export function Text<As extends keyof JSX.HTMLElementTags>(
-	props: TextProps<As>
+	props: TextProps<As>,
 ) {
 	const [knownProps, rest] = splitProps(props, [
 		"as",

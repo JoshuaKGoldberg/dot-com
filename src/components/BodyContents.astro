@@ -4,10 +4,10 @@ export interface Props {
 	class?: string | undefined;
 }
 
-const { as: As = "div" } = Astro.props;
+const { as: As = "div", ...rest } = Astro.props;
 ---
 
-<As class:list={["bodyContents", Astro.props.class]}>
+<As class:list={["bodyContents", Astro.props.class]} {...rest}>
 	<slot />
 </As>
 

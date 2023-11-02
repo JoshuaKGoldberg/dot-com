@@ -149,7 +149,7 @@ type Matchups = {
 
 type RockPaperScissors<
 	Player extends keyof Matchups,
-	Opponent extends keyof Matchups
+	Opponent extends keyof Matchups,
 > = Opponent extends keyof Matchups[Player]
 	? Matchups[Player][Opponent]
 	: "Draw";
@@ -194,7 +194,7 @@ type Cell = " " | "X" | "O";
 type TicTacToeBoard = [
 	[Cell, Cell, Cell],
 	[Cell, Cell, Cell],
-	[Cell, Cell, Cell]
+	[Cell, Cell, Cell],
 ];
 ```
 
@@ -344,7 +344,7 @@ type ReplaceInBoard<
 	Board extends TicTacToeBoard,
 	Replacement extends Cell,
 	RowPlace extends 0 | 1 | 2,
-	ColumnPlace extends 0 | 1 | 2
+	ColumnPlace extends 0 | 1 | 2,
 > = {
 	[Row in 0 | 1 | 2]: {
 		[Column in 0 | 1 | 2]: [Row, Column] extends [RowPlace, ColumnPlace]
@@ -442,7 +442,7 @@ type Move = [Cell, 0 | 1 | 2, 0 | 1 | 2];
 
 type ApplyMoves<
 	Board extends TicTacToeBoard,
-	Moves extends Move[]
+	Moves extends Move[],
 > = Moves extends []
 	? Board
 	: ApplyMoves<
@@ -597,7 +597,7 @@ type IntToString<Int> = Int extends "0"
 type ParseRawMove<Turn, RawRow, RawColumn> = [
 	Turn,
 	IntToString<RawRow>,
-	IntToString<RawColumn>
+	IntToString<RawColumn>,
 ];
 ```
 
@@ -610,7 +610,7 @@ A type that recursively goes through an array of raw move strings and turns them
 type CollectParsedRawMoves<
 	RawMoves extends string[],
 	Collected extends Move[],
-	Turn extends "X" | "O"
+	Turn extends "X" | "O",
 > = RawMoves extends []
 	? Collected
 	: RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
@@ -632,7 +632,7 @@ type CollectParsedRawMoves<
 	// * the collected moves thus far,
 	Collected extends Move[],
 	// * and a current turn to parse out of the next raw move.
-	Turn extends "X" | "O"
+	Turn extends "X" | "O",
 > =
 	// If there are no more raw moves to parse out, it's done, hooray!...
 	RawMoves extends []

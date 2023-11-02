@@ -44,13 +44,13 @@ export function TableOfContents(props: TableOfContentsProps) {
 	};
 
 	const [getActiveSlug, setActiveSlug] = createSignal<string | undefined>(
-		undefined
+		undefined,
 	);
 
 	// TODO: Is this available on npm? If not, perhaps I should publish it?
 	function updateActiveHeading() {
 		const headings = Array.from(
-			document.querySelectorAll<HTMLElement>("h2, h3, h4")
+			document.querySelectorAll<HTMLElement>("h2, h3, h4"),
 		);
 
 		// Case: no headings at all!
@@ -127,7 +127,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 								<Text
 									class={clsx(
 										styles.a,
-										h2.slug === getActiveSlug() && styles.active
+										h2.slug === getActiveSlug() && styles.active,
 									)}
 									as="a"
 									fontWeight="light"
@@ -143,7 +143,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 													<Text
 														class={clsx(
 															styles.a,
-															h3.slug === getActiveSlug() && styles.active
+															h3.slug === getActiveSlug() && styles.active,
 														)}
 														as="a"
 														fontWeight="light"

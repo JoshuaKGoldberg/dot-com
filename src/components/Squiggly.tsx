@@ -28,7 +28,7 @@ export type SquigglyProps<As extends keyof JSX.HTMLElementTags> =
 	};
 
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
-	props: SquigglyProps<As>
+	props: SquigglyProps<As>,
 ) {
 	const [squigglyProps, textProps] = splitProps(props, ["fontSize", "variant"]);
 
@@ -40,7 +40,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 				styles.squiggly,
 				squigglyProps.fontSize && fontSizes[squigglyProps.fontSize],
 				variants[squigglyProps.variant ?? "alwaysActive"],
-				props.class
+				props.class,
 			)}
 			fontSize={squigglyProps.fontSize}
 		>

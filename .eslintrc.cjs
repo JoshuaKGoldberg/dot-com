@@ -93,6 +93,9 @@ module.exports = {
 	rules: {
 		"deprecation/deprecation": "error",
 
+		// Seems to be conflicting with Prettier
+		"no-mixed-spaces-and-tabs": "off",
+
 		// Stylistic concerns that don't interfere with Prettier
 		"padding-line-between-statements": "off",
 		"@typescript-eslint/padding-line-between-statements": [
