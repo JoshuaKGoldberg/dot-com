@@ -9,28 +9,38 @@ import { GroupedEntries } from "../GroupedEntries";
 import { SpeakingEntry } from "./SpeakingEntry";
 
 export interface SpeakingsGroupedProps {
-	previous: CollectionEntry<"speaking">[];
-	upcoming: CollectionEntry<"speaking">[];
+	// previous: CollectionEntry<"speaking">[];
+	// upcoming: CollectionEntry<"speaking">[];
+	allSpeakings: CollectionEntry<"speaking">[];
 }
 
 export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
+	const now = Date.now();
+
+	// todo: memo? effect? signal?
+
+	const previous = () =>
+		props.allSpeakings
+			.filter((speaking) => +speaking.data.date < now)
+			.sort((a, b) => +b.data.date - +a.data.date);
+
+	const upcoming = () =>
+		props.allSpeakings
+			.filter((speaking) => +speaking.data.date > now)
+			.sort((a, b) => +a.data.date - +b.data.date);
+
 	return (
 		<>
-			<EntryList category="Upcoming">
-				<For each={props.upcoming}>
-					{(speaking) => <SpeakingEntry speaking={speaking} />}
-				</For>
-			</EntryList>
+			{upcoming().length && (
+				<EntryList category="Upcoming">
+					<For each={upcoming()}>
+						{(speaking) => <SpeakingEntry speaking={speaking} />}
+					</For>
+				</EntryList>
+			)}
 			<GroupedEntries
 				groups={Object.entries(
-					groupBy(
-						props.previous
-							// TODO: when I add in tabs, then I'll add in non-talks
-							.filter((speaking) =>
-								["Documentaries", "Talks"].includes(speaking.data.category),
-							),
-						(speaking) => yearOrUpcoming(speaking.data.date),
-					),
+					groupBy(previous(), (speaking) => yearOrUpcoming(speaking.data.date)),
 				).sort(([a], [b]) => (a === "Upcoming" ? -1 : +b - +a))}
 				renderEntry={(speaking) => <SpeakingEntry speaking={speaking} />}
 			/>

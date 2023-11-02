@@ -1,0 +1,27 @@
+.tabsList {
+	align-items: center;
+	padding-top: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	justify-content: center;
+	width: 100%;
+}
+
+.trigger {
+	background: none;
+	border: transparent;
+	color: var(--colorForeground);
+	cursor: pointer;
+	font-size: var(--fontSizeMedium);
+}
+
+.active {
+	color: var(--colorEmphasized);
+}
+
+@media (min-width: 1017px) {
+	.tabsList {
+		flex-direction: row;
+	}
+}
