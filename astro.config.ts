@@ -7,9 +7,6 @@ import konamimojisplosion from "astro-konamimojisplosion";
 import { site } from "./src/constants";
 
 export default defineConfig({
-	experimental: {
-		viewTransitions: true,
-	},
 	image: {
 		service: sharpImageService(),
 	},
