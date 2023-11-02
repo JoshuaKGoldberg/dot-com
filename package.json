@@ -69,7 +69,7 @@
 	"devDependencies": {
 		"eslint-plugin-perfectionist": "^1.5.1"
 	},
-	"packageManager": "pnpm@8.7.4",
+	"packageManager": "pnpm@8.10.0",
 	"engines": {
 		"node": ">=18"
 	}
