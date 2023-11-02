@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { For, JSX } from "solid-js";
+import { For, type JSX } from "solid-js";
 
 import { Anchor } from "./Anchor";
 import styles from "./ContentEntry.module.css";

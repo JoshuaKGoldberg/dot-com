@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { JSX, splitProps } from "solid-js";
+import { type JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
 import styles from "./Text.module.css";

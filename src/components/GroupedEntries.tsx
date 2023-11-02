@@ -1,4 +1,4 @@
-import { For, JSX } from "solid-js";
+import { For, type JSX } from "solid-js";
 
 import { EntryList } from "./EntryList";
 
