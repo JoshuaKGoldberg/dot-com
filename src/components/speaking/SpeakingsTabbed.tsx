@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-import { As, Tabs } from "@kobalte/core";
+import { Tabs } from "@kobalte/core";
 import clsx from "clsx";
 import { For, createSignal } from "solid-js";
 
@@ -37,8 +37,8 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 								as={Squiggly}
 								class={clsx(styles.trigger, active() && styles.active)}
 								value={category}
-								// TODO: variant prop isn't in Trigger's polymorphic type?
 								// TODO: fade-out animation is borked?
+								// @ts-expect-error - variant prop isn't in Trigger's polymorphic type?
 								variant={active() ? "passive" : "onHover"}
 							>
 								{category}
