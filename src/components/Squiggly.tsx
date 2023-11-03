@@ -14,9 +14,10 @@ const fontSizes: Record<string, string | undefined> = {
 export type SquigglyFontSize = keyof typeof fontSizes;
 
 const variants = {
-	alwaysActive: styles.alwaysActive,
+	active: styles.alwaysActive,
 	inactive: styles.inactive,
 	onHover: styles.onHover,
+	passive: styles.passive,
 };
 
 export type SquigglyVariant = keyof typeof variants;
@@ -41,7 +42,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			class={clsx(
 				styles.squiggly,
 				squigglyProps.fontSize && fontSizes[squigglyProps.fontSize],
-				variants[squigglyProps.variant ?? "alwaysActive"],
+				variants[squigglyProps.variant ?? "active"],
 				props.class,
 			)}
 			fontSize={squigglyProps.fontSize}

@@ -1,6 +1,6 @@
 .tabsList {
 	align-items: center;
-	padding-top: 1rem;
+	padding: 2rem 0 1rem;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
@@ -14,14 +14,20 @@
 	color: var(--colorForeground);
 	cursor: pointer;
 	font-size: var(--fontSizeMedium);
+	line-height: 0.75;
 }
 
 .active {
 	color: var(--colorEmphasized);
 }
 
-@media (min-width: 1017px) {
+.trigger:not(.active):not(:hover)::after {
+	opacity: 0;
+}
+
+@media (min-width: 700px) {
 	.tabsList {
 		flex-direction: row;
+		padding: 0 0 2rem;
 	}
 }

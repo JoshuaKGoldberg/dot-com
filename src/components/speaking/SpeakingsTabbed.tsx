@@ -20,7 +20,7 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 		...groupBy(props.allSpeakings, (speaking) => speaking.data.category),
 	});
 
-	const [selected, setSelected] = createSignal("All");
+	const [selected, setSelected] = createSignal("Talks");
 
 	return (
 		<Tabs.Root
@@ -39,7 +39,7 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 								value={category}
 								// TODO: variant prop isn't in Trigger's polymorphic type?
 								// TODO: fade-out animation is borked?
-								variant={active() ? "inactive" : "onHover"}
+								variant={active() ? "passive" : "onHover"}
 							>
 								{category}
 							</Tabs.Trigger>
