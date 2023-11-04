@@ -9,15 +9,11 @@ import { GroupedEntries } from "../GroupedEntries";
 import { SpeakingEntry } from "./SpeakingEntry";
 
 export interface SpeakingsGroupedProps {
-	// previous: CollectionEntry<"speaking">[];
-	// upcoming: CollectionEntry<"speaking">[];
 	allSpeakings: CollectionEntry<"speaking">[];
 }
 
 export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 	const now = Date.now();
-
-	// todo: memo? effect? signal?
 
 	const previous = () =>
 		props.allSpeakings
@@ -31,13 +27,13 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 
 	return (
 		<>
-			{upcoming().length && (
+			{upcoming().length ? (
 				<EntryList category="Upcoming">
 					<For each={upcoming()}>
 						{(speaking) => <SpeakingEntry speaking={speaking} />}
 					</For>
 				</EntryList>
-			)}
+			) : null}
 			<GroupedEntries
 				groups={Object.entries(
 					groupBy(previous(), (speaking) => yearOrUpcoming(speaking.data.date)),

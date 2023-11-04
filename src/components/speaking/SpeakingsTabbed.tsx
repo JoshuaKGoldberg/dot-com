@@ -4,23 +4,16 @@ import { Tabs } from "@kobalte/core";
 import clsx from "clsx";
 import { For, createSignal } from "solid-js";
 
-import { groupBy } from "~/utils";
-
 import { Squiggly } from "../Squiggly";
 import { SpeakingsGrouped } from "./SpeakingsGrouped";
 import styles from "./SpeakingsTabbed.module.css";
 
 export interface SpeakingsTabbedProps {
-	allSpeakings: CollectionEntry<"speaking">[];
+	categories: Record<string, CollectionEntry<"speaking">[]>;
 }
 
 export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
-	const categories = () => ({
-		All: props.allSpeakings,
-		...groupBy(props.allSpeakings, (speaking) => speaking.data.category),
-	});
-
-	const [selected, setSelected] = createSignal("Talks");
+	const [selected, setSelected] = createSignal("Podcasts");
 
 	return (
 		<Tabs.Root
@@ -29,7 +22,7 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 			value={selected()}
 		>
 			<Tabs.List class={styles.tabsList}>
-				<For each={Object.keys(categories())}>
+				<For each={Object.keys(props.categories)}>
 					{(category) => {
 						const active = () => category === selected();
 						return (
@@ -37,8 +30,8 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 								as={Squiggly}
 								class={clsx(styles.trigger, active() && styles.active)}
 								value={category}
-								// TODO: fade-out animation is borked?
-								// @ts-expect-error - variant prop isn't in Trigger's polymorphic type?
+								// @ts-expect-error - variant prop isn't in Trigger's polymorphic type
+								// https://github.com/kobaltedev/kobalte/issues/285
 								variant={active() ? "passive" : "onHover"}
 							>
 								{category}
@@ -50,7 +43,7 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 				<Tabs.Indicator style={{ position: "absolute" }} />
 			</Tabs.List>
 
-			<For each={Object.entries(categories())}>
+			<For each={Object.entries(props.categories)}>
 				{([category, speakings]) => (
 					<Tabs.Content value={category}>
 						<SpeakingsGrouped allSpeakings={speakings} />
