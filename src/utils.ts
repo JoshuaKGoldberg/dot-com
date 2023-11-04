@@ -9,5 +9,7 @@ export function groupBy<T, K extends number | string>(
 		(grouped[getKey(item)] ??= []).push(item);
 	}
 
-	return grouped;
+	return Object.fromEntries(
+		Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)),
+	) as typeof grouped;
 }
