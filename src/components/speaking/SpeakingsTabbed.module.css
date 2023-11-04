@@ -11,17 +11,25 @@
 .trigger {
 	background: none;
 	border: transparent;
+	position: relative;
+}
+
+.trigger:first-of-type {
+	width: 100%;
+}
+
+.squiggly {
 	color: var(--colorForeground);
 	cursor: pointer;
 	font-size: var(--fontSizeMedium);
 	line-height: 0.75;
 }
 
-.active {
+.squiggly.active {
 	color: var(--colorEmphasized);
 }
 
-.trigger:not(.active):not(:hover)::after {
+.squiggly:not(.active):not(:hover)::after {
 	opacity: 0;
 }
 
@@ -29,5 +37,21 @@
 	.tabsList {
 		flex-direction: row;
 		padding: 0 0 2rem;
+	}
+
+	.trigger:first-of-type {
+		margin-right: 3rem;
+		width: initial;
+	}
+
+	.trigger:first-of-type::after {
+		background: var(--colorForeground);
+		content: "";
+		display: block;
+		height: 0.7rem;
+		left: calc(100% + 2rem - 1px);
+		position: absolute;
+		top: 0.15rem;
+		width: 1px;
 	}
 }

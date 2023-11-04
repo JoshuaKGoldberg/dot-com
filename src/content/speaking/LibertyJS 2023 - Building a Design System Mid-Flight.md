@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-10-13
 event: "LibertyJS 2023"
 href: https://libertyjs.com/schedule/2023-10-13

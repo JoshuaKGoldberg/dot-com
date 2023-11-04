@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2021-05-20
 href: https://a11ybytes.org
 title: "Crafting an Accessible Design System"

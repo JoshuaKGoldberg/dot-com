@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-06-23
 event: "KCDC 2023"
 href: https://www.kcdc.info

@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2021-11-23
 event: "WeAreDevelopers JS Congress 2021"
 href: https://www.wearedevelopers.com

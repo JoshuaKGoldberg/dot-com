@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2022-04-20
 href: https://geekle.us/schedule/react2
 title: "Beyond Tailwind"

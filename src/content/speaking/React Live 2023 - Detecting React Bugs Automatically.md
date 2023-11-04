@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-09-29
 event: "React Live 2023"
 href: https://reactlive.nl

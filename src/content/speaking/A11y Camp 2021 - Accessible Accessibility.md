@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2021-11-09
 href: https://a11ycamp.com.au
 title: "Accessible Accessibility"

@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2021-07-14
 href: https://csscamp.tech/speakers/2021/josh-goldberg
 title: "Accessibility, Design Systems, and YOU!"

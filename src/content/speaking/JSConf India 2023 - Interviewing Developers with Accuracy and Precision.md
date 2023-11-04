@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-05-18
 event: "JSConf India 2023"
 href: https://jsconf.in

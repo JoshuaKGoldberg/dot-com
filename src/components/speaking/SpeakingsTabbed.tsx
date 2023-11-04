@@ -13,7 +13,7 @@ export interface SpeakingsTabbedProps {
 }
 
 export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
-	const [selected, setSelected] = createSignal("Podcasts");
+	const [selected, setSelected] = createSignal("Conferences");
 
 	return (
 		<Tabs.Root
@@ -26,15 +26,14 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 					{(category) => {
 						const active = () => category === selected();
 						return (
-							<Tabs.Trigger
-								as={Squiggly}
-								class={clsx(styles.trigger, active() && styles.active)}
-								value={category}
-								// @ts-expect-error - variant prop isn't in Trigger's polymorphic type
-								// https://github.com/kobaltedev/kobalte/issues/285
-								variant={active() ? "passive" : "onHover"}
-							>
-								{category}
+							<Tabs.Trigger class={styles.trigger} value={category}>
+								<Squiggly
+									as="div"
+									class={clsx(styles.squiggly, active() && styles.active)}
+									variant={active() ? "passive" : "onHover"}
+								>
+									{category}
+								</Squiggly>
 							</Tabs.Trigger>
 						);
 					}}

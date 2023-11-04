@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-01-17
 event: "THAT Conf Texas 2023"
 href: https://that.us/activities/tNRz6cMoBc0pqJsIFzkC

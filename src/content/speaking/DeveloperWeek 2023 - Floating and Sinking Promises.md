@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2023-02-15
 event: "DeveloperWeek 2023"
 href: https://developerweek2023.sched.com/event/1G10W/virtualonly-pro-workshop-floating-and-sinking-promises-lets-fix-your-broken-async-code

@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2022-04-01
 href: https://webdirections.org/hover/speakers/josh-goldberg.php
 title: "Focus Visible, At Last!"

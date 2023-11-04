@@ -36,8 +36,6 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 	return (
 		// @ts-expect-error - Dynamic components in TypeScript are tough.
 		<Text
-			// @ts-expect-error - in case of nested polymorphism
-			as="span"
 			{...textProps}
 			class={clsx(
 				styles.squiggly,

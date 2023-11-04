@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2021-12-09
 event: "GraphQL Galaxy 2021"
 href: https://portal.gitnation.org/events/graphql-galaxy-2021

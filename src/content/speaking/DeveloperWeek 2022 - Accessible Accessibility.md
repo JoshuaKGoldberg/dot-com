@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Conferences
 date: 2022-02-07
 href: https://hopin.com/events/developerweek-2022
 title: "Accessible Accessibility"
