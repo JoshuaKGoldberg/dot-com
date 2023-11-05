@@ -84,6 +84,7 @@
 	:link,
 	:visited {
 		color: var(--colorForeground);
+		transition: var(--transitionMedium) color;
 		text-decoration: none;
 	}
 
@@ -91,29 +92,27 @@
 		position: relative;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--colorBackgroundBottom: #111117;
-			--colorBackgroundTop: #071428;
-			--colorEmphasized: #77bbff;
-			--colorForeground: #dae7f3;
-			--colorForegroundExtra: #e5edf3;
-			--colorSubtle: #052438;
+	html.dark {
+		--colorBackgroundBottom: #111117;
+		--colorBackgroundTop: #071428;
+		--colorEmphasized: #77bbff;
+		--colorForeground: #dae7f3;
+		--colorForegroundExtra: #e5edf3;
+		--colorSubtle: #052438;
 
-			/* Note: some of these are unused in Prism, but would be in Shiki. */
-			--astro-code-color-text: #d3d6f0;
-			--astro-code-color-deleted: #f08080;
-			--astro-code-color-inserted: #70c27d;
-			--astro-code-token-comment: #85cab1;
-			--astro-code-token-constant: #d4d8f4;
-			--astro-code-token-function: #85b8ff;
-			--astro-code-token-keyword: #b0cff7;
-			--astro-code-token-link: #bde3bd;
-			--astro-code-token-parameter: #8dc1d0;
-			--astro-code-token-punctuation: #55e1f3;
-			--astro-code-token-string-expression: #82c1da;
-			--astro-code-token-string: #b3baf2;
-		}
+		/* Note: some of these are unused in Prism, but would be in Shiki. */
+		--astro-code-color-text: #d3d6f0;
+		--astro-code-color-deleted: #f08080;
+		--astro-code-color-inserted: #70c27d;
+		--astro-code-token-comment: #85cab1;
+		--astro-code-token-constant: #d4d8f4;
+		--astro-code-token-function: #85b8ff;
+		--astro-code-token-keyword: #b0cff7;
+		--astro-code-token-link: #bde3bd;
+		--astro-code-token-parameter: #8dc1d0;
+		--astro-code-token-punctuation: #55e1f3;
+		--astro-code-token-string-expression: #82c1da;
+		--astro-code-token-string: #b3baf2;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {

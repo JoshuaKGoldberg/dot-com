@@ -1,5 +1,6 @@
 .text {
 	color: var(--colorForeground);
+	transition: var(--transitionMedium) color;
 }
 
 .fontSizeSmaller {
