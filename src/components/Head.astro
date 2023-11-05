@@ -103,7 +103,7 @@ const metaPairs = [
 		rel="icon"
 		type="image/svg+xml"
 	/>
-	<link rel="sitemap" href="/sitemap-index.xml" />
+	<link href="/sitemap-index.xml" rel="sitemap" />
 	{metaPairs.map((meta) => <meta {...meta} />)}
 	<meta content={description} name="description" />
 	<meta content={keywords.join()} name="keywords" />
