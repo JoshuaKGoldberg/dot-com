@@ -90,8 +90,8 @@ dependencies:
     specifier: ^5.0.2
     version: 5.0.2
   joshuakgoldberg:
-    specifier: ^0.2.0
-    version: 0.2.3
+    specifier: ^0.3.0
+    version: 0.3.0
   knip:
     specifier: ^2.13.0
     version: 2.13.0
@@ -4970,8 +4970,8 @@ packages:
     hasBin: true
     dev: false
 
-  /joshuakgoldberg@0.2.3:
-    resolution: {integrity: sha512-5QSigslqcUclXA6ZftrcOGwBTAE32mTpuqeIo0nbcCyr2mzBQKbv4yklYFd5Zi9Vfcw7KlKwCE39rtCZOeVdmg==}
+  /joshuakgoldberg@0.3.0:
+    resolution: {integrity: sha512-a/guqX4e11PaQDoM4ieGOgC6Hk9zSrOGjcpt18te+S/luLf3LPXxvy/8boEMhLawe3XtYwv9fTia4j205VtfNQ==}
     engines: {node: '>=18'}
     dependencies:
       chalk: 5.3.0
