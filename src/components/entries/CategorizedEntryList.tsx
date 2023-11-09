@@ -1,14 +1,15 @@
 import type { JSX } from "solid-js";
 
-import styles from "./EntryList.module.css";
-import { Text } from "./Text";
+import { Text } from "../Text";
+import styles from "./CategorizedEntryList.module.css";
+import { EntryList } from "./EntryList";
 
 export interface EntryListProps {
 	category: string;
 	children: JSX.Element;
 }
 
-export function EntryList(props: EntryListProps) {
+export function CategorizedEntryList(props: EntryListProps) {
 	return (
 		<>
 			<Text
@@ -20,7 +21,7 @@ export function EntryList(props: EntryListProps) {
 			>
 				{props.category}
 			</Text>
-			<ul class={styles.entries}>{props.children}</ul>
+			<EntryList>{props.children}</EntryList>
 		</>
 	);
 }

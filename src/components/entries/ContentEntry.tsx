@@ -1,13 +1,13 @@
 import { clsx } from "clsx";
 import { For, type JSX } from "solid-js";
 
-import { Anchor } from "./Anchor";
+import { Anchor } from "../Anchor";
+import { Text } from "../Text";
 import styles from "./ContentEntry.module.css";
 import {
 	ContentEntryImage,
 	type ContentEntryImageProps,
 } from "./ContentEntryImage";
-import { Text } from "./Text";
 
 const widths = {
 	full: styles.widthsFull,

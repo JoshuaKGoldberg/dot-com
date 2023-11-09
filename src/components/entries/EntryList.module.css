@@ -1,0 +1,8 @@
+.entryList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3.5rem 3rem;
+	list-style-type: none;
+	padding: 0;
+	margin: 3rem 0 clamp(4rem, 10vh, 7rem);
+}

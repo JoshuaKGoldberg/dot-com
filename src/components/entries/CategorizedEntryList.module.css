@@ -1,0 +1,5 @@
+.subHeading {
+	margin: 3rem auto 0;
+	scroll-margin-top: var(--heightMinimumFromHeader);
+	text-align: center;
+}
