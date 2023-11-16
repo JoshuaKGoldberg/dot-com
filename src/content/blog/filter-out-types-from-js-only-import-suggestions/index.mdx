@@ -1,0 +1,40 @@
+---
+pubDate: 2023-11-25
+description: ""
+image:
+  alt: TODO
+  src: jerry-catwalk.jpg
+title: "TypeScript Contribution Diary: Filtering Out Types From JavaScript-Only Import Suggestions"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import jerryCatwalk from "./jerry-catwalk.jpg";
+
+<LabeledImage alt="TODO" description="TODO" src={jerryCatwalk} />
+
+## Problem Statement
+
+[#53339: Filter out types from esm import suggestions in JavaScript](https://github.com/microsoft/TypeScript/issues/53339) was filed on TypeScript in March of 2023.
+It states that at the time, when working in a JavaScript file, TypeScript would still suggest type-only constructs such as `interface`s in `import` statement auto-completions.
+
+Seeing those types in import completion lists is a little inconvenient give that they can't be used in JavaScript file imports.
+That's also a little misleading for folks who might be still new to TypeScript and not clear on the difference between type and value spaces.
+
+I figured this would be a fun contribution to get in: filtering out entries from import statements if they're not applicable to the file being imported into.
+
+> Spoiler: here's the [resultant pull request](https://github.com/microsoft/TypeScript/pull/53619). ✨
+
+## Digging Into Completions
+
+My first question was: where do completions come from?
+
+I first looked for resolved issues also tagged as `Domain: Completion Lists` to check for previous pull requests that showed which code areas I'd need to touch.
+I found
+
+## Final Thanks
+
+Thanks as always to [Mateusz Burzyński](https://github.com/Andarist) for helping so much in authoring the PR that it was more than reasonable for me to add Mateusz as a co-author 😄.
+
+Thanks to [@RyanCavanaugh](https://github.com/RyanCavanaugh) and [@sandersn](https://github.com/sandersn) for reviewing and merging the PR from the TypeScript team's side.
+Additional thanks to [@awerlogus](https://github.com/awerlogus) for reporting the issue in the first place, and [@Andarist](https://github.com/Andarist) for posting helpful comments on the [resultant pull request](https://github.com/microsoft/TypeScript/pull/51037).
+Cheers! 🙌
