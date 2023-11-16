@@ -29,7 +29,131 @@ I figured this would be a fun contribution to get in: filtering out entries from
 My first question was: where do completions come from?
 
 I first looked for resolved issues also tagged as `Domain: Completion Lists` to check for previous pull requests that showed which code areas I'd need to touch.
-I found
+A good first PR I found was [fix(52879): No autocompletions after the typeof keyword inside JSDoc comments](https://github.com/microsoft/TypeScript/pull/52973) from long-time frequent contributor [@a-tarasyuk](https://github.com/a-tarasyuk).
+It showed edits to `src/services/completions.ts`, in particular to a [`getCompletionsAtPosition` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L680).
+That seemed like a good place to start!
+
+### Getting Completions at a Position
+
+I read through the `getCompletionsAtPosition` function's body.
+The first few dozen lines seemed to be around edge cases and caching.
+But later down it had an area that seemed to retrieve the real completions I'd care about, then create a new statement based on the type of completion data.
+
+It looked a bit like this:
+
+```ts
+/* prettier-ignore */ // TODO JOSH: ugh the syntax highlighting
+const completionData = getCompletionData(program, log, /* ... */);
+
+switch (completionData.kind) {
+	case CompletionDataKind.Data:
+		return completionInfoFromData(/* ... */);
+	// ...
+	case CompletionDataKind.JsDocTagName:
+		return jsdocCompletionInfo(/* ... */);
+	// ...
+	case CompletionDataKind.JSDocTag:
+		return jsdocCompletionInfo(/* ... */);
+	// ...
+}
+```
+
+I put a breakpoint on the `switch` and launched a local reproduction of the issue in the VS Code debugger.
+The breakpoint hit and showed `completionData.kind` to be `CompletionDataKind.Data`.
+
+I poked around the `getCompletionData` function a bit but didn't find anything particularly useful in it for filtering out data.
+It was returning a bunch of data, only some of which made it to the completions suggested in my editor.
+
+Next step: digging into `completionInfoFromData`.
+
+### Getting Completions From Data
+
+The [`completionInfoFromData` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L1232) also seemed to start with a bit of edge case handling.
+Its first area of code relevant to filtering completion data was around creating an `entries` array of completions, then populating it with a `getCompletionEntriesFromSymbols` method.
+
+Again simplifying the code a bit:
+
+```ts
+const entries = createSortedArray<CompletionEntry>();
+const uniqueNames = getCompletionEntriesFromSymbols(symbols, entries /* ... */);
+```
+
+It felt reasonable that `getCompletionEntriesFromSymbols` was a place I'd want to add my new filtering logic.
+As the `entries` array was sorted, removing items later on would probably be less efficient than not adding them in the first place.
+
+### Getting Completion Entries From Symbols
+
+The [`getCompletionEntriesFromSymbols` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L2508) takes roughly two steps of note:
+
+1. It creates a `uniques = new Map<string, boolean>()` variable to track unique completion names
+2. It loops over all its provided `symbols`, adding an entry to `uniques` if some a [`createCompletionEntry` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L1630) was able to create one
+
+My first instinct was to add my new filtering lotic to the start of `createCompletionEntry`.
+I added a check that if we're in a JavaScript source file and the provided symbol doesn't have a runtime value (i.e. is only in type land), then we can bail out of creating a completion entry:
+
+```ts
+if (isInJSFile(sourceFile) && !symbolHasValueDeclaration(symbol)) {
+	return undefined;
+}
+```
+
+As for how to write that `symbolHasValueDeclaration` function, I couldn't find any good existing implementation in the codebase.
+So I went with a check over the symbol's declarations to see if any are something other than an interface or type:
+
+```ts
+function symbolHasValueDeclaration(symbol: Symbol): boolean {
+	return !!symbol?.declarations?.some((declaration) => {
+		switch (declaration.kind) {
+			case SyntaxKind.InterfaceDeclaration:
+			case SyntaxKind.TypeAliasDeclaration:
+				return false;
+			default:
+				return true;
+		}
+	});
+}
+```
+
+I tried rebuilding TypeScript's services locally and running the issue reproduction locally.
+It worked!
+My import completions in the JavaScript file for entries in a TypeScript no longer included any interfaces or types.
+
+### Testing Completion Entry Filtering
+
+You can see roughly the reproduction I was working with from the test case I added to the repo:
+
+```ts
+// tests/cases/fourslash/jsFileImportNoTypes.ts
+/// <reference path="fourslash.ts" />
+
+// @allowJs: true
+
+// @filename: /declarations.ts
+//// export class TestClass {}
+//// export const testValue = {};
+//// export enum TestEnum {}
+//// export function testFunction() {}
+//// export interface testInterface {}
+//// export namespace TestNamespace {}
+//// export type testType = {};
+////
+//// export interface TestInterfaceMerged {}
+//// export interface TestInterfaceMerged {}
+////
+//// export interface TestClassInterfaceMerged {}
+//// export class TestClassInterfaceMerged {}
+
+// @filename: /a.js
+////import { /**/ } from './declarations.ts'
+
+verify.baselineCompletions();
+```
+
+That test case uses TypeScript's "fourslash" test harness to see what completions would trigger (`verify.baselineCompletions()`) at a specific location inside the import (marked by the `/**/`).
+
+I wrote up a quick commit message and PR description, then sent this in as a draft PR: https://github.com/microsoft/TypeScript/pull/53619/commits/bf9dd25431e1e13dc054db03171e0f2b9b2a1019.
+
+## Account for JSDoc type locations in JS files
 
 ## Final Thanks
 
