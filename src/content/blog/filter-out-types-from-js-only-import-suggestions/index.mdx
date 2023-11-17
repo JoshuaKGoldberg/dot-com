@@ -88,7 +88,7 @@ The [`getCompletionEntriesFromSymbols` function](https://github.com/microsoft/Ty
 1. It creates a `uniques = new Map<string, boolean>()` variable to track unique completion names
 2. It loops over all its provided `symbols`, adding an entry to `uniques` if some a [`createCompletionEntry` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L1630) was able to create one
 
-My first instinct was to add my new filtering lotic to the start of `createCompletionEntry`.
+My first instinct was to add my new filtering logic to the start of `createCompletionEntry`.
 I added a check that if we're in a JavaScript source file and the provided symbol doesn't have a runtime value (i.e. is only in type land), then we can bail out of creating a completion entry:
 
 ```ts
@@ -120,6 +120,9 @@ My import completions in the JavaScript file for entries in a TypeScript no long
 
 ### Testing Completion Entry Filtering
 
+The TypeScript repository includes "fourslash" tests that can declare configuration values, contents of tests files, and expected user actions.
+"Fourslash" refers to the `////` (four slashes) comments in those tests that are placed before contents of test files.
+
 You can see roughly the reproduction I was working with from the test case I added to the repo:
 
 ```ts
@@ -149,15 +152,16 @@ You can see roughly the reproduction I was working with from the test case I add
 verify.baselineCompletions();
 ```
 
-That test case uses TypeScript's "fourslash" test harness to see what completions would trigger (`verify.baselineCompletions()`) at a specific location inside the import (marked by the `/**/`).
+That test case uses TypeScript's fourslash test harness to see what completions would trigger (`verify.baselineCompletions()`) at a specific location inside the import (marked by the `/**/`).
 
-I wrote up a quick commit message and PR description, then sent this in as a draft PR: https://github.com/microsoft/TypeScript/pull/53619/commits/bf9dd25431e1e13dc054db03171e0f2b9b2a1019.
+I wrote up a quick commit message and PR description, then sent this in as a draft PR: [#53619 > commits > `bf9dd2`](https://github.com/microsoft/TypeScript/pull/53619/commits/bf9dd25431e1e13dc054db03171e0f2b9b2a1019).
+I also started a `npx hereby runtests` run locally to run all TypeScript tests.
 
-## Account for JSDoc type locations in JS files
+## Test Failures on ???
 
 ## Final Thanks
 
-Thanks as always to [Mateusz Burzyński](https://github.com/Andarist) for helping so much in authoring the PR that it was more than reasonable for me to add Mateusz as a co-author 😄.
+Thanks as always to [Mateusz Burzyński](https://github.com/Andarist) for helping review the PR. So much that it was more than reasonable for me to add Mateusz as a co-author 😄.
 
 Thanks to [@RyanCavanaugh](https://github.com/RyanCavanaugh) and [@sandersn](https://github.com/sandersn) for reviewing and merging the PR from the TypeScript team's side.
 Additional thanks to [@awerlogus](https://github.com/awerlogus) for reporting the issue in the first place, and [@Andarist](https://github.com/Andarist) for posting helpful comments on the [resultant pull request](https://github.com/microsoft/TypeScript/pull/51037).
