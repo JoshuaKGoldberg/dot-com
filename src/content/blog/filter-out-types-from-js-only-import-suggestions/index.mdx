@@ -283,7 +283,7 @@ function symbolMayHaveValueDeclaration(symbol: Symbol): boolean {
 @Andarist left two additional helpful reviews:
 
 - [Commenting on the naming](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1160576555): that the double-negation in logic around `!symbolMayHaveValueDeclaration` was a little harder to reason about than it needed to be.
-- [Commenting on namespaces](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1161166760) along with [@sandersn](https://github.com/sandersn): I was still interested in using `symbol.flags`, as that would help deal with unforseen edge cases in imports such as type-only namespaces.
+- [Commenting on namespaces](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1161166760) along with [@sandersn](https://github.com/sandersn): I was still interested in using `symbol.flags`, as that would help deal with unforeseen edge cases in imports such as type-only namespaces.
 
 After some fiddling with different values in code I found the following two metrics to be enough for the existing test cases:
 
