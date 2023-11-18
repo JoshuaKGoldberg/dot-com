@@ -68,7 +68,7 @@
 		"yaml-eslint-parser": "^1.2.2"
 	},
 	"devDependencies": {
-		"eslint-plugin-perfectionist": "^1.5.1"
+		"eslint-plugin-perfectionist": "^2.0.0"
 	},
 	"packageManager": "pnpm@8.10.5",
 	"engines": {
