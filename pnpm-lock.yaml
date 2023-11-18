@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.0.2
     version: 3.0.2(solid-js@1.7.6)(vite@4.5.0)
   '@fontsource/league-spartan':
-    specifier: ^4.5.13
-    version: 4.5.13
+    specifier: ^5.0.0
+    version: 5.0.17
   '@kobalte/core':
     specifier: ^0.11.0
     version: 0.11.0(solid-js@1.7.6)
@@ -1323,8 +1323,8 @@ packages:
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
     dev: false
 
-  /@fontsource/league-spartan@4.5.13:
-    resolution: {integrity: sha512-GyF32dt1fw/TQlMJIHI5uPILRKldOENT5bQUzDDQIfeJMrXp/04Borcwmuqch5pqueAQ+di7fo204dgaZlCEjw==}
+  /@fontsource/league-spartan@5.0.17:
+    resolution: {integrity: sha512-eDkKxE+/wU8CTRDnX9GBbY8mqifCB4I8wAafrjJHL1vHxCfJIIhBP9azCQ3Q+9nWf4qvo8Lp/DkGKZRvgwpiuA==}
     dev: false
 
   /@formatjs/ecma402-abstract@1.15.0:
