@@ -1,0 +1,14 @@
+.squiggly {
+	color: var(--colorForeground);
+	cursor: pointer;
+	font-size: var(--fontSizeMedium);
+	line-height: 0.75;
+}
+
+.squiggly.active {
+	color: var(--colorEmphasized);
+}
+
+.squiggly:not(.active):not(:hover)::after {
+	opacity: 0;
+}

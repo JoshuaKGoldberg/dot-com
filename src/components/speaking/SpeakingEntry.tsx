@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-import { ContentEntry } from "../ContentEntry";
+import { ContentEntry } from "../entries/ContentEntry";
 
 export interface SpeakingEntryProps {
 	speaking: CollectionEntry<"speaking">;

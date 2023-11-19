@@ -1,6 +1,6 @@
 import { For, type JSX } from "solid-js";
 
-import { EntryList } from "./EntryList";
+import { CategorizedEntryList } from "./CategorizedEntryList";
 
 export interface GroupedEntriesProps<Entry> {
 	groups: [string, Entry[]][];
@@ -11,9 +11,9 @@ export function GroupedEntries<Entry>(props: GroupedEntriesProps<Entry>) {
 	return (
 		<For each={props.groups}>
 			{([category, entries]) => (
-				<EntryList category={category}>
+				<CategorizedEntryList category={category}>
 					<For each={entries}>{(entry) => props.renderEntry(entry)}</For>
-				</EntryList>
+				</CategorizedEntryList>
 			)}
 		</For>
 	);

@@ -2,7 +2,7 @@ import type { Project, ProjectBase } from "joshuakgoldberg";
 
 import { For } from "solid-js";
 
-import { ContentEntry } from "../ContentEntry";
+import { ContentEntry } from "../entries/ContentEntry";
 import styles from "./ProjectEntry.module.css";
 import { ProjectSubEntry } from "./ProjectSubEntry";
 
