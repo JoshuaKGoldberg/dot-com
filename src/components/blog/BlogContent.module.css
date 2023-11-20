@@ -4,7 +4,8 @@
 	font-size: var(--fontSizeSmall);
 	gap: 1rem;
 	font-weight: 300;
-	line-height: 1.35;
+	line-height: var(--lineHeightParagraph);
+	transition: line-height var(--transitionSlow);
 }
 
 .article a {

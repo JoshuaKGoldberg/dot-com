@@ -20,6 +20,9 @@
 		--fontWeightBold: 600;
 		--fontWeightBolder: 700;
 
+		--lineHeightBase: 1.1;
+		--lineHeightParagraph: 1.35;
+
 		--textShadow: 3px 3px 1px var(--colorSubtle);
 
 		--transitionMedium: 280ms;
@@ -67,7 +70,7 @@
 				)
 				no-repeat;
 		overflow-y: auto;
-		line-height: 1.1;
+		line-height: var(--lineHeightBase);
 		position: fixed;
 		top: 0;
 		bottom: 0;
@@ -99,6 +102,8 @@
 			--colorForeground: #dae7f3;
 			--colorForegroundExtra: #e5edf3;
 			--colorSubtle: #052438;
+
+			--lineHeightParagraph: 1.5;
 
 			/* Note: some of these are unused in Prism, but would be in Shiki. */
 			--astro-code-color-text: #d3d6f0;
