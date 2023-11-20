@@ -12,16 +12,22 @@ import jerryRainbowStreamer from "./jerry-rainbow-streamer.jpg";
 
 <LabeledImage
 	alt="Black cat on top of a cat box. A thin cloth rainbow streamer is draped around him twice."
-	description="Jerry the cat."
+	description="Jerry the cat looking, ah, import-ant."
 	src={jerryRainbowStreamer}
 />
+
+Do you write "vanilla" JavaScript (rather than TypeScript) in VS Code?
+If so, have you ever seen the editor suggest importing a type even though types aren't usable in `.js`/co. files?
+
+Those suggestions are powered by TypeScript, and I improved them to no longer suggest types in JavaScript-only files.
+This blog post details how I wrote and updated that pull request to TypeScript.
 
 ## Problem Statement
 
 [#53339: Filter out types from esm import suggestions in JavaScript](https://github.com/microsoft/TypeScript/issues/53339) was filed on TypeScript in March of 2023.
 It states that at the time, when working in a JavaScript file, TypeScript would still suggest type-only constructs such as `interface`s in `import` statement auto-completions.
 
-Seeing those types in import completion lists is a little inconvenient give that they can't be used in JavaScript file imports.
+Seeing those types in import completion lists is a little inconvenient given that they can't be used in JavaScript file imports.
 That's also a little misleading for folks who might be still new to TypeScript and not clear on the difference between type and value spaces.
 
 I figured this would be a fun contribution to get in: filtering out entries from import statements if they're not applicable to the file being imported into.
@@ -32,7 +38,7 @@ I figured this would be a fun contribution to get in: filtering out entries from
 
 My first question was: where do completions come from?
 
-I first looked for resolved issues also tagged as `Domain: Completion Lists` to check for previous pull requests that showed which code areas I'd need to touch.
+I first looked for resolved issues also tagged as [`Domain: Completion Lists`](https://github.com/microsoft/TypeScript/issues?q=is%3Aissue+is%3Aopen+label%3A%22Domain%3A+Completion+Lists%22) to check for previous pull requests that showed which code areas I'd need to touch.
 A good first PR I found was [fix(52879): No autocompletions after the typeof keyword inside JSDoc comments](https://github.com/microsoft/TypeScript/pull/52973) from long-time frequent contributor [@a-tarasyuk](https://github.com/a-tarasyuk).
 It showed edits to `src/services/completions.ts`, in particular to a [`getCompletionsAtPosition` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L680).
 That seemed like a good place to start!
@@ -45,8 +51,8 @@ But later down it had an area that seemed to retrieve the real completions I'd c
 
 It looked a bit like this:
 
+{/* prettier-ignore */}
 ```ts
-/* prettier-ignore */ // TODO JOSH: ugh the syntax highlighting
 const completionData = getCompletionData(program, log, /* ... */);
 
 switch (completionData.kind) {
@@ -201,7 +207,7 @@ verify.completions({
 });
 ```
 
-In other words, the test was letting me know that my change stopped the type import inside a `/** @type {Foo.} */ JSDoc type.
+In other words, the test was letting me know that my change stopped the type import inside a `/** @type {Foo.} */` JSDoc type.
 That's not good.
 My change should only apply to users importing in value-only spaces, such as `import`s.
 JSDoc `@type`s are a valid place to import types from.
@@ -343,9 +349,18 @@ function symbolAppearsToBeTypeOnly(symbol: Symbol): boolean {
 ## Review Round Three: Namespaces
 
 [The third round of PR review](https://github.com/microsoft/TypeScript/pull/53619#pullrequestreview-1690965501) was a bit less consequential than the first two.
-@sandersn asked a about namespaces and suggested adding a type for `export type testNamespacedType` inside a namespace.
+@sandersn asked about namespaces and suggested adding a type for `export type testNamespacedType` inside a namespace.
 
-[#53619 > commits > `5644a4`](https://github.com/microsoft/TypeScript/pull/53619/commits/5644a4f603e8f6f66d739abf2c488e50c4fea284) added a bit more logic to account for type exports in JS files.
+[#53619 > commits > `9eecdd`](https://github.com/microsoft/TypeScript/pull/53619/commits/9eecdd5290ffd00a128e71846f4b8eeb8abb9b30) added a bit of testingaround type exports in JS files.
+The test cases worked as expected already.
+The following two namespaces without types weren't suggested.
+
+```ts
+//// export namespace TestNamespaceEmpty {}
+//// export namespace TestNamespaceWithType {
+////   export type testTypeInner = boolean;
+//// }
+```
 
 ### Aside: Formatting Changes
 
@@ -372,7 +387,7 @@ Yay!
 [#53619 > commits > `8de257`](https://github.com/microsoft/TypeScript/pull/53619/commits/8de257da80e9124af45ab2d1e134600e4e20c9ba).
 
 A week later, @sandersn merged the PR.
-TypeScript 5.3 will include the language server improvements.
+TypeScript >=5.3 now include the language server improvements.
 🥳
 
 ## Final Thanks
