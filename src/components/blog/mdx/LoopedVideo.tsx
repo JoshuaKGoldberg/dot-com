@@ -8,6 +8,9 @@ export interface LoopedVideoProps {
 export function LoopedVideo(props: LoopedVideoProps) {
 	return (
 		<video
+			autoplay
+			class={styles.loopedVideo}
+			muted
 			ref={(element) => {
 				const media = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -22,9 +25,6 @@ export function LoopedVideo(props: LoopedVideoProps) {
 				media.addEventListener("change", setLoop);
 				setLoop();
 			}}
-			autoplay
-			class={styles.loopedVideo}
-			muted
 			title={props.title}
 		>
 			<source src={props.src} type="video/webm" />
