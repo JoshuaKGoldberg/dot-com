@@ -10,28 +10,22 @@ module.exports = {
 	],
 	overrides: [
 		{
-			extends: [
-				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@typescript-eslint/strict",
-			],
 			files: ["*.astro"],
 			parser: "astro-eslint-parser",
 			parserOptions: {
 				parser: "@typescript-eslint/parser",
 				extraFileExtensions: [".astro"],
 			},
-			rules: {
-				// TODO: Investigate?? :(
-				"@typescript-eslint/no-unsafe-assignment": "off",
-				"deprecation/deprecation": "off",
-			},
 		},
 		{
-			files: ["*.ts", "*.tsx"],
+			files: ["*.astro", "*.ts", "*.tsx"],
 			extends: [
-				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@typescript-eslint/strict",
+				"plugin:@typescript-eslint/strict-type-checked",
+				"plugin:@typescript-eslint/stylistic-type-checked",
 			],
+			rules: {
+				"deprecation/deprecation": "error",
+			},
 		},
 		{
 			files: ["*.json", "*.jsonc"],
@@ -91,8 +85,6 @@ module.exports = {
 	],
 	root: true,
 	rules: {
-		"deprecation/deprecation": "error",
-
 		// Seems to be conflicting with Prettier
 		"no-mixed-spaces-and-tabs": "off",
 
