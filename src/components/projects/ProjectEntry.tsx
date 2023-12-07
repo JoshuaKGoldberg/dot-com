@@ -21,6 +21,7 @@ function projectTitle(project: ProjectBase) {
 export function ProjectEntry(props: ProjectEntryProps) {
 	return (
 		<ContentEntry
+			description={props.project.description}
 			image={
 				props.project.image
 					? {
@@ -34,7 +35,6 @@ export function ProjectEntry(props: ProjectEntryProps) {
 				["Repo", projectUrl(props.project)],
 				...Object.entries(props.project.links ?? []),
 			]}
-			description={props.project.description}
 			subtitle={props.project.role ?? "Creator & Maintainer"}
 			title={projectTitle(props.project)}
 			url={projectUrl(props.project)}

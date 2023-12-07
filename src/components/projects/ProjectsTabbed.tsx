@@ -13,6 +13,8 @@ export interface ProjectsTabbedProps {
 export function ProjectsTabbed(props: ProjectsTabbedProps) {
 	return (
 		<TabbedEntryCategories
+			categories={props.categories}
+			collection="project"
 			renderCategory={(projects) => (
 				<EntryList>
 					<For each={projects.sort((a, b) => a.repo.localeCompare(b.repo))}>
@@ -20,8 +22,6 @@ export function ProjectsTabbed(props: ProjectsTabbedProps) {
 					</For>
 				</EntryList>
 			)}
-			categories={props.categories}
-			collection="project"
 		/>
 	);
 }
