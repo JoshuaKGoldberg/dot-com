@@ -25,6 +25,7 @@
 
 		--textShadow: 3px 3px 1px var(--colorSubtle);
 
+		--transitionFast: 117ms;
 		--transitionMedium: 280ms;
 		--transitionSlow: 700ms;
 
