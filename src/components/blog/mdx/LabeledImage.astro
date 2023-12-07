@@ -1,5 +1,5 @@
 ---
-import LabeledMedia, { MediaOriginal } from "./LabeledMedia.astro";
+import LabeledMedia, { type MediaOriginal } from "./LabeledMedia.astro";
 
 export interface Props {
 	alt: string;
@@ -16,11 +16,11 @@ export interface Props {
 	original={Astro.props.original}
 >
 	<img
+		alt={Astro.props.alt}
+		class="labeled-image"
 		src={typeof Astro.props.src === "string"
 			? Astro.props.src
 			: Astro.props.src.src}
-		alt={Astro.props.alt}
-		class="labeled-image"
 	/>
 </LabeledMedia>
 

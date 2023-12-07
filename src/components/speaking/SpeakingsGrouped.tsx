@@ -4,8 +4,8 @@ import { For } from "solid-js";
 
 import { groupBy } from "~/utils";
 
-import { EntryList } from "../EntryList";
-import { GroupedEntries } from "../GroupedEntries";
+import { CategorizedEntryList } from "../entries/CategorizedEntryList";
+import { GroupedEntries } from "../entries/GroupedEntries";
 import { SpeakingEntry } from "./SpeakingEntry";
 
 export interface SpeakingsGroupedProps {
@@ -28,11 +28,11 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 	return (
 		<>
 			{upcoming().length ? (
-				<EntryList category="Upcoming">
+				<CategorizedEntryList category="Upcoming">
 					<For each={upcoming()}>
 						{(speaking) => <SpeakingEntry speaking={speaking} />}
 					</For>
-				</EntryList>
+				</CategorizedEntryList>
 			) : null}
 			<GroupedEntries
 				groups={Object.entries(

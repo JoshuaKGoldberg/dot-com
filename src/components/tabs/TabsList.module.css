@@ -1,0 +1,20 @@
+.tabsList {
+	align-items: center;
+	padding: 2rem 0 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	justify-content: center;
+	width: 100%;
+}
+
+.indicator {
+	position: absolute;
+}
+
+@media (min-width: 700px) {
+	.tabsList {
+		flex-direction: row;
+		padding: 0 0 2rem;
+	}
+}

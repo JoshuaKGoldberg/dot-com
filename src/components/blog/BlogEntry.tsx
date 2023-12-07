@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-import { ContentEntry } from "../ContentEntry";
+import { ContentEntry } from "../entries/ContentEntry";
 import { DateAndMinutes } from "./DateAndMinutes";
 
 export interface BlogEntryProps {
@@ -12,6 +12,7 @@ export function BlogEntry(props: BlogEntryProps) {
 
 	return (
 		<ContentEntry
+			description={props.blog.data.description}
 			image={
 				props.blog.data.image && {
 					alt: props.blog.data.image.src,
@@ -25,7 +26,6 @@ export function BlogEntry(props: BlogEntryProps) {
 			title={props.blog.data.title
 				// TODO: use a markdown renderer
 				.replaceAll("`", "")}
-			description={props.blog.data.description}
 			url={url()}
 			widths="full"
 		/>
