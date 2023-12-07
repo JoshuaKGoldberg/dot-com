@@ -2,36 +2,45 @@
 </button>
 
 <script is:inline>
-	const html = () => document.documentElement;
-	const toggle = () => document.getElementById("themeToggle");
+	function initialize() {
+		const html = () => document.documentElement;
+		const toggle = () => document.getElementById("themeToggle");
 
-	const updateForTheme = (current) => {
-		toggle().setAttribute("aria-label", `Theme toggle (current: ${current})`);
-		localStorage.setItem("theme", current);
-	};
+		const updateForTheme = (current) => {
+			toggle().setAttribute("aria-label", `Theme toggle (current: ${current})`);
+			localStorage.setItem("theme", current);
+		};
 
-	const theme = (() => {
-		if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-			return localStorage.getItem("theme");
+		const theme = (() => {
+			if (
+				typeof localStorage !== "undefined" &&
+				localStorage.getItem("theme")
+			) {
+				return localStorage.getItem("theme");
+			}
+			if (matchMedia("(prefers-color-scheme: dark)").matches) {
+				return "dark";
+			}
+			return "light";
+		})();
+
+		if (theme === "light") {
+			html().classList.remove("dark");
+		} else {
+			html().classList.add("dark");
 		}
-		if (matchMedia("(prefers-color-scheme: dark)").matches) {
-			return "dark";
-		}
-		return "light";
-	})();
 
-	if (theme === "light") {
-		html().classList.remove("dark");
-	} else {
-		html().classList.add("dark");
+		updateForTheme(theme);
+
+		toggle().addEventListener("click", () => {
+			html().classList.toggle("dark");
+			updateForTheme(html().classList.contains("dark") ? "dark" : "light");
+		});
 	}
 
-	updateForTheme(theme);
+	initialize();
 
-	toggle().addEventListener("click", () => {
-		html().classList.toggle("dark");
-		updateForTheme(html().classList.contains("dark") ? "dark" : "light");
-	});
+	document.addEventListener("astro:after-swap", initialize);
 </script>
 
 <style>
