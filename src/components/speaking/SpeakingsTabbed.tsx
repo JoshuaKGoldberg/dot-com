@@ -10,11 +10,11 @@ export interface SpeakingsTabbedProps {
 export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 	return (
 		<TabbedEntryCategories
+			categories={props.categories}
+			collection="speaking"
 			renderCategory={(speakings) => (
 				<SpeakingsGrouped allSpeakings={speakings} />
 			)}
-			categories={props.categories}
-			collection="speaking"
 		/>
 	);
 }

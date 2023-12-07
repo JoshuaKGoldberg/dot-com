@@ -105,6 +105,10 @@ export function TableOfContents(props: TableOfContentsProps) {
 				<ol class={clsx(styles.ol, styles.tableRoot)}>
 					<li class={styles.li}>
 						<Text
+							as="a"
+							class={clsx(styles.back, !getActiveSlug() && styles.active)}
+							fontWeight="light"
+							href="#"
 							onClick={(event) => {
 								document.body.scroll({
 									behavior: "smooth",
@@ -113,10 +117,6 @@ export function TableOfContents(props: TableOfContentsProps) {
 								window.location.hash = "";
 								event.preventDefault();
 							}}
-							as="a"
-							class={clsx(styles.back, !getActiveSlug() && styles.active)}
-							fontWeight="light"
-							href="#"
 						>
 							Back to Top
 						</Text>
@@ -125,11 +125,11 @@ export function TableOfContents(props: TableOfContentsProps) {
 						{({ h2, h3s }) => (
 							<li class={styles.li}>
 								<Text
+									as="a"
 									class={clsx(
 										styles.a,
 										h2.slug === getActiveSlug() && styles.active,
 									)}
-									as="a"
 									fontWeight="light"
 									href={`#${h2.slug}`}
 								>
@@ -141,11 +141,11 @@ export function TableOfContents(props: TableOfContentsProps) {
 											{(h3) => (
 												<li class={styles.li}>
 													<Text
+														as="a"
 														class={clsx(
 															styles.a,
 															h3.slug === getActiveSlug() && styles.active,
 														)}
-														as="a"
 														fontWeight="light"
 														href={`#${h3.slug}`}
 													>
