@@ -1,0 +1,85 @@
+<button aria-label="Theme toggle (enable JavaScript to use)" id="themeToggle">
+</button>
+
+<script is:inline>
+	function initialize() {
+		const html = () => document.documentElement;
+		const toggle = () => document.getElementById("themeToggle");
+
+		const updateForTheme = (current) => {
+			toggle().setAttribute("aria-label", `Theme toggle (current: ${current})`);
+			localStorage.setItem("theme", current);
+		};
+
+		const theme = (() => {
+			if (
+				typeof localStorage !== "undefined" &&
+				localStorage.getItem("theme")
+			) {
+				return localStorage.getItem("theme");
+			}
+			if (matchMedia("(prefers-color-scheme: dark)").matches) {
+				return "dark";
+			}
+			return "light";
+		})();
+
+		if (theme === "light") {
+			html().classList.remove("dark");
+		} else {
+			html().classList.add("dark");
+		}
+
+		updateForTheme(theme);
+
+		toggle().addEventListener("click", () => {
+			html().classList.toggle("dark");
+			updateForTheme(html().classList.contains("dark") ? "dark" : "light");
+		});
+	}
+
+	initialize();
+
+	document.addEventListener("astro:after-swap", initialize);
+</script>
+
+<style>
+	#themeToggle {
+		background: none;
+		border: transparent;
+		cursor: pointer;
+		font-size: 1.5rem;
+		height: 2rem;
+		position: relative;
+		width: 2.25rem;
+	}
+
+	#themeToggle::after,
+	#themeToggle::before {
+		display: block;
+		top: 0;
+		position: absolute;
+		transform-origin: bottom center;
+		transition:
+			var(--transitionMedium) opacity,
+			var(--transitionMedium) transform;
+	}
+
+	#themeToggle::after {
+		content: "🌞";
+	}
+
+	#themeToggle::before {
+		content: "🌝";
+	}
+
+	html.dark #themeToggle::after {
+		transform: rotate(90deg);
+		opacity: 0;
+	}
+
+	html:not(.dark) #themeToggle::before {
+		transform: rotate(-90deg);
+		opacity: 0;
+	}
+</style>
