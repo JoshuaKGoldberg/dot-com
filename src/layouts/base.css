@@ -1,5 +1,7 @@
 @layer base {
 	:root {
+		color-scheme: light;
+
 		--colorBackgroundBottom: #fcffff;
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
@@ -97,6 +99,8 @@
 	}
 
 	html.dark {
+		color-scheme: dark;
+
 		--colorBackgroundBottom: #111117;
 		--colorBackgroundTop: #071428;
 		--colorEmphasized: #77bbff;
