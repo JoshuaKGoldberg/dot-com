@@ -57,8 +57,8 @@ dependencies:
     specifier: ^8.55.0
     version: 8.55.0
   eslint-plugin-astro:
-    specifier: ^0.30.0
-    version: 0.30.0(eslint@8.55.0)
+    specifier: ^0.31.0
+    version: 0.31.0(eslint@8.55.0)
   eslint-plugin-deprecation:
     specifier: ^2.0.0
     version: 2.0.0(eslint@8.55.0)(typescript@5.1.3)
@@ -3825,8 +3825,8 @@ packages:
       eslint: 8.55.0
     dev: false
 
-  /eslint-plugin-astro@0.30.0(eslint@8.55.0):
-    resolution: {integrity: sha512-LDbbs836SiHqhuiuAF4CPqSSWsfa7R8vfX5lckphCUD/kBFIsobViI8fuTyMktQ9isCg+Q86LIQAHTFl3PWKTA==}
+  /eslint-plugin-astro@0.31.0(eslint@8.55.0):
+    resolution: {integrity: sha512-oNZj7bcpCPkebKD7ZfGflAFVUwz78ItdXeK5aVAqFpZZk1JhGaseWdU24f8r26hRte9rrT3EQV4Qwbngp2xSPA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=7.0.0'
