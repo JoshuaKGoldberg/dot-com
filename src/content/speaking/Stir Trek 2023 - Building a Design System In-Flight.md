@@ -6,5 +6,5 @@ title: "Building a Design System In-Flight"
 event: "Stir Trek 2023"
 links:
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtFnhBSaIhabdMf7oQ?e=0Me4QN"
-  Video: "https://www.youtube.com/watch?v=gbNPXvfDAik"
+  Video: "https://www.youtube.com/watch?v=rN6kOPUEicE"
 ---
