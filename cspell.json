@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -42,6 +48,7 @@
 		"callstack",
 		"callstacks",
 		"Cascadia",
+		"Casonato",
 		"Cavanaugh",
 		"Chakra",
 		"chatbots",
@@ -93,8 +100,8 @@
 		"FOSS",
 		"fourslash",
 		"Frankensteinian",
-		"Freakin'",
 		"Freakin",
+		"Freakin'",
 		"freezeframe",
 		"Freitas",
 		"fullscreenmario",
@@ -143,6 +150,7 @@
 		"learningtypescript",
 		"learningypescript",
 		"Lolex",
+		"Luca",
 		"Ludgate",
 		"lunon",
 		"maintainership",
