@@ -115,11 +115,14 @@ Both of those options are difficult and will take some time to land.
 
 [Node.js user land snapshots](https://nodejs.org/en/blog/release/v18.8.0#bootstrap-implement-run-time-user-land-snapshots-via---build-snapshot-and---snapshot-blob) are mentioned in TypeScript's [Ideas for faster cold compiler start-up issue](https://github.com/microsoft/TypeScript/issues/25658) in the context of startup times.
 For the context of typed linting, aggressively JITing code ahead of time might be marginally useful too.
+The [Hermes engine](https://hermesengine.dev) has some interesting build-time precompilation too.
 
+Though, TypeScript itself isn't architected for native code.
+It assumes a runtime with built-in garbage collection, mutable objects, and other performance paper cuts
 I suspect the biggest gains might be from rearchitecting TypeScript to be more performance-friendly:
 
 - Restricting global type augmentations to be more parallelization-friendly
-- Changing the way its checker runs to not rely on garbage collection, mutable objects, or other performance paper cuts as much
+- Changing the way its checker runs to avoid those paper cuts
 
 Both avenues would be very difficult to implement and cause breaking changes in TypeScript's APIs.
 Neither is likely to happen any time soon.

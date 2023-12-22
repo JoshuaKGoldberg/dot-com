@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -193,6 +199,7 @@
 		"platformers",
 		"pluggable",
 		"Pocock",
+		"precompilation",
 		"prescheduled",
 		"Prith",
 		"protip",
