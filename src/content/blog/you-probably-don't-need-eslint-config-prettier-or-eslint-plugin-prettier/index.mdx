@@ -131,7 +131,8 @@ Furthermore, two insidious points of confusing can arise from using `eslint-conf
 I now recommend against including `eslint-config-prettier` in most new projects.
 
 > 💡 Not sure whether you can safely remove `"prettier"` from your `"extends"`?
-> Try removing it, running ESLint with [`--print-config`](https://eslint.org/docs/latest/use/command-line-interface#--print-config), and seeing which lint rules are newly enabled.
+> Try removing it, then running `npx eslint-config-prettier some/file.js` to see if it points out any conflicting rules.
+> Running ESLint with [`--print-config`](https://eslint.org/docs/latest/use/command-line-interface#--print-config), can alternately print out the full list of lint rule configurations for a file.
 
 ## `eslint-plugin-prettier`
 
@@ -207,7 +208,9 @@ Much appreciation to [Anisha Malde](https://www.anisha.dev) for suggesting I wri
 Thanks!
 🙌
 
+Thanks also to [Simon Lydell](https://github.com/lydell), the original creator and a long-time maintainer of `eslint-config-prettier`, for reviewing the post and suggesting the `npx eslint-config-prettier` approach.
+
 We should also note that although I personally disagree with `eslint-config-prettier` and `eslint-plugin-prettier`, they are legitimately useful tools for many.
 I like to think that they've helped many folks onboard to formatting and/or linting their code.
-Many thanks to their maintainers over the years!
+Many thanks to all their contributors and maintainers over the years!
 ❤️
