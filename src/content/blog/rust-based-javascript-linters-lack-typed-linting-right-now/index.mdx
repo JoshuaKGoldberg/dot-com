@@ -136,6 +136,9 @@ I'm not going to show you a performance comparison of Rust-based linters vs. ESL
 The comparison would be misleading: until Rust-based linters achieve feature parity with typed linting rules, they benefit in comparisons from having to run significantly less work.
 And given how many different avenues we have yet to flesh out in running type linting rules with a native speed linter, we have near-zero idea what that performance would look like.
 
+> 💡 When evaluating performance comparisons, always make sure the comparisons are on comparable behavior.
+> Don't trust any metric you don't understand the contents of.
+
 ## In Conclusion
 
 Rust-based JavaScript/TypeScript linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), [oxc](https://github.com/oxc-project/oxc), and [RSLint](https://rslint.org) are fantastically fast projects.
