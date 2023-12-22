@@ -117,7 +117,7 @@ Both of those options are difficult and will take some time to land.
 [Transpiling the checker to Go](https://kdy1.dev/2022-1-26-porting-tsc-to-go) was the original aim of what became `stc` before the [the project switched to the Rust re-implementation](https://kdy1.dev/2022-10-27-open-sourcing-stc#heading-ill-switch-back-to-the-rust-version).
 
 [Node.js user land snapshots](https://nodejs.org/en/blog/release/v18.8.0#bootstrap-implement-run-time-user-land-snapshots-via---build-snapshot-and---snapshot-blob) are mentioned in TypeScript's [Ideas for faster cold compiler start-up issue](https://github.com/microsoft/TypeScript/issues/25658) in the context of startup times.
-For the context of typed linting, aggressively JITing code ahead of time might be marginally useful too.
+For the context of typed linting, aggressively optimizing code ahead of time might be marginally useful too.
 The [Hermes engine](https://hermesengine.dev) has some interesting build-time precompilation too.
 
 Though, TypeScript itself isn't architected for native code.
