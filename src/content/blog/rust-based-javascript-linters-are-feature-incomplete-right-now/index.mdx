@@ -17,7 +17,7 @@ title: "Rust-Based JavaScript Linters are Feature Incomplete Right Now"
 
 One of 2023's biggest trends for web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org).
 Rust is a wonderful programming language that allows for shockingly fast binaries that still interop well with other web tools courtesy of WebAssembly.
-The speedsups seen in tools such as [swc](https://swc.rs) and [Turbopack](https://turbo.build/pack) are very exciting for fast development experiences.
+The speedups seen in tools such as [swc](https://swc.rs) and [Turbopack](https://turbo.build/pack) are very exciting for fast development experiences.
 
 [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), [oxc](https://github.com/oxc-project/oxc), and [RSLint](https://rslint.org) are all projects that include at least a JavaScript/TypeScript linter written in Rust.
 The idea of a linter that runs at Rust (native code) speed rather than JavaScript (JIT script) speed is quite appealing from the perspective of performance.
@@ -28,8 +28,8 @@ In this case, the pros are much less than many have noted, while the cons are mu
 
 ## Recap: Type-Checked Linting
 
-Traditionally, lint rules in linters such as ESLint only have visiblity into one source code file at a time.
-This makes them fast and theoretically cacheable and parallizeable.
+Traditionally, lint rules in linters such as ESLint only have visibility into one source code file at a time.
+This makes them fast and theoretically cacheable and parallelizable.
 
 [typescript-eslint](https://typescript-eslint.io) introduces the concept of [linting with type information](https://typescript-eslint.io/linting/typed-linting).
 By calling to TypeScript's type checking APIs, lint rules can make much more informed decisions on code based on types informed by potentially any other file in your project.
@@ -81,6 +81,10 @@ In order to work with type checking, a Rust linter would have to either:
 The performance hit option would likely slow the linters down to the point where they have no noticeable performance advantage compared to ESLint.
 👎
 
+That being said, if any native speed linter wants to do this, we in typescript-eslint would love to help.
+The [`@typescript-eslint/parser`](https://typescript-eslint.io/packages/parser) and [`@typescript-eslint/typescript-estree`](https://typescript-eslint.io/packages/typescript-estree) Node.js APIs are open source and as well documented as we've thought to write.
+We'd be happy to work with anybody who wants to use them, including spinning out standalone packages if that'd be useful.
+
 #### Option: Reimplementing TypeScript at Native Speed
 
 Reimplementing TypeScript at native speed is a tantalizing prospect for TypeScript users in general, not just linters.
@@ -94,7 +98,7 @@ TypeScript's type checking has to deal with bizarrely complex edge cases around 
 
 TypeScript is also a funded development team with contributions from its own programming language specialists and community contributors.
 Keeping up with its new versions is a Sisyphean task for any re-implementation.
-As impressive as Ezno and `stc` are, their long-term feasiblility as standalone projects is precarious.
+As impressive as Ezno and `stc` are, their long-term feasibility as standalone projects is precarious.
 
 > 💡 See [Matt Pocock's _Rewriting TypeScript in Rust? You'd have to be..._](https://www.totaltypescript.com/rewriting-typescript-in-rust) for more discussion with `stc`'s Donny.
 
@@ -127,4 +131,4 @@ But that speed comes with a serious feature gap compared to [ESLint](https://esl
 You should understand what you're missing when you switch from one to the other.
 
 Rust-based linters may eventually be able to get the benefits of type-checked linting at native speed code.
-But it's going to be a very long time until that's feasable.
+But it's going to be a very long time until that's feasible.
