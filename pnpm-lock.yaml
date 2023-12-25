@@ -87,8 +87,8 @@ dependencies:
     specifier: ^5.0.2
     version: 5.0.2
   joshuakgoldberg:
-    specifier: ^0.5.0
-    version: 0.5.0
+    specifier: ^0.6.0
+    version: 0.6.0
   knip:
     specifier: ^2.13.0
     version: 2.13.0
@@ -5252,8 +5252,8 @@ packages:
     hasBin: true
     dev: false
 
-  /joshuakgoldberg@0.5.0:
-    resolution: {integrity: sha512-A1JrWdqm/iAEP1zcpnQzcEC0bDP4dlNRGo8i48MHIvODSU4Udb7RUM/oxRGW9b97TSJ4KCWGP86UtQsLdkZ1iA==}
+  /joshuakgoldberg@0.6.0:
+    resolution: {integrity: sha512-xOfj8pPf+6DjuDTqrz8Cmy2MiESsmfqhvc26EShq6H9oRz6SqJZNIyrYzjxVBvES3S6CdirIwOhi6Z9QSyEP3A==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
@@ -7569,6 +7569,7 @@ packages:
 
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
+    requiresBuild: true
     dev: false
 
   /safe-regex-test@1.0.0:
@@ -7956,6 +7957,7 @@ packages:
 
   /string_decoder@1.3.0:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
+    requiresBuild: true
     dependencies:
       safe-buffer: 5.2.1
     dev: false
