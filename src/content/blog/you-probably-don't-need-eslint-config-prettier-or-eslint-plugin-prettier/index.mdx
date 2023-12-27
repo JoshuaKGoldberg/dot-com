@@ -51,7 +51,7 @@ If you use ESLint to lint TypeScript code then you're hopefully using all three 
 
 - **Parser**: [`@typescript-eslint/parser`](https://typescript-eslint.io/packages/parser) to support parsing TypeScript code
 - **Plugin**: [`@typescript-eslint/eslint-plugin`](https://typescript-eslint.io/packages/eslint-plugin) to load in rules specific to TypeScript
-- **Shared Config(s)**: Shared settings packaged with `@typescript-eslint/eslint-plugin` that configure many rules at once, such as [`plugin:@typescript-eslint/recommended`](https://typescript-eslint.io/linting/configs#recommended).
+- **Shareable Config(s)**: Shared settings packaged with `@typescript-eslint/eslint-plugin` that configure many rules at once, such as [`plugin:@typescript-eslint/recommended`](https://typescript-eslint.io/linting/configs#recommended).
 
 Note that the typescript-eslint _shareable configs_ come from the `@typescript-eslint/eslint-plugin` npm package.
 Hence the `plugin:` prefix in front of them: that's how ESLint knows where to find the configs.
@@ -85,7 +85,7 @@ Roughly:
 
 ### Why `eslint-config-prettier` Came To Be
 
-Back in the day, popular shared configs such as [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb) were often used to enable many rules at once.
+Back in the day, popular shareble configs such as [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb) were often used to enable many rules at once.
 These configs were popular because they established a well-known, opinionated style guide and set of logical checks on code.
 Their downside was that they were oftentimes too opinionated - even enabling formatting rules.
 
@@ -103,14 +103,14 @@ Developers got around those formatting rules by knowing that ESLint evaluates co
 }
 ```
 
-By extending from `eslint-config-prettier` last, projects could gain the benefits of those popular shared configs without having to run formatting rules within ESLint.
+By extending from `eslint-config-prettier` last, projects could gain the benefits of those popular shareable configs without having to run formatting rules within ESLint.
 
 ### Why `eslint-config-prettier` Is Often Unnecessary
 
 Over the last few years, ESLint best practices have advanced in two ways (among others):
 
-- ESLint core and most community plugins have determined that enabling overly opinionated rules -especially stylistic ones- in shared configs makes developers dislike ESLint without much real benefit
-- The recommended rulesets in ESLint and typescript-eslint have grown to include most of the beneficial logical rules that shared configs such as `eslint-config-airbnb` were largely used for
+- ESLint core and most community plugins have determined that enabling overly opinionated rules -especially stylistic ones- in shareable configs makes developers dislike ESLint without much real benefit
+- The recommended rulesets in ESLint and typescript-eslint have grown to include most of the beneficial logical rules that shareable configs such as `eslint-config-airbnb` were largely used for
 
 As a result, many new projects haven't felt a need to load in opinionated configs such as `eslint-config-airbnb`.
 Many projects start out with a much more straightforward set of configs:
@@ -119,7 +119,7 @@ Many projects start out with a much more straightforward set of configs:
 2. If using TypeScript: `"plugin:@typescript-eslint/recommended"` or `"plugin:@typescript-eslint/recommended-type-checked"` for the recommended TypeScript rules
 3. Any framework- or library-specific plugins, such as [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)'s `"plugin:jsx-a11y/recommended"`
 
-**If you don't use a legacy ESLint shared config that enables formatting rules, you probably don't need `eslint-config-prettier`.**
+**If you don't use a legacy ESLint shareable config that enables formatting rules, you probably don't need `eslint-config-prettier`.**
 Adding `eslint-config-prettier` at the end of the `"extends"` list doesn't do anything if nothing enabled formatting rules to begin with.
 Therefore, most projects don't gain any benefit from `eslint-config-prettier`.
 
