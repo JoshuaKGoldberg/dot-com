@@ -141,14 +141,19 @@ I now recommend against including `eslint-config-prettier` in most new projects.
 - A custom rule, `prettier/prettier`, that runs all of Prettier inside a single ESLint rule
 - A shareable config, `plugin:prettier/recommended`, that enables the `prettier/prettier` rule
 
-For example, in ESLint's legacy config format, you might enable them like:
+For example, in ESLint's legacy config format, you might enable it by extending its recommended config:
 
 ```json
 {
-	// 1. Load the prettier/prettier rule and turn it on
 	"extends": ["plugin:prettier/recommended"]
 }
 ```
+
+Extending that config:
+
+1. Adds `eslint-plugin-prettier` to the `"plugins"` list of extended plugins, thereby loading in the `prettier/prettier` rule
+2. Enables the `prettier/prettier` rule
+3. Adds `eslint-config-prettier` to the `"extends"` list of extended configs
 
 The advantage of this approach is that you don't need to separately configure Prettier alongside ESLint.
 You can have one file -your ESLint config- that enables both.
