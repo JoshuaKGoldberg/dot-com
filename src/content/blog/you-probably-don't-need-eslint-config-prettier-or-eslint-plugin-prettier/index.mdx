@@ -1,8 +1,8 @@
 ---
 description: "Explaining two popular Prettier integrations for ESLint, and why I avoid both of them."
 image:
-  alt: Josh smiling on stage and giving a presentation showing the "Type Checking React (v2)" from the linked slides.
-  src: react-miami-me-speaking.jpg
+  alt: Cat rolled up in a circular ball within a fluffy white circular pet bed.
+  src: circle-cat.jpg
 pubDate: 2024-01-14
 tags: [
 	"eslint-config-prettier",
@@ -15,6 +15,15 @@ tags: [
 ]
 title: "You Probably Don't Need `eslint-config-prettier` or `eslint-plugin-prettier`"
 ---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import circleCat from "./circle-cat.webp";
+
+<LabeledImage
+	alt="Cat rolled up in a circular ball within a fluffy white circular pet bed. Next to it are two photo frames."
+	description="Tiny the cat, neatly formatted into a circle within his cat bed."
+	src={circleCat}
+/>
 
 I've been proclaiming loudly for several years now to [_"STOP USING ESLINT FOR FORMATTING"_](/blog/configuring-eslint-prettier-and-typescript-together#stop-using-eslint-for-formatting).
 My belief is that _formatters_ such as [Prettier](https://prettier.io) and _linters_ such as [ESLint](https://eslint.org) are fundamentally different tools built for different purposes.
