@@ -1,6 +1,6 @@
 export function groupBy<T, K extends number | string>(
 	items: T[],
-	getKey: (item: T) => K
+	getKey: (item: T) => K,
 ) {
 	const grouped = {} as Record<K, T[]>;
 
@@ -9,5 +9,7 @@ export function groupBy<T, K extends number | string>(
 		(grouped[getKey(item)] ??= []).push(item);
 	}
 
-	return grouped;
+	return Object.fromEntries(
+		Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)),
+	) as typeof grouped;
 }

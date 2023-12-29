@@ -7,8 +7,8 @@ export interface ColorSchemeImages {
 export interface Props {
 	alt: string;
 	class?: string | undefined;
-	size: "small" | "large";
-	src: string | ColorSchemeImages;
+	size: "large" | "small";
+	src: ColorSchemeImages | string;
 }
 
 const src =
@@ -19,8 +19,8 @@ const src =
 
 <div class:list={["heroImage", Astro.props.class, Astro.props.size]}>
 	<picture>
-		<source srcset={src.dark} media="(prefers-color-scheme: dark)" />
-		<source srcset={src.light} media="(prefers-color-scheme: light)" />
+		<source media="(prefers-color-scheme: dark)" srcset={src.dark} />
+		<source media="(prefers-color-scheme: light)" srcset={src.light} />
 		<img alt={Astro.props.alt} class={Astro.props.size} src={src.light} />
 	</picture>
 </div>

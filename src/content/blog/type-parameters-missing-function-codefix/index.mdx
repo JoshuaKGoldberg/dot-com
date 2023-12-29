@@ -47,7 +47,7 @@ I ran a search for that runtime value and saw a result in [`src/services/codefix
 ```ts
 if (info.kind === InfoKind.Function) {
 	const changes = textChanges.ChangeTracker.with(context, (t) =>
-		addFunctionDeclaration(t, context, info)
+		addFunctionDeclaration(t, context, info),
 	);
 	return [
 		createCodeFixAction(
@@ -55,7 +55,7 @@ if (info.kind === InfoKind.Function) {
 			changes,
 			[Diagnostics.Add_missing_function_declaration_0, info.token.text],
 			fixMissingFunctionDeclaration,
-			Diagnostics.Add_all_missing_function_declarations
+			Diagnostics.Add_all_missing_function_declarations,
 		),
 	];
 }
@@ -168,7 +168,7 @@ const { argumentTypeNodes, argumentTypeParameters } =
 	getArgumentTypesAndTypeParameters(
 		checker,
 		importAdder,
-		instanceTypes
+		instanceTypes,
 		// (pass-through parameters omitted for brevity)
 	);
 ```
@@ -179,7 +179,7 @@ I used a `Set<string>` internally for the argument type parameters, to de-duplic
 export function getArgumentTypesAndTypeParameters(
 	checker: TypeChecker,
 	importAdder: ImportAdder,
-	instanceTypes: Type[]
+	instanceTypes: Type[],
 	// (pass-through parameters omitted for brevity)
 ) {
 	const argumentTypeNodes: TypeNode[] = [];
@@ -189,7 +189,7 @@ export function getArgumentTypesAndTypeParameters(
 		const argumentTypeNode = typeToAutoImportableTypeNode(
 			checker,
 			importAdder,
-			instanceType
+			instanceType,
 			// (pass-through arguments omitted for brevity)
 		);
 		if (!argumentTypeNode) {
@@ -258,8 +258,8 @@ const typeParameters =
 					/*modifiers*/ undefined,
 					CharacterCodes.T + typeArguments.length - 1 <= CharacterCodes.Z
 						? String.fromCharCode(CharacterCodes.T + i)
-						: `T${i}`
-				)
+						: `T${i}`,
+				),
 		  );
 ```
 
@@ -278,7 +278,7 @@ Here's what the function looked like at commit time:
 ```ts
 function createTypeParametersForArguments(
 	argumentTypeParameters: string[],
-	typeArguments: NodeArray<TypeNode> | undefined
+	typeArguments: NodeArray<TypeNode> | undefined,
 ) {
 	const usedNames = new Set(argumentTypeParameters);
 
@@ -291,13 +291,13 @@ function createTypeParametersForArguments(
 			usedNames.add(
 				CharacterCodes.T + i <= CharacterCodes.Z
 					? String.fromCharCode(CharacterCodes.T + i)
-					: `T${i}`
+					: `T${i}`,
 			);
 		}
 	}
 
 	return map(arrayFrom(usedNames.values()), (usedName) =>
-		factory.createTypeParameterDeclaration(/*modifiers*/ undefined, usedName)
+		factory.createTypeParameterDeclaration(/*modifiers*/ undefined, usedName),
 	);
 }
 ```
@@ -422,8 +422,8 @@ const typeArgumentsWithNewTypes = typeArguments.filter(
 	(typeArgument) =>
 		!argumentTypeParameters.some(
 			(pair) =>
-				checker.getTypeAtLocation(typeArgument) === pair[1]?.argumentType
-		)
+				checker.getTypeAtLocation(typeArgument) === pair[1]?.argumentType,
+		),
 );
 const targetSize = usedNames.size + typeArgumentsWithNewTypes.length;
 for (let i = 0; usedNames.size < targetSize; i += 1) {

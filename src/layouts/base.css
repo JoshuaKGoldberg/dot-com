@@ -1,5 +1,7 @@
 @layer base {
 	:root {
+		color-scheme: light;
+
 		--colorBackgroundBottom: #fcffff;
 		--colorBackgroundTop: #faffff;
 		--colorEmphasized: #1170d0;
@@ -20,8 +22,12 @@
 		--fontWeightBold: 600;
 		--fontWeightBolder: 700;
 
+		--lineHeightBase: 1.1;
+		--lineHeightParagraph: 1.35;
+
 		--textShadow: 3px 3px 1px var(--colorSubtle);
 
+		--transitionFast: 117ms;
 		--transitionMedium: 280ms;
 		--transitionSlow: 700ms;
 
@@ -53,7 +59,8 @@
 	}
 
 	body {
-		background: linear-gradient(
+		background:
+			linear-gradient(
 					to bottom,
 					transparent 70%,
 					var(--colorBackgroundBottom) 100%
@@ -66,7 +73,7 @@
 				)
 				no-repeat;
 		overflow-y: auto;
-		line-height: 1.1;
+		line-height: var(--lineHeightBase);
 		position: fixed;
 		top: 0;
 		bottom: 0;
@@ -83,32 +90,39 @@
 	:link,
 	:visited {
 		color: var(--colorForeground);
+		transition: var(--transitionMedium) color;
 		text-decoration: none;
 	}
 
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--colorBackgroundBottom: #111117;
-			--colorBackgroundTop: #071428;
-			--colorEmphasized: #77bbff;
-			--colorForeground: #dae7f3;
-			--colorForegroundExtra: #e5edf3;
-			--colorSubtle: #052438;
+	main {
+		position: relative;
+	}
 
-			/* Note: some of these are unused in Prism, but would be in Shiki. */
-			--astro-code-color-text: #d3d6f0;
-			--astro-code-color-deleted: #f08080;
-			--astro-code-color-inserted: #70c27d;
-			--astro-code-token-comment: #85cab1;
-			--astro-code-token-constant: #d4d8f4;
-			--astro-code-token-function: #85b8ff;
-			--astro-code-token-keyword: #b0cff7;
-			--astro-code-token-link: #bde3bd;
-			--astro-code-token-parameter: #8dc1d0;
-			--astro-code-token-punctuation: #55e1f3;
-			--astro-code-token-string-expression: #82c1da;
-			--astro-code-token-string: #b3baf2;
-		}
+	html.dark {
+		color-scheme: dark;
+
+		--colorBackgroundBottom: #111117;
+		--colorBackgroundTop: #071428;
+		--colorEmphasized: #77bbff;
+		--colorForeground: #dae7f3;
+		--colorForegroundExtra: #e5edf3;
+		--colorSubtle: #052438;
+
+		--lineHeightParagraph: 1.5;
+
+		/* Note: some of these are unused in Prism, but would be in Shiki. */
+		--astro-code-color-text: #d3d6f0;
+		--astro-code-color-deleted: #f08080;
+		--astro-code-color-inserted: #70c27d;
+		--astro-code-token-comment: #85cab1;
+		--astro-code-token-constant: #d4d8f4;
+		--astro-code-token-function: #85b8ff;
+		--astro-code-token-keyword: #b0cff7;
+		--astro-code-token-link: #bde3bd;
+		--astro-code-token-parameter: #8dc1d0;
+		--astro-code-token-punctuation: #55e1f3;
+		--astro-code-token-string-expression: #82c1da;
+		--astro-code-token-string: #b3baf2;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {

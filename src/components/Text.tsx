@@ -1,14 +1,14 @@
 import { clsx } from "clsx";
-import { JSX, splitProps } from "solid-js";
+import { type JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
 import styles from "./Text.module.css";
 
 const fontSizes = {
-	smaller: styles.fontSizeSmaller,
-	small: styles.fontSizeSmall,
-	medium: styles.fontSizeMedium,
 	large: styles.fontSizeLarge,
+	medium: styles.fontSizeMedium,
+	small: styles.fontSizeSmall,
+	smaller: styles.fontSizeSmaller,
 	subtitle: styles.fontSizeSubtitle,
 	title: styles.fontSizeTitle,
 };
@@ -16,10 +16,10 @@ const fontSizes = {
 export type FontSize = keyof typeof fontSizes;
 
 const fontWeights = {
-	light: styles.fontWeightLight,
-	medium: styles.fontWeightNormal,
 	bold: styles.fontWeightBold,
 	bolder: styles.fontWeightBolder,
+	light: styles.fontWeightLight,
+	medium: styles.fontWeightNormal,
 };
 
 export type FontWeight = keyof typeof fontWeights;
@@ -33,7 +33,7 @@ export type TextProps<As extends keyof JSX.HTMLElementTags> = {
 } & JSX.HTMLElementTags[As];
 
 export function Text<As extends keyof JSX.HTMLElementTags>(
-	props: TextProps<As>
+	props: TextProps<As>,
 ) {
 	const [knownProps, rest] = splitProps(props, [
 		"as",

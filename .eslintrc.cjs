@@ -1,45 +1,49 @@
 module.exports = {
+	env: {
+		node: true,
+	},
 	extends: [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"plugin:astro/recommended",
 		"plugin:jsx-a11y/recommended",
+		"plugin:perfectionist/recommended-natural",
 		"plugin:regexp/recommended",
 		"plugin:typescript-sort-keys/recommended",
 	],
 	overrides: [
 		{
+			// It would be lovely to enable typed linting in these files...
+			// https://github.com/ota-meshi/eslint-plugin-astro/issues/240
 			extends: [
-				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"plugin:@typescript-eslint/strict",
+				"plugin:@typescript-eslint/stylistic",
 			],
 			files: ["*.astro"],
 			parser: "astro-eslint-parser",
 			parserOptions: {
-				parser: "@typescript-eslint/parser",
 				extraFileExtensions: [".astro"],
-			},
-			rules: {
-				// TODO: Investigate?? :(
-				"@typescript-eslint/no-unsafe-assignment": "off",
-				"deprecation/deprecation": "off",
+				parser: "@typescript-eslint/parser",
 			},
 		},
 		{
-			files: ["*.ts", "*.tsx"],
 			extends: [
-				"plugin:@typescript-eslint/recommended-requiring-type-checking",
-				"plugin:@typescript-eslint/strict",
+				"plugin:@typescript-eslint/strict-type-checked",
+				"plugin:@typescript-eslint/stylistic-type-checked",
 			],
+			files: ["*.ts", "*.tsx"],
+			rules: {
+				"deprecation/deprecation": "error",
+			},
 		},
 		{
-			files: ["*.json", "*.jsonc"],
 			excludedFiles: ["package.json"],
+			extends: ["plugin:jsonc/recommended-with-json"],
+			files: ["*.json", "*.jsonc"],
 			parser: "jsonc-eslint-parser",
 			rules: {
 				"jsonc/sort-keys": "error",
 			},
-			extends: ["plugin:jsonc/recommended-with-json"],
 		},
 		{
 			extends: ["plugin:markdown/recommended"],
@@ -51,9 +55,9 @@ module.exports = {
 			files: ["*.tsx"],
 		},
 		{
+			extends: ["plugin:yml/standard", "plugin:yml/prettier"],
 			files: ["**/*.{yml,yaml}"],
 			parser: "yaml-eslint-parser",
-			extends: ["plugin:yml/standard", "plugin:yml/prettier"],
 			rules: {
 				"yml/file-extension": ["error", { extension: "yml" }],
 				"yml/sort-keys": [
@@ -83,22 +87,21 @@ module.exports = {
 		"astro",
 		"deprecation",
 		"jsx-a11y",
+		"perfectionist",
 		"regexp",
 		"solid",
-		"simple-import-sort",
 		"typescript-sort-keys",
 	],
 	root: true,
 	rules: {
-		"simple-import-sort/imports": "error",
-		"simple-import-sort/exports": "error",
-		"deprecation/deprecation": "error",
-
-		// Stylistic concerns that don't interfere with Prettier
-		"padding-line-between-statements": "off",
 		"@typescript-eslint/padding-line-between-statements": [
 			"error",
 			{ blankLine: "always", next: "*", prev: "block-like" },
 		],
+
+		// Seems to be conflicting with Prettier
+		"no-mixed-spaces-and-tabs": "off",
+		// Stylistic concerns that don't interfere with Prettier
+		"padding-line-between-statements": "off",
 	},
 };

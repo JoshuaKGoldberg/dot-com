@@ -1,5 +1,6 @@
-import clsx from "clsx";
 import type { JSX } from "solid-js/jsx-runtime";
+
+import clsx from "clsx";
 
 import styles from "./SocialImage.module.css";
 

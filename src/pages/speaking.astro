@@ -4,21 +4,17 @@ import { getCollection } from "astro:content";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
-import { SpeakingsGrouped } from "~/components/speaking/SpeakingsGrouped";
+import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
+import { groupBy } from "~/utils";
 
 import HeroLayout from "../layouts/HeroLayout.astro";
 
 const allSpeakings = await getCollection("speaking");
 
-const now = Date.now();
-
-const previous = allSpeakings
-	.filter((speaking) => +speaking.data.date < now)
-	.sort((a, b) => +b.data.date - +a.data.date);
-
-const upcoming = allSpeakings
-	.filter((speaking) => +speaking.data.date > now)
-	.sort((a, b) => +a.data.date - +b.data.date);
+const categories = {
+	All: allSpeakings,
+	...groupBy(allSpeakings, (speaking) => speaking.data.category),
+};
 ---
 
 <HeroLayout
@@ -30,7 +26,7 @@ const upcoming = allSpeakings
 	<HeroTertiary slot="tertiary">
 		Want me to speak at your event? Hooray!
 		<br />
-		Please see my <Anchor
+		 Please see my <Anchor
 			href="https://github.com/JoshuaKGoldberg/speaker-rider"
 			target="_blank"
 		>
@@ -38,6 +34,6 @@ const upcoming = allSpeakings
 		</Anchor>.
 	</HeroTertiary>
 	<BodyContents>
-		<SpeakingsGrouped previous={previous} upcoming={upcoming} />
+		<SpeakingsTabbed categories={categories} client:load />
 	</BodyContents>
 </HeroLayout>

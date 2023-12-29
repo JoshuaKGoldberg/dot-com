@@ -1,5 +1,5 @@
 ---
-import HeroImage, { Props as HeroImageProps } from "../HeroImage.astro";
+import HeroImage, { type Props as HeroImageProps } from "../HeroImage.astro";
 import HeroSecondary from "../HeroSecondary.astro";
 import HeroTertiary from "../HeroTertiary.astro";
 import HeroTitle from "../HeroTitle.astro";
@@ -41,8 +41,8 @@ interface Props {
 					>
 						<BlogShare
 							description={Astro.props.description}
-							url={Astro.url}
 							title={Astro.props.title}
+							url={Astro.url}
 						/>
 					</DateAndMinutes>
 				</HeroTertiary>

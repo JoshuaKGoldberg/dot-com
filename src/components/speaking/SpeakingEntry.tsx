@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-import { ContentEntry } from "../ContentEntry";
+import { ContentEntry } from "../entries/ContentEntry";
 
 export interface SpeakingEntryProps {
 	speaking: CollectionEntry<"speaking">;
@@ -15,8 +15,9 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 			}
 			subtitle={[
 				props.speaking.data.date.toLocaleString("default", {
-					month: "short",
 					day: "numeric",
+					month: "short",
+					timeZone: "GMT",
 				}),
 				props.speaking.data.location,
 			]

@@ -3,8 +3,6 @@
 	width: 1.25rem;
 }
 
-@media (prefers-color-scheme: dark) {
-	.socialImage {
-		filter: invert() hue-rotate(180deg);
-	}
+:global(html.dark) .socialImage {
+	filter: invert() hue-rotate(180deg);
 }

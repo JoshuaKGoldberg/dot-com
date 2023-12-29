@@ -1,6 +1,7 @@
 import type { MarkdownHeading } from "astro";
+
 import clsx from "clsx";
-import { createEffect, createSignal, For } from "solid-js";
+import { For, createEffect, createSignal } from "solid-js";
 
 import { Squiggly } from "../Squiggly";
 import { Text } from "../Text";
@@ -43,13 +44,13 @@ export function TableOfContents(props: TableOfContentsProps) {
 	};
 
 	const [getActiveSlug, setActiveSlug] = createSignal<string | undefined>(
-		undefined
+		undefined,
 	);
 
 	// TODO: Is this available on npm? If not, perhaps I should publish it?
 	function updateActiveHeading() {
 		const headings = Array.from(
-			document.querySelectorAll<HTMLElement>("h2, h3, h4")
+			document.querySelectorAll<HTMLElement>("h2, h3, h4"),
 		);
 
 		// Case: no headings at all!
@@ -127,7 +128,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 									as="a"
 									class={clsx(
 										styles.a,
-										h2.slug === getActiveSlug() && styles.active
+										h2.slug === getActiveSlug() && styles.active,
 									)}
 									fontWeight="light"
 									href={`#${h2.slug}`}
@@ -143,7 +144,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 														as="a"
 														class={clsx(
 															styles.a,
-															h3.slug === getActiveSlug() && styles.active
+															h3.slug === getActiveSlug() && styles.active,
 														)}
 														fontWeight="light"
 														href={`#${h3.slug}`}

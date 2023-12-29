@@ -1,5 +1,6 @@
-import readingTime from "reading-time";
 import type { JSX } from "solid-js/jsx-runtime";
+
+import readingTime from "reading-time";
 
 import styles from "./DateAndMinutes.module.css";
 
@@ -17,8 +18,8 @@ export function DateAndMinutes(props: DateAndMinutesProps) {
 	return (
 		<>
 			{props.date.toLocaleString("default", {
-				month: "short",
 				day: "numeric",
+				month: "short",
 				year: props.year,
 			})}
 			<span class={styles.between} />

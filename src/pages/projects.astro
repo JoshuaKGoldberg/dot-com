@@ -1,14 +1,32 @@
 ---
-import { getCollection } from "astro:content";
+import { projectCategories } from "joshuakgoldberg";
 
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
-import { ProjectsGrouped } from "~/components/speaking/ProjectsGrouped";
+import { ProjectsTabbed } from "~/components/projects/ProjectsTabbed";
 
 import HeroLayout from "../layouts/HeroLayout.astro";
 
-const allProjects = await getCollection("projects");
+const temporaryKeyAliases = new Map([
+	["Biggest Projects", "Biggest"],
+	["Just For Fun", "Shenanigans"],
+	["Tooling", "Dev Tooling"],
+]);
+
+const categories = {
+	All: Object.values(projectCategories).flatMap(
+		(category) => category.projects,
+	),
+	...Object.fromEntries(
+		Object.entries(projectCategories)
+			.map(
+				([key, category]) =>
+					[temporaryKeyAliases.get(key) ?? key, category.projects] as const,
+			)
+			.sort(([a], [b]) => a.localeCompare(b)),
+	),
+};
 ---
 
 <HeroLayout
@@ -20,7 +38,7 @@ const allProjects = await getCollection("projects");
 	<HeroTertiary slot="tertiary">
 		I also enjoy emojis and other shenanigans.
 		<br />
-		See more on my <Anchor
+		 Find all these on my <Anchor
 			href="https://github.com/JoshuaKGoldberg"
 			target="_blank"
 		>
@@ -29,6 +47,6 @@ const allProjects = await getCollection("projects");
 	</HeroTertiary>
 
 	<BodyContents>
-		<ProjectsGrouped projects={allProjects} />
+		<ProjectsTabbed categories={categories} client:load />
 	</BodyContents>
 </HeroLayout>

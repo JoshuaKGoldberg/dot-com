@@ -7,9 +7,9 @@ export function EmojisplosionHeart() {
 	return (
 		<Text
 			as="button"
+			class={styles.heart}
 			fontSize="small"
 			fontWeight="light"
-			class={styles.heart}
 			onClick={() => emojisplosion()}
 			type="button"
 		>

@@ -192,8 +192,8 @@ function containerSeemstoBeEmptyDomElement(containingType: Type): boolean {
 			(type) =>
 				type.symbol &&
 				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
-					type.symbol.escapedName.toString()
-				)
+					type.symbol.escapedName.toString(),
+				),
 		) &&
 		checker.getPropertiesOfType(containingType).length === 0
 	);
@@ -259,8 +259,8 @@ function containerSeemsToBeEmptyDomElement(containingType: Type): boolean {
 			(type) =>
 				type.symbol &&
 				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
-					unescapeLeadingUnderscores(type.symbol.escapedName)
-				)
+					unescapeLeadingUnderscores(type.symbol.escapedName),
+				),
 		) &&
 		isEmptyObjectType(containingType)
 	);

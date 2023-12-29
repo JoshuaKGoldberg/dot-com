@@ -1,21 +1,23 @@
 import clsx from "clsx";
 import { type JSX, splitProps } from "solid-js";
 
-import styles from "./Squiggly.module.css";
 import type { FontSize, TextProps } from "./Text";
+
+import styles from "./Squiggly.module.css";
 import { Text } from "./Text";
 
 const fontSizes: Record<string, string | undefined> = {
-	smaller: styles.smaller,
 	medium: styles.medium,
+	smaller: styles.smaller,
 };
 
 export type SquigglyFontSize = keyof typeof fontSizes;
 
 const variants = {
-	alwaysActive: styles.alwaysActive,
+	active: styles.alwaysActive,
 	inactive: styles.inactive,
 	onHover: styles.onHover,
+	passive: styles.passive,
 };
 
 export type SquigglyVariant = keyof typeof variants;
@@ -27,7 +29,7 @@ export type SquigglyProps<As extends keyof JSX.HTMLElementTags> =
 	};
 
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
-	props: SquigglyProps<As>
+	props: SquigglyProps<As>,
 ) {
 	const [squigglyProps, textProps] = splitProps(props, ["fontSize", "variant"]);
 
@@ -38,8 +40,8 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 			class={clsx(
 				styles.squiggly,
 				squigglyProps.fontSize && fontSizes[squigglyProps.fontSize],
-				variants[squigglyProps.variant ?? "alwaysActive"],
-				props.class
+				variants[squigglyProps.variant ?? "active"],
+				props.class,
 			)}
 			fontSize={squigglyProps.fontSize}
 		>

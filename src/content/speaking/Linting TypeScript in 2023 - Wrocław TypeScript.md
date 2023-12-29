@@ -1,5 +1,5 @@
 ---
-category: Talks
+category: Meetups
 date: 2023-02-22
 event: "Wrocław TypeScript"
 href: https://www.meetup.com/wroctypescript/events/290894011

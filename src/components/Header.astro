@@ -1,6 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import { Text } from "./Text";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const links = [
 	["Book", "https://learningtypescript.com"],
@@ -12,7 +13,10 @@ const links = [
 
 <div class="fader" role="presentation"></div>
 <Text as="header" class="header" fontWeight="bold">
-	<HeaderLink href="/">Josh Goldberg</HeaderLink>
+	<div class="first">
+		<HeaderLink href="/">Josh Goldberg</HeaderLink>
+		<ThemeToggle />
+	</div>
 	<div class="links">
 		{
 			links.map(([text, href]) => {
@@ -29,6 +33,13 @@ const links = [
 		gap: 0.5rem 3.5rem;
 		justify-content: space-between;
 		padding: 2rem;
+		position: relative;
+		width: 100%;
+	}
+
+	.first {
+		display: flex;
+		justify-content: space-between;
 		width: 100%;
 	}
 
@@ -69,7 +80,8 @@ const links = [
 		}
 
 		header::before {
-			background: radial-gradient(
+			background:
+				radial-gradient(
 						ellipse at top,
 						var(--colorBackgroundTop) 0,
 						transparent 100vh
@@ -107,7 +119,26 @@ const links = [
 			z-index: 1;
 		}
 
+		.first {
+			flex-grow: 100;
+			padding-right: 4rem;
+			position: relative;
+			width: initial;
+		}
+
+		.first::after {
+			background: var(--colorForeground);
+			content: "";
+			display: block;
+			height: 0.7rem;
+			position: absolute;
+			right: 1.5rem;
+			top: 0.5rem;
+			width: 1px;
+		}
+
 		.links {
+			position: relative;
 			gap: 1.5rem;
 			justify-content: space-between;
 		}

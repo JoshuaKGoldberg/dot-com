@@ -1,12 +1,12 @@
 ---
-import LabeledMedia, { MediaOriginal } from "./LabeledMedia.astro";
+import LabeledMedia, { type MediaOriginal } from "./LabeledMedia.astro";
 
 export interface Props {
 	alt: string;
 	description: string | string[];
 	note?: string;
-	original?: string | MediaOriginal;
-	src: string | { src: string };
+	original?: MediaOriginal | string;
+	src: { src: string } | string;
 }
 ---
 
