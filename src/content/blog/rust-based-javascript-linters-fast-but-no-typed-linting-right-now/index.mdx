@@ -100,6 +100,11 @@ In order to work with type checking, a Rust linter would have to either:
 - Reimplement TypeScript's APIs in a native speed language
 - Speed Up TypeScript's APIs to native speed
 
+Rust-based linters also haven't allowed writing custom lint rules in JavaScript.
+That presents a contribution barrier for most of the JavaScript ecosystem - but is a separate issue from this blog post's focus.
+
+Let's go into the different options for integrating Rust-based linters with TypeScript's type checking.
+
 #### Option: Slowing Down to JavaScript Speed
 
 The performance hit option would likely slow the linters down to the point where they have no noticeable performance advantage compared to ESLint.
@@ -210,7 +215,8 @@ But it's going to be a very long time until that's feasible.
 This post had a lot of help from quite a few developers working on the tools it mentions!
 
 - Biome: [Emanuele Stoppa](https://github.com/ematipico) and [Victorien Elvinger](https://github.com/Conaclos) emailed detailed thoughts on the performance landscape -including isolated declaration emit in TypeScript-, positioning of the different linters, and general thoughts on this post.
-- Ezno: [Ben](https://github.com/kaleidawave) left a lovely pull request review around phrasing, levels of detail, and some discussions around backing up performance claims.
+- Deno: [David Sherret](https://github.com/dsherret) shared enthusiasm and an interesting discussion around integrating TypeScript and Rust packages.
+- Ezno: [Ben](https://github.com/kaleidawave) left an informative pull request review around phrasing, levels of detail, and some discussions around backing up performance claims.
 - Oxc: Boshen left a similarly detailed pull request review discussing performance tradeoffs, TypeScript-integrated linting, and lint tool positioning.
 - TypeScript: [Nathan Shively-Sanders mentioned Static TypeScript](https://elk.zone/fosstodon.org/@shivelysanders/111630526209933660)
 
