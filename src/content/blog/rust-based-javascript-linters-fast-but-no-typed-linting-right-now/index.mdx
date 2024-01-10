@@ -2,7 +2,7 @@
 description: "Explaining why the speed gains from Rust linters aren't comparable to the full feature set of typescript-eslint."
 image:
   alt: Josh smiling on stage and giving a presentation showing the "Type Checking React (v2)" from the linked slides.
-  src: react-miami-me-speaking.jpg
+  src: jerry-sass.jpg
 pubDate: 2024-01-10
 tags: [
 	"biome",
@@ -19,6 +19,9 @@ tags: [
 title: "Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now"
 ---
 
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import jerrySass from "./jerry-sass.jpg";
+
 One of 2023's biggest trends for web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org).
 Rust is a wonderful programming language that allows for shockingly fast binaries which still interop well with other web tools courtesy of WebAssembly.
 The speedups seen in tools such as [swc](https://swc.rs) and [Turbopack](https://turbo.build/pack) are very exciting for fast development experiences.
@@ -32,6 +35,11 @@ It's a misconception to think that Rust-based linters are a complete and total r
 There are always tradeoffs when switching tooling.
 In this case, the positive performance advantages come with a negative feature gap: _type-checked linting_.
 
+<LabeledImage
+	alt="A black cat alying on a bed with its eyes half-closed. It looks sassy."
+	description="Jerry the cat with the same facial expression I get when a team doesn't used typed linting."
+	src={jerrySass}
+/>
 ## Recap: Type-Checked Linting
 
 Traditionally, lint rules in linters such as ESLint only have visibility into one source code file at a time.
