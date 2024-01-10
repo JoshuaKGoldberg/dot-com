@@ -20,7 +20,7 @@ title: "Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now"
 ---
 
 One of 2023's biggest trends for web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org).
-Rust is a wonderful programming language that allows for shockingly fast binaries that still interop well with other web tools courtesy of WebAssembly.
+Rust is a wonderful programming language that allows for shockingly fast binaries which still interop well with other web tools courtesy of WebAssembly.
 The speedups seen in tools such as [swc](https://swc.rs) and [Turbopack](https://turbo.build/pack) are very exciting for fast development experiences.
 
 [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), [Oxc](https://github.com/oxc-project/oxc), and [RSLint](https://rslint.org) are all projects that include at least a JavaScript/TypeScript linter written in Rust.
@@ -55,20 +55,20 @@ Without type information, they wouldn't be able to understand the type of any va
 ### Type-Checked Linting Performance
 
 The main downside of type-checked linting is performance.
-Lint rules are now blocked on calling to an API such as TypeScript's, which generally need to read all files to see which ones impact types of any other file.
+Typed lint rules necessitate calling to an API such as TypeScript's for type information, which generally need to read all files to see which ones impact types of any other file.
 That means linting performance will often be worse than that of running `tsc` on your entire project.
 
 We're actively working on this in typescript-eslint.
 Our [Performance Troubleshooting](https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting) docs have some suggestions, and we're very hopeful that our [`EXPERIMENTAL_useProjectService` option](https://typescript-eslint.io/packages/parser/#experimental_useprojectservice) will land as stable in 2024.
 
-TypeScript itself is also investing in better performance.
+TypeScript itself has also also been investing in better performance.
 [Project references](https://www.typescriptlang.org/docs/handbook/project-references.html) can significantly help with larger projects.
 TypeScript's upcoming [isolated declarations mode](https://github.com/microsoft/TypeScript/pull/53463) looks like it can also significantly improve performance on larger projects.
 
 But even if all those speedups work perfectly then type-checked linting will by design still be orders of magnitude slower than traditional linting.
 The act of inferring types from many files in a project is inherently much slower than a traditional lint rule looking at a single file at a time.
 
-Our experience has been that the the majority of codebases benefit from the slower, more in-depth type checking with typed lint rules.
+Our experience has been that the the majority of codebases benefit from the slower, more in-depth type checking of typed lint rules.
 Most of the time, when we've seen projects with slow type-checked linting, the root cause was either a misconfiguration of typescript-eslint (see our [Performance Troubleshooting](https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting)) or [slow TypeScript types](https://github.com/microsoft/TypeScript/wiki/Performance).
 
 ## Rust-Based Linters and Type Checking
@@ -107,7 +107,7 @@ Let's go into the different options for integrating Rust-based linters with Type
 
 #### Option: Slowing Down to JavaScript Speed
 
-The performance hit option would likely slow the linters down to the point where they have no noticeable performance advantage compared to ESLint.
+This performance hit option would likely slow the native-speed linters down to the point where they have little to no noticeable performance advantage compared to ESLint.
 👎
 
 That being said, if any native speed linter wants to do this, we in typescript-eslint would love to help.
@@ -150,7 +150,7 @@ There are a couple possibilities:
 - Pre-compiling and optimizing TypeScript like a binary
 
 Both of those options are difficult and will take some time to land.
-[Transpiling the checker to Go](https://kdy1.dev/2022-1-26-porting-tsc-to-go) was the original aim of what became `stc` before the [the project switched to the Rust re-implementation](https://kdy1.dev/2022-10-27-open-sourcing-stc#heading-ill-switch-back-to-the-rust-version).
+[Transpiling the checker to Go](https://kdy1.dev/2022-1-26-porting-tsc-to-go) was the original aim of what became `stc` before the [the project switched to a Rust re-implementation](https://kdy1.dev/2022-10-27-open-sourcing-stc#heading-ill-switch-back-to-the-rust-version).
 
 [Node.js user land snapshots](https://nodejs.org/en/blog/release/v18.8.0#bootstrap-implement-run-time-user-land-snapshots-via---build-snapshot-and---snapshot-blob) are mentioned in TypeScript's [Ideas for faster cold compiler start-up issue](https://github.com/microsoft/TypeScript/issues/25658) in the context of startup times.
 For the context of typed linting, aggressively optimizing code ahead of time might be marginally useful too.
@@ -160,17 +160,17 @@ The [Hermes engine](https://hermesengine.dev) has some interesting build-time pr
 Both operate with a subset or modified version of the TypeScript language oriented to low-level performance.
 
 Regardless of the approach used to speed up TypeScript, the implementation of TypeScript itself impedes the approach because TypeScript isn't architected for native code.
-Its code assumes a runtime with built-in garbage collection, mutable objects, and other performance paper cuts
+Its code assumes a runtime with built-in garbage collection, mutable objects, and other performance paper cuts.
 I suspect the biggest gains might be from rearchitecting TypeScript to be more performance-friendly:
 
 - The aforementioned [isolated declaration mode](https://github.com/microsoft/TypeScript/pull/53463)
 - Restricting global type augmentations to be more parallelization-friendly
 - Changing the way its checker runs to avoid those paper cuts
 
-Both avenues would be very difficult to implement and cause breaking changes in TypeScript's APIs.
-Neither is likely to happen any time soon.
+Any major structural change to TypeScript would be very difficult to implement and cause breaking changes in TypeScript's APIs.
+Besides isolated declaration mode likely shipping in 2024, nothing is likely to happen any time soon.
 
-### TypeScript-Integrated Linting
+## TypeScript-Integrated Linting
 
 Another high-level strategy could be to integrate linting into the existing TypeScript language server infrastructure.
 The [TypeScript Language Service Plugin](https://github.com/microsoft/TypeScript/wiki/Writing-a-Language-Service-Plugin) allows for adding tools to be run as part of the TypeScript editing experience.
@@ -181,7 +181,7 @@ I've seen two attempts at this:
 - [johnsoncodehk/typescript-linter](https://github.com/johnsoncodehk/typescript-linter): A re-implementation of a linter built on the TypeScript language server
 
 Both seem promising.
-I think running ESLint as a language service plugin is more feasible in the short-term for the sake of compatibility with existing rules.
+I think running ESLint as a TypeScript language service plugin is more feasible in the short-term for the sake of compatibility with existing rules.
 Either way, figuring out how to make the TypeScript experience great without behind other languages -especially given [ESLint's intent to embrace other web languages](https://github.com/eslint/eslint/discussions/16557)- will be a key challenge.
 
 We in typescript-eslint haven't had time to investigate language server integrations deeply.
@@ -225,4 +225,15 @@ This post had a lot of help from quite a few developers working on the tools it 
 You can see the full comments in [this blog post's backing pull request](https://github.com/JoshuaKGoldberg/dot-com/pull/143).
 I sincerely appreciate everyone who pitched in!
 There wasn't a single comment I disagreed with or didn't find value from.
-Thank you all! 💖
+💖 Thank you all!
+
+### Next Steps
+
+If any of this stuff is of interest to you, I'd encourage you to look at the projects' GitHubs and try to get involved.
+We're all open source projects and would love to have new contributors help out.
+
+I help maintain [typescript-eslint](https://typescript-eslint.io) and make sure our issue backlog always has [good first issues](https://github.com/typescript-eslint/typescript-eslint/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) stocked for newcomers.
+Our website has a [dedicated Contributing guide](https://typescript-eslint.io/contributing) to help you through the steps.
+And, of course, we can always use more [community financial contributors](https://typescript-eslint.io/#financial-contributors) to help us work.
+
+Let me know if you want any help! 😊
