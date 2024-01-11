@@ -33,6 +33,8 @@
 	transform: scale(1 1.17);
 }
 
-.squiggly:is(.alwaysActive, .passive, :hover):not(.inactive)::after {
+.squiggly:is(.alwaysActive, .passive, :focus-visible, :hover):not(
+		.inactive
+	)::after {
 	opacity: 1;
 }
