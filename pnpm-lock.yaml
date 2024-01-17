@@ -87,8 +87,8 @@ dependencies:
     specifier: ^5.0.2
     version: 5.0.2
   joshuakgoldberg:
-    specifier: ^0.7.0
-    version: 0.7.0
+    specifier: ^0.8.0
+    version: 0.8.0
   knip:
     specifier: ^2.13.0
     version: 2.13.0
@@ -5201,8 +5201,8 @@ packages:
     hasBin: true
     dev: false
 
-  /joshuakgoldberg@0.7.0:
-    resolution: {integrity: sha512-l8+Pjnde0/TGjMLW9jlzF0vfI3mHeP4RIygGaA2KjZFuJxXoEIHB9gf44ilsjcVnl/RipDELODPkEDCQZSlcQQ==}
+  /joshuakgoldberg@0.8.0:
+    resolution: {integrity: sha512-8HLrHN3ARki3fH3GBOHjTRU9obDerEcZAAMy3oF/4pxYqd/apD/is/HdiKg+qhwFLpFUeSr3+uWZLxyVRHwZ2g==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
