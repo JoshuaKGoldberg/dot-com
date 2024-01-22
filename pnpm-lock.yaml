@@ -21,8 +21,8 @@ dependencies:
     specifier: ^4.5.13
     version: 4.5.13
   '@kobalte/core':
-    specifier: ^0.11.0
-    version: 0.11.0(solid-js@1.7.6)
+    specifier: ^0.12.0
+    version: 0.12.0(solid-js@1.7.6)
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.13.2
     version: 6.13.2(@typescript-eslint/parser@6.13.2)(eslint@8.55.0)(typescript@5.1.3)
@@ -87,8 +87,8 @@ dependencies:
     specifier: ^5.0.2
     version: 5.0.2
   joshuakgoldberg:
-    specifier: ^0.5.0
-    version: 0.5.0
+    specifier: ^0.8.0
+    version: 0.8.0
   knip:
     specifier: ^2.13.0
     version: 2.13.0
@@ -96,8 +96,8 @@ dependencies:
     specifier: ^0.5.2
     version: 0.5.2
   markdownlint:
-    specifier: ^0.32.0
-    version: 0.32.1
+    specifier: ^0.33.0
+    version: 0.33.0
   markdownlint-cli:
     specifier: ^0.34.0
     version: 0.34.0
@@ -1330,40 +1330,6 @@ packages:
     resolution: {integrity: sha512-GyF32dt1fw/TQlMJIHI5uPILRKldOENT5bQUzDDQIfeJMrXp/04Borcwmuqch5pqueAQ+di7fo204dgaZlCEjw==}
     dev: false
 
-  /@formatjs/ecma402-abstract@1.15.0:
-    resolution: {integrity: sha512-7bAYAv0w4AIao9DNg0avfOLTCPE9woAgs6SpXuMq11IN3A+l+cq8ghczwqSZBM11myvPSJA7vLn72q0rJ0QK6Q==}
-    dependencies:
-      '@formatjs/intl-localematcher': 0.2.32
-      tslib: 2.5.0
-    dev: false
-
-  /@formatjs/fast-memoize@2.0.1:
-    resolution: {integrity: sha512-M2GgV+qJn5WJQAYewz7q2Cdl6fobQa69S1AzSM2y0P68ZDbK5cWrJIcPCO395Of1ksftGZoOt4LYCO/j9BKBSA==}
-    dependencies:
-      tslib: 2.5.0
-    dev: false
-
-  /@formatjs/icu-messageformat-parser@2.4.0:
-    resolution: {integrity: sha512-6Dh5Z/gp4F/HovXXu/vmd0If5NbYLB5dZrmhWVNb+BOGOEU3wt7Z/83KY1dtd7IDhAnYHasbmKE1RbTE0J+3hw==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.15.0
-      '@formatjs/icu-skeleton-parser': 1.4.0
-      tslib: 2.5.0
-    dev: false
-
-  /@formatjs/icu-skeleton-parser@1.4.0:
-    resolution: {integrity: sha512-Qq347VM616rVLkvN6QsKJELazRyNlbCiN47LdH0Mc5U7E2xV0vatiVhGqd3KFgbc055BvtnUXR7XX60dCGFuWg==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.15.0
-      tslib: 2.5.0
-    dev: false
-
-  /@formatjs/intl-localematcher@0.2.32:
-    resolution: {integrity: sha512-k/MEBstff4sttohyEpXxCmC3MqbUn9VvHGlZ8fauLzkbwXmVrEeyzS+4uhrvAk9DWU9/7otYWxyDox4nT/KVLQ==}
-    dependencies:
-      tslib: 2.5.0
-    dev: false
-
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
     engines: {node: '>=10.10.0'}
@@ -1575,13 +1541,6 @@ packages:
       '@swc/helpers': 0.5.1
     dev: false
 
-  /@internationalized/message@3.1.1:
-    resolution: {integrity: sha512-ZgHxf5HAPIaR0th+w0RUD62yF6vxitjlprSxmLJ1tam7FOekqRSDELMg4Cr/DdszG5YLsp5BG3FgHgqquQZbqw==}
-    dependencies:
-      '@swc/helpers': 0.5.1
-      intl-messageformat: 10.3.5
-    dev: false
-
   /@internationalized/number@3.2.1:
     resolution: {integrity: sha512-hK30sfBlmB1aIe3/OwAPg9Ey0DjjXvHEiGVhNaOiBJl31G0B6wMaX8BN3ibzdlpyRNE9p7X+3EBONmxtJO9Yfg==}
     dependencies:
@@ -1634,14 +1593,13 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: false
 
-  /@kobalte/core@0.11.0(solid-js@1.7.6):
-    resolution: {integrity: sha512-KflwKawdAXv1/W1Eh88SPTwpxGTVs7bAGkkW72w6pnRI3hcFWXEH+E/9CojoFrIc3WVBUT+y7GzaYLOKCailDw==}
+  /@kobalte/core@0.12.0(solid-js@1.7.6):
+    resolution: {integrity: sha512-TjUYlFCbfQ8T3g7M0pZI5s0BtkDmojLxDZR/pnsmhOzY6hNdERmnHpwe+7IxLeOx/Vwtudfa+YGm7xdOhZ0o8Q==}
     peerDependencies:
       solid-js: ^1.7.11
     dependencies:
       '@floating-ui/dom': 1.5.1
       '@internationalized/date': 3.4.0
-      '@internationalized/message': 3.1.1
       '@internationalized/number': 3.2.1
       '@kobalte/utils': 0.9.0(solid-js@1.7.6)
       solid-js: 1.7.6
@@ -4867,15 +4825,6 @@ packages:
       side-channel: 1.0.4
     dev: false
 
-  /intl-messageformat@10.3.5:
-    resolution: {integrity: sha512-6kPkftF8Jg3XJCkGKa5OD+nYQ+qcSxF4ZkuDdXZ6KGG0VXn+iblJqRFyDdm9VvKcMyC0Km2+JlVQffFM52D0YA==}
-    dependencies:
-      '@formatjs/ecma402-abstract': 1.15.0
-      '@formatjs/fast-memoize': 2.0.1
-      '@formatjs/icu-messageformat-parser': 2.4.0
-      tslib: 2.5.0
-    dev: false
-
   /irregular-plurals@3.5.0:
     resolution: {integrity: sha512-1ANGLZ+Nkv1ptFb2pa8oG8Lem4krflKuX/gINiHJHjJUKaJHk/SXk5x6K3J+39/p0h1RQ2saROclJJ+QLvETCQ==}
     engines: {node: '>=8'}
@@ -5252,8 +5201,8 @@ packages:
     hasBin: true
     dev: false
 
-  /joshuakgoldberg@0.5.0:
-    resolution: {integrity: sha512-A1JrWdqm/iAEP1zcpnQzcEC0bDP4dlNRGo8i48MHIvODSU4Udb7RUM/oxRGW9b97TSJ4KCWGP86UtQsLdkZ1iA==}
+  /joshuakgoldberg@0.8.0:
+    resolution: {integrity: sha512-8HLrHN3ARki3fH3GBOHjTRU9obDerEcZAAMy3oF/4pxYqd/apD/is/HdiKg+qhwFLpFUeSr3+uWZLxyVRHwZ2g==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
@@ -5435,6 +5384,12 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
+  /linkify-it@5.0.0:
+    resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
+    dependencies:
+      uc.micro: 2.0.0
+    dev: false
+
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
@@ -5569,15 +5524,16 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
-  /markdown-it@13.0.2:
-    resolution: {integrity: sha512-FtwnEuuK+2yVU7goGn/MJ0WBZMM9ZPgU9spqlFs7/A/pDIUNSOQZhUgOqYCficIuR2QaFnrt8LHqBWsbTAoI5w==}
+  /markdown-it@14.0.0:
+    resolution: {integrity: sha512-seFjF0FIcPt4P9U39Bq1JYblX0KZCjDLFFQPHpL5AzHpqPEKtosxmdq/LTVZnjfH7tjt9BxStm+wXcDBNuYmzw==}
     hasBin: true
     dependencies:
       argparse: 2.0.1
-      entities: 3.0.1
-      linkify-it: 4.0.1
-      mdurl: 1.0.1
-      uc.micro: 1.0.6
+      entities: 4.5.0
+      linkify-it: 5.0.0
+      mdurl: 2.0.0
+      punycode.js: 2.3.1
+      uc.micro: 2.0.0
     dev: false
 
   /markdown-it@8.4.2:
@@ -5616,8 +5572,8 @@ packages:
     engines: {node: '>=14.18.0'}
     dev: false
 
-  /markdownlint-micromark@0.1.7:
-    resolution: {integrity: sha512-BbRPTC72fl5vlSKv37v/xIENSRDYL/7X/XoFzZ740FGEbs9vZerLrIkFRY0rv7slQKxDczToYuMmqQFN61fi4Q==}
+  /markdownlint-micromark@0.1.8:
+    resolution: {integrity: sha512-1ouYkMRo9/6gou9gObuMDnvZM8jC/ly3QCFQyoSPCS2XV1ZClU0xpKbL1Ar3bWWRT1RnBZkWUEiNKrI2CwiBQA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -5636,12 +5592,12 @@ packages:
       markdownlint-micromark: 0.1.2
     dev: false
 
-  /markdownlint@0.32.1:
-    resolution: {integrity: sha512-3sx9xpi4xlHlokGyHO9k0g3gJbNY4DI6oNEeEYq5gQ4W7UkiJ90VDAnuDl2U+yyXOUa6BX+0gf69ZlTUGIBp6A==}
+  /markdownlint@0.33.0:
+    resolution: {integrity: sha512-4lbtT14A3m0LPX1WS/3d1m7Blg+ZwiLq36WvjQqFGsX3Gik99NV+VXp/PW3n+Q62xyPdbvGOCfjPqjW+/SKMig==}
     engines: {node: '>=18'}
     dependencies:
-      markdown-it: 13.0.2
-      markdownlint-micromark: 0.1.7
+      markdown-it: 14.0.0
+      markdownlint-micromark: 0.1.8
     dev: false
 
   /mdast-util-definitions@6.0.0:
@@ -5872,6 +5828,10 @@ packages:
 
   /mdurl@1.0.1:
     resolution: {integrity: sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==}
+    dev: false
+
+  /mdurl@2.0.0:
+    resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
     dev: false
 
   /meow@9.0.0:
@@ -7198,6 +7158,11 @@ packages:
     dev: false
     optional: true
 
+  /punycode.js@2.3.1:
+    resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
+    engines: {node: '>=6'}
+    dev: false
+
   /punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
@@ -7569,6 +7534,7 @@ packages:
 
   /safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
+    requiresBuild: true
     dev: false
 
   /safe-regex-test@1.0.0:
@@ -7956,6 +7922,7 @@ packages:
 
   /string_decoder@1.3.0:
     resolution: {integrity: sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==}
+    requiresBuild: true
     dependencies:
       safe-buffer: 5.2.1
     dev: false
@@ -8340,6 +8307,10 @@ packages:
 
   /uc.micro@1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
+    dev: false
+
+  /uc.micro@2.0.0:
+    resolution: {integrity: sha512-DffL94LsNOccVn4hyfRe5rdKa273swqeA5DJpMOeFmEn1wCDc7nAbbB0gXlgBCL7TNzeTv6G7XVWzan7iJtfig==}
     dev: false
 
   /unbox-primitive@1.0.2:
