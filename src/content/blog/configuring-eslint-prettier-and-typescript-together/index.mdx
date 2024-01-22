@@ -47,7 +47,7 @@ This blog post covers all the info in that talk: describing how to get started w
 Everything in this blog post is available online for free:
 
 - [My talk's recording](https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743) and [accompanying talk slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt0cjx-_PLIwDIzclw)
-- [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package): Template repo I maintain that sets up these three tools (and more!) in a general Node package
+- [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app): Template repo I maintain that sets up these three tools (and more!) in a general Node package
 - [Linting TypeScript in 2023](https://github.com/JoshuaKGoldberg/linting-typescript-in-2023): Demo repo showing using three type-checked typescript-eslint rules to catch three bugs in a React app
 
 I've also posted a separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions.
@@ -310,6 +310,9 @@ myFancyLogger("Hello, world!");
 }
 ```
 
+> Edit (January 2024): `reportUnusedDisableDirectives: true,` is now a configuration option you can set in your ESLint config file!
+> [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app) has been updated.
+
 > Fun fact: I authored the [PR that enabled `--report-unused-disable-directives` violations to be fixed by `--fix`](https://github.com/eslint/eslint/pull/14617).
 > Hooray, open source!
 
@@ -321,7 +324,7 @@ I recommend only using `"warn"` temporarily for newly enabled rules, and general
 
 > [See this interesting ESLint discussion on what a warning vs. an error means](https://github.com/eslint/eslint/discussions/16512).
 
-[`--max-warnings`](https://www.eslint.com.cn/docs/2.0.0/user-guide/command-line-interface#--max-warnings) allows you to specify a maximum number of warnings that are permitted.
+[`--max-warnings`](https://www.eslint.com/docs/2.0.0/user-guide/command-line-interface#--max-warnings) allows you to specify a maximum number of warnings that are permitted.
 If ESLint receives more warning-level rule complaints than that number, it'll switch to existing with an error code.
 
 I recommend keeping that number as low as possible, preferably `0`:
@@ -562,7 +565,8 @@ Let's recap how the tools all interact:
 
 [Linting TypeScript in 2023](https://github.com/JoshuaKGoldberg/linting-typescript-in-2023): is a demo repo showing configurations for all those tools, as well as an example of using three type-checked typescript-eslint rules to catch three bugs in a React app.
 
-See also the separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions on static analysis. This includes any questions you might have about plugins like eslint-config-prettier, eslint-plugin-prettier, tslint, tslint-config-prettier, and tslint-plugin-prettier.
+See also the separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions on static analysis.
+This includes any questions you might have about plugins like eslint-config-prettier, eslint-plugin-prettier, tslint, tslint-config-prettier, and tslint-plugin-prettier.
 
 ### Supporting Open Source Projects
 

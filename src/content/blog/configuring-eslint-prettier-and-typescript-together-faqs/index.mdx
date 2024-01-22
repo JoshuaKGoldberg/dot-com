@@ -28,7 +28,9 @@ module.exports = {
 
 Note that the recommended configurations in ESLint core, typescript-eslint, and all the plugins I've been using recently intentionally don't enable any rules that conflict with Prettier.
 That means you generally don't need to enable `eslint-config-prettier` with them.
-I don't use it in my [`template-typescript-node-package`](https://github.com/JoshuaKGoldberg/template-typescript-node-package).
+I don't use it in my [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app).
+
+See [You Probably Don't Need eslint-config-prettier or eslint-plugin-prettier](../you-probably-dont-need-eslint-config-prettier-or-eslint-plugin-prettier) for more information.
 
 ## What is `eslint-plugin-prettier`?
 
@@ -38,6 +40,8 @@ I strongly advise not using `eslint-plugin-prettier` for two reasons:
 
 - It slows formatting down to the speed of your linter. Which, if you're using [type-aware lint rules](https://typescript-eslint.io/linting/typed-linting) (as you generally should in TypeScript projects), should be much slower than running the formatter on its own.
 - Combining formatting complaints and lint complaints into one report is clunky and confusing. You'll often see large swathes of editor squigglies that may or may not be real logical complaints. New users have enough trouble understanding the differences between formatters and linters!
+
+See [You Probably Don't Need eslint-config-prettier or eslint-plugin-prettier](../you-probably-dont-need-eslint-config-prettier-or-eslint-plugin-prettier) for more information.
 
 ## Why not use ESLint for formatting?
 
