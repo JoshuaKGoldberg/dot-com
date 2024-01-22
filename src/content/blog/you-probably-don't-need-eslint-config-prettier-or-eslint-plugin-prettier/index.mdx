@@ -1,0 +1,232 @@
+---
+description: "Explaining two popular Prettier integrations for ESLint, and why I avoid both of them."
+image:
+  alt: Cat rolled up in a circular ball within a fluffy white circular pet bed.
+  src: circle-cat.jpg
+pubDate: 2024-01-28
+tags: [
+	"eslint-config-prettier",
+	"eslint-plugin-prettier",
+	"eslint",
+	"formatting",
+	"linting",
+	"prettier",
+	"style",
+]
+title: "You Probably Don't Need `eslint-config-prettier` or `eslint-plugin-prettier`"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import circleCat from "./circle-cat.webp";
+
+<LabeledImage
+	alt="Cat rolled up in a circular ball within a fluffy white circular pet bed. Next to it are two photo frames."
+	description="Tiny the cat, neatly formatted into a circle within his cat bed."
+	src={circleCat}
+/>
+
+I've been proclaiming loudly for several years now to [_"STOP USING ESLINT FOR FORMATTING"_](/blog/configuring-eslint-prettier-and-typescript-together#stop-using-eslint-for-formatting).
+My belief is that _formatters_ such as [Prettier](https://prettier.io) and _linters_ such as [ESLint](https://eslint.org) are fundamentally different tools built for different purposes.
+While you can use ESLint for formatting thanks to [ESLint Stylistic](https://eslint.style), [ESLint recommends using a separate dedicated formatter](https://eslint.org/blog/2023/10/deprecating-formatting-rules) and [typescript-eslint also recommends against using ESLint for formatting](https://typescript-eslint.io/linting/troubleshooting/formatting).
+
+The following two tools have historically been used to help ESLint interact nicely with Prettier:
+
+- [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier): An ESLint _shareable config_ that disables formatting-related rules
+- [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier): An ESLint _plugin_ that runs Prettier as a rule inside ESLint
+
+I believe neither tool is useful in most projects anymore.
+This blog post will explain the purpose of each of them, their differences, and why I generally don't use either.
+
+## Recap: ESLint Customizations
+
+[ESLint](https://eslint.org) works by letting individually configure "rules", or checks on your codebase.
+ESLint will do the work of parsing your code into a format rules understand, passing the code to those rules, and letting you know about any reports emitted by those rules.
+
+ESLint is highly extensible: meaning you can customize many aspects of how it runs.
+The most common ways to customize it are:
+
+- **[Parsers](https://eslint.org/docs/latest/extend/ways-to-extend#custom-parsers)**: Replace ESLint's built-in JavaScript parser to support reading code with different syntax than native JavaScript
+- **[Plugins](https://eslint.org/docs/latest/extend/ways-to-extend#plugins)**: Provide a set of rules that are added to the list of rules available to be configured
+- **[Shareable Configs](https://eslint.org/docs/latest/extend/ways-to-extend#shareable-configs)**: Provide configuration options for any number of rules - either as a standalone npm package or from part of a _plugin_
+
+Note that _plugins_ and _shareable configs_ are two different things.
+
+- _**Plugins**_ make rules available without configuring those rules.
+- _**Shareable configs**_ configure rules that come with ESLint and/or were previously made available in plugins.
+
+### ESLint Customization Example: TypeScript
+
+If you use ESLint to lint TypeScript code then you're hopefully using all three customizations:
+
+- **Parser**: [`@typescript-eslint/parser`](https://typescript-eslint.io/packages/parser) to support parsing TypeScript code
+- **Plugin**: [`@typescript-eslint/eslint-plugin`](https://typescript-eslint.io/packages/eslint-plugin) to load in rules specific to TypeScript
+- **Shareable Config(s)**: Shared settings packaged with `@typescript-eslint/eslint-plugin` that configure many rules at once, such as [`plugin:@typescript-eslint/recommended`](https://typescript-eslint.io/linting/configs#recommended).
+
+Note that the typescript-eslint _shareable configs_ come from the `@typescript-eslint/eslint-plugin` npm package.
+Hence the `plugin:` prefix in front of them: that's how ESLint knows where to find the configs.
+
+## `eslint-config-prettier`
+
+[`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) is a _shareable config_ that disables formatting-related rules.
+You can load it into your project by listing it under `"extends"` array in your ESLint config:
+
+```json
+{
+	"extends": [
+		// (shorthand for "eslint-config-prettier")
+		"prettier"
+	]
+}
+```
+
+The sole purpose of `eslint-config-prettier` is to turn rules off.
+On the inside, it looks like an object with a bunch of properties whose values are `0` or `"off"`.
+Roughly:
+
+```json
+{
+	"curly": "off",
+	"no-unexpected-multiline": "off",
+	"@babel/object-curly-spacing": "off",
+	"@typescript-eslint/lines-around-comment": "off"
+}
+```
+
+### Why `eslint-config-prettier` Came To Be
+
+Back in the day, popular shareable configs such as [`eslint-config-airbnb`](https://www.npmjs.com/package/eslint-config-airbnb) were often used to enable many rules at once.
+These configs were popular because they established a well-known, opinionated style guide and set of logical checks on code.
+Their downside was that they were oftentimes too opinionated - even enabling formatting rules.
+
+Developers got around those formatting rules by knowing that ESLint evaluates configs in the order they're listed under `"extends"`.
+`eslint-config-prettier` could be placed last in a project's ESLint config to turn off any formatting rules enabled by previous plugins.
+
+```json
+{
+	"extends": [
+		// 1. Configures many ESLint rules, including enabling some formatting ones
+		"airbnb",
+		// 2. Disables only the formatting rules from previous configs
+		"prettier"
+	]
+}
+```
+
+By extending from `eslint-config-prettier` last, projects could gain the benefits of those popular shareable configs without having to run formatting rules within ESLint.
+
+### Why `eslint-config-prettier` Is Often Unnecessary
+
+Over the last few years, ESLint best practices have advanced in two ways (among others):
+
+- ESLint core and most community plugins have determined that enabling overly opinionated rules -especially stylistic ones- in shareable configs makes developers dislike ESLint without much real benefit
+- The recommended rulesets in ESLint and typescript-eslint have grown to include most of the beneficial logical rules that shareable configs such as `eslint-config-airbnb` were largely used for
+
+As a result, many new projects haven't felt a need to load in opinionated configs such as `eslint-config-airbnb`.
+Many projects start out with a much more straightforward set of configs:
+
+1. To start: `"eslint:recommended"`, ESLint's built-in recommended configuration
+2. If using TypeScript: `"plugin:@typescript-eslint/recommended"` or `"plugin:@typescript-eslint/recommended-type-checked"` for the recommended TypeScript rules
+3. Any framework- or library-specific plugins, such as [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)'s `"plugin:jsx-a11y/recommended"`
+
+**If you don't use a legacy ESLint shareable config that enables formatting rules, you probably don't need `eslint-config-prettier`.**
+Adding `eslint-config-prettier` at the end of the `"extends"` list doesn't do anything if nothing enabled formatting rules to begin with.
+Therefore, most projects don't gain any benefit from `eslint-config-prettier`.
+
+Furthermore, two insidious points of confusing can arise from using `eslint-config-prettier` redundantly:
+
+- Seeing a reference to _"prettier"_ in an ESLint configuration can confuse developers new to the area.
+- Nothing stops projects from manually re-enabling formatting rules under the ESLint configuration's `"overrides"` or `"rules"` properties.
+
+I now recommend against including `eslint-config-prettier` in most new projects.
+
+> 💡 Not sure whether you can safely remove `"prettier"` from your `"extends"`?
+> Try removing it, then running `npx eslint-config-prettier some/file.js` to see if it points out any conflicting rules.
+> Running ESLint with [`--print-config`](https://eslint.org/docs/latest/use/command-line-interface#--print-config) can alternately print out the full list of lint rule configurations for a file.
+
+## `eslint-plugin-prettier`
+
+`eslint-plugin-prettier` is an ESLint _plugin_ that provides two things:
+
+- A custom rule, `prettier/prettier`, that runs all of Prettier inside a single ESLint rule
+- A shareable config, `plugin:prettier/recommended`, that enables the `prettier/prettier` rule
+
+For example, in ESLint's legacy config format, you might enable it by extending its recommended config:
+
+```json
+{
+	"extends": ["plugin:prettier/recommended"]
+}
+```
+
+Extending that config:
+
+1. Adds `eslint-plugin-prettier` to the `"plugins"` list of extended plugins, thereby loading in the `prettier/prettier` rule
+2. Enables the `prettier/prettier` rule
+3. Adds `eslint-config-prettier` to the `"extends"` list of extended configs
+
+The advantage of this approach is that you don't need to separately configure Prettier alongside ESLint.
+You can have one file -your ESLint config- that enables both.
+
+### Why `eslint-plugin-prettier` Is Often Harmful
+
+There are two big problems with running Prettier inside an ESLint rule the way `eslint-plugin-prettier` does:
+
+- Behavioral: it joins Prettier's reports with ESLint's, which in my experience confuses developers who aren't familiar with the tools
+- Performance: formatting is now blocked on all linting, which is often much slower than formatting
+
+The performance point can become quite bad in projects that utilize [type-checked rules](https://typescript-eslint.io/linting/typed-linting).
+
+- If `prettier/prettier` is the only lint rule that produces reports containing an auto-fixer, linting has to run twice
+- If any other rules introduce auto-fixes, one or more additional cycles may be introduced from `prettier/prettier` fixing formatting issues with those auto-fixes
+
+> 😬 Keep in mind that lint rules don't have visibility into formatting settings.
+> Their auto-fixers aren't likely to produce code that aligns to your formatter.
+
+Type-checked linting is by nature generally at least as slow as running the TypeScript type checker on all linted files.
+[Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now](/blog/rust-based-javascript-linters-fast-but-no-typed-linting-right-now) explains why.
+Running linting additional extra times adds up - and contributes to false negative perceptions around ESLint's and typescript-eslint's performance.
+
+**I strongly recommend you do not use `eslint-plugin-prettier`**.
+We even explicitly recommend against `eslint-plugin-prettier` in the [typescript-eslint formatting FAQs](https://typescript-eslint.io/linting/troubleshooting/formatting#eslint-plugin-prettier) and [typescript-eslint performance troubleshooting docs](https://typescript-eslint.io/linting/troubleshooting/performance-troubleshooting#eslint-plugin-prettier).
+
+If `prettier/prettier` is enabled in your ESLint configuration, the best step you can take is to remove it and uninstall the `eslint-plugin-prettier` package altogether.
+Failing that, you can disable the rule manually (`"prettier/prettier": "off"` under `"rules"`).
+At that point you'll still have the `eslint-config-prettier` shareable config enabled.
+
+## In Conclusion
+
+_Formatting_ and _linting_ are two separate concerns.
+Mixing the two can have negative impacts on the performance and understandability of your developer tooling.
+My standard repository template, [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app), keeps the two explicitly separate.
+
+If your ESLint configuration references [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier), I suggest you try to remove it from your config.
+You probably don't need it anymore.
+
+If your ESLint configuration references [`eslint-plugin-prettier`](https://github.com/prettier/eslint-plugin-prettier), I strongly recommend you instead enable Prettier separately from ESLint.
+Running the `prettier/prettier` rule can introduce significant performance pain to your project.
+
+No matter what tooling your ESLint configuration enables, if you haven't overhauled it in a few years, I strongly recommend:
+
+1. Making sure `"eslint:recommended"` is in your rule extensions
+2. If you're using TypeScript:
+   1. Making sure at least [`plugin:@typescript-eslint/recommended`](https://typescript-eslint.io/linting/configs#recommended) is enabled - or even better, [`plugin:@typescript-eslint/recommended-type-checked`](https://typescript-eslint.io/linting/configs#recommended-type-checked)
+   2. Checking the [`.eslintrc.cjs` from `create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/main/.eslintrc.cjs), for any rules or plugins generally applicable to your project
+3. Checking [github.com/dustinspecker/awesome-eslint](https://github.com/dustinspecker/awesome-eslint) for any additional plugins relevant to your project
+
+Happy linting, everyone! 🎉
+
+### Acknowledgements
+
+Much appreciation to [Anisha Malde](https://www.anisha.dev) for suggesting I write an explainer in this area and helping ideate contents.
+Thanks!
+🙌
+
+Thanks to [Ben Scott](https://github.com/BPScott), a maintainer of `eslint-config-prettier`, for reviewing the post and suggesting clarifications and corrections on how `eslint-plugin-prettier` is described.
+
+Thanks to [Simon Lydell](https://github.com/lydell), the original creator and a long-time maintainer of `eslint-config-prettier`, for reviewing the post and suggesting the `npx eslint-config-prettier` approach.
+
+We should also note that although I personally disagree with using `eslint-config-prettier` and `eslint-plugin-prettier` _now_, they have been legitimately useful tools for many years.
+I like to think that they've helped many folks onboard to formatting and/or linting their code.
+Heck, I'd still rather work in a project that uses them than a project that doesn't auto-format at all!
+Many thanks to all their contributors and maintainers over the years!
+❤️
