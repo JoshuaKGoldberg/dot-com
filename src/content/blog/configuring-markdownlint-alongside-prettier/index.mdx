@@ -122,8 +122,8 @@ markdownlint --rules sentences-per-line
 
 ## Putting It All Together
 
-You can see a repository that uses Markdownlint with formatting rules disabled over at [JoshuaKGoldberg/template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package).
-Its [package.json `lint:md` script](https://github.com/JoshuaKGoldberg/template-typescript-node-package/blob/55da5833d893bb2f9831896dfa23bd027fc04cfb/package.json#LL60) runs Markdownlint with `sentences-per-line` on all Markdown files (including those in the `.github/` directory, since dotfile folders aren't linted by default):
+You can see a repository that uses Markdownlint with formatting rules disabled over at [JoshuaKGoldberg/create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app).
+Its [package.json `lint:md` script](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/55da5833d893bb2f9831896dfa23bd027fc04cfb/package.json#LL60) runs Markdownlint with `sentences-per-line` on all Markdown files (including those in the `.github/` directory, since dotfile folders aren't linted by default):
 
 ```json
 {
@@ -133,7 +133,7 @@ Its [package.json `lint:md` script](https://github.com/JoshuaKGoldberg/template-
 }
 ```
 
-Its [`.markdownlint.json`](https://github.com/JoshuaKGoldberg/template-typescript-node-package/blob/55da5833d893bb2f9831896dfa23bd027fc04cfb/.markdownlint.json) extends from `markdownlint/style/prettier` and disables a couple more rules I tend to prefer off in my repositories:
+Its [`.markdownlint.json`](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/55da5833d893bb2f9831896dfa23bd027fc04cfb/.markdownlint.json) extends from `markdownlint/style/prettier` and disables a couple more rules I tend to prefer off in my repositories:
 
 ```json
 {
