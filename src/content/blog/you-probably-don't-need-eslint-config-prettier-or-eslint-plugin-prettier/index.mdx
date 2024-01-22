@@ -3,7 +3,7 @@ description: "Explaining two popular Prettier integrations for ESLint, and why I
 image:
   alt: Cat rolled up in a circular ball within a fluffy white circular pet bed.
   src: circle-cat.jpg
-pubDate: 2024-01-14
+pubDate: 2024-01-28
 tags: [
 	"eslint-config-prettier",
 	"eslint-plugin-prettier",
@@ -141,7 +141,7 @@ I now recommend against including `eslint-config-prettier` in most new projects.
 
 > 💡 Not sure whether you can safely remove `"prettier"` from your `"extends"`?
 > Try removing it, then running `npx eslint-config-prettier some/file.js` to see if it points out any conflicting rules.
-> Running ESLint with [`--print-config`](https://eslint.org/docs/latest/use/command-line-interface#--print-config), can alternately print out the full list of lint rule configurations for a file.
+> Running ESLint with [`--print-config`](https://eslint.org/docs/latest/use/command-line-interface#--print-config) can alternately print out the full list of lint rule configurations for a file.
 
 ## `eslint-plugin-prettier`
 
@@ -183,6 +183,7 @@ The performance point can become quite bad in projects that utilize [type-checke
 > Their auto-fixers aren't likely to produce code that aligns to your formatter.
 
 Type-checked linting is by nature generally at least as slow as running the TypeScript type checker on all linted files.
+[Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now](/blog/rust-based-javascript-linters-fast-but-no-typed-linting-right-now) explains why.
 Running linting additional extra times adds up - and contributes to false negative perceptions around ESLint's and typescript-eslint's performance.
 
 **I strongly recommend you do not use `eslint-plugin-prettier`**.
