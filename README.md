@@ -1,4 +1,4 @@
-<h1 align="center">JoshuaKGoldberg Dot Com Next</h1>
+<h1 align="center">JoshuaKGoldberg Dot Com</h1>
 
 <p align="center">
     Personal site for Josh Goldberg.
