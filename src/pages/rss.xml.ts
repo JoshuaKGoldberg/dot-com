@@ -4,7 +4,7 @@ import rss, { pagesGlobToRssItems } from "@astrojs/rss";
 
 import { blogDescription, site } from "../constants";
 
-export async function get(context: APIContext) {
+export async function GET(context: APIContext) {
 	return rss({
 		customData: `<language>en-us</language>`,
 		description: blogDescription,
