@@ -1,6 +1,6 @@
 ---
 category: Conferences
-date: 2021-05-04
+date: 2023-05-04
 href: https://stirtrek.com/speakers/2023/Josh-Goldberg.html
 title: "Building a Design System In-Flight"
 event: "Stir Trek 2023"

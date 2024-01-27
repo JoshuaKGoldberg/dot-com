@@ -15,6 +15,32 @@ const categories = {
 	All: allSpeakings,
 	...groupBy(allSpeakings, (speaking) => speaking.data.category),
 };
+
+console.log(
+	allSpeakings
+		.filter(
+			(conference) =>
+				conference.data.category === "Conferences" &&
+				conference.data.location !== "Online" &&
+				conference.data.date.getFullYear() === 2023,
+		)
+		.toSorted((a, b) => a.data.date - b.data.date)
+		.map(({ data }) => {
+			return `## ${data.event}
+
+> ${data.date.toLocaleString("default", {
+				day: "numeric",
+				month: "long",
+			})} - ${data.location}
+>
+> ${data.title}
+> ${Object.entries(data.links)
+				.map(([a, b]) => `[[${a}](${b} "${data.event} ${a}")]`)
+				.join(" ")}
+`;
+		})
+		.join("\n"),
+);
 ---
 
 <HeroLayout

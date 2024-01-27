@@ -61,6 +61,10 @@
 	);
 }
 
+.article h2 + blockquote {
+	margin-top: 0;
+}
+
 .article hr {
 	border-color: var(--colorMedium);
 	border-width: 0 0 1px 0;

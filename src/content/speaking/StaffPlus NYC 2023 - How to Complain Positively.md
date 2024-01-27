@@ -1,6 +1,6 @@
 ---
 category: Conferences
-date: 2023-03-14
+date: 2023-03-16
 event: "StaffPlus NYC 2023"
 href: https://leaddev.com/staffplus-new-york23/agenda
 links:
