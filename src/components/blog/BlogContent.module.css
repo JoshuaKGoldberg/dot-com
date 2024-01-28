@@ -40,7 +40,6 @@
 
 .article blockquote {
 	--blockBorderWidth: 6px;
-	font-style: italic;
 	margin-left: 0;
 	padding-left: calc(2rem - var(--blockBorderWidth));
 	position: relative;

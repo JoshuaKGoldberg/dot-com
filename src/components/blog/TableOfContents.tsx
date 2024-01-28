@@ -11,9 +11,14 @@ export interface TableOfContentsProps {
 	headings: MarkdownHeading[];
 }
 
-interface HeadingGroup {
-	h2: MarkdownHeading;
-	h3s: MarkdownHeading[];
+interface Heading2Group {
+	children: Heading3Group[];
+	heading: MarkdownHeading;
+}
+
+interface Heading3Group {
+	children: MarkdownHeading[];
+	heading: MarkdownHeading;
 }
 
 export function TableOfContents(props: TableOfContentsProps) {
@@ -22,21 +27,31 @@ export function TableOfContents(props: TableOfContentsProps) {
 			return [];
 		}
 
-		const groups: HeadingGroup[] = [
+		const groups: Heading2Group[] = [
 			{
-				h2: props.headings[0],
-				h3s: [],
+				children: [],
+				heading: props.headings[0],
 			},
 		];
 
 		for (const heading of props.headings.slice(1)) {
-			if (heading.depth === 2) {
-				groups.push({
-					h2: heading,
-					h3s: [],
-				});
-			} else {
-				groups[groups.length - 1].h3s.push(heading);
+			switch (heading.depth) {
+				case 2:
+					groups.push({
+						children: [],
+						heading: heading,
+					});
+					break;
+				case 3:
+					groups[groups.length - 1].children.push({
+						children: [],
+						heading: heading,
+					});
+					break;
+				case 4:
+					groups[groups.length - 1].children[
+						groups[groups.length - 1].children.length - 1
+					].children.push(heading);
 			}
 		}
 
@@ -122,7 +137,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 						</Text>
 					</li>
 					<For each={headingGroups()}>
-						{({ h2, h3s }) => (
+						{({ children: h3s, heading: h2 }) => (
 							<li class={styles.li}>
 								<Text
 									as="a"
@@ -138,7 +153,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 								{h3s.length ? (
 									<ol class={styles.ol}>
 										<For each={h3s}>
-											{(h3) => (
+											{({ children: h4s, heading: h3 }) => (
 												<li class={styles.li}>
 													<Text
 														as="a"
@@ -151,6 +166,28 @@ export function TableOfContents(props: TableOfContentsProps) {
 													>
 														{h3.text}
 													</Text>
+													{h4s.length && (
+														<ol class={styles.ol}>
+															<For each={h4s}>
+																{(h4) => (
+																	<li class={styles.li}>
+																		<Text
+																			as="a"
+																			class={clsx(
+																				styles.a,
+																				h4.slug === getActiveSlug() &&
+																					styles.active,
+																			)}
+																			fontWeight="light"
+																			href={`#${h4.slug}`}
+																		>
+																			{h4.text}
+																		</Text>
+																	</li>
+																)}
+															</For>
+														</ol>
+													)}
 												</li>
 											)}
 										</For>
