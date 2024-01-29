@@ -1,8 +1,7 @@
 ---
-export interface MediaOriginal {
-	href: string;
-	text: string;
-}
+import MediaOriginalNote, {
+	type MediaOriginal,
+} from "./MediaOriginalNote.astro";
 
 export interface Props {
 	class?: string | undefined;
@@ -16,11 +15,6 @@ const descriptions =
 	Array.isArray(Astro.props.description)
 		? Astro.props.description
 		: [Astro.props.description];
-
-const original =
-	typeof Astro.props.original === "string"
-		? { href: Astro.props.original, text: "original" }
-		: Astro.props.original;
 ---
 
 <label class="labeled-media-media">
@@ -32,12 +26,8 @@ const original =
 			))
 		}
 		{
-			original && (
-				<div class="labeled-media-original">
-					<a href={original.href} target="_blank">
-						{original.text}
-					</a>
-				</div>
+			Astro.props.original && (
+				<MediaOriginalNote original={Astro.props.original} />
 			)
 		}
 		{Astro.props.note && <em class="labeled-media-note">{Astro.props.note}</em>}

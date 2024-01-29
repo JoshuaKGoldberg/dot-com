@@ -24,6 +24,10 @@
 	margin-top: 1rem;
 }
 
+.article h4 {
+	margin-top: 0.75rem;
+}
+
 .article code {
 	font-size: 0.8em;
 }
@@ -60,8 +64,8 @@
 	);
 }
 
-.article h2 + blockquote {
-	margin-top: 0;
+.article :is(h2, h3, h4) + blockquote {
+	margin: 0;
 }
 
 .article hr {

@@ -2,14 +2,15 @@
 description: "Recapping the fantastic in-person conferences I attended in 2023."
 image:
   alt: View from behind of me on stage, wearing a black collared shirt with a green Pokemon pattern, pointing to the distance
-  src: me-pointing-on-stage.jpg
+  src: me-pointing-on-stage-back.jpg
 pubDate: 2024-01-30
 tags: ["conferences", "recap", "speaking", "year in review"]
 title: "2023 Conferences In Review"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import mePointingOnStage from "./me-pointing-on-stage.jpg";
+import mePointingOnStageBack from "./me-pointing-on-stage-back.jpg";
+import mePointingOnStageFront from "./me-pointing-on-stage-front.jpg";
 
 2023 was my year of conferences.
 I applied to a whole bunch, got into some, and had a fantastic year flying around the world every other week.
@@ -18,13 +19,14 @@ It was exhausting and I'm probably never going to go for that many again -- this
 <LabeledImage
 	alt="View from behind of me on stage, wearing a black collared shirt with a green Pokemon pattern, pointing to the distance"
 	description="Me speaking at JSConf IE 2023 in Dublin. Fun patterns on solid color shirts is definitely still my vibe."
-	src={mePointingOnStage}
+	original="https://twitter.com/JSConfIE/status/1706625585844203601/photo/2"
+	src={mePointingOnStageBack}
 />
 
 ## Talk Reflections
 
 I think 2023 is the year I really learned how to give a good tech talk.
-Not all the talks I gave were good (especially as I got tired towards the end of the year), but there were a few that I'm truly proud of.
+Not all the talks I gave were at the standards I want to hold myself to (especially as I got tired towards the end of the year), but there were a few that I'm truly proud of.
 My 2024 talk goals will be around giving _great_ talks _reliably_.
 
 ### Favorite Talks
@@ -40,7 +42,7 @@ Some of my talks do that better than others.
 
 #### How to Complain Positively
 
-> [StaffPlus NYC 2023](#staffplus-nyc-2023)
+> [StaffPlus NYC](#staffplus-nyc-2023)
 
 This is one of my favorite talks ones I've given.
 It's a tight ten minutes that walks through how I've messed up trying to effect positive change ("complain") in the past, better alternative strategies, and general tips for working with others.
@@ -73,9 +75,9 @@ I did a lot of the practice and less of the rest than I should have.
 
 #### Real Time Nostalgia with Web Sockets
 
-> [Wey Wey Web 2023](#wey-wey-web-2023)
+> [Wey Wey Web](#wey-wey-web-2023)
 
-I think this talk is going to be my [white whale](https://en.wiktionary.org/wiki/white_whale) of speaking.
+This talk might be my [white whale](https://en.wiktionary.org/wiki/white_whale) of speaking.
 It's meant to convey how waves of new tech abstractions and frameworks make it easier over time to make more and more complex apps -- against the backdrop of cool tech demos of real-time karaoke.
 In theory the talk is really cool and packs an inspiring message about the past, present, and future of web dev.
 
@@ -91,6 +93,17 @@ It didn't happen in 2022 or 2023 though.
 
 > [revo.js](#revojs-2023) and others
 
+This talk is _fine_, I think.
+I like how it explains the path we took through CSS modules, CSS-in-JS, and the two mainstream approaches of Tailwind-style utility classes and larger component library builders.
+That's all good and relevant information that often gets lost in modern CSS discourse.
+
+But the talk spends a lot more time digging through historical facts than providing useful information on styling systems.
+I think the talk could replace around 5 minutes of the historical stuff with 5 minutes of styling system design patterns.
+Things like setting up themes, using dynamic components, and why token-based approaches refactor so nicely.
+
+I'm already scheduled to give this talk at least once in 2024.
+You can bet I'm going to rework it to really make the points exploring styling systems shine.
+
 ## The Conferences
 
 I want this page to serve as a collective of shout-outs to the great in-person conferences I attended this past year.
@@ -100,12 +113,15 @@ Each has links to the conference as well as any associated repos, slides, videos
 I also included one > treasured moment from each of them.
 I probably could have gotten a few for each conference, but needed to keep it brief.
 
-### [THAT Conf Texas 2023](https://thatconference.com/tx/2023)
+### [THAT Conf Texas](https://thatconference.com/tx/2023)
 
-> January 16 - Round Rock, USA
+> January - Round Rock, USA
 >
 > Talk: Design Systems: Maximum Consistency, Minimum Effort
 > [[Repo](https://github.com/JoshuaKGoldberg/design-system-sketch "THAT Conf Texas 2023 Repo")] [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvtRv5w2TlFXfhHorNQ "THAT Conf Texas 2023 Slides")]
+>
+> Workshop: TypeScript for JavaScripties
+> [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvtRtHW5HQDcBV3ZVJw)]
 
 THAT Conf was my first conference of the year - and it was a grand one to start with.
 The [THAT conference series](https://that.us) holds its conferences in Kalahari resorts.
@@ -115,11 +131,11 @@ I met a bunch of the organizers the night before and helped out a bit with setti
 For such a large conference, it felt surprisingly personal.
 You can tell Clark and the rest of the organizing team put a lot of care into it.
 
-> Treasured moment: hanging out with Akira, Brandon, Craigory, and other speakers around dinner and then at the piano lounge. 🎹
+✨ Treasured moment: hanging out with Akira, Brandon, Craigory, and other speakers around dinner and then at the piano lounge. 🎹
 
-### [StaffPlus NYC 2023](https://leaddev.com/events/staffplus-new-york-2023)
+### [StaffPlus NYC](https://leaddev.com/events/staffplus-new-york-2023)
 
-> March 16 - New York City, USA
+> March - New York City, USA
 >
 > Talk: How to Complain Positively
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvtxmfY5e0vvS62B62A "StaffPlus NYC 2023 Slides")] [[Video](https://leaddev.com/new-york/staffplus/video/2023/how-complain-positively "StaffPlus NYC 2023 Video")]
@@ -129,11 +145,11 @@ I appreciated having a conference for us.
 The lineup of speakers around me was incredible.
 I learned a whole bunch around both people-politics and tech-management that haven't come up in many other conferences.
 
-> Treasured moment: having two consecutive "D 'n M" (Deep and Meaningful conversations) with Doug and Hila during the conference. 🥰
+✨ Treasured moment: having two consecutive "D 'n M" (Deep and Meaningful conversations) with Doug and Hila during the conference. 🥰
 
-### [React Miami 2023](https://www.reactmiami.com)
+### [React Miami](https://www.reactmiami.com)
 
-> April 20 - Miami, USA
+> April - Miami, USA
 >
 > Talk: Setting Up ESLint and TypeScript for React
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt0cjx-_PLIwDIzclw "React Miami 2023 Slides")] [[Video](https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743 "React Miami 2023 Video")]
@@ -146,12 +162,12 @@ The morning events (I chose the 5k), after-conference karaoke, and general fun v
 React Miami also was notably great at including a diverse lineup that touched on more than just React.
 It covered a gamut including accessibility, burnout, CSS, and the rest of the alphabet _(IYKYK)_.
 
-> Treasured moment: walking out on stage with a bunch of other speakers in oversided animal costumes for Kathleen's talk.
-> Or maybe, giggling about it backstage beforehand.
+✨ Treasured moment: walking out on stage with Ken, Sunil, Will, and other speakers in oversided animal costumes for Kathleen's talk.
+Or maybe, giggling about it backstage beforehand.
 
-### [Stir Trek 2023](https://stirtrek.com)
+### [Stir Trek](https://stirtrek.com)
 
-> May 4 - Columbus, Ohio
+> May - Columbus, Ohio
 >
 > Talk: Building a Design System In-Flight
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvtFnhBSaIhabdMf7oQ?e=0Me4QN "Stir Trek 2023 Slides")] [[Video](https://www.youtube.com/watch?v=rN6kOPUEicE "Stir Trek 2023 Video")]
@@ -160,11 +176,11 @@ Having a conference in a movie theater is a good idea.
 Making the whole thing movie-themed and having a speaker event the night before of watching the new Guardians of the Galaxy, complete with popcorn, soda, and candy...
 Awesome.
 
-> Treasured moment: grabbing dinner at a local BBQ place with Becca, Chris, Diana, Homer, Mark, and other speakers.
+✨ Treasured moment: grabbing dinner at a local BBQ place with Becca, Chris, Diana, Homer, Mark, and a bunch of other speakers.
 
-### [CityJS Athens 2023](https://greece.cityjsconf.org)
+### [CityJS Athens](https://greece.cityjsconf.org)
 
-> May 29 - Athens, Greece
+> May - Athens, Greece
 >
 > Talk: TypeScript for JavaScripties
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt5Xbqy62vlssO23Ew "CityJS Athens 2023 Slides")] [[Video](https://www.youtube.com/watch?v=Bxozlpc1hH8 "CityJS Athens 2023 Video")]
@@ -177,11 +193,11 @@ But then we did a speaker day trip through Athens...
 ...and then Aris organized a lovely full-day trip with his family and other organizers on a beach.
 Incredible.
 
-> Treasured moment: bonding with everyone over Greek food over lunch in a half-basement half-cafe.
+✨ Treasured moment: bonding with everyone over Greek food over lunch in a half-basement half-cafe.
 
-### [Web Directions Code 2023](https://webdirections.org/code)
+### [Web Directions Code](https://webdirections.org/code)
 
-> June 8 - Melbourne, Australia
+> June - Melbourne, Australia
 >
 > Talk: Static Analysis: Shockingly Useful! ⚡️
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt8B6-y28tCUw7Xqmg "Web Directions Code 2023 Slides")] [[Video](https://conffab.com/presentation/static-analysis-shockingly-useful-%e2%9a%a1%ef%b8%8f "Web Directions Code 2023 Video")]
@@ -196,11 +212,11 @@ I learned a bunch about the web as a platform: bluetooth, passkeys, WebAssembly,
 I'll admit, this one was probably the most jetlagged I've ever been at a conference.
 But it was worth it for the impromptu conversations in and out of the venue.
 
-> Treasured moment: hanging out with the Allsop siblings at the organizers table between talks, chatting aimlessly about life and the industry.
+✨ Treasured moment: hanging out with the Allsop siblings at the organizers table between talks, chatting aimlessly about life and the industry.
 
-### KCDC 2023
+### [KCDC 2023](https://www.kcdc.info)
 
-> June 21 & 22 - Kansas City, USA
+> June - Kansas City, USA
 >
 > Talk: Static Analysis: Don't Fear the Linter
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt90PBRDuBcngQYCPg "KCDC 2023 Slides")]
@@ -214,11 +230,11 @@ The talks were solid and staffed by a whole bunch of community folks I'd been wa
 The sponsor booths were super well done too.
 There was a sloth, an arcade cabinet, and a _puppy pit_ I got to lay around in.
 
-> Treasured moment: having a deep and meaningful chat with Nick, then him kicking off a fantastic karaoke group with a soul-touching rendition of _It's Raining Men_ over Karaoke.
+✨ Treasured moment: having a deep and meaningful chat with Nick, then him kicking off a fantastic karaoke group with a soul-touching rendition of _It's Raining Men_ over Karaoke.
 
-### [THAT Conf WI 2023](https://thatconference.com/wi/2023)
+### [THAT Conf WI](https://thatconference.com/wi/2023)
 
-> July 23 - Wisconsin Dells, USA
+> July - Wisconsin Dells, USA
 >
 > Talk: TypeScript for Javascripties: Day Camp Edition
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuEPyh8LP9z8JcM-xQ "THAT Conf WI 2023 Slides")]
@@ -231,32 +247,72 @@ The two had very similar vibes and style, with similarly high levels of quality.
 The keynotes from the two conferences were universally high-impact and insightful.
 I was happy to get the same kind of awesome community and talks the second time around.
 
-> Treasured moment: hanging out again at the piano lounge with Craigory, Katie,
+✨ Treasured moment: hanging out again at the piano lounge with Craigory, Katie, Kristen, and Zach.
 
-### SeattleJS Conf 2023
+### [SeattleJS Conf 2023](https://seattlejs.com/conf)
 
-> August 7 - Seattle, USA
+> August - Seattle, USA
 >
 > Talk: Static Analysis: Don't Fear the Linter!
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuE5LELJVy5LuVm9Kw "SeattleJS Conf 2023 Slides")] [[Video](https://www.youtube.com/watch?v=qiDzxvdKt-Y "SeattleJS Conf 2023 Video")]
+>
+> Workshop: TypeScript for JavaScripties
+> [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuE7lr9l-Z24Y1Z9Kw)]
 
-### JSDay IE 2023
+Seattle is my favorite city in the United States.
+It's got fantastic food, music, and nature scenes.
+Also a lovely tech community with lots of old friends.
 
-> September 25 - Dublin, Ireland
+SeattleJS Conf, to me, is an exemplar of the Seattle tech community.
+The organizers take care to make a fun and friendly space.
+I actually got my start public speaking at Bellevue and Seattle meetups, so it was something special to be able to give a talk on a bigger stage.
+
+✨ Treasured moment: hanging out at karaoke after the conference with Carter, Chris, Rachel, and an assortment of other awesome folks.
+
+### [JSDay IE 2023](https://www.jsconf.ie)
+
+> September - Dublin, Ireland
 >
 > Talk: TypeScript Static Analysis Hidden Gems
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMWM4OEEUB2khjYjA "JSDay IE 2023 Slides")] [[Video](https://www.youtube.com/watch?v=qxAwVwgEmZU "JSDay IE 2023 Video")]
 
-### React Live 2023
+Dublin!
+What a fun city.
+Despite traveling far, something about this conference's community felt simultaneously approachable and enthusiastic to me.
+The conference did a great job setting up attendees and speakers for good conversations.
+We had a lot of varied spaces to talk around -tables, mixers, and so on- that were effectively at encouraging us to chat.
 
-> September 28 - Amsterdam, NL
+Plus I appreciated the great photography day-of -- seen at the top of this post.
+
+I actually dipped my toes into MCing a bit in this one.
+Which, by the way, is surprisingly difficult!
+I'd known it was tough before, but standing up in front of a crowd and being charming is not an easy task.
+
+✨ Treasured moment: A jampacked morning of grabbing breakfast with Erica, going on a 5k run with Remo, then walking around and talking TypeScript with Orta.
+
+### [React Live 2023](https://reactlive.nl)
+
+> September - Amsterdam, NL
 >
 > Talk: Detecting React Bugs Automatically
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMaI_-L-BkT9QQRYA "React Live 2023 Slides")] [[Video](https://www.youtube.com/watch?v=zBN7aHDRsZw "React Live 2023 Video")]
 
-### revo.js 2023
+Amsterdam is one of my favorite cities in Europe for conferences.
+It's got a thriving food scene, lovely canals, and world-class museuems such as the Rijksmuseum.
 
-> October 4 & 5 - Timișoara, Romania
+This conference also had an opening party before-hand that showed the [TypeScript Origins documentary](https://www.offerzen.com/community/typescript-origins-documentary) I took part in.
+It was nifty being in the room and re-watching the video through the eyes of other developers.
+
+At this point in the year, my conference fatique was really starting to kick in.
+So although the conference's lineup of speakers was quite good, for me the standout here was social events around the conference.
+We had a lively speaker dinner one night and karaoke another night.
+Plus several other speakers and I had great 1:1s around the city.
+
+✨ Treasured moment: a lively set of speaker's dinner table discussions including Alexander, Anishe, Giorgio, Kent, Medhat, and Nico.
+
+### [revo.js 2023](https://revojs.ro/2023)
+
+> October - Timișoara, Romania
 >
 > Talk: Type-Safe Style Systems: The Future of CSS
 > [[Repo](https://github.com/JoshuaKGoldberg/type-safe-style-systems "revo.js 2023 Repo")] [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMcCHoud4DwsLktrw "revo.js 2023 Slides")]
@@ -264,16 +320,39 @@ I was happy to get the same kind of awesome community and talks the second time 
 > Talk: You Could Lint More
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMeYEDLI5BZo-gJjw "revo.js 2023 Slides")]
 
-### LibertyJS 2023
+I _love_ eastern European tech events.
+There's something magical about them.
+Maybe it's my Polish/Ukrainian heritage finally coming into play around the shared cusines around Europe's central and eastern countries?
+Maybe it's how consistently hard-working event organizers are there around making a good representation of the area (a common topic that came up)?
 
-> October 12 - Philadelphia, Pennsylvania
+Either way, revo.js had a stellar lineup and lots of great organizing touches from the organizing team.
+That included taking us to and from the airport -with an extra trip because I left luggage there like a buffoon- and multiple casual events in the lovely city around them.
+_Plus_ a full day bus trip to a small village with a buffet of Romanian food and drink prepared by relatives and friends of the organizers.
+
+✨ Treasured moment: lounging on top of a hill off-and-on with Anna, Atila, Matt, Ben, Lucian, and Ritvi after the horse-and-donkey ride along with Dana, Diana, and Jay.
+
+### [LibertyJS](https://libertyjs.com)
+
+> October - Philadelphia, Pennsylvania
 >
 > Talk: Building a Design System Mid-Flight
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMgsCt8tMkQgna1MA "LibertyJS 2023 Slides")]
 
-### DevReach 2023
+Philadelphia!
+I live here.
+It was nice to finally have a conference near home.
 
-> October 24 & 25 - Sofia, Bulgaria
+I wish I'd been more recovered for this one: there were quite a few attendees and speakers in the Philly area I wish I could have talked with more.
+Despite Philly seeming to have a relatively muted tech scene post-COVID, there's a lot of good potential in the city!
+
+LibertyJS also had the nifty idea of giving us pre-paid gift cards to use in local restaurants as groups rather than having generic catered lunch.
+What a good move for promoting local businesses.
+
+✨ Treasured moment: a casual but lively Pho lunch with Ben, Brent, Joe, Killian, and Phil.
+
+### [DevReach](https://www.telerik.com/devreach)
+
+> October - Sofia, Bulgaria
 >
 > Talk: Killing Mutants with Mutation Testing
 > [[Repo](https://github.com/JoshuaKGoldberg/robocafe-example "DevReach 2023 Repo")] [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuNccskQSRCBg1M1Hw "DevReach 2023 Slides")]
@@ -281,27 +360,68 @@ I was happy to get the same kind of awesome community and talks the second time 
 > Talk: TypeScript for JavaScripties
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuNesE6QkYRgJixZ9w "DevReach 2023 Slides")]
 
-### React Summit 2023
+...and back to eastern Europe!
+I don't often do corporate conferences (this one was hosted by Telerik), but DevReach stood out to me as one that was geared towards community members and learning new tech (not just the company's products).
+DevReach had a solid speaker lineup and lots of cool people attending.
+I also got to hang out with the organizing team a bunch, and they were a hoot.
 
-> November 12 - New York, USA
+DevReach additionally had a speakers day trip to Plovdiv that included a tour, lunch, and time to walk around.
+Which was phenomenal.
+I wish I could have stayed longer.
+
+✨ Treasured moment: going out for dinner and then drinks with JP, Katy, Laura, Myriam, and Selam.
+
+### [NodeConf EU](https://www.nodeconf.eu)
+
+> November - Kilkenny, Ireland
 >
-> Talk: Type-Safe Style Systems: The Future of CSS
-> [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuMi-FLvoFlHme1QPg "React Summit 2023 Slides")] [[Video](https://portal.gitnation.org/contents/type-safe-style-systems-the-future-of-css "React Summit 2023 Video")]
+> Workshop: Floating and Sinking Promises: Let's Fix Your Broken Async Code
+> [[Repo](https://github.com/JoshuaKGoldberg/fixing-floating-and-sinking-promises)] [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuQL58wf2Pb4AXSyag)]
 
-### Wey Wey Web 2023
+Out of all the events I've been to, I think NodeConf had by far the greatest concentration of influential people in the JavaScript/Node.js ecosystem in one place that I've ever seen.
+I would walk by random conversations and somehow fall into a deep discussion about iterator protocols or the types-as-comments TC39 proposal.
+It's hard to understate how expertise-packed this conference was.
 
-> November 22 - Malaga, Spain
+The location was beautiful, too: an estate in the Irish country complete with running paths, auditorium spaces, and banquet halls.
+
+✨ Treasured moment: Finally meeting Titian and then having a long talk on the bus ride back from the speakers dinner.
+
+### Wey Wey Web
+
+> November - Malaga, Spain
 >
 > Talk: Real Time Nostalgia with Web Sockets
 > [[Slides](https://1drv.ms/p/s!AvUc1cvPrJnWvuQPSA8YafPNO7NHLg "Wey Wey Web 2023 Slides")] [[Video](https://www.youtube.com/watch?v=uGdUSS4NA_4&ab_channel=WeyWeyWeb "Wey Wey Web 2023 Video")]
+
+Did you know spain is suffering from an invasive species of parrots called Quaker Monk Parakeets?
+They're incredibly cute and fluffy and apparently bad for the environment.
+But much like the rest of Malaga, they're colorful and lively and a joy to be around.
+
+Wey Wey Web was unusually multidisciplinary in how it blended design-oriented presentations with technical ones.
+I found it refreshing to get primers on art history and the impact of proper design on tech products.
+
+I really wish I'd gotten my [Real Time Nostalgia with Web Sockets](#real-time-nostalgia-with-web-sockets) talk to a better place so I could stand better among the phenomenal cross-discipline talks.
+But I think my TypeScript workshop went quite well, so I'm not completely unhappy.
+
+Additional shoutout to the two speakers events: one for walking Caminito del Rey _(beautiful and a great networking opportunity)_, and the other at a small music venue with a bombastic metal opening band in their early 20s.
+
+✨ Treasured moment: Morning workout and then surprise run with Aleksandra.
 
 ## Final Thoughts
 
 I love conferences.
 They're a fantastic way to learn about new tech, connect with interesting people, and make friends in the industry.
 
-I won't be doing as many in 2024 -- but that's only to be able to focus more and have more time for myself.
+I won't be doing as many in 2024 -- not out of a lack of desire, because I need to better focus on work and have more time for myself.
+I wish I could do more.
 
-Thanks again to all the conference organizers for having me over.
-You made my 2023 great.
+Thanks again to all the conference organizers for having me over and all the hard work you did to make your events special.
+You made my 2023 great and I deeply, truly appreciate you.
 💖
+
+<LabeledImage
+	alt="View from of me on stage, wearing a green sweater and an orange revo.js lanyard around my neck, smiling and pointing a clicker up and to the side"
+	description="Me speaking at revo.js I've come to enjoy cashmere sweaters."
+	original="https://twitter.com/revojsro/status/1709872770832597126/photo/2"
+	src={mePointingOnStageFront}
+/>
