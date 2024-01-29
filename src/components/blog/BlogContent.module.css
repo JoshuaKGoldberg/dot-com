@@ -24,6 +24,10 @@
 	margin-top: 1rem;
 }
 
+.article h4 {
+	margin-top: 0.75rem;
+}
+
 .article code {
 	font-size: 0.8em;
 }
@@ -40,7 +44,6 @@
 
 .article blockquote {
 	--blockBorderWidth: 6px;
-	font-style: italic;
 	margin-left: 0;
 	padding-left: calc(2rem - var(--blockBorderWidth));
 	position: relative;
@@ -59,6 +62,10 @@
 		var(--colorEmphasized),
 		var(--colorForeground)
 	);
+}
+
+.article :is(h2, h3, h4) + blockquote {
+	margin: 0;
 }
 
 .article hr {

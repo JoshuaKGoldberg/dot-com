@@ -1,0 +1,19 @@
+---
+export interface MediaOriginal {
+	href: string;
+	text: string;
+}
+
+export interface Props {
+	original: MediaOriginal | string;
+}
+
+const { href, text } =
+	typeof Astro.props.original === "string"
+		? { href: Astro.props.original, text: "original" }
+		: Astro.props.original;
+---
+
+<div class="labeled-media-original">
+	<a href={href} target="_blank">{text}</a>
+</div>
