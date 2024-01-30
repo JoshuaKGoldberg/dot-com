@@ -11,6 +11,7 @@ title: "2023 In Review"
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 import meLiftingHandsOnStage from "./me-lifting-hands-on-stage.jpg";
+import npxJoshuaKGoldberg from "./npx-joshuakgoldberg.png";
 
 2023 was a fun year.
 It was my second year as a full-time independent open source maintainer.
@@ -32,18 +33,16 @@ Out of all that happened in 2022, here's a list of my favorite highlights.
 
 ### Conference Speaking
 
-Conferences -especially in-person ones- are great!
-You get to attend talks by and chat with wonderful people from all over the industry.
-I can't get enough of them.
+I'd thought 2022 was my big year of conferences, with a half dozen in-person ones.
+Then in 2023 I _really_ went hard, averaging a conference every 2-3 weeks for most of the year.
+My [2023 Conferences in Review](../2023-conferences-in-review) goes into them more.
 
-2022 was the year I really went big on speaking at in-person conferences.
-I talked in Berlin _(twice!)_, Brussels, Newquay, and Raleigh in the second half of the year.
-And at each and every one of those conferences, I met people in person who I still have interactions with online months later.
-Amazing.
+I'm really proud of my conference-going in 2023.
+I'm not a perfect conference-goer or conference-speaker, but I made great connections with people and became much more practiced as a presenter.
 
-Talking in-person at conferences is its own skill that I'm working on.
-You can see me get more comfortable with enunciation, stage presence, and storytelling as the months went on.
-I'm excited to keep getting better as a speaker - and hopefully keynote something in 2023.
+Networking and sharing information is also a huge boon for my role as an open source project maintainer.
+Conferences allow me to learn how people use the projects I work on.
+Which allows me to accordingly improve those projects, then give talks explaining those learnings.
 
 > See my [How I Apply to Conferences](../how-i-apply-to-conferences) post for more information on talking at conferences.
 
@@ -83,6 +82,7 @@ Separately from my open source work, I earned about $2,150 a month / $25,700 fro
 - ~$1,300 a month on average from passive _Learning TypeScript_ royalties
 - ~$7,100 total from consulting and other sponsored work, which I've since trimmed to zero
 - ~$3,000 total from podcasts, which has replaced consulting for side income
+- ~$200 total from Twitch
 
 That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 2022.
 
@@ -113,13 +113,78 @@ Plus I finally documented our maintenance practices and got the community Discor
 
 ### create-typescript-app
 
+I'd started a project called `template-typescript-node-package` back in 2022.
+At first I was targeting it as a nice basis for my personal open source projects.
+That's how I used it through the first half of 2023.
+
+Through the second half of 2023, I [renamed it to `create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/671) and generalized it so anybody can use it for TypeScript packages.
+`npx create-typescript-app` can now be used to create a new repo or migrate an existing one to the template's tooling.
+I [finished rolling it out to most of my other projects at the end of November](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/734).
+
+Working consistently on `create-typescript-app` was an excellent choice for 2023.
+It gave me opportunities to learn about, contribute to, and sometimes even create pieces of tooling that work together for as ideal a TypeScript repository as I can get to.
+And now all my repositories adhere to my personal standards for how I think they should behave.
+
+> See [Contributing to a create-typescript-app Repository](../contributing-to-a-create-typescript-app-repository) for a unified blog post walking through the tooling in those repositories.
+
+### JoshuaKGoldberg (Dot Com)
+
+I finally got around to consolidating my online blog and personal website into one website.
+There are two relevant repositories:
+
+- [`JoshuaKGoldberg/JoshuaKGoldberg`](https://github.com/JoshuaKGoldberg/JoshuaKGoldberg): My GitHub README, plus a `joshuakgoldberg` npm package containing metadata on my projects.
+  - I extracted out a [`github-sponsors-to-markdown`](https://github.com/JoshuaKGoldberg/github-sponsors-to-markdown) package for creating a Markdown table summarizing GitHub sponsors.
+- [`JoshuaKGoldberg/dot-com`](https://github.com/JoshuaKGoldberg/dot-com): This Astro site, which uses the `joshuakgoldberg` npm package to build its _Projects_ page.
+  - I extracted out an [`astro-plugin-konamimojisplosion`](https://github.com/JoshuaKGoldberg/astro-plugin-konamimojisplosion) package for ... well, find out for yourself. 😉
+
+<LabeledImage
+	alt="Running the npx joshuakgoldberg command in a terminal. It includes a brief bio about me and links to my social media. Text is in a bright blue-to-green gradient top-to-bottom."
+	description="Another byproduct: a cute little 'npx joshuakgoldberg' CLI runner."
+	src={npxJoshuaKGoldberg}
+/>
+
+### DefinitelyTyped: Offboarding TSLint and Onboarding dprint
+
+I'd [helped maintain and then deprecate TSLint](../tslint-maintenance) back in the 2019 era.
+But the gigantic [`DefinitelyTyped/DefinitelyTyped`](https://github.com/DefinitelyTyped/DefinitelyTyped) repository was still stuck on TSLint through 2023.
+That repository has a large set of custom tooling -much of which is defined in [`Microsoft/DefinitelyTyped-tools`](https://github.com/Microsoft/DefinitelyTyped-tools) that needed to port from TSLint to ESLint.
+
+Finishing the migration ended up requiring three main areas of work:
+
+- Switching DefinitelyTyped's usage of formatting rules to a dedicated formatter
+- Switching DefinitelyTyped's usage of non-formatting core and community TSLint rules to their ESLint equivalents
+- Switching DefinitelyTyped's custom TSLint rules to custom ESLint rules
+
 ### Mocha
 
-I joined [Mocha]
+[Mocha](https://mochajs.org) is the JavaScript test framework I learned how to unit test with.
+It fell out of maintenance for much of the last few years.
+I'm now one of [three new Mocha maintainers](https://github.com/mochajs/mocha/issues/5027) as of November.
+Which is super exciting for me and a great opportunity to help out the ecosystem.
+I'm pumped!
 
 ### Other Open Source Projects
 
-ts-api-utils
+A big part of my `create-typescript-app` template work involved finding the right projects for different developer tooling needs.
+Sometimes those projects didn't yet exist, or did exist and were no longer maintained.
+Choice project highlights include:
+
+- [`all-contributors-auto-action`](https://github.com/JoshuaKGoldberg/all-contributors-auto-action) & [`all-contributors-for-repository`](https://github.com/JoshuaKGoldberg/all-contributors-for-repository): Semi-automating [AllContributors](https://allcontributors.org) recognition based on GitHub commits, comments, issues, and pull requests
+- [`are-docs-informative`](https://github.com/JoshuaKGoldberg/are-docs-informative): Detects code comments that add no useful info. Now used in the [`jsdoc/informative-docs` ESLint rule](https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/informative-docs.md).
+- [`dedent`](https://github.com/dmnd/dedent): I took over project maintenance and refreshed the repository on GitHub. The project is pretty stable so I'm happy to not make any ground-breaking changes.
+- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type): I took over project maintenance, refreshed the repository on GitHub, and set in motion plans to use it in DefinitelyTyped soon.
+- [`eslint-plugin-package-json`](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json): I took over project maintenance, refreshed the repository on GitHub, worked with contributors to add a host of new rules, and added a big tracking issue to bring in all sorts of new features.
+- [`node-emoji`](https://github.com/omnidan/node-emoji): I joined as a maintainer, refreshed the repository on GitHub, and helped plan for the next major version.
+- [`prettier-plugin-curly`](https://github.com/JoshuaKGoldberg/prettier-plugin-curly): A Prettier plugin that enforces using `{}`s around blocks.
+
+I'm also particularly excited about a few projects unrelated to `create-typescript-app`:
+
+- [`ts-api-utils`](https://github.com/JoshuaKGoldberg/ts-api-utils): Replaces the unmaintained `tsutils` as a standard set of utility functions for TypeScript's API.
+- [`tidelift-me-up`](https://github.com/JoshuaKGoldberg/tidelift-me-up) & [`tidelift-me-up-site`](https://github.com/JoshuaKGoldberg/tidelift-me-up-site): Finds npm packages eligible for Tidelift funding.
+
+The full list of projects I work on -including ones I created and ones I joined- is on [joshuakgoldberg.com/projects](https://joshuakgoldberg.com/projects), under _All_.
+
+### Philly JS Club
 
 ## Missed Opportunities
 
