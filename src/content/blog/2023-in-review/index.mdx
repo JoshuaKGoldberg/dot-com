@@ -10,6 +10,7 @@ title: "2023 In Review"
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import { PieChart } from "~/components/PieChart";
 import meLiftingHandsOnStage from "./me-lifting-hands-on-stage.jpg";
 import npxJoshuaKGoldberg from "./npx-joshuakgoldberg.png";
 
@@ -53,8 +54,38 @@ Back in 2022 my big financial accomplishment was New York City minimum wage.
 For 2023, my equivalent accomplishment was [New York City living wage for an adult](https://livingwage.mit.edu/counties/36061).
 That's $25/hour, or about $4,000 a month / $48,000 a year (not including an additional ~$10-15k for health insurance).
 
-My total income is about $5,000 a month / $60,000 a year.
+My total income is about $5,300 a month / $63,600 a year.
 That income is a combination of direct open source wages and side projects.
+
+<PieChart
+	client:load
+	data={{
+		datasets: [
+			{
+				data: [2300, 1300, 590, 450, 300, 250, 110, 17],
+				label: "Income ($)",
+			},
+		],
+		labels: [
+			"typescript-eslint",
+			"Learning TypeScript royalties",
+			"Consulting",
+			"GitHub Sponsors",
+			"ESLint",
+			"Podcasts",
+			"Tidelift",
+			"Twitch",
+		],
+	}}
+	id="monthly-income-all-sources"
+	options={{
+		plugins: {
+			title: {
+				text: "Monthly Income - All Sources",
+			},
+		},
+	}}
+/>
 
 For context, I was earning more than three times that amount in base salary alone in industry.
 Which is how I was able to build up savings to go full time open source in the first place.
@@ -67,13 +98,41 @@ It lets us spend more time on the real open source projects or sponsoring newer 
 
 #### Direct Open Source Income
 
-My open source salary is about $2,860 a month / $34,300 a year:
+My open source salary came to about $3,160 a month / $38,000 a year:
 
-- ~$2,300 a month from typescript-eslint's revenue: mostly via [Open Collective](https://opencollective.com/typescript-eslint), with additional bits from [Tidelift](https://tidelift.com) and [Thanks.dev](http://thanks.dev)
+- ~$2,300 a month from typescript-eslint's revenue: mostly via [Open Collective](https://opencollective.com/typescript-eslint "typescript-eslint Open Collective"), with additional bits from [Tidelift](https://tidelift.com) and [Thanks.dev](http://thanks.dev)
 - ~$450 a month from [my personal GitHub Sponsors](https://github.com/sponsors/joshuakgoldberg)
+- ~$300 a month from [ESLint's Open Collective](https://opencollective.com/eslint)
 - ~$110 a month from my non-typescript-eslint packages lifted by Tidelift
 
-That is a ~68% increase over the $1,700 a month / $20,400 a year open source income of 2022.
+That's an ~85% increase over the $1,700 a month / $20,400 a year open source income of 2022.
+
+<PieChart
+	client:load
+	data={{
+		datasets: [
+			{
+				data: [2300, 450, 300, 110],
+				label: "Income ($)",
+			},
+		],
+		labels: ["typescript-eslint", "GitHub Sponsors", "ESLint", "Tidelift"],
+	}}
+	id="monthly-income-open-source"
+	options={{
+		plugins: {
+			title: {
+				display: true,
+				font: {
+					size: 16,
+				},
+				padding: 20,
+				fullSize: true,
+				text: "Monthly Income - Open Source",
+			},
+		},
+	}}
+/>
 
 #### Side Project Income
 
@@ -85,6 +144,32 @@ Separately from open source, I earned about $2,150 a month / $25,700 from side p
 - ~$200 total from Twitch
 
 That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 2022.
+
+<PieChart
+	client:load
+	data={{
+		datasets: [
+			{
+				data: [1300, 590, 250, 17],
+				label: "Income ($)",
+			},
+		],
+		labels: [
+			"Learning TypeScript royalties",
+			"Consulting",
+			"Podcasts",
+			"Twitch",
+		],
+	}}
+	id="monthly-income-side-projects"
+	options={{
+		plugins: {
+			title: {
+				text: "Monthly Income - Side Projects",
+			},
+		},
+	}}
+/>
 
 ## Open Source Projects
 
