@@ -1,5 +1,6 @@
 import {
 	type ActiveDataPoint,
+	ArcElement,
 	Chart,
 	Colors,
 	Legend,
@@ -34,7 +35,7 @@ export function PieChart(props: PieChartProps) {
 	 * otherwise you will have the most primitive UI
 	 */
 	onMount(() => {
-		Chart.register(Colors, Legend, Title, Tooltip);
+		Chart.register(ArcElement, Colors, Legend, Title, Tooltip);
 	});
 
 	return (
