@@ -14,9 +14,9 @@ import { PieChart } from "~/components/PieChart";
 import meLiftingHandsOnStage from "./me-lifting-hands-on-stage.jpg";
 import npxJoshuaKGoldberg from "./npx-joshuakgoldberg.png";
 
-2023 was a fun year.
-It was my second year as a full-time independent open source maintainer.
+2023 was a wild ride.
 If 2022 was around trying new things, 2023 was around consolidating on where I can have a positive impact.
+It was my second year as a full-time independent open source maintainer, as well as what may end up being my most conference-packed year of my life.
 
 <LabeledImage
 	alt="Me raising hands happily while giving a talk on stage, with code projected behind me"
@@ -39,9 +39,10 @@ Then in 2023 I _really_ went hard, averaging a conference every 2-3 weeks for mo
 My [2023 Conferences in Review](../2023-conferences-in-review) goes into them more.
 
 I'm really proud of my conference-going in 2023.
-I'm not a perfect conference-goer or conference-speaker, but I made great connections with people and became much more practiced as a presenter.
+I'm not a perfect conference-goer or conference-speaker, nor am I as practiced at them as many full time developer relations folks.
+But I made great connections with people and became much more practiced as a presenter.
 
-Networking and sharing information is also a huge boon for my role as an open source project maintainer.
+Networking and sharing information is also a boon for my role as an open source project maintainer.
 Conferences allow me to learn how people use the projects I work on.
 Which allows me to accordingly improve those projects, then give talks explaining those learnings.
 
@@ -215,9 +216,11 @@ There are two relevant repositories:
 - [`JoshuaKGoldberg/dot-com`](https://github.com/JoshuaKGoldberg/dot-com): This Astro site, which uses the `joshuakgoldberg` npm package to build its _Projects_ page.
   - I extracted out an [`astro-plugin-konamimojisplosion`](https://github.com/JoshuaKGoldberg/astro-plugin-konamimojisplosion) package for ... well, find out for yourself. 😉
 
+I also finally made one of those cute little `npx`-runnable CLIs for my name.
+
 <LabeledImage
 	alt="Running the npx joshuakgoldberg command in a terminal. It includes a brief bio about me and links to my social media. Text is in a bright blue-to-green gradient top-to-bottom."
-	description="Another byproduct: a cute little 'npx joshuakgoldberg' CLI runner."
+	description="It was surprisingly fun tinkering with color math to get the gradient I wanted."
 	src={npxJoshuaKGoldberg}
 />
 
@@ -230,8 +233,19 @@ That repository has a large set of custom tooling -much of which is defined in [
 Finishing the migration ended up requiring three main areas of work:
 
 - Switching DefinitelyTyped's usage of formatting rules to a dedicated formatter
+  - Tracking discussion: [Using a formatter for formatting (instead of lint rules)](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993)
 - Switching DefinitelyTyped's usage of non-formatting core and community TSLint rules to their ESLint equivalents
+  - Tracking issue: [Port builtin tslint rules](https://github.com/microsoft/DefinitelyTyped-tools/pull/830)
 - Switching DefinitelyTyped's custom TSLint rules to custom ESLint rules
+  - Tracking issue: [Port custom tslint rules to eslint](https://github.com/microsoft/DefinitelyTyped-tools/issues/648)
+
+We finished the move in December with [feat: remove TSLint](https://github.com/microsoft/DefinitelyTyped-tools/pull/866).
+That felt really, really good.
+Plus it's always nice to get a chance to work with TypeScript folks (shoutout Jake and Nathan!).
+
+The [npm `tslint` package](https://npmjs.com/package/tslint) weekly downloads dropped below 2 million a week after we finished our work.
+That's down from 3.5 at peak in 2021 and 2.5 million at the start of 2023.
+Progress.
 
 ### Mocha
 
@@ -250,7 +264,7 @@ Choice project highlights include:
 - [`all-contributors-auto-action`](https://github.com/JoshuaKGoldberg/all-contributors-auto-action) & [`all-contributors-for-repository`](https://github.com/JoshuaKGoldberg/all-contributors-for-repository): Semi-automating [AllContributors](https://allcontributors.org) recognition based on GitHub commits, comments, issues, and pull requests
 - [`are-docs-informative`](https://github.com/JoshuaKGoldberg/are-docs-informative): Detects code comments that add no useful info. Now used in the [`jsdoc/informative-docs` ESLint rule](https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/informative-docs.md).
 - [`dedent`](https://github.com/dmnd/dedent): I took over project maintenance and refreshed the repository on GitHub. The project is pretty stable so I'm happy to not make any ground-breaking changes.
-- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type): I took over project maintenance, refreshed the repository on GitHub, and set in motion plans to use it in DefinitelyTyped soon.
+- [`eslint-plugin-expect-type`](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type): I took over project maintenance, refreshed the repository on GitHub, and set in motion plans to use it in DefinitelyTyped.
 - [`eslint-plugin-package-json`](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json): I took over project maintenance, refreshed the repository on GitHub, worked with contributors to add a host of new rules, and added a big tracking issue to bring in all sorts of new features.
 - [`node-emoji`](https://github.com/omnidan/node-emoji): I joined as a maintainer, refreshed the repository on GitHub, and helped plan for the next major version.
 - [`prettier-plugin-curly`](https://github.com/JoshuaKGoldberg/prettier-plugin-curly): A Prettier plugin that enforces using `{}`s around blocks.
@@ -283,7 +297,7 @@ That's a ... pretty good year, I suppose?
 Room for improvement, but not a failure?
 C+?
 
-As they say: _"Ds get degrees, but Cs really please."_
+As they say: _"Ds get degrees, but Cs better please."_
 
 The following sections go through each of the high-level goals.
 
@@ -411,8 +425,11 @@ So I don't mind realizing that setting up guidebooks for posting frequently onli
 | ----------------------- | -------------- |
 | Set up companion videos | ❌ I opted out |
 
-Yeah, I never really had time for this.
-Maybe if there's a second edition of the book.
+I never really had time for this.
+In retrospect I should have known I wouldn't want to set up an entire production run for companion videos.
+
+I'll probably get to this if there's a second edition of the book.
+That wouldn't likely happen for at least a couple years.
 
 ### Goal: Twitch Streaming
 
@@ -426,7 +443,7 @@ I got somewhat consistent at Twitch streaming this year!
 It fell apart in months when I was traveling a lot.
 But when I was home, I kept at it.
 
-My streams are at the point where I consistently have around a dozen people join, and a small handful in the chat.
+My streams are at the point where I consistently have around a dozen people join, with a small handful active in the chat.
 Which is perfect.
 I like being able to put most of my energy into coding and conversations with a few friendly names.
 I've seen the multi-hundred-person streams of big influencers and have no interest in getting that noise.
@@ -444,10 +461,11 @@ I've seen the multi-hundred-person streams of big influencers and have no intere
 
 There's a common theme with personal health...
 When I'm traveling, it's much harder to keep up with it.
+When I'm at home consistently, I'm fairly ok.
 
 Personal health is so very important.
-I don't work as effectively when I don't eat healthy, exercise, get good sleep, and manage my stress levels.
-My insomnia in particular gets bad when I don't.
+When I don't eat healthy, exercise, get good sleep, and manage my stress levels, I don't work as effectively.
+My insomnia in particular worsens when my health management gets sloppy.
 I don't have the physique I want either, but it's not much worse than at the beginning of the year.
 
 By the way, protip: I got Lasik in January 2023 and it was _excellent_.
