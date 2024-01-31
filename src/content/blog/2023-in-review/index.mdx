@@ -49,7 +49,7 @@ Which allows me to accordingly improve those projects, then give talks explainin
 ### Living Wage in Open Source
 
 Yup.
-One of my biggest accomplishments in 2022 was New York City minimum wage.
+Back in 2022 my big financial accomplishment was New York City minimum wage.
 For 2023, my equivalent accomplishment was [New York City living wage for an adult](https://livingwage.mit.edu/counties/36061).
 That's $25/hour, or about $4,000 a month / $48,000 a year (not including an additional ~$10-15k for health insurance).
 
@@ -71,13 +71,13 @@ My open source salary is about $2,860 a month / $34,300 a year:
 
 - ~$2,300 a month from typescript-eslint's revenue: mostly via [Open Collective](https://opencollective.com/typescript-eslint), with additional bits from [Tidelift](https://tidelift.com) and [Thanks.dev](http://thanks.dev)
 - ~$450 a month from [my personal GitHub Sponsors](https://github.com/sponsors/joshuakgoldberg)
-- ~$110 a month from my non-typescript-eslint packages lifted by TideLift
+- ~$110 a month from my non-typescript-eslint packages lifted by Tidelift
 
 That is a ~68% increase over the $1,700 a month / $20,400 a year open source income of 2022.
 
 #### Side Project Income
 
-Separately from my open source work, I earned about $2,150 a month / $25,700 from side projects:
+Separately from open source, I earned about $2,150 a month / $25,700 from side projects:
 
 - ~$1,300 a month on average from passive _Learning TypeScript_ royalties
 - ~$7,100 total from consulting and other sponsored work, which I've since trimmed to zero
@@ -85,6 +85,11 @@ Separately from my open source work, I earned about $2,150 a month / $25,700 fro
 - ~$200 total from Twitch
 
 That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 2022.
+
+## Open Source Projects
+
+Enough of looking at which past goals I did or didn't do.
+Let's look at the actual point of my career: pushing open source coding forward
 
 ### typescript-eslint
 
@@ -143,7 +148,7 @@ There are two relevant repositories:
 	src={npxJoshuaKGoldberg}
 />
 
-### DefinitelyTyped: Offboarding TSLint and Onboarding dprint
+### DefinitelyTyped: From TSLint To dprint
 
 I'd [helped maintain and then deprecate TSLint](../tslint-maintenance) back in the 2019 era.
 But the gigantic [`DefinitelyTyped/DefinitelyTyped`](https://github.com/DefinitelyTyped/DefinitelyTyped) repository was still stuck on TSLint through 2023.
@@ -184,14 +189,113 @@ I'm also particularly excited about a few projects unrelated to `create-typescri
 
 The full list of projects I work on -including ones I created and ones I joined- is on [joshuakgoldberg.com/projects](https://joshuakgoldberg.com/projects), under _All_.
 
-### Philly JS Club
+## Year-Long Goals
 
-## Missed Opportunities
+I'd mentioned yearly goals in [My Plans for 2023](../my-plans-for-2023) last year.
+Some of those goals had concrete objectives.
+Did I satisfy those objectives?
 
-As fun as 2022 was, I missed out on some key areas of growth.
-Hindsight is 20/20 and I do wish I'd have had the time and focus to invest in these things more.
+### Goals: typescript-eslint
 
-I hope I can grow in this area through 2023.
+| Objective                                 | Status                                            |
+| ----------------------------------------- | ------------------------------------------------- |
+| Stable `6.0.0`                            | ✅ Released                                       |
+| Establish performance improvements for v7 | ✅ Established                                    |
+| Systemize engaging with contributors      | ⏳ We did this ad hoc, but didn't set up systems. |
+| Spotlighting contributors on social media | ❌ I didn't start on this.                        |
+
+I hit the technical goals nicely.
+The project's v6 release went well and we've got a host of great [improvements lined up for v7](https://github.com/typescript-eslint/typescript-eslint/milestone/9).
+
+For maintenance processes, I did merge our [v1 maintenance docs](https://github.com/typescript-eslint/typescript-eslint/pull/8020) and we did start reaching out to folks and being more active on the Discord.
+But that took until December and I haven't yet had time to sett up tasks (let alone automations) for checking on repeat contributors, sending them money, or shouting them out on social media.
+That'll be on my 2024 goals for sure.
+
+### Goals: template-typescript-node-package & Other, Smaller Packages
+
+| Objective                                       | Status             |
+| ----------------------------------------------- | ------------------ |
+| Make the best starter template of its kind      | ✅ In my opinion   |
+| Create a suite of assorted open source projects | ✅ Created         |
+| Use it in all my applicable repositories        | ✅ It's rolled out |
+
+Smash success on this one, I think.
+I've yet to see an equivalent TypeScript starter template pack in as much tooling awesomeness or provide as much configurability.
+I [renamed the package to `create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/671) and [rolled it out all my active, applicable repositories](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/734).
+Yay!
+
+### Goal: TypeScript
+
+| Objective                          | Status            |
+| ---------------------------------- | ----------------- |
+| Send two PRs to TypeScript a month | ❌ Not even close |
+
+[Here's a query for all PRs that I sent to TypeScript in 2023](https://github.com/Microsoft/TypeScript/pulls?q=is%3Apr+author%3AJoshuaKGoldberg+created%3A2023-01-01..2024-01-01).
+That's less than one a month, including a reference PR not meant for merging.
+
+I think there were three main reasons why I didn't contribute to TypeScript much this year:
+
+- I became much more busy with my other open source work -- which, unlike TypeScript, I get funding for
+- Much of my TypeScript energy went towards the [DefinitelyTyped adoption of dprint](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993)
+- [Mateusz Burzyński](https://github.com/Andarist) and [Oleksandr Tarasyuk](https://github.com/a-tarasyuk) got most of the issues I would have wanted solved 😂
+
+I see this one as less of a goal _failure_ and more of a goal _change_.
+
+### Goal: Open Contributions Project
+
+| Objective                              | Status      |
+| -------------------------------------- | ----------- |
+| Create a set of contribution resources | ❌ Canceled |
+
+I still believe that getting more companies to contribute money and time to open source software is a critical issue for the tech industry.
+I'd wanted to start an ["Open Contributions Project" initiative](https://github.com/OpenContributionsProject) to make resources for people trying to get their company to sponsor open source.
+The plan was to eventually expand into tracking which companies are or aren't doing their fair share.
+
+But, none of us working on it had the time to really give it the attention it deserved.
+So we tabled it.
+
+In retrospect, I should have known I wouldn't have time for this.
+I have a lot of open source goals that clearly come first.
+Ah well.
+
+### Goal: Community Engagement & Conferences
+
+| Objective                                   | Status              |
+| ------------------------------------------- | ------------------- |
+| Be a known part of the TypeScript community | ✅ I suppose so?    |
+| Be a regular speaker at conferences         | ✅ Multiple a month |
+| Be a regularly high quality speaker         | ⏳ Sometimes        |
+| Follow up conferences with networking       | ⏳ Sometimes        |
+
+These goals were a little more intangible than some of the other ones.
+But I think I understand where I stand well.
+
+I'm definitely a known part of the TypeScript community.
+I'm not as much of a go-to as Matt Pocock / Total TypeScript, but I still see my reputation sometimes precede me.
+And thanks to the conferences and open source work, I know people in a lot of neighboring projects.
+It's cool to see a personal network grow.
+
+My execution of conference talks and the subsequent networking could use some work.
+The talks themselves I covered in my [2023 Conferences In Review post](../2023-conferences-in-review).
+For deepening connections at conferences, it's happened _sometimes_.
+Going to fewer of them in 2024 will certainly help me be better at consistently doing this.
+
+### Goal: Blogging
+
+| Objective                                            | Status                     |
+| ---------------------------------------------------- | -------------------------- |
+| One blog post every two weeks                        | ⏳ Almost: 22 total posts  |
+| One personal blog post every two months              | ✅ Yes: 14 posts           |
+| One _Learning TypeScript_ blog post every two months | ❌ Not even close: 3 posts |
+| One typescript-eslint blog post every two months     | ⏳ Almost: 5 posts         |
+
+Mixed bag here.
+I'm happy that I became a regular personal blogger.
+I think my personal blog posts have been getting better over time, too.
+
+Not populating the _Learning TypeScript_ articles is a big miss, though.
+It's a space I think people find useful in general.
+And it helps sell copies of my book -- which is necessary to push for hard as an author.
 
 ## Closing Thoughts
 
