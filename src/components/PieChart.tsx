@@ -1,8 +1,16 @@
-import { Chart, Colors, Legend, Title, Tooltip } from "chart.js";
+import {
+	type ActiveDataPoint,
+	Chart,
+	Colors,
+	Legend,
+	Title,
+	Tooltip,
+} from "chart.js";
 import { type ChartProps, Pie } from "solid-chartjs";
 import { onMount } from "solid-js";
 
-export type PieChartProps = ChartProps & {
+export interface PieChartProps {
+	colors: string[];
 	data: NonNullable<ChartProps["data"]> & {
 		datasets: [
 			{
@@ -13,14 +21,8 @@ export type PieChartProps = ChartProps & {
 		labels: string[];
 	};
 	id: string;
-	options: ChartProps["options"] & {
-		plugins: {
-			title: {
-				text: string;
-			};
-		};
-	};
-};
+	title: string;
+}
 
 const fontBase = {
 	family: "League SpartanVariable",
@@ -39,7 +41,7 @@ export function PieChart(props: PieChartProps) {
 		<div
 			aria-label={[
 				"Pie chart: ",
-				props.options.plugins.title.text,
+				props.title,
 				". ",
 				props.data.datasets[0].label,
 				": ",
@@ -52,6 +54,12 @@ export function PieChart(props: PieChartProps) {
 			<Pie
 				data={props.data}
 				options={{
+					elements: {
+						arc: {
+							backgroundColor: ({ index }: ActiveDataPoint) =>
+								props.colors[index],
+						},
+					},
 					layout: {
 						padding: {
 							bottom: 20,
@@ -75,7 +83,7 @@ export function PieChart(props: PieChartProps) {
 							},
 							fullSize: true,
 							padding: 20,
-							...props.options.plugins.title,
+							text: props.title,
 						},
 					},
 					responsive: true,

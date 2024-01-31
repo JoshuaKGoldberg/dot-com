@@ -59,6 +59,16 @@ That income is a combination of direct open source wages and side projects.
 
 <PieChart
 	client:load
+	colors={[
+		"#2656c7",
+		"#e51b36",
+		"#95ab75",
+		"#2dba4e",
+		"#341bab",
+		"#777777",
+		"#f6914d",
+		"#9147ff",
+	]}
 	data={{
 		datasets: [
 			{
@@ -78,13 +88,7 @@ That income is a combination of direct open source wages and side projects.
 		],
 	}}
 	id="monthly-income-all-sources"
-	options={{
-		plugins: {
-			title: {
-				text: "Monthly Income - All Sources",
-			},
-		},
-	}}
+	title="Monthly Income - All Sources"
 />
 
 For context, I was earning more than three times that amount in base salary alone in industry.
@@ -100,7 +104,7 @@ It lets us spend more time on the real open source projects or sponsoring newer 
 
 My open source salary came to about $3,160 a month / $38,000 a year:
 
-- ~$2,300 a month from typescript-eslint's revenue: mostly via [Open Collective](https://opencollective.com/typescript-eslint "typescript-eslint Open Collective"), with additional bits from [Tidelift](https://tidelift.com) and [Thanks.dev](http://thanks.dev)
+- ~$2,300 a month from typescript-eslint's revenue: my shares of project income mostly via [Open Collective](https://opencollective.com/typescript-eslint "typescript-eslint Open Collective"), with additional contributions from [Tidelift](https://tidelift.com) and [Thanks.dev](http://thanks.dev)
 - ~$450 a month from [my personal GitHub Sponsors](https://github.com/sponsors/joshuakgoldberg)
 - ~$300 a month from [ESLint's Open Collective](https://opencollective.com/eslint)
 - ~$110 a month from my non-typescript-eslint packages lifted by Tidelift
@@ -109,6 +113,7 @@ That's an ~85% increase over the $1,700 a month / $20,400 a year open source inc
 
 <PieChart
 	client:load
+	colors={["#2656c7", "#2dba4e", "#341bab", "#f6914d"]}
 	data={{
 		datasets: [
 			{
@@ -119,19 +124,7 @@ That's an ~85% increase over the $1,700 a month / $20,400 a year open source inc
 		labels: ["typescript-eslint", "GitHub Sponsors", "ESLint", "Tidelift"],
 	}}
 	id="monthly-income-open-source"
-	options={{
-		plugins: {
-			title: {
-				display: true,
-				font: {
-					size: 16,
-				},
-				padding: 20,
-				fullSize: true,
-				text: "Monthly Income - Open Source",
-			},
-		},
-	}}
+	title="Monthly Income - Open Source"
 />
 
 #### Side Project Income
@@ -147,6 +140,7 @@ That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 
 
 <PieChart
 	client:load
+	colors={["#e51b36", "#95ab75", "#777777", "#9147ff"]}
 	data={{
 		datasets: [
 			{
@@ -162,13 +156,7 @@ That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 
 		],
 	}}
 	id="monthly-income-side-projects"
-	options={{
-		plugins: {
-			title: {
-				text: "Monthly Income - Side Projects",
-			},
-		},
-	}}
+	title="Monthly Income - Side Projects"
 />
 
 ## Open Source Projects
@@ -280,8 +268,6 @@ I'd mentioned yearly goals in [My Plans for 2023](../my-plans-for-2023) last yea
 Some of those goals had concrete objectives.
 Did I satisfy those objectives?
 
-...some of them!
-
 | Status     | Count | Percentage |
 | ---------- | ----- | ---------- |
 | Total      | 34    | _-_        |
@@ -289,18 +275,17 @@ Did I satisfy those objectives?
 | ⏳ Partial | 10    | 29%        |
 | ❌ Miss    | 7     | 21%        |
 
-Half of my goals I succeeded in.
+...some of them!
+
+Half of my goals I fully succeeded in.
 I got at least some of the way towards 79% of my goals.
 That's a ... pretty good year, I suppose?
-C+?
 Room for improvement, but not a failure?
+C+?
 
 As they say: _"Ds get degrees, but Cs really please."_
 
-The following sections go through each of the high-level goals I described in [My Plans for 2023](../my-plans-for-2023)
-Note that they don't capture many of the smaller, non-tangible things I worked in in 2023.
-I started and stopped rounds of mentorships, volunteered at bootcamps, and did all sorts of other smaller things.
-I ascribe to the _"[Slack](https://www.google.com/books/edition/Slack/XPQJAQAAMAAJ?hl=en)"_ ideology of always leaving a hefty percentage of room to let yourself grow and explore.
+The following sections go through each of the high-level goals.
 
 ### Goals: typescript-eslint
 
