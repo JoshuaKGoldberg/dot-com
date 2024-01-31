@@ -96,6 +96,20 @@
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
+.article table {
+	border-spacing: 0;
+	text-align: left;
+}
+
+.article th {
+	font-weight: var(--fontWeightBold);
+}
+
+.article :is(td, th) {
+	border-bottom: 1px solid var(--colorSubtle);
+	padding-top: 0.5rem;
+}
+
 @media (min-width: 1017px) {
 	.article {
 		max-width: calc(var(--widthSlim) + 4rem);
