@@ -9,7 +9,7 @@
 	}
 }
 
-.heroImage:not(.heroImageLoaded) {
+:global(.javascriptEnabled) .heroImage:not(.heroImageLoaded) {
 	opacity: 0;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .heroImage,
-.heroImage img {
+.heroImage :is(img, source) {
 	view-transition-name: none;
 
 	height: var(--imageSize);
@@ -34,6 +34,7 @@
 }
 
 .heroImage img {
+	display: block;
 	border-radius: 100%;
 	box-shadow: 0 3px 7px 3px var(--colorSubtle);
 	user-select: none;
