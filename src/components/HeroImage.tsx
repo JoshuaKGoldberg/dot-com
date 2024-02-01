@@ -21,10 +21,6 @@ export interface HeroImageProps {
 	src: ColorSchemeImages | string;
 }
 
-const [previousImage, setPreviousImage] = createSignal<string | undefined>(
-	undefined,
-);
-
 export function HeroImage(props: HeroImageProps) {
 	const src = createMemo(() =>
 		typeof props.src === "string"
@@ -34,68 +30,32 @@ export function HeroImage(props: HeroImageProps) {
 
 	const [loaded, setLoaded] = createSignal(false);
 
-	onCleanup(() => {
-		console.log("setting previous image", src().dark);
-		// setPreviousImage(src().dark);
-	});
-
 	const markLoaded = () => {
-		console.log("Loaded!");
-		setLoaded(true);
+		setTimeout(() => {
+			setLoaded(true);
+		});
 	};
 
-	console.log(
-		src().dark,
-		"vs",
-		previousImage(),
-		src().dark === previousImage(),
-	);
-
-	console.log(
-		"first clsx",
-		clsx(
-			styles.heroImage,
-			styles[props.size],
-			src().dark === previousImage() && styles.heroImageRepeated,
-			loaded() && styles.heroImageLoaded,
-			props.class,
-		),
-	);
-	createEffect(() => {
-		console.log(
-			src().dark,
-			"vs",
-			previousImage(),
-			src().dark === previousImage(),
-		);
-		console.log(
-			"now clsx",
-			clsx(
+	return (
+		<div
+			class={clsx(
 				styles.heroImage,
 				styles[props.size],
-				src().dark === previousImage() && styles.heroImageRepeated,
 				loaded() && styles.heroImageLoaded,
 				props.class,
-			),
-		);
-	});
-
-	const className = createMemo(() =>
-		clsx(
-			styles.heroImage,
-			styles[props.size],
-			src().dark === previousImage() && styles.heroImageRepeated,
-			// loaded() && styles.heroImageLoaded,
-			styles.heroImageLoaded,
-			props.class,
-		),
-	);
-
-	return (
-		<div class={className()}>
-			<picture transition:name="none">
-				<source media="(prefers-color-scheme: dark)" srcset={src().dark} />
-				<source media="(prefers-color-scheme: light)" srcset={src().light} />
+			)}
+		>
+			<picture>
+				<source
+					media="(prefers-color-scheme: dark)"
+					onLoad={markLoaded}
+					srcset={src().dark}
+				/>
+				<source
+					media="(prefers-color-scheme: light)"
+					onLoad={markLoaded}
+					srcset={src().light}
+				/>
 				<img
 					alt={props.alt}
 					class={props.size}
