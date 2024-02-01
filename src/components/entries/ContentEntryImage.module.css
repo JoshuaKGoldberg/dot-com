@@ -1,14 +1,33 @@
+@keyframes fadeIn {
+	from {
+		filter: blur(3px);
+		opacity: 0;
+	}
+	to {
+		filter: none;
+		opacity: 1;
+	}
+}
+
 .contentEntryImage {
+	display: block;
 	height: 3.5rem;
 	width: 3.5rem;
 	user-select: none;
+}
+
+:global(.javascriptEnabled) .contentEntryImage:not(.contentEntryImageLoaded) {
+	opacity: 0;
+}
+
+.contentEntryImageLoaded {
+	animation: var(--transitionSlow) fadeIn;
 }
 
 .round {
 	border-radius: 100%;
 }
 
-/* todo: switch to webp or avif or some such... or Astro images? */
 .contentEntryImage[src$=".png"] {
 	image-rendering: pixelated;
 }
