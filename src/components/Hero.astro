@@ -1,5 +1,5 @@
 ---
-import HeroImage, { type Props as HeroImageProps } from "./HeroImage.astro";
+import { HeroImage, type HeroImageProps } from "./HeroImage";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 <div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<HeroImage {...Astro.props.image} size="large" />
+		<HeroImage client:load {...Astro.props.image} size="large" />
 	</div>
 	<div class="half second">
 		<HeroTitle>

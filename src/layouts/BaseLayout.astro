@@ -22,6 +22,9 @@ const { class: className, description, image, title } = Astro.props;
 
 <html lang="en">
 	<Head description={description} image={image} title={title} />
+	<script>
+		document.body.classList.add("javascriptEnabled");
+	</script>
 	<div id="#top"></div>
 	<MainArea as="body" class={className}>
 		<SkipLinks />
