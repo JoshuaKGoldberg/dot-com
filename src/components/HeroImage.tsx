@@ -15,8 +15,6 @@ export interface HeroImageProps {
 	src: ColorSchemeImages | string;
 }
 
-const [previousImage, setPreviousImage] = createSignal<string | undefined>();
-
 export function HeroImage(props: HeroImageProps) {
 	const src = createMemo(() =>
 		typeof props.src === "string"
@@ -29,14 +27,6 @@ export function HeroImage(props: HeroImageProps) {
 	const markLoaded = () => {
 		setTimeout(() => {
 			setLoaded(true);
-
-			const current = src().dark;
-
-			setTimeout(() => {
-				if (current === src().dark) {
-					setPreviousImage(current);
-				}
-			}, 500);
 		});
 	};
 
@@ -46,7 +36,6 @@ export function HeroImage(props: HeroImageProps) {
 				styles.heroImage,
 				styles[props.size],
 				loaded() && styles.heroImageLoaded,
-				previousImage() === src().dark && styles.heroImageRepeated,
 				props.class,
 			)}
 		>
