@@ -13,7 +13,7 @@
 	opacity: 0;
 }
 
-.heroImageLoaded {
+.heroImageLoaded:not(.heroImageRepeated) {
 	animation: var(--transitionSlow) fadeIn;
 }
 
