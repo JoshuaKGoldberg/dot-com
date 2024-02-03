@@ -26,11 +26,11 @@
 }
 
 .heroImage.small {
-	--imageSize: clamp(4rem, 12vmin, 8rem);
+	--imageSize: var(--heroSizeSmall);
 }
 
 .heroImage.large {
-	--imageSize: clamp(4rem, 20vmin, 10rem);
+	--imageSize: var(--heroSizeLarge);
 }
 
 .heroImage img {
@@ -41,23 +41,9 @@
 }
 
 @media (min-width: 700px) {
-	.heroImage.small {
-		--imageSize: 128px;
-	}
-
-	.heroImage.large {
-		--imageSize: clamp(12rem, 32vw, 16rem);
-	}
-
 	.heroImage img {
 		max-height: 100%;
 		max-width: 100%;
 		box-shadow: 0 3px 14px 0 var(--colorSubtle);
-	}
-}
-
-@media (min-width: 1017px) {
-	.heroImage.large {
-		--imageSize: 256px;
 	}
 }

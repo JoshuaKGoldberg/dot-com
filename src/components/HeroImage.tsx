@@ -15,6 +15,8 @@ export interface HeroImageProps {
 	src: ColorSchemeImages | string;
 }
 
+type Load = "initial" | "loaded" | "loading";
+
 export function HeroImage(props: HeroImageProps) {
 	const src = createMemo(() =>
 		typeof props.src === "string"
@@ -22,11 +24,15 @@ export function HeroImage(props: HeroImageProps) {
 			: props.src,
 	);
 
-	const [loaded, setLoaded] = createSignal(false);
+	const [load, setLoad] = createSignal<Load>("initial");
+
+	setTimeout(() => {
+		setLoad("loading");
+	});
 
 	const markLoaded = () => {
 		setTimeout(() => {
-			setLoaded(true);
+			setLoad("loaded");
 		});
 	};
 
@@ -35,7 +41,8 @@ export function HeroImage(props: HeroImageProps) {
 			class={clsx(
 				styles.heroImage,
 				styles[props.size],
-				loaded() && styles.heroImageLoaded,
+				load() === "loaded" && styles.heroImageLoaded,
+				load() === "loading" && styles.heroImageLoading,
 				props.class,
 			)}
 		>

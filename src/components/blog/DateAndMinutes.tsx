@@ -22,11 +22,11 @@ export function DateAndMinutes(props: DateAndMinutesProps) {
 				month: "short",
 				year: props.year,
 			})}
-			<span class={styles.between} />
-			{estimate()} minute read
+			<span class={styles.betweenDateAndTime} />
+			<span class={styles.together}>{estimate()} minute read</span>
 			{props.children && (
 				<>
-					<span class={styles.between} />
+					<span class={styles.beforeChildren} />
 					{props.children}
 				</>
 			)}
