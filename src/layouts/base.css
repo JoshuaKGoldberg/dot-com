@@ -33,6 +33,9 @@
 
 		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
 
+		--heroSizeSmall: clamp(5rem, 12vmin, 9rem);
+		--heroSizeLarge: clamp(6rem, 20vmin, 12rem);
+
 		--widthFull: 63rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
@@ -130,5 +133,18 @@
 		body {
 			scroll-behavior: smooth;
 		}
+	}
+}
+
+@media (min-width: 700px) {
+	:root {
+		--heroSizeSmall: 128px;
+		--heroSizeLarge: clamp(12rem, 32vw, 16rem);
+	}
+}
+
+@media (min-width: 1017px) {
+	:root {
+		--heroSizeLarge: 256px;
 	}
 }

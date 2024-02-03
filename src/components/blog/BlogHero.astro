@@ -20,12 +20,7 @@ interface Props {
 <div class:list={["blogHero", Astro.props.class]}>
 	<div class="left">
 		<div class="primary">
-			{
-				Astro.props.image && (
-					<HeroImage {...Astro.props.image} class="image" size="small" />
-				)
-			}
-			<div>
+			<div class="hero-title">
 				<HeroTitle>
 					{
 						Astro.props.title
@@ -33,6 +28,20 @@ interface Props {
 							.replaceAll("`", "")
 					}
 				</HeroTitle>
+			</div>
+			{
+				Astro.props.image && (
+					<div class="hero-image">
+						<HeroImage
+							client:load
+							{...Astro.props.image}
+							class="image"
+							size="small"
+						/>
+					</div>
+				)
+			}
+			<div class="hero-tertiary">
 				<HeroTertiary>
 					<DateAndMinutes
 						body={Astro.props.body}
@@ -69,24 +78,61 @@ interface Props {
 </div>
 
 <style>
-	.image {
-		float: right;
+	.primary {
+		--imageSize: var(--heroSizeSmall);
+
+		display: grid;
+		column-gap: 0.5rem;
+		grid-template-columns: auto var(--imageSize);
+		grid-template-rows: max-content max-content auto;
+		width: 100%;
+	}
+
+	.hero-image {
+		grid-column: 2;
+		grid-row: 1 / 3;
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.hero-title {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.hero-tertiary {
+		grid-column: 1 / 3;
 	}
 
 	.download {
 		margin-top: 1.5rem;
 	}
 
+	@media (min-width: 490px) {
+		.hero-tertiary {
+			grid-row: 2;
+		}
+	}
+
 	@media (min-width: 700px) {
 		.primary {
-			display: grid;
-			margin-bottom: 2rem;
-			width: 100%;
+			grid-template-columns: var(--imageSize) auto;
+			grid-template-rows: auto;
+			margin-bottom: 1.5rem;
+			column-gap: 1.5rem;
 		}
 
-		.primary:has(.image) {
-			gap: 1.5rem;
-			grid-template-columns: min-content auto;
+		.primary {
+			grid-column: 2;
+		}
+
+		.hero-image {
+			grid-column: 1;
+		}
+
+		.hero-tertiary {
+			grid-column: 2;
 		}
 	}
 
