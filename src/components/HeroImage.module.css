@@ -14,7 +14,7 @@
 }
 
 .heroImageLoaded {
-	animation: var(--transitionSlow) fadeIn;
+	animation: var(--transitionMedium) fadeIn;
 }
 
 .heroImage,
