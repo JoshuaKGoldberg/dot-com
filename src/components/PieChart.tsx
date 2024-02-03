@@ -27,10 +27,6 @@ export interface PieChartProps {
 }
 
 export function PieChart(props: PieChartProps) {
-	/**
-	 * You must register optional elements before using the chart,
-	 * otherwise you will have the most primitive UI
-	 */
 	onMount(() => {
 		Chart.register(ArcElement, Colors, Tooltip);
 	});
