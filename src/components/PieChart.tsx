@@ -50,7 +50,6 @@ export function PieChart(props: PieChartProps) {
 					gap: "0.5rem 1rem",
 					"justify-content": "center",
 					margin: "0.75rem 0",
-					"max-height": "25rem",
 				}}
 			>
 				<For each={props.data.datasets[0].data.map((data, i) => [data, i])}>
@@ -79,24 +78,30 @@ export function PieChart(props: PieChartProps) {
 					)}
 				</For>
 			</figcaption>
-			<Pie
-				data={props.data}
-				options={{
-					elements: {
-						arc: {
-							backgroundColor: ({ index }: ActiveDataPoint) =>
-								props.colors[index],
-						},
-					},
-					layout: {
-						padding: {
-							bottom: 20,
-						},
-					},
-					maintainAspectRatio: true,
-					responsive: true,
+			<div
+				style={{
+					"max-height": "25rem",
 				}}
-			/>
+			>
+				<Pie
+					data={props.data}
+					options={{
+						elements: {
+							arc: {
+								backgroundColor: ({ index }: ActiveDataPoint) =>
+									props.colors[index],
+							},
+						},
+						layout: {
+							padding: {
+								bottom: 20,
+							},
+						},
+						maintainAspectRatio: true,
+						responsive: true,
+					}}
+				/>
+			</div>
 		</figure>
 	);
 }
