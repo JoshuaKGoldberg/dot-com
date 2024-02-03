@@ -3,12 +3,13 @@ import {
 	ArcElement,
 	Chart,
 	Colors,
-	Legend,
-	Title,
 	Tooltip,
 } from "chart.js";
 import { type ChartProps, Pie } from "solid-chartjs";
-import { onMount } from "solid-js";
+import { For, onMount } from "solid-js";
+
+import styles from "./PieChart.module.css";
+import { Text } from "./Text";
 
 export interface PieChartProps {
 	colors: string[];
@@ -25,33 +26,33 @@ export interface PieChartProps {
 	title: string;
 }
 
-const fontBase = {
-	family: "League SpartanVariable",
-};
-
 export function PieChart(props: PieChartProps) {
 	/**
 	 * You must register optional elements before using the chart,
 	 * otherwise you will have the most primitive UI
 	 */
 	onMount(() => {
-		Chart.register(ArcElement, Colors, Legend, Title, Tooltip);
+		Chart.register(ArcElement, Colors, Tooltip);
 	});
 
 	return (
-		<div
-			aria-label={[
-				"Pie chart: ",
-				props.title,
-				". ",
-				props.data.datasets[0].label,
-				": ",
-				props.data.datasets[0].data
-					.map((value, i) => `${props.data.labels[i]}, ${value}`)
-					.join("; "),
-				".",
-			].join("")}
-		>
+		<figure class={styles.figure}>
+			<h4 class={styles.title}>{props.title}</h4>
+			<figcaption class={styles.captions}>
+				<For each={props.data.datasets[0].data.map((data, i) => [data, i])}>
+					{([value, i]) => (
+						<Text as="div" class={styles.caption} fontSize="smaller">
+							<span
+								class={styles.colorBlock}
+								style={{ "background-color": props.colors[i] }}
+							/>
+							<span>
+								{props.data.labels[i]}: ${value}
+							</span>
+						</Text>
+					)}
+				</For>
+			</figcaption>
 			<Pie
 				data={props.data}
 				options={{
@@ -66,30 +67,10 @@ export function PieChart(props: PieChartProps) {
 							bottom: 20,
 						},
 					},
-					maintainAspectRatio: false,
-					plugins: {
-						legend: {
-							labels: {
-								font: {
-									...fontBase,
-									size: 16,
-								},
-							},
-						},
-						title: {
-							display: true,
-							font: {
-								...fontBase,
-								size: 20,
-							},
-							fullSize: true,
-							padding: 20,
-							text: props.title,
-						},
-					},
+					maintainAspectRatio: true,
 					responsive: true,
 				}}
 			/>
-		</div>
+		</figure>
 	);
 }

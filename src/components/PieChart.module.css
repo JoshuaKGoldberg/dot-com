@@ -1,0 +1,34 @@
+.figure {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+
+.figure > * {
+	max-height: 25rem;
+}
+
+.title {
+	text-align: center;
+}
+
+.captions {
+	justify-content: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	margin: 0.75rem 0;
+}
+
+.caption {
+	align-items: baseline;
+	display: inline-flex;
+	gap: 0.35rem;
+}
+
+.colorBlock {
+	display: inline-block;
+	width: 1.5rem;
+	height: 0.7rem;
+}
