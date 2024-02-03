@@ -1,5 +1,3 @@
-import styles from "./LoopedVideo.module.css";
-
 export interface LoopedVideoProps {
 	src: string;
 	title: string;
@@ -9,7 +7,6 @@ export function LoopedVideo(props: LoopedVideoProps) {
 	return (
 		<video
 			autoplay
-			class={styles.loopedVideo}
 			muted
 			ref={(element) => {
 				const media = window.matchMedia("(prefers-reduced-motion: reduce)");
