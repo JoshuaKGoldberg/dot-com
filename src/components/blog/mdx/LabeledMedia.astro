@@ -45,6 +45,7 @@ const descriptions =
 		display: block;
 		margin-top: 1rem;
 	}
+
 	.labeled-media-note {
 		font-size: 0.9em;
 		padding-bottom: 1rem;
@@ -57,5 +58,14 @@ const descriptions =
 
 	.labeled-media-original::before {
 		content: "[";
+	}
+
+	/* Ideally these would be in a LoopVideo.module.css... */
+	/* https://github.com/JoshuaKGoldberg/dot-com/issues/190 */
+	.labeled-media-media video {
+		margin: auto;
+		max-height: fit-content;
+		max-width: fit-content;
+		width: 100%;
 	}
 </style>
