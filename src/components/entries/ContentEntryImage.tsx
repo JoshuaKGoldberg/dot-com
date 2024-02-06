@@ -33,6 +33,7 @@ export function ContentEntryImage(props: ContentEntryImageProps) {
 				variants[props.variant],
 				loaded() && styles.contentEntryImageLoaded,
 			)}
+			loading="lazy"
 			onLoad={markLoaded}
 			ref={(element) => {
 				if (element.complete) {
