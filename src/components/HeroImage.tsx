@@ -60,6 +60,7 @@ export function HeroImage(props: HeroImageProps) {
 				<img
 					alt={props.alt}
 					class={props.size}
+					loading="lazy"
 					onLoad={markLoaded}
 					ref={(element) => {
 						if (element.complete) {
