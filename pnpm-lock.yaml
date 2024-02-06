@@ -126,8 +126,8 @@ dependencies:
     specifier: ^2.4.6
     version: 2.4.6(prettier@3.0.3)
   reading-time:
-    specifier: ^1.5.0
-    version: 1.5.0
+    specifier: ^2.0.0-1
+    version: 2.0.0-1
   sentences-per-line:
     specifier: ^0.2.1
     version: 0.2.1
@@ -7256,8 +7256,8 @@ packages:
       picomatch: 2.3.1
     dev: false
 
-  /reading-time@1.5.0:
-    resolution: {integrity: sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==}
+  /reading-time@2.0.0-1:
+    resolution: {integrity: sha512-5Eoo17ZGqH2L0jmMZUNKARiGAX3NCC0LR+mDHTX+nMPqFSRwMQrsxhI9NOSEfzH8E1W5vGAKFcyQAk3Rla1WuA==}
     dev: false
 
   /redent@3.0.0:
