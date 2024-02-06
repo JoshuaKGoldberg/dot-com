@@ -30,6 +30,7 @@ const blogs = await getCollection("blog");
 	<BodyContents>
 		<BlogsGrouped
 			blogs={blogs.sort((a, b) => +b.data.pubDate - +a.data.pubDate)}
+			client:load
 		/>
 	</BodyContents>
 </HeroLayout>
