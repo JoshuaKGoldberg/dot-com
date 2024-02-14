@@ -1,26 +1,22 @@
 {
-  "files": [
-    "README.md"
-  ],
-  "imageSize": 100,
-  "commit": false,
-  "commitType": "docs",
-  "commitConvention": "angular",
-  "contributors": [
-    {
-      "login": "agulen",
-      "name": "Altan Gulen",
-      "avatar_url": "https://avatars.githubusercontent.com/u/3536080?v=4",
-      "profile": "https://github.com/agulen",
-      "contributions": [
-        "ideas"
-      ]
-    }
-  ],
-  "contributorsPerLine": 7,
-  "skipCi": true,
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "projectName": "dot-com",
-  "projectOwner": "JoshuaKGoldberg"
+	"files": ["README.md"],
+	"imageSize": 100,
+	"commit": false,
+	"commitType": "docs",
+	"commitConvention": "angular",
+	"contributors": [
+		{
+			"login": "agulen",
+			"name": "Altan Gulen",
+			"avatar_url": "https://avatars.githubusercontent.com/u/3536080?v=4",
+			"profile": "https://github.com/agulen",
+			"contributions": ["ideas"]
+		}
+	],
+	"contributorsPerLine": 7,
+	"skipCi": true,
+	"repoType": "github",
+	"repoHost": "https://github.com",
+	"projectName": "dot-com",
+	"projectOwner": "JoshuaKGoldberg"
 }
