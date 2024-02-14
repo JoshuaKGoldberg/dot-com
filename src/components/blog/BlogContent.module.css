@@ -12,20 +12,28 @@
 	text-decoration: underline;
 }
 
-.article :is(h2, h3, h4) {
+.article :is(h2, h3, h4, h5) {
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
 .article h2 {
+	font-size: 2rem;
 	margin-top: 2rem;
 }
 
 .article h3 {
+	font-size: 1.75rem;
 	margin-top: 1rem;
 }
 
 .article h4 {
+	font-size: 1.5rem;
 	margin-top: 0.75rem;
+}
+
+.article h5 {
+	font-size: 1.35rem;
+	margin-top: 0.5rem;
 }
 
 .article code {
@@ -64,7 +72,7 @@
 	);
 }
 
-.article :is(h2, h3, h4) + blockquote {
+.article :is(h2, h3, h4, h5) + blockquote {
 	margin: 0;
 }
 
