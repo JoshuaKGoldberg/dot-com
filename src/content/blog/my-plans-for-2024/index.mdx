@@ -16,9 +16,9 @@ I've learned it's important -especially when you're independent like me and have
 I posted my [2023 In Review](/blog/2023-in-review) blog a couple of weeks ago, at the end of January.
 So now it's time to look forward to the remaining ~10-11 months of this year and figure out what I'm going to be doing.
 
-As with last year's [My Plans for 2023](/blog/my-plans-for-2023), This post is 40% a reference for anybody curious about what a full time open source maintainer's life is like... and 60% a form of self-motivation to actually do the things.
+As with last year's [My Plans for 2023](/blog/my-plans-for-2023), this post is 40% a reference for anybody curious about what a full time open source maintainer's life is like... and 60% a form of self-motivation to actually do the things.
 
-Each of the following sections is a key area I'm going to invest my time in for 2023, in decreasing order of time spent.
+Each of the following sections is a key area I'm going to invest my time in for 2023, in decreasing order of time spent during working hours.
 
 - [Open Source](#open-source)
 - [Community Engagement](#community-engagement)
@@ -60,7 +60,7 @@ typescript-eslint is still my primary project for 2024.
 I spend the most time on it and consider it my most notable contribution to the world of TypeScript.
 Beyond standard maintenance and development, I've got a few key points planned for it.
 
-##### typescript-eslint Performance
+##### Performance
 
 > Objective: Release typescript-eslint@v8 with significant performance improvements.
 
@@ -80,11 +80,11 @@ It'll likely go through a similar multi-month beta process as v6 did.
 I also plan on setting up some kind of performance tooling project that can create projects of various sizes, run linting on them, and compare how time spent scales with project size.
 My hope is that the performance tooling in particular will help us pinpoint bottlenecks in the new project service option.
 
-##### typescript-eslint Committer Team Expansion
+##### Committer Team Expansion
 
 > Objective: Onboard two new consistently active committer team members.
 
-Maintaining open source projects can be difficult and time-consuming... but if you can get more people to join you, it gets easier and less time-consuming!
+Maintaining open source projects can be difficult and time-consuming... but if you can get more people to join you, it gets better!
 Following our [formalizing our project governance v1](https://github.com/typescript-eslint/typescript-eslint/discussions/7103) near the end of last year, we've been better able to track when community folks are stepping up to help the project.
 We've even already identified several great candidates to join the committer team.
 
@@ -93,7 +93,7 @@ Doing so would increase the rate at which we can push issues and pull requests t
 It'd also test out our onboarding and maintenance processes - which I'm sure will need iteration.
 Lastly, as I've also never done this before, going through the process will give me valuable experience that I hope to keep using in the future.
 
-##### typescript-eslint Documentation
+##### Documentation
 
 > Objective: Finish overhauls of committing, maintenance, and Promise-related documentation.
 
@@ -108,7 +108,8 @@ The remaining most pressing reports of user pain seem to now be coming from two 
   It's a real pain.
   I'm hopeful the new project service option will eliminate this entire classification of user pain by making it much more straightforward to generate types for an out-of-TSConfig file.
 - Promises: In particular [`@typescript-eslint/no-floating-promises`](https://typescript-eslint.io/rules/no-floating-promises).
-  Our rules around asynchronous code are divisive: some users love the bug-catching; others think they're maniacally pedantic.
+  Our rules around asynchronous code are divisive.
+  Some users love the bug-catching; others think they're maniacally pedantic.
   Between [Docs: Overhaul no-floating-promise messages and docs](https://github.com/typescript-eslint/typescript-eslint/issues/8088) and [Enhancement: [no-floating-promises] add an 'allowForKnownSafePromises' option](https://github.com/typescript-eslint/typescript-eslint/issues/7008), I'm hopeful we can make this experience universally ~loved~ not hated.
 
 I'd also like to set up a large set of clean, quick examples of using typescript-eslint.
@@ -143,7 +144,7 @@ It's a fast, stable alternative that's higher-level than the new `node:test` and
 
 Our goal is to keep Mocha afloat.
 We don't plan on releasing any major breaking changes or earth-shattering new features.
-We mostly and keep the project up with other test frameworks.
+We mostly want to keep the project up with the basic expectations developers have around testing.
 
 That will include roughly three areas of investment:
 
@@ -155,26 +156,25 @@ I'll consider maintaining Mocha a success if all those are stable at the end of 
 
 #### [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)
 
-> Objective: Simplify the template to have 25% fewer root-level files.
+> Objective: Simplify the template to have 20% fewer root-level files.
 >
-> Objective: Make migrating an existing single-project or monorepo repository with divergent tooling needs a pleasant experience.
+> Objective: Make migrating a customized single-project or monorepo repository a pleasant experience.
 >
 > Objective: Close out all the features I'd suggested through 2022 and 2023.
 >
 > Objective: Spin out a general-purpose `create` package without losing features or usability.
 
 My, how this little project has grown!
-What started as a template for my personal files has turned into a reusable public use creator for general TypeScript projects.
+What started as a template for my personal files has turned into a reusable creator for general TypeScript projects.
 I'm excited to keep making it a better and better template over time.
 
 The most pressing concern I have with it now is that its `--base everything` creates a lot of files: about 20 in the repository root.
-I'd like to get it down to at most ~15 or so.
+I'd like to get it down to at most ~16 or so.
 [Milestone: General Simplification](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/3) tracks reducing that count.
 
 Next, there's also a long-time annoyance that the template's "migration" mode -the command that takes an existing repository and switches its tooling to the template's- doesn't do a good job of handling divergent tooling.
 As in, if the migrating project has any intentional differences from the template, those need to be manually re-applied.
 And it doesn't even try to support monorepos!
-I'd like to make customization and monorepos first-class supported features in some way.
 [Milestone: Simpler Snapshots](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/4) tracks simplifying the repository's internal end-to-end migration test snapshots, then turning that into a feature.
 
 I'd also like to finish implementing all the features I've been wanting to add to it for months or longer.
@@ -213,8 +213,8 @@ But I'm confident this will both simplify how my repositories enforce good GitHu
 
 TypeStat is probably my most technically intensive personal project: an engine that "converts JavaScript to TypeScript and TypeScript to better TypeScript".
 I'd explicitly listed [TypeStat as out of scope for 2023](https://www.joshuakgoldberg.com/blog/my-plans-for-2023/#typestat).
-The project is a _difficult_ one to get right, and additionally needs some rearchitectures to work well.
-I wasn't even sure what to call the thing!
+The project is _difficult_ to get right, and additionally needs some rearchitectures to work well.
+I wasn't even sure what to call the thing until the second half of 2023!
 
 Two factors make me more confident in tackling TypeStat this year:
 
@@ -238,7 +238,7 @@ We'll see.
 
 Emojisplosion is one of my favorite pet projects.
 It provides a clean JavaScript API to trigger configurable blasts(s) of emojis onto a page.
-It's not exactly ecosystem-shattering but it's really cute and makes it fun to add delighters to web apps - which I personally think is a great thing to do.
+It's not exactly ecosystem-shattering but it's really cute and makes adding delighters to web apps fun - which I personally think is wonderful.
 
 One problem with Emojisplosion is that nobody can ever remember its name.
 Even worse, I insisted on calling its [Konami code](https://en.wikipedia.org/wiki/Konami_Code) integration "Konamimojisplosion".
@@ -270,7 +270,7 @@ I don't exclusively work on my larger visibility projects: I also have a collect
 [2023's plans for my packages](https://www.joshuakgoldberg.com/blog/my-plans-for-2023/#my-other-smaller-packages) included onboarding those packages to `create-typescript-app`.
 I plan on keeping to that this year, with occasional refreshes of all my packages to newer versions of my template.
 
-I'm also a committer or maintainer on a few other packages that I didn't make, and generally enjoy helping out with, such as [`dedent`](https://github.com/JoshuaKGoldberg/dedent) and [`node-emoji`](https://github.com/omnidan/node-emoji).
+I'm also a committer or maintainer on a few other packages that I didn't make and generally enjoy helping out with, such as [`dedent`](https://github.com/JoshuaKGoldberg/dedent) and [`node-emoji`](https://github.com/omnidan/node-emoji).
 I don't plan on leading any major changes for them: just keeping them well-maintained.
 
 ## Community Engagement
@@ -305,6 +305,7 @@ Networking!
 ### Blogging
 
 > Objective: Publish at least one blog post every two weeks
+>
 > Objective: Publish at least one post in each blog every two months
 
 I have a few blogs under my purview:
@@ -331,6 +332,7 @@ Well-run meetups can be a lovely thing for a local tech community.
 They can help with networking, showing off latest-and-greatest tech updates, and giving people a place to try out public speaking.
 
 I'm going to set up a Boston TypeScript meetup later this year.
+I'm also going to get involved in the existing Boston meetup scene.
 Expect more from me on that soon!
 
 ### _(redacted)_
@@ -417,16 +419,16 @@ And I'm only planning one travel trip a month or so.
 I spent most of 2023 off-and-on Twitch streaming - mostly 'on' when not traveling.
 There are a few reasons why I kept at it:
 
-- It's fun! I like chatting with people on the internet - especially since not having real coworkers can be isolating.
+- It's fun! I like chatting with fellow developers - especially since not having real coworkers can be isolating.
 - It's useful for my projects to have more eyes and visibility on them.
 - It's useful for developers new to open source to see what it entails.
 
 But, Twitch streaming is also a big investment of energy and time.
 You have to be very regular to get a real following doing it.
-I would leave streams somewhat drained - despite being relatively less productive per hour than usual doing them.
+I often leave streams somewhat drained despite being relatively less productive per hour than usual doing them.
 
 For 2024, I've built up enough friends online and projects to work on that I can't reasonably justify the investment in Twitch streaming.
-So I'm putting it on pause for now.
+So I'm putting it on pause for now starting in March.
 😢
 
 ### Older Personal Projects
