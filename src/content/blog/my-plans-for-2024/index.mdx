@@ -8,14 +8,14 @@ title: "My Plans for 2024"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 import thisIsFine from "./this-is-fine.jpg";
 
 Happy belated new year, everyone!
-I've learned it's important -especially when you're independent like me and have no job or manager- to set medium- and long-term goals for yourself.
-
 I posted my [2023 In Review](/blog/2023-in-review) blog a couple of weeks ago, at the end of January.
 So now it's time to look forward to the remaining ~10-11 months of this year and figure out what I'm going to be doing.
 
+I've learned it's important -especially when you're independent like me and have no job or manager- to set medium- and long-term goals for yourself.
 As with last year's [My Plans for 2023](/blog/my-plans-for-2023), this post is 40% a reference for anybody curious about what a full time open source maintainer's life is like... and 60% a form of self-motivation to actually do the things.
 
 Each of the following sections is a key area I'm going to invest my time in for 2023, in decreasing order of time spent during working hours.
@@ -38,7 +38,7 @@ Each of the following sections is a key area I'm going to invest my time in for 
 > Objective: Foster gradual improvement in the TypeScript static analysis ecosystem.
 
 [I'm a full time open source maintainer](../full-time-open-source).
-This is my full time occupation and the most important part of my professional life.
+Open source is my full time occupation and the most important area of my professional life.
 I'm going to continue to spend the majority of my time maintaining the open source libraries I'm responsible for, as well as contributing to other libraries I use in my day-to-day.
 
 The following sections each explain my goals around an individual project.
@@ -67,7 +67,7 @@ Beyond standard maintenance and development, I've got a few key points planned f
 I'd [mentioned last year for `typescript-eslint`](/blog/my-plans-for-2023#typescript-eslint) that the next major version (then, referred to as v7) will focus on performance and usability.
 We ended up releasing an small v7 release earlier this month and pushing overhauls to v8.
 But the performance and usability work is still very much on!
-Our [`EXPERIMENTAL_useProjectService` option](https://typescript-eslint.io/packages/parser#experimental_useprojectservice) has started user testing and is showing a lot of promise.
+Our [`EXPERIMENTAL_useProjectService` option](https://typescript-eslint.io/packages/parser#experimental_useprojectservice) started user testing and is showing a lot of promise.
 
 My goal for the project service is that should make it straightforward for users to enable typed linting on all files in a project.
 They shouldn't have to make any extra files on disk like a `tsconfig.eslint.json`.
@@ -126,10 +126,10 @@ ESLint has long been one of my favorite open source projects.
 It's _the_ standard JavaScript linter in use today, supports a thriving ecosystem of community projects, and is the basis upon which typescript-eslint is built.
 
 I don't have any flashy big goals around ESLint.
-For my first year I just want to be a good member of the team and get used to the codebase, fellow committers, and existing processes.
+For my first year I just want to be a good member of the team and get used to the codebase, existing processes, and fellow committers.
 
-There are a few issues I'm particularly interested in tackling ([#15559](https://github.com/eslint/eslint/issues/15559), [#17814](https://github.com/eslint/eslint/issues/17814)).
-I hope I'll get to them, but don't want to commit to finishing anything so soon.
+There are a few issues I'm particularly interested in tackling ([eslint/eslint#15559](https://github.com/eslint/eslint/issues/15559), [eslint/eslint#17814](https://github.com/eslint/eslint/issues/17814)).
+I hope I'll get to them, but don't want to commit so soon to finishing anything.
 
 #### Mocha
 
@@ -138,9 +138,9 @@ I hope I'll get to them, but don't want to commit to finishing anything so soon.
 I also joined the [Mocha maintenance reboot](https://github.com/mochajs/mocha/issues/5027) last November! 🤎
 
 Mocha is the testing framework I learned how to test JavaScript code on.
-It's a venerable project with over a decade of common uses.
-Although newer test frameworks have largely supplanted it for most new projects, Mocha still has a place in the ecosystem as a stable option used by many existing projects.
-It's a fast, stable alternative that's higher-level than the new `node:test` and with fewer abstractions than Jest and Vitest.
+It's a venerable project with over a decade of popular use in the JavaScript ecosystem.
+Although newer test frameworks have largely supplanted it for new projects, Mocha still has a place in the ecosystem as a stable option used by many existing projects.
+It's a fast, stable alternative that's higher-level than the new `node:test` and relies on fewer abstractions than Jest and Vitest.
 
 Our goal is to keep Mocha afloat.
 We don't plan on releasing any major breaking changes or earth-shattering new features.
@@ -178,6 +178,7 @@ And it doesn't even try to support monorepos!
 [Milestone: Simpler Snapshots](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/4) tracks simplifying the repository's internal end-to-end migration test snapshots, then turning that into a feature.
 
 I'd also like to finish implementing all the features I've been wanting to add to it for months or longer.
+That includes more comprehensive tooling with a [standalone gitHub linter (see next section!)](#standalone-github-linter) and a snazzy website.
 [Milestone: Long-Desired Features](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/5) tracks all those lovely additions.
 
 Lastly, I think the project's core templating engine is a good approach for many general `create-*` projects.
@@ -195,7 +196,7 @@ One of the biggest pain points I've had in managing GitHub repositories is stand
 - Issues: additionally: filling out required information, ensuring the title isn't the default, ...
 - Pull requests: additionally: ensuring the PR addresses an open accepted issue, asking users not to force push, ...
 
-`create-typescript-app` uses a couple dedicated GitHub Actions to enforce some of those needs for now.
+`create-typescript-app` uses a few dedicated GitHub Actions to enforce some of those needs for now.
 But that's inconvenient.
 I'd like to make a generalized linter for GitHub comments, discussions, issues, PRs, etc.
 It would be able to be configured with granular rules, plugins, and shared configs, the way ESLint is now.
@@ -232,6 +233,11 @@ We'll see.
 
 ### Personal Projects
 
+All work and no play makes Josh a bored open source maintainer.
+I intentionally want to keep some more "fun" and/or smaller scale projects in the list.
+Even if they don't have ecosystem-wide impact, it's still good for me to work on a variety of project sizes and areas.
+Depth in addition to breadth!
+
 #### [Emojisplosion](https://github.com/JoshuaKGoldberg/Emojisplosion) (`emoji-blast`)
 
 > Objective: Rebrand and re-document Emojisplosion and its plugins as an `emoji-blast` monorepo.
@@ -260,7 +266,9 @@ For context, I'd worked on DefinitelyTyped's migration from TSLint to ESLint las
 I think it'd be great to reduce lint rule duplication and onboard DefinitelyTyped to the same rule as other consumers in the ecosystem.
 [Milestone: Feature Parity: dtslint](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type/milestone/1) tracks adding missing features in.
 
-(Obviously, having DefinitelyTyped use my plugin would be beneficial for me personally. But I'd still want this even if it was someone else's plugin.)
+Obviously, having DefinitelyTyped use my plugin would be beneficial for me personally.
+And it's not clear whether the specific needs DefinitelyTyped of can be met by a generalized external plugin such as this one.
+But it's a fun project to work on and I'd still want to try to align DefinitelyTyped to the communal plugin (as I did with [DefinitelyTyped and `eslint-plugin-jsdoc`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/65660)) even if I wasn't maintaining that plugin.
 
 #### Other Packages
 
@@ -333,7 +341,7 @@ They can help with networking, showing off latest-and-greatest tech updates, and
 
 I'm going to set up a Boston TypeScript meetup later this year.
 I'm also going to get involved in the existing Boston meetup scene.
-Expect more from me on that soon!
+Expect more ... soon!
 
 ### _(redacted)_
 
@@ -341,9 +349,9 @@ Expect more from me on that soon!
 
 _(redacted)_
 
-I've got a yearly planning point that's not _quite_ ready to be announced.
-It'll likely be happening in October and I'll be making a ton of noise about it on social media.
-Expect more from me on that soon! 😉
+I've got a yearly planning point that we're not _quite_ ready to announce.
+It'll likely happen in October and I'll be making a ton of noise about it on social media.
+Expect more ... soon! 😉
 
 ## Personal
 
@@ -424,8 +432,8 @@ There are a few reasons why I kept at it:
 - It's useful for developers new to open source to see what it entails.
 
 But, Twitch streaming is also a big investment of energy and time.
-You have to be very regular to get a real following doing it.
-I often leave streams somewhat drained despite being relatively less productive per hour than usual doing them.
+You have to stream consistently to get a real following doing it.
+And I often leave streams somewhat drained despite being relatively less productive per hour than usual doing them.
 
 For 2024, I've built up enough friends online and projects to work on that I can't reasonably justify the investment in Twitch streaming.
 So I'm putting it on pause for now starting in March.
@@ -451,3 +459,10 @@ Fun!
 
 > If you read this far - thank you, and I have no idea why.
 > Let me know!
+
+<LabeledVideo
+	alt="Homer Simpson in his underwear looking worriedly into a mirror. His reflection is extremely muscular, smiling, and alternating flexing its impressive pecs."
+	description="Talking myself up on the internet feels inauthentic... but it's an excellent form of self-motivation."
+	original="https://giphy.com/gifs/116S6GJEkPw8YE"
+	src="/images/blog/homer-simpson-mirror-pecs-flexing.webm"
+/>
