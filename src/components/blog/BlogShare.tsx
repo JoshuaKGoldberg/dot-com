@@ -1,9 +1,12 @@
-import { For } from "solid-js";
+import clsx from "clsx";
+import { For, JSX } from "solid-js";
 
 import { SocialImage } from "../SocialImage";
 import styles from "./BlogShare.module.css";
 
 export interface BlogShareProps {
+	children?: JSX.Element;
+	class?: string;
 	description: string;
 	title: string;
 	url: URL;
@@ -11,7 +14,8 @@ export interface BlogShareProps {
 
 export function BlogShare(props: BlogShareProps) {
 	return (
-		<span class={styles.shares}>
+		<span class={clsx(styles.shares, props.class)}>
+			{props.children}
 			<For
 				each={[
 					[

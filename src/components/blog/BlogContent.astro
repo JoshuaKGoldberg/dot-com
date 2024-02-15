@@ -12,6 +12,7 @@ export interface Props {
 
 <BodyContents as="article" class={styles.article}>
 	<Astro.props.rendered.Content />
+	<slot />
 </BodyContents>
 
 <script>
