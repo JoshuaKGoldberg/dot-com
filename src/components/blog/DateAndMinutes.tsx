@@ -20,6 +20,7 @@ export function DateAndMinutes(props: DateAndMinutesProps) {
 			{props.date.toLocaleString("default", {
 				day: "numeric",
 				month: "short",
+				timeZone: "GMT",
 				year: props.year,
 			})}
 			<span class={styles.betweenDateAndTime} />
