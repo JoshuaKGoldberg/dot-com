@@ -1,4 +1,5 @@
 .shares {
+	align-items: baseline;
 	display: inline-flex;
 	gap: 1rem;
 	margin: 0.5em 0 0;
