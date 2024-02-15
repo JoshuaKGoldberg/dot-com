@@ -1,0 +1,468 @@
+---
+pubDate: 2024-02-15
+description: "How I'm going to make 2024 beautiful."
+image:
+  alt: "Meme cartoon of a dog sitting on a chair at a table with fire all around him."
+  src: "this-is-fine.jpg"
+title: "My Plans for 2024"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import thisIsFine from "./this-is-fine.jpg";
+
+Happy belated new year, everyone!
+I posted my [2023 In Review](/blog/2023-in-review) blog a couple of weeks ago, at the end of January.
+So now it's time to look forward to the remaining ~10-11 months of this year and figure out what I'm going to be doing.
+
+I've learned it's important -especially when you're independent like me and have no job or manager- to set medium- and long-term goals for yourself.
+As with last year's [My Plans for 2023](/blog/my-plans-for-2023), this post is 40% a reference for anybody curious about what a full time open source maintainer's life is like... and 60% a form of self-motivation to actually do the things.
+
+Each of the following sections is a key area I'm going to invest my time in for 2023, in decreasing order of time spent during working hours.
+
+- [Open Source](#open-source)
+- [Community Engagement](#community-engagement)
+- [Personal](#personal)
+
+<LabeledImage
+	alt="Meme cartoon of a dog sitting on a chair at a table with fire all around him."
+	description="Filling out 2024 goals by copy and pasting things I wanted to do in 2023. This is fine."
+	original="https://gunshowcomic.com/648"
+	src={thisIsFine}
+/>
+
+## Open Source
+
+> Objective: Be a known leader in the TypeScript static analysis ecosystem.
+>
+> Objective: Foster gradual improvement in the TypeScript static analysis ecosystem.
+
+[I'm a full time open source maintainer](../full-time-open-source).
+Open source is my full time occupation and the most important area of my professional life.
+I'm going to continue to spend the majority of my time maintaining the open source libraries I'm responsible for, as well as contributing to other libraries I use in my day-to-day.
+
+The following sections each explain my goals around an individual project.
+I've put the major community projects first, followed by my personal projects later.
+
+### Ecosystem Projects
+
+> Objective: Be a reliable steward of important projects in the JavaScript/TypeScript ecosystem.
+
+These ecosystem-level projects are high visibility to many web developers.
+My work in pushing them forward helps make their areas of development incrementally better for countless developers.
+It's fascinating and humbling to think about.
+
+#### [typescript-eslint](https://typescript-eslint.io)
+
+> Objective: Continue maintenance of typescript-eslint as it increases in community engagement.
+
+typescript-eslint is still my primary project for 2024.
+I spend the most time on it and consider it my most notable contribution to the world of TypeScript.
+Beyond standard maintenance and development, I've got a few key points planned for it.
+
+##### Performance
+
+> Objective: Release typescript-eslint@v8 with significant performance improvements.
+
+I'd [mentioned last year for `typescript-eslint`](/blog/my-plans-for-2023#typescript-eslint) that the next major version (then, referred to as v7) will focus on performance and usability.
+We ended up releasing an small v7 release earlier this month and pushing overhauls to v8.
+But the performance and usability work is still very much on!
+Our [`EXPERIMENTAL_useProjectService` option](https://typescript-eslint.io/packages/parser#experimental_useprojectservice) started user testing and is showing a lot of promise.
+
+My goal for the project service is that should make it straightforward for users to enable typed linting on all files in a project.
+They shouldn't have to make any extra files on disk like a `tsconfig.eslint.json`.
+If their TSConfig doesn't include some files, such as root-level `.js` files when `allowJs` isn't enabled, there should be some easy-to-use option in their ESLint config to fix that.
+What a world that would be.
+
+My plan is still that we'll release v8 this year.
+It'll likely go through a similar multi-month beta process as v6 did.
+
+I also plan on setting up some kind of performance tooling project that can create projects of various sizes, run linting on them, and compare how time spent scales with project size.
+My hope is that the performance tooling in particular will help us pinpoint bottlenecks in the new project service option.
+
+##### Committer Team Expansion
+
+> Objective: Onboard two new consistently active committer team members.
+
+Maintaining open source projects can be difficult and time-consuming... but if you can get more people to join you, it gets better!
+Following our [formalizing our project governance v1](https://github.com/typescript-eslint/typescript-eslint/discussions/7103) near the end of last year, we've been better able to track when community folks are stepping up to help the project.
+We've even already identified several great candidates to join the committer team.
+
+I'd like to have _at least_ two new committer team members join.
+Doing so would increase the rate at which we can push issues and pull requests through the system, which results in a more rapidly improving project for everyone.
+It'd also test out our onboarding and maintenance processes - which I'm sure will need iteration.
+Lastly, as I've also never done this before, going through the process will give me valuable experience that I hope to keep using in the future.
+
+##### Documentation
+
+> Objective: Finish overhauls of committing, maintenance, and Promise-related documentation.
+
+One of the "lovely" side effects of bolstering a project's documentation is that whenever you fix one area, you realize what the next-most-painful area is.
+Lovely.
+
+We put a ton of work in over the last few years to work on the documentation around getting started, typed linting, rules, integrations with other tools, and common FAQs.
+The remaining most pressing reports of user pain seem to now be coming from two areas:
+
+- Typed linting: still!
+  People are constantly asking about [typed linting being enabled improperly](https://typescript-eslint.io/linting/troubleshooting#i-get-errors-telling-me-eslint-was-configured-to-run--however-that-tsconfig-does-not--none-of-those-tsconfigs-include-this-file).
+  It's a real pain.
+  I'm hopeful the new project service option will eliminate this entire classification of user pain by making it much more straightforward to generate types for an out-of-TSConfig file.
+- Promises: In particular [`@typescript-eslint/no-floating-promises`](https://typescript-eslint.io/rules/no-floating-promises).
+  Our rules around asynchronous code are divisive.
+  Some users love the bug-catching; others think they're maniacally pedantic.
+  Between [Docs: Overhaul no-floating-promise messages and docs](https://github.com/typescript-eslint/typescript-eslint/issues/8088) and [Enhancement: [no-floating-promises] add an 'allowForKnownSafePromises' option](https://github.com/typescript-eslint/typescript-eslint/issues/7008), I'm hopeful we can make this experience universally ~loved~ not hated.
+
+I'd also like to set up a large set of clean, quick examples of using typescript-eslint.
+It'd be very convenient to have those as a reference for when users want to know the canonically "right" way to do different things.
+I started [typescript-eslint/typescript-eslint-examples](https://github.com/typescript-eslint/typescript-eslint-examples) earlier this year and plan to add to it as time goes on.
+
+#### ESLint
+
+> Objective: Consistently exceed expectations as a new ESLint team member.
+
+I joined the [ESLint committer team](https://eslint.org/team) in January! 🥳
+
+ESLint has long been one of my favorite open source projects.
+It's _the_ standard JavaScript linter in use today, supports a thriving ecosystem of community projects, and is the basis upon which typescript-eslint is built.
+
+I don't have any flashy big goals around ESLint.
+For my first year I just want to be a good member of the team and get used to the codebase, existing processes, and fellow committers.
+
+There are a few issues I'm particularly interested in tackling ([eslint/eslint#15559](https://github.com/eslint/eslint/issues/15559), [eslint/eslint#17814](https://github.com/eslint/eslint/issues/17814)).
+I hope I'll get to them, but don't want to commit so soon to finishing anything.
+
+#### Mocha
+
+> Objective: Stabilize Mocha as a smoothly-run package without major breakages.
+
+I also joined the [Mocha maintenance reboot](https://github.com/mochajs/mocha/issues/5027) last November! 🤎
+
+Mocha is the testing framework I learned how to test JavaScript code on.
+It's a venerable project with over a decade of popular use in the JavaScript ecosystem.
+Although newer test frameworks have largely supplanted it for new projects, Mocha still has a place in the ecosystem as a stable option used by many existing projects.
+It's a fast, stable alternative that's higher-level than the new `node:test` and relies on fewer abstractions than Jest and Vitest.
+
+Our goal is to keep Mocha afloat.
+We don't plan on releasing any major breaking changes or earth-shattering new features.
+We mostly want to keep the project up with the basic expectations developers have around testing.
+
+That will include roughly three areas of investment:
+
+- Triaging and reviewing all existing and new issues and pull requests
+- Cleaning up the existing documentation resources, i.e. [mochajs.org](https://mochajs.org), [mochajs.org/api](https://mochajs.org/api), and [github.com/mochajs/mocha/wiki](https://github.com/mochajs/mocha/wiki)
+- Fleshing out the [github.com/mochajs/mocha-examples](https://github.com/mochajs/mocha-examples) repository
+
+I'll consider maintaining Mocha a success if all those are stable at the end of the year, and we haven't obnoxiously broken any existing users.
+
+#### [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)
+
+> Objective: Simplify the template to have 20% fewer root-level files.
+>
+> Objective: Make migrating a customized single-project or monorepo repository a pleasant experience.
+>
+> Objective: Close out all the features I'd suggested through 2022 and 2023.
+>
+> Objective: Spin out a general-purpose `create` package without losing features or usability.
+
+My, how this little project has grown!
+What started as a template for my personal files has turned into a reusable creator for general TypeScript projects.
+I'm excited to keep making it a better and better template over time.
+
+The most pressing concern I have with it now is that its `--base everything` creates a lot of files: about 20 in the repository root.
+I'd like to get it down to at most ~16 or so.
+[Milestone: General Simplification](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/3) tracks reducing that count.
+
+Next, there's also a long-time annoyance that the template's "migration" mode -the command that takes an existing repository and switches its tooling to the template's- doesn't do a good job of handling divergent tooling.
+As in, if the migrating project has any intentional differences from the template, those need to be manually re-applied.
+And it doesn't even try to support monorepos!
+[Milestone: Simpler Snapshots](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/4) tracks simplifying the repository's internal end-to-end migration test snapshots, then turning that into a feature.
+
+I'd also like to finish implementing all the features I've been wanting to add to it for months or longer.
+That includes more comprehensive tooling with a [standalone gitHub linter (see next section!)](#standalone-github-linter) and a snazzy website.
+[Milestone: Long-Desired Features](https://github.com/JoshuaKGoldberg/create-typescript-app/milestone/5) tracks all those lovely additions.
+
+Lastly, I think the project's core templating engine is a good approach for many general `create-*` projects.
+I'd like to split that engine out into a standalone `create` package that `create-typescript-app` would then be built on top of.
+As in, the `create` package would provide hooks for file creations and migrations that packages would then supply values to.
+[📝 Documentation: Long-term project vision](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/1181) tracks that work.
+
+#### Standalone GitHub Linter
+
+> Objective: Make a stable lint experience for GitHub repositories -including issues and pull requests- and use it in `create-typescript-app`.
+
+One of the biggest pain points I've had in managing GitHub repositories is standardizing practices around comments, issues, and pull requests:
+
+- Comments: not being obvious spam, including alt text for accessible images, ...
+- Issues: additionally: filling out required information, ensuring the title isn't the default, ...
+- Pull requests: additionally: ensuring the PR addresses an open accepted issue, asking users not to force push, ...
+
+`create-typescript-app` uses a few dedicated GitHub Actions to enforce some of those needs for now.
+But that's inconvenient.
+I'd like to make a generalized linter for GitHub comments, discussions, issues, PRs, etc.
+It would be able to be configured with granular rules, plugins, and shared configs, the way ESLint is now.
+
+I haven't thought deeply on what the technical implementation of rules would look like.
+But I'm confident this will both simplify how my repositories enforce good GitHub practices and make it easier to enforce more practices.
+
+#### [TypeStat](https://github.com/JoshuaKGoldberg/TypeStat) (`ts-lift`)
+
+> Objective: Rebrand, re-document, and stabilize TypeStat as a `ts-lift` monorepo.
+>
+> Objective: Create a `ts-initialize` project within `ts-lift` that reliably converts projects from JavaScript to TypeScript.
+>
+> Objective: Create a `ts-enhance` project within `ts-lift` that reliably improves TypeScript types when possible.
+
+TypeStat is probably my most technically intensive personal project: an engine that "converts JavaScript to TypeScript and TypeScript to better TypeScript".
+I'd explicitly listed [TypeStat as out of scope for 2023](https://www.joshuakgoldberg.com/blog/my-plans-for-2023/#typestat).
+The project is _difficult_ to get right, and additionally needs some rearchitectures to work well.
+I wasn't even sure what to call the thing until the second half of 2023!
+
+Two factors make me more confident in tackling TypeStat this year:
+
+- `create-typescript-app` being much more fleshed out and stable, with monorepo support planned for 2024.
+- Resolving TypeStat's ["Find a new name for this library" issue](https://github.com/JoshuaKGoldberg/TypeStat/issues/1040): Knowing that I'm going to split it into:
+  - `ts-lift` for the general package name
+  - `ts-initialize` for the onboarding portion ("JavaScript to TypeScript")
+  - `ts-enhance` for the types improving portion ("TypeScript to better TypeScript")
+
+That better understanding of how to split up the project means I can really think through the architecture and documentation.
+Splitting `ts-initialize` and `ts-enhance` out of the shared core means I can focus them on doing their respective tasks.
+
+...and, as much as I hate to cave to tech trend hype, it's possible that `ts-enhance` could use AI to solve type generation challenges that would otherwise be prohibitively difficult.
+We'll see.
+
+### Personal Projects
+
+All work and no play makes Josh a bored open source maintainer.
+I intentionally want to keep some more "fun" and/or smaller scale projects in the list.
+Even if they don't have ecosystem-wide impact, it's still good for me to work on a variety of project sizes and areas.
+Depth in addition to breadth!
+
+#### [Emojisplosion](https://github.com/JoshuaKGoldberg/Emojisplosion) (`emoji-blast`)
+
+> Objective: Rebrand and re-document Emojisplosion and its plugins as an `emoji-blast` monorepo.
+
+Emojisplosion is one of my favorite pet projects.
+It provides a clean JavaScript API to trigger configurable blasts(s) of emojis onto a page.
+It's not exactly ecosystem-shattering but it's really cute and makes adding delighters to web apps fun - which I personally think is wonderful.
+
+One problem with Emojisplosion is that nobody can ever remember its name.
+Even worse, I insisted on calling its [Konami code](https://en.wikipedia.org/wiki/Konami_Code) integration "Konamimojisplosion".
+What a mouthful.
+
+For 2024, I'm planning on renaming it to the easier `emoji-blast` and, along with TypeStat/`ts-lift`, using `create-typescript-app` to turn it into a monorepo.
+That monorepo will contain the core `emoji-blast` package along with integrations for Astro, Docusaurus, TypeDoc, and any other platforms that would make sense to add it to.
+
+#### [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
+
+> Objective: Achieve parity with DefinitelyTyped-tools.
+
+`eslint-plugin-expect-type` is a handy ESLint plugin that allows enforcing `^?` twoslash assertion comments and the like.
+It's one of a few different options for declaring and/or testing TypeScript types in comments.
+I'd taken over project maintenance back in late 2021, and out of an abundance of caution haven't done much beyond bug fixes, documentation, and repository tooling.
+
+In 2024 I'd like to expand the plugin to be able to be used by [DefinitelyTyped](https://github.com/Microsoft/DefinitelyTyped-tools).
+For context, I'd worked on DefinitelyTyped's migration from TSLint to ESLint last year, and that involved migrating its old equivalent TSLint rule to a new `@definitelytyped/expect` ESLint rule.
+I think it'd be great to reduce lint rule duplication and onboard DefinitelyTyped to the same rule as other consumers in the ecosystem.
+[Milestone: Feature Parity: dtslint](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type/milestone/1) tracks adding missing features in.
+
+Obviously, having DefinitelyTyped use my plugin would be beneficial for me personally.
+And it's not clear whether the specific needs DefinitelyTyped of can be met by a generalized external plugin such as this one.
+But it's a fun project to work on and I'd still want to try to align DefinitelyTyped to the communal plugin (as I did with [DefinitelyTyped and `eslint-plugin-jsdoc`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/65660)) even if I wasn't maintaining that plugin.
+
+#### Other Packages
+
+> Objective: Maintain a small suite of well-managed open source repositories in my areas of interest.
+
+I don't exclusively work on my larger visibility projects: I also have a collection of smaller utilities addressing needs I've wanted to create over the years.
+[2023's plans for my packages](https://www.joshuakgoldberg.com/blog/my-plans-for-2023/#my-other-smaller-packages) included onboarding those packages to `create-typescript-app`.
+I plan on keeping to that this year, with occasional refreshes of all my packages to newer versions of my template.
+
+I'm also a committer or maintainer on a few other packages that I didn't make and generally enjoy helping out with, such as [`dedent`](https://github.com/JoshuaKGoldberg/dedent) and [`node-emoji`](https://github.com/omnidan/node-emoji).
+I don't plan on leading any major changes for them: just keeping them well-maintained.
+
+## Community Engagement
+
+> Objective: Be a top-of-mind community member for TypeScript and general web development, and foster others to do the same.
+
+It's invaluable both for open source maintainers and book authors to be engaged with the community.
+We get user feedback and project exposure by being a known name people interact with.
+Plus, I enjoy it!
+
+This year, as with 2023, I'm going to continue being active online as a member of the developer community.
+I don't like the term _"thought leader"_, but whatever equivalent is halfway to that...
+Let's go with it.
+
+### Conferences
+
+> Objective: Give all excellent conference talks, once a month.
+
+My [2023 Conferences In Review](https://www.joshuakgoldberg.com/blog/2023-conferences-in-review) post mentioned I had a packed year for giving talks.
+I'm planning on cutting my conferences quota to about one a month for March through December.
+
+By attending fewer conferences, I'd like to be be able to really focus on the talks I do give.
+I'm studying other speakers and great TED talks, reading up on the craft of presenting, and putting more effort into the talks I'm going to give.
+
+My goal is that every one of my talks is _excellent_.
+Not just good or serviceable, but really well-crafted and well-delivered.
+I need to speak more slowly, enunciate more clearly, and leave attendees with better-delineated main takeaways and actionable next steps.
+
+I'd also like to continue to get better at creating and deepening personal connections at conferences.
+Networking!
+
+### Blogging
+
+> Objective: Publish at least one blog post every two weeks
+>
+> Objective: Publish at least one post in each blog every two months
+
+I have a few blogs under my purview:
+
+- My main personal blog at [joshuakgoldberg.com/blog](https://joshuakgoldberg.com/blog)
+- _Learning TypeScript_'s blog at [learningtypescript.com/articles](https://learningtypescript.com/articles)
+- typescript-eslint's blog at [typescript-eslint.io/blog](https://typescript-eslint.io/blog)
+
+These goals are the same as last year.
+Except, unlike in my [2023 In Review > Goal: Branding and Blogging](https://www.joshuakgoldberg.com/blog/2023-in-review/#goal-branding-and-blogging), I'd like to ... actually hit all of these goals every time.
+
+Publishing to the _Learning TypeScript_ blog is particularly important because it drives attention to the _Learning TypeScript_ book.
+There also aren't very many high-visibility blogs in the TypeScript ecosystem that reliably publish clear technical advice missing from the TypeScript handbook.
+It'll be useful to have a place to publish points that I can then reference in my personal blog and typescript-eslint's.
+
+### BostonTS
+
+> Objective: Establish a smoothly-running monthly meetup for JavaScript and TypeScript developers in the Boston area.
+
+I'm moving to Boston this fall!
+
+I've also always wanted to organize a monthly TypeScript meetup.
+Well-run meetups can be a lovely thing for a local tech community.
+They can help with networking, showing off latest-and-greatest tech updates, and giving people a place to try out public speaking.
+
+I'm going to set up a Boston TypeScript meetup later this year.
+I'm also going to get involved in the existing Boston meetup scene.
+Expect more ... soon!
+
+### _(redacted)_
+
+> Objective: Successfully run _(redacted)_ without any major problems.
+
+_(redacted)_
+
+I've got a yearly planning point that we're not _quite_ ready to announce.
+It'll likely happen in October and I'll be making a ton of noise about it on social media.
+Expect more ... soon! 😉
+
+## Personal
+
+> Objective: Achieve high sustainability and low stress in my personal and professional lives.
+
+Personal happiness and health are key to sustainable development.
+I can't be effective in open source if I'm just barely hanging on personally.
+These goals are largely copy & pasted from my [My Plans for 2023 > Personal Goals](https://www.joshuakgoldberg.com/blog/my-plans-for-2023/#personal).
+
+### Goal: Health
+
+> Objective: Be healthy (instead of overworking myself).
+
+I have a tendency to be self-critical drive myself to the point of burnout.
+Think frequent late nights (or skipping sleep entirely), eating constant junk food, and burning out spectacularly on projects I've convinced myself I “need” to finish.
+It's not good for my quality of work and is certainly not good for my long-term health.
+
+I was much better at stabilizing myself for much of 2023... except when I was traveling.
+Which is a large part of why I'm not traveling as much in 2024.
+
+I still aim for the roughly the same goals as last year:
+
+- Wake up before 7am on weekdays and 8am on weekends at least 6 days a week
+- Average 8 hours of work a day & 40 hour weeks
+  - I can go over for time-sensitive work, but need to compensate in a subsequent time period
+- Eat three balanced, healthy meals a day at least 6 days a week
+- Work out at least three times a week
+- Date night with my spouse at least once a week
+
+In the start of 2023 I got Lasik eye surgery to get rid of my need for glasses.
+In 2024 I'd like to finally get teeth whitening.
+I've always had off-color teeth -despite brushing, flossing, and rinsing regularly- and it's always annoyed me.
+
+### Goal: Personal Accountability
+
+> Objective: Have confidence in the amount of work I've accomplished.
+
+One of the side effects of my being self-critical is that, absent of proof, I tend to undervalue the magnitude of work I accomplish in any time period.
+That tendency is particularly dangerous now that I'm my own manager.
+I've been keeping to using a tracking Notion database & board for tasks.
+
+The goals around my work accountability are similar to last year's:
+
+- Keep a permanent record of my todo list and day-to-day tasks
+- End each week at inbox zero and with no desk clutter
+- Give myself an informed performance review every three months
+
+I'm still not sure what that performance review should look like.
+We'll see how things go.
+
+## Out of Scope
+
+Speaking of personal satisfaction, one of the battles I'm still happy to have gotten better at over the last couple of years is deciding on what _not_ to take on.
+If you know you won't have time for something, it's best to admit it early on.
+Don't keep a sad glimmer of hope to be continuously crushed until you eventually give up.
+
+### Conferences Galore
+
+As I mentioned earlier and in my [2023 Conferences in Review](/blog/2023-conferences-in-review), I went to too many conferences last year.
+I enjoy them, but can't sustain that level of speaking and travel.
+
+Part of why I did so many last year was that it's hard to predict which conferences will accept my talks.
+The (good) strategy many newer speakers take is to apply to every conference that could potentially be relevant.
+I was still doing that in 2023.
+No longer.
+
+Now, I'm being much more intentional with my conferences.
+I'm only applying to conferences I think will will be high impact for me personally and/or have many people I want to spend time with.
+And I'm only planning one travel trip a month or so.
+
+### Twitch Streaming
+
+I spent most of 2023 off-and-on Twitch streaming - mostly 'on' when not traveling.
+There are a few reasons why I kept at it:
+
+- It's fun! I like chatting with fellow developers - especially since not having real coworkers can be isolating.
+- It's useful for my projects to have more eyes and visibility on them.
+- It's useful for developers new to open source to see what it entails.
+
+But, Twitch streaming is also a big investment of energy and time.
+You have to stream consistently to get a real following doing it.
+And I often leave streams somewhat drained despite being relatively less productive per hour than usual doing them.
+
+For 2024, I've built up enough friends online and projects to work on that I can't reasonably justify the investment in Twitch streaming.
+So I'm putting it on pause for now starting in March.
+😢
+
+### Older Personal Projects
+
+As with 2023, I don't plan on working on any particular big personal projects.
+I do enough fun coding projects for my day-to-day work.
+I don't need to expend my need to do that in my personal time.
+
+Instead, it's healthier for me to find out-of-coding hobbies.
+Things like exercising, hanging out with friends, being a human in general.
+No plans for [Budgie](https://github.com/budgielang/budgie) or [EightBittr](https://github.com/FullScreenShenanigans/EightBittr) progress this year.
+
+## Closing Thoughts
+
+2023 was a good year.
+But I think 2024 is going to be even better.
+
+I'm solidifying my areas of impact, expanding my areas of reach, and learning what I can do best within them.
+Fun!
+
+> If you read this far - thank you, and I have no idea why.
+> Let me know!
+
+<LabeledVideo
+	alt="Homer Simpson in his underwear looking worriedly into a mirror. His reflection is extremely muscular, smiling, and alternating flexing its impressive pecs."
+	description="Talking myself up on the internet feels inauthentic... but it's an excellent form of self-motivation."
+	original="https://giphy.com/gifs/116S6GJEkPw8YE"
+	src="/images/blog/homer-simpson-mirror-pecs-flexing.webm"
+/>
