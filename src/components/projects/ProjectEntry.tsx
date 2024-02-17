@@ -10,8 +10,8 @@ export interface ProjectEntryProps {
 	project: Project;
 }
 
-function projectUrl(project: ProjectBase) {
-	return project.url ?? `https://github.com/JoshuaKGoldberg/${project.repo}`;
+function projectUrl({ owner = "JoshuaKGoldberg", repo, url }: ProjectBase) {
+	return url ?? `https://github.com/${owner}/${repo}`;
 }
 
 function projectTitle(project: ProjectBase) {
