@@ -13,6 +13,8 @@ export const collections = {
 				})
 				// TODO: add images for older blog posts, then remove this .optional()
 				.optional(),
+			pubDate: z.coerce.date(),
+			title: z.string(),
 		}),
 	}),
 	speaking: defineCollection({
