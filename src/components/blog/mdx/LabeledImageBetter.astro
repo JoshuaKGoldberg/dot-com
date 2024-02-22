@@ -3,13 +3,14 @@ import type { MediaOriginal } from "./MediaOriginalNote.astro";
 
 import LabeledMedia from "./LabeledMedia.astro";
 import { Image } from "astro:assets";
+import { ImageMetadata } from "astro";
 
 export interface Props {
 	alt: string;
-	description: string | string[];
+	description: string;
 	note?: string;
-	original?: MediaOriginal | string;
-	src: { src: string } | string;
+	original?: string;
+	src: ImageMetadata["src"];
 }
 ---
 
@@ -18,12 +19,11 @@ export interface Props {
 	note={Astro.props.note}
 	original={Astro.props.original}
 >
-	<img
+	<Image
 		alt={Astro.props.alt}
 		class="labeled-image"
-		src={typeof Astro.props.src === "string"
-			? Astro.props.src
-			: Astro.props.src.src}
+		inferSize
+		src={Astro.props.src}
 	/>
 </LabeledMedia>
 
