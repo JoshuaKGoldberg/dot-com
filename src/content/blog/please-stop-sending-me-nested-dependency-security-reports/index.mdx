@@ -1,0 +1,96 @@
+---
+description: "Security is important, but overusing report mechanisms for non-actionable noise is counterproductive."
+image:
+  alt: Larry David in Curb Your Enthusiasm looking consternated
+  src: larry-david-consternation-head.webp
+pubDate: 2024-04-29
+title: "Please Stop Sending Me Nested Dependency Security Reports"
+---
+
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+As an open source maintainer, I regularly receive "critical security vulnerabilities" DMs, emails, and GitHib issues from individual developers or IT teams about packages that are dependencies of dependencies of my packages.
+These "nested dependency" reports often go something like:
+
+<blockquote>
+Hello.
+We use `your-package` and `npm audit` is reporting a critical issue:
+<br />
+```plaintext
+some-nested-dependency  <=0.1.2
+Severity: critical
+Prototype Pollution in some-nested-dependency - https://github.com/advisories/GHSA-ab12-cd23-ef45
+No fix available
+node_modules/some-dependency/node_modules/some-nested-dependency
+  some-dependency  >=2.3.4
+  Depends on vulnerable versions of some-nested-dependency
+  node_modules/some-dependency
+    your-package  >=5.6.7
+    Depends on vulnerable versions of some-dependency
+    node_modules/your-package
+```
+<br />
+Could you please fix this?
+</blockquote>
+
+I appreciate the attention to detail and security.
+Really, I do!
+Paying attention to your tooling is a useful skill for any developer.
+
+But these reports aren't useful.
+They don't come with the context and proof-of-concept a real vulnerability report needs to.
+I've never seen one indicate a real vulnerability.
+
+Reproduction-less reports about nested dependencies' security reports _spam maintainers_ like me and actually _hamper security_ by training us to ignore reports.
+Unless you can demonstrate a real security vulnerability in one of my packages, please don't send me a report about a nested dependency.
+
+<LabeledVideo
+	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
+	description="Captured: an open source maintainer trying to find phrasing to discourage these security repo while still encouraging security as a practice"
+	original="https://giphy.com/gifs/MyzfERo9SqG1G"
+	src="/images/blog/larry-david-consternation.webm"
+/>
+
+## This Is Probably Not a Real Vulnerability
+
+These excessive reports are produced because scanners such as npm audit and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
+That means every downstream package that relies on any package -even if they never use the impacted APIs- will get a security report.
+
+Most of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
+That can be very important to patch for some users of some packages!
+
+But: many packages are only ever used at development time.
+A linter plugin, for example, isn't likely vulnerable to attacks that require modifying JavaScript global objects or providing exponentially expensive regular expressions to function calls.
+If an attacker is able to run arbitrary JavaScript on your computer then hardening your linter isn't going to save you from anything.
+
+Vulnerabilities in my packages -even direct dependencies- might be something that impacts users.
+But something nested deep within a dependency's dependency?
+Possible, but much less likely.
+
+## This Is Not a Real Report
+
+In order to determine whether there's a real security issue in a package, you need to demonstrate an exploit.
+Security reporting platforms such as HackerOne categorically do not allow reports that don't include at least a set of steps to achieve an exploit reproduction.
+Emailing me that some automated scan found a potential issue does not amount to a real security report.
+
+Requiring reproduction steps is important for two reasons:
+
+- Ensuring reporters have done their due diligence in making sure what they're reporting is something worth spending time on.
+- Helping the receiving developer(s) understand exactly what's being reported.
+
+Again, for emphasis: if you have a real security report then please send it over.
+But a vague hand-wave at a security advisory on code I do not work on is not going to help me triage your report.
+
+## This Is Counterproductive
+
+Developers have finite energy and time budgets - even for important tasks such as security.
+If any avenue of reporting repeatedly wastes our time, what do you think our reaction is going to be?
+Just as flakiness in unit tests kills motivation to test, spam false security reports train us to ignore all security reports.
+That's bad.
+
+As positive as your intentions may be, it's counterproductive to take up my time with security reports.
+I'd recommend instead spending the time to learn how the code in play works - so that you can send a pull request to fix it yourself.
+❤️
+
+> If you're a company reading this, please consider sponsoring your open source dependencies.
+> None of this development work is free - even if you don't personally pay for it.
