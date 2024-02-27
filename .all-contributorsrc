@@ -7,15 +7,7 @@
     {
       "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
       "contributions": [
-        "bug",
-        "code",
-        "maintenance",
-        "review",
-        "tool",
-        "doc",
-        "infra",
-        "test",
-        "ideas"
+        "doc"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
@@ -28,6 +20,33 @@
       "profile": "https://github.com/agulen",
       "contributions": [
         "ideas"
+      ]
+    },
+    {
+      "login": "sxflynn",
+      "name": "Stephen Flynn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2034081?v=4",
+      "profile": "https://github.com/sxflynn",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "dasa",
+      "name": "Dasa Paddock",
+      "avatar_url": "https://avatars.githubusercontent.com/u/828058?v=4",
+      "profile": "https://js.arcgis.com",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "azat-io",
+      "name": "Azat S.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5698350?v=4",
+      "profile": "https://azat.io",
+      "contributions": [
+        "code"
       ]
     },
     {
