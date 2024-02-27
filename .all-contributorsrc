@@ -7,7 +7,15 @@
     {
       "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
       "contributions": [
-        "maintenance"
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "review",
+        "test",
+        "tool"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
@@ -20,6 +28,51 @@
       "profile": "https://github.com/agulen",
       "contributions": [
         "ideas"
+      ]
+    },
+    {
+      "login": "sxflynn",
+      "name": "Stephen Flynn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2034081?v=4",
+      "profile": "https://github.com/sxflynn",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "dasa",
+      "name": "Dasa Paddock",
+      "avatar_url": "https://avatars.githubusercontent.com/u/828058?v=4",
+      "profile": "https://js.arcgis.com",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "azat-io",
+      "name": "Azat S.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5698350?v=4",
+      "profile": "https://azat.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "eliancodes",
+      "name": "Elian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15145918?v=4",
+      "profile": "https://www.elian.codes",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "michaeldeboey",
+      "name": "Michaël De Boey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6643991?v=4",
+      "profile": "https://michaeldeboey.be",
+      "contributions": [
+        "bug"
       ]
     }
   ],
