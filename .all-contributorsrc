@@ -21,6 +21,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "sxflynn",
+      "name": "Stephen Flynn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2034081?v=4",
+      "profile": "https://github.com/sxflynn",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

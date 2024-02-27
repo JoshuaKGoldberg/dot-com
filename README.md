@@ -3,7 +3,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 2" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-2-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 3" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-3-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -33,6 +33,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/agulen"><img src="https://avatars.githubusercontent.com/u/3536080?v=4?s=100" width="100px;" alt="Altan Gulen"/><br /><sub><b>Altan Gulen</b></sub></a><br /><a href="#ideas-agulen" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg"/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sxflynn"><img src="https://avatars.githubusercontent.com/u/2034081?v=4?s=100" width="100px;" alt="Stephen Flynn"/><br /><sub><b>Stephen Flynn</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=sxflynn" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
