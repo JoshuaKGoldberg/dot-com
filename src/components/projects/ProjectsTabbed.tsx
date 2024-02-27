@@ -13,7 +13,7 @@ export interface ProjectsTabbedProps {
 export function ProjectsTabbed(props: ProjectsTabbedProps) {
 	return (
 		<TabbedEntryCategories
-			categories={props.categories}
+			initialCategories={props.categories}
 			collection="project"
 			renderCategory={(projects) => (
 				<EntryList>
