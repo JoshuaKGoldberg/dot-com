@@ -1,10 +1,26 @@
 {
-	"files": ["README.md"],
-	"imageSize": 100,
+	"badgeTemplate": "\t<a href=\"#contributors\" target=\"_blank\"><img alt=\"👪 All Contributors: <%= contributors.length %>\" src=\"https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-<%= contributors.length %>-21bb42.svg\" /></a>",
 	"commit": false,
-	"commitType": "docs",
 	"commitConvention": "angular",
+	"commitType": "docs",
 	"contributors": [
+		{
+			"avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
+			"contributions": [
+				"bug",
+				"code",
+				"maintenance",
+				"review",
+				"tool",
+				"doc",
+				"infra",
+				"test",
+				"ideas"
+			],
+			"login": "JoshuaKGoldberg",
+			"name": "Josh Goldberg",
+			"profile": "http://www.joshuakgoldberg.com"
+		},
 		{
 			"login": "agulen",
 			"name": "Altan Gulen",
@@ -14,9 +30,11 @@
 		}
 	],
 	"contributorsPerLine": 7,
-	"skipCi": true,
-	"repoType": "github",
+	"contributorsSortAlphabetically": true,
+	"files": ["README.md"],
+	"imageSize": 100,
+	"projectName": "create-typescript-app",
+	"projectOwner": "JoshuaKGoldberg",
 	"repoHost": "https://github.com",
-	"projectName": "dot-com",
-	"projectOwner": "JoshuaKGoldberg"
+	"repoType": "github"
 }
