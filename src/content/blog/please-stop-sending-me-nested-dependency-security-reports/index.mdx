@@ -9,7 +9,8 @@ title: "Please Stop Sending Me Nested Dependency Security Reports"
 
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
-As an open source maintainer, I regularly receive "critical security vulnerabilities" DMs, emails, and GitHib issues from individual developers or IT teams about packages that are dependencies of dependencies of my packages.
+As an open source maintainer, I regularly receive "critical security vulnerability" DMs, emails, and GitHib issues about my projects.
+Most of these notices are sent from individual developers or IT teams about packages that are dependencies of dependencies.
 These "nested dependency" reports often go something like:
 
 <blockquote>
@@ -46,7 +47,7 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 
 <LabeledVideo
 	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
-	description="Captured: an open source maintainer trying to find phrasing to discourage these security repo while still encouraging security as a practice"
+	description="Captured: an open source maintainer trying to find phrasing to discourage these reports while still encouraging security as a practice"
 	original="https://giphy.com/gifs/MyzfERo9SqG1G"
 	src="/images/blog/larry-david-consternation.webm"
 />
@@ -63,7 +64,7 @@ But: many packages are only ever used at development time.
 A linter plugin, for example, isn't likely vulnerable to attacks that require modifying JavaScript global objects or providing exponentially expensive regular expressions to function calls.
 If an attacker is able to run arbitrary JavaScript on your computer then hardening your linter isn't going to save you from anything.
 
-Vulnerabilities in my packages -even direct dependencies- might be something that impacts users.
+Vulnerabilities in my packages -even direct dependencies- might impact users.
 But something nested deep within a dependency's dependency?
 Possible, but much less likely.
 
