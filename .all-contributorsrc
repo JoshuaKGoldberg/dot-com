@@ -63,7 +63,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/15145918?v=4",
       "profile": "https://www.elian.codes",
       "contributions": [
-        "code"
+        "code",
+        "bug"
       ]
     },
     {
@@ -81,7 +82,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/2382552?v=4",
       "profile": "https://atila.io/",
       "contributions": [
-        "code"
+        "code",
+        "bug"
       ]
     },
     {
@@ -90,7 +92,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/35337607?v=4",
       "profile": "https://danieljcafonso.com/",
       "contributions": [
-        "code"
+        "code",
+        "bug"
       ]
     }
   ],
