@@ -9,13 +9,13 @@
       "contributions": [
         "bug",
         "code",
+        "doc",
+        "ideas",
+        "infra",
         "maintenance",
         "review",
-        "tool",
-        "doc",
-        "infra",
         "test",
-        "ideas"
+        "tool"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
