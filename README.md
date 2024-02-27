@@ -3,11 +3,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-<<<<<<< HEAD
 	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 7" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-7-21bb42.svg" /></a>
-=======
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 6" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-6-21bb42.svg" /></a>
->>>>>>> main
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -40,10 +36,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://js.arcgis.com"><img src="https://avatars.githubusercontent.com/u/828058?v=4?s=100" width="100px;" alt="Dasa Paddock"/><br /><sub><b>Dasa Paddock</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Adasa" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.elian.codes"><img src="https://avatars.githubusercontent.com/u/15145918?v=4?s=100" width="100px;" alt="Elian"/><br /><sub><b>Elian</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=eliancodes" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg"/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Documentation">📖</a></td>
-<<<<<<< HEAD
       <td align="center" valign="top" width="14.28%"><a href="https://michaeldeboey.be"><img src="https://avatars.githubusercontent.com/u/6643991?v=4?s=100" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Amichaeldeboey" title="Bug reports">🐛</a></td>
-=======
->>>>>>> main
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sxflynn"><img src="https://avatars.githubusercontent.com/u/2034081?v=4?s=100" width="100px;" alt="Stephen Flynn"/><br /><sub><b>Stephen Flynn</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=sxflynn" title="Code">💻</a></td>
     </tr>
   </tbody>
