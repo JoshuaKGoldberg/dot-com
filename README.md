@@ -3,7 +3,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 3" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-3-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 7" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-7-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -32,8 +32,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/agulen"><img src="https://avatars.githubusercontent.com/u/3536080?v=4?s=100" width="100px;" alt="Altan Gulen"/><br /><sub><b>Altan Gulen</b></sub></a><br /><a href="#ideas-agulen" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg"/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3AJoshuaKGoldberg" title="Bug reports">🐛</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Code">💻</a> <a href="#maintenance-JoshuaKGoldberg" title="Maintenance">🚧</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/pulls?q=is%3Apr+reviewed-by%3AJoshuaKGoldberg" title="Reviewed Pull Requests">👀</a> <a href="#tool-JoshuaKGoldberg" title="Tools">🔧</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Documentation">📖</a> <a href="#infra-JoshuaKGoldberg" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Tests">⚠️</a> <a href="#ideas-JoshuaKGoldberg" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://azat.io"><img src="https://avatars.githubusercontent.com/u/5698350?v=4?s=100" width="100px;" alt="Azat S."/><br /><sub><b>Azat S.</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=azat-io" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://js.arcgis.com"><img src="https://avatars.githubusercontent.com/u/828058?v=4?s=100" width="100px;" alt="Dasa Paddock"/><br /><sub><b>Dasa Paddock</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Adasa" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.elian.codes"><img src="https://avatars.githubusercontent.com/u/15145918?v=4?s=100" width="100px;" alt="Elian"/><br /><sub><b>Elian</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=eliancodes" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg"/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://michaeldeboey.be"><img src="https://avatars.githubusercontent.com/u/6643991?v=4?s=100" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Amichaeldeboey" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sxflynn"><img src="https://avatars.githubusercontent.com/u/2034081?v=4?s=100" width="100px;" alt="Stephen Flynn"/><br /><sub><b>Stephen Flynn</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=sxflynn" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
