@@ -48,6 +48,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "eliancodes",
+      "name": "Elian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15145918?v=4",
+      "profile": "https://www.elian.codes",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
