@@ -74,6 +74,24 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "atilafassina",
+      "name": "Atila Fassina",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2382552?v=4",
+      "profile": "https://atila.io/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "danieljcafonso",
+      "name": "Daniel Afonso",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35337607?v=4",
+      "profile": "https://danieljcafonso.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
