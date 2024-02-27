@@ -24,7 +24,7 @@
 		"@astrojs/mdx": "^2.0.0",
 		"@astrojs/rss": "^4.0.1",
 		"@astrojs/sitemap": "^3.0.3",
-		"@astrojs/solid-js": "^3.0.2",
+		"@astrojs/solid-js": "^4.0.0",
 		"@fontsource/league-spartan": "^4.5.13",
 		"@kobalte/core": "^0.12.0",
 		"@solid-primitives/refs": "^1.0.6",
