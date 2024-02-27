@@ -7,15 +7,7 @@
     {
       "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
       "contributions": [
-        "bug",
-        "code",
-        "maintenance",
-        "review",
-        "tool",
-        "doc",
-        "infra",
-        "test",
-        "ideas"
+        "doc"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
@@ -28,6 +20,15 @@
       "profile": "https://github.com/agulen",
       "contributions": [
         "ideas"
+      ]
+    },
+    {
+      "login": "sxflynn",
+      "name": "Stephen Flynn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2034081?v=4",
+      "profile": "https://github.com/sxflynn",
+      "contributions": [
+        "bug"
       ]
     },
     {
