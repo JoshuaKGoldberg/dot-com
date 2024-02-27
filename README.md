@@ -1,17 +1,19 @@
 <h1 align="center">JoshuaKGoldberg Dot Com</h1>
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+
+<p align="center">
+	<!-- prettier-ignore-start -->
+	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 2" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-2-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+	<!-- prettier-ignore-end -->
+	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
+	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg"></a>
+	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
+</p>
 
 <p align="center">
     Personal site for Josh Goldberg.
     Hooray! ✨
-</p>
-
-<p align="center">
-<small>
-Based on <a href="https://www.figma.com/file/Nb0bOYi74nqp37t9VzXMPH/Personal-Site">these Personal Site designs</a>.
-</small>
 </p>
 
 ## Development
@@ -30,6 +32,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/agulen"><img src="https://avatars.githubusercontent.com/u/3536080?v=4?s=100" width="100px;" alt="Altan Gulen"/><br /><sub><b>Altan Gulen</b></sub></a><br /><a href="#ideas-agulen" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.joshuakgoldberg.com"><img src="https://avatars.githubusercontent.com/u/3335181?v=4?s=100" width="100px;" alt="Josh Goldberg"/><br /><sub><b>Josh Goldberg</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3AJoshuaKGoldberg" title="Bug reports">🐛</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Code">💻</a> <a href="#maintenance-JoshuaKGoldberg" title="Maintenance">🚧</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/pulls?q=is%3Apr+reviewed-by%3AJoshuaKGoldberg" title="Reviewed Pull Requests">👀</a> <a href="#tool-JoshuaKGoldberg" title="Tools">🔧</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Documentation">📖</a> <a href="#infra-JoshuaKGoldberg" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=JoshuaKGoldberg" title="Tests">⚠️</a> <a href="#ideas-JoshuaKGoldberg" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
