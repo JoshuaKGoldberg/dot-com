@@ -47,14 +47,14 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 
 <LabeledVideo
 	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
-	description="Captured: an open source maintainer trying to find phrasing to discourage these reports while still encouraging security as a practice"
+	description="Captured: an open source maintainer trying to find phrasing that discourage these reports while still encouraging security as a practice..."
 	original="https://giphy.com/gifs/MyzfERo9SqG1G"
 	src="/images/blog/larry-david-consternation.webm"
 />
 
 ## This Is Probably Not a Real Vulnerability
 
-These excessive reports are produced because scanners such as npm audit and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
+These excessive reports are produced because traditional scanners such as `npm audit` and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
 That means every downstream package that relies on any package -even if they never use the impacted APIs- will get a security report.
 
 Most of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
@@ -67,6 +67,8 @@ If an attacker is able to run arbitrary JavaScript on your computer then hardeni
 Vulnerabilities in my packages -even direct dependencies- might impact users.
 But something nested deep within a dependency's dependency?
 Possible, but much less likely.
+
+> 💡 Other tools such as [Socket](https://socket.dev) and [Snyk](https://snyk.io) provide more options around prioritizing issues and/or ignoring vulnerabilities that don't impact the APIs you use.
 
 ## This Is Not a Real Report
 
@@ -94,4 +96,4 @@ I'd recommend instead spending the time to learn how the code in play works - so
 ❤️
 
 > If you're a company reading this, please consider sponsoring your open source dependencies.
-> None of this development work is free - even if you don't personally pay for it.
+> None of their development work is free - even if you don't personally pay for it.
