@@ -47,7 +47,7 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 
 <LabeledVideo
 	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
-	description="Captured: an open source maintainer trying to find phrasing that discourage these reports while still encouraging security as a practice..."
+	description="Seen: a maintainers trying to find phrasing that discourages these reports while still encouraging security as a practice."
 	original="https://giphy.com/gifs/MyzfERo9SqG1G"
 	src="/images/blog/larry-david-consternation.webm"
 />
@@ -57,18 +57,18 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 These excessive reports are produced because traditional scanners such as `npm audit` and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
 That means every downstream package that relies on any package -even if they never use the impacted APIs- will get a security report.
 
-Most of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
+Much of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
 That can be very important to patch for some users of some packages!
 
 But: many packages are only ever used at development time.
-A linter plugin, for example, isn't likely vulnerable to attacks that require modifying JavaScript global objects or providing exponentially expensive regular expressions to function calls.
-If an attacker is able to run arbitrary JavaScript on your computer then hardening your linter isn't going to save you from anything.
+A linter plugin, for example, will often only be run on safely parsed representations of code written by the project's developers.
+That's not a realistic vector for attacks that require passing a raw untrusted strings to specific API.
 
 Vulnerabilities in my packages -even direct dependencies- might impact users.
-But something nested deep within a dependency's dependency?
+But something nested deep within a development-only dependency's dependency?
 Possible, but much less likely.
 
-> 💡 Other tools such as [Socket](https://socket.dev) and [Snyk](https://snyk.io) provide more options around prioritizing issues and/or ignoring vulnerabilities that don't impact the APIs you use.
+> 💡 Comprehensive tools such as [Socket](https://socket.dev) and [Snyk](https://snyk.io) provide more options around prioritizing issues and/or ignoring vulnerabilities that don't impact the APIs you use.
 
 ## This Is Not a Real Report
 
@@ -95,5 +95,5 @@ As positive as your intentions may be, it's counterproductive to take up my time
 I'd recommend instead spending the time to learn how the code in play works - so that you can send a pull request to fix it yourself.
 ❤️
 
-> If you're a company reading this, please consider sponsoring your open source dependencies.
-> None of their development work is free - even if you don't personally pay for it.
+> If you're a company reading this, please consider [sponsoring your open source dependencies](https://github.com/sponsors).
+> Their development is not free - even if you don't personally pay for it.
