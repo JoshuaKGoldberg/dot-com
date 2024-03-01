@@ -55,7 +55,7 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 ## This Is Probably Not a Real Vulnerability
 
 These excessive reports are produced because traditional scanners such as `npm audit` and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
-That means every downstream package that relies on any package -even if they never use the impacted APIs- will get a security report.
+That means every downstream package that directly or transitively relies on an impacted package -even if they never use the impacted APIs- will get a security report.
 
 Much of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
 That can be very important to patch for some users of some packages!
