@@ -47,6 +47,7 @@
 		"eslint-plugin-jsonc": "^2.13.0",
 		"eslint-plugin-jsx-a11y": "^6.8.0",
 		"eslint-plugin-markdown": "^3.0.1",
+		"eslint-plugin-perfectionist": "^2.5.0",
 		"eslint-plugin-regexp": "^2.2.0",
 		"eslint-plugin-solid": "^0.13.1",
 		"eslint-plugin-typescript-sort-keys": "^3.2.0",
@@ -70,9 +71,6 @@
 		"solid-js": "^1.8.15",
 		"typescript": "^5.3.3",
 		"yaml-eslint-parser": "^1.2.2"
-	},
-	"devDependencies": {
-		"eslint-plugin-perfectionist": "^2.5.0"
 	},
 	"packageManager": "pnpm@8.15.3",
 	"engines": {
