@@ -28,7 +28,7 @@ export function ProjectEntry(props: ProjectEntryProps) {
 							alt: `${projectTitle(props.project)} logo`,
 							src: props.project.image,
 							variant: "square",
-					  }
+						}
 					: undefined
 			}
 			links={[

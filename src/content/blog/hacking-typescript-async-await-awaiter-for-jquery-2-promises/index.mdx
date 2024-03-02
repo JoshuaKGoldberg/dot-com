@@ -276,7 +276,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 			? resolve(result.value)
 			: jQueryPromiseFactory(function (resolve) {
 					resolve(result.value);
-			  }).then(fulfilled, rejected);
+				}).then(fulfilled, rejected);
 	}
 	step((generator = generator.apply(thisArg, _arguments || [])).next());
 });
