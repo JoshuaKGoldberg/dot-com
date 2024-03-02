@@ -70,8 +70,8 @@ Take a look at this type:
 type RockMatchup<Opponent> = Opponent extends "Rock"
 	? "Draw"
 	: Opponent extends "Paper"
-	? "Loss"
-	: "Win";
+		? "Loss"
+		: "Win";
 ```
 
 That's a description of how a player's Rock choice in a game of Tic Tac Toe works against its possible opponents.
@@ -96,21 +96,21 @@ type RockPaperScissors<Player, Opponent> =
 		? Opponent extends "Rock"
 			? "Draw"
 			: Opponent extends "Paper"
-			? "Loss"
-			: "Win"
+				? "Loss"
+				: "Win"
 		: // Player is Paper
-		Player extends "Paper"
-		? Opponent extends "Rock"
-			? "Win"
-			: Opponent extends "Paper"
-			? "Draw"
-			: "Loss"
-		: // Player is Scissors
-		Opponent extends "Rock"
-		? "Loss"
-		: Opponent extends "Paper"
-		? "Win"
-		: "Draw";
+			Player extends "Paper"
+			? Opponent extends "Rock"
+				? "Win"
+				: Opponent extends "Paper"
+					? "Draw"
+					: "Loss"
+			: // Player is Scissors
+				Opponent extends "Rock"
+				? "Loss"
+				: Opponent extends "Paper"
+					? "Win"
+					: "Draw";
 ```
 
 Amusing.
@@ -267,11 +267,12 @@ type HowAboutNow = Victory<
 Taking our conditionals one step higher, we can check which player –if either– wins by seeing whether the board satisfies the victory condition for either of our known players.
 
 ```ts
-type Winner<Board> = Victory<"X", Board> extends true
-	? "X"
-	: Victory<"O", Board> extends true
-	? "O"
-	: " ";
+type Winner<Board> =
+	Victory<"X", Board> extends true
+		? "X"
+		: Victory<"O", Board> extends true
+			? "O"
+			: " ";
 
 type StartingWinner = Winner<StartingBoard>;
 // ' '
@@ -448,7 +449,7 @@ type ApplyMoves<
 	: ApplyMoves<
 			ReplaceInBoard<Board, Moves[0][0], Moves[0][1], Moves[0][2]>,
 			DropFirst<Moves>
-	  >;
+		>;
 ```
 
 - First, if the moves extends the empty array (so, if there are no more moves), the resultant type is the board itself.
@@ -554,8 +555,8 @@ Finally, we get a real example in this blog post of using template literal types
 type Split<Text extends string, Splitter extends string> = Text extends ""
 	? []
 	: Text extends `${infer Prefix}${Splitter}${infer Suffix}`
-	? [Prefix, ...Split<Suffix, Splitter>]
-	: [Text];
+		? [Prefix, ...Split<Suffix, Splitter>]
+		: [Text];
 ```
 
 Our `Split` type takes in a `Text` string and a `Splitter` string.
@@ -586,10 +587,10 @@ type NextTurn<Turn> = Turn extends "X" ? "O" : "X";
 type IntToString<Int> = Int extends "0"
 	? 0
 	: Int extends "1"
-	? 1
-	: Int extends "2"
-	? 2
-	: never;
+		? 1
+		: Int extends "2"
+			? 2
+			: never;
 ```
 
 ```ts
@@ -614,12 +615,12 @@ type CollectParsedRawMoves<
 > = RawMoves extends []
 	? Collected
 	: RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
-	? CollectParsedRawMoves<
-			DropFirst<RawMoves>,
-			[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
-			NextTurn<Turn>
-	  >
-	: CollectParsedRawMoves<DropFirst<RawMoves>, Collected, Turn>;
+		? CollectParsedRawMoves<
+				DropFirst<RawMoves>,
+				[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
+				NextTurn<Turn>
+			>
+		: CollectParsedRawMoves<DropFirst<RawMoves>, Collected, Turn>;
 ```
 
 It's kind of big, so here's a version with inline comments:
@@ -637,32 +638,32 @@ type CollectParsedRawMoves<
 	// If there are no more raw moves to parse out, it's done, hooray!...
 	RawMoves extends []
 		? // ...we can exit early by returning an empty array.
-		  Collected
+			Collected
 		: // If there is a next move to parse in our list of raw moves,
-		// it checks whether that move matches a usable pattern.
-		// There can be any amount of Pre text before the Turn string,
-		// followed by a space, the row, another space, the column,
-		// then any amount of Post text.
-		RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
-		? // If it did match, we can recursively continue with:
-		  CollectParsedRawMoves<
-				// * remaining moves yet to be parsed,
-				DropFirst<RawMoves>,
-				// * the previous collected moves, followed by this new move
-				//   (as parsed by our ParseRawMove helper),
-				[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
-				// * and the next turn.
-				NextTurn<Turn>
-		  >
-		: // If our raw move doesn't match the template, then we recurse:
-		  CollectParsedRawMoves<
-				// * still with the rest of the raw moves, but
-				DropFirst<RawMoves>,
-				// * the same collected moves list (no added one), and
-				Collected,
-				// * we retry the same move again.
-				Turn
-		  >;
+			// it checks whether that move matches a usable pattern.
+			// There can be any amount of Pre text before the Turn string,
+			// followed by a space, the row, another space, the column,
+			// then any amount of Post text.
+			RawMoves[0] extends `${infer Pre}${Turn} ${infer RawRow} ${infer RawColumn}${infer Post}`
+			? // If it did match, we can recursively continue with:
+				CollectParsedRawMoves<
+					// * remaining moves yet to be parsed,
+					DropFirst<RawMoves>,
+					// * the previous collected moves, followed by this new move
+					//   (as parsed by our ParseRawMove helper),
+					[...Collected, ParseRawMove<Turn, RawRow, RawColumn>],
+					// * and the next turn.
+					NextTurn<Turn>
+				>
+			: // If our raw move doesn't match the template, then we recurse:
+				CollectParsedRawMoves<
+					// * still with the rest of the raw moves, but
+					DropFirst<RawMoves>,
+					// * the same collected moves list (no added one), and
+					Collected,
+					// * we retry the same move again.
+					Turn
+				>;
 ```
 
 ...tada! 🎊

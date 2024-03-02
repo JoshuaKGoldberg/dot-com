@@ -61,8 +61,8 @@ function findFirstSuperCall(node: Node): SuperCall | undefined {
 	return isSuperCall(node)
 		? node
 		: isFunctionLike(node)
-		? undefined
-		: forEachChild(node, findFirstSuperCall);
+			? undefined
+			: forEachChild(node, findFirstSuperCall);
 }
 ```
 

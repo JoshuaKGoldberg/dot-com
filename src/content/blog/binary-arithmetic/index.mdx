@@ -228,8 +228,8 @@ Let's show that in code:
 type BitAdd<A extends Bit, B extends Bit> = [A, B] extends [0, 0]
 	? [0, 0]
 	: [A, B] extends [1, 0] | [0, 1]
-	? [1, 0]
-	: [0, 1];
+		? [1, 0]
+		: [0, 1];
 ```
 
 Wowee.
@@ -359,10 +359,10 @@ type BitAddThree<A extends Bit, B extends Bit, C extends Bit> = [
 ] extends [0, 0, 0]
 	? [0, 0]
 	: [A, B, C] extends [1, 0, 0] | [0, 1, 0] | [0, 0, 1]
-	? [1, 0]
-	: [A, B, C] extends [1, 1, 0] | [1, 0, 1] | [0, 1, 1]
-	? [0, 1]
-	: [1, 1];
+		? [1, 0]
+		: [A, B, C] extends [1, 1, 0] | [1, 0, 1] | [0, 1, 1]
+			? [0, 1]
+			: [1, 1];
 ```
 
 If you think that's a mouthful, take a look at the JavaScript equivalent:
