@@ -95,6 +95,15 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "eskimojo14",
+      "name": "Ben Durrant",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18308300?v=4",
+      "profile": "https://github.com/EskiMojo14",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
