@@ -1,5 +1,5 @@
 ---
-description: "Security is important, but overusing report mechanisms for non-actionable noise is counterproductive."
+description: "Security is important. Overusing report mechanisms for non-actionable noise is counterproductive."
 image:
   alt: Larry David in Curb Your Enthusiasm looking consternated
   src: larry-david-consternation-head.webp
@@ -47,7 +47,7 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 
 <LabeledVideo
 	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
-	description="Seen: a maintainers trying to find phrasing that discourages these reports while still encouraging security as a practice."
+	description="Shown: a maintainer ideating find phrasing that discourages these reports while still encouraging security practices."
 	original="https://giphy.com/gifs/MyzfERo9SqG1G"
 	src="/images/blog/larry-david-consternation.webm"
 />
@@ -70,13 +70,15 @@ Possible, but much less likely.
 
 > 💡 Comprehensive tools such as [Socket](https://socket.dev) and [Snyk](https://snyk.io) provide more options around prioritizing issues and/or ignoring vulnerabilities that don't impact the APIs you use.
 
+In order to determine whether there's a real security issue in a package, you need to demonstrate an exploit.
+But...
+
 ## This Is Not a Real Report
 
-In order to determine whether there's a real security issue in a package, you need to demonstrate an exploit.
-Security reporting platforms such as [HackerOne](https://docs.hackerone.com/en/articles/8475116-quality-reports) categorically do not allow reports that don't include at least a set of steps to achieve an exploit reproduction.
-Emailing me that some automated scan found a potential issue does not amount to a real security report.
+Solely telling me that some automated scan found a potential issue does not amount to a real security report.
+There are good reasons why security reporting platforms such as [HackerOne](https://docs.hackerone.com/en/articles/8475116-quality-reports) categorically do not allow reports that don't include at least a set of steps to achieve an exploit reproduction.
 
-Requiring reproduction steps is important for two reasons:
+Requiring reproduction steps is important for two goals:
 
 - Ensuring reporters have done their due diligence in making sure what they're reporting is something worth spending time on.
 - Helping the receiving developer(s) understand exactly what's being reported.
@@ -92,7 +94,7 @@ Just as flakiness in unit tests kills motivation to test, spam false security re
 That's bad.
 
 As positive as your intentions may be, it's counterproductive to take up my time with unnecessary security reports.
-I'd recommend instead spending the time to learn how the code in play works - so that you can send a pull request to fix it yourself.
+I'd recommend instead spending the time to learn how the code in play works - so that you can file an actionable report, and maybe even send a pull request to fix it yourself.
 ❤️
 
 > If you're a company reading this, please consider [sponsoring your open source dependencies](https://github.com/sponsors).
