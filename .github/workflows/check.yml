@@ -1,0 +1,16 @@
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare
+      - run: pnpm check
+
+name: Check
+
+on:
+  pull_request: ~
+
+  push:
+    branches:
+      - main

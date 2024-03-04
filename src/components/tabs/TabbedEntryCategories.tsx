@@ -6,8 +6,8 @@ import { TabsSquiggly } from "./TabsSquiggly";
 import { TabsTrigger } from "./TabsTrigger";
 
 export interface TabbedEntryCategoriesProps<Entry> {
-	categories: Record<string, Entry[]>;
 	collection: string;
+	initialCategories: Record<string, Entry[]>;
 	renderCategory: (entries: Entry[]) => JSX.Element;
 }
 
@@ -15,9 +15,7 @@ export function TabbedEntryCategories<Entry>(
 	props: TabbedEntryCategoriesProps<Entry>,
 ) {
 	const [selected, setSelected] = createSignal(
-		// Initial value set to the first category after "All"
-		// eslint-disable-next-line solid/reactivity
-		Object.keys(props.categories)[1],
+		Object.keys(props.initialCategories)[1],
 	);
 
 	return (
@@ -27,7 +25,7 @@ export function TabbedEntryCategories<Entry>(
 			value={selected()}
 		>
 			<TabsList>
-				<For each={Object.keys(props.categories)}>
+				<For each={Object.keys(props.initialCategories)}>
 					{(category) => (
 						<TabsTrigger value={category}>
 							<TabsSquiggly active={category === selected()}>
@@ -38,7 +36,7 @@ export function TabbedEntryCategories<Entry>(
 				</For>
 			</TabsList>
 
-			<For each={Object.entries(props.categories)}>
+			<For each={Object.entries(props.initialCategories)}>
 				{([category, entries]) => (
 					<Tabs.Content value={category}>
 						{props.renderCategory(entries)}

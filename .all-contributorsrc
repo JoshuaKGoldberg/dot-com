@@ -1,22 +1,110 @@
 {
-	"files": ["README.md"],
-	"imageSize": 100,
-	"commit": false,
-	"commitType": "docs",
-	"commitConvention": "angular",
-	"contributors": [
-		{
-			"login": "agulen",
-			"name": "Altan Gulen",
-			"avatar_url": "https://avatars.githubusercontent.com/u/3536080?v=4",
-			"profile": "https://github.com/agulen",
-			"contributions": ["ideas"]
-		}
-	],
-	"contributorsPerLine": 7,
-	"skipCi": true,
-	"repoType": "github",
-	"repoHost": "https://github.com",
-	"projectName": "dot-com",
-	"projectOwner": "JoshuaKGoldberg"
+  "badgeTemplate": "\t<a href=\"#contributors\" target=\"_blank\"><img alt=\"👪 All Contributors: <%= contributors.length %>\" src=\"https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-<%= contributors.length %>-21bb42.svg\" /></a>",
+  "commit": false,
+  "commitConvention": "angular",
+  "commitType": "docs",
+  "contributors": [
+    {
+      "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
+      "contributions": [
+        "bug",
+        "code",
+        "doc",
+        "ideas",
+        "infra",
+        "maintenance",
+        "review",
+        "test",
+        "tool"
+      ],
+      "login": "JoshuaKGoldberg",
+      "name": "Josh Goldberg",
+      "profile": "http://www.joshuakgoldberg.com"
+    },
+    {
+      "login": "agulen",
+      "name": "Altan Gulen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3536080?v=4",
+      "profile": "https://github.com/agulen",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "sxflynn",
+      "name": "Stephen Flynn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2034081?v=4",
+      "profile": "https://github.com/sxflynn",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "dasa",
+      "name": "Dasa Paddock",
+      "avatar_url": "https://avatars.githubusercontent.com/u/828058?v=4",
+      "profile": "https://js.arcgis.com",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "azat-io",
+      "name": "Azat S.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5698350?v=4",
+      "profile": "https://azat.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "eliancodes",
+      "name": "Elian",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15145918?v=4",
+      "profile": "https://www.elian.codes",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "michaeldeboey",
+      "name": "Michaël De Boey",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6643991?v=4",
+      "profile": "https://michaeldeboey.be",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "atilafassina",
+      "name": "Atila Fassina",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2382552?v=4",
+      "profile": "https://atila.io/",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "danieljcafonso",
+      "name": "Daniel Afonso",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35337607?v=4",
+      "profile": "https://danieljcafonso.com/",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": true,
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "projectName": "dot-com",
+  "projectOwner": "JoshuaKGoldberg",
+  "repoHost": "https://github.com",
+  "repoType": "github"
 }

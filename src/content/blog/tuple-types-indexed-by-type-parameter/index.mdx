@@ -148,7 +148,7 @@ const baseConstraint = getBaseConstraintOrType(parentType);
 type = everyType(baseConstraint, isTupleType)
 	? mapType(baseConstraint, (t) =>
 			sliceTupleType(t as TupleTypeReference, index),
-	  )
+		)
 	: createArrayType(elementType);
 ```
 
