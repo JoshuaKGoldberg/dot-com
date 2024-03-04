@@ -57,6 +57,8 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 These excessive reports are produced because traditional scanners such as `npm audit` and Dependabot don't have a way to indicate which API(s) in a package are impacted by a reported issue.
 That means every downstream package that directly or transitively relies on an impacted package -even if they never use the impacted APIs- will get a security report.
 
+> 👉 See [npm audit: Broken by Design](https://overreacted.io/npm-audit-broken-by-design) for a deep dive into `npm audit`'s flaws.
+
 Much of the time, the vulnerability is only exploitable if a user runs some carefully crafted malicious code on the server the package is running on.
 That can be very important to patch for some users of some packages!
 
@@ -103,3 +105,4 @@ If you can, I'd recommend instead spending the time to learn how the code in pla
 ## Acknowledgements
 
 Thanks to [Lydia Stepanek](https://www.lydiaoncybersecurity.com) for reviewing the post and providing helpful feedback & suggestions! 🤝
+Thanks also to [Ben Durrant](https://github.com/EskiMojo14) for [mentioning the `npm audit` deep dive](https://www.reddit.com/r/javascript/comments/1b6fqvt/comment/ktbpoa7).
