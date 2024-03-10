@@ -33,12 +33,13 @@
 
 		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
 
-		--heroSizeSmall: clamp(5rem, 12vmin, 9rem);
+		--heroSizeSmall: clamp(6rem, 12vmin, 9rem);
 		--heroSizeLarge: clamp(6rem, 20vmin, 12rem);
 
 		--widthFull: 63rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
+		--widthPagePadding: clamp(0.5rem, 5vw, 2rem);
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */
 		--astro-code-color-background: transparent;
@@ -146,5 +147,6 @@
 @media (min-width: 1017px) {
 	:root {
 		--heroSizeLarge: 256px;
+		--widthPagePadding: 0;
 	}
 }
