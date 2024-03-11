@@ -2,21 +2,28 @@
 import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
-export interface HeroImageMetadata {
-	alt: string;
-	src: ImageMetadata;
+export interface HeroImages {
+	dark: ImageMetadata;
+	light: ImageMetadata;
 }
 
-export interface HeroImageProps extends HeroImageMetadata {
+interface Props {
+	alt: string;
 	class?: string | undefined;
+	src: HeroImages | ImageMetadata;
 	size: "large" | "small";
 }
 
-// TODO: light/dark mode?
+// TODO:
 ---
 
 <div class:list={["hero-image", Astro.props.size, Astro.props.class]}>
-	<Image alt={Astro.props.alt} src={Astro.props.src} />
+	<!-- TODO: support both images.dark and images.light? -->
+	<Image
+		alt={Astro.props.alt}
+		loading="lazy"
+		src={"dark" in Astro.props.src ? Astro.props.src.dark : Astro.props.src}
+	/>
 </div>
 
 <style>

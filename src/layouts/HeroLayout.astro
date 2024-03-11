@@ -1,7 +1,6 @@
 ---
-import type { ImageMetadata } from "astro";
-
 import Hero from "~/components/Hero.astro";
+import type { HeroImages } from "~/components/HeroImage.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
 
 import BaseLayout from "./BaseLayout.astro";
@@ -9,7 +8,7 @@ import BaseLayout from "./BaseLayout.astro";
 export interface Props {
 	alt: string;
 	class?: string | undefined;
-	image: ImageMetadata;
+	images: HeroImages;
 	primary: string;
 	secondary: string;
 	slug?: string;
@@ -27,14 +26,7 @@ const image = `images/${slug}`;
 	image={`${image}.png`}
 	title={title ? `${title} | Josh Goldberg` : "Josh Goldberg"}
 >
-	<Hero
-		image={{
-			alt: Astro.props.alt,
-			src: Astro.props.image,
-			size: "large",
-		}}
-		primary={primary}
-	>
+	<Hero alt={Astro.props.alt} images={Astro.props.images} primary={primary}>
 		<HeroSecondary>
 			{secondary}
 		</HeroSecondary>

@@ -1,5 +1,6 @@
 ---
-import josh from "~/assets/josh.webp";
+import joshDark from "~/assets/josh-dark.webp";
+import joshLight from "~/assets/josh-light.webp";
 import BodyContents from "~/components/BodyContents.astro";
 import Socials from "~/components/Socials.astro";
 import { Text } from "~/components/Text";
@@ -9,7 +10,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 
 <HeroLayout
 	alt="Josh's half-smiling happy face"
-	image={josh}
+	images={{ dark: joshDark, light: joshLight }}
 	primary="Hi! I'm Josh."
 	secondary="I'm an open source maintainer in the TypeScript ecosystem."
 	slug="josh"
