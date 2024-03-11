@@ -3,19 +3,24 @@ description: "Just for fun, what if we crafted a board game purely within TypeSc
 download: https://1drv.ms/p/s!AvUc1cvPrJnWvtEWI5Fd_5Va4n3ggg?e=XnppFL
 image:
   alt: Smiling cat receiving head scratches next to a laptop showing VS Code
-  src: ~/assets/brad.jpg
+  src: "~/assets/blog/brad.jpg"
 pubDate: 2020-10-05
 title: Type System Game Engines
 ---
 
+import brad from "~/assets/blog/brad.jpg";
+import definitelyTyped from "~/assets/blog/definitely-typed.png";
+import krabbyPatties from "~/assets/blog/krabby-patties.webm";
+import pinkyUp from "~/assets/blog/pinky-up.webm";
+import recursion from "~/assets/blog/recursion.webm";
+import riding from "~/assets/blog/riding.webm";
+import superSaiyan from "~/assets/blog/super-saiyan.webm";
+import uhhh from "~/assets/blog/uhhh.webm";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
-import brad from "~/assets/brad.jpg";
-import definitelyTyped from "~/assets/definitely-typed.png";
 
 <LabeledImage
 	description="Here's a cute photo of a cat to start the blog post off right."
-	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
 	alt="Smiling cat receiving head scratches next to a laptop showing VS Code"
 	src={brad}
 />
@@ -49,7 +54,7 @@ I've left those out of this blog post to keep it trim.
 	alt="Patrick Star saying 'hold your pinky up like this' and holding it up"
 	description="Buckle down, folks, and hold your pinkies up. We're going to explore some fancy types."
 	original="https://giphy.com/gifs/spongebob-rock-patrick-star-gk960SX0iuOWXQIcnW"
-	src="/images/blog/pinky-up.webm"
+	src={pinkyUp}
 />
 
 ## Conditional Generics
@@ -170,7 +175,7 @@ The `extends` keyword in `RockPaperScissors` is important: it tells the type sys
 	alt="Patrick Star riding a sea horse machine"
 	description="We're winding up to play with the type system."
 	original="https://giphy.com/gifs/patrick-ride-enjoying-jvbQuNWohvydW"
-	src="/images/blog/riding.webm"
+	src={riding}
 />
 
 ## Tuple Types
@@ -287,7 +292,7 @@ Nifty.
 	alt="Patrick Star sucking in many Krabby Patties"
 	description="Many of a thing is always better than one of it."
 	original="https://giphy.com/gifs/spongebob-squarepants-patrick-star-burgers-mVWOIgoVI7edW"
-	src="/images/blog/krabby-patties.webm"
+	src={krabbyPatties}
 />
 
 ## Mapped Types
@@ -385,7 +390,7 @@ Still, the result is what we want: a new board based on the original with the mo
 	alt="Patrick Star going Super Saiyan"
 	description="We're leveling up! We can play games with ourselves now in the type system!"
 	original="https://giphy.com/gifs/zCtOatW0GOije"
-	src="/images/blog/super-saiyan.webm"
+	src={superSaiyan}
 />
 
 ## Inferred Types
@@ -489,7 +494,7 @@ Our output board is the result of all those moves applied on top of each other.
 	alt="Infinite recursion of zooming into Patrick Star's mouth"
 	description="Recursion! In the type system!"
 	original="https://giphy.com/gifs/spongebob-squarepants-endless-cartoon-3o7aCZDlmQZLe4Q4V2"
-	src="/images/blog/recursion.webm"
+	src={recursion}
 />
 
 ## Template Literal Types
@@ -687,7 +692,7 @@ All concepts are new until you've had the time to play with them for a bit. Ever
 	alt="Patrick Star drooling and saying 'uhhh'"
 	description="Patrick Star trying to grasp template literal types."
 	original="https://giphy.com/gifs/patrick-spongebob-squarepants-sleepy-qQZAQQZP029NK"
-	src="/images/blog/uhhh.webm"
+	src={uhhh}
 />
 
 ## What's Next
