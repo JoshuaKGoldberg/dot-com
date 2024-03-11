@@ -7,16 +7,16 @@ pubDate: 2023-09-20 10:00 GMT
 title: "Speeding Up Centered Part 5: Emoji Processing"
 ---
 
-import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import LabeledImages from "~/components/blog/LabeledImages.astro";
-import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
-
 import lighthousePerformanceOverviewAfter from "~/assets/blog/lighthouse-performance-overview-after.png";
 import lighthousePerformanceOverviewBefore from "~/assets/blog/lighthouse-performance-overview-before.png";
 import lighthousePerformanceOverviewOriginal from "~/assets/blog/lighthouse-performance-overview-original.png";
 import lighthousePerformanceProfileAfterLongTask from "~/assets/blog/lighthouse-performance-profile-after-long-task.png";
 import lighthousePerformanceProfileBeforeLongTask from "~/assets/blog/lighthouse-performance-profile-before-long-task.png";
+import localhostCenteredLoadingSeconds from "~/assets/blog/localhost-centered-loading-seconds.webm";
 import sourceBeforeLineAnnotations from "~/assets/blog/source-before-line-annotations.png";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledImages from "~/components/blog/mdx/LabeledImages.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 > This post is the fifth in a series of five performance improvements I made to the [Centered app](https://centered.app).
 > See [81 &lt;iframe&gt; Embeds](/blog/speeding-up-centered-part-1-81-iframe-embeds) for more context.
@@ -37,7 +37,7 @@ It was as if the page was performing multiple seconds of busywork before it coul
 <LabeledVideo
 	alt="Loading localhost:1701/app (Centered) for several seconds of spinner before app content appears."
 	description="Loading a local production build of Centered. Note the several seconds before populating with app content."
-	src="~/assets/blog/localhost-centered-loading-seconds.webm"
+	src={localhostCenteredLoadingSeconds}
 />
 
 This last performance improvement is my favorite of the bunch.

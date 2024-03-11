@@ -7,6 +7,9 @@ pubDate: 2023-07-19
 title: "Speeding Up Centered Part 1: 81 <iframe> Embeds"
 ---
 
+import centeredLoadingQuotesPageAfter from "~/assets/blog/centered-loading-quotes-page-after.webm";
+import centeredLoadingQuotesPageBefore from "~/assets/blog/centered-loading-quotes-page-before.webm";
+import mrBeanWaiting from "~/assets/blog/mr-bean-waiting.webm";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 import centeredAppScreenshot from "~/assets/blog/centered-app-screenshot.png";
@@ -22,7 +25,7 @@ But when you're a startup working quickly to implement critical user features, i
 	alt="Mr. Bean waiting ni front of a yellow field of flowers, checking his watch"
 	description="Your users are not Mr. Bean. Don't make them wait to use your website."
 	original="https://giphy.com/gifs/waiting-mr-bean-checking-time-pFZTlrO0MV6LoWSDXd"
-	src="~/assets/blog/mr-bean-waiting.webm"
+	src={mrBeanWaiting}
 />
 
 Earlier this year, I spent some time working on performance for the popular [Centered app](https://centered.app).
@@ -82,7 +85,7 @@ It was _aggravatingly_ slow.
 <LabeledVideo
 	alt="Recording of centered.app/quotes with a blank page for several seconds before populating tweets content"
 	description="2x sped up recording of loading centered.app/quotes"
-	src="~/assets/blog/centered-loading-quotes-page-before.webm"
+	src={centeredLoadingQuotesPageBefore}
 />
 
 On my Mac Mini with an M1 Max chip, the page took _ten seconds_ to populate page
@@ -185,7 +188,7 @@ The general time from page load to all visible content loading was reduced from 
 <LabeledVideo
 	alt="Recording of centered.app/quotes with a blank page for several seconds before populating tweets content"
 	description="1x recording of loading centered.app/quotes with the over-eager loading"
-	src="~/assets/blog/centered-loading-quotes-page-after.webm"
+	src={centeredLoadingQuotesPageAfter}
 />
 
 The page still has a bit of choppiness as the frames load in.

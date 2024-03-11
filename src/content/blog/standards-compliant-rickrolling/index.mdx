@@ -7,7 +7,8 @@ image:
   src: "~/assets/blog/rick-astley.png"
 ---
 
-import { LoopedVideo } from "~/components/blog/LoopedVideo";
+import rickAstleyDancing from "~/assets/blog/rick-astley-dancing.webm";
+import { LoopedVideo } from "~/components/blog/mdx/LoopedVideo";
 
 > This blog post does not contain any surprise rickrolls.
 > It's a safe space.
@@ -22,7 +23,7 @@ Modern web browsers restrict autoplaying audio and video, complicating the art o
 This blog post details how and why my site works the way it does in celebration of April Fools' Day 2022.
 
 <LoopedVideo
-	src="~/assets/blog/rick-astley-dancing.webm"
+	src={rickAstleyDancing}
 	title="Rick Astley dancing in the Never Gonna Give You Up music video"
 />
 

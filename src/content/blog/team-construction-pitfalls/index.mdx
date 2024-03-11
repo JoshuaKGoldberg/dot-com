@@ -7,9 +7,11 @@ pubDate: 2021-01-23
 title: "Team Construction Pitfalls"
 ---
 
+import aladdinAndJasmine from "~/assets/blog/aladdin-and-jasmine.webm";
+import hamstersSwarming from "~/assets/blog/hamsters-swarming.webm";
+import deathOfSocrates from "~/assets/blog/death-of-socrates.jpg";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
-import deathOfSocrates from "~/assets/blog/death-of-socrates.jpg";
 
 <LabeledImage
 	alt="The Death of Socrates (painting)"
@@ -50,7 +52,7 @@ For the sake of easier writing, let's consider "junior" to be people who haven't
 	alt="A lot of hamsters, swarming"
 	description="Despite the context, these are not implied to be junior developers. They're _frontend_ developers being shown a new framework."
 	original="https://giphy.com/gifs/running-hamster-11Ss9q3F4zf5VC"
-	src="~/assets/blog/hamsters-swarming.webm"
+	src={hamstersSwarming}
 />
 
 > Anecdote: two junior developers on a relatively new team were tasked with creating a new variation of an existing, tech-debt-heavy page.
@@ -101,7 +103,7 @@ Thus, it is unhealthy to spin off a new team solely with new team members, regar
 	alt="Aladdin and Jasmine on the flying carpet"
 	description="How 'senior' developers feel explaining why their opinions are best"
 	original="https://giphy.com/gifs/disney-aladdin-princess-jasmine-a-whole-new-world-WUu9EGdSEImJy"
-	src="~/assets/blog/aladdin-and-jasmine.webm"
+	src={aladdinAndJasmine}
 />
 
 When you match area experts with developers new to the organization, both sides benefit.

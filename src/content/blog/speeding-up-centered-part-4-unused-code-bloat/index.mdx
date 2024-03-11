@@ -7,6 +7,7 @@ pubDate: 2023-08-21 10:01 GMT
 title: "Speeding Up Centered Part 4: Unused Code Bloat"
 ---
 
+import centeredKnip from "~/assets/blog/centered-knip.webm";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
@@ -59,7 +60,7 @@ The results were pleasing: it found quite a few unused areas of code!
 <LabeledVideo
 	alt="Running yarn knip on a repository, finding very many unused dependencies and files"
 	description="Running knip with almost no customizations in its knip.json file"
-	src="~/assets/blog/centered-knip.webm"
+	src={centeredKnip}
 />
 
 Quoting and summarizing its output:
