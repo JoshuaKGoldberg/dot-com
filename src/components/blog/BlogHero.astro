@@ -1,5 +1,5 @@
 ---
-import { HeroImage, type HeroImageProps } from "../HeroImage.tsx";
+import HeroImage, { type HeroImageMetadata } from "../HeroImage.astro";
 import HeroSecondary from "../HeroSecondary.astro";
 import HeroTertiary from "../HeroTertiary.astro";
 import HeroTitle from "../HeroTitle.astro";
@@ -12,7 +12,7 @@ interface Props {
 	date: Date;
 	description: string;
 	download?: string | undefined;
-	image?: HeroImageProps | undefined;
+	image: HeroImageMetadata;
 	title: string;
 }
 ---
@@ -23,12 +23,7 @@ interface Props {
 			{
 				Astro.props.image && (
 					<div class="hero-image">
-						<HeroImage
-							client:load
-							{...Astro.props.image}
-							class="image"
-							size="small"
-						/>
+						<HeroImage class="image" size="small" {...Astro.props.image} />
 					</div>
 				)
 			}

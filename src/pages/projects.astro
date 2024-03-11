@@ -1,6 +1,7 @@
 ---
 import { projectCategories } from "joshuakgoldberg";
 
+import projects from "~/assets/projects.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
@@ -31,6 +32,7 @@ const categories = {
 
 <HeroLayout
 	alt="Josh smiling and giving a thumbs up at a podium wearing a white shirt with a pineapple pattern"
+	image={projects}
 	primary="Projects"
 	secondary="I work primarily on open source tooling for TypeScript projects."
 	title="Projects"

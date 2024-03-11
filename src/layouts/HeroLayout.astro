@@ -1,4 +1,6 @@
 ---
+import type { ImageMetadata } from "astro";
+
 import Hero from "~/components/Hero.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
 
@@ -7,7 +9,7 @@ import BaseLayout from "./BaseLayout.astro";
 export interface Props {
 	alt: string;
 	class?: string | undefined;
-	image?: string;
+	image: ImageMetadata;
 	primary: string;
 	secondary: string;
 	slug?: string;
@@ -28,11 +30,8 @@ const image = `images/${slug}`;
 	<Hero
 		image={{
 			alt: Astro.props.alt,
+			src: Astro.props.image,
 			size: "large",
-			src: {
-				dark: `/${image}-dark.webp`,
-				light: `/${image}-light.webp`,
-			},
 		}}
 		primary={primary}
 	>

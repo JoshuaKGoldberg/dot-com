@@ -13,13 +13,11 @@ export function BlogEntry(props: BlogEntryProps) {
 	return (
 		<ContentEntry
 			description={props.blog.data.description}
-			image={
-				props.blog.data.image && {
-					alt: props.blog.data.image.src,
-					src: `/blog/${props.blog.data.image.src}`,
-					variant: "round",
-				}
-			}
+			image={{
+				alt: props.blog.data.image.alt,
+				src: props.blog.data.image.src.src,
+				variant: "round",
+			}}
 			subtitle={
 				<DateAndMinutes body={props.blog.body} date={props.blog.data.pubDate} />
 			}

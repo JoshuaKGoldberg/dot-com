@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 
+import speaking from "~/assets/speaking.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
@@ -19,6 +20,7 @@ const categories = {
 
 <HeroLayout
 	alt="Josh looking up seriously wearing a dark blue shirt with a small pineapples and flamingos pattern"
+	image={speaking}
 	primary="Speaking"
 	secondary="I talk about static analysis, accessibility, and team culture."
 	title="Speaking"

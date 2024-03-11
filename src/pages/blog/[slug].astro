@@ -25,14 +25,11 @@ if (!entry) {
 }
 
 const rendered = await entry.render();
-const image = entry.data.image?.src
-	? `/images/blog/${entry.data.image.src}`
-	: `/images/goldblog.png`;
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	image={image}
+	image={entry.data.image.src.src}
 	title={`${entry.data.title} | Goldblog`}
 >
 	<BodyContents class="top">
@@ -42,11 +39,7 @@ const image = entry.data.image?.src
 			date={entry.data.pubDate}
 			description={entry.data.description}
 			download={entry.data.download}
-			image={entry.data.image && {
-				alt: entry.data.image.alt,
-				size: "small",
-				src: `/images/blog/${entry.data.image.src}`,
-			}}
+			image={entry.data.image}
 			title={entry.data.title}
 		/>
 		<TableOfContents client:only headings={rendered.headings} />

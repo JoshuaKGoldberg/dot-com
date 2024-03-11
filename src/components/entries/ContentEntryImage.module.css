@@ -16,14 +16,6 @@
 	user-select: none;
 }
 
-:global(.javascriptEnabled) .contentEntryImage:not(.contentEntryImageLoaded) {
-	opacity: 0;
-}
-
-.contentEntryImageLoaded {
-	animation: var(--transitionSlow) fadeIn;
-}
-
 .round {
 	border-radius: 100%;
 }
