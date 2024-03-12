@@ -11,8 +11,14 @@ export interface Props {
 	description: string | string[];
 	note?: string;
 	original?: MediaOriginal | string;
-	src: ImageMetadata["src"];
+	src: ImageMetadata;
 }
+
+const alt =
+	Astro.props.alt ??
+	(Array.isArray(Astro.props.description)
+		? Astro.props.description.join(" ")
+		: Astro.props.description);
 ---
 
 <LabeledMedia
@@ -21,18 +27,23 @@ export interface Props {
 	original={Astro.props.original}
 >
 	<Image
-		alt={Astro.props.alt ?? Astro.props.description}
+		alt={alt}
 		class="labeled-image"
 		inferSize
 		src={Astro.props.src}
+		style={{
+			// Astro manually sets aspect-ratio, height, and width on the image.
+			// With maximum widths and heights, that overrides the aspect-ratio,
+			// resulting in stretched images. 😬
+			height: "auto !important",
+			width: "auto !important",
+		}}
 	/>
 </LabeledMedia>
 
 <style is:inline>
 	.labeled-image {
-		display: block;
-		margin: auto;
 		max-height: 25rem;
-		max-width: 100%;
+		max-width: min(100%, 37.5rem);
 	}
 </style>
