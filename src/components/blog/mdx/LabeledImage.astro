@@ -23,7 +23,7 @@ const alt =
 
 // If I pass src.src (the actual string), Astro's build thinks it's a remote image and fails.
 // Adding catch (error) { and console.log(error) to node_modules/astro/dist/assets/internal.js > getImage:
-//   TypeError: Failed to parse URL from /_astro/me-laughing-on-stage-wide.fsNdobAQ.webp
+//   TypeError: Failed to parse URL from /_astro/me-laughing-on-stage-wide.abc123.webp
 const src = Astro.props.src as unknown as string;
 ---
 
