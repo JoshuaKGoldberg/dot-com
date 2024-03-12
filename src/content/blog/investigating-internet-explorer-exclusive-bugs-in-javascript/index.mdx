@@ -1,9 +1,14 @@
 ---
 description: "IE users are users too!"
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2018-10-12
 title: "Investigating Internet Explorer Exclusive Bugs in JavaScript"
 ---
 
+import zoolanderComputer from "~/assets/blog/zoolander-computer.webm";
+import zoolanderHappy from "~/assets/blog/zoolander-happy.webm";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 In an era dominated by evergreen browsers such as Chrome, Edge, Firefox, and Safari, it's easy as web developers to assume our users are all on modern platforms.
@@ -17,7 +22,7 @@ Both types of users will blame you if your site doesn't work on their computer.
 <LabeledVideo
 	alt="Derek Zoolander and Hansel MacDonald from Zoolander (2001) looking confused next to an orange iMac."
 	description="Making inclusive products means designing for Derek Zoolander."
-	src="/images/blog/zoolander-computer.webm"
+	src={zoolanderComputer}
 />
 
 ## The Root Problems
@@ -204,7 +209,7 @@ Finally!
 	alt="Derek Zoolander happily being brainwashed by Mugatu's floating heads in Zoolander (2001)"
 	description="Happy."
 	original="https://giphy.com/gifs/zoolander-ac38RqTgQXYAM"
-	src="/images/blog/zoolander-happy.webm"
+	src={zoolanderHappy}
 />
 
 We later added a test to our regularly-running integration tests to switch between pages rapidly a few dozen times.

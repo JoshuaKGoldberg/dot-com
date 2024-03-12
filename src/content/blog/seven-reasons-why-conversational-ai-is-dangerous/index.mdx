@@ -12,20 +12,21 @@ keywords:
   - OpenAI
 image:
   alt: "Robots talking to each other in a neon city"
-  src: robots-talking-neon.jpg
+  src: "~/assets/blog/robots-talking-neon.jpg"
 title: "Seven Reasons Why Conversational AI is Dangerous"
 ---
 
-import robotNo from "./robot-no.png";
-import robotsTalkingNeon from "./robots-talking-neon.jpg";
+import robotNo from "~/assets/blog/robot-no.png";
+import robotsTalkingNeonWide from "~/assets/blog/robots-talking-neon-wide.jpg";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 
 Conversational artificial intelligence (AI) has become a rapidly growing technology in recent years, with chatbots and virtual assistants becoming increasingly common in our daily lives.
 While these AI systems can be helpful in certain situations, there are also significant risks associated with their use.
 In this blog post, we will explore the dangers of conversational AIs and why we should be cautious when using them.
 
-<img
+<LabeledImage
 	alt="Robots talking to each other in a neon city"
-	src={robotsTalkingNeon}
+	src={robotsTalkingNeonWide}
 />
 
 ## 1. Privacy Risks
@@ -83,7 +84,7 @@ For instance, chatbots that provide mental health counseling or legal advice may
 In conclusion, while conversational AIs have the potential to be helpful, we must also be aware of the risks associated with their use.
 As we continue to develop and implement these systems, it is important to prioritize privacy, fairness, and accountability, and to ensure that they are designed and used in a way that benefits all of us, not just a few.
 
-<img alt="Robot gesturing no" src={robotNo} />
+<LabeledImage alt="Robot gesturing no" src={robotNo} />
 
 ---
 

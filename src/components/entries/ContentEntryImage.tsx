@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import { createSignal } from "solid-js";
 
 import styles from "./ContentEntryImage.module.css";
 
@@ -17,30 +16,12 @@ export interface ContentEntryImageProps {
 }
 
 export function ContentEntryImage(props: ContentEntryImageProps) {
-	const [loaded, setLoaded] = createSignal(false);
-
-	const markLoaded = () => {
-		setTimeout(() => {
-			setLoaded(true);
-		});
-	};
-
 	return (
 		<img
 			alt={props.alt}
-			class={clsx(
-				styles.contentEntryImage,
-				variants[props.variant],
-				loaded() && styles.contentEntryImageLoaded,
-			)}
+			class={clsx(styles.contentEntryImage, variants[props.variant])}
 			loading="lazy"
-			onLoad={markLoaded}
-			ref={(element) => {
-				if (element.complete) {
-					markLoaded();
-				}
-			}}
-			src={props.src.startsWith("http") ? props.src : `/images/${props.src}`}
+			src={props.src}
 		/>
 	);
 }

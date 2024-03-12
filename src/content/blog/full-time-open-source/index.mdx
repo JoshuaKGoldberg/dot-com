@@ -1,9 +1,14 @@
 ---
 description: "I'm quitting my job to become a full time open source maintainer"
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2022-01-22
 title: "Full Time Open Source"
 ---
 
+import goingOnAnAdventure from "~/assets/blog/going-on-an-adventure.webm";
+import soLong from "~/assets/blog/so-long.webm";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 I love coding.
@@ -25,7 +30,7 @@ I'm taking February partially off to relax, then fully starting in March I'll be
 
 <LabeledVideo
 	original="https://giphy.com/gifs/spongebob-squarepants-leave-smooth-48FhEMYGWji8"
-	src="/images/blog/so-long.webm"
+	src={soLong}
 	title="Spongebob suavely backing out of a room with the caption 'So Long!'"
 />
 
@@ -183,7 +188,7 @@ I'm hopeful I get to make a real positive impact in the open source world and li
 
 <LabeledVideo
 	original="https://giphy.com/gifs/hobbit-xKeqcRfET8be"
-	src="/images/blog/going-on-an-adventure.webm"
+	src={goingOnAnAdventure}
 	title="Frodo happily running with the caption 'I'm going on an adventure!'"
 />
 

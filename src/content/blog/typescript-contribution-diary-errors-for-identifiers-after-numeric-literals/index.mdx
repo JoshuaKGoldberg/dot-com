@@ -1,17 +1,20 @@
 ---
 description: "How I made TypeScript's parsing of name characters after numbers conform to the ECMAScript specification just a bit more strictly."
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2018-12-07
 title: "TypeScript Contribution Diary: Identifiers after Numeric Literals"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import drakeSpecSyntaxErrata from "./drake-spec-syntax-errata.webp";
-import tsdevtest3inError from "./tsdevtest-3in-error.webp";
-import tsdevtestResult3 from "./tsdevtest-result-3.webp";
-import tsdevtestResult4 from "./tsdevtest-result-4.webp";
-import tsdevtestParseElementThrice from "./tsdevtest-parseElement-thrice.png";
-import tsdevtestTargetESNext from "./tsdevtest-target-esnext.webp";
-import tsdevtestVariousErrors from "./tsdevtest-various-errors.webp";
+import drakeSpecSyntaxErrata from "~/assets/blog/drake-spec-syntax-errata.webp";
+import tsdevtest3inError from "~/assets/blog/tsdevtest-3in-error.webp";
+import tsdevtestResult3 from "~/assets/blog/tsdevtest-result-3.webp";
+import tsdevtestResult4 from "~/assets/blog/tsdevtest-result-4.webp";
+import tsdevtestParseElementThrice from "~/assets/blog/tsdevtest-parseElement-thrice.png";
+import tsdevtestTargetESNext from "~/assets/blog/tsdevtest-target-esnext.webp";
+import tsdevtestVariousErrors from "~/assets/blog/tsdevtest-various-errors.webp";
 
 > I've started making contributions to TypeScript, working my way up from small error reporting nitpicks to (hopefully!) real syntactic and control flow improvements.
 > These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.

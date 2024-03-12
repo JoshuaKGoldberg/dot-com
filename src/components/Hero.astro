@@ -1,17 +1,18 @@
 ---
-import { HeroImage, type HeroImageProps } from "./HeroImage";
+import HeroImage, { type HeroImages } from "./HeroImage.astro";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
+	alt: string;
 	class?: string | undefined;
-	image: HeroImageProps;
+	images: HeroImages;
 	primary: string;
 }
 ---
 
 <div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<HeroImage client:load {...Astro.props.image} size="large" />
+		<HeroImage alt={Astro.props.alt} size="large" src={Astro.props.images} />
 	</div>
 	<div class="half second">
 		<HeroTitle>

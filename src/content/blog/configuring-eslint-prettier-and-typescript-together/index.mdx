@@ -2,12 +2,15 @@
 description: "How I recommend getting your formatter, linter, and type checker to play together nicely."
 image:
   alt: Josh smiling on stage and giving a presentation showing the "Type Checking React (v2)" from the linked slides.
-  src: react-miami-me-speaking.jpg
+  src: "~/assets/blog/react-miami-me-speaking.jpg"
 pubDate: 2023-05-01
 tags: ["formatting", "eslint", "linting", "prettier", "react", "style"]
 title: "Configuring ESLint, Prettier, and TypeScript Together"
 ---
 
+import april from "~/assets/blog/april.webm";
+import needsMoreLintRules from "~/assets/blog/needs-more-lint-rules.webm";
+import otterCleaning from "~/assets/blog/otter-cleaning.webm";
 import EmbeddedIframe from "~/components/blog/mdx/EmbeddedIframe.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
@@ -91,7 +94,7 @@ Let's dig into the types of tools.
 	alt="Cute otter cleaning itself in a body of water."
 	description="Formatters clean your code. That's all they do."
 	original="https://giphy.com/gifs/montereybayaquarium-face-otter-sea-1xlGfZ07Dq62jqKT9t"
-	src="/images/blog/otter-cleaning.webm"
+	src={otterCleaning}
 />
 
 A formatter is a tool that reads in your source code, ignores your formatting, and suggests how to write it.
@@ -167,7 +170,7 @@ The only option I generally set in my configs is [changing `useTabs` to true](ht
 <LabeledVideo
 	alt="Will Ferrel in SNL banging a cowbell behind the band in the 'needs more cowbell' sketch. Caption: 'NEEDS MORE LINT RULES'"
 	description="me irl"
-	src="/images/blog/needs-more-lint-rules.webm"
+	src={needsMoreLintRules}
 />
 
 A linter is a tool that runs a set of checks on your source code.
@@ -382,7 +385,7 @@ Use a dedicated formatter, please!
 	alt="April Ludgate in Parks and Recreation putting her fingers to her forehead and looking exasperated and overwhelmed'"
 	description="me and all other linter maintainers irl having to deal with formatting rules"
 	original="https://giphy.com/gifs/parksandrec-episode-5-parks-and-recreation-rec-76Nahzjx4Y6WXP2APE"
-	src="/images/blog/april.webm"
+	src={april}
 />
 
 ## Type Checking

@@ -2,20 +2,22 @@
 description: "How misbalanced or poorly positioned teams restrict their developers in both the short and long term."
 image:
   alt: The Death of Socrates (painting)
-  src: death-of-socrates.jpg
+  src: "~/assets/blog/death-of-socrates.jpg"
 pubDate: 2021-01-23
 title: "Team Construction Pitfalls"
 ---
 
+import aladdinAndJasmine from "~/assets/blog/aladdin-and-jasmine.webm";
+import hamstersSwarming from "~/assets/blog/hamsters-swarming.webm";
+import deathOfSocratesWide from "~/assets/blog/death-of-socrates-wide.jpg";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
-import deathOfSocrates from "./death-of-socrates.jpg";
 
 <LabeledImage
 	alt="The Death of Socrates (painting)"
 	description="“I know that I know nothing.” - Socrates, paraphrased by Plato, paraphrased"
 	original="https://en.wikipedia.org/wiki/File:David_-_The_Death_of_Socrates.jpg"
-	src={deathOfSocrates}
+	src={deathOfSocratesWide}
 />
 
 How does it happen that a fresh new product team can sometimes create tech debt before its first release?
@@ -50,7 +52,7 @@ For the sake of easier writing, let's consider "junior" to be people who haven't
 	alt="A lot of hamsters, swarming"
 	description="Despite the context, these are not implied to be junior developers. They're _frontend_ developers being shown a new framework."
 	original="https://giphy.com/gifs/running-hamster-11Ss9q3F4zf5VC"
-	src="/images/blog/hamsters-swarming.webm"
+	src={hamstersSwarming}
 />
 
 > Anecdote: two junior developers on a relatively new team were tasked with creating a new variation of an existing, tech-debt-heavy page.
@@ -101,7 +103,7 @@ Thus, it is unhealthy to spin off a new team solely with new team members, regar
 	alt="Aladdin and Jasmine on the flying carpet"
 	description="How 'senior' developers feel explaining why their opinions are best"
 	original="https://giphy.com/gifs/disney-aladdin-princess-jasmine-a-whole-new-world-WUu9EGdSEImJy"
-	src="/images/blog/aladdin-and-jasmine.webm"
+	src={aladdinAndJasmine}
 />
 
 When you match area experts with developers new to the organization, both sides benefit.

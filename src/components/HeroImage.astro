@@ -1,0 +1,58 @@
+---
+import type { ImageMetadata } from "astro";
+
+import { Image } from "astro:assets";
+
+export interface HeroImages {
+	dark: ImageMetadata;
+	light: ImageMetadata;
+}
+
+interface Props {
+	alt: string;
+	class?: string | undefined;
+	size: "large" | "small";
+	src: HeroImages | ImageMetadata;
+}
+
+// TODO:
+---
+
+<div class:list={["hero-image", Astro.props.size, Astro.props.class]}>
+	<!-- TODO: support both images.dark and images.light? -->
+	<Image
+		alt={Astro.props.alt}
+		loading="lazy"
+		src={"dark" in Astro.props.src ? Astro.props.src.dark : Astro.props.src}
+	/>
+</div>
+
+<style>
+	.hero-image {
+		height: var(--imageSize);
+		width: var(--imageSize);
+	}
+
+	.hero-image.small {
+		--imageSize: var(--heroSizeSmall);
+	}
+
+	.hero-image.large {
+		--imageSize: var(--heroSizeLarge);
+	}
+
+	.hero-image img {
+		display: block;
+		border-radius: 100%;
+		box-shadow: 0 3px 7px 3px var(--colorSubtle);
+		max-height: 100%;
+		max-width: 100%;
+		user-select: none;
+	}
+
+	@media (min-width: 700px) {
+		.hero-image img {
+			box-shadow: 0 3px 14px 0 var(--colorSubtle);
+		}
+	}
+</style>

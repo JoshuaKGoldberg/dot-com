@@ -2,7 +2,7 @@
 description: "Explaining why the speed gains from Rust linters aren't comparable to the full feature set of typescript-eslint."
 image:
   alt: A black cat laying on a bed with its eyes half-closed. It looks sassy.
-  src: jerry-sass.jpg
+  src: "~/assets/blog/jerry-sass.jpg"
 pubDate: 2024-01-10
 tags: [
 	"biome",
@@ -20,7 +20,7 @@ title: "Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import jerrySass from "./jerry-sass.jpg";
+import jerrySassWide from "~/assets/blog/jerry-sass-wide.jpg";
 
 One of 2023's biggest trends for web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org).
 Rust is a wonderful programming language that allows for shockingly fast binaries which still interop well with other web tools courtesy of WebAssembly.
@@ -38,7 +38,7 @@ In this case, the positive performance advantages come with a negative feature g
 <LabeledImage
 	alt="A black cat laying on a bed with its eyes half-closed. It looks sassy."
 	description="Jerry the cat with the same facial expression I get when a team doesn't use typed linting."
-	src={jerrySass}
+	src={jerrySassWide}
 />
 ## Recap: Type-Checked Linting
 

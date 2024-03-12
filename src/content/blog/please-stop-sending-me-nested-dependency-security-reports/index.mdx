@@ -2,11 +2,12 @@
 description: "Security is important. Overusing report mechanisms for non-actionable noise is counterproductive."
 image:
   alt: Larry David in Curb Your Enthusiasm looking consternated
-  src: larry-david-consternation-head.webp
+  src: "~/assets/blog/larry-david-consternation-head.webp"
 pubDate: 2024-03-04
 title: "Please Stop Sending Me Nested Dependency Security Reports"
 ---
 
+import larryDavidConsternation from "~/assets/blog/larry-david-consternation.webm";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 As an open source maintainer, I regularly receive "critical security vulnerability" DMs, emails, and GitHub issues about my projects.
@@ -49,7 +50,7 @@ Unless you can demonstrate a real security vulnerability in one of my packages, 
 	alt="Larry David in Curb Your Enthusiasm looking more and more consternated, subtly talking to himself."
 	description="Shown: a maintainer ideating find phrasing that discourages these reports while still encouraging security practices."
 	original="https://giphy.com/gifs/MyzfERo9SqG1G"
-	src="/images/blog/larry-david-consternation.webm"
+	src={larryDavidConsternation}
 />
 
 ## This Is Probably Not a Real Vulnerability

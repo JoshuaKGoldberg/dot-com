@@ -2,14 +2,14 @@
 description: "Using lazily instantiated, dynamic classes instead of hand-written functions to reduce unnecessary work during loads."
 image:
   alt: "Screenshot of a Chrome devtools performance profile"
-  src: "fsp-game-loading-profile.png"
+  src: "~/assets/blog/fsp-game-loading-profile.png"
 pubDate: 2017-10-09
 title: "How lazily instantiated classes reduced my game engines' reset times by half"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import objectmakrAfter from "./objectmakr-after.webp";
-import objectmakrBefore from "./objectmakr-before.webp";
+import objectmakrAfter from "~/assets/blog/objectmakr-after.webp";
+import objectmakrBefore from "~/assets/blog/objectmakr-before.webp";
 
 A very long time ago, I made the decision to write my own game engine from scratch.
 If you want to get anything done well or in a reasonable amount of time it's a terrible idea, but it does serve as a great vehicle for exploring best practices in performance-critical code.

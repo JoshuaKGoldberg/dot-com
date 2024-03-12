@@ -3,12 +3,12 @@ pubDate: 2022-03-07
 description: "Allowing derived classes with properties to include code before `super()` call that doesn't touch `this`. A grand pull request three years in the making -- with cake!"
 image:
   alt: "Fancy blue and white circular cake with text 'Happy 3rd Birthday, #293374' and 'Bump for PR review please!' above the TypeScript logo"
-  src: cake.jpg
+  src: "~/assets/blog/cake.jpg"
 title: "TypeScript Contribution Diary: Allowing Code in Constructors Before `super()`"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import cake from "./cake.jpg";
+import cakeWide from "~/assets/blog/cake-wide.jpg";
 
 <LabeledImage
 	alt="Fancy blue and white circular cake with text 'Happy 3rd Birthday, #293374' and 'Bump for PR review please!' above the TypeScript logo"
@@ -18,7 +18,7 @@ import cake from "./cake.jpg";
 		href: "https://twitter.com/JoshuaKGoldberg/status/1481654056422567944",
 		text: "tweet",
 	}}
-	src={cake}
+	src={cakeWide}
 />
 
 [#8277: Always allow code before super call when it does not use "this"](https://github.com/microsoft/TypeScript/issues/8277) is one of TypeScript's oldest highly-upvoted issues.

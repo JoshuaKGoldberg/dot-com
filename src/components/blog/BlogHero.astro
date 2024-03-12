@@ -1,10 +1,17 @@
 ---
-import { HeroImage, type HeroImageProps } from "../HeroImage.tsx";
+import type { ImageMetadata } from "astro";
+
+import HeroImage from "../HeroImage.astro";
 import HeroSecondary from "../HeroSecondary.astro";
 import HeroTertiary from "../HeroTertiary.astro";
 import HeroTitle from "../HeroTitle.astro";
 import { BlogShare } from "./BlogShare";
 import { DateAndMinutes } from "./DateAndMinutes";
+
+export interface BlogImage {
+	alt: string;
+	src: ImageMetadata;
+}
 
 interface Props {
 	body: string;
@@ -12,7 +19,7 @@ interface Props {
 	date: Date;
 	description: string;
 	download?: string | undefined;
-	image?: HeroImageProps | undefined;
+	image: BlogImage;
 	title: string;
 }
 ---
@@ -20,18 +27,9 @@ interface Props {
 <div class:list={["blogHero", Astro.props.class]}>
 	<div class="left">
 		<div class="primary">
-			{
-				Astro.props.image && (
-					<div class="hero-image">
-						<HeroImage
-							client:load
-							{...Astro.props.image}
-							class="image"
-							size="small"
-						/>
-					</div>
-				)
-			}
+			<div class="hero-image">
+				<HeroImage class="image" size="small" {...Astro.props.image} />
+			</div>
 			<div class="hero-title">
 				<HeroTitle>
 					{
