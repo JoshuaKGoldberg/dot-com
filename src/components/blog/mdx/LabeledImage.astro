@@ -20,6 +20,11 @@ const alt =
 	(Array.isArray(Astro.props.description)
 		? Astro.props.description.join(" ")
 		: Astro.props.description);
+
+// If I pass src.src (the actual string), Astro's build thinks it's a remote image and fails.
+// Adding catch (error) { and console.log(error) to node_modules/astro/dist/assets/internal.js > getImage:
+//   TypeError: Failed to parse URL from /_astro/me-laughing-on-stage-wide.fsNdobAQ.webp
+const src = Astro.props.src as unknown as string;
 ---
 
 <LabeledMedia
@@ -32,7 +37,7 @@ const alt =
 		alt={alt}
 		class="labeled-image"
 		inferSize
-		src={Astro.props.src}
+		src={src}
 		style={{
 			// Astro manually sets aspect-ratio, height, and width on the image.
 			// With maximum widths and heights, that overrides the aspect-ratio,
