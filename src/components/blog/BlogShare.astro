@@ -30,7 +30,7 @@ const channels = [
 ---
 
 <span class:list={["shares", Astro.props.class]}>
-	{Astro.props.children}
+	<slot />
 	{
 		channels.map(([network, href, image]) => (
 			<a
