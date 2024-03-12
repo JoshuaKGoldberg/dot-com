@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from "astro";
+
 import { Image } from "astro:assets";
 
 export interface HeroImages {
@@ -10,8 +11,8 @@ export interface HeroImages {
 interface Props {
 	alt: string;
 	class?: string | undefined;
-	src: HeroImages | ImageMetadata;
 	size: "large" | "small";
+	src: HeroImages | ImageMetadata;
 }
 
 // TODO:
