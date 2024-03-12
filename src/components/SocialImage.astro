@@ -1,0 +1,29 @@
+---
+import type { ImageMetadata } from "astro";
+
+import { Image } from "astro:assets";
+
+interface Props {
+	alt: string;
+	class?: string;
+	image: ImageMetadata;
+}
+---
+
+<Image
+	alt={Astro.props.alt}
+	class:list={["social-image", Astro.props.class]}
+	src={Astro.props.image}
+/>
+
+<style>
+	.social-image {
+		height: 1.25rem;
+		width: 1.25rem;
+		vertical-align: text-bottom;
+	}
+
+	:global(html.dark) .social-image {
+		filter: invert() hue-rotate(180deg);
+	}
+</style>

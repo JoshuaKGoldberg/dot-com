@@ -1,0 +1,64 @@
+---
+import { JSX } from "solid-js";
+
+import linkedin from "~/assets/icons/linkedin.svg";
+import twitter from "~/assets/icons/twitter.svg";
+
+import SocialImage from "../SocialImage.astro";
+
+interface Props {
+	children?: JSX.Element;
+	class?: string;
+	description: string;
+	title: string;
+	url: URL;
+}
+
+const channels = [
+	[
+		"LinkedIn",
+		`https://linkedin.com/sharing/share-offsite/?url=${Astro.props.url.toString()}`,
+		linkedin,
+	],
+	[
+		"Twitter",
+		`https://twitter.com/intent/tweet?text=${[
+			`📝 ${Astro.props.title}`,
+			`"${Astro.props.description}" - by @JoshuaKGoldberg`,
+			"",
+		].join("%0a%0a")}&url=${Astro.props.url.toString()}`,
+		twitter,
+	],
+] as const;
+---
+
+<span class:list={["shares", Astro.props.class]}>
+	{Astro.props.children}
+	{
+		channels.map(([network, href, image]) => (
+			<a
+				class="share"
+				href={href}
+				target="_blank"
+				title={`Share on ${network}`}
+			>
+				<SocialImage alt={`${network} logo`} class="share-img" image={image} />
+			</a>
+		))
+	}
+</span>
+
+<style>
+	.shares {
+		align-items: baseline;
+		display: inline-flex;
+		gap: 1rem;
+		margin: 0.5em 0 0;
+	}
+
+	@media (min-width: 700px) {
+		.shares {
+			margin: 0 0 -0.25em;
+		}
+	}
+</style>
