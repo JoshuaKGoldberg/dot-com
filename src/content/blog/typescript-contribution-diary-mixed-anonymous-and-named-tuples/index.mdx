@@ -1,0 +1,86 @@
+---
+description: "How I contributed a change to TypeScript that allowed tuples to have both named and anonymous elements."
+image:
+  alt: "Screenshot of a Chrome devtools performance profile"
+  src: "chrome-trailer.png"
+pubDate: 2023-08-21
+title: "TypeScript Contribution Diary: Mixed Anonymous and Named Tuples"
+---
+
+Tuples are one of my favorite features in TypeScript.
+They're like arrays, but with known, specific types at specific element indices.
+That's a powerful type system feature that many modern languages don't yet have.
+
+```ts
+// An array with two elements.
+// The first element is a string, while the second is a number.
+type AnonymousPair = [string, number];
+```
+
+As of [version 4.0](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html#labeled-tuple-elements), TypeScript allows tuples to attach an optional name label on their elements to help document them.
+These name labels are purely a development-time helper.
+Other than improving readability of the tuples and any associated error messages, they don't impact the type system at all.
+
+```ts
+// Functionally equivalent to AnonymousPair, but with names.
+type NamedPair = [first: string, second: number];
+```
+
+## Problem Statement
+
+One limitation of TypeScript tuple name labels was that they had to be either all named or all anonymous.
+You couldn't mix the two.
+If you did, TypeScript would report a type error:
+
+```ts
+type MixedPair = [first: string, second];
+//                               ~~~~~~
+// Tuple members must all have names or all not have names.
+```
+
+TypeScript's inability to mix anonymous and named tuple elements would sometimes cause unexpected difficulties in edge cases around using tuples.
+For example, [Issue #52853: Labeled variadic tuples should not require labeling spreads for tuples that are already labeled](https://github.com/microsoft/TypeScript/issues/52853) reported that spreading a named tuple into another tuple would trigger a TypeScript type error:
+
+```ts
+type LabeledTuple = [first: string, second: number];
+
+type VariadicTuplesCanInheritLabels = [...LabeledTuple, third: boolean];
+//                                     ~~~~~~~~~~~~~~~
+// Tuple members must all have names or all not have names.
+```
+
+I was excited to see the following [issue response from @RyanCavanaugh](https://github.com/microsoft/TypeScript/issues/52853#issuecomment-1447340030):
+
+> Discussed and we're OK removing this restriction for all tuple elements.
+> However, [#53011](https://github.com/microsoft/TypeScript/issues/53011) would need to be fixed first, otherwise we might break currently-working declaration emit.
+
+[#53011](https://github.com/microsoft/TypeScript/issues/53011) was fixed a few weeks later - clearing the way to remove TypeScript's restriction on mixed anonymous and named tuples.
+Time to code! 🚀
+
+## Step 1: Where
+
+TypeScript's type error for mixing anonymous and named tuple elements was `Tuple members must all have names or all not have names.`.
+The `diagnosticMessages.json` (file that stores all of TypeScript's diagnostics, including type errors) equivalent would contain `Tuple_members_must_all_have_names_or_all_not_have_names`.
+
+I ran a full text search on "`Tuple_members_must_all_have_names_or_all_not_have_names`" and found a single usage in `checker.ts` (the file containing most of TypeScript's type checker) inside a function named `checkTupleType`.
+It was the first block of logic run in a loop over all elements in a tuple:
+
+```ts
+for (const e of elementTypes) {
+	if (e.kind !== SyntaxKind.NamedTupleMember && hasNamedElement) {
+		grammarErrorOnNode(
+			e,
+			Diagnostics.Tuple_members_must_all_have_names_or_all_not_have_names
+		);
+		break;
+	}
+
+	// ...
+}
+```
+
+I'd inferred from previous TypeScript contributions that functions named `check*` inside `checker.ts` are generally what run on different AST nodes to find type errors.
+So if this was where TypeScript was reporting an error on mixed tuple naming, what would happen if I just ... removed that line?
+
+I removed the `if` block and updated TypeScript's test baselines.
+Exactly one baseline 
