@@ -99,8 +99,8 @@ dependencies:
     specifier: ^5.0.2
     version: 5.0.2
   joshuakgoldberg:
-    specifier: ^0.9.2
-    version: 0.9.2
+    specifier: ^0.10.0
+    version: 0.10.0
   knip:
     specifier: ^5.0.2
     version: 5.0.2(@types/node@20.11.24)(typescript@5.3.3)
@@ -5510,8 +5510,8 @@ packages:
     hasBin: true
     dev: false
 
-  /joshuakgoldberg@0.9.2:
-    resolution: {integrity: sha512-SLkq+oLO8bzo1ovY0UaGW3lswQ9Yf7ejN9TZCjM3jonU7tlnzF3l7DStnW32jZz1zdF/10rNuTwr1Cw+cpvXbQ==}
+  /joshuakgoldberg@0.10.0:
+    resolution: {integrity: sha512-D9IiXvqaeBiGQL0XajsLwOph70BRjdiQl82dnn7EE+M/T6/jJFcCMOLBKlE8gCL39VUdF4A7NhHwKhTDip1OyA==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
