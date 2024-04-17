@@ -18,6 +18,9 @@ That PR started off pleasant: a pairing session with Dan Vanderkam and hopes of 
 It ended up being much more complicated than we'd hoped and draining a bunch of both of our time.
 Such is life in software development.
 
+I think "deep" work like this lint rule is a great showcase of why it can be difficult for projects with limited funding to make progress on larger tasks.
+Their costs can be much higher than expected -- which is part of why sponsoring open source projects is so important.
+
 <LabeledVideo
 	alt="Donald Duck happily walking and counting a stack of dollar bills"
 	description="Seen: corporate entities counting profits not spent on open source development. 🥲"
@@ -25,15 +28,28 @@ Such is life in software development.
 	src={donaldDuckMoneyWalk}
 />
 
+## "Joy" Cost
+
+Speaking just for myself, I found this rule incredibly annoying to work on.
+The rule's implementation involves recursively traversing through TypeScript types and counting instances of type parameters.
+That's just as annoying and mind-melting as it sounds.
+
+Even after we figured out the strategy pivot needed to get it to work reliably, there were a ton of tricky edge cases inherent to figuring out what forms of syntax it should report on.
+Many of those discovered edge cases turned into "whack-a-mole" development, where resolving one caused others to pop up.
+
+Because I work in the "wild west" of open source, rather than a funded development team, I have far fewer opportunities to pair with others to help get through difficult tasks.
+Working on this lint rule made me crabby and tired for the days I was working on it.
+There is a finite number of these tasks that I as an open source maintainer can take on before the "joy" of coding yields to the dullness of burnout.
+
 ## Monetary Cost
 
-Speaking just for myself, this rule took about two and a half days of work to get into review.
+Again speaking just for myself, this rule took about two and a half days of work to get into review.
 For the sake of easy math let's suppose my compensation should be $100/hour (a reasonable total compensation for senior developers in the US).
-Calculating roughly six hours of work per day, that's 2.5 days &times; 6 hours / day &times; $100/hour = **$1,500**.
+Calculating roughly six hours of work per day, that's 2.5 days &times; 6 hours/day &times; $100/hour = **$1,500**.
 
-That's not even factoring in Dan's time, time it'll take at least one other project maintainer to review the code, time spent improving the rule based on code review, etc.
+That's not factoring in Dan's time, time it'll take at least one other project maintainer to review the code, time spent improving the rule based on code review, etc.
 
-The monetary compensation cost of this lint rule rule will be **well over two thousand dollars**.
+The monetary compensation cost of this lint rule rule will easily exceed **well over two thousand dollars**.
 
 ## Opportunity Cost
 
