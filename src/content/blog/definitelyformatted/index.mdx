@@ -1,0 +1,311 @@
+---
+description: "How we migrated the massive DefinitelyTyped repository from using a linter for formatting to the dprint formatter."
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
+pubDate: 2024-04-22
+title: "DefinitelyFormatted"
+---
+
+import battleOfKöniggrätz from "~/assets/blog/battle-of-königgrätz.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
+Last year, I had the pleasure of leading a project to onboard the massive [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) repository to using a dedicated formatter, [dprint](https://dprint.dev), with some members of the TypeScript community and team.
+This change took us nearly half a year from start to end: initial discussions in late May and the last PR merged in early October.
+It went through some twists and turns but I'm happy with how it all turned out.
+
+> _"No plan survives first contact with the enemy"_
+> -Helmuth von Moltke
+
+## Context
+
+DefinitelyTyped is one of the largest, most active repositories on GitHub.
+It contains over 9,000 folders storing community-authored TypeScript type definitions for JavaScript projects that don't ship their own types.
+DefinitelyTyped supports those many thousands of projects with a ton of tooling that manages PR reviews and auto-publishing to `@types/` packages such as [`@types/react`](https://npmjs.com/package/@types/react).
+Much of that tooling exists in the [Microsoft/DefinitelyTyped-tools](https://github.com/Microsoft/DefinitelyTyped-tools) repository.
+
+### ESLint vs. TSLint
+
+Back in mid-2023, DefinitelyTyped was still using the [TSLint](https://palantir.github.io/tslint) for linting.
+TSLint had long been deprecated in favor of [ESLint](https://eslint.org).
+As a [former maintainer of TSLint](./tslint-maintence), I was motivated to help move DefinitelyTyped onto ESLint and off of the deprecated TSLint.
+
+Although most of the old TSLint rules have equivalents in ESLint, many rules are implemented slightly different in ESLint-land.
+Rules around _formatting_ -changing the whitespace and other trivia without logic- tended to be particularly different.
+Migrating formatting rules from TSLint to ESLint would necessitate a ton of small changes.
+Not ideal.
+
+### Formatting vs. Linting
+
+At the same time we were looking at migrating DefinitelyTyped to ESLint, I was advocating in ESLint circles to [_"STOP USING ESLINT FOR FORMATTING"_](/blog/configuring-eslint-prettier-and-typescript-together#stop-using-eslint-for-formatting).
+My belief is that _formatters_ such as [Prettier](https://prettier.io) and _linters_ such as [ESLint](https://eslint.org) are fundamentally different tools built for different purposes.
+While you can use ESLint for formatting thanks to [ESLint Stylistic](https://eslint.style), [ESLint recommends using a separate dedicated formatter](https://eslint.org/blog/2023/10/deprecating-formatting-rules) and [typescript-eslint also recommends against using ESLint for formatting](https://typescript-eslint.io/linting/troubleshooting/formatting).
+
+The drive to use a formatter for formatting instead of a linter was well-timed for the DefinitelyTyped migrations.
+We could skip having to migrate the old TSLint formatting rules to the ESLint equivalents by using a formatter for formatting instead!
+💡
+
+## The Choices
+
+### Continuous Integration
+
+Many repositories integrate formatters in up to three common ways:
+
+- Editor integration: formatting files after editing and/or file saves
+- Git commit hook: formatting all files touched in every commit
+- GitHub action / continuous integration: verifying commits pushed to GitHub have well-formatted files
+
+The first two options we opted to include without debate.
+But what to run in CI was trickier.
+
+Many DefinitelyTyped contributors don't work in rich code editors like VS Code.
+Some aren't even day-to-day programmers.
+Some contributors exclusively do occasional work in the GitHub web editor.
+Asking them to apply arbitrary formatting changes manually would be inconvenient for them and restrict their ability to easily contribute.
+
+An alternate idea we'd seen in other repositories was to have a bot automatically fix formatting issues on the branch.
+That would keep code on the branch formatted, but would run the risk of confusing contributors not yet familiar with Git or GitHub.
+I've personally tried bots like that and also found them annoying to deal with.
+
+Conclusion: was that we shouldn't block PRs on formatting issues.
+...but then how would we enforce formatting be valid on the default branch?
+
+#### The Merge Bot
+
+Fortunately, the DefinitelyTyped repository already had a "DefinitelyTyped Merge Bot" set up to merge PRs.
+The merge bot merges PRs once CI is passing and at least one area owner has approved.
+
+We added a planning note that the merge bot could apply formatting to PRs just before merging them.
+We saw this as a "best of both worlds" situation: the convenience of not requiring PR authors to format their code, with the strictness of keeping the default branch fully formatted.
+
+We also noted that we'd need to still apply formatting on the default branch after PR merges.
+We didn't want to require PRs be up-to-date to be merged, even if the default branch had changes to its formatting settings.
+
+> We were also interested in creating a general-purpose PR bot that could offer to apply formatting to PRs for users.
+> That kind of opt-in behavior could overcome the confusion of automatic formatting bots.
+> I plan on tackling that eventually in [create-typescript-app#139 🛠 Tooling: Add a bot that suggests auto-formatting](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/139)
+
+### Formatter
+
+The biggest choice we needed to make was the actual formatter tool.
+At the time, there were two tools that we considered stable and well-supported:
+
+- **[dprint](https://dprint.dev)**: A highly configurable formatter written in Rust.
+  Its TypeScript plugin powers [`deno fmt`](https://docs.deno.com/runtime/manual/tools/formatter) and uses [swc](https://swc.rs) internally.
+- **[Prettier](https://prettier.io)**: The classic formatter for web languages.
+  It's by far the most popular formatter in the JavaScript/TypeScript ecosystem.
+
+Both formatters were feasible options.
+dprint had the advantages of being faster and more configurable, while Prettier had the advantages of higher user familiarity.
+
+After several iterations of back-and-forth in the private chat, we settled on proposing **dprint**.
+The following two sections are the main reasons why.
+
+#### Ecosystem Partnership
+
+Although both dprint and Prettier are popular and widely used, dprint and Deno have only a fraction of the total number of users that Prettier and Node have.
+Very few large ecosystem projects were using dprint.
+Developer tooling projects such as formatters need "production" usage to exercise edge cases and collect real user feedback.
+Moving DefinitelyTyped to dprint was a unique opportunity to lend a helping hand to dprint in the form of bug reports and feature requests.
+
+David Sherret and Jake Bailey did end up sending several issues and pull requests around dprint and swc to support the work.
+This is an incomplete list of the most important improvements:
+
+- [dprint/dprint-plugin-typescript#533 Arrow function parameters containing comment has parens removed incorrectly](https://github.com/dprint/dprint-plugin-typescript/issues/533)
+- [dprint/dprint-vscode#64 perf: lazily startup editor process](https://github.com/dprint/dprint-vscode/pull/64)
+- [dprint/dprint#719 feat: nested directory specific configuration](https://github.com/dprint/dprint/pull/719)
+- [swc-project/swc#7187 Parser error for type parameters containing a generic function signature](https://github.com/swc-project/swc/issues/7187)
+
+One of the benefits of working with newer projects and ecosystem partners you're on close terms with is the ability to get issues resolved quickly.
+Many of the issues we filed as a part of this work were resolved within days -or even hours- by David or kdy.
+
+#### Performance
+
+dprint's performance at the scale of DefinitelyTyped at the time of selection blew Prettier away.
+From the DefinitelyFormatted Gist:
+
+> A quick comparison of running both tools and [pprettier](https://www.npmjs.com/package/pprettier) on DefinitelyTyped shows a 10 second vs. minutes-scale difference:
+>
+> ```plaintext
+> npx dprint fmt  141.52s user 9.29s system 1481% cpu 10.177 total
+> npx pprettier --write './types/**/*.{ts,mts,cts}'  8.97s user 3.18s system 21% cpu 56.725 total
+> npx prettier -w ./types  361.28s user 35.60s system 126% cpu 5:13.36 total
+> ```
+
+Formatter performance doesn't matter very much when you're only formatting a few changed files at a time as a CI job, commit hook, or editor format-on-save action.
+But the time does add up when working on changes that touch many hundreds of files, such as improving the lint configuration across a whole repository.
+
+> [Prettier landed some impressive CLI performance improvements](https://prettier.io/blog/2023/11/30/cli-deep-dive.html) several months after our investigation.
+> Its new performance speed is still orders of magnitude slower.
+> However, even if dprint and Prettier were to run at the same speed, we still feel the ecosystem partnership benefits of dprint are enough for DefinitelyTyped to solidly choose dprint.
+
+### Non-Goals
+
+One benefit of sharing with small groups first is that you learn the common questions and stumbling blocks before sharing publicly.
+DefinitelyTyped had a few points that I nailed down early, to avoid derailing discussions later on:
+
+- The goal wasn't to decide on newer formatting preferences. We would stick with the auto-formatted style closest to the existing settings.
+  - Even if developers didn't like the existing style, finding a new one that would satisfy everyone is an impossible task.
+- Some giant auto-generated packages would need to be excluded, pending their teams updating their code generation to work well with auto-formatted code.
+
+I tried to lean on my past intuition from maintaining repositories and working on teams.
+But, projects at the scale of DefinitelyTyped have different priorities than smaller ones.
+I needed to be flexible and willing to compromise my personal ideals for the sake of getting the project done.
+
+#### Tabs vs. Spaces
+
+_"Tabs vs. Spaces"_ is one of the most frustratingly common, yet-to-be resolved debates in the developer community.
+You'd think that after _decades_ of active discussion we'd have come to a conclusion.
+Nope!
+Most discussions on the subject get bogged down by logical fallacies and monomania over points that don't end up mattering.
+Prettier's four-year-old [Change `useTabs` to `true` by default](https://github.com/prettier/prettier/issues/7475) is over 700 comments and going strong.
+
+Unfortunately for us, choosing a formatter necessitates choosing what indentation format it went with.
+The vast majority of DefinitelyTyped packages use four spaces for indentation.
+Switching DefinitelyTyped to using tabs was out of scope for this work.
+So we stuck with four spaces as indentation for the dprint settings -- with the prerequisite that we'd need to let individual packages override that if they needed.
+
+To support that work:
+
+- David added [nested configuration support to dprint](https://github.com/dprint/dprint/pull/719) to allow individual directory overrides
+- I started a [tabs discussion thread](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993#discussioncomment-6597701) soliciting input from owners of the few packages using tabs
+
+> Aside: I personally prefer spaces _in theory_ but use tabs in my projects because [I've been told they're better for accessibility reasons](https://alexandersandberg.com/articles/default-to-tabs-instead-of-spaces-for-an-accessible-first-environment).
+> I also find it frustrating that, to my knowledge, no _accessibility organization_ released a formal study that backs up the general advice of using tabs for accessibility.
+> If you know of such a study, please let me know!
+
+## The Plan
+
+Executing any change to a large shared repository necessitates proposing the change in the open beforehand.
+You can't just decide to do something and roll it out.
+The change must be surfaced to and discussed by a large segment of the community so they can point out potential issues beforehand.
+
+My strategy for proposing changes is generally to repeat a cycle of:
+
+1. Ideate what I'd like to do
+1. Share with a small group of people
+1. Fill in the plan and FAQs based on their feedback
+1. Repeat with larger and larger groups of people.
+
+For DefinitelyTyped's formatting migration, those steps ended up being:
+
+1. ~May 2023: Confirm in a private chat with Nathan Shively-Sanders that DefinitelyTyped was ready to migrate to a dedicated formatter
+1. ~June 2023:
+   1. Create a [Gist named "DefinitelyFormatted"](https://gist.github.com/JoshuaKGoldberg/cb7630833acf7421b6d93b51a333612d) where I wrote up a summary of the context behind, strategies for, and FAQs around the proposed changes
+   1. Show that Gist in a private chat with a few DefinitelyTyped folks
+1. ~July 2023:
+   1. Post the Gist as [GitHub Discussion: Using a formatter for formatting (instead of lint rules)](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993#top)
+   1. Share that discussion on social media
+1. ~August 2023: Send an initial slate of pull requests:
+   - Migrations of sections of DefinitelyTyped to the formatter
+   - Updates to DefinitelyTyped-tools to remove formatting lint rules and allow dprint
+1. ~September 2023: Slog through individual issues resultant from those formatting PRs
+1. ~October 2023: Finish up the last tricky pull requests
+
+You can see the tracking list of issues and PRs in [this discussion comment](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993#discussioncomment-6597804 "tracking issues and PRs discussion comment").
+
+## The Rollout
+
+<LabeledImage
+	alt="Me laughing and speaking with a conference mic on my face, wearing a white t-shirt with small pink flamingos, holding a cup of water"
+	description="Me speaking at LeadDev 2022 in Berlin. Fun patterns on solid color shirts is definitely still my vibe."
+	src={battleOfKöniggrätz}
+/>
+
+It's expected when you make sweeping changes to any large repository -especially one with tens of thousands of files like DefinitelyTyped- that some things will go wrong in surprising ways.
+We got through some of the unexpected problems early in the planning by running dprint on DefinitelyTyped and reporting issues (see [Ecosystem Partnership](#ecosystem-partnership) earlier).
+I also opted to send multiple waves of pull requests to DefinitelyTyped, so each area of problems wouldn't impact other areas:
+
+1. [Added dprint config and commit-on-master task](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66235): setting up the settings for the dprint VS Code extension and GitHub Actions trigger to automatically format files, without enabling the trigger yet
+2. [Twenty-six PRs to apply formatting to one alphabet letter at a time, and one for non-letters](https://github.com/DefinitelyTyped/DefinitelyTyped/pulls?q=is%3Apr+author%3AJoshuaKGoldberg+is%3Aclosed+%22with+dprint%22+NOT+mp4frag+in%3Atitle+merged%3A%3C2023-10-10+): each merged as soon as they had a passing build, and with troublesome packages removed for a later PR
+3. [Several other PRs to format individual, troublesome packages](https://github.com/DefinitelyTyped/DefinitelyTyped/pulls?q=is%3Apr+author%3AJoshuaKGoldberg+is%3Amerged+-is%3Adraft+-label%3A%22Too+Many+Files%22+-label%3A%22Too+Many+Owners%22+dprint+NOT+%22types%2Fa*%22+-label%3A%22Too+Many+Owners%22+dprint+NOT+%22types%2Fz*%22+) that were causing build issues in their "alphabet letter PR"
+
+Still, as expected, some unexpected difficulties came up that we had to deal with.
+
+### Comment Directives
+
+Comments!
+For a language feature so many developers joke about never using, comments can be a surprisingly common annoying edge case.
+Especially when "comment directives" such as [`// eslint-ignore-next-line`](https://eslint.org/docs/latest/use/configure/rules#using-configuration-comments-1) (ESLint) and [`// @ts-expect-error`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#-ts-expect-error-comments) (TypeScript) change the behavior of other tools.
+By far the most common cause of build breaks in the alphabet letter PRs was formatting changing which areas of code some comment directives applied to.
+
+Consider the following contrived example's `// @ts-expect-error`.
+The comment directive was originally correctly suppressing an error, but was auto-formatted to apply to the wrong line:
+
+```diff
+declare function onlyTakesNumbers(...input: number[]): void;
+
+// @ts-expect-error
+- onlyTakesNumbers(0, "this line should have // @ts-expect-error suppressing a type error", 1);
++ onlyTakesNumbers(
++  0,
++ "this line should have // @ts-expect-error suppressing a type error",
++  1
++ );
+```
+
+Formatters don't have any way to call into other tools such as ESLint or TypeScript to know what comments act as directives for which ranges of code.
+I had to manually move around quite a few comment directives in individual package PRs.
+The work wasn't practically difficult, but it was boring and tedious.
+
+### Merge Bot Changes
+
+The biggest change we made after the plan was on how to run the formatter for users.
+Our initial plan was to have the existing DefinitelyTyped merge bot apply dprint formatting to PRs before merging them.
+The bot was already creating commits on behalf of developers, so I'd hoped this would allow for keeping files formatted without bothering curmudgeonly developers.
+
+Unfortunately, the DefinitelyTyped merge bot wasn't set up to have state between _"PR is approved and passing builds"_ and _"PR is merging"_.
+We would need to add states like _"PR is being formatted"_, _"Formatting succeeded"_, and _"Formatting introduced build failures"_.
+
+We ended up opting for a simpler approach of solely relying on a `dprint fmt run` run on the default branch after each commit.
+It was much simpler to write and maintain than introducing new state flows to the existing merge bot.
+
+There is still the edge case that auto-formatting might introduce [comment directive](#comment-directives) CI failures to the main branch.
+We haven't seen that be a common pain point since this work went in.
+
+## The Results
+
+...it works! 🙌
+
+We merged [Added dprint config and commit-on-master task](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66235) on October 6th, 2023.
+It added VS Code settings, documentation, updates to a few ancillary scripts, and a trigger to format files on merges to the default branch.
+It also included a [`.git-blame-ignore-revs` file](https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view) to avoid cluttering the Git history with formatting changes.
+
+The only user pain we received feedback on was an extra publish of each of the `@types/` packages despite not having any functional changes.
+Which is fair: in theory we could have skipped releases from PRs that only touched package formatting.
+In practice, I was worried about previously-unknown formatting bugs causing bugs in types, and wanted any bugs to be caught sooner rather than later.
+In retrospect that didn't happen, so this was just extra precaution.
+Ah well.
+
+Otherwise I'm happy to report I've heard roughly zero noise about the formatting changes.
+I've heard no users speak out for or against the changes in any way.
+The lack of noise is good in the sense that we don't seem to have broken the contribution flow for anybody.
+
+I'm not too surprised that this flew under the radar.
+Such is the nature of open source: the development setups of even very large projects are irrelevant to most of their users, and only briefly relevant to most contributors.
+
+I think this change was very positive for the DefinitelyTyped repository.
+It made it _easier_ to contribute by removing the need to adhere to formatting lint rules.
+And it drastically sped up the work to replace TSLint with ESLint.
+So I'm quite pleased about the results.
+
+Our "DefinitelyFormatted" work was a success. 🏆
+
+## Thanks
+
+Sincere appreciation to everyone who participated in this effort. 🙏
+
+First, the group chat where we discussed the idea early on, iterated on the proposal, and discussed the work as it evolved.
+[Andrew Branch](https://blog.andrewbran.ch/), [David Sherret](https://github.com/dsherret), [Jake Bailey](https://jakebailey.dev/), [Johnny Reilly](https://johnnyreilly.com), [Piotr Błażejewicz](https://github.com/peterblazejewicz), [Nathan Shively-Sanders](https://shively-sanders.com), [Sebastian Silbermann](https://twitter.com/sebsilbermann) - it was a pleasure working with you all and I hope we get to do it again soon!
+
+On top of the generally helpful discussions, I also want to shout out:
+
+- David Sherret and Jake Bailey for sending issues and PRs upstream in the ecosystem to remove blockers and improve the massive-monorepo dprint experience
+- Jake Bailey and Nathan Shively-Sanders for working from the DefinitelyTyped + TypeScript side to support the infrastructure changes
+- John Reilly for a never-ending trickle of puns -- a surprisingly high percentage of which only caused mild physical pain!
+
+Additional thanks to everyone who participated in [Using a formatter for formatting (instead of lint rules)](https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/65993).
+Even just posting a 👍 to indicate support helped us know we were on the right track.
+Special thanks in particular to [Rick Kirkham](https://github.com/Rick-Kirkham) for advising from the Microsoft Office side for their large auto-generated types packages.
+
+> Expect a blog post soon detailing the rest of the DefinitelyTyped TSLint-to-ESLint migration! ✨
