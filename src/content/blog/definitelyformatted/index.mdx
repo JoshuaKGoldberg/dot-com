@@ -267,6 +267,9 @@ We haven't seen that be a common pain point since this work went in.
 
 ...it works! 🙌
 
+- DefinitelyTyped is now consistently formatted with dprint
+- That consistent formatting is maintained by running dprint on each commit to the default branch
+
 We merged [Added dprint config and commit-on-master task](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/66235) on October 6th, 2023.
 It added VS Code settings, documentation, updates to a few ancillary scripts, and a trigger to format files on merges to the default branch.
 It also included a [`.git-blame-ignore-revs` file](https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view) to avoid cluttering the Git history with formatting changes.
