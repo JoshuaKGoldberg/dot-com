@@ -1,20 +1,21 @@
 ---
 description: "How we migrated the massive DefinitelyTyped repository from using a linter for formatting to the dprint formatter."
 image:
-  alt: ""
-  src: "~/assets/blog/default.webp"
-pubDate: 2024-04-29
+  alt: "A small Shinto shrine called Hakusan Gongen, following the pre-Meiji terminology, at Kita-in, Kawagoe."
+  src: "~/assets/blog/battle-of-koniggratz.png"
+pubDate: 2024-04-30
 title: "DefinitelyFormatted"
 ---
 
-import battleOfKöniggrätz from "~/assets/blog/battle-of-königgrätz.webp";
+import battleOfKoniggratz from "~/assets/blog/battle-of-koniggratz-wide.webp";
+import prussiaDefeatsAustria from "~/assets/blog/prussia-defeats-austria.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 
 Last year, I had the pleasure of leading a project to onboard the massive [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) repository to using a dedicated formatter, [dprint](https://dprint.dev), with some members of the TypeScript community and team.
 This change took us nearly half a year from start to end: initial discussions in late May and the last PR merged in early October.
 It went through some twists and turns but I'm happy with how it all turned out.
 
-> _"No plan survives first contact with the enemy"_
+> _"No plan survives contact with the enemy"_
 > -Helmuth von Moltke
 
 ## Context
@@ -46,6 +47,13 @@ We could skip having to migrate the old TSLint formatting rules to the ESLint eq
 💡
 
 ## The Choices
+
+<LabeledImage
+	alt="Painging: Prussia defeats Austria at Koeniggratz, 3rd July, 1866, by Christian Sell"
+	description="The battle of Königgrätz, as won by Helmuth von Moltke. See earlier quote."
+	src={prussiaDefeatsAustria}
+	original="https://commons.wikimedia.org/wiki/File:Schlacht-bei-koeniggraetz-von-georg-bleibtreu.jpg"
+/>
 
 ### Continuous Integration
 
@@ -207,9 +215,10 @@ You can see the tracking list of issues and PRs in [this discussion comment](htt
 ## The Rollout
 
 <LabeledImage
-	alt="Me laughing and speaking with a conference mic on my face, wearing a white t-shirt with small pink flamingos, holding a cup of water"
-	description="Me speaking at LeadDev 2022 in Berlin. Fun patterns on solid color shirts is definitely still my vibe."
-	src={battleOfKöniggrätz}
+	alt="Painging: The battle of Königgrätz, 3rd July, 1866, by Georg Bleibtreu"
+	description="The battle of Königgrätz, as won by Helmuth von Moltke. See earlier quote."
+	src={battleOfKoniggratz}
+	original="https://en.wikipedia.org/wiki/Battle_of_K%C3%B6niggr%C3%A4tz#/media/File:Schlacht-bei-koeniggraetz-von-georg-bleibtreu.jpg"
 />
 
 It's expected when you make sweeping changes to any large repository -especially one with tens of thousands of files like DefinitelyTyped- that some things will go wrong in surprising ways.
