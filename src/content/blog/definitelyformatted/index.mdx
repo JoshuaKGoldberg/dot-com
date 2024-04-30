@@ -8,15 +8,24 @@ title: "Definitely Formatted"
 ---
 
 import battleOfKoniggratz from "~/assets/blog/battle-of-koniggratz-wide.webp";
+import dieSeeschlachtBeiLissa from "~/assets/blog/die-seeschlacht-bei-lissa.webp";
 import prussiaDefeatsAustria from "~/assets/blog/prussia-defeats-austria.webp";
+import helmuthVonMoltkePortrait from "~/assets/blog/helmuth-von-moltke-portrait.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 
 Last year, I had the pleasure of leading a project to onboard the massive [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) repository to using a dedicated formatter, [dprint](https://dprint.dev), with some members of the TypeScript community and team.
 This change took us nearly half a year from start to end: initial discussions in late May and the last PR merged in early October.
 It went through some twists and turns but I'm happy with how it all turned out.
 
-> _"No plan survives contact with the enemy"_
-> -Helmuth von Moltke
+<LabeledImage
+	alt="Portrait of Helmuth von Moltke"
+	description={[
+		"No plan survives contact with the enemy.",
+		"-Helmuth von Moltke",
+	]}
+	src={helmuthVonMoltkePortrait}
+	original="https://commons.wikimedia.org/wiki/File:Conrad_Freyberg_Moltke.jpg"
+/>
 
 ## Context
 
@@ -49,7 +58,7 @@ We could skip having to migrate the old TSLint formatting rules to the ESLint eq
 ## The Choices
 
 <LabeledImage
-	alt="Painging: Prussia defeats Austria at Koeniggratz, 3rd July, 1866, by Christian Sell"
+	alt="Painting: Prussia defeats Austria at Koeniggratz, 3rd July, 1866, by Christian Sell"
 	description="The battle of Königgrätz, as won by Helmuth von Moltke. See earlier quote."
 	src={prussiaDefeatsAustria}
 	original="https://commons.wikimedia.org/wiki/File:Schlacht-bei-koeniggraetz-von-georg-bleibtreu.jpg"
@@ -215,7 +224,7 @@ You can see the tracking list of issues and PRs in [this discussion comment](htt
 ## The Rollout
 
 <LabeledImage
-	alt="Painging: The battle of Königgrätz, 3rd July, 1866, by Georg Bleibtreu"
+	alt="Painting: The battle of Königgrätz, 3rd July, 1866, by Georg Bleibtreu"
 	description="The battle of Königgrätz, as won by Helmuth von Moltke. See earlier quote."
 	src={battleOfKoniggratz}
 	original="https://en.wikipedia.org/wiki/Battle_of_K%C3%B6niggr%C3%A4tz#/media/File:Schlacht-bei-koeniggraetz-von-georg-bleibtreu.jpg"
@@ -273,6 +282,13 @@ There is still the edge case that auto-formatting might introduce [comment direc
 We haven't seen that be a common pain point since this work went in.
 
 ## The Results
+
+<LabeledImage
+	alt="Painting: Sea battle at Lissa, by Carl Frederik Sorensen."
+	description="Much like the Austrians at the naval Battle of Lissa, we were victorious."
+	src={dieSeeschlachtBeiLissa}
+	original="https://en.wikipedia.org/wiki/File:Die_Seeschlacht_bei_Lissa.jpg"
+/>
 
 ...it works! 🙌
 
