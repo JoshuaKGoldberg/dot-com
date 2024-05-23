@@ -2,7 +2,9 @@
 category: Conferences
 date: 2024-05-23
 event: "JSHeroes"
-location: Cluj-Napoca, Romania
 href: https://jsheroes.io
+links:
+  Slides: https://1drv.ms/p/s!AvUc1cvPrJnWvucokO5vNfGARtHveQ
+location: Cluj-Napoca, Romania
 title: "Type-Safe Style Systems: The Future of CSS"
 ---
