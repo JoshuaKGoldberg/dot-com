@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -131,8 +137,8 @@
 		"FOSS",
 		"fourslash",
 		"Frankensteinian",
-		"Freakin'",
 		"Freakin",
+		"Freakin'",
 		"Frederik",
 		"freezeframe",
 		"Freitas",
@@ -308,6 +314,7 @@
 		"Selam",
 		"Sessionize",
 		"Shabbos",
+		"Shaundai",
 		"sheetalkamat",
 		"Sherret",
 		"shiki",
