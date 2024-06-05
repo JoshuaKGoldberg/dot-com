@@ -40,7 +40,7 @@ importers:
         version: 7.1.0(eslint@8.57.0)(typescript@5.3.3)
       accessible-astro-components:
         specifier: ^2.3.5
-        version: 2.3.5
+        version: 2.3.6
       astro:
         specifier: ^4.4.9
         version: 4.4.9(@types/node@20.11.24)(typescript@5.3.3)
@@ -1351,8 +1351,8 @@ packages:
     resolution: {integrity: sha512-mCfR3gylCzPC+iqdxEA6z5SxJeOgzgbwmyxanKriIne5qZLswDe/M43aD3p5MNzwzXRhbZg/OX+MpES6Zk1a6A==}
     engines: {node: '>=12.10'}
 
-  accessible-astro-components@2.3.5:
-    resolution: {integrity: sha512-QlDkCCWQ2uOJhTOtnP2xWlli2hT3DVWhvg1233yLvwycnxyzaVj4JxyG9Wn0KffkJN3G+M1TRpJh5FB4tsAn/w==}
+  accessible-astro-components@2.3.6:
+    resolution: {integrity: sha512-o8bza9yxXcfz38qKUT52iJRV3Rq44Lw90WTmeMk4oCOHAnRHAZNpeWp2TuZz+cRiL8lPJI1Nc5eloWJB26SS1w==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -6300,7 +6300,7 @@ snapshots:
     dependencies:
       rimraf: 3.0.2
 
-  accessible-astro-components@2.3.5: {}
+  accessible-astro-components@2.3.6: {}
 
   acorn-jsx@5.3.2(acorn@8.11.2):
     dependencies:
