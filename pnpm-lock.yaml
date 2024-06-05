@@ -25,7 +25,7 @@ importers:
         version: 4.0.1(solid-js@1.8.15)(vite@5.1.4(@types/node@20.11.24))
       '@fontsource-variable/league-spartan':
         specifier: ^5.0.18
-        version: 5.0.18
+        version: 5.0.20
       '@kobalte/core':
         specifier: ^0.12.2
         version: 0.12.2(solid-js@1.8.15)
@@ -696,8 +696,8 @@ packages:
   '@floating-ui/utils@0.1.1':
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
 
-  '@fontsource-variable/league-spartan@5.0.18':
-    resolution: {integrity: sha512-CEPNcrJV445XE+XtLpk9wb5auqae7bXafSOnD0U+H0p61Oq25fbeYsQFbgQ7k462Zu2Iq1nQTFaVGcFYFLRhOQ==}
+  '@fontsource-variable/league-spartan@5.0.20':
+    resolution: {integrity: sha512-rJJOemaQs2KhQ7LdPjo8I/wZYuewASwNAZAomPEbocKBTa320Xl2zdl+tNSJoix79LNWraMwAe59zrnbMe3FwQ==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -5532,7 +5532,7 @@ snapshots:
 
   '@floating-ui/utils@0.1.1': {}
 
-  '@fontsource-variable/league-spartan@5.0.18': {}
+  '@fontsource-variable/league-spartan@5.0.20': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
