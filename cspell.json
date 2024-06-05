@@ -1,11 +1,5 @@
 {
-	"dictionaries": [
-		"css",
-		"html",
-		"node",
-		"npm",
-		"typescript"
-	],
+	"dictionaries": ["css", "html", "node", "npm", "typescript"],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -14,6 +8,7 @@
 		"public"
 	],
 	"words": [
+		"Abhi",
 		"Abrahamic",
 		"Accesso",
 		"Afonso",
@@ -217,6 +212,7 @@
 		"matchups",
 		"Mateusz",
 		"Matheus",
+		"Mathur",
 		"mdast",
 		"Medhat",
 		"Mehlhorn",
