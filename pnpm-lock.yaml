@@ -102,8 +102,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       joshuakgoldberg:
-        specifier: ^0.12.0
-        version: 0.12.0
+        specifier: ^0.13.0
+        version: 0.13.0
       knip:
         specifier: ^5.0.2
         version: 5.0.2(@types/node@20.11.24)(typescript@5.3.3)
@@ -2909,8 +2909,8 @@ packages:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
 
-  joshuakgoldberg@0.12.0:
-    resolution: {integrity: sha512-7sw7s/+1qKR96XH061xJ89UffPmrdgJSe/obt0yG6x/n97ripPDvcwgzktW0NQal98vYYvkbSuinFjdvTE2WYA==}
+  joshuakgoldberg@0.13.0:
+    resolution: {integrity: sha512-uL/rXqLC0UbYck0z3bEIx0Umk1Cv7G4N4ZMYfFi85m7We9TAiRwC41VjWIslX8zLYXVFgyUC5boTCwMC4XZzAw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -8185,7 +8185,7 @@ snapshots:
 
   jiti@1.21.0: {}
 
-  joshuakgoldberg@0.12.0:
+  joshuakgoldberg@0.13.0:
     dependencies:
       chalk: 5.3.0
 
