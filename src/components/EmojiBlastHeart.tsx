@@ -1,16 +1,18 @@
-import { emojisplosion } from "emojisplosion";
+import { emojiBlast } from "emoji-blast";
 
-import styles from "./EmojisplosionHeart.module.css";
+import styles from "./EmojiBlastHeart.module.css";
 import { Text } from "./Text";
 
-export function EmojisplosionHeart() {
+export function EmojiBlastHeart() {
 	return (
 		<Text
 			as="button"
 			class={styles.heart}
 			fontSize="small"
 			fontWeight="light"
-			onClick={() => emojisplosion()}
+			onClick={() => {
+				emojiBlast();
+			}}
 			type="button"
 		>
 			💙
