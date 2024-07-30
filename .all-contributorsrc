@@ -105,6 +105,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "pinjasaur",
+      "name": "Paul Esch-Laurent",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6335792?v=4",
+      "profile": "https://paulisaweso.me/",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
