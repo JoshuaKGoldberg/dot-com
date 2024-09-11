@@ -11,6 +11,12 @@ import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
+> # 🛑 **THIS IS JUST A DRAFT.**
+>
+> I need to run it by other developers in the linter ecosystem.
+> It might be horribly wrong and it might be horribly misrepresenting reality.
+> Please don't take it seriously!
+
 <LabeledImage
 	alt="Tevye from Fiddler on the Roof TODO_ACTIVITY"
 	description="Tevye from Fiddler on the Roof enjoying linting his code with a very strict configuration."
@@ -68,8 +74,8 @@ Having to cross the bridge between JavaScript/TypeScript and Rust for a JavaScri
 Lint rules that use type information are significantly more capable than tradtional, AST-only rules.
 Many popular lint rules have ended up either dependent on typed linting or having to deal with known bugs or feature gaps without typed linting.[^eslint-plugin-react-hooks-detection-typed-linting][^eslint-plugin-vitest-valid-type-type-checking]
 
-But, typed linting is not an easy feature for many users.
-The divide between untyped core rules and _only some_ typed rules is painful for the whole ecosystem:
+But, typed linting is not an easy feature for many users right now.
+The divide between untyped core rules and _only some_ typed rules is painful for the ecosystem:
 
 - Core rules are less powerful than they could be
 - Extension rules have to choose between being fast and easy to set up vs. slow and type-aware
@@ -83,6 +89,11 @@ On the other hand, if rules can always assume type awareness, the linting story 
 - Core rules don't need to be delegated to or duplicated by plugins to add in typed linting support
 - Extension rules don't have to choose an awkward dependency on a non-core parser for type information
 - The core linter architecture can be optimized for type-checked linting performance
+
+For this always-type-aware-world, I envision projects effectively always having [typescript-eslint's new Project Service](https://typescript-eslint.io/blog/announcing-typescript-eslint-v8#project-service) enabled.
+And because the core can optimize for it, it wouldn't have performance issues from including "out-of-project" files.
+All files could be linted with type information!
+What a wonderful world that would be.
 
 ### TypeScript For Type Awareness
 
