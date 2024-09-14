@@ -139,14 +139,18 @@ At this point, the scope reduction from excluding type error reporting isn't eno
 
 ESLint is one of the few common modern JavaScript utilities that doesn't support TypeScript syntax out-of-the-box.
 To add support, your configuration must use typescript-eslint.
-Even if you bypass having to create your configuration yourself by using a creation tool such as [`@eslint/create-config`](https://www.github.com/eslint/create-config), you'll still come across that complexity whenever you need to meaningfully edit that config file.
+Even if you bypass creating your configuration yourself by using a creation tool such as [`@eslint/create-config`](https://www.github.com/eslint/create-config), you'll still come across that complexity whenever you need to meaningfully edit that config file.
 
-More troublesome long-term is the inability of core ESLint rules to understand TypeScript types or concepts.
+More inconvenient long-term is the inability of core ESLint rules to understand TypeScript types or concepts.
 That's led to the concept of "extension rules" in typescript-eslint[^extension-rules]: rules that replace built-in rules.
 Extension rules are confusing for users and inconvenient to work with for both maintainers and users.
 
 I'm excited that ESLint is rethinking its TypeScript support[^rethinking-typescript-support-in-eslint].
 Hopefully, once the ESLint rewrite comes out, we'll be able to declutter userland configs and deduplicate the extension rules.
+
+If I wrote a linter, it would support TypeScript natively.
+No additional packages or "extension" rules.
+The core parser would be TypeScript's, and core rules would understand TypeScript syntax and types.
 
 ### Probably TypeScript's AST
 
@@ -161,7 +165,7 @@ Runtime performance is not a real reason to avoid the parse-and-convert.
 Second, both of those ASTs are useful:
 
 - ESTree: means lint rules have no dependency on the corporate-backed TypeScript -- they are compatible with ESLint core
-  - One of the main downsides of TSLint being based on TypeScript's AST was having to rewrite every ESLint/ESTree-based lint rule in
+  - One of the main downsides of TSLint being based on TypeScript's AST was having to rewrite every ESLint/ESTree-based lint rule for TSLint
 - TypeScript's: must be used for AST nodes passed to TypeScript APIs, most notably for typed linting
 
 The main downside of this dual-tree format is the complication for linter teams and lint rule authors working with TypeScript APIs.
@@ -193,7 +197,220 @@ I haven't had time to deeply investigate how to deduplicate type checking work w
 
 ## User Experience
 
+### Only Errors
+
+All web linters I've found allow configuring rules as _errors_ or _warnings_.
+In theory, this is straightforward: errors are visualized with red squigglies and fail builds; warnings are visualized with yellow squigglies and don't fail builds.
+Warnings are supposed to be transient indicators during migrations or when rules aren't certain about issues [^eslint-pr-docs-warn-severity], not long-lived noice.
+
+In practice, I think this is not useful:
+
+- Using the same red color and terminology for _lint_ errors and _type-checking_ errors is confusing both ideologically and practically.
+  I personally tell my VS Code to visualize lint errors with yellow squigglies, to not conflict with red TypeScript squigglies.
+- Warnings tend to live forever in codebases, which trains developers to ignore lint reports.
+- If a problem can't be determined with certainty, it either should be suppressed using an inline config comment with an explanation, or not turned into a lint rule at all!
+
+In other words, I think warnings are a bad fit for the migration use case.
+Tools like [eslint-nibble](https://github.com/IanVS/eslint-nibble) can provide a more comprehensive experience.
+Editor features such as [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) can now change how rules are visualized.
+
+If I were to write a linter, I would have it so rules can only be turned off or on.
+Gradual onboardings of new rules or rule options would be a separately managed feature.
+Changing of visuals for specific rules or categories thereof would be separately managed features in editor extensions.
+
 ### Strongly Typed Rule Options
+
+One of my biggest gripes with all existing linter configuration systems today is that _rule options are not type-safe_.
+To recap, you specify them as properties an object, where their string key is their plugin name and rule name, and their value is their severity and any options:
+
+```js
+{
+	"my-plugin/some-rule": ["error", {
+		setting: "..."
+	}]
+}
+```
+
+Those string keys have no associated types in config files.
+Linters themselves can validate rule options, such as [ESLint's options schemas](https://eslint.org/docs/latest/extend/custom-rules#options-schemas), but those don't translate to TypeScript types.
+You don't get editor intellisense while authoring; instead, you have to use `@eslint/config-inspector` or run your config to know whether you've mistyped the name of a rule or an option.
+
+I'd love to make a standard plugin creator function that plugin authors are encouraged -even required- to use.
+It could take in a set of rules and return some kind of well-typed function.
+
+Vaguely, maybe it'd use a TypeScript-friendly schema validation library such as [Zod](https://zod.dev) and look something like:
+
+```ts
+import { createRule, createPlugin } from "@joshuakgoldberg/if-i-wrote-a-linter";
+import { z } from "zod";
+
+const someRule = createRule({
+	options: {
+		option: z.string(),
+	},
+});
+
+export const myPlugin = createPlugin({
+	name: "My Plugin",
+	rules: [someRule],
+});
+```
+
+...and in usage could look something like:
+
+```ts
+// linter.config.ts
+import { myPlugin } from "@joshuakgoldberg/my-plugin";
+
+export default [
+	rules: myPlugin.rules({
+		someRule: {
+			option: "..."
+		},
+	}),
+];
+```
+
+Under that kind of system, users would receive intellisense as they type plugin rules, and all those settings could be type checked.
+Doing so would even coincidentally solve the issue of [plugin namespacing and rule config duplication](https://github.com/eslint/eslint/discussions/17766).
+Config values would still be verified at runtime by the schema validation library.
+
+### Strongly Typed Plugin Settings
+
+An even less type-safe part of ESLint's current config system is the [shared `settings` object](https://eslint.org/docs/latest/use/configure/configuration-files#configuring-shared-settings).
+You can put whatever you want in there, and any plugin may read from it.
+
+In theory, cross-plugin shared settings can be used for related plugins, while plugin-specific settings are by convention namespaced under their name.
+In practice, I don't think I've ever seen a shared setting used across plugins.
+
+I think a settings system more true to how plugins use it would have plugins define their own settings and settings types.
+
+Vaguely, maybe it'd use a TypeScript-friendly schema validation library such as [Zod](https://zod.dev) and look something like:
+
+```ts
+import { createPlugin } from "@joshuakgoldberg/if-i-wrote-a-linter";
+import { z } from "zod";
+
+export const myPlugin = createPlugin({
+	name: "My Plugin",
+	rules: [
+		/* ... */
+	],
+	settings: {
+		setting: z.string(),
+	},
+});
+```
+
+...and in usage could look something like:
+
+```ts
+// linter.config.ts
+import { myPlugin } from "@joshuakgoldberg/my-plugin";
+
+export default [
+	plugins: [
+		myPlugin({
+			setting: "..."
+		})
+	],
+];
+```
+
+As with rules, allowing plugins to define their own settings types would help with the config authoring experience.
+It would also newly allow shared settings to be validated by both type-checking and the core linter.
+Doing so means plugins can be more confident in defining settings and changing them over time as needed.
+
+### Strongly Typed JS/TS Configuration Files
+
+Let's take a step back from all these strong typings.
+I think there are roughly two classifications of linter configs in use today:
+
+- Direct JSON ([`biome.json`](https://biomejs.dev/linter/#configuration), [Deno](https://docs.deno.com/runtime/fundamentals/configuration/#linting), [Oxlint](https://oxc.rs/docs/guide/usage/linter#configuration-file))
+- Nuanced JS (ESLint: [`.eslintrc.js` (deprecated)](https://eslint.org/docs/latest/use/configure/configuration-files-deprecated), [`eslint.config.js`](https://eslint.org/docs/latest/use/configure/configuration-files))
+
+Direct JSON is a nice and straightforward "walled garden" that shines in small projects.
+But I don't think it scales well.
+The user experience of typing config files isn't great if you're not using a custom editor extension to get JSON intellisense.
+More importantly, specifying plugin modules isn't conceptually straightforward.
+Once the native language linters support plugins, we'lll have to specify them by some string specifier matching the plugin's module entry point.
+That duplication of core JavaScript semantics feels off to me.
+
+Nuanced JS configurations from ESLint, on the other hand, are "just JavaScript" and so utilize native module importing for plugins, global variables, and shared configurations.
+That's great for understandability and simplifying the plugin loading model.
+ESLint's flat config is a huge step forward from the confusing `overrides` model of ESLint's legacy configs.
+But, I think we're learning the hard way what nuances trip people up this far outside the "walled garden":
+
+- Because all config entries are just JavaScript objects, there's no way to lint only the user's own config entries [^eslint-change-request-report-unnecessary-config-overrides]
+- Directory relativity becomes confusing when nested configs `import` from a higher-up config [^eslint-change-request-inherit-flat-configs-from-root]
+- `ignores` is not very intuitive right now [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file] [^tseslint-discord-help-eslint-not-ignoring-js-files]
+
+I think we could solve most of that by creating delineated functions or objects to create `ignores` blocks, shared configs, and plugins.
+Doing so would clarify the intentions behind each portion of a config both to users and to tooling.
+
+Here's a rough sketch of what the root monorepo config could like with a config system more akin to a [`tsup.config.ts`](https://tsup.egoist.dev/#using-custom-configuration) or [`vitest.config.ts`](https://vitest.dev/config), but with explicit methods for common operations:
+
+```ts
+// if-i-wrote-a-linter.config.ts
+import { linter } from "@joshuakgoldberg/if-i-wrote-a-linter";
+import { someExample } from "@joshuakgoldberg/plugin-some-example";
+
+export default linter.config({
+	files: [
+		{
+			extends: [
+				linter.recommended.logical(),
+				linter.recommended.stylistic(),
+				someExample.recommended({
+					exampleSetting: true,
+				}),
+			],
+			glob: "**/*.{js,ts}",
+			rules: [
+				linter.rules({
+					someCoreRuleA: false,
+					someCoreRuleB: true,
+					someCoreRuleC: {
+						someSetting: true,
+					},
+				}),
+				someExample.rules({
+					somePluginRule: true,
+				}),
+			],
+		},
+	],
+	ignore: ["packages/*/dist/", "generated/"],
+	workspaces: ["packages/*"],
+});
+```
+
+Each `packages/*` workspace directory could define its own config that explicitly indicates its root directory:
+
+```ts
+// packages/example/if-i-wrote-a-linter.config.ts
+import { linter } from "@joshuakgoldberg/if-i-wrote-a-linter";
+
+export default linter.config({
+	files: [
+		glob: "src/**/*.ts",
+		rules: [
+			linter.rules({
+				someCoreRuleD: false,
+			}),
+		],
+	],
+	ignore: "lib/"
+	root: "../..",
+});
+```
+
+Those config file sketches are a little more verbose that ESLint flat config.
+But they're more explicitly clear on what they do, and can be made much more type-safe using the APIs like `linter.config()` and `linter.rules()`.
+The core linter could then even let users know of any redundant properties passed to a `linter.rules()`, `somePlugin.rules()`, or `somePlugin.settings`.
+
+That config system is just a sketch and I have no way of knowing how its tradeoffs would work in production today.
+But I'd really love to see how its tradeoffs are experienced by users.
 
 ## Ideology
 
@@ -203,23 +420,27 @@ I haven't had time to deeply investigate how to deduplicate type checking work w
 
 Logical and stylistic rules with recommended and strict
 
+### Thorough Examples
+
 ### Thorough FAQs
 
 Full explanation docs for all decisions
+
+### Thorough Troubleshooting
 
 ### First Party Community Repositories
 
 First party built in for what is the current slate of popular plugins
 
-## Features for Users
+## Features for Developers
+
+### Cross File Fixes
+
+A linter is in some ways the best codemod platform for many kinds of migrations.
 
 ### First Party Templates
 
-## Features for Developers
-
 ### Virtual File System
-
-### Cross File Fixes
 
 ## Implementation
 
@@ -231,13 +452,18 @@ Full project context available up front including preprocessors and session obje
 
 Pluggable api for embedding in places like typescript, TS, config and biome project
 
+[^eslint-change-request-inherit-flat-configs-from-root]: [eslint/eslint#18385 Change Request: Make it easier to inherit flat configs from the repo root](https://github.com/eslint/eslint/issues/18385). [eslint/rfcs#120 feat!: Look Up Config Files From Linted File] was accepted to change lookup locations, but there's still a _conceptual_ ambiguity of how one config file's relative paths should work in another config file.
+[^eslint-change-request-report-unnecessary-config-overrides]: [eslint/eslint#15476Change Request: report unnecessary config overrides](https://github.com/eslint/eslint/issues/15476)
 [^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
 [^eslint-plugin-vitest-valid-type-type-checking]: [vitest-dev/eslint-plugin-vitest#251 valid-type: use type checking to determine test name type?](https://github.com/vitest-dev/eslint-plugin-vitest/issues/251)
+[^eslint-pr-docs-warn-severity]: [eslint/eslint#16696 docs: Add explanation of when to use 'warn' severity](https://github.com/eslint/eslint/issues/16696)
 [^extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
 [^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
 [^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
 [^rfc-feat-parsing-sessionobjects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
+[^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
 [^stc-abandoned]: [dudykr/stc#1101 Project is officially abandoned](https://github.com/dudykr/stc/issues/1101)
+[^tseslint-discord-help-eslint-not-ignoring-js-files]: [Discord help thread: Eslint not ignoring .js files and throwing Definition for rule ... not found error](https://discord.com/channels/1026804805894672454/1283776448188121158)
 [^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]: [typescript-eslint/typescript-eslint#7936 🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
 [^tseslint-pr-new-eslint-parser-on-swc]: [typescript-eslint/typescript-eslint#7680 feat: add a new ESLint parser built on top of SWC](https://github.com/typescript-eslint/typescript-eslint/pull/7680)
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
