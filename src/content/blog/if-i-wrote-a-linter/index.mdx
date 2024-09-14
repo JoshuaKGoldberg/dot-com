@@ -423,13 +423,45 @@ The core linter could then even let users know of any redundant properties passe
 That config system is just a sketch and I have no way of knowing how its tradeoffs would work in production today.
 But I'd really love to see how its tradeoffs are experienced by users.
 
-## Ideology
+## Userland Standardization
 
 ### Consistent Glossary
 
+Most developers I've talked to do not understand or use the right terms when talking about linting.
+Heck, most developers don't want to talk about the linter in the first place -- let alone understand the difference between, say, a config and a plugin.
+
+Many important linting terms have inconsistent usage or even definitions in the wild today.
+For example, _"stylistic"_ can alternately refer to:
+
+- [Stylistic (Rule)](https://eslint.org/docs/latest/use/core-concepts/glossary#stylistic-rule): The category of lint rules that enforce _formatting_, naming conventions, or consistent usage of equivalent syntaxes
+- [ESLint Stylistic](https://eslint.style): The plugin that ESLint's _formatting_ rules were migrated to, along with a small selection of non-formatting stylistic rules
+- [typescript-eslint's stylistic shared configs](https://typescript-eslint.io/users/configs#stylistic), which enforce consistent usage of equivalent syntaxes, as well as general TypeScript best practices that don't impact program logic
+
+...what!?
+
+I work on these tools and I have a hard time keeping this all straight.
+
+The [ESLint Glossary](https://eslint.org/docs/latest/use/core-concepts/glossary) is a very good first step towards solidifying terminology.
+I would want to go one step further and have a single term and definition for all the linting concepts that authors and/or end users care about.
+Doing so would provide authors with the guidance to name their configs, plugins, and rules consistently to each other and the linter core.
+Users then would have an easier time navigating the plugin ecosystem and understanding how they all fit together.
+
 ### Granular Rule Categories
 
-Logical and stylistic rules with recommended and strict
+Over the last decade, the linter community learned the hard way that users need properly categorized shared configs.
+If you give everyone one config that mixes _logical_ and _stylistic_ rules the way, say, `eslint-plugin-airbnb` did, users will resent the portions they disagree with and turn away from linting altogether.
+Plugins that include both of those broad areas of rules now tend to provide dedicated shared configs for different areas of rules [^jsdoc-granular-flat-typescript-configs] [^typescript-eslint-configs].
+
+Once a consistent glossary exists, its definitions can be used to consistently categorize configs and rules.
+Heck, the linter could even provide recommended utilities for generating configs based on rule categories.
+I think that'd go a long way towards further standardizing and making clear the ecosystem of plugin rules.
+At the very least, it'd help encourage plugin authors to make it easier for users to include only the categories of rules they want from the plugin.
+
+### First Party Templates
+
+## Userland Help
+
+### Thorough Config Initializer
 
 ### Thorough Examples
 
@@ -437,7 +469,9 @@ Logical and stylistic rules with recommended and strict
 
 Full explanation docs for all decisions
 
-### Thorough Troubleshooting
+### Thorough Troubleshooting Guide
+
+## Community
 
 ### First Party Community Repositories
 
@@ -448,8 +482,6 @@ First party built in for what is the current slate of popular plugins
 ### Cross File Fixes
 
 A linter is in some ways the best codemod platform for many kinds of migrations.
-
-### First Party Templates
 
 ### Virtual File System
 
@@ -470,6 +502,7 @@ Pluggable api for embedding in places like typescript, TS, config and biome proj
 [^eslint-pr-docs-warn-severity]: [eslint/eslint#16696 docs: Add explanation of when to use 'warn' severity](https://github.com/eslint/eslint/issues/16696)
 [^extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
 [^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
+[^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
 [^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
 [^rfc-feat-parsing-session-objects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
@@ -480,4 +513,5 @@ Pluggable api for embedding in places like typescript, TS, config and biome proj
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
 [^tseslint-troubleshooting-typed-linting]: [typescript-eslint > Troubleshooting & FAQs > Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting)
 [^typerunner-stalled]: [marcj/TypeRunner Is there still a chance of kickstarting the project?](https://github.com/marcj/TypeRunner/issues/14)
+[^typescript-eslint-configs]: [typescript-eslint: Shared Configs > Recommended Configurations](https://typescript-eslint.io/users/configs#recommended-configurations)
 [^vscode-eslint-cross-file-information]: [microsoft/vscode-eslint#1774 ESLint does not re-compute cross-file information on file changes](https://github.com/microsoft/vscode-eslint/issues/1774)
