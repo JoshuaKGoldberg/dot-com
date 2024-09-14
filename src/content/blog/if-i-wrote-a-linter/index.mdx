@@ -346,9 +346,16 @@ But, I think we're learning the hard way what nuances trip people up this far ou
 - Because all config entries are just JavaScript objects, there's no way to lint only the user's own config entries [^eslint-change-request-report-unnecessary-config-overrides]
 - Directory relativity becomes confusing when nested configs `import` from a higher-up config [^eslint-change-request-inherit-flat-configs-from-root]
 - `ignores` is not very intuitive right now [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file] [^tseslint-discord-help-eslint-not-ignoring-js-files]
+- Plugins' shared configs being able to set file matches and other settings besides rules adds complexity to configs that use multiple plugins
 
-I think we could solve most of that by creating delineated functions or objects to create `ignores` blocks, shared configs, and plugins.
+I think we could solve most of that by:
+
+- Creating delineated functions or objects to create `ignores` blocks, shared configs, and plugins.
+- Having plugins automatically register themselves when their rules are included
+- Only allow plugin configs to specify rules and shared rule settings
+
 Doing so would clarify the intentions behind each portion of a config both to users and to tooling.
+I think a good goal would be to make it so you don't have to understand anything about a config _system_ to be able to read and understand a _config file_.
 
 Here's a rough sketch of what the root monorepo config could like with a config system more akin to a [`tsup.config.ts`](https://tsup.egoist.dev/#using-custom-configuration) or [`vitest.config.ts`](https://vitest.dev/config), but with explicit functions for common operations:
 
@@ -364,7 +371,7 @@ export default linter.config({
 				linter.recommended.logical(),
 				linter.recommended.stylistic(),
 				someExample.recommended({
-					exampleSetting: true,
+					setting: true,
 				}),
 			],
 			glob: "**/*.{js,ts}",
