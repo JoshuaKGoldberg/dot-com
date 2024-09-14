@@ -395,14 +395,16 @@ import { linter } from "@joshuakgoldberg/if-i-wrote-a-linter";
 
 export default linter.config({
 	files: [
-		glob: "src/**/*.ts",
-		rules: [
-			linter.rules({
-				someCoreRuleD: false,
-			}),
-		],
+		{
+			glob: "src/**/*.ts",
+			rules: [
+				linter.rules({
+					someCoreRuleD: false,
+				}),
+			],
+		},
 	],
-	ignore: "lib/"
+	ignore: "lib/",
 	root: "../..",
 });
 ```
