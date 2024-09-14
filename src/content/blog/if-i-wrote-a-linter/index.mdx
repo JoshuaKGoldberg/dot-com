@@ -123,6 +123,8 @@ Any modern ORM (e.g. [Prisma](https://github.com/prisma/prisma), [Supabase](http
 Not being able to understand those types blocks rules from understanding any code referencing those types.
 Inconsistent levels of type-awareness would be very confusing for users.
 
+A full type system such as TypeScript's is the only way path to fully working lint rules that perform any go-to-definition or type-dependent logic.
+
 ### TypeScript's Assignability APIs
 
 One shortcut in reimplementing TypeScript could be to only implement part of it.
