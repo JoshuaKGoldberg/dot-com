@@ -348,7 +348,7 @@ But, I think we're learning the hard way what nuances trip people up this far ou
 I think we could solve most of that by creating delineated functions or objects to create `ignores` blocks, shared configs, and plugins.
 Doing so would clarify the intentions behind each portion of a config both to users and to tooling.
 
-Here's a rough sketch of what the root monorepo config could like with a config system more akin to a [`tsup.config.ts`](https://tsup.egoist.dev/#using-custom-configuration) or [`vitest.config.ts`](https://vitest.dev/config), but with explicit methods for common operations:
+Here's a rough sketch of what the root monorepo config could like with a config system more akin to a [`tsup.config.ts`](https://tsup.egoist.dev/#using-custom-configuration) or [`vitest.config.ts`](https://vitest.dev/config), but with explicit functions for common operations:
 
 ```ts
 // if-i-wrote-a-linter.config.ts
@@ -405,7 +405,7 @@ export default linter.config({
 });
 ```
 
-Those config file sketches are a little more verbose that ESLint flat config.
+Those config file sketches are a little more verbose than ESLint flat config.
 But they're more explicitly clear on what they do, and can be made much more type-safe using the APIs like `linter.config()` and `linter.rules()`.
 The core linter could then even let users know of any redundant properties passed to a `linter.rules()`, `somePlugin.rules()`, or `somePlugin.settings`.
 
