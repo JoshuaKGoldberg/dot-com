@@ -199,6 +199,18 @@ I haven't had time to deeply investigate how to deduplicate type checking work w
 
 ## User Experience
 
+### Formatting After Linting
+
+The primary reason why many ESLint users move to Biome or Oxc is that those tools perform both _formatting_ and _linting_ with a single devDependency and configuration file.
+In doing so, they provide a much easier setup and maintenance story, as well as eliminate the all-too-easy common ESLint misconfigurations that lead to performance issues [^tseslint-troubleshooting-performance-stylistic][^tseslint-troubleshooting-performance-prettier][^tseslint-troubleshooting-performance-import].
+
+Even better, they can automatically apply formatting after lint rule autofixes and suggestions.
+No more running `--fix` and seeing a bunch of bizarrely formatting `{`s and `}`s until you hit save.
+
+I still believe a linter should not be used for formatting [^post-stop-using-eslint-for-formatting] [^post-the-blurry-line-between-formatting-and-style].
+But built-in automatic formatting after linting is _really nice_.
+I want that.
+
 ### Only Errors
 
 All web linters I've found allow configuring rules as _errors_ or _warnings_.
@@ -522,6 +534,8 @@ Pluggable api for embedding in places like typescript, TS, config and biome proj
 [^extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
 [^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
 [^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
+[^post-stop-using-eslint-for-formatting]: [Configuring ESLint, Prettier, and TypeScript Together > STOP USING ESLINT FOR FORMATTING](/blog/configuring-eslint-prettier-and-typescript-together/#stop-using-eslint-for-formatting)
+[^post-the-blurry-line-between-formatting-and-style]: [The Blurry Line Between Formatting and Style](/blog/the-blurry-line-between-formatting-and-style)
 [^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
 [^rfc-feat-parsing-session-objects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
@@ -531,6 +545,9 @@ Pluggable api for embedding in places like typescript, TS, config and biome proj
 [^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
 [^tseslint-pr-new-eslint-parser-on-swc]: [typescript-eslint/typescript-eslint#7680 feat: add a new ESLint parser built on top of SWC](https://github.com/typescript-eslint/typescript-eslint/pull/7680)
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
+[^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
+[^tseslint-troubleshooting-performance-prettier]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-prettier`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-prettier)
+[^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
 [^tseslint-troubleshooting-typed-linting]: [typescript-eslint > Troubleshooting & FAQs > Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting)
 [^typerunner-stalled]: [marcj/TypeRunner Is there still a chance of kickstarting the project?](https://github.com/marcj/TypeRunner/issues/14)
 [^typescript-eslint-configs]: [typescript-eslint: Shared Configs > Recommended Configurations](https://typescript-eslint.io/users/configs#recommended-configurations)
