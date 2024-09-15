@@ -313,11 +313,13 @@ export const myPlugin = createPlugin({
 import { myPlugin } from "@joshuakgoldberg/my-plugin";
 
 export default [
-	plugins: [
-		myPlugin({
-			setting: "..."
-		})
-	],
+	{
+		plugins: [
+			myPlugin({
+				setting: "...",
+			}),
+		],
+	},
 ];
 ```
 
