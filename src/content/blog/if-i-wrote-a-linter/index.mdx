@@ -265,11 +265,13 @@ export const myPlugin = createPlugin({
 import { myPlugin } from "@joshuakgoldberg/my-plugin";
 
 export default [
-	rules: myPlugin.rules({
-		someRule: {
-			option: "..."
-		},
-	}),
+	{
+		rules: myPlugin.rules({
+			someRule: {
+				option: "...",
+			},
+		}),
+	},
 ];
 ```
 
