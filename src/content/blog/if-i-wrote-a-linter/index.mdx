@@ -45,7 +45,7 @@ For the web ecosystem, that means TypeScript.
 
 I love the speed gains of native-speed tooling such as Biome and Oxc.
 Those are fantastic projects run by excellent teams, and they serve a real use case of ultrafast tooling.
-But there are two particularly strong reasons why I would strongly prefer a JavaScript flavor for core over an "alternative" language such as Rust.
+But I think the following reasons around _developer_ and _ecosystem_ compatibility weigh me preferring JavaScript flavor for the core linter and its plugins.
 
 #### Developer Compatibility
 
@@ -479,11 +479,25 @@ First party built in for what is the current slate of popular plugins
 
 ## Features for Developers
 
-### Cross File Fixes
+### Full Virtual File System
 
-A linter is in some ways the best codemod platform for many kinds of migrations.
+[^tseslint-explore-ts-vfs]
 
-### Virtual File System
+something something linting file permissions
+
+### Rich Cross File Fixes
+
+A linter is in many ways the best codemod platform for many kinds of migrations.
+It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
+I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
+
+Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
+Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-change-request-apply-suggestions-to-other-files].
+
+If I were to write a linter, I would add in a rich system for rule fixes and suggestions:
+
+- The ability to indicate changes to virtual files other than the one being linted
+- Other file system operations, such as renames and permissions changes
 
 ## Implementation
 
@@ -495,6 +509,7 @@ Full project context available up front including preprocessors and session obje
 
 Pluggable api for embedding in places like typescript, TS, config and biome project
 
+[^eslint-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
 [^eslint-change-request-inherit-flat-configs-from-root]: [eslint/eslint#18385 Change Request: Make it easier to inherit flat configs from the repo root](https://github.com/eslint/eslint/issues/18385). [eslint/rfcs#120 feat!: Look Up Config Files From Linted File](https://github.com/eslint/rfcs/pull/120) was accepted to change lookup locations, but there's still a _conceptual_ ambiguity of how one config file's relative paths should work in another config file.
 [^eslint-change-request-report-unnecessary-config-overrides]: [eslint/eslint#15476Change Request: report unnecessary config overrides](https://github.com/eslint/eslint/issues/15476)
 [^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
@@ -509,6 +524,7 @@ Pluggable api for embedding in places like typescript, TS, config and biome proj
 [^stc-abandoned]: [dudykr/stc#1101 Project is officially abandoned](https://github.com/dudykr/stc/issues/1101)
 [^tseslint-discord-help-eslint-not-ignoring-js-files]: [Discord help thread: Eslint not ignoring .js files and throwing Definition for rule ... not found error](https://discord.com/channels/1026804805894672454/1283776448188121158)
 [^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]: [typescript-eslint/typescript-eslint#7936 🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
+[^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
 [^tseslint-pr-new-eslint-parser-on-swc]: [typescript-eslint/typescript-eslint#7680 feat: add a new ESLint parser built on top of SWC](https://github.com/typescript-eslint/typescript-eslint/pull/7680)
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
 [^tseslint-troubleshooting-typed-linting]: [typescript-eslint > Troubleshooting & FAQs > Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting)
