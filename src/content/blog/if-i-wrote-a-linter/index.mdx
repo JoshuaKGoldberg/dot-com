@@ -44,7 +44,7 @@ It is my sincere belief that **the standard linter for an ecosystem should be wr
 For the web ecosystem, that means TypeScript.
 
 I love the speed gains of native-speed tooling such as Biome and Oxc.
-Those are fantastic projects run by excellent teams, and they serve a real use case of ultrafast tooling.
+Those are fantastic projects run by excellent teams, and they serve a real use case of ultra-fast tooling.
 But I think the following reasons around _developer_ and _ecosystem_ compatibility weigh me preferring JavaScript flavor for the core linter and its plugins.
 
 #### Developer Compatibility
@@ -71,7 +71,7 @@ Having to cross the bridge between JavaScript/TypeScript and Rust for a JavaScri
 ## Type Aware, Always
 
 [typescript-eslint's Typed Linting](https://typescript-eslint.io/getting-started/typed-linting) is the most powerful JavaScript/TypeScript linting in common use today.
-Lint rules that use type information are significantly more capable than tradtional, AST-only rules.
+Lint rules that use type information are significantly more capable than traditional, AST-only rules.
 Many popular lint rules have ended up either dependent on typed linting or having to deal with known bugs or feature gaps without typed linting.[^eslint-plugin-react-hooks-detection-typed-linting][^eslint-plugin-vitest-valid-type-type-checking]
 
 But, typed linting is not an easy feature for many users right now.
@@ -117,7 +117,7 @@ It'd be great to avoid the performance cost of a full TypeScript API call.
 One workaround could be to support only limited type retrievals: effectively only looking at what's visible in the AST.
 I'd wager you could get somewhat far with basic AST checks in a file for many functions, and even further with a basic TypeScript parser that builds up a scope manager for each file and effectively looks up where identifiers are declared.
 
-Sadly, an AST-only type lookup system falls apart fairly quickly in the presense of any complex TypeScript types (e.g. conditional or mapped types).
+Sadly, an AST-only type lookup system falls apart fairly quickly in the presence of any complex TypeScript types (e.g. conditional or mapped types).
 Most larger TypeScript projects end up using complex types _somewhere_ in the stack.
 Any modern ORM (e.g. [Prisma](https://github.com/prisma/prisma), [Supabase](https://github.com/supabase/supabase)) or schema validation library (e.g. [Arktype](https://github.com/arktypeio/arktype), [Zod](https://github.com/colinhacks/zod)) employs conditional types and other shenanigans.
 Not being able to understand those types blocks rules from understanding any code referencing those types.
@@ -129,7 +129,7 @@ A full type system such as TypeScript's is the only way path to fully working li
 
 One shortcut in reimplementing TypeScript could be to only implement part of it.
 Typed linters haven't traditionally needed type errors, just type retrievals.
-Reducing scope for a TypeScript reimplementation could make it achieveable outside of the TypeScript team.
+Reducing scope for a TypeScript reimplementation could make it achievable outside of the TypeScript team.
 
 However, typescript-eslint will soon start using TypeScript's type _assignability_ APIs too.[^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]
 That means any TypeScript API replacement would have to not just _retrieve_ the types of AST nodes, but also be able to perform _assignability_ checking (i.e. compare them).
@@ -158,7 +158,7 @@ The core parser would be TypeScript's, and core rules would understand TypeScrip
 
 ESLint's AST representation is [ESTree](https://github.com/estree/estree).
 `@typescript-eslint/parser` works by parsing code using TypeScript's parser into TypeScript's AST, then recursively creating a "TSESTree" (ESTree + TypeScript nodes) structure roughly adhering to ESTree from that.
-Every so often, a tooling afficianado will notice this parse-and-convert duplication and suggest removing one of the two trees to improve performance.
+Every so often, a tooling aficionado will notice this parse-and-convert duplication and suggest removing one of the two trees to improve performance.
 
 First off, the cost of parsing two ASTs out of source code has never been the relevant bottleneck in any linted project I've seen.
 Parse time is practically always dwarfed by type-checked linting time[^tseslint-pr-new-eslint-parser-on-swc].
@@ -526,29 +526,55 @@ Full project context available up front including preprocessors and session obje
 Pluggable api for embedding in places like typescript, TS, config and biome project
 
 [^eslint-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
+
 [^eslint-change-request-inherit-flat-configs-from-root]: [eslint/eslint#18385 Change Request: Make it easier to inherit flat configs from the repo root](https://github.com/eslint/eslint/issues/18385). [eslint/rfcs#120 feat!: Look Up Config Files From Linted File](https://github.com/eslint/rfcs/pull/120) was accepted to change lookup locations, but there's still a _conceptual_ ambiguity of how one config file's relative paths should work in another config file.
+
 [^eslint-change-request-report-unnecessary-config-overrides]: [eslint/eslint#15476Change Request: report unnecessary config overrides](https://github.com/eslint/eslint/issues/15476)
+
 [^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
+
 [^eslint-plugin-vitest-valid-type-type-checking]: [vitest-dev/eslint-plugin-vitest#251 valid-type: use type checking to determine test name type?](https://github.com/vitest-dev/eslint-plugin-vitest/issues/251)
+
 [^eslint-pr-docs-warn-severity]: [eslint/eslint#16696 docs: Add explanation of when to use 'warn' severity](https://github.com/eslint/eslint/issues/16696)
+
 [^extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
+
 [^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
+
 [^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
+
 [^post-stop-using-eslint-for-formatting]: [Configuring ESLint, Prettier, and TypeScript Together > STOP USING ESLINT FOR FORMATTING](/blog/configuring-eslint-prettier-and-typescript-together/#stop-using-eslint-for-formatting)
+
 [^post-the-blurry-line-between-formatting-and-style]: [The Blurry Line Between Formatting and Style](/blog/the-blurry-line-between-formatting-and-style)
+
 [^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
+
 [^rfc-feat-parsing-session-objects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
+
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
+
 [^stc-abandoned]: [dudykr/stc#1101 Project is officially abandoned](https://github.com/dudykr/stc/issues/1101)
+
 [^tseslint-discord-help-eslint-not-ignoring-js-files]: [Discord help thread: Eslint not ignoring .js files and throwing Definition for rule ... not found error](https://discord.com/channels/1026804805894672454/1283776448188121158)
+
 [^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]: [typescript-eslint/typescript-eslint#7936 🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
+
 [^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
+
 [^tseslint-pr-new-eslint-parser-on-swc]: [typescript-eslint/typescript-eslint#7680 feat: add a new ESLint parser built on top of SWC](https://github.com/typescript-eslint/typescript-eslint/pull/7680)
+
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
+
 [^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
+
 [^tseslint-troubleshooting-performance-prettier]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-prettier`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-prettier)
+
 [^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
+
 [^tseslint-troubleshooting-typed-linting]: [typescript-eslint > Troubleshooting & FAQs > Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting)
+
 [^typerunner-stalled]: [marcj/TypeRunner Is there still a chance of kickstarting the project?](https://github.com/marcj/TypeRunner/issues/14)
+
 [^typescript-eslint-configs]: [typescript-eslint: Shared Configs > Recommended Configurations](https://typescript-eslint.io/users/configs#recommended-configurations)
+
 [^vscode-eslint-cross-file-information]: [microsoft/vscode-eslint#1774 ESLint does not re-compute cross-file information on file changes](https://github.com/microsoft/vscode-eslint/issues/1774)
