@@ -11,8 +11,6 @@ const fontSizes: Record<string, string | undefined> = {
 	smaller: styles.smaller,
 };
 
-export type SquigglyFontSize = keyof typeof fontSizes;
-
 const variants = {
 	active: styles.alwaysActive,
 	inactive: styles.inactive,
