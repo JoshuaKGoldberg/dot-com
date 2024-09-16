@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
+		"exactOptionalPropertyTypes": false,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",

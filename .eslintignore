@@ -1,4 +1,0 @@
-.astro/
-dist/
-pnpm-lock.yaml
-src/env.d.ts
