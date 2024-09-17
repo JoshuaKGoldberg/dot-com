@@ -225,7 +225,8 @@ The space and time used for a project's typed linting are always exponentially l
 For example, [Brad Zacher](https://github.com/bradzacher) tried out optimizing typescript-eslint's parser to use a more efficient AST converter [^tseslint-issue-conversion-logic-jump-table].
 The results there were that even with a 10% reduction in _conversion_ time, the net reduction in _overall_ time was only ~0.2% [^tseslint-pr-typescript-estree-jump-table].
 That was because lint rules themselves take up most lint timing asking TypeScript for type information.
-For the forseeable future, I think there will be two speeds of linting:
+
+I think there will be two speeds of linting for the forseeable future:
 
 - Native speed: exponentially faster, but without type information
 - Typed speed: with type information, but at JIT speeds
