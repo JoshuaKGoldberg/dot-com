@@ -3,7 +3,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 11" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-11-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 12" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-12-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -44,6 +44,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://michaeldeboey.be"><img src="https://avatars.githubusercontent.com/u/6643991?v=4?s=100" width="100px;" alt="Michaël De Boey"/><br /><sub><b>Michaël De Boey</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Amichaeldeboey" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://paulisaweso.me/"><img src="https://avatars.githubusercontent.com/u/6335792?v=4?s=100" width="100px;" alt="Paul Esch-Laurent"/><br /><sub><b>Paul Esch-Laurent</b></sub></a><br /><a href="#ideas-pinjasaur" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sxflynn"><img src="https://avatars.githubusercontent.com/u/2034081?v=4?s=100" width="100px;" alt="Stephen Flynn"/><br /><sub><b>Stephen Flynn</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Asxflynn" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://tonyedwardspz.co.uk/"><img src="https://avatars.githubusercontent.com/u/6146746?v=4?s=100" width="100px;" alt="Tony Edwards"/><br /><sub><b>Tony Edwards</b></sub></a><br /><a href="#ideas-tonyedwardspz" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
