@@ -114,6 +114,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "johnnyreilly",
+      "name": "John Reilly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1010525?v=4",
+      "profile": "https://johnnyreilly.com/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
