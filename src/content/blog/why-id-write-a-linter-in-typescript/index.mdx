@@ -199,6 +199,23 @@ The maintenance tax for dual-tree conversion isn't horribly painful, but it's no
 We should be making the acts of writing lint rules and adding type awareness to lint rules as streamlined as possible.
 Especially given my desire for built-in type awareness, I think the tradeoff of having to depend on TypeScript is worth it.
 
+#### Drawback: Ecosystem Compatibility
+
+One downside of using the TypeScript AST shape for lint rules is losing interoperability with existing ESLint rules.
+ESLint's rules use a different AST structure, [ESTree](https://github.com/estree/estree), that is fundamentally different from TypeScript's AST structure.
+
+Any rule written for ESLint and ESTree would have to be rewritten in TypeScript's AST.
+That's a lot of work, especially as rules update.
+[TSLint](https://palantir.github.io/tslint) was killed in part to avoiding this very same burden!
+
+I think this drawback is important, but not as pressing as it used to be.
+ESLint's ecosystem has matured over the last few years.
+The act of writing rules is much better documented now than it was when TSLint was being killed.
+The recent ESLint "flat config" launch is both taking a lot of time away from rule shakeups and helping show how many community plugins aren't actively changing very much [^eslint-issue-tracking-flat-config-support].
+
+For experimental evidence, see the [Biome Linter rules from other sources](https://github.com/biomejs/biome/discussions/3) and [Oxlint Rules](https://oxc.rs/docs/guide/usage/linter/rules.html) pages showing _hundreds_ of community rules each linter has implemented.
+I think that progress is great evidence that the drawbacks of rewriting lint rules in a new AST structure can be outweighed by other advantages.
+
 #### Not a Motivator: Dual Tree Performance
 
 I've seen a lot of developers express performance concerns about how typescript-eslint's dual tree strategy has to create two ASTs.
@@ -220,23 +237,6 @@ Maybe we could even have a TypeScript [daemon](<https://en.wikipedia.org/wiki/Da
 
 Regardless, for now, TypeScript runs at JIT speed, and therefore type information will be as well.
 The cost of parsing and converting into a dual tree structure is not a significant performance factor when linting with type information.
-
-#### Drawback: Ecosystem Compatibility
-
-One downside of using the TypeScript AST shape for lint rules is losing interoperability with existing ESLint rules.
-ESLint's rules use a different AST structure, [ESTree](https://github.com/estree/estree), that is fundamentally different from TypeScript's AST structure.
-
-Any rule written for ESLint and ESTree would have to be rewritten in TypeScript's AST.
-That's a lot of work, especially as rules update.
-[TSLint](https://palantir.github.io/tslint) was killed in part to avoiding this very same burden!
-
-I think this drawback is important, but not as pressing as it used to be.
-ESLint's ecosystem has matured over the last few years.
-The act of writing rules is much better documented now than it was when TSLint was being killed.
-The recent ESLint "flat config" launch is both taking a lot of time away from rule shakeups and helping show how many community plugins aren't actively changing very much [^eslint-issue-tracking-flat-config-support].
-
-For experimental evidence, see the [Biome Linter rules from other sources](https://github.com/biomejs/biome/discussions/3) and [Oxlint Rules](https://oxc.rs/docs/guide/usage/linter/rules.html) pages showing _hundreds_ of community rules each linter has implemented.
-I think that progress is great evidence that the drawbacks of rewriting lint rules in a new AST structure can be outweighed by other advantages.
 
 ## Alternatives Can Be Good, Actually
 
