@@ -114,6 +114,15 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "robin-a-meade",
+      "name": "Robin A. Meade",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1343270?v=4",
+      "profile": "https://github.com/robin-a-meade",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
