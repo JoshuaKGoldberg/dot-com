@@ -119,6 +119,15 @@
       ]
     },
     {
+      "login": "johnnyreilly",
+      "name": "John Reilly",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1010525?v=4",
+      "profile": "https://johnnyreilly.com/",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
       "login": "tonyedwardspz",
       "name": "Tony Edwards",
       "avatar_url": "https://avatars.githubusercontent.com/u/6146746?v=4",
