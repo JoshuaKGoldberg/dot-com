@@ -1,11 +1,16 @@
 ---
 description: "Typed linting is powerful but requires a full type checker to function well. Today, that means TypeScript. This is why we haven't found a suitable replacement yet."
 image:
-  alt: "A small Shinto shrine called Hakusan Gongen, following the pre-Meiji terminology, at Kita-in, Kawagoe."
-  src: "~/assets/blog/battle-of-koniggratz.png"
+  alt: "The DMV sloth from Zootopia, Flash, slowly breaking into a smile."
+  src: "~/assets/blog/zootopia-flash-mid-smile.png"
 pubDate: 2024-09-23
 title: "Why Typed Linting Needs TypeScript Today"
 ---
+
+import zootopiaBloodBloodBloodAndDeath from "~/assets/blog/zootopia-blood-blood-blood-and-death.webm";
+import zootopiaJudyNickSelfie from "~/assets/blog/zootopia-judy-nick-selfie.webm";
+import zootopiaSlothStamping from "~/assets/blog/zootopia-sloth-stamping.webm";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 ## Recap: Typed Linting?
 
@@ -13,7 +18,7 @@ title: "Why Typed Linting Needs TypeScript Today"
 Typed linting rules as provided by typescript-eslint are the most powerful JavaScript/TypeScript linting in common use today.
 Lint rules that use type information are significantly more capable than traditional, AST-only rules.
 
-> 👉 For a deeper explanation of typed linting, see [typescript-eslint > Typed Linting: The Most Powerful TypeScript Linting Ever](https://github.com/typescript-eslint/typescript-eslint/pull/10025).
+> 👉 For a deeper explanation of typed linting, see the [deploy preview of typescript-eslint > Typed Linting: The Most Powerful TypeScript Linting Ever](https://deploy-preview-10025--typescript-eslint.netlify.app/blog/typed-linting), a work-in-progress blog post.
 
 Many popular lint rules have ended up either dependent on typed linting or having to deal with known bugs or feature gaps without typed linting [^eslint-plugin-react-hooks-detection-typed-linting] [^eslint-plugin-vitest-valid-type-type-checking].
 ESLint's core rules don't understand type information, leading to some typescript-eslint "extension" rules adding in type information [^tseslint-extension-rules-type-checked].
@@ -44,6 +49,13 @@ TypeScript executes at JavaScript speeds ("JIT", or Just In Time compiling), and
 It would be fantastic for linter users if we could find away around having to run the full JIT speed type checker as part of our typed linting.
 Such a feat has not been successfully implemented yet.
 
+<LabeledVideo
+	alt="Zootopia movie scene: a sloth working at the DMV very slowly stamps two papers. A waiting lioness face palms."
+	description="Seen: TypeScript calculating types for a typed linting in a project utilizing Lodash, Prisma, and Zod."
+	original="https://giphy.com/gifs/zootopia-dmv-3og0INAY5MLmEBubyU"
+	src={zootopiaSlothStamping}
+/>
+
 ### AST-Only Types
 
 One way to avoid a TypeScript dependency could be to support only limited type retrievals: effectively only looking at what's visible in the AST.
@@ -71,6 +83,13 @@ The TypeScript team receives the equivalent of _millions of dollars a year_ in f
 A new version of TypeScript that adds type checking bugfixes and features releases every three months.
 
 Can you imagine the Herculean difficulty for any team trying to keep up with TypeScript?
+
+<LabeledVideo
+	alt="Zootopia's Judy Hopps dramatically enacting a death, gesturing like blood pouring out her chest. Caption: 'Blood, blood, blood! And, death.'"
+	description="Zootopia's Judy Hopps describing the fate of every high-profile attempt to reimplement TypeScript."
+	original="https://tenor.com/view/zoo-tropolis-zootopia-lt-judy-hopps-nick-wilde-acting-gif-14399368"
+	src={zootopiaBloodBloodBloodAndDeath}
+/>
 
 I hope for a day when there is a tool that can fully compete with TypeScript.
 Competition is good for an ecosystem.
@@ -121,6 +140,13 @@ Or, failing that, a subset of TypeScript that can speed up API consumers such as
 
 But, it's going to be a while until anything remotely capable of competing with TypeScript stabilizes.
 We're stuck with TypeScript for typed linting for now.
+
+<LabeledVideo
+	alt="Zootopia's Judy Hopps (rabbit) and Nick Wilde (fox) taking a selfie. Judy is excited, Nick is begrudging."
+	description="Linting and type checking might not always get along, but the results are great."
+	original="https://giphy.com/gifs/zootopia-16bJmyPvRbCDu"
+	src={zootopiaJudyNickSelfie}
+/>
 
 [^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
 
