@@ -1,0 +1,135 @@
+---
+description: "Typed linting is powerful but requires a full type checker to function well. Today, that means TypeScript. This is why we haven't found a suitable replacement yet."
+image:
+  alt: "A small Shinto shrine called Hakusan Gongen, following the pre-Meiji terminology, at Kita-in, Kawagoe."
+  src: "~/assets/blog/battle-of-koniggratz.png"
+pubDate: 2024-09-23
+title: "Why Typed Linting Needs TypeScript Today"
+---
+
+## Recap: Typed Linting?
+
+[Linting with type information](https://typescript-eslint.io/getting-started/typed-linting), also called "typed linting" or "type-aware linting", is the act of writing lint rules that use type information to understand your code.
+Typed linting rules as provided by typescript-eslint are the most powerful JavaScript/TypeScript linting in common use today.
+Lint rules that use type information are significantly more capable than traditional, AST-only rules.
+
+> 👉 For a deeper explanation of typed linting, see [typescript-eslint > Typed Linting: The Most Powerful TypeScript Linting Ever](https://github.com/typescript-eslint/typescript-eslint/pull/10025).
+
+Many popular lint rules have ended up either dependent on typed linting or having to deal with known bugs or feature gaps without typed linting [^eslint-plugin-react-hooks-detection-typed-linting] [^eslint-plugin-vitest-valid-type-type-checking].
+ESLint's core rules don't understand type information, leaing to some typescript-eslint "extension" rules adding in type information [^tseslint-extension-rules-type-checked].
+
+So, typed linting is _really, really important_ for a linter.
+
+And how do you get type information?
+Well...
+
+## TypeScript For Type Information
+
+TypeScript is _the_ tool for providing full TypeScript type information on JavaScript or TypeScript code.
+It's by far the most popular flavor of JavaScript during this era of web development.
+
+In fact, TypeScript is the _only_ tool that can reasonably retrieve type information today.
+Every public effort to recreate it is either abandoned[^stc-abandoned] or stalled[^typerunner-stalled].
+Flow is explicitly not targeting competing with TypeScript for public mindshare[^flow-blog-clarity-on-direction].
+The closest publicly known effort right now is [Ezno](https://github.com/kaleidawave/ezno), which is very early stage.
+
+If you want a full type checker for your JavaScript/TypeScript project (which, again, _you do_), then TypeScript is your only reasonable choice today.
+
+## Alternatives and Difficulties
+
+TypeScript is a large dependency.
+Type checking is a notoriously expensive process.
+TypeScript executes at JavaScript speeds ("JIT", or Just In Time compiling), and so takes up exponentially more memory and execution time than tooling written in native speed languages such as Go or Rust.
+
+It would be fantastic for linter users if we could find away around having to run the full JIT speed type checker as part of our typed linting.
+Such a feat has not been successfully implemented yet.
+
+### AST-Only Types
+
+One way to avoid a TypeScript dependency could be to support only limited type retrievals: effectively only looking at what's visible in the AST.
+I'd wager you could get somewhat far with basic AST checks in a file for many functions, and even further with a basic TypeScript parser that builds up a scope manager for each file and effectively looks up where identifiers are declared.
+
+Sadly, an AST-only type lookup system falls apart fairly quickly in the presence of any complex TypeScript types (e.g. conditional or mapped types).
+Most larger TypeScript projects end up using complex types _somewhere_ in the stack.
+Any modern ORM (e.g. [Prisma](https://github.com/prisma/prisma), [Supabase](https://github.com/supabase/supabase)) or schema validation library (e.g. [Arktype](https://github.com/arktypeio/arktype), [Zod](https://github.com/colinhacks/zod)) employs conditional types and other shenanigans.
+Not being able to understand those types blocks rules from understanding any code referencing those types.
+
+Inconsistent levels of type-awareness are at best confusing for users.
+They're practically a blocker to real adoption of a linter.
+
+A full type system such as TypeScript's is the only way path to fully working lint rules that perform any go-to-definition or type-dependent logic.
+
+### Native Speed Reimplementation
+
+> I previously touched on similar points in [Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now > Option: Reimplementing TypeScript at Native Speed](/rust-based-javascript-linters-fast-but-no-typed-linting-right-now/#option-reimplementing-typescript-at-native-speed).
+
+If type checking is so important, and a native speed type checker would be so beneficial, why hasn't one been written yet?
+Why hasn't anybody reimplemented TypeScript in, say, Go or Rust?
+
+TypeScript is a huge project under active development from a funded team of incredibly dedicated, experienced Microsoft employees -- as well as an active community of power users and contributors.
+The TypeScript team receives the equivalent of _millions of dollars a year_ in funding from employee compensation alone.
+A new version of TypeScript that adds type checking bugfixes and features releases every three months.
+
+Can you imagine the Herculean difficulty for any team trying to keep up with TypeScript?
+
+I hope for a day when there is a tool that can fully compete with TypeScript.
+Competition is good for an ecosystem.
+But it's going to be _years_ until a tool like that can develop.
+
+#### Subset Remplementation
+
+TypeScript consists of several big areas of functionality, of which type checking is only one.
+"Type checking" as used by tooling primarily consists of two areas of APIs:
+
+- Type retrieval _("what type is this node?")_
+- Type relations _("is this type assignable to that type?")_
+
+Most typed lint rules today only use the _retrieval_ part of the type checker.
+Reimplementing only that portion of TypeScript could significantly reduce the development cost of the reimplementation.
+
+Unfortunately, the _relations_ portion of TypeScript was recently confirmed to be ready for use by linters[^tseslint-discussion-checker-is-type-assignable-to].
+typescript-eslint is going to start building in rule logic that builds on `checker.isTypeAssignableTo`.
+
+Any subset reimplementation of TypeScript would need to include equivalents both for the existing type _retrieval_ and type _relations_ APIs.
+Those APIs include most of the tricky assignability logic that makes TypeScript so hard to reimplement in the first place.
+
+A subset reimplementation of TypeScript for typed linting is tempting, but not as narrowly scoped of a task as it might seem.
+
+### Automatically Porting TypeScript to Native Speed
+
+> I previously touched on similar points in [Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now > Option: Boosting TypeScript’s APIs to Native Speed](/https://www.joshuakgoldberg.com/blog/rust-based-javascript-linters-fast-but-no-typed-linting-right-now/#option-boosting-typescripts-apis-to-native-speed).
+
+Instead of reimplementing TypeScript from scratch, what if we could automatically port its source code to a faster language?
+
+Well, TypeScript has tens of thousands of lines of source code built for single-threaded JavaScript with dynamic objects.
+It's really not architected to work in another paradigm.
+I've yet to see anybody make any significant progress on this idea.
+
+## Closing Thoughts
+
+TypeScript is the only reasonable tool available right now for typed linting.
+It's got a monopoly on usable type checking APIs.
+Being able to use a faster equivalent would be fantastic for users of typed linting, but none have become production ready yet.
+
+There are a lot of obstacles to reimplementing TypeScript or an equivalent to it.
+And every year, TypeScript gets more complex and fully-featured.
+
+I'm hopeful that a true competitor to TypeScript will eventually rise up and introduce more healthy competition into the ecosystme.
+Or, failing that, a subset of TypeScript that can speed up API consumers such as typed linting.
+
+But, it's going to be a while until anything remotely capable of competing with TypeScript stabilizes.
+We're stuck with TypeScript for typed linting for now.
+
+[^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
+
+[^eslint-plugin-vitest-valid-type-type-checking]: [vitest-dev/eslint-plugin-vitest#251 valid-type: use type checking to determine test name type?](https://github.com/vitest-dev/eslint-plugin-vitest/issues/251)
+
+[^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
+
+[^stc-abandoned]: [dudykr/stc#1101 Project is officially abandoned](https://github.com/dudykr/stc/issues/1101)
+
+[^tseslint-discussion-checker-is-type-assignable-to]: [🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
+
+[^tseslint-extension-rules-type-checked]: [typescript-eslint.io > Rules > Extension & Type Information](https://typescript-eslint.io/rules/?=typeInformation-extension).
+
+[^typerunner-stalled]: [marcj/TypeRunner Is there still a chance of kickstarting the project?](https://github.com/marcj/TypeRunner/issues/14)
