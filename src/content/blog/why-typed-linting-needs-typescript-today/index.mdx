@@ -16,7 +16,7 @@ import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 ## Recap: Typed Linting?
 
 [Linting with type information](https://typescript-eslint.io/getting-started/typed-linting), also called "typed linting" or "type-aware linting", is the act of writing lint rules that use type information to understand your code.
-Typed linting rules as provided by typescript-eslint are the most powerful JavaScript/TypeScript linting in common use today.
+Typed linting as provided by typescript-eslint is the most powerful JavaScript/TypeScript linting in common use today.
 Lint rules that use type information are significantly more capable than traditional, AST-only rules.
 
 > 👉 For a deeper explanation of typed linting, see the [deploy preview of typescript-eslint > Typed Linting: The Most Powerful TypeScript Linting Ever](https://deploy-preview-10025--typescript-eslint.netlify.app/blog/typed-linting), a work-in-progress blog post.
@@ -106,12 +106,12 @@ But it's going to be _years_ until a tool like that can develop.
 #### Subset Reimplementation
 
 TypeScript consists of several big areas of functionality, of which type checking is only one.
-"Type checking" as used by tooling primarily consists of two areas of APIs:
+The areas of type checking used by typed linting theoretically revolves around two areas of APIs:
 
 - Type retrieval _("what type is this node?")_
 - Type relations _("is this type assignable to that type?")_
 
-Most typed lint rules today only use the _retrieval_ part of the type checker.
+Most typed lint rule in practice today only use the _retrieval_ part of the type checker.
 Reimplementing only that portion of TypeScript could significantly reduce the development cost of the reimplementation.
 
 Unfortunately, the _relations_ portion of TypeScript was recently confirmed to be ready for use by linters[^tseslint-discussion-checker-is-type-assignable-to].
@@ -121,6 +121,7 @@ Any subset reimplementation of TypeScript would need to include equivalents both
 Those APIs include most of the tricky assignability logic that makes TypeScript so hard to reimplement in the first place.
 
 A subset reimplementation of TypeScript for typed linting is tempting, but not as narrowly scoped of a task as it might seem.
+The scope of TypeScript that must be implemented is actually a substantial portion of its APIs' logic.
 
 ### Automatically Porting TypeScript to Native Speed
 
@@ -136,7 +137,7 @@ I've yet to see anybody make any significant progress on this idea beyond proof-
 
 ## Closing Thoughts
 
-TypeScript is the only reasonable tool available right now for typed linting.
+TypeScript itself is the only stable, production-ready tool available right now for typed linting on TypeScript code.
 It's got a monopoly on usable type checking APIs.
 Being able to use a faster equivalent would be fantastic for users of typed linting, but none have become production ready yet.
 
@@ -144,7 +145,7 @@ There are a lot of obstacles to reimplementing TypeScript or an equivalent to it
 And every year, TypeScript gets more complex and fully-featured.
 
 I'm hopeful that a true competitor to TypeScript will eventually rise up and introduce more healthy competition into the ecosystem.
-Or, failing that, a subset of TypeScript that can speed up API consumers such as typed linting.
+Or failing that, either a subset of TypeScript that can speed up API consumers such as typed linting, or an automated TypeScript-to-native-speed port.
 
 But, it's going to be a while until anything remotely capable of competing with TypeScript stabilizes.
 We're stuck with TypeScript for typed linting for now.
