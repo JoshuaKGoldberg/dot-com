@@ -4,7 +4,7 @@ import LabeledMedia from "./LabeledMedia.astro";
 export interface LabeledImage {
 	alt: string;
 	description?: string;
-	source?: string;
+	original?: string;
 	src: { src: string } | string;
 }
 
@@ -27,9 +27,9 @@ export interface Props {
 					{image.description && (
 						<div class="labeled-image-description">{image.description}</div>
 					)}
-					{image.source && (
-						<span class="labeled-image-source">
-							[<a href={image.source}>source</a>]
+					{image.original && (
+						<span class="labeled-image-original">
+							[<a href={image.original}>original</a>]
 						</span>
 					)}
 				</div>
@@ -58,7 +58,7 @@ export interface Props {
 		margin-top: 0.5rem;
 	}
 
-	.labeled-image-source {
+	.labeled-image-original {
 		font-size: 1rem;
 	}
 </style>
