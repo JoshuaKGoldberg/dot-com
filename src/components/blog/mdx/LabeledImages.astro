@@ -3,11 +3,13 @@ import LabeledMedia from "./LabeledMedia.astro";
 
 export interface LabeledImage {
 	alt: string;
+	description?: string;
+	source?: string;
 	src: { src: string } | string;
 }
 
 export interface Props {
-	description: string;
+	description?: string;
 	images: [LabeledImage, LabeledImage];
 }
 ---
@@ -16,11 +18,21 @@ export interface Props {
 	<div class="labeled-images">
 		{
 			Astro.props.images.map((image) => (
-				<img
-					alt={image.alt}
-					class="labeled-image"
-					src={typeof image.src === "string" ? image.src : image.src.src}
-				/>
+				<div class="labeled-image-container">
+					<img
+						alt={image.alt}
+						class="labeled-image"
+						src={typeof image.src === "string" ? image.src : image.src.src}
+					/>
+					{image.description && (
+						<div class="labeled-image-description">{image.description}</div>
+					)}
+					{image.source && (
+						<span class="labeled-image-source">
+							[<a href={image.source}>source</a>]
+						</span>
+					)}
+				</div>
 			))
 		}
 	</div>
@@ -32,9 +44,21 @@ export interface Props {
 		gap: 0.5rem;
 	}
 
+	.labeled-image-container {
+		max-width: calc(50% - 0.25rem);
+	}
+
 	label .labeled-images img.labeled-image {
 		display: block;
 		margin: auto;
-		max-width: calc(50% - 0.25rem);
+		width: 100%;
+	}
+
+	.labeled-image-description {
+		margin-top: 0.5rem;
+	}
+
+	.labeled-image-source {
+		font-size: 1rem;
 	}
 </style>

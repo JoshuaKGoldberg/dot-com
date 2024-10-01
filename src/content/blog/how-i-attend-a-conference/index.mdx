@@ -7,8 +7,16 @@ image:
 title: "How I Attend a Conference"
 ---
 
-import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import conferenceDinnerSelfieBBQStirTrek from "~/assets/blog/conference-dinner-selfie-bbq-stir-trek.jpg";
+import conferenceDinnerSelfieSquiggleConfReactMiami from "~/assets/blog/conference-dinner-selfie-squiggleconf-react-miami.jpg";
+import conferenceFoodTruckSelie from "~/assets/blog/conference-food-truck-selfie.jpg";
+import conferencePackingKitTravel from "~/assets/blog/conference-packing-kit-travel.jpg";
+import conferenceSelfieCascadiaJS2024Sign from "~/assets/blog/conference-selfie-cascadiajs-2024-sign.jpg";
+import conferenceWalkingSelfieMarkMo from "~/assets/blog/conference-walking-selfie-mark-mo.jpg";
 import notionRolodexExampleJerryGoldberg from "~/assets/blog/notion-rolodex-example-jerry-goldberg.png";
+import sunsetRunBegaRiver from "~/assets/blog/sunset-run-bega-river.jpg";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledImages from "~/components/blog/mdx/LabeledImages.astro";
 
 As of September 2024, I've attended about thirty to forty in-person conferences across a handful of countries -- mostly in the last two years.
 I'm also a co-founder and co-organizer of [SquiggleConf](https://squiggleconf.com).
@@ -58,8 +66,6 @@ Those searches can take time, so start them as soon as you can.
 
 ## 2. Research the Conference
 
-TODO: insert nice selfie here :)
-
 The more information you can glean about the conference, the better.
 Follow them on social media, subscribe to their newsletter, and read their website in its entirety.
 
@@ -94,19 +100,36 @@ Having a solid foundation for talks before the conference will help you understa
 
 ## 3. Arrive Fresh
 
-TODO: insert nice running selfie here :)
-
 It's the day of the conference.
 Now what?
 
 Be your best self, whatever that means for you.
 
 For me, that means arriving after a good night's sleep, a healthy breakfast, and a hot shower.
-I make sure my laptop and phone are charged and I have working chargers with me.
+I'll have gone for a run earlier that morning, or failing that, the evening before.
+I make sure my laptop and phone are charged and I have working chargers with me -- including an international adapter if traveling abroad.
 I wear comfortable walking shoes, freshly laundered jeans, silly socks, and a casual button-up shirt with a silly pattern.
 I also pack deodorant, gum, and mints because I have anxiety about smelling bad.
 
 Whatever you need to do to feel your best and conquer any fears, do it.
+
+<LabeledImages
+	images={[
+		{
+			alt: "Selfie of me running in front of a nice city park with a fountain and church.",
+			description:
+				"Blurry sunset run selfie along the Bega river in Timișoara during revo.js.",
+			source: "https://x.com/JoshuaKGoldberg/status/1711107460684030015",
+			src: sunsetRunBegaRiver,
+		},
+		{
+			alt: "Packed in a small suitcase: On running shoes, THAT Conf blue tote bag, Extra gum, Altoids mints, Jlab wireless headphones case, Old Spice Fresh deodorant, Macbook charger, international power adapter, and USB A and C cables in a wall plug.",
+			description:
+				"My standard packing kit for a conference. Shoutout THAT Conf for a great shoe-sized tote.",
+			src: conferencePackingKitTravel,
+		},
+	]}
+/>
 
 ### Early or On Time
 
@@ -126,11 +149,28 @@ Either way, you're making a good impression on the team, and setting a positive 
 
 ## Be Social
 
-TODO: insert nice selfie here :)
-
 Conferences are inherently social events.
 Most people are there to mingle, or at the very least, understand it will be happening a lot around them.
 It's ok if you want to just be quiet (or don't feel comfortable socializing like that), but networking is a big potential benefit for in-person events.
+
+<LabeledImages
+	images={[
+		{
+			alt: "Selfie of me walking with two smiling guys on the streets of Amsterdam.",
+			description:
+				"A lovely walk around Amsterdam with Mark and Mo, both of whom thought my signature Richard Nixon joke was funny.",
+			source: "https://x.com/JoshuaKGoldberg/status/1802772931464073312",
+			src: conferenceWalkingSelfieMarkMo,
+		},
+		{
+			alt: "Smiling selfie of a group of people in front of a food truck.",
+			description:
+				"Food truck times with Ioana, Daniel, Tiger, and Atila. Also in Amsterdam, for React Summit.",
+			source: "https://x.com/JoshuaKGoldberg/status/1802738800541475160",
+			src: conferenceFoodTruckSelie,
+		},
+	]}
+/>
 
 ### How I Socialize
 
@@ -164,6 +204,26 @@ Here are the high-level strategies I utilize most from the book:
 That's what's worked for me and my personality.
 What works for you might be totally different.
 
+#### Posting Online
+
+Conferences _really_ like it when you post positive things about them.
+Marketing and ticket sales are _hard_, so anything that helps promote them is great.
+
+If I have the energy and I'm at a single-track conference, I might start a tweet thread posting the top couple of takeaways from each talk.
+[Here's a talks thread I started for Prisma Day 2022](https://x.com/JoshuaKGoldberg/status/1537356455958953985).
+
+That takes energy and focus, so if I'm in a rush I might just start a chain or two of assorted conference photos.
+[Here's a photos thread I started for revo.js 2023](https://x.com/JoshuaKGoldberg/status/1710151931140677777).
+
+At the very least, I'll try to remember to take a selfie in front of conference signage before the event starts.
+
+<LabeledImage
+	alt="Smiling selfie in front of a TV displaying 'Welcome to CascadiaJS 2024!' in front of a photo."
+	description="Me juicing up on caffeine the morning of CascadiaJS 2024."
+	source="https://x.com/JoshuaKGoldberg/status/1803862518626160725"
+	src={conferenceSelfieCascadiaJS2024Sign}
+/>
+
 ### If You're Shy
 
 I know "networking" and making friends with strangers doesn't come naturally to everyone.
@@ -181,6 +241,25 @@ If you're alone, that's ok too.
 Many conferences have systems set up for people to come together, such as Discords, group activities, or even explicit guides for first-timers.
 If any organizer makes a strong effort to be friendly, then you can absolutely ask them for help.
 You can also even post on social media: _"I'm going to be at @(conference)! Who else?"_ and friendly people will join up.
+
+<LabeledImages
+	images={[
+		{
+			alt: "Selfie of four people smiling happily at a restaurant table.",
+			description:
+				"BBQ dinner with Virtual Coffee folks before Stir Trek. What a happy group.",
+			source: "https://x.com/JoshuaKGoldberg/status/1654881594358784000",
+			src: conferenceDinnerSelfieBBQStirTrek,
+		},
+		{
+			alt: "Smiling selfie of a group of people at an outdoor dinner table.",
+			description:
+				'A bunch of us at dinner for React Miami. This was when the name "SquiggleConf" was born!',
+			source: "https://x.com/JoshuaKGoldberg/status/1649745771154087936",
+			src: conferenceDinnerSelfieSquiggleConfReactMiami,
+		},
+	]}
+/>
 
 ### Take Breaks
 
