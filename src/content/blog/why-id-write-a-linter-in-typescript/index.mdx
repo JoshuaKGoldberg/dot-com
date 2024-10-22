@@ -115,7 +115,11 @@ A linter that executes wholly in Node.js "JIT" (Just In Time) compiling speed ca
 
 However!
 [Typed linting will always be roughly as slow as type checking](TODO).
-Regardless, for now, TypeScript runs at JIT speed, and therefore type information will be as well.
+Typed linting is a very complex operation that is fundamentally much slower than pure AST parsing and crawling.
+TypeScript itself also runs at JIT speed, and therefore type information will be JIT speed as well.
+
+> 👉 See my other post on why TypeScript is a bottleneck: [Why Typed Linting Needs TypeScript Today](/blog/why-typed-linting-needs-typescript-today).
+
 I think there will be two speeds of linting for the forseeable future:
 
 - Native speed: exponentially faster, but without type information
