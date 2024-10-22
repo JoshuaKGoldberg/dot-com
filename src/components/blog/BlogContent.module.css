@@ -91,6 +91,10 @@
 	margin-top: 0.5rem;
 }
 
+.article li ul {
+	margin-top: 0.5rem;
+}
+
 .article strong {
 	font-weight: bolder;
 }
