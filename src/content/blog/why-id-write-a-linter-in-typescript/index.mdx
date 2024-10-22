@@ -148,9 +148,13 @@ Judging all JavaScript-speed linters based on ESLint is a [straw man fallacy](ht
 
 ## 2️⃣ TypeScript Over JavaScript
 
-ESLint core is written in JavaScript and [the upcoming rewrite of ESLint is also written in JavaScript](https://github.com/eslint/eslint/discussions/16557).
-The rewrite uses JSDoc comments to allow TypeScript to type check it.
-This is an intentional decision by the ESLint TSC (Technical Steering Committee) for several reasons:
+ESLint core uses the "[ESTree](https://eslint.org/docs/latest/use/core-concepts/glossary#estree)" AST format.
+ESTree is a community specification that is different from the TypeScript AST.
+ESLint itself has no concept of TypeScript or types in its core architecture or lint rules.
+
+> 💡 See [ASTs and typescript-eslint](https://typescript-eslint.io/blog/asts-and-typescript-eslint) for how typescript-eslint builds on top of the ESLint ESTree base.
+
+Sticking with the community ESTree spec is an intentional decision by the ESLint TSC (Technical Steering Committee) made for several reasons:
 
 - ESLint is positioned as a JavaScript-first linter, with any flavor such as Flow or TypeScript fitting into its plugin model
 - ESLint wants to avoid a core runtime dependency on any tool it can't easily control
@@ -158,7 +162,7 @@ This is an intentional decision by the ESLint TSC (Technical Steering Committee)
 
 ESLint's decision makes sense given those goals and priorities for ESLint.
 I'm not trying to suggest any changes to ESLint in this post.
-My vision for a linter is different from ESLint's, so I've naturally come to a different conclusion.
+My personal vision for a linter is different from ESLint's, so I've naturally come to a different conclusion.
 
 My priorities have a higher value on _optimizing for the majority_ and a lower value on _ideological pureness_.
 I would rather make a linter that requires no out-of-the-box plugins for common important use cases -including typed linting- than one that is more dependency-controlled.
