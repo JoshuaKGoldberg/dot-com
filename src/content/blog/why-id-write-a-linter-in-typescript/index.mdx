@@ -183,7 +183,7 @@ That means type-informed linters have two strategies to choose from:
 As I see it, if you're going to be creating a TypeScript tree internally anyway, having an additional tree is conceptually heavyweight.
 I'm proposing the _TypeScript core_ strategy to avoid the burden of a _dual tree_ format.
 
-#### Motivator: Dual Trees Are Annoying
+#### Motivator: Dual Trees Are Inconvenient
 
 The main downside of the dual-tree format is the complication for linter teams and lint rule authors working with TypeScript APIs.
 We've written utilities in typescript-eslint to help with common cases [^tseslint-pr-type-checker-wrapper-apis] but the conceptual overhead is painful.
