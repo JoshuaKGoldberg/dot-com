@@ -114,8 +114,20 @@ They can achieve incredible performance because they're written in languages opt
 A linter that executes wholly in Node.js "JIT" (Just In Time) compiling speed cannot achieve even close to the same speeds.
 
 However!
-As lovely as ultrafast tooling is, I think we should take a step back and evaluate how impactful these gains are long-term in a typed linting world.
-They're certainly excellent, but I don't think they're as big of a game changer as they seem.
+[Typed linting will always be roughly as slow as type checking](TODO).
+
+We may be able to significantly speed up TypeScript type information long term.
+Bun, Node.js compile caching, and other engine- and platform-level improvements give me a lot of hope for a much faster JavaScript world.
+Maybe we could even have a TypeScript [daemon](<https://en.wikipedia.org/wiki/Daemon_(computing)>) that preemptively generates type information files before lint rules run.
+
+Regardless, for now, TypeScript runs at JIT speed, and therefore type information will be as well.
+I think we should take a step back and evaluate how impactful these gains are long-term in a typed linting world.
+I think there will be two speeds of linting for the forseeable future:
+
+- Native speed: exponentially faster, but without type information
+- Typed speed: with type information, but at JavaScript's JIT speeds
+
+Native speed linters are certainly excellent, but I don't think their performance is as big of a game changer as it seems.
 
 #### ESLint Performance is a Straw Man Fallacy
 
@@ -131,41 +143,6 @@ Heck, [Node.js compile caching](https://nodejs.org/en/blog/release/v22.8.0#new-j
 You can't make a fair judgement against linters written in a JavaScript flavor by pointing at ESLint.
 ESLint is not the fastest linter running JavaScript on Node.js anymore.
 Judging all JavaScript-speed linters based on ESLint is a [straw man fallacy](https://en.wikipedia.org/wiki/Straw_man).
-
-Lets discuss the characteristics of the two most common performance cases for linters:
-
-- Editors (real time typing): a small number of open files at a time
-- Full (on the CLI): all files in a project or set of projects
-
-> 👉 I've written about why typed linting with Git commit hooks is fundamentally flawed: TODO.
-
-For both of those scenarios, the bottleneck is not the linter itself.
-It's TypeScript's type APIs.
-[Typed linting will always be roughly as slow as type checking](TODO).
-
-#### Editor Performance
-
-Users of editor integrations generally don't mind until actions are much slower than a hundred milliseconds or so [^TODO].
-
-There is also ample room for performance growth in TypeScript-based linters.
-[typescript-eslint-language-service](https://github.com/Quramy/typescript-eslint-language-service) and [TSSLint](https://github.com/johnsoncodehk/tsslint) are integrations I'd like to explore with typescript-eslint now that our [project service is stable](https://typescript-eslint.io/blog/announcing-typescript-eslint-v8#project-service).
-
-#### Full Linting Performance
-
-TODO
-
-#### General Performance Characteristics
-
-I think there will be two speeds of linting for the forseeable future:
-
-- Native speed: exponentially faster, but without type information
-- Typed speed: with type information, but at JavaScript's JIT speeds
-
-We may be able to significantly speed up TypeScript type information long term.
-Bun, Node.js compile caching, and other engine- and platform-level improvements give me a lot of hope for a much faster JavaScript world.
-Maybe we could even have a TypeScript [daemon](<https://en.wikipedia.org/wiki/Daemon_(computing)>) that preemptively generates type information files before lint rules run.
-
-Regardless, for now, TypeScript runs at JIT speed, and therefore type information will be as well.
 
 ## 2️⃣ TypeScript Over JavaScript
 
