@@ -12,7 +12,7 @@
 	text-decoration: underline;
 }
 
-.article :is(h2, h3, h4, h5) {
+.article :is(a, h2, h3, h4, h5) {
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
