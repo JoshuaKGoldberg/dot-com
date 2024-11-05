@@ -21,11 +21,20 @@ const categories = {
 
 <HeroLayout
 	alt="Josh looking up seriously wearing a dark blue shirt with a small pineapples and flamingos pattern"
+	description="I talk about static analysis, accessibility, and team culture."
 	images={{ dark: speakingDark, light: speakingLight }}
 	primary="Speaking"
-	secondary="I talk about static analysis, accessibility, and team culture."
 	title="Speaking"
 >
+	<Fragment slot="secondary">
+		I talk about static analysis and co-organize <Anchor
+			href="https://squiggleconf.com"
+			target="_blank"
+			variant="passive"
+		>
+			SquiggleConf
+		</Anchor>.
+	</Fragment>
 	<HeroTertiary slot="tertiary">
 		Want me to speak at your event? Hooray!
 		<br />
