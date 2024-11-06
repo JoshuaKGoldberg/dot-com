@@ -10,11 +10,14 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 
 <HeroLayout
 	alt="Josh's half-smiling happy face"
+	description="I'm an open source maintainer in the TypeScript ecosystem."
 	images={{ dark: joshDark, light: joshLight }}
 	primary="Hi! I'm Josh."
-	secondary="I'm an open source maintainer in the TypeScript ecosystem."
 	slug="josh"
 >
+	<Fragment slot="secondary">
+		I'm an open source maintainer in the TypeScript ecosystem.
+	</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">
 		<Text as="p" fontSize="medium" fontWeight="light">
