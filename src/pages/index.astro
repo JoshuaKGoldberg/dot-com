@@ -33,21 +33,6 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	</BodyContents>
 </HeroLayout>
 
-<script>
-	// Preserves legacy linking behavior from my old static HTML site.
-	// It can be removed in... mid-late 2024? 1+ year of compatibility?
-	const redirect = {
-		"#projects": "/projects",
-		"#talks": "/speaking",
-	}[window.location.hash];
-
-	if (redirect) {
-		const url = new URL(redirect, location.toString());
-		url.hash = "";
-		window.location.replace(url);
-	}
-</script>
-
 <style>
 	.tabletUp {
 		display: none;
