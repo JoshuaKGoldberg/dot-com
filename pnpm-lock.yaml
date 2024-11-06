@@ -1810,6 +1810,10 @@ packages:
     resolution: {integrity: sha512-4e3vWOWhLdTEemJ+sP1mDJ5dvlwLSHrJsU9csqkJQNBw5JkGJjHVOLwIWnS3VuanzIgtSkpv0Sd7usReQyyPQw==}
     engines: {node: '>=18'}
 
+  emoji-blast@0.10.2:
+    resolution: {integrity: sha512-3VrqajirPj8QeQxQeMHUfD+03H64XTEVPGRjxP5rjDCVEC5NGF3FgutMpU5scIOhcuzG23Qvs32k0Pnj+hRzGA==}
+    engines: {node: '>=18'}
+
   emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
 
@@ -6118,6 +6122,8 @@ snapshots:
 
   emoji-blast@0.10.1: {}
 
+  emoji-blast@0.10.2: {}
+
   emoji-regex@10.3.0: {}
 
   emoji-regex@8.0.0: {}
@@ -7222,7 +7228,7 @@ snapshots:
 
   konami-emoji-blast@0.5.5:
     dependencies:
-      emoji-blast: 0.10.1
+      emoji-blast: 0.10.2
       konami-code-js: 0.8.1
 
   language-subtag-registry@0.3.22: {}
