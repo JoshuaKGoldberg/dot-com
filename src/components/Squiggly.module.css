@@ -12,7 +12,7 @@
 }
 
 .squiggly:not(.inactive)::after {
-	background: url("/icons/squiggle.svg") repeat-x;
+	background: var(--squiggle) repeat-x;
 	background-size: contain;
 	content: "";
 	display: block;
