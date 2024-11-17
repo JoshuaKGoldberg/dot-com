@@ -64,7 +64,7 @@ importers:
         version: 8.14.3
       emoji-blast:
         specifier: ^0.10.1
-        version: 0.10.1
+        version: 0.10.2
       eslint:
         specifier: ^9.10.0
         version: 9.10.0(jiti@1.21.6)
@@ -1805,10 +1805,6 @@ packages:
 
   emmet@2.4.6:
     resolution: {integrity: sha512-dJfbdY/hfeTyf/Ef7Y7ubLYzkBvPQ912wPaeVYpAxvFxkEBf/+hJu4H6vhAvFN6HlxqedlfVn2x1S44FfQ97pg==}
-
-  emoji-blast@0.10.1:
-    resolution: {integrity: sha512-4e3vWOWhLdTEemJ+sP1mDJ5dvlwLSHrJsU9csqkJQNBw5JkGJjHVOLwIWnS3VuanzIgtSkpv0Sd7usReQyyPQw==}
-    engines: {node: '>=18'}
 
   emoji-blast@0.10.2:
     resolution: {integrity: sha512-3VrqajirPj8QeQxQeMHUfD+03H64XTEVPGRjxP5rjDCVEC5NGF3FgutMpU5scIOhcuzG23Qvs32k0Pnj+hRzGA==}
@@ -6119,8 +6115,6 @@ snapshots:
     dependencies:
       '@emmetio/abbreviation': 2.3.3
       '@emmetio/css-abbreviation': 2.1.8
-
-  emoji-blast@0.10.1: {}
 
   emoji-blast@0.10.2: {}
 
