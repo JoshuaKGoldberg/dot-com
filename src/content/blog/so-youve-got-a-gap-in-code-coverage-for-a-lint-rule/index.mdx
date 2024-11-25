@@ -1,0 +1,202 @@
+---
+description: "TODO."
+image:
+  alt: TODO
+  src: "~/assets/blog/jerry-sass.jpg"
+pubDate: 2024-11-25
+tags: [
+	"code coverage",
+	"types",
+	"unit testing",
+]
+title: "So You've Got A Gap In Code Coverage"
+---
+
+Hi!
+You might have been linked this blog post in a PR that has missing code coverage.
+There might be a request for changes linking to this blog post, asking that you resolve the missing code coverage gaps.
+
+For each gap in coverage, at least one of the following is probably true:
+
+- [The code is reachable, so a unit test should exercise it](#the-code-is-reachable-so-a-unit-test-should-exercise-it)
+- [The code can be refactored to not include that case](#the-code-can-be-refactored-to-not-include-that-case)
+- [This is some difficult-to-represent edge case in types and a type assertion is the best strategy]()
+
+## The code is reachable, so a unit test should exercise it
+
+We maintain a very high test coverage level because our project is the type that can be tested in a straightforward manner.
+If something can legitimately be hit by users, we want to have a unit test for it.
+
+Take this `capitalizeBeforeExclamation` function that uppercases text before a `!` if found:
+
+```ts
+function capitalizeBeforeExclamation(text: string) {
+	const index = text.indexOf("!");
+
+	if (index === -1) {
+		return text;
+	}
+
+	return text.substring(0, index).toUpperCase() + text.substring(index);
+}
+```
+
+An incomplete test suite might only test the case of a `!` being found:
+
+```ts
+describe("capitalizeBeforeExclamation", () => {
+	it("capitalizes only text before the !", () => {
+		expect(capitalizeBeforeExclamation("abc! def")).toBe("ABC! def");
+	});
+});
+```
+
+But, if it's legitimately possible for text to be passed in that doesn't have a `!`, then we should test that!
+A more comprehensive test suite might look like:
+
+```ts
+describe("capitalizeBeforeExclamation", () => {
+	it("does not change text when no ! is present", () => {
+		expect(capitalizeBeforeExclamation("abc def")).toBe("ABC def");
+	});
+
+	it("capitalizes only text before the ! when text exists", () => {
+		expect(capitalizeBeforeExclamation("abc! def")).toBe("ABC! def");
+	});
+});
+```
+
+💡 Notice how the test titles became more clear, too.
+I find that unit tests titles that indicate the expected behavior upon a particular input _("it X when Y")_ make tests easier to understand.
+
+### A Deeper Example: Lint Rules
+
+> If you're not working with an "[AST](https://typescript-eslint.io/blog/asts-and-typescript-eslint)" then you can skip this section.
+
+I send this post on pull requests reviews for changes to lint rules a lot.
+It's very common -especially in well-typed ASTs such as typescript-eslint's- that developers will add in an `if` statement to handle some kind of AST shape, then not test it.
+
+Suppose you're working on a typescript-eslint rule that bans using the name `"foo"` for property keys.
+The type of `TSESTree.Property` indicates its `key` might be something other than an identifier, so you add a check for that before retrieving node name:
+
+```ts
+function create(context) {
+	return {
+		Property(node) {
+			const name = node.key.type === AST_NODE_TYPES.Identifier && node.key.name;
+
+			if (name === "foo") {
+				context.report({ messageId: "noFoo", node });
+			}
+		},
+	};
+}
+```
+
+Let's also suppose your rule tests validate both sides of the `if (name === "foo")` check:
+
+```ts
+ruleTester.run("no-foo-property", [
+	invalid: [
+		{
+			code: "const value = { foo: 1 };",
+			errors: [{ messageId: "noFoo" }]
+		}
+	],
+	valid: [`const value = { other: 1 };`]
+])
+```
+
+If you did this in a repo such as typescript-eslint that has strict code coverage requirements, you'd get a report flagging the `node.key.type === AST_NODE_TYPES.Identifier` check as partially missing.
+Which is correct: the tests only include cases where it's true.
+
+`node.key` is only ever `TSESTree.Identifier` in tests, but removing the `===` check produces a type error about `.name` not necessarily existing on `node.key`.
+You might replace the `===` check with a type assertion to force TypeScript to let you access `.name`:
+
+```ts
+// 🛑 Don't do this!
+const name = (node.key as TSESTree.Identifier).name;
+```
+
+But, the type checker was right to complain!
+`node.key` might be some node type other than `TSESTree.Identifier`.
+For example, users might use a computed key with a literal like `{ ['foo']: 1 }`, or even a dynamic key like `{ [myVariable]: 1 }`.
+Your rule will need to handle those cases, and so should include tests for them too.
+
+```ts
+ruleTester.run("no-foo-property", [
+	invalid: [
+		{
+			code: "const value = { foo: 1 };",
+			errors: [{ messageId: "noFoo" }]
+		},
+		{
+			code: "const value = { ['foo']: 1 };",
+			errors: [{ messageId: "noFoo" }]
+		},
+		{
+			code: `
+				const key = 'foo';
+				const value = { [key]: 1 };
+			`,
+			errors: [{ messageId: "noFoo" }]
+		},
+		// ...
+	],
+	valid: [
+		`const value = { other: 1 };`,
+		`const value = { ['other']: 1 };`,
+		`
+			const key = 'other';
+			const value = { [key]: 1 };
+		`,
+		// ...
+	]
+])
+```
+
+## The code can be refactored to not include that case
+
+Another common strategy is to simplify the code to not include as many cases for testing.
+
+Developers often accidentally duplicate logical checks across areas of code.
+A check inside one function might no longer be necessary once a calling function is changed to also include that check.
+
+Suppose, the same contrived `log` function changes its behavior based on whether its `text` parameter ends with a `!`.
+Its helper function `getWarningText` also checks for the `!`, which can't be hit from just calling `log`:
+
+```ts
+export function log(text: string) {
+	if (text.endsWith("!")) {
+		console.warn(getWarningText(text));
+	} else {
+		console.log(text);
+	}
+}
+
+function getWarningText(original: string) {
+	return original.endsWith("!") ? original.toUpperCase() : original;
+	//                                                     ~~~~~~~~~~
+	// Uncovered: getWarningText is only called when original.endsWith("!")
+}
+```
+
+A refactored version of the code could remove the `!` check from `getWarningText` altogether:
+
+```ts
+export function log(text: string) {
+	if (text.endsWith("!")) {
+		console.warn(getWarningText(text));
+	} else {
+		console.log(text);
+	}
+}
+
+function getWarningText(original: string) {
+	return original.toUpperCase();
+}
+```
+
+By removing an unnecessary duplicate check, we both simplified the code and removed a gap in code coverage.
+
+## This is some difficult-to-represent edge case in types and a type assertion is the best strategy
