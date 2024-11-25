@@ -24,7 +24,7 @@ For each gap in coverage, at least one of the following is probably true:
 
 - [The code is reachable, so a unit test should exercise it](#the-code-is-reachable-so-a-unit-test-should-exercise-it)
 - [The code can be refactored to not include that case](#the-code-can-be-refactored-to-not-include-that-case)
-- [This is a difficult-to-represent edge case in types and a type assertion is warranted](#this-is-a-difficult-to-represent-edge-case-in-types-and-a-type-assertion-is-warranted)
+- [This is a difficult-to-represent edge case in types](#this-is-a-difficult-to-represent-edge-case-in-types)
 
 The next three sections of this blog post explain those three classifications in more detail and with examples.
 Whichever strategy you pick, go ahead and re-request review once you've got no new gaps code coverage -- or would like help getting there.
@@ -39,9 +39,39 @@ Whichever strategy you pick, go ahead and re-request review once you've got no n
 ## The code is reachable, so a unit test should exercise it
 
 We maintain a **very** high test coverage level because our project is the type that can be tested in a straightforward manner.
-If a situation can legitimately be hit by users, we want to have a unit test for that situation.
 
-### Example: Handling Edge Cases
+It looks like this area of code is something that can be hit by users, but doesn't have a unit test covering it.
+When a situation can legitimately be hit by users, we want to have a unit test for that situation.
+
+> 👉 See [Handling Edge Cases](#handling-edge-cases) below for an example.
+
+## The code can be refactored to not include that case
+
+Another common strategy is to simplify the code to not include as many cases for testing.
+
+Developers often accidentally duplicate logical checks across areas of code.
+A check inside one function might no longer be necessary once a calling function is changed to also include that check.
+
+> 👉 See [Duplicate Work](#duplicate-work) below for an example.
+
+## This is a difficult-to-represent edge case in types
+
+The rarest of these three cases is type checking pressuring you to handle a case that you know with certainty will not happen.
+This really is rare: most of the time, either that edge case really should be handled or code can be refactored nicely.
+
+However, you may occasionally find an edge case in types where refactoring wouldn't make sense and it's annoyingly difficult or even impossible to get TypeScript's types to understand your code.
+It might be reasonable to use a type assertion to tell TypeScript something it can't figure out for itself.
+
+> 👉 See [Map Gets](#map-gets) below for an example.
+
+## Examples
+
+These are some contrived examples showcasing the three strategies in order.
+I separated them out because I know a lot of people don't have the time to read them in detail.
+
+### Handling Edge Cases
+
+> 👉 Strategy: [The code is reachable, so a unit test should exercise it](#the-code-is-reachable-so-a-unit-test-should-exercise-it
 
 Consider this `capitalizeBeforeExclamation` function that processes a `text: string`.
 If `text` includes a `!`, all characters before it are upper-cased:
@@ -86,16 +116,11 @@ describe("capitalizeBeforeExclamation", () => {
 > 💡 Notice how the test titles became more clear, too.
 > I find that unit tests titles that indicate the expected behavior upon a particular input _("it X when Y")_ make tests easier to understand.
 
-## The code can be refactored to not include that case
+### Duplicate Work
 
-Another common strategy is to simplify the code to not include as many cases for testing.
+> 👉 Strategy: [The code can be refactored to not include that case](#the-code-can-be-refactored-to-not-include-that-case)
 
-Developers often accidentally duplicate logical checks across areas of code.
-A check inside one function might no longer be necessary once a calling function is changed to also include that check.
-
-### Example: Duplicate Work
-
-Take the following contrived `createLabelIfSuffixed` function that, depending on whether a suffix exists for some name, returns either `undefined` or an object with a `suffix` and `text` properties.
+Take the following `createLabelIfSuffixed` function that, depending on whether a suffix exists for some name, returns either `undefined` or an object with a `suffix` and `text` properties.
 It has its own `suffixes.get(name)` lookup -- as does a `getLabelText` helper function:
 
 ```ts
@@ -176,15 +201,9 @@ function getLabelText(name: string, suffix: string) {
 By deduplicating work, we've both simplified our code and closed the gap in code coverage.
 Hooray!
 
-## This is a difficult-to-represent edge case in types and a type assertion is warranted
+### Map Gets
 
-The rarest of these three cases is type checking pressuring you to handle a case that you know with certainty will not happen.
-This really is rare: most of the time, either that edge case really should be handled or code can be refactored nicely.
-
-However, you may occasionally find an edge case in types where refactoring wouldn't make sense and it's annoyingly difficult or even impossible to get TypeScript's types to understand your code.
-It might be reasonable to use a type assertion to tell TypeScript something it can't figure out for itself.
-
-### Example: Map Gets
+> 👉 Strategy: [This is a difficult-to-represent edge case in types](#this-is-a-difficult-to-represent-edge-case-in-types)
 
 The built-in `Map` class is one place where TypeScript can sometimes be overly restrictive about types.
 `Map<K, V>.get<K>` is typed as returning `V | undefined` because there's no guarantee any arbitrary k (`K`) exists on a `Map`.
@@ -236,6 +255,6 @@ Thank you for sending a pull request in, let alone working with me on getting it
 <LabeledImage
 	alt="Altered version of Edvard Munch's The Scream, cropped to just show the person, who is now smiling happily"
 	description="The feeling we all get from successfully writing comprehensive tests! Yippee!"
-	note="Altered version of Edvard Munch's The Scream, courtesy of Michigan TypeScript's Dimitri Mitropoulos."
+	note="Altered version of Edvard Munch's The Scream courtesy of Michigan TypeScript's Dimitri Mitropoulos."
 	src={theScreamHappy}
 />
