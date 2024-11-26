@@ -1,0 +1,238 @@
+---
+description: "This is my standard explainer for pull request reviews where a try...catch statement is used more than I think it needs to be."
+image:
+  alt: Ice Cube looking happy with a red life preserver around his neck
+  src: "~/assets/blog/ice-cube-happy-fishing.png"
+pubDate: 2024-11-27
+tags: [
+	"errors",
+	"exceptions",
+	"try catch",
+]
+title: "Try...Catch As Little As Possible"
+---
+
+import checkYourselfBeforeYouWreckYourselfCallie from "~/assets/blog/check-yourself-before-you-wreck-yourself-callie.webm";
+import checkYourselfBeforeYouWreckYourselfIce from "~/assets/blog/check-yourself-before-you-wreck-yourself-ice.webm";
+import checkYourselfBeforeYouWreckYourselfZach from "~/assets/blog/check-yourself-before-you-wreck-yourself-zach.webm";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+Hi!
+You might have been linked this blog post in a PR that has a [`try...catch`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) statement.
+There might be a request for changes linking to this blog post, asking that you avoid a the `try...catch`, or failing that, reduce its scope.
+
+When as `try...catch` statement is unavoidable, I advise putting as little code as possible inside.
+
+<LabeledVideo
+	alt="Zach Galifanakis from 'The Hangover' angrily saying 'check yourself... before you wreck yourself'."
+	description="Listen to Alan. Knowing the correct ways of self-checking will reduce occurrences of self-wrecking."
+	original="https://tenor.com/view/hangover-gif-12838870"
+	src={checkYourselfBeforeYouWreckYourselfZach}
+/>
+
+## Avoid `try...catch` if possible
+
+I advise using `try...catch` statements as little as possible.
+They should only ever be used when in _exception_ cases: ones that aren't expected to happen normally, or when an API outside of your control might throw.
+
+If you know some situation will happen in code, your code should handle it as directly as possible.
+If something is crashing, figure out the root cause of _why_ it's crashing, and handle that root cause.
+
+> 👉 See [Checking Before Wrecking](#checking-before-wrecking) below for an example.
+
+## Reducing `try...catch` scope as much as possible
+
+If you absolutely must use a `try...catch`, try to put as little as possible inside it.
+
+`try...catch` statements are a very blunt tool.
+They catch _any_ exception, including ones that you might not expect them too.
+
+Instead of wrapping large swathes of code in a `try...catch`, wrap only the specific piece of code that is expected to throw.
+
+> 👉 See [trying-less](#trying-less) below for an example.
+
+<LabeledVideo
+	alt="Sara Ramirez as Callie Torres in 'Grey\'s Anatomy' saying 'check yourself before you wreck yourself'."
+	description="Callie Torres is a doctor, so she knows. Self-checks will prevent self-wrecks."
+	original="https://tenor.com/view/callietorres-greysanatomy-sararamirez-check-yourself-before-you-wreck-yourself-gif-5961639"
+	src={checkYourselfBeforeYouWreckYourselfCallie}
+/>
+
+## Examples
+
+These are some contrived examples showcasing the two strategies in order.
+I separated them out because I know a lot of people wont't have the time to read them in detail.
+
+### Checking Before Wrecking
+
+Suppose you have a `emphasize` JavaScript function that's supposed to turn a string text into an uppercase version with an exclamation mark:
+
+```js
+// emphasize.js
+export function emphasize(text) {
+	return `${text.toUpperCase()}!`;
+}
+```
+
+It might be used in an application to log the value of a `--message` argument.
+Running the following file like `node index.js --message "Hello world"` should print `HELLO WORLD!`:
+
+```js
+// index.js
+import { parseArgs } from "node:util";
+import { emphasize } from "./emphasize.js";
+
+const { values } = parseArgs({
+	options: {
+		message: { type: "string" },
+	},
+});
+
+console.log(emphasize(values.message));
+```
+
+Let's say you're seeing errors from `emphasize` saying that `text.toUpperCase()` is not a function:
+
+```plaintext
+Uncaught TypeError: text.toUpperCase is not a function
+    at emphasize (emphasize.js:2:20)
+    at index.js:6:13
+```
+
+A bit of debugging might show that the `message` argument being passed to `emphasize` is actually `undefined`.
+One fix could be to wrap the contents of `emphasize` in a `try...catch`, so errors attempting to call `.toUpperCase()` on the `undefined` value are caught and reported:
+
+```js
+// 🛑 See later - there's a better way!
+export function emphasize(text) {
+	try {
+		return `${text.toUpperCase()}!`;
+	} catch (error) {
+		console.warn("Oh no:", error);
+		return text;
+	}
+}
+```
+
+But, that's a "band-aid" fix: it doesn't address the root issue of `emphasize` being passed the wrong type of data.
+Band-aid fixes are almost never the right strategy.
+Most of the time, it's better to address root problems so they don't present issues elsewhere in code.
+
+Here, the "unhappy" case was when users don't provide a `message` argument.
+They might be running `node index.js` without `--message`.
+When that happens, `message`'s value is `undefined` rather than a `string`.
+
+A better fix might be to print a better error if there's no `message` provided:
+
+```js
+import { parseArgs } from "node:util";
+import { emphasize } from "./emphasize.js";
+
+const { values } = parseArgs({
+	options: {
+		message: { type: "string" },
+	},
+});
+
+if (values.message) {
+	console.log(emphasize(values.message));
+} else {
+	console.error("No --message provided.");
+	process.exitCode = 1;
+}
+```
+
+By refactoring to handle the "unhappy" case as early as possible, the code didn't have to worry about invalid data being passed to `emphasize`.
+
+> 💡 In TypeScript terms, we made sure the argument passed to `emphasize` matched the expected type of the parameter: `string`, not `string | undefined`.
+
+### Trying Less
+
+Let's say you have a `fileIncludes` function that determines whether some file includes a string.
+It reads the file from disk as text, then checks whether that text includes the search string:
+
+```ts
+import fs from "node:fs/promises";
+
+async function fileIncludes(filePath: string, search: string) {
+	const data = await fs.readFile(filePath);
+	const text = data.toString();
+
+	return text.includes(search);
+}
+```
+
+`fileIncludes` will throw if no file exists under `filePath`.
+So, it might be tempting to wrap the function's body in a `try...catch`:
+
+```ts
+import fs from "node:fs/promises";
+
+async function fileIncludes(filePath: string, search: string) {
+	// 🛑 See later - there's a better way!
+	try {
+		const data = await fs.readFile(filePath);
+		const text = data.toString();
+
+		return text.includes(search);
+	} catch (error) {
+		console.warn(`Failed to read ${filePath}:`, error);
+		return false;
+	}
+}
+```
+
+There's no need to wrap _all_ of the code inside `fileIncludes` in the `try...catch`.
+Only the call to `fs.readFile` is expected to throw.
+Even if another line of code were to throw, it wouldn't likely be for the logged reason _"Failed to read ..."_.
+
+A more targeted strategy would be to only wrap the one line in a `try...catch`:
+
+```ts
+import fs from "node:fs/promises";
+
+async function fileIncludes(filePath: string, search: string) {
+	let data;
+
+	try {
+		data = await fs.readFile(filePath);
+	} catch (error) {
+		console.warn(`Failed to read ${filePath}:`, error);
+		return false;
+	}
+
+	const text = data.toString();
+
+	return text.includes(search);
+}
+```
+
+This way, only the one line that might throw an error is handled by the `try...catch`.
+Developers reading the `fileIncludes` function can more easily understand what specifically might fail.
+Any other unexpected error that occurs would fall back to however the project handles unexpected errors.
+
+<LabeledVideo
+	alt="Ice Cube in 'Check Yo Self' saying 'check yourself before you wreck yourself'."
+	description="Ice Cube's been saying this for years. Remembering to check is an essential step for avoiding a wreck."
+	original="https://tenor.com/view/wreck-check-yourself-before-you-wreck-yourself-check-yo-self-ice-cube-gif-5076649"
+	src={checkYourselfBeforeYouWreckYourselfIce}
+/>
+
+## Further Reading
+
+If you want to read more about why `try...catch` is something to avoid when possible, I recommend:
+
+- [Exceptions as a form of control flow are inherently difficult to reason about](https://softwareengineering.stackexchange.com/questions/189222/are-exceptions-as-control-flow-considered-a-serious-antipattern-if-so-why)
+- [Thrown errors can't be modeled by type systems like TypeScript's](https://www.learningtypescript.com/articles/why-typescript-doesnt-include-a-throws-keyword)
+
+## Don't be afraid to ask for help
+
+It's ok if you're having a hard time figuring out the right way to safely handle errors in code!
+I want open source software to be a warm, welcoming place.
+Nobody should feel intimidated asking me for help with code.
+
+Go ahead and post a comment explaining what you've tried, what did or didn't work, and any specific questions you have.
+I'll be happy to give you pointers and work with you to write the code safely.
+
+Thank you for sending a pull request in, let alone working with me on getting it approved! 💙
