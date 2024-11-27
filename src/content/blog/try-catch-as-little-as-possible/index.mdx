@@ -66,7 +66,7 @@ I separated them out because I know a lot of people wont't have the time to read
 
 ### Checking Before Wrecking
 
-Suppose you have a `emphasize` JavaScript function that's supposed to turn a string text into an uppercase version with an exclamation mark:
+Suppose you have a `emphasize` JavaScript function that's supposed to turn a string into an uppercase version with an exclamation mark:
 
 ```js
 // emphasize.js
@@ -92,7 +92,7 @@ const { values } = parseArgs({
 console.log(emphasize(values.message));
 ```
 
-Let's say you're seeing errors from `emphasize` saying that `text.toUpperCase()` is not a function:
+Let's say you're seeing errors from `emphasize` complaining that `text.toUpperCase()` is not a function:
 
 ```plaintext
 Uncaught TypeError: text.toUpperCase is not a function
@@ -143,7 +143,7 @@ if (values.message) {
 }
 ```
 
-By refactoring to handle the "unhappy" case as early as possible, the code didn't have to worry about invalid data being passed to `emphasize`.
+By refactoring to handle the "unhappy" case separately, the code didn't have to worry about invalid data being passed to `emphasize`.
 
 > 💡 In TypeScript terms, we made sure the argument passed to `emphasize` matched the expected type of the parameter: `string`, not `string | undefined`.
 
@@ -226,4 +226,4 @@ If you want to read more about why `try...catch` is something to avoid when poss
 - [Exceptions as a form of control flow are inherently difficult to reason about](https://softwareengineering.stackexchange.com/questions/189222/are-exceptions-as-control-flow-considered-a-serious-antipattern-if-so-why)
 - [Thrown errors can't be modeled by type systems like TypeScript's](https://www.learningtypescript.com/articles/why-typescript-doesnt-include-a-throws-keyword)
 
-Thank you for sending a pull request in, and thanks for working on it! 💙
+Thank you for sending a pull request in, and thanks for iterating on it! 💙
