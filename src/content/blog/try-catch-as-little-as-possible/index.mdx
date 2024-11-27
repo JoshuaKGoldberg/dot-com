@@ -1,5 +1,5 @@
 ---
-description: "This is my standard explainer for pull request reviews where a try...catch statement is used more than I think it needs to be."
+description: "This is a general explainer for pull request reviews where a try...catch statement is used more than I think it needs to be."
 image:
   alt: Ice Cube looking happy with a red life preserver around his neck
   src: "~/assets/blog/ice-cube-happy-fishing.png"
@@ -46,11 +46,11 @@ If something is crashing, figure out the root cause of _why_ it's crashing, and 
 If you absolutely must use a `try...catch`, try to put as little as possible inside it.
 
 `try...catch` statements are a very blunt tool.
-They catch _any_ exception, including ones that you might not expect them too.
+They catch _any_ exception, including ones that you might not expect.
 
 Instead of wrapping large swathes of code in a `try...catch`, wrap only the specific piece of code that is expected to throw.
 
-> 👉 See [trying-less](#trying-less) below for an example.
+> 👉 See [Trying Less](#trying-less) below for an example.
 
 <LabeledVideo
 	alt="Sara Ramirez as Callie Torres in 'Grey\'s Anatomy' saying 'check yourself before you wreck yourself'."
@@ -210,7 +210,7 @@ async function fileIncludes(filePath: string, search: string) {
 
 This way, only the one line that might throw an error is handled by the `try...catch`.
 Developers reading the `fileIncludes` function can more easily understand what specifically might fail.
-Any other unexpected error that occurs would fall back to however the project handles unexpected errors.
+Any other unexpected exception that occurs would fall back to however the project handles unexpected exceptions.
 
 <LabeledVideo
 	alt="Ice Cube in 'Check Yo Self' saying 'check yourself before you wreck yourself'."
