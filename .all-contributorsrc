@@ -144,6 +144,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "torvec",
+      "name": "Edward Vonschondorf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54784448?v=4",
+      "profile": "https://edward-vonschondorf.dev/",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
