@@ -153,6 +153,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "hatemmn",
+      "name": "Hatem M'naouer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19950216?v=4",
+      "profile": "http://mnaouer.tn",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
