@@ -23,7 +23,7 @@ const url = Astro.props.url.toString();
 const channels = [
 	[
 		"Bluesky",
-		`https://bsky.app/intent/compose?text=${text}&url=${url}`,
+		`https://bsky.app/intent/compose?text=${text}%0A%0A${url}`,
 		bluesky,
 	],
 	[
