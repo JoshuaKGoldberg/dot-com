@@ -30,7 +30,6 @@
 
 .squiggly.passive::after {
 	filter: blur(0.7px) opacity(0.7);
-	transform: scale(1 1.17);
 }
 
 .squiggly:is(.alwaysActive, .passive, :focus-visible, :hover):not(
