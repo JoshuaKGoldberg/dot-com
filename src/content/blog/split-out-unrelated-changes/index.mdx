@@ -1,9 +1,9 @@
 ---
 description: "This is a general explainer for pull request reviews where I think unrelated changes should be split into a separate PR."
 image:
-  alt: Ice Cube looking happy with a red life preserver around his neck
-  src: "~/assets/blog/ice-cube-happy-fishing.png"
-pubDate: 2024-01-08
+  alt: Famous portrait of Samuel Johnson squinting up close at a newspaper
+  src: "~/assets/blog/samuel-johnson-reading.webp"
+pubDate: 2025-01-13
 tags: [
 	"pull requests",
 	"reviews",
@@ -11,11 +11,8 @@ tags: [
 title: "Split Out Unrelated Changes"
 ---
 
-import checkYourselfBeforeYouWreckYourselfCallie from "~/assets/blog/check-yourself-before-you-wreck-yourself-callie.webm";
-import checkYourselfBeforeYouWreckYourselfIce from "~/assets/blog/check-yourself-before-you-wreck-yourself-ice.webm";
-import checkYourselfBeforeYouWreckYourselfZach from "~/assets/blog/check-yourself-before-you-wreck-yourself-zach.webm";
+import samuelJohnsonDuo from "~/assets/blog/samuel-johnson-duo.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 Hi!
 You might have been linked this blog post in a pull request that has a lot of changes in it.
@@ -23,11 +20,14 @@ There might be a request linking to this blog post, asking that you split out so
 
 This blog post is an explainer for why to split out unrelated changes from reviews.
 
-<LabeledVideo
-	alt="Zach Galifanakis from 'The Hangover' angrily saying 'check yourself... before you wreck yourself'."
-	description="Listen to Alan. Knowing the correct ways of self-checking will reduce occurrences of self-wrecking."
-	original="https://tenor.com/view/hangover-gif-12838870"
-	src={checkYourselfBeforeYouWreckYourselfZach}
+<LabeledImage
+	alt="Two famous portraits of Samuel Johnson, side-by-side. The left one is him squinting up close at a newspaper. The right one is him looking at the viewer, confused."
+	description="Famous writer Samuel Johnson reading a 100-file pull request tackling a half dozen issues at once."
+	original={{
+		href: "https://knowyourmeme.com/memes/samuel-johnson-reading",
+		text: "original",
+	}}
+	src={samuelJohnsonDuo}
 />
 
 ## Split Out Unrelated Changes
@@ -41,8 +41,21 @@ They also clutter the Git history for files, making it harder to search back ove
 Anything we can do to reduce that cost is helpful.
 My favorite strategies in particular are:
 
-- Separating changes that impact code logic out from changes that only impact layout, formatting, or style.
 - Instead of one PR that resolves multiple issues at once, it can often be better to send one PR for each one of those issues.
+- Separating changes that impact code logic out from changes that only impact layout, formatting, or style.
+
+## One Pull Request Per Task
+
+It's generally easier to review a pull request that resolves one task (e.g. GitHub issue) rather than a pull request that resolves multiple tasks.
+Each area of change you add to a pull request increases the size and complexity of the pull request, making longer and more convoluted to review.
+It becomes harder to keep track of which changes apply to which task as a pull request grows in size.
+
+Furthermore, many repositories -including most of mine- automatically generate changelogs and new releases.
+Granular pull requests can become individual changelog entries and releases.
+Catch-all pull requests don't fit well into those systems.
+
+As a general ideology, I try to make each of my pull requests address a single GitHub issue.
+There should be one granular `fixes #<number>` in the pull request description per GitHub's docs on [linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
 ## Separate Logical and Stylistic Changes
 
@@ -99,19 +112,6 @@ If you want to enforce a stylistic preference, do so with as much automation as 
 
 Most of the `repeatMessage` formatting from earlier could be enforced with any common formatter such as [Prettier](https://prettier.io) and linter such as [ESLint](https://eslint.org).
 I personally also include [typescript-eslint's `stylisticTypeChecked` config](https://typescript-eslint.io/users/configs#stylistic-type-checked) along with Prettier plugins such as [prettier-plugin-curly](https://github.com/JoshuaKGoldberg/prettier-plugin-curly) to enforce a large set of consistency preferences.
-
-## One Pull Request Per Task
-
-On a similar note, it's generally easier to review a pull request that resolves one task (a.k.a. GitHub issue) rather than a pull request resolving multiple tasks.
-Each task you add to a pull request increases the size and complexity of the pul request, making longer and more convoluted to review.
-It becomes harder to keep track of which changes apply to which task.
-
-Furthermore, many repositories -including most of mine- automatically generate changelogs and new releases.
-Granular pull requests can become individual changelog entries and releases.
-Catch-all pull requests don't fit well into those systems.
-
-As a general ideology, I try to make each of my pull requests address a single GitHub issue.
-There should be one granular `fixes #<number>` in the pull request description per GitHub's docs on [linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
 ## Everything in Balance
 
