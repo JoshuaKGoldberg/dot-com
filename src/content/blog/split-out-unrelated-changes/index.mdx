@@ -50,12 +50,17 @@ It's generally easier to review a pull request that resolves one task (e.g. GitH
 Each area of change you add to a pull request increases the size and complexity of the pull request, making longer and more convoluted to review.
 It becomes harder to keep track of which changes apply to which task as a pull request grows in size.
 
+As a general ideology, I try to make each of my pull requests address a single GitHub issue.
+There should be one granular `fixes #<number>` in the pull request description per GitHub's docs on [linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+### Working with Automation
+
 Furthermore, many repositories -including most of mine- automatically generate changelogs and new releases.
 Granular pull requests can become individual changelog entries and releases.
 Catch-all pull requests don't fit well into those systems.
 
-As a general ideology, I try to make each of my pull requests address a single GitHub issue.
-There should be one granular `fixes #<number>` in the pull request description per GitHub's docs on [linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+As a general rule, I try to make sure all my pull requests can be described in a single [conventional commits message](https://www.conventionalcommits.org/en/v1.0.0).
+If you can't describe your pull request with a title like a `feat: add option to abc` or `fix: avoid crash when xyz` then it might be a sign of an overloaded set of changes.
 
 ## Separate Logical and Stylistic Changes
 
