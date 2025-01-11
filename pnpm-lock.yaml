@@ -3267,10 +3267,6 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  picomatch@4.0.1:
-    resolution: {integrity: sha512-xUXwsxNjwTQ8K3GnT4pCJm+xq3RUPQbmkYJTP5aFIfNIvbcc/4MUxgBaaRSZJ6yGJZiGSyYlM6MzwTsRk8SYCg==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
@@ -4206,11 +4202,6 @@ packages:
     resolution: {integrity: sha512-CBKFWExMn46Foo4cldiChEzn7S7SRV+wqiluAb6xmueD/fGyRHIhX8m14vVGgeFWjN540nKCNVj6P21eQjgTuA==}
     engines: {node: '>= 14'}
 
-  yaml@2.5.1:
-    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.6.1:
     resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
     engines: {node: '>= 14'}
@@ -4394,7 +4385,7 @@ snapshots:
 
   '@astrojs/yaml2ts@0.2.1':
     dependencies:
-      yaml: 2.5.1
+      yaml: 2.6.1
 
   '@babel/code-frame@7.24.7':
     dependencies:
@@ -7253,7 +7244,7 @@ snapshots:
       js-yaml: 4.1.0
       minimist: 1.2.8
       picocolors: 1.1.0
-      picomatch: 4.0.1
+      picomatch: 4.0.2
       pretty-ms: 9.0.0
       smol-toml: 1.2.2
       strip-json-comments: 5.0.1
@@ -8157,8 +8148,6 @@ snapshots:
   picocolors@1.1.0: {}
 
   picomatch@2.3.1: {}
-
-  picomatch@4.0.1: {}
 
   picomatch@4.0.2: {}
 
@@ -9205,7 +9194,7 @@ snapshots:
     dependencies:
       eslint-visitor-keys: 3.4.3
       lodash: 4.17.21
-      yaml: 2.5.1
+      yaml: 2.6.1
 
   yaml-language-server@1.15.0:
     dependencies:
@@ -9223,8 +9212,6 @@ snapshots:
       prettier: 2.8.7
 
   yaml@2.2.2: {}
-
-  yaml@2.5.1: {}
 
   yaml@2.6.1: {}
 
