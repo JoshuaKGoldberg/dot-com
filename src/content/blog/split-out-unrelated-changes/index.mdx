@@ -41,7 +41,7 @@ They also clutter the Git history for files, making it harder to search back ove
 Anything we can do to reduce that cost is helpful.
 My favorite strategies in particular are:
 
-- Instead of one PR that resolves multiple issues at once, it can often be better to send one PR for each one of those issues.
+- Instead of one pull request that resolves multiple issues at once, it can often be better to send one pull request for each one of those issues.
 - Separating changes that impact code logic out from changes that only impact layout, formatting, or style.
 
 ## One Pull Request Per Task
@@ -71,9 +71,9 @@ Logical changes to code, on the other hand, generally take much longer to review
 Which is good: logical changes come with a much higher risk of bugs.
 Every changed line of code in a pull request that changes logic should be scrutinized to make sure it doesn't break something.
 
-Introducing stylistic changes in a logical PR makes that those stylistically changed lines appear to need scrutiny.
+Introducing stylistic changes in a logical pull request makes that those stylistically changed lines appear to need scrutiny.
 Reviewers will have to remember that those lines aren't logically changed in reviews.
-That's a tax that slows down review of the PR.
+That's a tax that slows down review of the pull request.
 
 Consider trying to understand this large set of changes to a `repeatMessage` function:
 
