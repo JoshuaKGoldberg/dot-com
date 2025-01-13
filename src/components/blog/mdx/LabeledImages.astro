@@ -5,7 +5,7 @@ export interface LabeledImage {
 	alt: string;
 	description?: string;
 	original?: string;
-	src: { src: string } | string;
+	src: string | { src: string };
 }
 
 export interface Props {
