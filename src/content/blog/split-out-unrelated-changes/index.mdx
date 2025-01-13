@@ -1,0 +1,141 @@
+---
+description: "This is a general explainer for pull request reviews where I think unrelated changes should be split into a separate PR."
+image:
+  alt: Famous portrait of Samuel Johnson squinting up close at a newspaper
+  src: "~/assets/blog/samuel-johnson-reading.webp"
+pubDate: 2025-01-13
+tags: [
+	"pull requests",
+	"reviews",
+]
+title: "Split Out Unrelated Changes"
+---
+
+import samuelJohnsonDuo from "~/assets/blog/samuel-johnson-duo.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
+Hi!
+You might have been linked this blog post in a pull request that has a lot of changes in it.
+There might be a request linking to this blog post, asking that you split out some or all of those unrelated changes from it.
+
+This blog post is an explainer for why to split out unrelated changes from reviews.
+
+<LabeledImage
+	alt="Two famous portraits of Samuel Johnson, side-by-side. The left one is him squinting up close at a newspaper. The right one is him looking at the viewer, confused."
+	description="Famous writer Samuel Johnson reading a 100-file pull request tackling a half dozen issues at once."
+	original={{
+		href: "https://knowyourmeme.com/memes/samuel-johnson-reading",
+		text: "original",
+	}}
+	src={samuelJohnsonDuo}
+/>
+
+## Split Out Unrelated Changes
+
+For the most part, the larger a pull request, the longer it will take to review and get merged.
+Larger pull requests generally come with more cost and more risk than smaller PRs.
+They also clutter the Git history for files, making it harder to search back over time to see why logic changed when.
+
+> 👉 See [Why Open Source Pull Requests Can Take A While](https://www.joshuakgoldberg.com/blog/open-source-pull-request-timing) for why open source pull requests in particular can take a long time.
+
+Anything we can do to reduce that cost is helpful.
+My favorite strategies in particular are:
+
+- Instead of one pull request that resolves multiple issues at once, it can often be better to send one pull request for each one of those issues.
+- Separating changes that impact code logic out from changes that only impact layout, formatting, or style.
+
+## One Pull Request Per Task
+
+It's generally easier to review a pull request that resolves one task (e.g. GitHub issue) rather than a pull request that resolves multiple tasks.
+Each area of change you add to a pull request increases the size and complexity of the pull request, making longer and more convoluted to review.
+It becomes harder to keep track of which changes apply to which task as a pull request grows in size.
+
+As a general ideology, I try to make each of my pull requests address a single GitHub issue.
+There should be one granular `fixes #<number>` in the pull request description per GitHub's docs on [linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+### Working with Automation
+
+Furthermore, many repositories -including most of mine- automatically generate changelogs and new releases.
+Granular pull requests can become individual changelog entries and releases.
+Catch-all pull requests don't fit well into those systems.
+
+As a general rule, I try to make sure all my pull requests can be described in a single [conventional commits message](https://www.conventionalcommits.org/en/v1.0.0).
+If you can't describe your pull request with a title like a `feat: add abc option` or `fix: avoid crash when xyz` then it might be a sign of an overloaded set of changes.
+
+## Separate Logical and Stylistic Changes
+
+Stylistic changes generally don't require very much review time per line of code changed.
+Teams sometimes take a long time to discuss their stylistic preferences, but once those discussions are resolved, changing code to adhere to new styles is often straightforward.
+
+Logical changes to code, on the other hand, generally take much longer to review.
+Which is good: logical changes come with a much higher risk of bugs.
+Every changed line of code in a pull request that changes logic should be scrutinized to make sure it doesn't break something.
+
+Introducing stylistic changes in a logical pull request makes that those stylistically changed lines appear to need scrutiny.
+Reviewers will have to remember that those lines aren't logically changed in reviews.
+That's a tax that slows down review of the pull request.
+
+Consider trying to understand this large set of changes to a `repeatMessage` function:
+
+```diff
+-export function repeatMessage(
+-       times: number,
+-       ...messages: string[]
+-) {
+-        for (let i = 0; i < times; i += 1)
+-               for (const message of messages)
++export function repeatMessage(times: number, messages: string[]) {
++        for (let i = 0; i < times; i += 1) {
++               for (const message of messages) {
+                        console.log(message);
++               }
++       }
+ }
+```
+
+Now consider this version of the same change but with only logical differences:
+
+```diff
+-export function repeatMessage(times: number, ...messages: string[]) {
++export function repeatMessage(times: number, messages: string[]) {
+        for (let i = 0; i < times; i += 1) {
+                for (const message of messages) {
+                        console.log(message);
+```
+
+Much easier and faster to read through, right?
+All that was being changed was removing the `...` -- but the first diff obfuscated that straightforward intent with misleading stylistic changes.
+
+### Automate Stylistic Preferences (If Possible)
+
+Co-opting logical pull requests to enforce stylistic preferences is not an efficient way to roll out those preferences.
+Stylistic preferences lend themselves well to automation.
+Trying to touch them up one-by-one is sisyphean: a never-ending expenditure of effort that yields little to no real results.
+
+Formatters and linters are pretty good at **automating** most stylistic conventions.
+If you want to enforce a stylistic preference, do so with as much automation as possible.
+
+Most of the `repeatMessage` formatting from earlier could be enforced with any common formatter such as [Prettier](https://prettier.io) and linter such as [ESLint](https://eslint.org).
+I personally include [typescript-eslint's `stylisticTypeChecked` config](https://typescript-eslint.io/users/configs#stylistic-type-checked) along with Prettier plugins such as [prettier-plugin-curly](https://github.com/JoshuaKGoldberg/prettier-plugin-curly) to enforce a large set of consistency preferences in my projects.
+
+## Everything in Moderation
+
+These are't absolute rules.
+Sometimes the convenience of including a small unrelated change in a pull request is worth more than the benefits of splitting up changes.
+
+Filing an issue and reviewing a pull request both take time.
+If that time is greater than the cost of adding a small unrelated change to a pull request, then it may be worth it to just stick with the one pull request.
+
+If I'm already refactoring an area of code, and touching up some stylistic preferences wouldn't bloat the pull request too much, I might throw them in.
+Especially if those changes aren't something that need to be applied elsewhere in the repository.
+
+When including an unrelated change in a pull request, I recommend explicitly adding a comment explaining why it's there.
+That might convince a reviewer that it is indeed worth it to keep the changes together.
+At the very least it will explain your thought process and make the choice seem intentional rather than mistaken.
+
+## Further Reading
+
+If you want to read more about why granular pull requests are often preferable, I recommend:
+
+- [Google Testing Blog: In Praise of Small Pull Requests](https://testing.googleblog.com/2024/07/in-praise-of-small-pull-requests.html)
+- [Are small pull requests better than one large all-encompassing features, and how can I convince my team of that?](https://softwareengineering.stackexchange.com/questions/425665/are-small-pull-requests-better-than-one-large-all-encompasing-features-and-how)
