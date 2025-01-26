@@ -37,6 +37,7 @@
 		"@types/eslint__js": "^8.42.3",
 		"accessible-astro-components": "^2.3.6",
 		"astro": "^4.15.6",
+		"cached-factory": "^0.1.0",
 		"chart.js": "^4.4.4",
 		"clsx": "^2.1.1",
 		"cspell": "^8.16.1",

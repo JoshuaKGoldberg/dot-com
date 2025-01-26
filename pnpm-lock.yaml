@@ -53,6 +53,9 @@ importers:
       astro:
         specifier: ^4.15.6
         version: 4.15.6(@types/node@20.11.24)(rollup@4.21.3)(typescript@5.6.2)
+      cached-factory:
+        specifier: ^0.1.0
+        version: 0.1.0
       chart.js:
         specifier: ^4.4.4
         version: 4.4.4
@@ -1473,6 +1476,10 @@ packages:
     resolution: {integrity: sha512-btwCFJVjI4YWDNfau8RhZ+B1Q/VLoUITrm3RlP6y1tYGWIOa+InuYiRGXUBXo8nA1qKmHMyLB/iVQg5TT4eFoA==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
+
+  cached-factory@0.1.0:
+    resolution: {integrity: sha512-IGOSWu+NuED5UzCRmBeqQPZ8z7SkgrD/nN67W2iY1Qv83CVhevyMexkGclJ86saXisIqxoOnbeiTWvsCHRqJBw==}
+    engines: {node: '>=18'}
 
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
@@ -5767,6 +5774,8 @@ snapshots:
       electron-to-chromium: 1.5.23
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
+
+  cached-factory@0.1.0: {}
 
   call-bind@1.0.7:
     dependencies:
