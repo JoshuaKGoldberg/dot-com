@@ -16,126 +16,295 @@ tags:
 title: "2024 In Review"
 ---
 
+import emojiblastHomepageBlasts from "~/assets/blog/emojiblast-homepage-blasts.webm";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 import { PieChart } from "~/components/PieChart";
 
-...
-
 I like looking back at large time periods and the major events that happened during them.
 It's useful to reflect back on what the most important happenings were, and to learn from any missed opportunities or mistakes.
-Let's do that now for my 2024.
 
-## Biggest Notes
+## Finances
 
-Out of all that happened in 2023,
+> 👉 [2024 Finances in Review](./2024-finances-in-review) covers my 2024 finances and goals for 2025.
 
-### Community Events
+My earnings in 2024 were similar to [2023 in Review > Living Wage in Open Source](./2023-in-review#living-wage-in-open-source).
+I took in a total income of roughly **$60k** for 2024, compared to $63k for 2023.
 
-I switched from a participant-and-occasional-helper for community events to an active leader in 2024.
-2024 saw the launch of two events:
+$60k for the year isn't the end of the world -I have a spouse supporting me and other income- but not long-term sustainable.
+I'm going to need to grow that in 2025 if I want to keep working as a full-time independent open source maintainer.
 
-- [Boston TS Club](https://bostonts.club): a monthly meetup for TypeScript developers in the Boston area
-- [SquiggleConf](https://squiggleconf.com): _"a conference for excellent web dev tooling"_ held yearly in Boston
-
-I (co-)organized both because I wanted that type of event to regularly occur, and it that wasn't yet.
-For both, I'm proud of and thrilled with how far they've come in less than a year.
-
-### Living Wage in Open Source
-
-My earnings this year are pretty similar to [2023 Living Wage in Open Source](./2023-in-review#living-wage-in-open-source).
-I took in a total income of roughly **$60,000** for 2024, compared to $63,000 for 2023.
-
-This is ... fine.
-Not ideal.
-I was hoping to see my income grow, not fall slightly.
-
-> 👉 I broke down my 2024 finances, goals, and hopes for 2025 in [2024 Finances in Review](./2024-finances-in-review)
-
-## Open Source Projects
-
-??? What to put here?
-
-## Year-Long Goals
+## Goals
 
 I'd mentioned yearly goals in [My Plans for 2024](../my-plans-for-2024) last year.
-Some of those goals had concrete objectives.
+Many of those goals had concrete objectives.
 Did I satisfy those objectives?
 
 | Status     | Count | Percentage |
 | ---------- | ----- | ---------- |
-| Total      | TODO  | _-_        |
-| ✅ Hit     | TODO  | TODO%      |
-| ⏳ Partial | TODO  | TODO%      |
-| ❌ Miss    | TODO  | TODO%      |
+| Total      | 36    | _-_        |
+| ✅ Hit     | 14    | 39%        |
+| ⏳ Partial | 14    | 39%        |
+| ❌ Miss    | 8     | 22%        |
 
-TODO
+...some of them!
 
-The following sections go through each of the high-level goals.
+The same number of partials as hits.
+Let's compare with [2023's year-long goals](./2023-in-review#year-long-goals):
+
+| Year | Total | Miss | Partial | Hit |
+| ---- | ----- | ---- | ------- | --- |
+| 2024 | 35    | 7    | 14      | 14  |
+| 2023 | 34    | 7    | 10      | 17  |
+
+More partials and fewer hits in 2024 compared to 2023.
+If my 2023 was a C+, I'd give 2024 a C.
+
+2024 was a year of _"starts"_ rather than _"finishes"_.
+I took on a lot of tasks and pushed many of them only some or most of the way to completion.
+
+The learning here is that I committed to too many things in 2024.
+I was excited to have more time outside of conferences and spread myself too thin.
+For 2025, I'm going to need to commit to fewer things - and get better at pushing mostly-done projects to completion.
+
+Let's take a look the areas of goals.
 
 ### Open Source
 
+The biggest and most important area of goals for me is my open source work.
+My primary occupation is doing this full-time, and my area of focus is tooling for web developers.
+The following projects are the ones I saw as providing the most positive impact for the ecosystem.
+
 #### typescript-eslint
 
-| Objective                                 | Status                                                   |
-| ----------------------------------------- | -------------------------------------------------------- |
-| Stable `8.0.0`                            | ✅ Released                                              |
-| Establish performance improvements for v8 | ⏳ Project service released, but performance is unproven |
-| Committer Team Expansion                  | ✅ 2-3 new active committer team members added           |
-| Documentation overhaul                    | ⏳ Done for all except Promises and examples             |
+> [My Plans for 2024 > typescript-eslint](./my-plans-for-2024/#typescript-eslint)
+
+| Objective                                 | Status                                             |
+| ----------------------------------------- | -------------------------------------------------- |
+| Committer Team Expansion                  | ✅ &ge;2 new active committer team members added   |
+| Stable `8.0.0`                            | ✅ Released                                        |
+| Release the new project service           | ✅ Released                                        |
+| Establish performance improvements for v8 | ⏳ Anecdotally better, not in all tested scenarios |
+| Documentation overhaul                    | ⏳ Done for all except Promises and examples       |
+
+typescript-eslint is the project I'm most closely associated with.
+I spend more time on it than any other project and receive more income from it than any other two sources combined.
+I'm fairly happy overall, though not overjoyed, with how typescript-eslint grew in 2024.
+
+The biggest point that I _am_ overjoyed about is adding multiple new active committer team members.
+[@auvred](https://github.com/auvred), [@kirkwaiblinger](https://github.com/kirkwaiblinger), and [@ronami](https://github.com/ronami) have each contributed dozens of issues and pull requests to typescript-eslint, both as authors and reviewers.
+Plus I've enjoyed working with each of them.
+Auvred, Kirk, and Ronen: thanks for being awesome! 🙌
+
+I'm also _very_ pleased that we released both a stable 8.0.0 with ESLint v9 support and stabilized project service.
+Both of those tasks took longer than I'd hoped but were important for users.
+[Announcing typescript-eslint v8](https://typescript-eslint.io/blog/announcing-typescript-eslint-v8) explains them in detail.
+
+My biggest misses for typescript-eslint in 2024 all came down to documenting the project service.
+The project service is fast in practice but trying to measure that in isolated exposed some bugs in typescript-eslint and/or TypeScript.
+[docs: blog post on parserOptions.projectService](https://github.com/typescript-eslint/typescript-eslint/pull/8031) is still in draft because I wanted to publish only after we'd made the numbers more impressive.
+Now it's been in draft for over a year, and a lot of other documentation work such as Promises is still waiting for that performance work to conclude.
+
+In retrospect, I wish I'd put more emphasis on how the project service makes configuring typed linting better, and then posted the blog post with the current performance numbers.
+That'll now be a 2025 goal.
+
+Overall thoughts for typescript-eslint: it was a good year, and we're well-positioned for 2025.
+I didn't get everything I wanted done but the most important points were successful.
+✅
 
 #### ESLint
 
-| Objective                       | Status                           |
-| ------------------------------- | -------------------------------- |
-| Remain active as a team member  | ⏳ Not consistently active       |
-| Send high quality contributions | ⏳ Not consistently high quality |
+> [My Plans for 2024 > ESLint](./my-plans-for-2024/#eslint)
 
-#### ESLint
+| Objective                             | Status                                          |
+| ------------------------------------- | ----------------------------------------------- |
+| Feel comfortable as a new team member | ✅ I feel like I understand the systems in play |
+| Remain active as a team member        | ⏳ Not consistently active                      |
+| Send high quality contributions       | ⏳ Not consistently high quality                |
 
-| Objective                       | Status                           |
-| ------------------------------- | -------------------------------- |
-| Remain active as a team member  | ⏳ Not consistently active       |
-| Send high quality contributions | ⏳ Not consistently high quality |
+TODO
 
 #### create-typescript-app
+
+> [My Plans for 2024 > create-typescript-app](./my-plans-for-2024/#create-typescript-app)
 
 | Objective                                                                               | Status                                            |
 | --------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | Simplify the template to have 20% fewer root-level files                                | ✅ From 24 to 19                                  |
-| Make migrating a customized single-project or monorepo repository a pleasant experience | ✅ It's as good as it can be pending `create`     |
+| Make migrating a customized single-project or monorepo repository a pleasant experience | ✅ As good as it can be pending `create`          |
 | Close out all the features I'd suggested through 2022 and 2023                          | ⏳ Most, but not all, are resolved                |
 | Spin out a general-purpose `create` package without losing features or usability        | ⏳ Mostly completed by the second week of January |
+| Monorepo support                                                                        | ❌ Not started                                    |
+
+I'm happy with how [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) progressed in 2024.
+It's been reliably excellent for quickly spinning up new repositories with all the tooling I want in them.
+And the [`create` (create.bingo)](https://create.bingo) project is in full swing.
+
+I didn't get to implementing all of the long-standing feature requests, but I did put in quite a lot of work to continuously improve the template.
+The biggest feature point I'm happy about is reducing the number of root-level files to below 20.
+Web repositories have a _ton_ of configuration files these days, which contributes to tooling fatigue.
+The fewer tools the better.
+
+As for the standalone `create` project, I am _ecstatic_ with how it's shaping up.
+You can see the evolution of its design in [create-typescript-app#1181 📝 Documentation: Long-term project vision](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/1181) and [create#76 🚀 Feature: Switch to a pluggable templating engine system](https://github.com/JoshuaKGoldberg/create/issues/76).
+I think the Blocks engine is a wonderfully clean approach to large repository templates like create-typescript-app.
+And once `create` is streamlined to have a pluggable templating system, I think it's going to be best-in-class.
+
+The only full miss for create-typescript-app was monorepo support.
+I don't plan on working on that until the `create` engine is launch-ready, in part because I want to get more experience working in a monorepo like `create`'s.
+
+Expect a lot more from `create` and create-typescript-app in 2025.
+🚀
 
 #### Standalone GitHub Linter
+
+> [My Plans for 2024 > Standalone Github Linter](./my-plans-for-2024/#standalone-github-linter)
 
 | Objective                                             | Status         |
 | ----------------------------------------------------- | -------------- |
 | Make a stable lint experience for GitHub repositories | ❌ Not started |
 
-#### TypeStat
+I ran out of time and did not work on a standalone GitHub linter at all.
+Ah well.
+This will be a 2025 goal.
 
-| Objective                                                            | Status                                |
-| -------------------------------------------------------------------- | ------------------------------------- |
-| Rebrand, re-document, and stabilize TypeStat as a `ts-lift` monorepo | ❌ Prototyped, but not close to ready |
-| Create a `ts-initialize` project within `ts-lift`                    | ❌ Not started                        |
-| Create a `ts-enhance` project within `ts-lift`                       | ❌ Not started                        |
+#### TypeStat (`ts-lift`)
+
+> [My Plans for 2024 > TypeStat (`ts-lift`)](./my-plans-for-2024/#typestat-ts-lift)
+
+| Objective                                                            | Status                       |
+| -------------------------------------------------------------------- | ---------------------------- |
+| Rebrand, re-document, and stabilize TypeStat as a `ts-lift` monorepo | ❌ Prototyped, but not ready |
+| Create a `ts-initialize` project within `ts-lift`                    | ❌ Not started               |
+| Create a `ts-enhance` project within `ts-lift`                       | ❌ Not started               |
+
+I ran out of time and did not work on the TypeStat re-architecture.
+create-typescript-app also monorepo didn't land in 2024.
+Ah well.
+This will be a 2025 goal.
 
 ### Personal Projects
 
+All work and no play makes Josh a bored open source maintainer.
+I intentionally want to keep some more “fun” and/or smaller scale projects in the list.
+Even if they don't have ecosystem-wide impact, it's still good for me to work on a variety of project sizes and areas.
+Depth in addition to breadth!
+
 #### [emoji-blast](https://github.com/JoshuaKGoldberg/emoji-blast) (Emojisplosion)
+
+> [My Plans for 2024 > Emojisplosion (`emoji-blast`)](./my-plans-for-2024/#emojisplosion-emoji-blast)
 
 | Objective                                                                          | Status      |
 | ---------------------------------------------------------------------------------- | ----------- |
 | Rebrand and re-document Emojisplosion and its plugins as an `emoji-blast` monorepo | ✅ Released |
 
+I did it!
+The old "emojisplosion" project is now called "emoji-blast" and documented on [emojiblast.dev](https://emojiblast.dev).
+Which I have to brag about a moment.
+This homepage is glorious:
+
+<LabeledVideo
+	alt="Blasts of emojis from visiting the emojiblast.dev page and clicking its Trigger button"
+	description="I spent far too much time during development tinkering with the entry animation physics..."
+	src={emojiblastHomepageBlasts}
+/>
+
 #### [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
 
-| Objective                                 | Status    |
-| ----------------------------------------- | --------- |
-| Achieve parity with DefinitelyTyped-tools | ⏳ Mostly |
+> [My Plans for 2024 > eslint-plugin-expect-type](./my-plans-for-2024/eslint-plugin-expect-type)
+
+| Objective                                 | Status  |
+| ----------------------------------------- | ------- |
+| Achieve parity with DefinitelyTyped-tools | ✅ Done |
+
+I have to admit, I didn't think about this project for most of the year.
+DefinitelyTyped's existing type assertions work fine, and most of my energy working on TypeScript plumbing was expended on typescript-eslint's project service.
+
+I did focus on this project in late November and resolve all the issues in its [milestone/1 Feature Parity: dtslint](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type/milestone/1).
+So technically the "parity" note is a hit.
+
+But I haven't followed up with DefinitelyTyped to get started using eslint-plugin-expect-type.
+That will be a 2025 goal.
 
 ## Community Engagement
+
+I switched from a participant-and-occasional-helper for community events to an active leader in 2024.
+I (co-)organized two event series that launched this past year:
+
+- [Boston TS Club](https://bostonts.club): a monthly meetup for TypeScript developers in the Boston area
+- [SquiggleConf](https://squiggleconf.com): _"a conference for excellent web dev tooling"_ held yearly in Boston
+
+Both events were born in large part because we on the organizing teams wanted that type of event to regularly occur, and it that wasn't yet.
+I'm deeply proud of both and thrilled with how far they've come in less than a year.
+
+I also include general education work as part of community engagement, including blogging and speaking at conferences.
+Like it or not (spoiler: _not_) I'm someone people ask about for linting and TypeScript advice.
+Many of the ecosystem changes I push for require solid resources in both spoken -i.e. conference talks- and written -i.e. blog posts and documentation- form.
+
+Let's see how I did with my 2024 community engagement goals...
+
+### Boston TS Club
+
+> [My Plans for 2024 > Boston TS Club](./my-plans-for-2024/boston-ts)
+
+| Objective                                   | Status                          |
+| ------------------------------------------- | ------------------------------- |
+| Establish a smoothly-running monthly meetup | ✅ It's happening, once a month |
+| Set up a solid organizing team              | ✅ _**YES**_                    |
+
+💯.
+🔥.
+Absolute success.
+
+[Boston TS Club](https://bostonts.club) has had 9 regular monthly events since we launched it in April, only skipping December for the holiday break.
+The organizing team is a solid crew and we've made great progress in formalizing our processes.
+
+Meetup attendance has fluctuated -as is the norm for local meetups- but we on the team have been noting a solid crew of regulars who we enjoy having there.
+The overall number of attendees is trending upwards:
+
+| Event                          | Date               | Attendees |
+| ------------------------------ | ------------------ | --------- |
+| VI: New Year, New Type         | January 16, 2025   | 32        |
+| VIII: Thankful for Type Safety | November 19, 2024  | 29        |
+| VII: The Spooky Scary Edition  | October 23, 2024   | 27        |
+| VI: Rise of the Squiggles      | September 26, 2024 | 20        |
+| V: The Compiler Strikes Back   | August 29, 2024    | 25        |
+| IV: A New Type                 | July 25, 2024      | 23        |
+| III: This Time It's Personal   | June 27, 2024      | 25        |
+| II: Electric Boogaloo          | May 23, 2024       | 9         |
+| The First One Ever!            | April 18, 2024     | 30        |
+
+Our selection of speakers has also been more diverse than the norm.
+The average number of not-male speakers per Boston TS Club event is 1.
+We've had people from a variety of personal backgrounds, cultures, and speaking experience give talks.
+A big goal for Boston TS Club is to help grow the Boston web development community.
+Any good community needs to be diverse, equitable, and inclusive -- so I'm happy we're not perpetuating existing industry biases.
+
+### SquiggleConf 2024
+
+| Objective                                   | Status            |
+| ------------------------------------------- | ----------------- |
+| Successfully run without any major problems | ✅ It went great! |
+| Set up a solid organizing team              | ✅ _**YES**_      |
+
+🔥.
+Absolute success.
+
+We were a definitive success our first year:
+
+- Approximately 125 attendees including staff and volunteers
+- A universally well-received talk lineup and out-of-conference events
+- No major calamities during the conference
+
+TODO: talk about success and such
+
+Our selection of speakers, as with Boston TS Club, was more diverse than the norm.
+Roughly 36% of the talk speakers were not men.
+I would have preferred closer to 50%, but given how many conferences I've turned down per my [speaker rider's request to not have a supermajority of dudes](https://github.com/JoshuaKGoldberg/speaker-rider?tab=readme-ov-file#diversity-equity-and-inclusion), I am not upset by this amount our first year.
+
+On the other hand, co-organizing SquiggleConf 2024 took a heck of a lot out of me.
+I spent a ton of time through the year, especially in September, working on it.
+Then I was burned out and relatively unproductive for much of October and part of November.
 
 ### Conferences
 
@@ -152,22 +321,6 @@ The following sections go through each of the high-level goals.
 | Publish at least one post in my personal blog every two months               | ✅ 12 out of 6        |
 | Publish at least one post in the _Learning TypeScript_ blog every two months | ❌ 2 out of 6         |
 | Publish at least one post in the typescript-eslint blog every two months     | ❌ 3 out of 6         |
-
-### Boston TS Club
-
-| Objective                                   | Status                          |
-| ------------------------------------------- | ------------------------------- |
-| Establish a smoothly-running monthly meetup | ✅ It's happening, once a month |
-| Set up a solid organizing team              | ✅ _**YES**_                    |
-
-### SquiggleConf 2024
-
-| Objective                                   | Status            |
-| ------------------------------------------- | ----------------- |
-| Successfully run without any major problems | ✅ It went great! |
-| Set up a solid organizing team              | ✅ _**YES**_      |
-
-We were a definitive success our first year: approximately 135 attendees including staff and volunteers, a well-received talk lineup and out-of-conference events, and -best of all- no major calamities during the conference.
 
 ## Personal
 
@@ -198,6 +351,9 @@ It's a pleasant surprise.
 2024 was a ton of fun, but was very tiring.
 I touched on some burnout towards the end and missed some of the big goals I'd had for the year.
 I'm happy with what got done but can't help but feeling disappointment that the rest is still pending.
+
+Expect a blog post soon on my 2025 goals.
+I'm hoping to tackle fewer things in 2025 -- but still make a positive impact on the web development ecosystem.
 
 Thanks again to all the awesome people who helped make my 2024 wonderful.
 I appreciate you all!
