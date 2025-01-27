@@ -4,6 +4,7 @@ import {
 	BarElement,
 	Chart,
 	Colors,
+	Title,
 	Tooltip,
 } from "chart.js";
 import { type ChartProps, Bar } from "solid-chartjs";
@@ -26,7 +27,7 @@ export interface BarChartProps {
 
 export function BarChart(props: BarChartProps) {
 	onMount(() => {
-		Chart.register(BarElement, Colors, Tooltip);
+		Chart.register(BarElement, Colors, Title, Tooltip);
 	});
 
 	const dataLengthTotal = props.data.datasets.reduce(
