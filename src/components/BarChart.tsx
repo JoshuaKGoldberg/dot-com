@@ -1,5 +1,11 @@
 import { CachedFactory } from "cached-factory";
-import { type ActiveElement, Chart, Colors, Tooltip } from "chart.js";
+import {
+	type ActiveElement,
+	BarElement,
+	Chart,
+	Colors,
+	Tooltip,
+} from "chart.js";
 import { type ChartProps, Bar } from "solid-chartjs";
 import { onMount } from "solid-js";
 
@@ -20,7 +26,7 @@ export interface BarChartProps {
 
 export function BarChart(props: BarChartProps) {
 	onMount(() => {
-		Chart.register(Colors, Tooltip);
+		Chart.register(BarElement, Colors, Tooltip);
 	});
 
 	const dataLengthTotal = props.data.datasets.reduce(
