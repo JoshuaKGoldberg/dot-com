@@ -2,8 +2,13 @@ import { CachedFactory } from "cached-factory";
 import {
 	type ActiveElement,
 	BarElement,
+	CategoryScale,
 	Chart,
 	Colors,
+	LinearScale,
+	LineController,
+	LineElement,
+	PointElement,
 	Title,
 	Tooltip,
 } from "chart.js";
@@ -27,7 +32,17 @@ export interface BarChartProps {
 
 export function BarChart(props: BarChartProps) {
 	onMount(() => {
-		Chart.register(BarElement, Colors, Title, Tooltip);
+		Chart.register(
+			BarElement,
+			CategoryScale,
+			Colors,
+			LinearScale,
+			LineController,
+			LineElement,
+			PointElement,
+			Title,
+			Tooltip,
+		);
 	});
 
 	const dataLengthTotal = props.data.datasets.reduce(
