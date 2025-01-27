@@ -53,6 +53,9 @@ importers:
       astro:
         specifier: ^5.1.10
         version: 5.1.10(@types/node@20.11.24)(jiti@2.4.2)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0)
+      cached-factory:
+        specifier: ^0.1.0
+        version: 0.1.0
       chart.js:
         specifier: ^4.4.7
         version: 4.4.7
@@ -1489,6 +1492,10 @@ packages:
     resolution: {integrity: sha512-KDi1Ny1gSePi1vm0q4oxSF8b4DR44GF4BbmS2YdhPLOEqd8pDviZOGH/GsmRwoWJ2+5Lr085X7naowMwKHDG1A==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
+
+  cached-factory@0.1.0:
+    resolution: {integrity: sha512-IGOSWu+NuED5UzCRmBeqQPZ8z7SkgrD/nN67W2iY1Qv83CVhevyMexkGclJ86saXisIqxoOnbeiTWvsCHRqJBw==}
+    engines: {node: '>=18'}
 
   call-bind-apply-helpers@1.0.1:
     resolution: {integrity: sha512-BhYE+WDaywFg2TBWYNXAE+8B1ATnThNBqXHP5nQu0jWJdVvY2hvkpyB3qOmtmDePiS5/BDQ8wASEWGMWRG148g==}
@@ -5837,6 +5844,8 @@ snapshots:
       electron-to-chromium: 1.5.88
       node-releases: 2.0.19
       update-browserslist-db: 1.1.2(browserslist@4.24.4)
+
+  cached-factory@0.1.0: {}
 
   call-bind-apply-helpers@1.0.1:
     dependencies:

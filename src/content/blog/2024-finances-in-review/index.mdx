@@ -1,0 +1,295 @@
+---
+description: "Breaking down the income streams and totals from my third year as a full-time independent open source maintainer."
+image:
+  alt: Black cat chewing on a leather chair armrest, holding on with both paws, with a blank look in his eyes
+  src: "~/assets/blog/jerry-eating-chair-square.webp"
+pubDate: 2025-01-27
+tags: ["finances", "open source", "recap", "year in review"]
+title: "2024 Finances In Review"
+---
+
+import jerryEatingChairWide from "~/assets/blog/jerry-eating-chair-wide.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import { BarChart } from "~/components/BarChart";
+import { PieChart } from "~/components/PieChart";
+
+I'm an independent open source maintainer.
+That means I work on shared projects online instead of for any one company.
+It's incredibly rewarding work and I love being able to directly contribute to web development tooling.
+
+The downside of this independent work is that I don't receive a salaried paycheck.
+I've also mostly moved away from contract or freelance work.
+Instead, my income largely comprises of community sponsorships directly related to my open source work.
+
+This blog post breaks down where that money came from and how it's changed since my [2023 in Review > Living Wage in Open Source](./2023-in-review#living-wage-in-open-source).
+I publicize this breakdown to show what it's like being in open source the way I am and to be transparent about donations.
+
+Let's dig in!
+
+## Total Income
+
+I took in a total income of roughly **$60,191** for 2024.
+**$47,269** of that was for open source work.
+
+2024 continued my trend of increasing income directly from open source and decreasing income from other sources such as consulting.
+My open source income grew ~24% from 2023's $38,000.
+Here's how 2024's income split compares to previous years:
+
+<BarChart
+	client:load
+	colors={["#33aa33", "#4256aa"]}
+	data={{
+		datasets: [
+			{
+				data: [20_400, 38_000, 47_269],
+				label: "Open Source",
+			},
+			{
+				data: [26_598, 25_700, 13_630],
+				label: "Other Work",
+			},
+		],
+		labels: ["2022", "2023", "2024"],
+	}}
+	id="total-income-years"
+	title="Total Income - Years"
+/>
+
+| Year               | Total Income | Open Source | Non Open Source | % Open Source |
+| ------------------ | ------------ | ----------- | --------------- | ------------- |
+| 2024               | $60,191      | $46,561     | $13,630         | ~77%          |
+| 2023 [^past-years] | ~$63,700     | ~$38,000    | ~$25,700        | ~60%          |
+| 2022 [^past-years] | ~$41,100     | ~$20,400    | ~$20,700        | ~50%          |
+
+Happy note: I earned more from my independent open source work in 2024 than I did from both open source and non open source independent work in 2022.
+
+Less happy note: I was hoping to get to $80,000 total income this year.
+More on that later.
+
+## Sources Breakdown
+
+A majority of my income comes from open source projects, and a majority of that is from bigger names.
+That income is supplemented by other sources -- mostly _Learning TypeScript_ book sales.
+
+Here are the individual categories of income:
+
+<PieChart
+	client:load
+	colors={[
+		"#374EBE",
+		"#8D6748",
+		"#e51737",
+		"#2DBA4F",
+		"#341BAB",
+		"#777777",
+		"#2F3241",
+		"#f6914d",
+		"#9147ff",
+	]}
+	data={{
+		datasets: [
+			{
+				data: [22_772, 8_588, 7_368, 6_230, 5_488, 4_262, 2_587, 2_000, 897],
+				label: "Income ($)",
+			},
+		],
+		labels: [
+			"typescript-eslint",
+			"Mocha",
+			"Learning TypeScript royalties",
+			"GitHub Sponsors",
+			"ESLint",
+			"Consulting",
+			"Tidelift",
+			"Podcasts",
+			"thanks.dev",
+		],
+	}}
+	id="total-income-all-sources"
+	title="Total Income - All Sources"
+/>
+
+| Source                          | Income                     |
+| ------------------------------- | -------------------------- |
+| typescript-eslint               | $22,772 [^tseslint-income] |
+| Mocha                           | $8,588                     |
+| _Learning TypeScript_ royalties | $7,368                     |
+| GitHub Sponsors                 | $6,230                     |
+| ESLint                          | $5,487                     |
+| Consulting                      | $4,262                     |
+| Tidelift                        | $2,587                     |
+| Podcasts                        | $2,000                     |
+| thanks.dev                      | $897                       |
+| **Total**                       | **$60,191**                |
+
+I'm glad to have a diverse set of income sources in open source.
+The small- and medium-sized web dev tooling projects I work tend to fluctuate in popularity over time.
+You don't want any one fluctuating project to be a supermajority of income: when it inevitably wanes, so too will overall income.
+
+## Months Breakdown
+
+I think the per-month breakdown of my sources is also important for showing whether my open source income was stable through the year.
+Spoiler: about half of it was, but as I became more busy with conference organizing and moving to the Boston area during the fall, my income slipped.
+
+<BarChart
+	client:load
+	colors={["#33aa33", "#4256aa"]}
+	data={{
+		datasets: [
+			{
+				data: [
+					4_894, 5_040, 4_704, 4_408, 3_530, 2_811, 3_012, 3_393, 3_719, 3_232,
+					2_009, 6_562,
+				],
+				label: "Open Source",
+			},
+			{
+				data: [
+					2_573, 1_125, 415, 825, 4_025, 1_688, 488, 652, 444, 854, 462, 767,
+				],
+				label: "Other Work",
+			},
+		],
+		labels: [
+			"January",
+			"February",
+			"march",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		],
+	}}
+	id="months-breakdown"
+	title="Months Breakdown"
+/>
+
+| Month     | Total Income | Open Source                                        | Other Work               | % Open Source |
+| --------- | ------------ | -------------------------------------------------- | ------------------------ | ------------- |
+| January   | $7,467       | $4,894                                             | $2,573                   | 66%           |
+| February  | $6,165       | $5,040 [^tseslint-delay-feb-march]                 | $1,125                   | 82%           |
+| March     | $5,119       | $4,704 [^tseslint-delay-feb-march]                 | $415                     | 92%           |
+| April     | $5,233       | $4,408                                             | $825                     | 84%           |
+| May       | $7,555       | $3,530                                             | $4,025 [^codecademy-may] | 47%           |
+| June      | $4,499       | $2,811                                             | $1,688                   | 62%           |
+| July      | $3,500       | $3,012                                             | $488                     | 86%           |
+| August    | $4,045       | $3,393                                             | $652                     | 84%           |
+| September | $4,163       | $3,719 [^mocha-delay-sep]                          | $444                     | 89%           |
+| October   | $4,086       | $3,232                                             | $854                     | 79%           |
+| November  | $2,471       | $2,009                                             | $462                     | 81%           |
+| December  | $7,329       | $6,562 [^mocha-delay-dec] [^tseslint-thanksgiving] | $767                     | 90%           |
+
+## Reflecting on 2024
+
+This was a mixed year for me.
+
+$60k is unusually high for an independent open source maintainer.
+I'm very proud of it.
+That number represents a ton of effort in onboarding to new projects and consistently motivating myself to work on the various parts of open source maintenance.
+
+Still, $60k is objectively not a very good number for a software developer with a decade of experience.
+I used to make over $200k base salary as a full-time staff developer.
+
+I'd hoped to hit a total income of $80,000 this year by again doubling my open source income at the expensive of half my other income.
+My other income did fall by about half again but my open source income only rose by about 1.25x.
+
+I think my income remained stagnant for a few reasons:
+
+- There were a higher-than-expected number of higher-than-expected project costs in 2024:
+  - Supporting [ESLint flat config](https://github.com/typescript-eslint/typescript-eslint/issues/7694 "typescript-eslint#7694 ESLint Flat Config Support") and [ESLint 9](https://github.com/typescript-eslint/typescript-eslint/pull/9002 "typescript-eslint#9002 feat: support ESLint v9") in typescript-eslint took up much more of my Spring months than I expected
+  - I burned out organizing [SquiggleConf 2024](https://2024.squiggleconf.com) in September and was largely out of commission in October and part of November
+  - We moved to the Boston area in the Fall, which in retrospect I should have predicted would siphon my energy and time
+- We adjusted monthly reimbursements in typescript-eslint, reducing payments by ~60% [^tseslint-expenses]
+- I stopped consulting work after May: it's lucrative but takes time away from open source
+- _Learning TypeScript_ is past its peak book sales period, dropping its intake by ~2/3
+
+A $60k salary is not the end of the world for me.
+I have a spouse supporting me and savings from years in industry.
+But it's not long-term sustainable and I need to continue to grow it if I want to stay independent in open source.
+
+> I'll publish a full blog post soon on my plans for the 2025 year.
+> It'll focus both on my financial goals as well as the individual projects' milestones.
+
+## Your Support Matters
+
+The best way you can support me financially is to **[sponsor me on GitHub Sponsors](https://github.com/sponsors/JoshuaKGoldberg)**.
+That money goes directly to me and helps me focus on open source work.
+
+Each of the larger projects I'm on the team of have an Open Collective you can support financially:
+
+- [opencollective.com/typescript-eslint](https://opencollective.com/typescript-eslint)
+- [opencollective.com/mochajs](https://opencollective.com/mochajs)
+- [opencollective.com/eslint](https://opencollective.com/eslint)
+- [opencollective.com/yeoman](https://opencollective.com/yeoman)
+
+To more broadly want to support your dependencies, several aggregator services can distribute your donations:
+
+- [GitHub Sponsors](https://github.com/sponsors)
+- [Tidelift](https://tidelift.com)
+- [thanks.dev](https://thanks.dev)
+
+Even better than sponsoring me yourself, if you work at a profitable company, consider advocating for your employer to sponsor open source or even sign the [Open Source Pledge](https://opensourcepledge.com).
+Companies sharing some of their profit is a much more sustainable route for the ecosystem than individual charitable donations.
+
+Support doesn't have to be financial.
+Just sharing the word about the importance of open source software and its maintainers can help share the word about how important support is.
+Sharing is caring.
+
+If you do have time, maybe spend a bit of time helping out on GitHub on projects I work on that you find useful.
+The beautify of open source is that it's _open_.
+If you want something, you can always go do it yourself.
+Who knows, maybe you'll fall in love with open source the way I did.
+💚
+
+<LabeledImage
+	alt="Black cat chewing on a leather chair armrest, holding on with both paws, with a blank look in his eyes"
+	description="Jerry, my favorite cat, eating my old office chair. This photo somehow felt appropriate for a blog post on finances."
+	src={jerryEatingChairWide}
+/>
+
+[^aggregate-packages]:
+    Services like Tidelift and thanks.dev pay per package, and send money based on how widely used the package is.
+    I've started releasing many more individual packages in 2024 to support my [create.bingo](https://create.bingo) and [create-typescript-app](http://github.com/JoshuaKGoldberg/create-typescript-app) projects.
+    Many of those packages are likely to start receiving income in 2025.
+
+[^codecademy-may]:
+    I received a final $2,500 payment in May for past curriculum development work with Codecademy.
+    I'd since stopped that work, which is why only May has such a high _Other Income_ amount.
+
+[^create]:
+    The new [create.bingo](https://create.bingo) engine.
+    It's very new, but I think I can turn it into a great ecosystem-pushing project for template repository.
+
+[^mocha-delay-sep]:
+    September was the month we finished setting up Mocha expenses.
+    I received $7,250 for older work: $3,200 for November and December 2023; $2,400 for January through March 2024; $800 for April through June 2024; $850 for July 2024.
+    The data is backdated and normalized by averaging the payments across the months they span and shifting forward one or two months.
+    That's: $1,100 a month for January and February 2024; $850 a month for March through May 2024; $700 a month for June through July 2024; $550 a month for August and September 2024.
+
+[^mocha-delay-dec]:
+    I received $1,200 from Mocha via Open Collective in December 2024 for October 2024.
+    I backdated it in the data to November 2024 to align with Open Collective payments typically taking only one month, not two.
+
+[^past-years]:
+    2024 is the first year with precise numbers for totals.
+    I'd rounded the totals for [2023 in Review](./2023-in-review) and don't have the energy or time to re-calculate them more precisely.
+
+[^tseslint-delay-feb-march]:
+    I procrastinated filing my monthly typescript-eslint expense for January, so it was paid in March instead of February.
+    I backdated it in February to normalize the monthly data.
+
+[^tseslint-expenses]:
+    We'd been basing the monthly stipend on an optimistic Open Collective yearly budget estimate.
+    That led to our reserves running low sooner than expected.
+    When we switched in April to their more realistic money-per-month budget, my monthly stipend dropped from ~$1800 to $1100.
+
+[^tseslint-income]: I received $15,675.38 via Open Collective, $5,500 via Tidelift, and $1,597.25 via thanks.dev for typescript-eslint work in 2024.
+
+[^tseslint-thanksgiving]:
+    I gave myself a $1,700 "Thanksgiving bonus" for typescript-eslint via Open Collective in December 2024.
+    A new contributor had previously declined roughly that amount in reimbursements over the last few months.
