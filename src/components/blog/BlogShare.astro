@@ -14,7 +14,7 @@ interface Props {
 
 const text = [
 	`📝 ${Astro.props.title}`,
-	`"${Astro.props.description}" - by @JoshuaKGoldberg`,
+	`"${Astro.props.description}"`,
 	"",
 ].join("%0a%0a");
 
@@ -23,7 +23,7 @@ const url = Astro.props.url.toString();
 const channels = [
 	[
 		"Bluesky",
-		`https://bsky.app/intent/compose?text=${text}%0A%0A${url}`,
+		`https://bsky.app/intent/compose?text=${text}- by @joshuakgoldberg.com%0A%0A${url}`,
 		bluesky,
 	],
 	[
@@ -31,7 +31,11 @@ const channels = [
 		`https://linkedin.com/sharing/share-offsite/?url=${url}`,
 		linkedin,
 	],
-	["Mastodon", `https://fosstodon.org/share?text=${text}`, mastodon],
+	[
+		"Mastodon",
+		`https://fosstodon.org/share?text=${text} by @JoshuaKGoldberg@fosstodon.org`,
+		mastodon,
+	],
 ] as const;
 ---
 
