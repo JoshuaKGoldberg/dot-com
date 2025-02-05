@@ -72,7 +72,7 @@
 	);
 }
 
-.article :is(h2, h3, h4, h5) + blockquote {
+.article :is(blockquote, h2, h3, h4, h5) + blockquote {
 	margin: 0;
 }
 
