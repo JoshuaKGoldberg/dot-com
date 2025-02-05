@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -199,6 +205,7 @@
 		"l'Assemblée",
 		"Lasik",
 		"learningtypescript",
+		"lemongrab",
 		"lissa",
 		"Lolex",
 		"Luca",
@@ -224,6 +231,7 @@
 		"mhegazy",
 		"Michaël",
 		"microfrontends",
+		"Milchick",
 		"mindshare",
 		"minifiers",
 		"misbalanced",
