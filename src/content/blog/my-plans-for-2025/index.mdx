@@ -288,15 +288,15 @@ typescript-eslint is not going anywhere anytime soon.
 I'm intentionally burying this project goal deep in this blog post because I don't want anybody to misread it and think this is some big ecosystem competitor or drama.
 
 ESLint is structurally focused on _single-file_ linting: each lint rule is architecturally encouraged to only think of one rule at a time.
-Single-file linting falls apart when you need information from other files, such as understanding paths on disk or using [typed linting](https://typescript-eslint.io/blog/typed-linting).
-See [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102) for more information.
+Single-file linting falls apart when you add [typed linting](https://typescript-eslint.io/blog/typed-linting).
+See [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102).
 
-I think any web linter that wants to remain viable long-term needs to have first-class support for _cross-file_ linting.
+I think any modern web linter needs to have first-class support for _cross-file_ linting.
 [ESLint's rewrite](http://github.com/eslint/rewrite) is positioned as the place for ESLint to work on that.
 Native speed linters are starting to integrate typed linting, too: e.g. [Biome's `noFloatingPromises` rule](https://github.com/biomejs/biome/pull/4911).
 
 I want to help work on cross-file linting -- but have found it difficult to propose ideas given my lack of experience of actually writing a linter.
-And even if I were confident in my technical understanding, not having a proof-of-concept linter to show my ideas working is a further detriment.
+And even for the ideas I'm confident in, not having a proof-of-concept linter to show my ideas working is a further detriment.
 
 So, I plan on finally writing my own _fresh_, modern linter in 2025.
 😱.
