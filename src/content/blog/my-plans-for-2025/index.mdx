@@ -15,10 +15,9 @@ import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 Happy belated new year, everyone!
-I posted my [2024 In Review](/blog/2024-in-review) blog a week ago, after procrastinating on it most of January.
-So now it's time to look forward to the remaining ~10-11 months of this year and figure out what I'm going to be doing.
+I posted my [2024 In Review](/blog/2024-in-review) blog a week ago.
+Now it's time to look forward to the remaining ~10-11 months of this year.
 
-I've learned it's important -especially when you're independent like me and have no job or manager- to set medium- and long-term goals for yourself.
 As with last year's [My Plans for 2024](/blog/my-plans-for-2024), this post is 40% a reference for anybody curious about what a full time open source maintainer's life is like... and 60% a form of self-motivation to actually do the things.
 
 <LabeledVideo
@@ -40,15 +39,6 @@ The five primary ways I will do that are:
 5. Stabilize tooling that converts from JavaScript to TypeScript and TypeScript to better TypeScript: [ts-lift](#ts-lift)
 6. Socialize great developer tooling with [Boston TS Club](#boston-ts-club) and [SquiggleConf](#squiggleconf)
 
-Each of the following sections is a key area I'm going to invest my time in for 2025, in decreasing order of time spent during working hours.
-
-- [Open Source](#open-source)
-- [Community Engagement](#community-engagement)
-- [Personal](#personal)
-
-I'm trying to give my self smaller and more attainable goals in 2025 than for past years.
-There are more _Objective:_ notes in this blog post than 2023 or 2024, but the objectives themselves are generally granular and -I hope- more achievable.
-
 ## Open Source
 
 > Objective: Be a known leader in the TypeScript static analysis ecosystem.
@@ -56,22 +46,17 @@ There are more _Objective:_ notes in this blog post than 2023 or 2024, but the o
 > Objective: Foster gradual improvement in the TypeScript static analysis ecosystem.
 
 [I'm a full time open source maintainer](../full-time-open-source).
-Open source is my full time occupation and the most important area of my professional life.
-I'm going to continue to spend the majority of my time maintaining the open source libraries I'm responsible for, as well as contributing to other libraries I use in my day-to-day.
-
-The following sections each explain my goals around an individual project.
-I've put the major community projects first, followed by my personal projects later.
+I'm going to continue to spend the majority of my time maintaining the open source libraries I'm responsible for, as well as contributing to other libraries.
 
 ### Larger Projects
 
 These ecosystem-level projects are high visibility to many web developers.
-My work in pushing them forward helps make their areas of development incrementally better for countless developers.
-It's fascinating and humbling to think about.
+My work in pushing them forward helps make their areas of development incrementally better for many developers.
+It's fun and humbling to think about.
 
 #### [typescript-eslint](https://typescript-eslint.io)
 
 I'm on the typescript-eslint maintainer team.
-typescript-eslint still represents the most user impact I make in open source.
 Unlike 2024, I don't plan on pushing for any major user-facing changes.
 We released a fair amount of those in 2024 in 8.0.0: namely ESLint v9 support and stabilized [project service](https://typescript-eslint.io/blog/announcing-typescript-eslint-v8#project-service).
 
@@ -81,41 +66,33 @@ I'd like 2025 to be a more calm year for my typescript-eslint involvement.
 
 > Objective: Rework the website to better explain the project.
 >
-> Objective: Publish at least 4 long-requested blog posts.
+> Objective: Publish &ge;4 long-requested blog posts.
 
-The landing page on [typescript-eslint.io](https://typescript-eslint.io) hasn't been reworked in several years.
+The landing page on [typescript-eslint.io](https://typescript-eslint.io) hasn't been reworked in a long time.
 It prioritizes explaining what ESLint and TypeScript are over the benefits or definition of typescript-eslint.
-And that _"The tooling that enables ..."_ definition doesn't capture how essential the project is for _providing_ -not just _enabling_- TypeScript lint rules.
 
-[@ElianCodes](https://github.com/ElianCodes) led me through a pairing to audit the site's docs earlier this year in [youtube.com/watch?v=Vyu8FU0VAqA](https://www.youtube.com/watch?v=Vyu8FU0VAqA).
+[@ElianCodes](https://github.com/ElianCodes) led me through an audit of the site earlier this year in [youtube.com/watch?v=Vyu8FU0VAqA](https://www.youtube.com/watch?v=Vyu8FU0VAqA).
 I'd like to apply the suggestions from that audit to the typescript-eslint website.
 
-Additionally, I've long wanted to flesh out resources on the site for high-impact areas of rules.
-We got through some of that in 2024 but not all the ones I wanted.
+Additionally, many longstanding community gripes about typescript-eslint and typed linting come in part from us not explaining ourselves well.
+I want us to have published at least 4 more blog posts that answer frequent user questions.
+At the very least, that should include:
 
-In particular, I want us to have published at least 4 of:
-
-- [typescript-eslint#6758 Docs: Add article about restrict-plus-operands & restrict-template-expressions best practices](https://github.com/typescript-eslint/typescript-eslint/issues/6758)
 - [typescript-eslint#7350 Docs: Add blog post & revamped docs for parserOptions.projectService](https://github.com/typescript-eslint/typescript-eslint/issues/7350)
 - [typescript-eslint#8517 Blog: Add post about our suite of Promise rules](https://github.com/typescript-eslint/typescript-eslint/issues/8517)
-- [typescript-eslint#8139 Blog: Add post about allowAutomaticSingleRunInference](https://github.com/typescript-eslint/typescript-eslint/issues/8139)
-- [typescript-eslint#9103 Docs: Write blog post on the history of ban-types, {}, and object/Object](https://github.com/typescript-eslint/typescript-eslint/issues/9103)
-- [typescript-eslint#10364 Docs: Add blog post about history and usage of TypeScript's isTypeAssignableTo API](https://github.com/typescript-eslint/typescript-eslint/issues/10364)
 
-Many of the longstanding community gripes about typescript-eslint and typed linting come in part from us not explaining ourselves well (see: [typescript-eslint#10666 Enhancement: [no-floating-promises] Provide a built-in SafePromise type](https://github.com/typescript-eslint/typescript-eslint/issues/10666)).
 I'm very hopeful that by better explaining the nuances of typed linting, we'll continue to see fewer misconceptions about it in the wild.
 
 ##### Issue Management
 
 > Objective: Finish the year with &lt;250 issues
 >
-> Objective: Close out 3 of 4 issues from 2019
+> Objective: Close out &ge;3 of 4 issues from 2019
 >
-> Objective: Close out 20 of 26 issues from 2019 and 2020
+> Objective: Close out &ge;20 of 26 issues from 2019-2020
 
 We started 2024 with about 400 open issues in our backlog and ended with just under 300 open issues.
 I don't like having many hundreds of issues in a backlog.
-It feels disorganized and I know it often results in real user requests getting buried.
 
 Some old issues might be reasonable to accept pull requests but not important enough for us to prioritize.
 But too many old issues crowd out important ones.
@@ -135,7 +112,7 @@ I'm on the ESLint committer team.
 I still don't have any big flashy goals around ESLint.
 For my second year I just want to be a good, reliable member of the team.
 
-If I consistently apply >15 hours a month to ESLint, and the work is an acceptable quality, I will be happy.
+If I consistently apply >15 hours a month to ESLint, and the work is an acceptable quality, I'll be happy.
 
 #### Mocha
 
@@ -145,7 +122,7 @@ If I consistently apply >15 hours a month to ESLint, and the work is an acceptab
 >
 > Objective: Release the new Mocha website
 
-I'm on the Mocha maintainer team ([mocha#5027 📌 Project Status: Maintenance Reboot](https://github.com/mochajs/mocha/issues/5027)).
+I'm on the new Mocha maintainer team ([mocha#5027 📌 Project Status: Maintenance Reboot](https://github.com/mochajs/mocha/issues/5027)).
 2024 was mostly a _"pick up the pieces"_ year for Mocha: getting through the issue and PR backlogs, cleaning up project processes, and releasing a major version v11 that just bumped platform dependencies without other breaking changes.
 
 Now that I'm more confident as a maintainer for Mocha, I'm ready to make more impactful changes.
@@ -156,7 +133,6 @@ Fixing them will be good for the project but technically requires a new major ve
 Separately, [mocha#4154 🚀 Feature: TypeScript .d.ts type declarations](https://github.com/mochajs/mocha/issues/4154) is the single most requested issue people bring up with me when they hear I took on Mocha maintenance.
 
 Lastly, I made a new version of the ancient Mocha website using Astro last year: [mocha#5246 docs: add new website using Astro Starlight](https://github.com/mochajs/mocha/pull/5246).
-It's a much more modern website that also doesn't rely on very ancient versions of old packages.
 I'd like to get that website fully launched this year, with the old website kept on something like `old.mochajs.org`.
 
 #### Yeoman
@@ -168,11 +144,6 @@ I'd like to get that website fully launched this year, with the old website kept
 > Objective: Update `yo` and other packages to no longer print deprecation warnings when run
 
 I joined the [Yeoman maintenance reboot](https://github.com/yeoman/yeoman/issues/1779) in January! 🎩
-
-The Yeoman ("yo") project is one of the classic pieces of web dev tooling.
-It was _the_ generator framework when I started learning JavaScript.
-Much like Mocha, it's no longer cutting edge and modern, but rather a stable legacy project to be kept afloat.
-(Unlike Mocha, no significant alternative has captured significant market share -- more on that later...)
 
 Our goal is to keep Yeoman afloat.
 We don't plan on releasing any major breaking changes or earth-shattering new features.
@@ -186,10 +157,6 @@ We mostly want to keep the project up with the basic expectations developers hav
 >
 > Objective: Release a well-documented `create@1`
 
-I'd learned Yeoman needed maintenance because I was researching repository templating engines.
-I was researching repository templating engines because I wanted one that could work well for [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app).
-No existing templating engine comes close to what CTA needs and I think that's a real gap in web dev tooling.
-
 The [`create`](https://create.bingo) project is my take on a templating engine.
 Its feature set represents points that I think no existing engine comes close to capturing a majority of:
 
@@ -200,12 +167,10 @@ Its feature set represents points that I think no existing engine comes close to
 - Well-typed options through a standard schema ([Zod](https://zod.dev))
 
 I find all that very exciting: especially the "Blocks" system I'd originally envisioned for it ([create-typescript-app#1181 📝 Documentation: Long-term project vision](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/1181)).
-It's such a cool system for swapping pieces of tooling in and out, where each piece can describe how it impacts other pieces.
-I think most repository templates will want to start out with a more traditional [Handlebars](https://handlebarsjs.com)-based approach, and some will grow to the Blocks scale.
 
 Another point I'm enthused about is setting up automations that repositories can use to update themselves to newer versions of templates.
 Until this feature exists I have to update my repositories to newer create-typescript-app versions manually, which is _tedious_.
-I think a big part of why no repository templating system has achieved Yeoman levels of adoption is because they haven't cracked the user story of keeping repositories updated over time.
+Automatically updating repository configuration files with new versions of tools will make my life -and I hope many other open source lives- much easier.
 
 #### [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)
 
@@ -219,7 +184,6 @@ I think a big part of why no repository templating system has achieved Yeoman le
 
 As of writing, create-typescript-app is _almost_ ready to promote a v2 version rebuilt on `create` from beta to stable.
 It's only blocked on a few foundational rearchitectures in `create`.
-But once it's released I'll continue to focus on improving the CTA repository experience.
 
 Firstly, I aim to continue reducing the number of root-level files produced by the template.
 Tooling fatigue is a real problem for web developers.
@@ -232,7 +196,6 @@ I'm pretty sure I can get rid of three config files from CTA:
 I'm also targeting two goals for 2025 that are carried over from [My Plans for 2024 > create-typescript-app](/blog/my-plans-for-2024#create-typescript-app).
 
 The biggest one is monorepo support.
-Monorepos are an important facet of TypeScript development.
 I personally want CTA monorepo support for my own monorepos such as [emoji-blast](https://github.com/JoshuaKGoldberg/emoji-blast) and [TypeStat (`ts-lift`)](https://github.com/JoshuaKGoldberg/TypeStat).
 
 The CTA issue tracker still has 19 issues from 2022 or 2023, 9 of which are features.
@@ -258,8 +221,8 @@ But that's inconvenient.
 I'd like to make a generalized linter for GitHub comments, discussions, issues, pull requests, etc.
 It would be able to be configured with granular rules, plugins, and shared configs, the way ESLint is now.
 
-I haven't thought deeply on what the technical implementation of rules would look like.
-But I'm confident this will both simplify how my repositories enforce good GitHub practices and make it easier to enforce more practices.
+I haven't started deep design work on Glint.
+But I'm confident I can make it a _shining_ example of repository tooling.
 
 #### [TypeStat](https://github.com/JoshuaKGoldberg/TypeStat) (`ts-lift`)
 
@@ -269,12 +232,7 @@ But I'm confident this will both simplify how my repositories enforce good GitHu
 >
 > Objective: Create a `ts-enhance` project within `ts-lift` that reliably improves TypeScript types when possible.
 
-This section is copied over from [My Plans for 2024 > TypeStat (`ts-lift`)](/blog/my-plans-for-2024#typestat-ts-lift).
-
-TypeStat is probably my most technically intensive personal project: an engine that "converts JavaScript to TypeScript and TypeScript to better TypeScript".
-I'd explicitly listed [TypeStat as out of scope for 2023](/blog/my-plans-for-2023/#typestat).
-The project is _difficult_ to get right, and additionally needs some rearchitectures to work well.
-I wasn't even sure what to call the thing until the second half of 2023!
+This section is partially copied over from [My Plans for 2024 > TypeStat (`ts-lift`)](/blog/my-plans-for-2024#typestat-ts-lift).
 
 Two factors make me more confident in tackling TypeStat this year:
 
@@ -292,13 +250,10 @@ We'll see.
 
 ### Smaller Projects
 
-All work and no play makes Josh a bored open source maintainer.
-I intentionally want to keep some more "fun" and/or smaller scale projects in the list.
-Even if they don't have ecosystem-wide impact, it's still good for me to work on a variety of project sizes and areas.
-
-I'd previously called this _"Personal Projects"_, but that's not the right name.
+I'd previously called this _"Personal Projects"_ to convey that I want to work on more "fun" and/or smaller scale projects in the list.
+But that's not the right name.
 Since going full time open source I've mostly stopped working on coding projects in my personal time.
-These projects are smaller-scale but still relevant to the web ecosystem.
+These smaller projects are more fun while still contributing to the greater web ecosystem.
 
 #### [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
 
@@ -307,23 +262,15 @@ These projects are smaller-scale but still relevant to the web ecosystem.
 This section is partially copied over from [My Plans for 2024 > eslint-plugin-expect-type](/blog/my-plans-for-2024#eslint-plugin-expect-type).
 
 `eslint-plugin-expect-type` is a handy ESLint plugin that allows enforcing `^?` twoslash assertion comments and the like.
-It's one of a few different options for declaring and/or testing TypeScript types in comments.
-I'd taken over project maintenance back in late 2021, and out of an abundance of caution haven't done much beyond bug fixes, documentation, and repository tooling.
-
 In 2024 I'd expanded the plugin to encompass all the features I know [DefinitelyTyped-tools](https://github.com/Microsoft/DefinitelyTyped-tools) uses in its `@definitelytyped/expect` equivalent.
 I think it'd be great to reduce lint rule duplication and onboard DefinitelyTyped to the same rule as other consumers in the ecosystem.
-
-Obviously, having DefinitelyTyped use my plugin would be beneficial for me personally.
-And it's not clear whether the specific needs DefinitelyTyped of can be met by a generalized external plugin such as this one.
-But it's a fun project to work on and I'd still want to try to align DefinitelyTyped to the communal plugin (as I did with [DefinitelyTyped and `eslint-plugin-jsdoc`](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/65660)) even if I wasn't maintaining that plugin.
 
 #### [eslint-plugin-package-json](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json)
 
 > Objective: Finish achieving feature parity with all other package.json linters
 
 I adopted the ESLint plugin for `package.json` files in 2023 because I wanted to flesh out its feature set.
-It hit "recommended" feature parity with other linters in January 2024: meaning roughly all the rules you would want enabled by default were implemented.
-But there are still some rules available in other package.json linters not yet available in `eslint-plugin-package-json`.
+Some rules exist in other package.json linters that are not yet available in `eslint-plugin-package-json`.
 You can see the full list of linter rules in [eslint-plugin-package-json#42 📌 Tracking issue: comparison with equivalent other tools](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/42).
 
 For 2025, I'd like to finish filling out that list of rules.
@@ -346,17 +293,13 @@ See [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rf
 
 I think any web linter that wants to remain viable long-term needs to have first-class support for _cross-file_ linting.
 [ESLint's rewrite](http://github.com/eslint/rewrite) is positioned as the place for ESLint to work on that.
-Native speed linters are starting to integrate typed linting, too: e.g. [Biome's new `noFloatingPromises` rule](https://github.com/biomejs/biome/pull/4911).
+Native speed linters are starting to integrate typed linting, too: e.g. [Biome's `noFloatingPromises` rule](https://github.com/biomejs/biome/pull/4911).
 
 I want to help work on cross-file linting -- but have found it difficult to propose ideas given my lack of experience of actually writing a linter.
 And even if I were confident in my technical understanding, not having a proof-of-concept linter to show my ideas working is a further detriment.
 
-So, I plan on finally writing my own linter in 2025.
+So, I plan on finally writing my own _fresh_, modern linter in 2025.
 😱.
-
-I'm not looking to try to replace ESLint or otherwise have the linter be part of the recommended create-typescript-app template.
-I see this project as early-stage, experimental work.
-But I'm very excited to try things out _my_ way.
 
 To do this, I'm first going to publish a blog post explaining all my ideas for what a modern web linter could do.
 See [JoshuaKGoldberg/dot-com#296 🚀 Feature: Blog post on "If I Wrote a Linter"](https://github.com/JoshuaKGoldberg/dot-com/issues/296).
@@ -369,8 +312,8 @@ That issue is blocked by a chain of other blog posts explaining nuances such as 
 This section is copied over from [My Plans for 2024 > Other Packages)](/blog/my-plans-for-2024#other-packages).
 
 I don't exclusively work on my larger visibility projects: I also have a collection of smaller utilities addressing needs I've wanted to create over the years.
-[2024's plans for my packages](/blog/my-plans-for-2024/#other-packages) included onboarding those packages to `create-typescript-app`.
-I plan on keeping to that this year, with occasional refreshes of all my packages to newer versions of my template.
+They've all been onboarded to `create-typescript-app`.
+I plan on further onboarding those packages to `create`'s automated tooling updates.
 
 I'm also a committer or maintainer on a few other packages that I didn't make and generally enjoy helping out with, such as [`dedent`](https://github.com/JoshuaKGoldberg/dedent) and [`node-emoji`](https://github.com/omnidan/node-emoji).
 I don't plan on leading any major changes for them: just keeping them well-maintained.
@@ -380,10 +323,6 @@ I don't plan on leading any major changes for them: just keeping them well-maint
 It's invaluable both for open source maintainers and book authors to be engaged with the community.
 We get user feedback and project exposure by being a known name people interact with.
 Plus, I enjoy it!
-
-This year, as with 2023 and 2024, I'm going to continue being active online as a member of the developer community.
-I don't like the term _"thought leader"_, but whatever equivalent is halfway to that...
-Let's go with it.
 
 ### Conferences
 
@@ -410,9 +349,6 @@ I have a few blogs under my purview:
 I missed my blog post goals in both [2023 In Review > Goal: Branding and Blogging](/blog/2023-in-review/#goal-branding-and-blogging) and [2024 In Review > Blogging](/blog/2024-in-review/#blogging).
 For this year I'm reducing the target numbers by about a third.
 
-Publishing to the _Learning TypeScript_ blog is particularly important because it drives attention to the _Learning TypeScript_ book.
-I've found it to be a consistently useful place to publish general TypeScript technical ideas that I can then reference in my personal blog and typescript-eslint's.
-
 ### [Boston TS Club](https://bostonts.club)
 
 > Objective: Produce ten successful monthly meetups for Boston TS Club
@@ -426,10 +362,8 @@ I founded it in 2024 and have since picked up an awesome team of fellow organize
 I'm very happy with how it's going: see [2024 in Review > Boston TS Club](/blog/2024-in-review#boston-ts-club).
 
 For the meetups, my hope for 2025 is to keep doing more of the same, but more organized.
-Now that we've run a handful of successful meetups we think we have a handle on the general tasks for each meetup.
-We'd like to turn that knowledge into more predictable meetups: i.e. publishing the timing of talks and networking sessions ahead of time.
+We'd like to turn our gained knowledge into more predictable meetups: i.e. publishing the timing of talks and networking sessions ahead of time.
 
-Thinking on organizing: every local meetup I've ever seen has burned out its lead organizers.
 Running a meetup is an investment of both time and emotional energy.
 For both my health and the meetup's, I'd like to move away from there being a sole "director" role the way I run it now.
 Instead, we're looking to:
@@ -437,7 +371,7 @@ Instead, we're looking to:
 - Give each organizer full autonomy and ownership over their area, with "understudies" who also learn the area
 - Have the "director" role cycle between organizers every few months, to share experience gains and responsibility
 
-My goal for 2025 is that any organizer -including and especially myself- should be able to unexpectedly drop out of Boston TS Club without aversely affecting the meetups.
+My goal for 2025 is to make Boston TS Club able run smoothly even if any organizer -including and especially myself- leaves.
 
 ### [SquiggleConf](https://2025.squiggleconf.com)
 
@@ -455,25 +389,23 @@ We've since formed a fantastic team of staff members to run it with us in Septem
 
 My primary conference goal here is for nothing terrible to happen.
 Running a large event is _scary_.
-There are a lot of moving parts to contend with -- only some of which are during the conference days themselves.
+There are a lot of moving parts to contend with.
 
-2024 saw about 125 attendees seated in the theater during talks at peak during its one day.
+2024 saw about 125 attendees throughout the day.
 2025 will be two days, so we can expect some deflation in attendance numbers.
-But I'd still like to grow to 150 people in seats for a nice full-feeling theater.
+But I'd still like to grow to 150 people for a nice full-feeling event.
 
-I also would like to break even (read: not lose money) this year.
-2024 came to a deficit of several thousand dollars.
+2024 came out to a deficit of several thousand dollars.
 We want to keep SquiggleConf running for years, and we can't do that if every year loses us money.
 I think we can at least break even in 2025, hopefully positioning ourselves to least make back our 2024 money within 2026.
 
-Lastly, and perhaps most important for me personally, is that I don't want to burn out again in 2025.
+Lastly, and perhaps most important for me personally, I don't want to burn out again in 2025.
 2024's post-SquiggleConf burnout wrecked my productivity and impacted my personal health through October and much of November.
-I'm optimistic that by building a team of staff around us, as well as starting conference work several months earlier in the year, I'll avoid spending a month overeating ramen and re-watching _Mad Men_.
+I'm optimistic that with the awesome team of staff, as well as starting conference work several months earlier in the year, I'll avoid spending a month overeating ramen and re-watching _Mad Men_.
 
 ## Personal
 
 Personal happiness and health are key to sustainable development.
-I can't be effective in open source if I'm just barely hanging on personally.
 These goals are largely copy & pasted from [My Plans for 2024 > Personal](/blog/my-plans-for-2024/#personal).
 
 ### Goal: Health
@@ -485,7 +417,6 @@ These goals are largely copy & pasted from [My Plans for 2024 > Personal](/blog/
 This section is partially copied over from [My Plans for 2024 > Goal: Health](/blog/my-plans-for-2024#goal-health).
 
 I have a tendency to be self-critical and drive myself to the point of burnout.
-Think frequent late nights (or skipping sleep entirely), eating constant junk food, and burning out spectacularly on projects I've convinced myself I “need” to finish.
 It's not good for my quality of work and is certainly not good for my long-term health.
 
 I did well for stabilizing myself through the first two-thirds of 2024 or so.
@@ -517,11 +448,7 @@ That tendency is particularly dangerous now that I'm my own manager.
 
 I used to keep a tracking Notion database & board for tasks.
 I also promised myself I'd use that to feel good about the amount of work I did.
-That never worked out.
-
-I think I was using the task and review system as a surface band-aid for my internal insecurities and nervousness.
-Given that I didn't treat the underlying cause, I'm not surprised they didn't work out.
-Taking on too much work didn't help either.
+Those were surface "band-aid" fixes for deeper insecurities, so I'm not surprised that they didn't stick.
 
 This year, I'm going to try to center myself and address the root cause.
 I have a new therapist who is helping me connect with my emotions.
@@ -540,9 +467,6 @@ We'll see.
 ## Out of Scope
 
 Speaking of personal satisfaction, one of the battles I'm still happy to have gotten better at over the last couple of years is deciding on what _not_ to take on.
-If you know you won't have time for something, it's best to admit it early on.
-Don't keep a sad glimmer of hope to be continuously crushed until you eventually give up.
-
 I'm not going to tackle any of the points I mentioned as out of scope in [My Plans for 2024 > Out of Scope](/blog/my-plans-for-2024#out-of-scope):
 
 - Conferences galore: I enjoy conferences, but doing too many of them is exhausting and takes time away from my other work
@@ -558,7 +482,6 @@ Keeping a consistent supply of _"wouldn't this be nice?"_ projects is a surefire
 The biggest top-of-mind projects for me are simplifications to the create-typescript-app template:
 
 - Moving CSpell into ESLint: thereby removing the `cspell.json` file.
-  I think the user experience of the spell checker necessitates editor suggestions that add words to the dictionary in the ESLint config file.
   For the CSpell ESLint plugin, this is blocked on [#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881).
 - Removing `.nvmrc` in favor of `package.json` `"engines"`.
   This is blocked on either nvm or pnpm supporting the field directly.
@@ -567,7 +490,6 @@ The biggest top-of-mind projects for me are simplifications to the create-typesc
   Long-term I think I'd want formatting to be coordinated by the linter: see [eslint#19171 Change Request: Add a concept of "postlint" hooks, such as for running a formatter](https://github.com/eslint/eslint/issues/19171).
 - Replacing tsup: [create-typescript-app#1910 🚀 Feature: Rethinking building: entry points, bundle: false, and tsup issues](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/1910) tracks my discontent with the tsup tool.
   I would love to have a zero-config builder that can infer all it needs from `package.json` & `tsconfig.json`.
-  This would remove the `tsup.config.ts` file.
 
 No guarantees these will happen anytime soon.
 But it's nice to dream.
