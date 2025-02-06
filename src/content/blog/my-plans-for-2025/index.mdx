@@ -481,15 +481,10 @@ Keeping a consistent supply of _"wouldn't this be nice?"_ projects is a surefire
 
 The biggest top-of-mind projects for me are simplifications to the create-typescript-app template:
 
-- Moving CSpell into ESLint: thereby removing the `cspell.json` file.
-  For the CSpell ESLint plugin, this is blocked on [#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881).
-- Removing `.nvmrc` in favor of `package.json` `"engines"`.
-  This is blocked on either nvm or pnpm supporting the field directly.
-  See [create-typescript-app#805 🚀 Feature: Use pnpm as a Node.js environment manager (comment)](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/805#issuecomment-2636638653)
-- Replacing `husky` + `lint-staged`: I'm sure there's a way to remove the `.husky` directory in favor of a config more integrated with other tools.
-  Long-term I think I'd want formatting to be coordinated by the linter: see [eslint#19171 Change Request: Add a concept of "postlint" hooks, such as for running a formatter](https://github.com/eslint/eslint/issues/19171).
-- Replacing tsup: [create-typescript-app#1910 🚀 Feature: Rethinking building: entry points, bundle: false, and tsup issues](https://github.com/JoshuaKGoldberg/create-typescript-app/issues/1910) tracks my discontent with the tsup tool.
-  I would love to have a zero-config builder that can infer all it needs from `package.json` & `tsconfig.json`.
+- Moving CSpell into ESLint: thereby removing the `cspell.json` file
+- Removing `.nvmrc` in favor of `package.json` `"engines"`
+- Replacing `husky` + `lint-staged` with a simpler system
+- Replacing tsup with a zero-config builder
 
 No guarantees these will happen anytime soon.
 But it's nice to dream.
