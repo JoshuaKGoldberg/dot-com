@@ -7,11 +7,13 @@ image:
 title: "My Plans for 2025"
 ---
 
+import finnJakeDancingLSP from "~/assets/blog/finn-jake-lsp-dancing.webm";
 import finnJakeRidingDolphin from "~/assets/blog/finn-jake-riding-dolphin.webm";
+import jakeBabyButtDancing from "~/assets/blog/jake-baby-butt-dancing.webm";
 import jakeMeltingEverythingNormal from "~/assets/blog/jake-melting-everything-normal-wide.webm";
 import lemongrabUnacceptable from "~/assets/blog/lemongrab-unacceptable.webm";
+import princessBubblegumWeGotScience from "~/assets/blog/princess-bubblegum-we-got-science.webm";
 import thisIsFine from "~/assets/blog/this-is-fine.jpg";
-import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 Happy belated new year, everyone!
@@ -36,7 +38,7 @@ The primary ways I will do that are:
 2. Build the best repository templating engine possible: [create](#createbingo)
 3. Onboard [create-typescript-app](#create-typescript-app) to that engine
 4. Consolidate common issue and pull request linting tasks into a GitHub-focused linter: [Glint](#glint)
-5. Increase the power and simplicity of other developer tooling provided by [create-typescript-app](#create-typescript-app)
+5. Increase the power and simplicity of developer tooling provided by [create-typescript-app](#create-typescript-app)
 6. Stabilize tooling that converts from JavaScript to TypeScript and TypeScript to better TypeScript: [ts-lift](#ts-lift)
 7. Socialize great developer tooling with [Boston TS Club](#boston-ts-club) and [SquiggleConf](#squiggleconf)
 
@@ -44,6 +46,13 @@ The primary ways I will do that are:
 
 [I'm a full time independent open source maintainer](../full-time-open-source).
 I'm going to continue to spend the majority of my time maintaining open source libraries I'm responsible for, as well as contributing to other libraries.
+
+<LabeledVideo
+	alt="Princess Bubblegum from Adventure Time speaking while melting to reveal his skeleton, while being held by Jake's hands. Caption: 'Everything's normal.'"
+	description="Much like Princess Bubblegum from Adventure Time, I am always happy seeing my creations grow. Even Lemongrab."
+	original="https://jerky-teenage-bear.tumblr.com/post/57766138668/fuckyeahfemalestem"
+	src={princessBubblegumWeGotScience}
+/>
 
 ### Finances
 
@@ -62,10 +71,9 @@ I'd like that to come from approximately 75% open source income, 25% other incom
 I think I can hit that through:
 
 - typescript-eslint: $1,500 a month, or roughly 20% more than the current $1,250 a month
-- ESLint: $800 a month, or 16 hours of $50/hour invoiced time
+- ESLint: $1,000 a month, or 20 hours of $50/hour invoiced time
 - Mocha: $600 a month, or 14 hours of $50/hour invoiced time
 - Yeoman: $400 a month, as new income via Tidelift and thanks.dev
-- create: $200 a month in sponsorships for my new project
 - GitHub Sponsors: $600 a month, slightly more than the current ~$500 a month
 - Tidelift: $500 a month, doubling the current ~$250 a month
 - thanks.dev: $150 a month, doubling the current ~$75 a month
@@ -79,7 +87,7 @@ I think I can hit that through:
   - This will be my backup if any other source falls short
 
 This is not ideal.
-I'd prefer to not have to do consulting at all.
+I'd prefer to not consult at all.
 But the open source sponsorships are not likely to increase enough to take over that number.
 Consulting and workshops it is.
 
@@ -280,6 +288,13 @@ But that's not the right name.
 Since going full time open source I've mostly stopped working on coding projects in my personal time.
 These smaller projects might be more fun, but still contribute to the greater web ecosystem.
 
+<LabeledVideo
+	alt="Baby Jake from Adventure Time dancing and shaking his butt in a bathroom while Marceline peeks in"
+	description="My little babies -adopted and my own- are bundles of joy. Or... something."
+	original="https://tenor.com/view/baby-finn-dance-finn-adventure-time-dancing-gif-11997080"
+	src={jakeBabyButtDancing}
+/>
+
 #### [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
 
 > Objective: Get adopted by DefinitelyTyped.
@@ -292,7 +307,7 @@ I think it'd be great to reduce lint rule duplication and onboard DefinitelyType
 
 #### [eslint-plugin-package-json](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json)
 
-> Objective: Finish achieving feature parity with all other package.json linters
+> Objective: Finish achieving feature parity with other package.json linters
 
 I adopted the ESLint plugin for `package.json` files in 2023 because I wanted to flesh out its feature set.
 Some rules exist in other package.json linters that are not yet available in `eslint-plugin-package-json`.
@@ -346,6 +361,12 @@ I don't plan on leading any major changes for them: just keeping them well-maint
 
 It's invaluable both for open source maintainers and book authors to be engaged with the community.
 We get valuable user feedback and project exposure by being a known name.
+
+<LabeledVideo
+	alt="Finn, Jake, Lumpy Space Princess, and glob characters from Adventure Time dancing in a club. Caption: 'the club cant even handle me right now'"
+	original="https://tenor.com/view/club-cant-handle-me-jake-finn-adventure-time-dancing-gif-9436538"
+	src={finnJakeDancingLSP}
+/>
 
 ### Conferences
 
@@ -427,6 +448,13 @@ I'm optimistic that with the awesome team, as well as starting conference work s
 Personal happiness and health are key to sustainable development.
 These goals are largely copy & pasted from [My Plans for 2024 > Personal](/blog/my-plans-for-2024/#personal).
 
+<LabeledVideo
+	alt="Lemongrab from Adventure Time shouting angrily. Caption: 'UNACCEPTABLE!!!'"
+	description="My internal monologue every time I try to give myself a performance review. It's not healthy. I do not recommend it."
+	original="https://tenor.com/view/adventure-time-unacceptable-earl-of-lemongrab-no-watermark-gif-27371438"
+	src={lemongrabUnacceptable}
+/>
+
 ### Goal: Health
 
 > Objective: Eat healthy, balanced meals most days of the week
@@ -469,16 +497,8 @@ Those were surface "band-aid" fixes for deeper insecurities, so I'm not surprise
 This year, I'm going to try to center myself and address the root cause.
 I have a new therapist who is helping me connect with my emotions.
 If I get done most of what I say I want to in this post, I want to also feel good about about that.
-I _should_ feel good about that.
 
 We'll see.
-
-<LabeledVideo
-	alt="Lemongrab from Adventure Time shouting angrily. Caption: 'UNACCEPTABLE!!!'"
-	description="My internal monologue every time I try to give myself a performance review. It's not healthy. I do not recommend it."
-	original="https://tenor.com/view/adventure-time-unacceptable-earl-of-lemongrab-no-watermark-gif-27371438"
-	src={lemongrabUnacceptable}
-/>
 
 ## Out of Scope
 
@@ -508,7 +528,7 @@ But it's nice to dream.
 
 ## Closing Thoughts
 
-2025 has a lot of objectives.
+I've got a lot of objectives for 2025.
 I _think_ the big splashy ones are doable as long as I focus on one each month or two and hold overflow time at the end of the year:
 
 1. February and March: [`create`](#create) and [`create-typescript-app`](#create-typescript-app)
