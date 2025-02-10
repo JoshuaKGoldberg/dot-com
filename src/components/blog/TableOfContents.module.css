@@ -35,7 +35,7 @@
 }
 
 .tableRoot {
-	--gapVertical: 0.75rem;
+	--gapVertical: 0.7rem;
 	padding: 1rem 0 0.5rem;
 	width: 100%;
 }
@@ -49,10 +49,6 @@
 .tableRoot .ol {
 	padding-left: 0;
 	font-size: 90%;
-}
-
-.li {
-	list-style-type: none;
 }
 
 li:has(.back) {
