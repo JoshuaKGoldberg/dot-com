@@ -83,6 +83,7 @@
 	width: 100%;
 }
 
+.article ol,
 .article ul {
 	margin: 0;
 }
@@ -91,6 +92,7 @@
 	margin-top: 0.5rem;
 }
 
+.article li ol,
 .article li ul {
 	margin-top: 0.5rem;
 }
