@@ -34,7 +34,7 @@ importers:
         version: 5.1.1
       '@kobalte/core':
         specifier: ^0.13.7
-        version: 0.13.7(solid-js@1.9.4)
+        version: 0.13.8(solid-js@1.9.4)
       '@konami-emoji-blast/astro':
         specifier: ^0.1.1
         version: 0.1.1(astro@5.1.10(@types/node@20.11.24)(jiti@2.4.2)(rollup@4.32.0)(typescript@5.7.3)(yaml@2.7.0))(konami-emoji-blast@0.5.9)
@@ -906,8 +906,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@kobalte/core@0.13.7':
-    resolution: {integrity: sha512-COhjWk1KnCkl3qMJDvdrOsvpTlJ9gMLdemkAn5SWfbPn/lxJYabejnNOk+b/ILGg7apzQycgbuo48qb8ppqsAg==}
+  '@kobalte/core@0.13.8':
+    resolution: {integrity: sha512-Im3nJYeFdvfihybqRoWeURxb+ksgHJWa+znHV0Niv8tKOwsg/IzIJmPqg1w6BKsINX5GKuIZKfEn8H6AVJSTCQ==}
     peerDependencies:
       solid-js: ^1.8.15
 
@@ -5064,7 +5064,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@kobalte/core@0.13.7(solid-js@1.9.4)':
+  '@kobalte/core@0.13.8(solid-js@1.9.4)':
     dependencies:
       '@floating-ui/dom': 1.6.13
       '@internationalized/date': 3.7.0
