@@ -1,0 +1,97 @@
+---
+description: "I've taken on maintenance of older projects such as dedent, Mocha, and Yeoman. This is why I choose to spend my open source time on such legacy code."
+image:
+  alt: TODO
+  src: "~/assets/blog/ice-cube-happy-fishing.png"
+pubDate: 2025-02-17
+tags: [
+	"dedent", "maintenance", "mocha", "open source", "yeoman"
+]
+title: "Why I Maintain Legacy Packages"
+---
+
+import checkYourselfBeforeYouWreckYourselfCallie from "~/assets/blog/check-yourself-before-you-wreck-yourself-callie.webm";
+import checkYourselfBeforeYouWreckYourselfIce from "~/assets/blog/check-yourself-before-you-wreck-yourself-ice.webm";
+import checkYourselfBeforeYouWreckYourselfZach from "~/assets/blog/check-yourself-before-you-wreck-yourself-zach.webm";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+## Maintaining Old Projects
+
+Over the last couple of years, I've taken on maintenance of several older projects that are no longer undergoing active feature development:
+
+- [dedent](https://github.com/dmnd/dedent/issues/36): May 2023
+- [Mocha](https://github.com/mochajs/mocha/issues/5027): November 2023, along with other maintainers
+- [Yeoman](https://github.com/yeoman/yeoman/issues/1779): January 2025, along with other maintainers
+
+> Other projects I've taken on such as [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type) and [package-json-validator](https://github.com/JoshuaKGoldberg/package-json-validator) are still under active feature development, and so aren't the focus of this blog post.
+
+For each of those projects, I posted an issue explaining the project maintenance goals to be focused on stability.
+None are undergoing active feature development anymore.
+They're just treading water with docs fixes, dependency upgrades, and regular triaging and reviewing of user issues and pull requests.
+
+I bellow at the start of each year about how I want to advance the state of web development, push forward TypeScript tooling, and other grandiose ideals.
+So why would I spend my limited time on these old projects -- especially considering how many modern projects could use work themselves?
+
+Well, there are a few reasons...
+
+## It's Impactful
+
+These projects might not be pushing the ecosystem forward, but they're still used by many, many people.
+The [`dedent` package on npm](https://www.npmjs.com/package/dedent) is downloaded over 10 million times a week.
+Mocha is the test runner for many major ecosystem projects including ESLint and TypeScript.
+Yeoman is the core driver in the [VS Code Your First Extension guide](https://code.visualstudio.com/api/get-started/your-first-extension).
+
+These projects are used by real developers.
+Keeping them afloat helps those developers.
+Even if "afloat" just means removing a few npm warnings about deprecated dependencies, I think this work is beneficial.
+
+The JavaScript ecosystem has a reputation for moving fast and tools getting outdated quickly.
+When major projects that used to be popular only a few years ago crumble, that tarnishes the experience and reputation of the ecosystem.
+Keeping older projects reasonably functional helps stave off that bad reputation.
+
+## It's Interesting
+
+On a personal level, I find these projects fascinating to dig into.
+Especially the larger ones with over a decade of context to sift through.
+Going back through the issue trackers and pull requests shows a deep history of project decisions and personal politics.
+
+I learn a lot
+The historical dives are fascinating
+
+### It's Satisfying
+
+I love organizing and tidying up.
+I'm like a digital Marie Kondo, except instead of arranging bookshelves and tabletops, I sort properties alphabetically and apply meaningful labels.
+
+Being able to go through a project backlog from years of disrepair is...
+Well, it's like a seven-year-old being given a fresh sheet of bubble wrap.
+I love it.
+
+To start, a big percentage of issues end up being duplicates of others.
+This happens even in well-groomed open source backlogs -- let alone ones without proper labeling.
+
+Plus, most older projects hail from before proper GitHub issue label practices were solidified.
+Most don't have labels for area, status, or type -- if they have labels at all.
+
+The juiciest bit is that when a project switches from active feature development to long-term stability, a lot of feature requests become out of scope.
+Which means the new maintainer -me!- gets to close all those issues.
+
+For reference, the Mocha organization backlog had over 400 open issues towards the end of 2023.
+It now has fewer than 200.
+
+The pure feeling of satisfaction from labeling hundreds of issues and wontfix-ing dozens of them is itself almost reward enough for doing the work.
+Almost, except...
+
+## The Money Is Nice Too
+
+I'm a full time independent open source maintainer.
+Income from open source projects is how I support myself.
+These older projects generally have funding available, which I then receive some or all of as a maintainer.
+
+I used to feel awkward, even embarrassed, about receiving compensation for my work on shared open source projects.
+I don't like the idea of monetary motivations influencing open source development.
+
+But, being paid for labor is good, actually.
+I earned $60k in 2024, my third year of full time open source.
+My time is valuable and working on these projects is valuable labor.
