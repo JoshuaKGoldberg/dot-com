@@ -3,16 +3,19 @@ import type { Render } from "astro:content";
 
 import BodyContents from "../BodyContents.astro";
 import styles from "./BlogContent.module.css";
+import BlogSeries, { type Props as BlogSeriesProps } from "./BlogSeries.astro";
 import "./code.css";
 
 export interface Props {
 	rendered: Awaited<Render[".md"]>;
+	series?: BlogSeriesProps | undefined;
 }
 ---
 
 <BodyContents as="article" class={styles.article}>
 	<Astro.props.rendered.Content />
 	<slot />
+	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 </BodyContents>
 
 <script>
