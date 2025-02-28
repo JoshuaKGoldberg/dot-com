@@ -1,26 +1,39 @@
 .article {
 	display: flex;
 	flex-direction: column;
-	font-size: 1.35rem;
+	font-size: var(--fontSizeSmall);
 	gap: 1rem;
 	font-weight: 300;
-	line-height: 1.5;
+	line-height: var(--lineHeightParagraph);
+	transition: line-height var(--transitionSlow);
 }
 
 .article a {
 	text-decoration: underline;
 }
 
-.article :is(h2, h3, h4) {
+.article :is(h2, h3, h4, h5, [data-footnotes] li) {
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
-.article > h2 {
+.article h2 {
+	font-size: 2rem;
 	margin-top: 2rem;
 }
 
-.article > h3 {
+.article h3 {
+	font-size: 1.75rem;
 	margin-top: 1rem;
+}
+
+.article h4 {
+	font-size: 1.5rem;
+	margin-top: 0.75rem;
+}
+
+.article h5 {
+	font-size: 1.35rem;
+	margin-top: 0.5rem;
 }
 
 .article code {
@@ -30,7 +43,6 @@
 .article pre {
 	border: 1px solid var(--colorSubtle);
 	font-size: 0.9em;
-	line-height: 1.25;
 	margin: 0;
 	overflow-x: auto;
 	font-size: 0.9em;
@@ -40,7 +52,6 @@
 
 .article :is(aside, blockquote) {
 	--blockBorderWidth: 6px;
-	font-style: italic;
 	margin-left: 0;
 	padding-left: calc(2rem - var(--blockBorderWidth));
 	position: relative;
@@ -61,6 +72,10 @@
 	);
 }
 
+.article :is(blockquote, h2, h3, h4, h5) + blockquote {
+	margin: 0;
+}
+
 .article hr {
 	border-color: var(--colorMedium);
 	border-width: 0 0 1px 0;
@@ -68,6 +83,7 @@
 	width: 100%;
 }
 
+.article ol,
 .article ul {
 	margin: 0;
 }
@@ -76,17 +92,36 @@
 	margin-top: 0.5rem;
 }
 
-.article label img {
-	max-width: 100%;
+.article li ol,
+.article li ul {
+	margin-top: 0.5rem;
 }
 
 .article strong {
-	font-weight: var(--fontWeightBold);
+	font-weight: bolder;
 }
 
 .article sup a {
 	padding: 0 0.1rem 0 0.2rem;
 	scroll-margin-top: var(--heightMinimumFromHeader);
+}
+
+.article table {
+	border-spacing: 0;
+	text-align: left;
+}
+
+.article th {
+	font-weight: var(--fontWeightBold);
+}
+
+.article :is(td, th) {
+	border-bottom: 1px solid var(--colorSubtle);
+	padding-top: 0.5rem;
+}
+
+.article :is([data-footnotes]) {
+	font-size: var(--fontSizeSmaller);
 }
 
 @media (min-width: 1017px) {

@@ -1,5 +1,8 @@
 ---
 description: "Using the popular NProgress library to visualize load progress on sites built on the AMD RequireJS loader"
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2016-12-28
 title: "How to show RequireJS progress with NProgress"
 ---
@@ -28,11 +31,6 @@ sendNetworkRequest().then(() => {
 
 The beauty of the `.inc()` function is that it'll never actually make the bar reach the end.
 It's like [Achilles and the Tortoise](https://en.wikipedia.org/wiki/Zeno%27s_paradoxes#Achilles_and_the_tortoise) except instead of exploring the mathematical beauty of infinity it makes your users willing to wait for completion.
-
-One drawback of the timer approach is that it assumes the task finishes in a relatively predictable amount of time.
-That assumption can fall apart for network requests if the user has a slow connection.
-They'll see the progress bar continuously creep to the right while their computer keeps loading… and loading… and eventually the user loses faith in the loading bars altogether.
-Sad day.
 
 One drawback of the timer approach is that it assumes the task finishes in a relatively predictable amount of time.
 That assumption can fall apart for network requests if the user has a slow connection.

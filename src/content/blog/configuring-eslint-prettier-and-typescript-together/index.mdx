@@ -2,12 +2,15 @@
 description: "How I recommend getting your formatter, linter, and type checker to play together nicely."
 image:
   alt: Josh smiling on stage and giving a presentation showing the "Type Checking React (v2)" from the linked slides.
-  src: react-miami-me-speaking.jpg
+  src: "~/assets/blog/react-miami-me-speaking.jpg"
 pubDate: 2023-05-01
 tags: ["formatting", "eslint", "linting", "prettier", "react", "style"]
 title: "Configuring ESLint, Prettier, and TypeScript Together"
 ---
 
+import april from "~/assets/blog/april.webm";
+import needsMoreLintRules from "~/assets/blog/needs-more-lint-rules.webm";
+import otterCleaning from "~/assets/blog/otter-cleaning.webm";
 import EmbeddedIframe from "~/components/blog/mdx/EmbeddedIframe.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
@@ -47,7 +50,7 @@ This blog post covers all the info in that talk: describing how to get started w
 Everything in this blog post is available online for free:
 
 - [My talk's recording](https://www.youtube.com/live/mPPZ-NUnR-4?feature=share&t=25743) and [accompanying talk slides](https://1drv.ms/p/s!AvUc1cvPrJnWvt0cjx-_PLIwDIzclw)
-- [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package): Template repo I maintain that sets up these three tools (and more!) in a general Node package
+- [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app): Template repo I maintain that sets up these three tools (and more!) in a general Node package
 - [Linting TypeScript in 2023](https://github.com/JoshuaKGoldberg/linting-typescript-in-2023): Demo repo showing using three type-checked typescript-eslint rules to catch three bugs in a React app
 
 I've also posted a separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions.
@@ -91,7 +94,7 @@ Let's dig into the types of tools.
 	alt="Cute otter cleaning itself in a body of water."
 	description="Formatters clean your code. That's all they do."
 	original="https://giphy.com/gifs/montereybayaquarium-face-otter-sea-1xlGfZ07Dq62jqKT9t"
-	src="/images/blog/otter-cleaning.webm"
+	src={otterCleaning}
 />
 
 A formatter is a tool that reads in your source code, ignores your formatting, and suggests how to write it.
@@ -167,7 +170,7 @@ The only option I generally set in my configs is [changing `useTabs` to true](ht
 <LabeledVideo
 	alt="Will Ferrel in SNL banging a cowbell behind the band in the 'needs more cowbell' sketch. Caption: 'NEEDS MORE LINT RULES'"
 	description="me irl"
-	src="/images/blog/needs-more-lint-rules.webm"
+	src={needsMoreLintRules}
 />
 
 A linter is a tool that runs a set of checks on your source code.
@@ -310,6 +313,9 @@ myFancyLogger("Hello, world!");
 }
 ```
 
+> Edit (January 2024): `reportUnusedDisableDirectives: true,` is now a configuration option you can set in your ESLint config file!
+> [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app) has been updated.
+
 > Fun fact: I authored the [PR that enabled `--report-unused-disable-directives` violations to be fixed by `--fix`](https://github.com/eslint/eslint/pull/14617).
 > Hooray, open source!
 
@@ -321,7 +327,7 @@ I recommend only using `"warn"` temporarily for newly enabled rules, and general
 
 > [See this interesting ESLint discussion on what a warning vs. an error means](https://github.com/eslint/eslint/discussions/16512).
 
-[`--max-warnings`](https://www.eslint.com.cn/docs/2.0.0/user-guide/command-line-interface#--max-warnings) allows you to specify a maximum number of warnings that are permitted.
+[`--max-warnings`](https://www.eslint.com/docs/2.0.0/user-guide/command-line-interface#--max-warnings) allows you to specify a maximum number of warnings that are permitted.
 If ESLint receives more warning-level rule complaints than that number, it'll switch to existing with an error code.
 
 I recommend keeping that number as low as possible, preferably `0`:
@@ -346,7 +352,7 @@ I'd also encourage you to enable the [ESLint extension for VS Code](https://mark
 }
 ```
 
-...then set it as your default formatter and enable linting on save in your [`.vscode/settings.json` workspace settings](https://code.visualstudio.com/docs/getstarted/settings#_workspace-settings):
+...then enable linting on save in your [`.vscode/settings.json` workspace settings](https://code.visualstudio.com/docs/getstarted/settings#_workspace-settings):
 
 ```json
 // .vscode/settings.json​
@@ -379,7 +385,7 @@ Use a dedicated formatter, please!
 	alt="April Ludgate in Parks and Recreation putting her fingers to her forehead and looking exasperated and overwhelmed'"
 	description="me and all other linter maintainers irl having to deal with formatting rules"
 	original="https://giphy.com/gifs/parksandrec-episode-5-parks-and-recreation-rec-76Nahzjx4Y6WXP2APE"
-	src="/images/blog/april.webm"
+	src={april}
 />
 
 ## Type Checking
@@ -562,7 +568,8 @@ Let's recap how the tools all interact:
 
 [Linting TypeScript in 2023](https://github.com/JoshuaKGoldberg/linting-typescript-in-2023): is a demo repo showing configurations for all those tools, as well as an example of using three type-checked typescript-eslint rules to catch three bugs in a React app.
 
-See also the separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions on static analysis. This includes any questions you might have about plugins like eslint-config-prettier, eslint-plugin-prettier, tslint, tslint-config-prettier, and tslint-plugin-prettier.
+See also the separate [FAQs article](../configuring-eslint-prettier-and-typescript-together-faqs) for assorted questions on static analysis.
+This includes any questions you might have about plugins like eslint-config-prettier, eslint-plugin-prettier, tslint, tslint-config-prettier, and tslint-plugin-prettier.
 
 ### Supporting Open Source Projects
 

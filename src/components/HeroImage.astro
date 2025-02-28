@@ -1,70 +1,58 @@
 ---
-export interface ColorSchemeImages {
-	dark: string;
-	light: string;
+import type { ImageMetadata } from "astro";
+
+import { Image } from "astro:assets";
+
+export interface HeroImages {
+	dark: ImageMetadata;
+	light: ImageMetadata;
 }
 
-export interface Props {
+interface Props {
 	alt: string;
 	class?: string | undefined;
 	size: "large" | "small";
-	src: ColorSchemeImages | string;
+	src: HeroImages | ImageMetadata;
 }
 
-const src =
-	typeof Astro.props.src === "string"
-		? { dark: Astro.props.src, light: Astro.props.src }
-		: Astro.props.src;
+// TODO:
 ---
 
-<div class:list={["heroImage", Astro.props.class, Astro.props.size]}>
-	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset={src.dark} />
-		<source media="(prefers-color-scheme: light)" srcset={src.light} />
-		<img alt={Astro.props.alt} class={Astro.props.size} src={src.light} />
-	</picture>
+<div class:list={["hero-image", Astro.props.size, Astro.props.class]}>
+	<!-- TODO: support both images.dark and images.light? -->
+	<Image
+		alt={Astro.props.alt}
+		loading="lazy"
+		src={"dark" in Astro.props.src ? Astro.props.src.dark : Astro.props.src}
+	/>
 </div>
 
 <style>
-	.heroImage,
-	img {
+	.hero-image {
 		height: var(--imageSize);
 		width: var(--imageSize);
 	}
 
-	.heroImage.small {
-		--imageSize: clamp(4rem, 12vmin, 8rem);
+	.hero-image.small {
+		--imageSize: var(--heroSizeSmall);
 	}
 
-	.heroImage.large {
-		--imageSize: clamp(4rem, 20vmin, 10rem);
+	.hero-image.large {
+		--imageSize: var(--heroSizeLarge);
 	}
 
-	img {
+	.hero-image img {
+		display: block;
 		border-radius: 100%;
 		box-shadow: 0 3px 7px 3px var(--colorSubtle);
+		max-height: 100%;
+		max-width: 100%;
 		user-select: none;
 	}
 
 	@media (min-width: 700px) {
-		.heroImage.small {
-			--imageSize: 128px;
-		}
-
-		.heroImage.large {
-			--imageSize: clamp(12rem, 32vw, 16rem);
-		}
-
-		img {
-			max-height: 100%;
-			max-width: 100%;
+		.hero-image img {
 			box-shadow: 0 3px 14px 0 var(--colorSubtle);
-		}
-	}
-
-	@media (min-width: 1017px) {
-		.heroImage.large {
-			--imageSize: 256px;
 		}
 	}
 </style>

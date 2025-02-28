@@ -1,8 +1,11 @@
 ---
-pubDate: 2022-03-07
 description: "More technical descriptions around allowing derived classes with properties to include code before `super()` call that doesn't touch `this`."
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
+pubDate: 2022-03-07
 series: "TypeScript Contribution Diary"
-title: "Allowing Code in Constructors Before `super()` (Technical Overview)"
+title: "TypeScript Contribution Diary: Allowing Code in Constructors Before `super()` (Technical Overview)"
 ---
 
 > **This contribution diary post is much longer than normal** because its subject matter is deeper.
@@ -62,8 +65,8 @@ function findFirstSuperCall(node: Node): SuperCall | undefined {
 	return isSuperCall(node)
 		? node
 		: isFunctionLike(node)
-		? undefined
-		: forEachChild(node, findFirstSuperCall);
+			? undefined
+			: forEachChild(node, findFirstSuperCall);
 }
 ```
 
@@ -75,7 +78,7 @@ I used the existing `superCall` variable for a check to make sure it was root le
 if (!superCallIsRootLevelInConstructor(superCall, node.body!)) {
 	error(
 		superCall,
-		Diagnostics.A_super_call_must_be_a_root_level_statement_within_a_constructor_of_a_derived_class_that_contains_initialized_properties_parameter_properties_or_private_identifiers
+		Diagnostics.A_super_call_must_be_a_root_level_statement_within_a_constructor_of_a_derived_class_that_contains_initialized_properties_parameter_properties_or_private_identifiers,
 	);
 }
 ```
@@ -145,7 +148,7 @@ After the loop, if we hadn't found the `super()` call, issue a type error with a
 if (superCallStatement === undefined) {
 	error(
 		node,
-		Diagnostics.A_super_call_must_be_the_first_statement_in_the_constructor_to_refer_to_super_or_this_when_a_derived_class_contains_initialized_properties_parameter_properties_or_private_identifiers
+		Diagnostics.A_super_call_must_be_the_first_statement_in_the_constructor_to_refer_to_super_or_this_when_a_derived_class_contains_initialized_properties_parameter_properties_or_private_identifiers,
 	);
 }
 ```
@@ -305,19 +308,19 @@ const indexAfterLastPrologueStatement = factory.copyPrologue(
 	body.statements,
 	statements,
 	/*ensureUseStrict*/ false,
-	visitor
+	visitor,
 );
 
 const superStatementIndex = findSuperStatementIndex(
 	body.statements,
-	indexAfterLastPrologueStatement
+	indexAfterLastPrologueStatement,
 );
 ```
 
 ```ts
 function findSuperStatementIndex(
 	statements: NodeArray<Statement>,
-	indexAfterLastPrologueStatement: number
+	indexAfterLastPrologueStatement: number,
 ) {
 	for (let i = indexAfterLastPrologueStatement; i < statements.length; i += 1) {
 		const statement = statements[i];
@@ -349,8 +352,8 @@ if (superStatementIndex >= 0) {
 			visitor,
 			isStatement,
 			indexAfterLastPrologueStatement,
-			superStatementIndex + 1 - indexAfterLastPrologueStatement
-		)
+			superStatementIndex + 1 - indexAfterLastPrologueStatement,
+		),
 	);
 }
 
@@ -368,7 +371,7 @@ if (superStatementIndex >= 0) {
 //
 const parameterPropertyAssignments = mapDefined(
 	parametersWithPropertyAssignments,
-	transformParameterWithPropertyAssignment
+	transformParameterWithPropertyAssignment,
 );
 
 // If there is a super() call, the parameter properties go immediately after it
@@ -383,7 +386,7 @@ else {
 // Add remaining statements from the body, skipping the super() call if it was found
 addRange(
 	statements,
-	visitNodes(body.statements, visitor, isStatement, superStatementIndex + 1)
+	visitNodes(body.statements, visitor, isStatement, superStatementIndex + 1),
 );
 ```
 

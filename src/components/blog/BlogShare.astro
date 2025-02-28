@@ -1,0 +1,71 @@
+---
+import bluesky from "~/assets/icons/bluesky.svg";
+import linkedin from "~/assets/icons/linkedin.svg";
+import mastodon from "~/assets/icons/mastodon.svg";
+
+import SocialImage from "../SocialImage.astro";
+
+interface Props {
+	class?: string;
+	description: string;
+	title: string;
+	url: URL;
+}
+
+const text = [
+	`📝 ${Astro.props.title}`,
+	`"${Astro.props.description}"`,
+	"",
+].join("%0a%0a");
+
+const url = Astro.props.url.toString();
+
+const channels = [
+	[
+		"Bluesky",
+		`https://bsky.app/intent/compose?text=${text}- by @joshuakgoldberg.com%0A%0A${url}`,
+		bluesky,
+	],
+	[
+		"LinkedIn",
+		`https://linkedin.com/sharing/share-offsite/?url=${url}`,
+		linkedin,
+	],
+	[
+		"Mastodon",
+		`https://fosstodon.org/share?text=${text} by @JoshuaKGoldberg@fosstodon.org`,
+		mastodon,
+	],
+] as const;
+---
+
+<span class:list={["shares", Astro.props.class]}>
+	<slot />
+	{
+		channels.map(([network, href, image]) => (
+			<a
+				class="share"
+				href={href}
+				target="_blank"
+				title={`Share on ${network}`}
+			>
+				<SocialImage alt={`${network} logo`} class="share-img" image={image} />
+			</a>
+		))
+	}
+</span>
+
+<style>
+	.shares {
+		align-items: baseline;
+		display: inline-flex;
+		gap: 1rem;
+		margin: 0.5em 0 0;
+	}
+
+	@media (min-width: 700px) {
+		.shares {
+			margin: 0 0 -0.25em;
+		}
+	}
+</style>

@@ -1,32 +1,40 @@
 ---
 import { getCollection } from "astro:content";
 
+import speakingDark from "~/assets/speaking-dark.webp";
+import speakingLight from "~/assets/speaking-light.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
-import { SpeakingsGrouped } from "~/components/speaking/SpeakingsGrouped";
+import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
+import { groupBy } from "~/utils";
 
 import HeroLayout from "../layouts/HeroLayout.astro";
 
 const allSpeakings = await getCollection("speaking");
 
-const now = Date.now();
-
-const previous = allSpeakings
-	.filter((speaking) => +speaking.data.date < now)
-	.sort((a, b) => +b.data.date - +a.data.date);
-
-const upcoming = allSpeakings
-	.filter((speaking) => +speaking.data.date > now)
-	.sort((a, b) => +a.data.date - +b.data.date);
+const categories = {
+	All: allSpeakings,
+	...groupBy(allSpeakings, (speaking) => speaking.data.category),
+};
 ---
 
 <HeroLayout
 	alt="Josh looking up seriously wearing a dark blue shirt with a small pineapples and flamingos pattern"
+	description="I talk about static analysis, accessibility, and team culture."
+	images={{ dark: speakingDark, light: speakingLight }}
 	primary="Speaking"
-	secondary="I talk about static analysis, accessibility, and team culture."
 	title="Speaking"
 >
+	<Fragment slot="secondary">
+		I talk about static analysis and co-organize <Anchor
+			href="https://squiggleconf.com"
+			target="_blank"
+			variant="passive"
+		>
+			SquiggleConf
+		</Anchor>.
+	</Fragment>
 	<HeroTertiary slot="tertiary">
 		Want me to speak at your event? Hooray!
 		<br />
@@ -38,6 +46,6 @@ const upcoming = allSpeakings
 		</Anchor>.
 	</HeroTertiary>
 	<BodyContents>
-		<SpeakingsGrouped previous={previous} upcoming={upcoming} />
+		<SpeakingsTabbed categories={categories} client:load />
 	</BodyContents>
 </HeroLayout>

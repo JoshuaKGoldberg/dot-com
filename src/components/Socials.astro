@@ -1,24 +1,24 @@
 ---
+import bluesky from "~/assets/icons/bluesky.svg";
+import github from "~/assets/icons/github.svg";
+import mastodon from "~/assets/icons/mastodon.svg";
 import { Squiggly } from "~/components/Squiggly";
 import { Text } from "~/components/Text";
 
-import { SocialImage } from "./SocialImage";
+import SocialImage from "./SocialImage.astro";
 
 const socials = [
-	["bsky", "https://bsky.app/profile/joshuakgoldberg.com", "/icons/bsky.svg"],
-	["GitHub", "https://github.com/JoshuaKGoldberg", "/icons/github.svg"],
-	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", "/icons/mastodon.svg"],
-	["Twitch", "https://twitch.tv/JoshuaKGoldberg", "/icons/twitch.svg"],
-	["Twitter", "https://twitter.com/JoshuaKGoldberg", "/icons/twitter.svg"],
-	["YouTube", "https://youtube.com/@JoshuaKGoldberg", "/icons/youtube.svg"],
+	["Bluesky", "https://bsky.app/profile/joshuakgoldberg.com", bluesky],
+	["GitHub", "https://github.com/JoshuaKGoldberg", github],
+	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", mastodon],
 ] as const;
 ---
 
 <Text as="p" class="socials" fontSize="smaller" fontWeight="light">
 	{
-		socials.map(([alt, href, src]) => (
+		socials.map(([alt, href, image]) => (
 			<a class="social" href={href} target="_blank">
-				<SocialImage alt={alt} src={src} />
+				<SocialImage alt={alt} image={image} />
 				<Squiggly as="span" fontSize="smaller" variant="onHover">
 					{alt}
 				</Squiggly>
@@ -47,7 +47,6 @@ const socials = [
 			display: grid;
 			grid-template-columns: auto auto auto;
 			grid-template-rows: auto auto;
-			/* justify-content: center; */
 			margin-left: 0;
 		}
 	}

@@ -1,8 +1,28 @@
-.between {
+.betweenDateAndTime {
 	display: inline-block;
 	background: var(--colorForeground);
 	border-radius: 100%;
 	width: 0.3em;
 	height: 0.3em;
 	margin: 0 0.75em 0.15em;
+}
+
+.beforeChildren {
+	display: block;
+}
+
+.together {
+	display: inline-block;
+}
+
+@media (min-width: 490px) {
+	.betweenDateAndTime,
+	.beforeChildren {
+		display: inline-block;
+		background: var(--colorForeground);
+		border-radius: 100%;
+		width: 0.3em;
+		height: 0.3em;
+		margin: 0 0.75em 0.15em;
+	}
 }

@@ -4,16 +4,16 @@ export interface Props {
 	class?: string | undefined;
 }
 
-const { as: As = "div" } = Astro.props;
+const { as: As = "div", ...rest } = Astro.props;
 ---
 
-<As class:list={["bodyContents", Astro.props.class]}>
+<As class:list={["bodyContents", Astro.props.class]} {...rest}>
 	<slot />
 </As>
 
 <style>
 	.bodyContents {
-		padding: 0 2rem;
+		padding: 0 var(--widthPagePadding);
 	}
 
 	@media (min-width: 1017px) {

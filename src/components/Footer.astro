@@ -1,18 +1,18 @@
 ---
 import { Anchor } from "./Anchor";
-import { EmojisplosionHeart } from "./EmojisplosionHeart";
+import { EmojiBlastHeart } from "./EmojiBlastHeart";
 import { Text } from "./Text";
 ---
 
 <Text as="footer" fontSize="small" fontWeight="light">
-	Made with <EmojisplosionHeart client:visible /> in Philadelphia
+	Made with <EmojiBlastHeart client:visible /> in <s>Philadelphia</s> Boston
 	<br />
 	using Astro, Solid, and TypeScript.
 	<br />
 	<Anchor
 		class="anchor"
 		fontSize="small"
-		href="https://github.com/JoshuaKGoldberg/joshuakgoldberg-dot-com-next"
+		href="https://github.com/JoshuaKGoldberg/dot-com"
 		target="_blank"
 	>
 		view source
@@ -22,8 +22,9 @@ import { Text } from "./Text";
 <style>
 	footer {
 		opacity: 0.75;
-		padding: clamp(2.8rem, 5vmin, 7rem) 2rem 3rem;
+		padding: clamp(2.8rem, 5vmin, 7rem) var(--widthPagePadding) 3rem;
 		justify-self: flex-end;
+		width: 100%;
 	}
 
 	.anchor {
@@ -39,7 +40,7 @@ import { Text } from "./Text";
 
 	@media (min-height: 938px) {
 		footer {
-			padding-top: max(3rem, 13vmin);
+			padding-top: max(2.8rem, 11.7vmin);
 		}
 	}
 </style>

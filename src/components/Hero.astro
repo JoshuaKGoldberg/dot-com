@@ -1,17 +1,18 @@
 ---
-import HeroImage, { Props as HeroImageProps } from "./HeroImage.astro";
+import HeroImage, { type HeroImages } from "./HeroImage.astro";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
+	alt: string;
 	class?: string | undefined;
-	image: HeroImageProps;
+	images: HeroImages;
 	primary: string;
 }
 ---
 
 <div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<HeroImage {...Astro.props.image} size="large" />
+		<HeroImage alt={Astro.props.alt} size="large" src={Astro.props.images} />
 	</div>
 	<div class="half second">
 		<HeroTitle>
@@ -24,7 +25,7 @@ interface Props {
 <style>
 	.hero {
 		margin: clamp(2rem, 8vmin, 8rem) auto;
-		padding: 0 2rem;
+		padding: 0 var(--widthPagePadding) 1rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
@@ -41,7 +42,7 @@ interface Props {
 			gap: 2.5rem;
 			height: 35vh;
 			flex-direction: row;
-			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(4rem, 7vh, 12rem);
+			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(5rem, 10vh, 14rem);
 			padding: 0;
 		}
 

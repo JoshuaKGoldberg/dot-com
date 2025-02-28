@@ -1,8 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
-import BlogSeriesLink from "./BlogSeriesLink.astro";
 import { Text } from "../Text";
+import BlogSeriesLink from "./BlogSeriesLink.astro";
 
 export interface Props {
 	entries: CollectionEntry<"blog">[];
@@ -14,7 +14,9 @@ const entries = Astro.props.entries.sort(
 	(a, b) => +b.data.pubDate - +a.data.pubDate
 );
 
-const entryIndex = entries.findIndex(entry => entry.slug === Astro.props.entry.slug);
+const entryIndex = entries.findIndex(
+	(entry) => entry.slug === Astro.props.entry.slug
+);
 
 const next =
 	entryIndex === entries.length - 1 ? undefined : entries[entryIndex + 1];

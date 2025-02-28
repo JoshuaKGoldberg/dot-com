@@ -1,0 +1,36 @@
+@keyframes fadeIn {
+	from {
+		filter: blur(3px);
+		opacity: 0;
+	}
+	to {
+		filter: none;
+		opacity: 1;
+	}
+}
+
+.contentEntryImage {
+	display: block;
+	height: 3.5rem;
+	width: 3.5rem;
+	user-select: none;
+}
+
+.round {
+	border-radius: 100%;
+}
+
+.contentEntryImage[src$=".png"] {
+	image-rendering: pixelated;
+}
+
+@media (min-width: 700px) {
+	.contentEntry:not(.widthsFull) {
+		width: calc(50% - 1.5rem);
+	}
+
+	.contentEntryImage {
+		height: 5rem;
+		width: 5rem;
+	}
+}

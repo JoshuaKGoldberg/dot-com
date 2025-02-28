@@ -1,4 +1,6 @@
 ---
+import joshDark from "~/assets/josh-dark.webp";
+import joshLight from "~/assets/josh-light.webp";
 import BodyContents from "~/components/BodyContents.astro";
 import Socials from "~/components/Socials.astro";
 import { Text } from "~/components/Text";
@@ -8,10 +10,14 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 
 <HeroLayout
 	alt="Josh's half-smiling happy face"
+	description="I'm an open source maintainer in the TypeScript ecosystem."
+	images={{ dark: joshDark, light: joshLight }}
 	primary="Hi! I'm Josh."
-	secondary="I'm an open source maintainer in the TypeScript ecosystem."
 	slug="josh"
 >
+	<Fragment slot="secondary">
+		I'm an open source maintainer in the TypeScript ecosystem.
+	</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">
 		<Text as="p" fontSize="medium" fontWeight="light">
@@ -22,25 +28,10 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		<Text as="p" fontSize="medium" fontWeight="light">
 			I’m the author of Learning TypeScript (O’Reilly), a Microsoft MVP,
 			<br class="tabletUp" />
-			an international conference speaker, a mentor, and a live code streamer.
+			an international conference speaker, and a community organizer.
 		</Text>
 	</BodyContents>
 </HeroLayout>
-
-<script>
-	// Preserves legacy linking behavior from my old static HTML site.
-	// It can be removed in... mid-late 2024? 1+ year of compatibility?
-	const redirect = {
-		"#projects": "/projects",
-		"#talks": "/speaking",
-	}[window.location.hash];
-
-	if (redirect) {
-		const url = new URL(redirect, location.toString());
-		url.hash = "";
-		window.location.replace(url);
-	}
-</script>
 
 <style>
 	.tabletUp {

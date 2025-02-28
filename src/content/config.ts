@@ -3,39 +3,18 @@ import { defineCollection, z } from "astro:content";
 
 export const collections = {
 	blog: defineCollection({
-		schema: rssSchema.extend({
-			description: z.string(),
-			download: z.string().optional(),
-			image: z
-				.object({
+		schema: ({ image }) =>
+			rssSchema.extend({
+				description: z.string(),
+				download: z.string().optional(),
+				image: z.object({
 					alt: z.string(),
-					src: z.string(),
-				})
-				// TODO: add images for older blog posts, then remove this .optional()
-				.optional(),
-			series: z.string().optional(),
-		}),
-	}),
-	projects: defineCollection({
-		schema: z.object({
-			category: z.string(),
-			description: z.string(),
-			image: z.string().optional(),
-			links: z.record(z.string()).optional(),
-			more: z
-				.array(
-					z.object({
-						description: z.string(),
-						href: z.string(),
-						title: z.string(),
-					})
-				)
-				.optional(),
-			role: z.string().optional(),
-			stars: z.number(),
-			title: z.string().optional(),
-			url: z.string().optional(),
-		}),
+					src: image(),
+				}),
+				pubDate: z.coerce.date(),
+				series: z.string().optional(),
+				title: z.string(),
+			}),
 	}),
 	speaking: defineCollection({
 		schema: z.object({

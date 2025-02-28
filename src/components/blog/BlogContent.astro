@@ -2,8 +2,8 @@
 import type { Render } from "astro:content";
 
 import BodyContents from "../BodyContents.astro";
-import BlogSeries, { Props as BlogSeriesProps } from "./BlogSeries.astro";
 import styles from "./BlogContent.module.css";
+import BlogSeries, { type Props as BlogSeriesProps } from "./BlogSeries.astro";
 import "./code.css";
 
 export interface Props {
@@ -15,6 +15,7 @@ export interface Props {
 <BodyContents as="article" class={styles.article}>
 	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 	<Astro.props.rendered.Content />
+	<slot />
 	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 </BodyContents>
 

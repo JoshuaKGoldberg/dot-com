@@ -1,9 +1,15 @@
 ---
 description: "Why separating responsibilities between your formatter and linter isn't always clear-cut."
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2023-06-19
 tags: ["formatting", "eslint", "linting", "prettier", "style"]
 title: "The Blurry Line Between Formatting and Style"
 ---
+
+> Edit (January 2024): Since writing this blog post, [ESLint core deprecated formatting rules](https://eslint.org/blog/2023/10/deprecating-formatting-rules) and [ESLint Stylistic](https://eslint.style) was announced and released.
+> Hooray! 🙌
 
 I've been doing a lot of advocacy work on how to properly use formatters such as [Prettier](https://prettier.io) alongside linters such as [ESLint](https://eslint.org).
 
@@ -54,7 +60,7 @@ But that always felt wrong - even if the formatting couldn't reasonably handle t
 
 That's why I recently wrote & published my first Prettier plugin: [`prettier-plugin-curly`](https://github.com/JoshuaKGoldberg/prettier-plugin-curly).
 It adds the enforcement of consistent brace style (i.e. the `curly` rule's [`all` option](https://github.com/JoshuaKGoldberg/prettier-plugin-curly#:~:text=the%20equivalent%20of-,curly%27s%20all%20option,-at%20the%20Prettier)) to Prettier.
-I now use it in my [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package)'s [`.prettierrc`](https://github.com/JoshuaKGoldberg/template-typescript-node-package/blob/ff623074af4811c69ceeb8ed277ef7f0fdb14ea2/.prettierrc).
+I now use it in my [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)'s [`.prettierrc`](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/ff623074af4811c69ceeb8ed277ef7f0fdb14ea2/.prettierrc).
 
 ```json
 {
@@ -142,7 +148,7 @@ This plugin provides a nice comprehensive set of rules for sorting constructs in
 ```
 
 [`eslint-plugin-perfectionist`](https://github.com/azat-io/eslint-plugin-perfectionist) is also pretty new -released mid-2023- and I'd highly recommend trying it out.
-It's enabled in my [template-typescript-node-package](https://github.com/JoshuaKGoldberg/template-typescript-node-package)'s [`.eslintrc.cjs`](https://github.com/JoshuaKGoldberg/template-typescript-node-package/blob/a6feabdf3cb7aa525167168652a17bd2c3de2330/.eslintrc.cjs#L20).
+It's enabled in my [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)'s [`.eslintrc.cjs`](https://github.com/JoshuaKGoldberg/create-typescript-app/blob/a6feabdf3cb7aa525167168652a17bd2c3de2330/.eslintrc.cjs#L20).
 
 ## Summarizing
 

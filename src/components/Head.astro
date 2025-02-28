@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
 	description: string;
@@ -103,6 +103,13 @@ const metaPairs = [
 		rel="icon"
 		type="image/svg+xml"
 	/>
+	<link href="/sitemap-index.xml" rel="sitemap" />
+	<link
+		href="/rss.xml"
+		rel="alternate"
+		title="RSS Feed"
+		type="application/rss+xml"
+	/>
 	{metaPairs.map((meta) => <meta {...meta} />)}
 	<meta content={description} name="description" />
 	<meta content={keywords.join()} name="keywords" />
@@ -111,4 +118,4 @@ const metaPairs = [
 	<title>{title}</title>
 </head>
 
-<ViewTransitions />
+<ClientRouter />

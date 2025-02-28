@@ -2,20 +2,20 @@
 description: "Glorious hardcoding of a better error message if someone forgets to include the 'dom' lib option."
 image:
   alt: The Library of the Palais Bourbon in Paris
-  src: library-lunon.jpg
+  src: "~/assets/blog/library-lunon.jpg"
 pubDate: 2021-06-22
 series: "TypeScript Contribution Diary"
-title: "Improved errors for empty DOM interfaces"
+title: "TypeScript Contribution Diary: Improved errors for empty DOM interfaces"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import libraryNunon from "./library-lunon.jpg";
+import libraryNunonWide from "~/assets/blog/library-lunon-wide.jpg";
 
 <LabeledImage
 	alt="Bibliothèque de l'Assemblée Nationale (Lunon)"
 	description="The Library of the Palais Bourbon in Paris"
 	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
-	src={libraryNunon}
+	src={libraryNunonWide}
 />
 
 ## Problem Statement
@@ -193,8 +193,8 @@ function containerSeemstoBeEmptyDomElement(containingType: Type): boolean {
 			(type) =>
 				type.symbol &&
 				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
-					type.symbol.escapedName.toString()
-				)
+					type.symbol.escapedName.toString(),
+				),
 		) &&
 		checker.getPropertiesOfType(containingType).length === 0
 	);
@@ -260,8 +260,8 @@ function containerSeemsToBeEmptyDomElement(containingType: Type): boolean {
 			(type) =>
 				type.symbol &&
 				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
-					unescapeLeadingUnderscores(type.symbol.escapedName)
-				)
+					unescapeLeadingUnderscores(type.symbol.escapedName),
+				),
 		) &&
 		isEmptyObjectType(containingType)
 	);

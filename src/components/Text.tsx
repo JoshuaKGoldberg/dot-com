@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { JSX, splitProps } from "solid-js";
+import { type JSX, splitProps } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
 import styles from "./Text.module.css";
@@ -33,7 +33,7 @@ export type TextProps<As extends keyof JSX.HTMLElementTags> = {
 } & JSX.HTMLElementTags[As];
 
 export function Text<As extends keyof JSX.HTMLElementTags>(
-	props: TextProps<As>
+	props: TextProps<As>,
 ) {
 	const [knownProps, rest] = splitProps(props, [
 		"as",

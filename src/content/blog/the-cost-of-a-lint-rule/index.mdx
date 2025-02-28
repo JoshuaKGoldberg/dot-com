@@ -1,0 +1,94 @@
+---
+description: "Explaining why deep work can be so difficult in open source."
+image:
+  alt: Larry David in Curb Your Enthusiasm looking consternated
+  src: "~/assets/blog/donald-duck-money-walk.png"
+pubDate: 2024-04-17
+title: "The Cost of a Lint Rule"
+---
+
+import donaldDuckMoneyPush from "~/assets/blog/donald-duck-money-push.webm";
+import donaldDuckMoneyWalk from "~/assets/blog/donald-duck-money-walk.webm";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+I put a tricky pull request in review this morning.
+[feat(eslint-plugin): [no-unnecessary-type-parameters] initial implementation](https://github.com/typescript-eslint/typescript-eslint/pull/8173): resolving a nearly three-year-old feature request on [typescript-eslint](https://typescript-eslint.io) to add a lint rule that detects violations of [The Golden Rule of Generics](https://effectivetypescript.com/2020/08/12/generics-golden-rule).
+
+That PR started off pleasant: a pairing session with Dan Vanderkam and hopes of having it ready in advance of his _[Effective TypeScript](https://effectivetypescript.com)_ second edition.
+It ended up being much more complicated than we'd hoped and draining a bunch of both of our time.
+Such is life in software development.
+
+I think "deep" work like this lint rule is a great showcase of why it can be difficult for projects with limited funding to make progress on larger tasks.
+So, this blog post is half my bragging (really, venting) about a difficult task I accomplished this week, and half explaining why sponsoring open source projects is so important.
+
+<LabeledVideo
+	alt="Donald Duck happily walking and counting a stack of dollar bills"
+	description="Seen: corporate entities counting profits not spent on open source development. 🥲"
+	original="https://tenor.com/view/choaruiburey-vaguibu-gif-12324115614053945085"
+	src={donaldDuckMoneyWalk}
+/>
+
+## "Joy" Cost
+
+Speaking just for myself, I found this rule incredibly annoying to work on.
+The rule's implementation involves recursively traversing through TypeScript types and counting instances of type parameters.
+That's just as irritating and mind-melting to debug as it sounds.
+
+Even after we figured out the strategy pivot needed to get it to work reliably, there were a ton of tricky edge cases inherent to figuring out what forms of syntax it should report on.
+Many of those discovered edge cases turned into "whack-a-mole" development, where resolving one caused others to pop up.
+
+Because I work in the "wild west" of open source, rather than a funded development team, I have far fewer opportunities to pair with others to help get through difficult tasks.
+Working on this lint rule made me crabby and tired for the days I was working on it.
+There is a finite number of these tasks that I as an open source maintainer can take on before the joy of coding erodes into the dullness of burnout.
+
+## Monetary Cost
+
+Again speaking just for myself, this rule took about two and a half days of work to get into review.
+For the sake of easy math let's suppose my compensation should be $100/hour (a reasonable total compensation for senior developers in the US).
+Calculating roughly six hours of work per day, that's 2.5 days &times; 6 hours/day &times; $100/hour = **$1,500**.
+
+That's not factoring in Dan's time, time it'll take at least one other project maintainer to review the code, time spent improving the rule based on code review, etc.
+
+The monetary compensation cost of this lint rule rule is easily **several thousand dollars**.
+
+## Opportunity Cost
+
+Most tasks in software development are fairly straightforward _if_ you've practiced them a bunch.
+My normal flow is to take on several "shallow" tasks at a time and context switch during long-running tasks.
+That's how I'm able to be effective on multiple open source projects at a time.
+
+But, sometimes you come across a task that involves work you're not deeply practiced in.
+For "deep" tasks, you need to put aside other work and focus on slow and steady progress.
+
+I ended up putting aside several other important, time-sensitive commitments to focus on this darn lint rule.
+Instead of context switching, I would step away from the computer to think deeply or clear my mind.
+
+There's no good way to estimating what I would have been able to do instead of this lint rule.
+
+## Sponsoring Open Source
+
+There are many good reasons to sponsor open source development: to improve software supply chain security, to reward developers for their time, to encourage more people to get into open source, ...
+Letting full-time maintainers like me focus on deep tasks like this is one of them.
+
+I'm only able to spend many hours a day on open source projects such as typescript-eslint because of monetary sponsorships.
+If I had to go back to consulting or employment to support myself, I would not have the time to regularly tackle deep work like this.
+
+Most open source software projects have teeny development costs compared to the amount of bug reports and feature requests they receive.
+[typescript-eslint's annual Open Collective budget](https://opencollective.com/typescript-eslint) has never exceeded $50,000.
+
+So, the next time you 👍 a request on an open source project's GitHub issue tracker, think about how much money that feature request will cost.
+It might be a lot more than you'd think.
+
+<LabeledVideo
+	alt="Donald Duck unfazed by money being pushed at him by another duck"
+	description="Increasing the money sent to open source projects won't solve all of our industry's issues, but it's certainly a start."
+	original="https://giphy.com/gifs/money-donald-duck-109qivmw8Q6K52"
+	src={donaldDuckMoneyPush}
+/>
+
+## Acknowledgements
+
+Many thanks to [Dan Vanderkam](https://www.danvk.org) for getting started on `no-unnecessary-type-parameters`: both the practical rule implementation and helping spread the Golden Rule of Generics.
+_Effective TypeScript_ is an excellent read, especially the second edition.
+
+Additional thanks to [Daniel Afonso](https://www.danieljcafonso.com) for helpful proofreading on this blog post. 💖

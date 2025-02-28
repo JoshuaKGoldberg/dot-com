@@ -21,7 +21,7 @@ const active =
 	fontWeight="bolder"
 	href={href}
 	{...href.startsWith("http") && { target: "_blank" }}
-	variant={active ? "inactive" : "onHover"}
+	variant={active ? "passive" : "onHover"}
 >
 	<slot />
 </Squiggly>

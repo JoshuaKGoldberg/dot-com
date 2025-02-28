@@ -1,6 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 
-import { ContentEntry } from "../ContentEntry";
+import { ContentEntry } from "../entries/ContentEntry";
 
 export interface SpeakingEntryProps {
 	speaking: CollectionEntry<"speaking">;
@@ -9,6 +9,7 @@ export interface SpeakingEntryProps {
 export function SpeakingEntry(props: SpeakingEntryProps) {
 	return (
 		<ContentEntry
+			description={props.speaking.data.title}
 			links={
 				props.speaking.data.links && Object.entries(props.speaking.data.links)
 			}
@@ -22,7 +23,6 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 			]
 				.filter(Boolean)
 				.join(" - ")}
-			description={props.speaking.data.title}
 			title={props.speaking.data.event}
 			url={props.speaking.data.href}
 			widths="third"

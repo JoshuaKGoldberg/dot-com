@@ -1,10 +1,14 @@
 ---
-import "@fontsource/league-spartan/variable.css";
+import "@fontsource-variable/league-spartan";
+import { SkipLink } from "accessible-astro-components";
 
 import Footer from "~/components/Footer.astro";
 import Head from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
 import MainArea from "~/components/MainArea.astro";
+
+import "./normalize.css";
+import "./base.css";
 
 export interface Props {
 	class?: string | undefined;
@@ -18,22 +22,17 @@ const { class: className, description, image, title } = Astro.props;
 
 <html lang="en">
 	<Head description={description} image={image} title={title} />
+	<script>
+		document.body.classList.add("javascriptEnabled");
+	</script>
 	<div id="#top"></div>
 	<MainArea as="body" class={className}>
+		<SkipLink />
 		<Header />
-		<main>
+
+		<main id="main-content">
 			<slot />
 		</main>
 		<Footer />
 	</MainArea>
-
-	<style is:global>
-		@import "./normalize.css";
-		@import "./base.css";
-	</style>
-	<style>
-		main {
-			position: relative;
-		}
-	</style>
 </html>

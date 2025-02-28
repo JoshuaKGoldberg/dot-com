@@ -1,24 +1,24 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 
-import BodyContents from "~/components/BodyContents.astro";
 import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
+import BlogShareBottom from "~/components/blog/BlogShareBottom.astro";
 import { TableOfContents } from "~/components/blog/TableOfContents";
-import BaseLayout from "~/layouts/BaseLayout.astro";
 import { createBlogTitle } from "~/components/blog/utils";
+import BodyContents from "~/components/BodyContents.astro";
+import BaseLayout from "~/layouts/BaseLayout.astro";
 
 const blogs = await getCollection("blog");
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
+
 	return blogs.map((blog) => ({
 		params: { slug: blog.slug },
 	}));
 }
 
-// TODO: find or file an issue?
-// eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
 const slug = Astro.params.slug!;
 const entry = await getEntry("blog", slug);
 if (!entry) {
@@ -26,33 +26,25 @@ if (!entry) {
 }
 
 const rendered = await entry.render();
-const image = entry.data.image?.src
-	? `/images/blog/${entry.data.image.src}`
-	: `/images/goldblog.png`;
-
 const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	image={image}
-	title={`${title} ${entry.data.title} | Goldblog`}
+	image={entry.data.image.src.src}
+	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">
 		<BlogHero
-			image={entry.data.image && {
-				alt: entry.data.image.alt,
-				size: "small",
-				src: `/images/blog/${entry.data.image.src}`,
-			}}
 			body={entry.body}
 			class="hero"
 			date={entry.data.pubDate}
 			description={entry.data.description}
 			download={entry.data.download}
+			image={entry.data.image}
 			title={title}
 		/>
-		<TableOfContents client:only headings={rendered.headings} />
+		<TableOfContents client:only="react" headings={rendered.headings} />
 	</BodyContents>
 	<BlogContent
 		rendered={rendered}
@@ -63,42 +55,48 @@ const title = createBlogTitle(entry);
 					),
 					entry,
 					series: entry.data.series,
-			  }
+				}
 			: undefined}
-	/>
+	>
+		<BlogShareBottom
+			description={entry.data.description}
+			title={title}
+			url={Astro.url}
+		/>
+	</BlogContent>
+</BaseLayout>
 
-	<style>
+<style>
+	.top {
+		margin-top: 1.5rem;
+	}
+
+	.top::after {
+		border-bottom: 1px solid var(--colorMedium);
+		content: "";
+		display: block;
+		margin-bottom: 2.5rem;
+		width: 100%;
+	}
+
+	@media (min-width: 700px) {
 		.top {
-			margin-top: 1.5rem;
+			margin-top: var(--heightMinimumFromHeader);
 		}
 
 		.top::after {
-			border-bottom: 1px solid var(--colorMedium);
-			content: "";
-			display: block;
-			margin-bottom: 2.5rem;
-			width: 100%;
+			margin-bottom: 3rem;
+		}
+	}
+
+	@media (min-width: 1017px) {
+		.top::after {
+			margin: 2rem 0;
+			width: calc(100% - var(--widthTableOfContents));
 		}
 
-		@media (min-width: 700px) {
-			.top {
-				margin-top: var(--heightMinimumFromHeader);
-			}
-
-			.top::after {
-				margin-bottom: 3rem;
-			}
+		.hero {
+			max-width: calc(var(--widthSlim) + 4rem);
 		}
-
-		@media (min-width: 1017px) {
-			.top::after {
-				margin: 2rem 0;
-				width: calc(100% - var(--widthTableOfContents));
-			}
-
-			.hero {
-				max-width: calc(var(--widthSlim) + 4rem);
-			}
-		}
-	</style>
-</BaseLayout>
+	}
+</style>

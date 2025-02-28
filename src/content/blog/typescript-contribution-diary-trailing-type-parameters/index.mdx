@@ -2,19 +2,25 @@
 description: "How I contributed a change to TypeScript that allowed trailing commas in type parameter/argument lists."
 image:
   alt: "Screenshot of a Chrome devtools performance profile"
-  src: "chrome-trailer.png"
+  src: "~/assets/blog/chrome-trailer.png"
 pubDate: 2018-02-17
 series: "TypeScript Contribution Diary"
-title: "Trailing Type Parameters"
+title: "TypeScript Contribution Diary: Trailing Type Parameters"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import chromeTrailer from "./chrome-trailer.webp";
+import chromeTrailerWide from "~/assets/blog/chrome-trailer-wide.webp";
+
+> I've started making contributions to TypeScript, working my way up from small error reporting nitpicks to (hopefully!) real syntactic and control flow improvements.
+> These blog posts are documentation of the steps I took to figure out what to do for these contributes & then do them.
+> If you're thinking of contributing to TypeScript or other large open source libraries, I hope seeing how to delve into a giant foreign monolith is of some help!
+
+> Next post: [Pretty Error Counts](/blog/typescript-contribution-diary-pretty-error-counts)
 
 <LabeledImage
 	alt="Parked shiny chrome trailer outside with trees and a hill in the background."
 	description="Medium told me to add a high resolution image, so here's the closest relevant thing I could find. ✔️"
-	src={chromeTrailer}
+	src={chromeTrailerWide}
 />
 
 ## Problem Statement
@@ -25,7 +31,7 @@ When you have a list of type parameters split across lines, some code styles and
 ```ts
 export const myLambda = <
 	TFirstTemplate,
-	TSecondTemplate // [ts] Error: Trailing comma not allowed.
+	TSecondTemplate, // [ts] Error: Trailing comma not allowed.
 >() => {
 	/* ... */
 };
@@ -37,9 +43,9 @@ These giant syntax lists can be pretty hard to read unless split across lines:
 ```ts
 export const createSourceNodeFromTemplateBinding = <
 	TTemplateBinding extends TemplateBinding = TemplateBinding,
-	TSourceNode extends SourceNode = SourceNode // comma here?
+	TSourceNode extends SourceNode = SourceNode, // comma here?
 >(
-	templateBinding: TTemplateBinding
+	templateBinding: TTemplateBinding,
 ) => {
 	/* ... */
 };
@@ -92,7 +98,7 @@ A diligent programmer intent on learning all there is to know about TypeScript m
 
 ```ts
 function checkGrammarForDisallowedTrailingComma(
-	list: NodeArray<Node>
+	list: NodeArray<Node>,
 ): boolean {
 	if (list && list.hasTrailingComma) {
 		const start = list.end - ",".length;
@@ -101,7 +107,7 @@ function checkGrammarForDisallowedTrailingComma(
 			list[0],
 			start,
 			end - start,
-			Diagnostics.Trailing_comma_not_allowed
+			Diagnostics.Trailing_comma_not_allowed,
 		);
 	}
 }

@@ -20,13 +20,14 @@ export function DateAndMinutes(props: DateAndMinutesProps) {
 			{props.date.toLocaleString("default", {
 				day: "numeric",
 				month: "short",
+				timeZone: "GMT",
 				year: props.year,
 			})}
-			<span class={styles.between} />
-			{estimate()} minute read
+			<span class={styles.betweenDateAndTime} />
+			<span class={styles.together}>{estimate()} minute read</span>
 			{props.children && (
 				<>
-					<span class={styles.between} />
+					<span class={styles.beforeChildren} />
 					{props.children}
 				</>
 			)}

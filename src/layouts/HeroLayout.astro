@@ -1,4 +1,6 @@
 ---
+import type { HeroImages } from "~/components/HeroImage.astro";
+
 import Hero from "~/components/Hero.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
 
@@ -7,37 +9,32 @@ import BaseLayout from "./BaseLayout.astro";
 export interface Props {
 	alt: string;
 	class?: string | undefined;
-	image?: string;
+	description: string;
+	images: HeroImages;
 	primary: string;
-	secondary: string;
 	slug?: string;
 	title?: string;
 }
 
-const { primary, secondary, slug = primary.toLowerCase(), title } = Astro.props;
+const {
+	description,
+	primary,
+	slug = primary.toLowerCase(),
+	title,
+} = Astro.props;
 
 const image = `images/${slug}`;
 ---
 
 <BaseLayout
 	{...Astro.props}
-	description={secondary}
+	description={description}
 	image={`${image}.png`}
 	title={title ? `${title} | Josh Goldberg` : "Josh Goldberg"}
 >
-	<Hero
-		image={{
-			alt: Astro.props.alt,
-			size: "large",
-			src: {
-				dark: `/${image}-dark.webp`,
-				light: `/${image}-light.webp`,
-			},
-		}}
-		primary={primary}
-	>
+	<Hero alt={Astro.props.alt} images={Astro.props.images} primary={primary}>
 		<HeroSecondary>
-			{secondary}
+			<slot name="secondary" />
 		</HeroSecondary>
 		<slot name="tertiary" />
 	</Hero>

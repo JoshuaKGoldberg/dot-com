@@ -1,0 +1,21 @@
+---
+import BlogShare from "./BlogShare.astro";
+
+interface Props {
+	description: string;
+	title: string;
+	url: URL;
+}
+---
+
+<hr />
+<BlogShare {...Astro.props} class="blog-share-bottom">
+	Liked this post? Thanks! Let the world know:
+</BlogShare>
+
+<style>
+	.blog-share-bottom {
+		font-size: var(--fontSizeSmall);
+		font-weight: var(--fontWeightMedium);
+	}
+</style>

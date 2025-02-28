@@ -1,0 +1,405 @@
+---
+pubDate: 2023-11-20
+description: "Removing type-land entries from import completions that can't be used in value-only-land."
+image:
+  alt: "Black cat on top of a cat box. A thin cloth rainbow streamer is draped around him twice."
+  src: "~/assets/blog/jerry-rainbow-streamer.jpg"
+series: "TypeScript Contribution Diary"
+title: "TypeScript Contribution Diary: Filtering Out Types From JavaScript-Only Import Suggestions"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import jerryRainbowStreamerWide from "~/assets/blog/jerry-rainbow-streamer-wide.jpg";
+
+<LabeledImage
+	alt="Black cat on top of a cat box. A thin cloth rainbow streamer is draped around him twice."
+	description="Jerry the cat looking, ah, import-ant."
+	src={jerryRainbowStreamerWide}
+/>
+
+Do you write "vanilla" JavaScript (rather than TypeScript) in VS Code?
+If so, have you ever seen the editor suggest importing a type even though types aren't usable in `.js`/co. files?
+
+Those suggestions are powered by TypeScript, and I improved them to no longer suggest types in JavaScript-only files.
+This blog post details how I wrote and updated that pull request to TypeScript.
+
+## Problem Statement
+
+[#53339: Filter out types from esm import suggestions in JavaScript](https://github.com/microsoft/TypeScript/issues/53339) was filed on TypeScript in March of 2023.
+It states that at the time, when working in a JavaScript file, TypeScript would still suggest type-only constructs such as `interface`s in `import` statement auto-completions.
+
+Seeing those types in import completion lists is a little inconvenient given that they can't be used in JavaScript file imports.
+That's also a little misleading for folks who might be still new to TypeScript and not clear on the difference between type and value spaces.
+
+I figured this would be a fun contribution to get in: filtering out entries from import statements if they're not applicable to the file being imported into.
+
+> Spoiler: here's the [resultant pull request](https://github.com/microsoft/TypeScript/pull/53619). ✨
+
+## Digging Into Completions
+
+My first question was: where do completions come from?
+
+I first looked for resolved issues also tagged as [`Domain: Completion Lists`](https://github.com/microsoft/TypeScript/issues?q=is%3Aissue+is%3Aopen+label%3A%22Domain%3A+Completion+Lists%22) to check for previous pull requests that showed which code areas I'd need to touch.
+A good first PR I found was [fix(52879): No autocompletions after the typeof keyword inside JSDoc comments](https://github.com/microsoft/TypeScript/pull/52973) from long-time frequent contributor [@a-tarasyuk](https://github.com/a-tarasyuk).
+It showed edits to `src/services/completions.ts`, in particular to a [`getCompletionsAtPosition` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L680).
+That seemed like a good place to start!
+
+### Getting Completions at a Position
+
+I read through the `getCompletionsAtPosition` function's body.
+The first few dozen lines seemed to be around edge cases and caching.
+But later down it had an area that seemed to retrieve the real completions I'd care about, then create a new statement based on the type of completion data.
+
+It looked a bit like this:
+
+{/* prettier-ignore */}
+```ts
+const completionData = getCompletionData(program, log, /* ... */);
+
+switch (completionData.kind) {
+	case CompletionDataKind.Data:
+		return completionInfoFromData(/* ... */);
+	// ...
+	case CompletionDataKind.JsDocTagName:
+		return jsdocCompletionInfo(/* ... */);
+	// ...
+	case CompletionDataKind.JSDocTag:
+		return jsdocCompletionInfo(/* ... */);
+	// ...
+}
+```
+
+I put a breakpoint on the `switch` and launched a local reproduction of the issue in the VS Code debugger.
+The breakpoint hit and showed `completionData.kind` to be `CompletionDataKind.Data`.
+
+I poked around the `getCompletionData` function a bit but didn't find anything particularly useful in it for filtering out data.
+It was returning a bunch of data, only some of which made it to the completions suggested in my editor.
+
+Next step: digging into `completionInfoFromData`.
+
+### Getting Completions From Data
+
+The [`completionInfoFromData` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L1232) also seemed to start with a bit of edge case handling.
+Its first area of code relevant to filtering completion data was around creating an `entries` array of completions, then populating it with a `getCompletionEntriesFromSymbols` method.
+
+Again simplifying the code a bit:
+
+```ts
+const entries = createSortedArray<CompletionEntry>();
+const uniqueNames = getCompletionEntriesFromSymbols(symbols, entries /* ... */);
+```
+
+It felt reasonable that `getCompletionEntriesFromSymbols` was a place I'd want to add my new filtering logic.
+As the `entries` array was sorted, removing items later on would probably be less efficient than not adding them in the first place.
+
+### Getting Completion Entries From Symbols
+
+The [`getCompletionEntriesFromSymbols` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L2508) takes roughly two steps of note:
+
+1. It creates a `uniques = new Map<string, boolean>()` variable to track unique completion names
+2. It loops over all its provided `symbols`, adding an entry to `uniques` if some a [`createCompletionEntry` function](https://github.com/microsoft/TypeScript/blob/70becf9af9c90f1320309a4afa9a75024fb14c04/src/services/completions.ts#L1630) was able to create one
+
+My first instinct was to add my new filtering logic to the start of `createCompletionEntry`.
+I added a check that if we're in a JavaScript source file and the provided symbol doesn't have a runtime value (i.e. is only in type land), then we can bail out of creating a completion entry:
+
+```ts
+if (isInJSFile(sourceFile) && !symbolHasValueDeclaration(symbol)) {
+	return undefined;
+}
+```
+
+As for how to write that `symbolHasValueDeclaration` function, I couldn't find any good existing implementation in the codebase.
+So I went with a check over the symbol's declarations to see if any are something other than an interface or type:
+
+```ts
+function symbolHasValueDeclaration(symbol: Symbol): boolean {
+	return !!symbol?.declarations?.some((declaration) => {
+		switch (declaration.kind) {
+			case SyntaxKind.InterfaceDeclaration:
+			case SyntaxKind.TypeAliasDeclaration:
+				return false;
+			default:
+				return true;
+		}
+	});
+}
+```
+
+I tried rebuilding TypeScript's services locally and running the issue reproduction locally.
+It worked!
+My import completions in the JavaScript file for entries in a TypeScript no longer included any interfaces or types.
+
+### Testing Completion Entry Filtering
+
+The TypeScript repository includes "fourslash" tests that can declare configuration values, contents of tests files, and expected user actions.
+"Fourslash" refers to the `////` (four slashes) comments in those tests that are placed before contents of test files.
+
+You can see roughly the reproduction I was working with from the test case I added to the repo:
+
+```ts
+// tests/cases/fourslash/jsFileImportNoTypes.ts
+/// <reference path="fourslash.ts" />
+
+// @allowJs: true
+
+// @filename: /declarations.ts
+//// export class TestClass {}
+//// export const testValue = {};
+//// export enum TestEnum {}
+//// export function testFunction() {}
+//// export interface testInterface {}
+//// export namespace TestNamespace {}
+//// export type testType = {};
+////
+//// export interface TestInterfaceMerged {}
+//// export interface TestInterfaceMerged {}
+////
+//// export interface TestClassInterfaceMerged {}
+//// export class TestClassInterfaceMerged {}
+
+// @filename: /a.js
+////import { /**/ } from './declarations.ts'
+
+verify.baselineCompletions();
+```
+
+That test case uses TypeScript's fourslash test harness to see what completions would trigger (`verify.baselineCompletions()`) at a specific location inside the import (marked by the `/**/`).
+
+I wrote up a quick commit message and PR description, then sent this in as a draft PR: [#53619 > commits > `bf9dd2`](https://github.com/microsoft/TypeScript/pull/53619/commits/bf9dd25431e1e13dc054db03171e0f2b9b2a1019).
+I also started a `npx hereby runtests` run locally to run all TypeScript tests.
+
+## Test Failures on Existing JS File Tests
+
+Sadly, there were some test failures on existing tests.
+This was the output from the one of them:
+
+```plaintext
+  2) fourslash tests
+       tests/cases/fourslash/completionInJsDocQualifiedNames.ts
+         fourslash test completionInJsDocQualifiedNames.ts runs correctly:
+     Error: At marker '': Includes: completion 'T' not found.
+```
+
+This was the associated `tests/cases/fourslash/completionInJsDocQualifiedNames.ts`:
+
+```ts
+/// <reference path="fourslash.ts" />
+
+// @allowJs: true
+
+// @Filename: /node_modules/foo/index.d.ts
+/////** tee */
+////export type T = number;
+
+// @Filename: /a.js
+////import * as Foo from "foo";
+/////** @type {Foo./**/} */
+////const x = 0;
+
+verify.completions({
+	marker: "",
+	includes: {
+		name: "T",
+		text: "type T = number",
+		documentation: "tee",
+		kind: "type",
+		kindModifiers: "export,declare",
+	},
+});
+```
+
+In other words, the test was letting me know that my change stopped the type import inside a `/** @type {Foo.} */` JSDoc type.
+That's not good.
+My change should only apply to users importing in value-only spaces, such as `import`s.
+JSDoc `@type`s are a valid place to import types from.
+
+### Allowing JSDoc Type Imports
+
+I was bummed that my nice clean changed needed more nuance.
+Nothing else inside `createCompletionEntry` seemed like a reasonable place to apply the filtering logic.
+
+On the other hand, I noticed during debugging that one of the parameters to `getCompletionEntriesFromSymbols` was already an `isTypeOnlyLocation?: boolean`.
+That seemed like a relevant, useful bit of data to use!
+
+I moved my PR's added logic to inside the `for` loop over `symbols`:
+
+```ts
+if (
+	!isTypeOnlyLocation &&
+	isInJSFile(sourceFile) &&
+	!symbolHasValueDeclaration(symbol)
+) {
+	continue;
+}
+```
+
+That fixed the failing test cases.
+Excellent.
+
+[#53619 > commits > `c7ff6b`](https://github.com/microsoft/TypeScript/pull/53619/commits/c7ff6b2a59f81f180d1305f3c963d416e3abaed4).
+
+## Review Round One: Naming and Symbol Flags
+
+Once the TypeScript CI processes all passed, I marked the PR as ready for review.
+I was still dissatisfied with my `symbolHasValueDeclaration` function so I posted a [comment asking for a better way](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1155106998):
+
+> Is there a better way to check? I searched around for `/is.*type.*only/` & similar but couldn't find anything.
+
+[@Andarist](https://github.com/Andarist) and [@RyanCavanaugh](https://github.com/RyanCavanaugh) discussed in the thread:
+
+- @Andarist suggested I add a test case with `verbatimModuleSyntax: true`
+- @RyanCavanaugh indicated `flags` tells you what meaning(s) a symbol has
+
+I added [#53619 > commits > `3773af`](https://github.com/microsoft/TypeScript/pull/53619/commits/3773af1c2a9bcf29aded7d657e76c2aa4e6f4481) with a few more pieces of sample data in my new `jsFileImportNoTypes.ts` fourslash test.
+We [discussed `symbol.flags` briefly](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1157549048) and after trying a few variations of it I ended up keeping roughly the same approach ([#53619 > commits > `b4b7b9`](https://github.com/microsoft/TypeScript/pull/53619/commits/b4b7b98d12155950b7da931a646193e672d79081)).
+
+The added code roughly looked like this:
+
+```ts
+// Inside getCompletionEntriesFromSymbols:
+// When in a value-time location in a JS file, ignore symbols that definitely seem to be type-only
+if (
+	!isTypeOnlyLocation &&
+	isInJSFile(sourceFile) &&
+	!symbolMayHaveValueDeclaration(symbol)
+) {
+	continue;
+}
+```
+
+```ts
+/**
+ * When filling completions for value-time locations in JS files, we'll want
+ * to only consider symbols that seem to have a value declaration. If a
+ * symbol no known declarations we cautiously include them just to be safe.
+ */
+function symbolMayHaveValueDeclaration(symbol: Symbol): boolean {
+	return (
+		!symbol?.declarations?.length ||
+		symbol.declarations.some((declaration) => {
+			switch (declaration.kind) {
+				case SyntaxKind.InterfaceDeclaration:
+				case SyntaxKind.TypeAliasDeclaration:
+					return false;
+				default:
+					return true;
+			}
+		})
+	);
+}
+```
+
+### Symbol Flags, Finally
+
+@Andarist left two additional helpful reviews:
+
+- [Commenting on the naming](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1160576555): that the double-negation in logic around `!symbolMayHaveValueDeclaration` was a little harder to reason about than it needed to be.
+- [Commenting on namespaces](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1161166760) along with [@sandersn](https://github.com/sandersn): I was still interested in using `symbol.flags`, as that would help deal with unforeseen edge cases in imports such as type-only namespaces.
+
+After some fiddling with different values in code I found the following two metrics to be enough for the existing test cases:
+
+- `!(symbol.flags & SymbolFlags.Value)`: Filtered out most (but not all) symbols that weren't known to have any well-defined value backing
+- `!isInJSFile(symbol.declarations?.[0]?.getSourceFile())`: Caught remaining symbols that didn't have full symbol info populated due to being defined in a JS file
+
+That meant I was able to reduce to just one change in the `getCompletionEntriesFromSymbols` loop:
+
+```ts
+// Inside getCompletionEntriesFromSymbols:
+if (
+	!isTypeOnlyLocation &&
+	isInJSFile(sourceFile) &&
+	!(symbol.flags & SymbolFlags.Value) &&
+	!isInJSFile(symbol.declarations?.[0]?.getSourceFile())
+) {
+	continue;
+}
+```
+
+[#53619 > commits > `dd9ff9`](https://github.com/microsoft/TypeScript/pull/53619/commits/dd9ff9b71d31e29b46354651cc82e2ba178df67d) showed passing test cases with this new, trimmed down logic.
+
+## Review Round Two: JSDoc Types
+
+[@Andarist yet again posted a helpful comment](https://github.com/microsoft/TypeScript/pull/53619#discussion_r1168549358) pointing out a flaw in my logic: I'd assumed anything exported from a JS file would be a JS runtime value.
+But JS files in TypeScript actually can export types using JSDoc:
+
+```js
+// types.js
+/**
+ * @typedef {Object} Pet
+ * @prop {string} name
+ */
+module.exports = { a: 1 };
+```
+
+Good call.
+
+[#53619 > commits > `5644a4`](https://github.com/microsoft/TypeScript/pull/53619/commits/5644a4f603e8f6f66d739abf2c488e50c4fea284) added a bit more logic to account for type exports in JS files.
+Now, in addition to checking if a symbol's declaration was in a JS file, it would also check if the symbol explicitly had `SymbolFlags.Type` set.
+I also re-extracted back to a function:
+
+```ts
+function symbolAppearsToBeTypeOnly(symbol: Symbol): boolean {
+	return (
+		!(symbol.flags & SymbolFlags.Value) &&
+		(!isInJSFile(symbol.declarations?.[0]?.getSourceFile()) ||
+			!!(symbol.flags & SymbolFlags.Type))
+	);
+}
+```
+
+## Review Round Three: Namespaces
+
+[The third round of PR review](https://github.com/microsoft/TypeScript/pull/53619#pullrequestreview-1690965501) was a bit less consequential than the first two.
+@sandersn asked about namespaces and suggested adding a type for `export type testNamespacedType` inside a namespace.
+
+{/* spell-checker: disable-next-line */}
+[#53619 > commits > `9eecdd`](https://github.com/microsoft/TypeScript/pull/53619/commits/9eecdd5290ffd00a128e71846f4b8eeb8abb9b30) added a bit of testing around type exports in JS files.
+The test cases worked as expected already.
+The following two namespaces without types weren't suggested.
+
+```ts
+//// export namespace TestNamespaceEmpty {}
+//// export namespace TestNamespaceWithType {
+////   export type testTypeInner = boolean;
+//// }
+```
+
+### Aside: Formatting Changes
+
+A few of the commits in the PR's history involved formatting changes.
+That's because TypeScript didn't use a dedicated formatter through the middle of 2023.
+Most of its formatting was done either by occasional [ESLint formatting rules (which have since been deprecated)](https://github.com/eslint/eslint/issues/17522) or by feedback in pull requests.
+
+Since then, [TypeScript adopted dprint for auto-formatting](https://github.com/microsoft/TypeScript/pull/54820).
+Hooray!
+
+## Review Round Four: File Checking Simplification
+
+[One final round of review from @sandersn](https://github.com/microsoft/TypeScript/pull/53619#pullrequestreview-1699743842) left a couple of interesting points:
+
+- Since something being in a JS file didn't mean it couldn't be typed, there might not be a need to check `isInJSFile`
+- `isInJSFile` uses flags set on every node, so calling `.getSourceFile()` seemed unnecessary
+
+I tried removing or deferring the `isInJSFile` check in a few different ways but each attempt resulted in test failures.
+Darn.
+
+But, removing `.getSourceFile()` did work.
+Yay!
+
+[#53619 > commits > `8de257`](https://github.com/microsoft/TypeScript/pull/53619/commits/8de257da80e9124af45ab2d1e134600e4e20c9ba).
+
+A week later, @sandersn merged the PR.
+TypeScript >=5.3 now include the language server improvements.
+🥳
+
+## Final Thanks
+
+Thanks as always to [@Andarist](https://github.com/Andarist) for helping review the PR. So much that it was more than reasonable for me to add Mateusz as a co-author 😄.
+
+Thanks to [@RyanCavanaugh](https://github.com/RyanCavanaugh) and [@sandersn](https://github.com/sandersn) for reviewing and merging the PR from the TypeScript team's side.
+Additional thanks to [@awerlogus](https://github.com/awerlogus) for reporting the issue in the first place.
+
+You can also see my [live coding stream from April 13th, 2023](https://youtu.be/sc2GbAIgrf0?si=Y48hRq-eVX8AsTlh&t=1218) for working on the first round of PR reviews.
+The chat there was helpful in finding an off comment of mine - final thanks to the folks in the chat then.
+
+Cheers! 🙌

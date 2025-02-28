@@ -1,0 +1,27 @@
+.trigger {
+	background: none;
+	border: transparent;
+	position: relative;
+}
+
+.trigger:first-of-type {
+	width: 100%;
+}
+
+@media (min-width: 700px) {
+	.trigger:first-of-type {
+		margin-right: 3rem;
+		width: initial;
+	}
+
+	.trigger:first-of-type::after {
+		background: var(--colorForeground);
+		content: "";
+		display: block;
+		height: 0.7rem;
+		left: calc(100% + 2rem - 1px);
+		position: absolute;
+		top: 0.15rem;
+		width: 1px;
+	}
+}

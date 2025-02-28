@@ -1,8 +1,11 @@
 ---
 description: "Adding a new comment directive to the TypeScript compiler."
+image:
+  alt: ""
+  src: "~/assets/blog/default.webp"
 pubDate: 2020-07-12
 series: "TypeScript Contribution Diary"
-title: "// @ts-expect-error"
+title: "TypeScript Contribution Diary: // @ts-expect-error"
 ---
 
 > “To expect the unexpected shows a thoroughly modern intellect.” - Oscar Wilde
@@ -300,7 +303,6 @@ If you've taken any kind of intensive developer interview training or gone throu
 > O(), or "Big O" Notation refers to how quickly quickly an operation takes place based on how many items are in your collection.
 >
 > - O(1) means the operation always takes the same amount of time (most of the time that's very fast).
->
 > - O(log(N)) is the number of times you need to square a number -normally 2- to get to your N... meaning, it gets worse less quickly as you add more elements.
 
 The built-in `Object`s, `Map`s, and `Set`s in JavaScript are both generally hash table data structures with O(1) insertions and lookups. _[[map](https://tc39.es/ecma262/#sec-map-objects) and [set](https://tc39.es/ecma262/#sec-set-objects) specification references]_
@@ -332,7 +334,7 @@ const directivesByLine = createMapFromEntries(
 			getLineAndCharacterOfPosition(sourceFile, commentDirective.range.pos).line
 		}`,
 		commentDirective,
-	])
+	]),
 );
 ```
 
@@ -367,7 +369,7 @@ I created a `getDirectiveFilteredProgramDiagnostics` function to replace the fil
 function getDirectiveFilteredProgramDiagnostics(
 	sourceFile: SourceFile,
 	commentDirectives: CommentDirective[],
-	diagnostics: Diagnostic[]
+	diagnostics: Diagnostic[],
 );
 ```
 
@@ -384,7 +386,7 @@ if (!sourceFile.commentDirectives?.length) {
 const directives = createCommentDirectivesMap(sourceFile, commentDirectives);
 const diagnostics = diagnostics.filter(
 	(diagnostic) =>
-		markPrecedingCommentDirectiveLine(diagnostic, directives) === -1
+		markPrecedingCommentDirectiveLine(diagnostic, directives) === -1,
 );
 
 return diagnostics;
