@@ -11,17 +11,17 @@ export interface Props {
 }
 
 const entries = Astro.props.entries.sort(
-	(a, b) => +b.data.pubDate - +a.data.pubDate,
+	(a, b) => +b.data.pubDate - +a.data.pubDate
 );
 
 const entryIndex = entries.findIndex(
-	(entry) => entry.slug === Astro.props.entry.slug,
+	(entry) => entry.slug === Astro.props.entry.slug
 );
 
-const next =
+const previous =
 	entryIndex === entries.length - 1 ? undefined : entries[entryIndex + 1];
 
-const previous = entryIndex === 0 ? undefined : entries[entryIndex - 1];
+const next = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 ---
 
 <aside class="series">
@@ -29,7 +29,7 @@ const previous = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 		Series: {Astro.props.series}
 	</Text>
 	{
-		(previous || next) && (
+		(next || previous) && (
 			<div class="links">
 				{previous && <BlogSeriesLink entry={previous} label="Previous" />}
 				{next && <BlogSeriesLink entry={next} label="Next" />}
@@ -45,19 +45,5 @@ const previous = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 
 	.series:not(:last-child) {
 		margin-bottom: 1rem;
-	}
-
-	.series-strong {
-		display: block;
-	}
-
-	.links {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 0.5rem 1rem;
-		justify-content: space-between;
-		margin-top: 0.75rem;
-		width: 100%;
 	}
 </style>
