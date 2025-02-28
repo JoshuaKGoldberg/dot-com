@@ -11,11 +11,11 @@ export interface Props {
 }
 
 const entries = Astro.props.entries.sort(
-	(a, b) => +b.data.pubDate - +a.data.pubDate
+	(a, b) => +b.data.pubDate - +a.data.pubDate,
 );
 
 const entryIndex = entries.findIndex(
-	(entry) => entry.slug === Astro.props.entry.slug
+	(entry) => entry.slug === Astro.props.entry.slug,
 );
 
 const next =
