@@ -13,7 +13,6 @@ export interface Props {
 ---
 
 <BodyContents as="article" class={styles.article}>
-	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 	<Astro.props.rendered.Content />
 	<slot />
 	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
