@@ -28,13 +28,6 @@ const previous = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 	<Text as="strong" class="series-strong" fontSize="medium" fontWeight="bolder">
 		Series: {Astro.props.series}
 	</Text>
-	<em>
-		I've been contributing to TypeScript, working up from small nitpicks to real
-		syntactic and control flow improvements. These blog posts document the steps
-		I took to make the contributions. If you're thinking of contributing to
-		TypeScript or other large open source libraries, I hope seeing how to delve
-		into a giant foreign monolith is helpful!
-	</em>
 	{
 		(previous || next) && (
 			<div class="links">

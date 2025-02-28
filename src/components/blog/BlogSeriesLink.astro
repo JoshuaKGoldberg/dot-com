@@ -8,7 +8,7 @@ export interface Props {
 ---
 
 <div>
-	{Astro.props.label}:{" "}
+	{Astro.props.label} post:{" "}
 	<a href={`/blog/${Astro.props.entry.slug}`}>
 		{Astro.props.entry.data.title}
 	</a>
