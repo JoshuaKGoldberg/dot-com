@@ -43,7 +43,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 				props.class,
 			)}
 			fontSize={squigglyProps.fontSize}
-			style={`--squiggle: url('${squiggle.src})`}
+			style={`--squiggle: url('${squiggle.src}')`}
 		>
 			{props.children}
 		</Text>

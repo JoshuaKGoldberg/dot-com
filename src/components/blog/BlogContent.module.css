@@ -12,7 +12,7 @@
 	text-decoration: underline;
 }
 
-.article :is(h2, h3, h4, h5) {
+.article :is(h2, h3, h4, h5, [data-footnotes] li) {
 	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
@@ -72,7 +72,7 @@
 	);
 }
 
-.article :is(h2, h3, h4, h5) + blockquote {
+.article :is(blockquote, h2, h3, h4, h5) + blockquote {
 	margin: 0;
 }
 
@@ -83,6 +83,7 @@
 	width: 100%;
 }
 
+.article ol,
 .article ul {
 	margin: 0;
 }
@@ -91,6 +92,7 @@
 	margin-top: 0.5rem;
 }
 
+.article li ol,
 .article li ul {
 	margin-top: 0.5rem;
 }
@@ -116,6 +118,10 @@
 .article :is(td, th) {
 	border-bottom: 1px solid var(--colorSubtle);
 	padding-top: 0.5rem;
+}
+
+.article :is([data-footnotes]) {
+	font-size: var(--fontSizeSmaller);
 }
 
 @media (min-width: 1017px) {

@@ -72,7 +72,7 @@ export function PieChart(props: PieChartProps) {
 								}}
 							/>
 							<span>
-								{props.data.labels[i]}: ${value}
+								{props.data.labels[i]}: ${value.toLocaleString()}
 							</span>
 						</Text>
 					)}
