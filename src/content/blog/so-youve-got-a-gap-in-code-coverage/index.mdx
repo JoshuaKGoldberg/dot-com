@@ -3,7 +3,7 @@ description: "This is my standard explainer for pull request reviews where chang
 image:
   alt: Edvard Munch's The Scream, cropped to just show the screaming person
   src: "~/assets/blog/the-scream.webp"
-pubDate: 2025-03-03
+pubDate: 2025-03-05
 tags: [
 	"code coverage",
 	"types",
@@ -18,7 +18,7 @@ import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 
 Hi!
 You might have been linked this blog post in a PR that has missing code coverage.
-There might be a request for changes linking to this blog post, asking that you resolve the missing code coverage gaps.
+There might be a request for changes linking to this blog post, asking that you resolve the code coverage gaps.
 
 For each gap in coverage, at least one of the following is probably true:
 
@@ -67,11 +67,10 @@ It might be reasonable to use a type assertion to tell TypeScript something it c
 ## Examples
 
 These are some contrived examples showcasing the three strategies in order.
-I separated them out because I know a lot of people don't have the time to read them in detail.
 
 ### Handling Edge Cases
 
-> 👉 Strategy: [The code is reachable, so a unit test should exercise it](#the-code-is-reachable-so-a-unit-test-should-exercise-it
+> 👉 Strategy: [The code is reachable, so a unit test should exercise it](#the-code-is-reachable-so-a-unit-test-should-exercise-it)
 
 Consider this `capitalizeBeforeExclamation` function that processes a `text: string`.
 If `text` includes a `!`, all characters before it are upper-cased:
