@@ -228,17 +228,24 @@ function createCounters<T>(values: T[]) {
 }
 ```
 
+You might be tempted to use a runtime check for `undefined`, such as `??`:
+
 ```ts
 // 🛑 See later - there's a better way!
 const count = (counts.get(value) ?? 0) + 1;
 ```
 
+But, that `??` shouldn't be necessary.
+We know that `counts.get(value)` will always return a defined value.
+Thus, the easiest solution is likely to use a type assertion such as `!` to tell TypeScript we're absolutely sure the value is not `undefined`:
+
 ```ts
 const count = counts.get(value)! + 1;
 ```
 
-> 🚫 Type assertions are almost always a last ditch resort.
-> They're still better than using `any`, or even more unsafe, [TypeScript comment directives](https://learningtypescript.com/articles/comment-directives).
+🚫 Type assertions are almost always a last ditch resort.
+They're still better than using `any`, or even more unsafe, [TypeScript comment directives](https://learningtypescript.com/articles/comment-directives).
+But use them sparingly, and only when other options such as refactors are not worthwhile.
 
 ## Don't be afraid to ask for help
 
