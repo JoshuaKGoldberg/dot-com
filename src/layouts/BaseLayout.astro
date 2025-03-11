@@ -1,6 +1,6 @@
 ---
 import "@fontsource-variable/league-spartan";
-import { SkipLinks } from "accessible-astro-components";
+import { SkipLink } from "accessible-astro-components";
 
 import Footer from "~/components/Footer.astro";
 import Head from "~/components/Head.astro";
@@ -27,7 +27,7 @@ const { class: className, description, image, title } = Astro.props;
 	</script>
 	<div id="#top"></div>
 	<MainArea as="body" class={className}>
-		<SkipLinks />
+		<SkipLink />
 		<Header />
 
 		<main id="main-content">

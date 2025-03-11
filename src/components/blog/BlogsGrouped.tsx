@@ -13,7 +13,9 @@ export function BlogsGrouped(props: BlogsGroupedProps) {
 	return (
 		<GroupedEntries
 			groups={Object.entries(
-				groupBy(props.blogs, (blog) => blog.data.pubDate.getFullYear()),
+				groupBy(props.blogs, (blog) =>
+					new Date(blog.data.pubDate).getFullYear(),
+				),
 			).sort(([a], [b]) => +b - +a)}
 			renderEntry={(blog) => <BlogEntry blog={blog} />}
 		/>

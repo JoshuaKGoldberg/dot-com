@@ -1,5 +1,5 @@
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 // @ts-check
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import eslint from "@eslint/js";
 import astro from "eslint-plugin-astro";
 import jsdoc from "eslint-plugin-jsdoc";
@@ -43,7 +43,6 @@ export default tseslint.config(
 	...yml.configs["flat/prettier"],
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- Missing src/types.d.ts in linting
 	comments.recommended,
-	// @ts-expect-error -- Mismatched types
 	jsdoc.configs["flat/contents-typescript-error"],
 	jsdoc.configs["flat/logical-typescript-error"],
 	jsdoc.configs["flat/stylistic-typescript-error"],

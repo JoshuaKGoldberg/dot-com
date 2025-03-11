@@ -50,14 +50,14 @@
 	tab-size: 4;
 }
 
-.article blockquote {
+.article :is(aside, blockquote) {
 	--blockBorderWidth: 6px;
 	margin-left: 0;
 	padding-left: calc(2rem - var(--blockBorderWidth));
 	position: relative;
 }
 
-.article blockquote::before {
+.article :is(aside, blockquote)::before {
 	content: "";
 	display: block;
 	position: absolute;
