@@ -27,7 +27,8 @@ I believe:
 
 - The linter for an ecosystem should be written in a flavor of its primary language.
 - Splitting a linter's language bifurcates the lint ecosystem and harms approachability.
-- A web linter should be TypeScript-first for its JavaScript and TypeScript files by default.
+- JavaScript-speed lint rules backed by native speed parsing and type information are more than fast enough for the majority of real-world usage scenarios.
+- A web linter should be TypeScript-first for linting JavaScript and TypeScript files by default.
 
 I'd like to explain what those points mean, how they're different from the other linter archetypes, and their benefits.
 
@@ -121,7 +122,7 @@ Now that TypeScript is being ported to Go, 90% of that bottleneck is going to go
 
 > 👉 See my post on the TypeScript bottleneck: [Why Typed Linting Needs TypeScript Today](/blog/why-typed-linting-needs-typescript-today).
 
-I think slower lint speeds is the biggest drawback of a JIT-speed linter.
+I think slower lint speeds is the biggest drawback of a JavaScript-speed linter.
 However, I think the performance downsides are significantly less many think:
 
 1. ESLint performance is not a fair comparison to native speed linters
@@ -173,8 +174,7 @@ To prove the point, check out this this linting performance comparison: [lint-ru
 It parses 100-line files containing assorted syntax using [swc](https://swc.rs) then passes the result to a rudimentary JavaScript lint rule.
 Its performance on my M1 Mac Studio is about 90 milliseconds to lint 100 files, or about 350 milliseconds to lint 1,000 files.
 
-I have found that developers don't mind typed linting performance as long as it takes less than half a second.
-JIT-speed lint rules backed by native speed parsing and type information are plenty fast enough for the majority of real-world usage scenarios.
+> **JavaScript-speed lint rules backed by native speed parsing and type information are more than fast enough for the majority of real-world usage scenarios.**
 
 <LabeledImage
 	alt="Normal Rockwell's 'Girl Running with Wet Canvas': a schoolgirl in red running while holding wet painting supplies and a painting of a white tree on tan grass. She holds a paintbrush in her mouth and has a determined look on her face."
@@ -203,7 +203,7 @@ My personal vision for a linter is different from ESLint's.
 I want to value _optimizing for the majority_ more highly than _ideological pureness_.
 With that priority weighting my conclusion is:
 
-> **A web linter should be TypeScript-first for its JavaScript and TypeScript files by default.**
+> **A web linter should be TypeScript-first for linting JavaScript and TypeScript files by default.**
 
 TypeScript support and type information would be built-in to my linter.
 It'd of course have support for non-script languages (JSON, Markdown, etc.) and allow plugging in non-TypeScript flavors of JavaScript ([Ezno](https://github.com/kaleidawave/ezno), [Flow](https://flow.org), etc.).
