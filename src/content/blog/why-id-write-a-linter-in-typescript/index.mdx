@@ -19,7 +19,7 @@ It's an exciting time for web dev tooling.
 Web developer linters today are effectively split into two archetypes:
 
 - JavaScript core (i.e. [ESLint](https://eslint.io)): with community plugins for TypeScript and other common needs
-- Native speed core (i.e. [Biome](https://biomejs.dev) and [Oxlint](https://oxc.rs/docs/guide/usage/linter)): typically with first party plugins for those needs
+- Native speed core (i.e. [Biome](https://biomejs.dev), [deno lint](https://docs.deno.com/runtime/reference/cli/lint), [Oxlint](https://oxc.rs/docs/guide/usage/linter)): often with first-party plugins for those needs
 
 From just headlines you'd think the next mainstream web linter should also be written in native code.
 But I don't think that's the right direction.
@@ -44,7 +44,7 @@ I'd like to explain what those points mean, how they're different from the other
 Native speed source code (Go, Rust, ...) brings significant performance improvements to JIT speed source code (JavaScript/TypeScript).
 But authoring lint rules in the same runtime language of the code they analyze brings strong benefits around _developer_ and _ecosystem_ compatibility.
 
-I'm not saying native speed linters such as Biome or Oxlint shouldn't exist or that you shouldn't use them.
+I'm not saying native speed linters such as Biome, deno lint, or Oxlint shouldn't exist or that you shouldn't use them.
 Those are fantastic projects run by excellent teams, and they serve a real use case of ultra-fast tooling.
 
 I'm saying I think there should _also_ be a JavaScript/TypeScript-first linter - and here's why.
