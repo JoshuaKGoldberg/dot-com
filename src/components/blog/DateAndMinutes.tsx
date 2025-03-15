@@ -12,8 +12,7 @@ export interface DateAndMinutesProps {
 }
 
 export function DateAndMinutes(props: DateAndMinutesProps) {
-	const estimate = () =>
-		Math.ceil((readingTime(props.body).minutes * 1.5) / 5) * 5;
+	const estimate = () => Math.ceil(readingTime(props.body).minutes / 5) * 5;
 
 	return (
 		<>
