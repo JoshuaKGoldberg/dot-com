@@ -3,20 +3,20 @@ description: "Native speed for parsing and type checking is wonderful, but I thi
 image:
   alt: "The face of the man from Normal Rockwell's 'Freedom of Speech': standing up and looking up stoically, about to speak."
   src: "~/assets/blog/freedom-of-speech.jpg"
-pubDate: 2025-03-18
+pubDate: 2025-03-17
 series: Linters
 title: "Why I'd Write a Linter in TypeScript"
 ---
 
+import girlRunningWithWetCanvas from "~/assets/blog/girl-running-with-wet-canvas.jpg";
 import freedomFromWant from "~/assets/blog/freedom-from-want.jpg";
 import freedomOfSpeech from "~/assets/blog/freedom-of-speech-tall.jpg";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 
-It's an exciting time for web linting.
-ESLint's flat config is stable in production and most popular community plugins support it now.
+It's an exciting time for web dev tooling.
 2024 continued 2023's big trend of web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org), while 2025 saw [TypeScript announce a rewrite in Go](https://devblogs.microsoft.com/typescript/typescript-native-port/).
 
-The Node.js linting world is effectively split into two archetypes:
+Web developer linters today are effectively split into two archetypes:
 
 - JavaScript core (i.e. [ESLint](https://eslint.io)): with community plugins for TypeScript and other common needs
 - Native speed core (i.e. [Biome](https://biomejs.dev) and [Oxlint](https://oxc.rs/docs/guide/usage/linter)): typically with first party plugins for those needs
@@ -29,7 +29,7 @@ I believe:
 - Splitting a linter's language bifurcates the lint ecosystem and harms approachability.
 - A web linter should be TypeScript-first for its JavaScript and TypeScript files by default.
 
-I'd like to explain what those points mean, how they're different from the other linter archetypes, and the benefits of this approach.
+I'd like to explain what those points mean, how they're different from the other linter archetypes, and their benefits.
 
 <LabeledImage
 	alt="Normal Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
@@ -40,11 +40,8 @@ I'd like to explain what those points mean, how they're different from the other
 
 ## 1️⃣ TypeScript Over Native Speed Languages
 
-I believe:
-
-> **The linter for an ecosystem should be written in a flavor of its primary language**.
-
-Although other runtimes are faster than JavaScript's, there are strong benefits around _developer_ and _ecosystem_ compatibility to sticking with JavaScript or TypeScript for a web linter.
+Native speed source code (Go, Rust, ...) brings significant performance improvements to JIT speed source code (JavaScript/TypeScript).
+But authoring lint rules in the same runtime language of the code they analyze brings strong benefits around _developer_ and _ecosystem_ compatibility.
 
 I'm not saying native speed linters such as Biome or Oxlint shouldn't exist or that you shouldn't use them.
 Those are fantastic projects run by excellent teams, and they serve a real use case of ultra-fast tooling.
@@ -72,9 +69,11 @@ Most developers -especially ["dark matter"](https://www.hanselman.com/blog/dark-
 In my experiences on web platform teams, it was hard enough to get developers interested in _any_ custom lint rules, let alone ones written in a completely different paradigm than their day-to-day work.
 I'd like to avoid any additional "barriers to entry" if at all possible.
 
-#### Motivator: Avoiding Multiple Core Languages
+> **The linter for an ecosystem should be written in a flavor of its primary language**.
 
-Today's native code linters are starting to allow third-party rules to be written easily in JavaScript/TypeScript.
+#### Avoiding Multiple Core Languages
+
+Today's native code linters are starting to allow third-party rules to be written easily in JavaScript/TypeScript [^biome-discussion-plugins-biome-2] [^deno-blog-lint-plugins].
 That solves some of the language approachability issues.
 Teams can write lint rules in the web language they're comfortable in.
 This is good!
@@ -109,21 +108,6 @@ Lint rules written in TypeScript can import those tokens directly and stay withi
 Bridges between native code and JavaScript/TypeScript do exist.
 Node.js FFI and WASM interop layers in particular are steadily getting better over time.
 But the _conceptual_ overhead of jumping between language paradigms makes me lean strongly away from multi-language lint rules.
-
-### Not a Motivator: Type Information
-
-> 💡 Unfamiliar with typed linting?
-> See [Typed Linting: The Most Powerful TypeScript Linting Ever](https://typescript-eslint.io/blog/typed-linting).
-
-I've previously blogged on type information and native code linters: [Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now](/blog/rust-based-javascript-linters-fast-but-no-typed-linting-right-now).
-No native code linter today fully supports [linting with type information](https://typescript-eslint.io/getting-started/typed-linting).
-
-That's a transient concern.
-Those linters will eventually support typed linting.
-They're already working on it [^biome-type-aware-linter] [^deno-type-aware-lints] [^oxlint-type-aware-linting].
-Lack of typed linting support is not a long-term motivator against writing linters in native code.
-
-For me, it's the drawbacks on _developer_ and _ecosystem_ compatibility that push wanting a linter written in JavaScript or TypeScript.
 
 ### Drawback: Performance
 
@@ -161,24 +145,6 @@ You can't make a fair judgement against linters written in a JavaScript flavor b
 ESLint is not the fastest linter running JavaScript on Node.js anymore.
 Judging all JavaScript-speed linters based on ESLint is a [straw man fallacy](https://en.wikipedia.org/wiki/Straw_man).
 
-#### JavaScript Excels at High-Level Logic
-
-Many of the performance gains from rewriting in native speed languages come from low-level optimizations to creating data structures in memory.
-TypeScript's Go rewrite, for example, benefitted heavily from Go's memory layout and allocation models [^typescript-go-discussion-why-go].
-
-Those concerns are much less impactful for the areas of code that operate on already-created data structures.
-Once
-
-I set up a performance benchmark for a JIT speed linting: [lint-rule-jit-on-parsing-native-speed](https://github.com/JoshuaKGoldberg/lint-rule-jit-on-parsing-native-speed).
-It parses 100-line files containing assorted syntax using [swc](https://swc.rs) then passes the result to a rudimentary JavaScript lint rule.
-Its performance on my M1 Mac Studio is about 90 milliseconds to lint 100 files, or about 350 milliseconds to lint 1,000 files.
-
-Consider too that typed linting often takes up 70% or more of the lint time for a file [^tseslint-pr-typescript-estree-jump-table].
-Once native speed linting is unlocked with typescript-go [^tseslint-issue-typescript-go], files that today take 3 seconds would drop to (3 \* 0.3) + (3 \* 0.7 \* 0.1) = just under 1 second.
-That's not including performance benefits from switching the parser to native speed as well.
-
-JIT-speed lint rules backed by native speed parsing and type information are plenty fast enough for the majority of real-world usage scenarios.
-
 #### Linting A Full Repository Is Not the Most Important Metric (Partial Re-Lints Are)
 
 Most performance comparisons of linters compare time to lint a full repository.
@@ -189,12 +155,33 @@ The two most common, relevant usage scenarios for linting are:
 - Linting a single file as you edit it
 - Linting in CI to to catch lint failures in changed files and their dependents
 
-Consider a linter that analyzes file imports and exports à la [Knip](https://knip.dev) to detect which files are affected by a change.
-That linter could lint only those files, which in the majority of real-world changes, is typically a small percentage of a repository.
-The parts of linting managed by the JIT-speed linter would be a fraction of the work spent on generating type information.
+Consider a linter that analyzes file imports and exports -à la [Knip](https://knip.dev)- to detect which files are affected by a change.
+Those files are typically a small percentage of source code in real-world changes.
 
-In practice, I find developers don't mind typed linting performance as long as it don't noticeably slow down file saves or take noticeably longer than other CI tasks such as unit tests.
-Those are the benchmarks I think we should prioritize measuring and optimizing for.
+Typed linting often takes up 70% or more of the lint time for a file [^tseslint-pr-typescript-estree-jump-table].
+I believe that once we have a linter that can intelligently re-lint changed files using native speed type information, that will become the most common relevant performance comparison for linting.
+
+#### JavaScript Excels at High-Level Logic
+
+Many of the performance gains from rewriting in native speed languages come from low-level optimizations to creating data structures in memory.
+TypeScript's Go rewrite, for example, benefits greatly from Go's memory layout and allocation models [^typescript-go-discussion-why-go].
+
+Those concerns are much less impactful for the areas of code that operate on already-created data structures.
+Once an AST with type information has been generated for a file, the actual work done by a linter is relatively small.
+
+To prove the point, check out this this linting performance comparison: [lint-rule-jit-on-parsing-native-speed](https://github.com/JoshuaKGoldberg/lint-rule-jit-on-parsing-native-speed).
+It parses 100-line files containing assorted syntax using [swc](https://swc.rs) then passes the result to a rudimentary JavaScript lint rule.
+Its performance on my M1 Mac Studio is about 90 milliseconds to lint 100 files, or about 350 milliseconds to lint 1,000 files.
+
+I have found that developers don't mind typed linting performance as long as it takes less than half a second.
+JIT-speed lint rules backed by native speed parsing and type information are plenty fast enough for the majority of real-world usage scenarios.
+
+<LabeledImage
+	alt="Normal Rockwell's 'Girl Running with Wet Canvas': a schoolgirl in red running while holding wet painting supplies and a painting of a white tree on tan grass. She holds a paintbrush in her mouth and has a determined look on her face."
+	description="JavaScript performance can run faster than you think in many use cases."
+	original="https://www.wikiart.org/en/norman-rockwell/girl-running-with-wet-canvas"
+	src={girlRunningWithWetCanvas}
+/>
 
 ## 2️⃣ TypeScript Over JavaScript for ASTs
 
@@ -226,9 +213,12 @@ Let me explain why.
 
 ### TypeScript Is Essential For Typed Linting
 
+> 💡 Unfamiliar with typed linting or why a web linter needs it?
+> See [Typed Linting: The Most Powerful TypeScript Linting Ever](https://typescript-eslint.io/blog/typed-linting).
+
 TypeScript's type checking APIs must be provided AST nodes generated by TypeScript [^typescript-ast-nodes-for-types-caveats].
 Specifically, [TypeScript's Type Checker APIs](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#type-checker-apis) are made available by the TypeScript "Program" objects that roughly represent an application being type checked using a TSConfig.
-If a linter wants type checking with TypeScript today, it needs to create a TypeScript Program and use nodes created by that Program's representation of source files.
+Those Program APIs work in terms of TypeScript AST nodes.
 
 That means type-informed linters have two strategies to choose from:
 
@@ -238,7 +228,7 @@ That means type-informed linters have two strategies to choose from:
 As I see it, if you're going to be creating a TypeScript tree internally anyway, having an additional tree is conceptually heavyweight.
 I'm proposing the _TypeScript core_ strategy to avoid the burden of a _dual tree_ format.
 
-#### Motivator: Dual Trees Are Inconvenient
+#### Dual Trees Are Inconvenient
 
 The main downside of the dual-tree format is the complication for linter teams and lint rule authors working with TypeScript APIs.
 We've written utilities in typescript-eslint to help with common cases [^tseslint-pr-type-checker-wrapper-apis] but the conceptual overhead is painful.
@@ -261,7 +251,7 @@ I've seen a lot of developers express performance concerns about how typescript-
 Although thinking about performance is good, I've never seen tree parsing or conversion be a relevant performance bottleneck once typed linting is involved.
 The space and time used for a project's typed linting are always exponentially larger than those of a dual tree parse-and-convert.
 
-For example, [Brad Zacher](https://github.com/bradzacher) tried out optimizing typescript-eslint's parser to use a more efficient AST converter [^tseslint-issue-conversion-logic-jump-table].
+[Brad Zacher](https://github.com/bradzacher) tried out optimizing typescript-eslint's parser to use a more efficient AST converter [^tseslint-issue-conversion-logic-jump-table].
 The results there were that even with a 10% reduction in _conversion_ time, the net reduction in _overall_ time was only ~0.2% [^tseslint-pr-typescript-estree-jump-table].
 That was because lint rules themselves take up most lint timing asking TypeScript for type information.
 
@@ -275,10 +265,12 @@ Any rule written for ESLint and ESTree would have to be rewritten in TypeScript'
 That's a lot of work, especially as rules update.
 [TSLint](https://palantir.github.io/tslint) was killed in part to avoid this very same burden!
 
-I think this drawback is important, but not as pressing as it used to be.
-ESLint's ecosystem has matured over the last few years.
-The act of writing rules is much better documented now than it was when TSLint was being killed.
-The recent ESLint "flat config" launch is both taking a lot of time away from rule shakeups and helping show how many community plugins aren't actively changing very much [^eslint-issue-tracking-flat-config-support].
+I think this drawback is not as severe as it used to be.
+ESLint's ecosystem has matured over the last few years:
+
+- The act of writing rules is much better documented now than it was when TSLint was being killed.
+- The rate of growth for new plugins has slowed: we're not experimenting as much with new rules and plugins as we were a few years ago.
+- The recent ESLint "flat config" launch is both taking a lot of time away from rule shakeups and helping show how many community plugins aren't actively changing very much [^eslint-issue-tracking-flat-config-support].
 
 For experimental evidence, see the [Biome Linter rules from other sources](https://github.com/biomejs/biome/discussions/3) and [Oxlint Rules](https://oxc.rs/docs/guide/usage/linter/rules.html) pages showing _hundreds_ of community rules each linter has implemented.
 I think that progress is great evidence that the drawbacks of rewriting lint rules in a new AST structure can be outweighed by other advantages.
@@ -323,11 +315,15 @@ Let me know!
 
 Thanks to Dimitri Mitropoulos from [Michigan TypeScript](https://michigantypescript.com) for reviewing and giving excellent feedback on this post.
 
-[^biome-type-aware-linter]: [biomejs/biome#3187 ☂️ Type-aware linter](https://github.com/biomejs/biome/issues/3187)
+[^biome-discussion-plugins-biome-2]: [Announcement: Plugins are coming to Biome 2.0](https://github.com/biomejs/biome/discussions/4428)
+
+[^biome-issue-type-aware-linter]: [biomejs/biome#3187 ☂️ Type-aware linter](https://github.com/biomejs/biome/issues/3187)
 
 [^cloudflare-workerd-pr-remove-eslint-prettier-config]: [cloudflare/workerd#3320 remove eslint-prettier-config](https://github.com/cloudflare/workerd/pull/3320)
 
-[^deno-type-aware-lints]: [denoland/deno_lint#1138 Type-aware lints](https://github.com/denoland/deno_lint/issues/1138)
+[^deno-blog-lint-plugins]: [Deno 2.2: OpenTelemetry, Lint Plugins, node:sqlite > JavaScript plugin API](https://deno.com/blog/v2.2#javascript-plugin-api)
+
+[^deno-issue-type-aware-lints]: [denoland/deno_lint#1138 Type-aware lints](https://github.com/denoland/deno_lint/issues/1138)
 
 [^eslint-issue-make-rules-typescript-syntax-aware]:
     [eslint/eslint#19173 Change Request: Make rules TypeScript syntax-aware](https://github.com/eslint/eslint/issues/19173).
