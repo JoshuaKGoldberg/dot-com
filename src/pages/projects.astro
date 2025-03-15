@@ -29,18 +29,24 @@ const categories = {
 			.sort(([a], [b]) => a.localeCompare(b)),
 	),
 };
+
+const description =
+	"I work primarily on open source tooling for TypeScript projects.";
 ---
 
 <HeroLayout
 	alt="Josh smiling and giving a thumbs up at a podium wearing a white shirt with a pineapple pattern"
+	description={description}
 	images={{
 		dark: projectsDark,
 		light: projectsLight,
 	}}
 	primary="Projects"
-	secondary="I work primarily on open source tooling for TypeScript projects."
 	title="Projects"
 >
+	<Fragment slot="secondary">
+		{description}
+	</Fragment>
 	<HeroTertiary slot="tertiary">
 		I also enjoy emojis and other shenanigans.
 		<br />

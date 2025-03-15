@@ -5,8 +5,11 @@ import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
 import BlogShareBottom from "~/components/blog/BlogShareBottom.astro";
 import { TableOfContents } from "~/components/blog/TableOfContents";
+import { createBlogTitle } from "~/components/blog/utils";
 import BodyContents from "~/components/BodyContents.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+
+const blogs = await getCollection("blog");
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
@@ -23,12 +26,13 @@ if (!entry) {
 }
 
 const rendered = await entry.render();
+const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={entry.data.description}
 	image={entry.data.image.src.src}
-	title={`${entry.data.title} | Goldblog`}
+	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">
 		<BlogHero
@@ -38,14 +42,25 @@ const rendered = await entry.render();
 			description={entry.data.description}
 			download={entry.data.download}
 			image={entry.data.image}
-			title={entry.data.title}
+			title={title}
 		/>
 		<TableOfContents client:only="react" headings={rendered.headings} />
 	</BodyContents>
-	<BlogContent rendered={rendered}>
+	<BlogContent
+		rendered={rendered}
+		series={entry.data.series
+			? {
+					entries: blogs.filter(
+						(blog) => blog.data.series === entry.data.series,
+					),
+					entry,
+					series: entry.data.series,
+				}
+			: undefined}
+	>
 		<BlogShareBottom
 			description={entry.data.description}
-			title={entry.data.title}
+			title={title}
 			url={Astro.url}
 		/>
 	</BlogContent>

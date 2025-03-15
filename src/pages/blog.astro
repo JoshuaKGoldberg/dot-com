@@ -16,11 +16,12 @@ const blogs = await getCollection("blog");
 
 <HeroLayout
 	alt="Smiling cat receiving head scratches next to a laptop showing VS Code"
+	description={blogDescription}
 	images={{ dark: goldblogDark, light: goldblogLight }}
 	primary="Goldblog"
-	secondary={blogDescription}
 	title="Goldblog"
 >
+	<Fragment slot="secondary">{blogDescription}</Fragment>
 	<HeroTertiary slot="tertiary">
 		New posts are shared online and posted to an RSS feed at <Anchor
 			href="/rss.xml"

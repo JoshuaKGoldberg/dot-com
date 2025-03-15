@@ -1,6 +1,6 @@
+import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 // @ts-check
 import eslint from "@eslint/js";
-import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import astro from "eslint-plugin-astro";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";

@@ -1,0 +1,144 @@
+---
+description: "Twitter has been a core part of my web development career for over a decade. But Twitter's been replaced by the vastly inferior X. Here's why I'm finally ready to commit to Bluesky."
+image:
+  alt: "Bluesky's blue butterfly logo over a white background"
+  src: "~/assets/blog/bluesky.png"
+pubDate: 2024-11-18
+title: "Why I'm Migrating from X to Bluesky"
+---
+
+I've been a loyal Twitter user on [@JoshuaKGoldberg](https://twitter.com/JoshuaKGoldberg) since 2014.
+Twitter has been a huge part of my career success, enabling me to connect with other folks in the web ecosystem, learn from them, and share my areas of work.
+I wouldn't be where I am today as an independent open source maintainer without Twitter.
+
+But, Twitter -now X- has been in a consistent downward spiral since Elon Musk bought it in October 2022.
+The accounts of people I professionally benefit from interacting with have steadily decreased in activity or moved to other platforms: first [Mastodon](https://mastodon.social), then [Bluesky](https://bsky.app).
+
+Starting in January 2025, I'm going to stop most of my posting on X.
+I'll still post announcements and links for the projects I maintain and my personal blog, but each will have a link to the equivalent Bluesky and Mastodon posts.
+For discussions around technology, personal thoughts, and other non-essential content, I'll skip posting to X.
+
+## A History of Tweeting
+
+I'm not an exceptionally important person, or really relevant at all outside of the web development tooling niche.
+This blog post is not some ground-shaking announcement.
+But I am a known open source maintainer when it comes to web development tooling and TypeScript static analysis in particular.
+
+My understanding of web development tooling is directly informed by conversations with and posts by my peers online.
+In turn, I'm able to share my work and learnings online with the rest of the industry.
+I post announcements for projects I work on and collect feedback on them in public.
+Social media platforms are an integral part of my open source work.
+
+I've been cross-posting all my threads across Twitter/X to [fosstodon.org/@JoshuaKGoldberg](https://fosstodon.org/@JoshuaKGoldberg) since 2022 and [bsky.app/profile/joshuakgoldberg.com](https://bsky.app/profile/joshuakgoldberg.com) since 2023.
+I've needed to because each has an overlapping set of the people I need to reach and be reached by.
+
+## The Trouble with Twitter (X)
+
+Twitter used to be a common watering hole for all sorts of communities, including the web development circles I work in.
+It wasn't perfect -there was still spam and trolling, like any popular internet space- but most of those communities spent _years_ trying to make their spaces safe and welcoming to all.
+Elon Musk's leadership has steadily eroded those efforts to the point where X is a dark shadow of what Twitter used to be.
+
+Here are some of the high-level destructive changes taken over the last two years:
+
+- Renaming from the beloved, well-known "Twitter" to the confusing, obnoxious "X"
+- [Allowing disinformation for critical topics such as COVID-19](https://www.cnn.com/2022/11/29/tech/twitter-covid-misinformation-policy/index.html): and even encouraging or spreading it from Musk's account
+- [Bumbling the Verification feature](https://en.wikipedia.org/wiki/Twitter_verification#Since_November_2022): removing the notability of real Verified accounts and turning the platform into a pay-to-play mess
+- [Changing the Blocks feature so blocked users can see posts on profiles](https://www.msn.com/en-us/news/technology/x-updates-block-feature-letting-blocked-users-see-your-public-posts/ar-AA1tsoHz): making it much easier to harass and stalk on the platform
+- [Laying off a majority of the company](https://apnews.com/article/elon-musk-twitter-inc-business-layoffs-c0334da78b3af9faf2f43cf3f6e52ffa): severely hampering its ability to maintain platform stability, work on essentials such as accessibility for new features, or moderate its content
+- [Moving most of the API behind a paywall](https://www.theverge.com/2023/3/30/23662832/twitter-api-tiers-free-bot-novelty-accounts-basic-enterprice-monthly-price): destroying most of the platform's ecosystem
+
+[Elon Musk is a homophobic, misogynistic, self-centered jackass](https://www.vanityfair.com/news/2022/04/elon-musk-twitter-terrible-things-hes-said-and-done).
+[He actively spreads abhorrent and harmful disinformation](https://www.reuters.com/world/us/wrong-claims-by-musk-us-election-got-2-billion-views-x-2024-report-says-2024-11-04).
+A platform's culture is directly impacted by -and often becomes a reflection of- the top-down direction and tone of its leadership.
+It is _deeply, deeply bad_ for a public platform to be bound to a person like Elon Musk.
+
+I've wanted to decrease my X activity for a long time, but didn't feel enough of the community had moved off X for that to not harm my career and projects.
+
+### Naming Nuance
+
+Like many longtime users, I spent most of 2023 and 2024 refusing to call Twitter "X".
+It's a horrifically confusing rename and a downgrade.
+
+But at this point, X really is a different platform from Twitter.
+Twitter is gone.
+It's just X now.
+
+Calling X "X" helps differentiate the spam-ridden monstrosity we see today from the Twitter of ages past.
+
+## The Muddle of Mastodon
+
+> 🎙️ I had the pleasure of [interviewing Mastodon's creator, Eugen Rochko, on Software Engineering Daily](https://softwareengineeringdaily.com/2024/01/31/mastodon-with-eugen-rochko) earlier this year.
+
+Mastodon was the first major alternative to Twitter/X that the community tried out following Musk's 2022 takeover.
+Mastodon presents a theologically beautiful alternative to centralized platforms like Instagram and X.
+Instead of giving control to a single company, Mastodon inherently forces communities to be decentralized and resilient to corporate takeovers.
+
+I wanted to love Mastodon.
+I really, really did.
+Mastodon is a wonderful piece of engineering.
+
+But I think Mastodon is a case study of _principles over practicality_.
+
+Mastodon's core design is fundamentally confusing to newcomers.
+In order to use Mastodon, you have to understand the concept of servers and how to interact with accounts and links to posts cross-platform.
+That's not accessible for people who aren't already proficient with technology and able to spend the time to learn.
+
+People want and need a unified public space with easy access to peers across communities.
+Twitter gave us that.
+Something like Twitter is going to exist for a while.
+It would be better for us all if a decentralized platform could replace Twitter/X.
+
+If Mastodon had a straightforward onboarding experience and user flow, the web dev community would have been able to wholly move off Twitter in 2022.
+Instead, confusion around servers and onboarding hampered that intake.
+Many of us therefore had to stay on Twitter for fear of missing out important information sharing.
+
+Many of the great ideas from Mastodon live on in projects like Bluesky and its [AT Protocol](https://en.wikipedia.org/wiki/AT_Protocol).
+Mastodon does have legitimately great communities and spaces, and for its intended use case is wonderful.
+But I don't think Mastodon is going to be a replacement for Twitter any time soon.
+
+## Bluesky: Hesitant Optimism
+
+Bluesky solves many of the problems of X: content is on a decentralized protocol; its frontend is open source; its APIs are freely available; it's not helmed by an abhorrent jackass.
+Structurally, I much prefer Bluesky to X or even Twitter.
+
+Bluesky and atproto also solve many of the user experience difficulties of Mastodon.
+There's only one user-facing website to contend with, bsky.app.
+The app is similar enough to Twitter/X that it's straightforward to move over.
+
+Bluesky's culture at the moment seems much more like early-stage Twitter than late-stage X.
+My experience has been that people are much friendlier and less immediately critical.
+I haven't had to deal with right-wing trolls when I post an opinion like _"we should improve DEI in tech"_.
+
+Bluesky's platform also just performs better than X's.
+X has had obnoxious bugs for months or years now like the notifications tab not updating until you refresh the page.
+Bluesky has better performance and is actively adding features such as [anti-toxicity features](https://bsky.social/about/blog/08-28-2024-anti-toxicity-features) and [starter packs](https://bsky.social/about/blog/06-26-2024-starter-packs).
+They even have a [product roadmap](https://bsky.social/about/blog/05-07-2024-product-roadmap)!
+
+### The Nature of Progress
+
+Bluesky is still a single VC-funded company.
+That comes with risk: if the backing VCs decide to monetize quickly, they can force the company to make decisions counter to its users' best interests.
+Having the primary domain for all accounts be owned by one company means it would be hard -though not impossible- to steer the community to different owner(s).
+
+That being said, I'm not worried about Bluesky's direction for now.
+The team has made a lot of great directional decisions -- including staying on a portable protocol that, even if the Bluesky company were to be compromised, could be migrated elsewhere.
+
+A bad actor like Elon Musk also wouldn't be able to make fundamentally foolish architectural changes like paywalling the API.
+The backing atproto architecture wouldn't allow it.
+If Bluesky "goes evil" at some time in the future, we'll be in a much better position to deal with it than we are now with X.
+
+I think the community should look at any new social media platform with healthy skepticism.
+We've all been burned many times before.
+But that doesn't mean we shouldn't try something new like Bluesky -- or move to it when it's clearly better than the previous generation.
+
+## Getting Started with Bluesky
+
+I'm excited to see how things go with Bluesky.
+It's a refreshing improvement over X and reminds me of the better parts of old school Twitter.
+
+Even if your X experience is fine now, I'd highly recommend at least trying out Bluesky.
+Go through [bsky.app](https://bsky.app), make an account, and find some of your favorite accounts from Twitter.
+I've got a [TypeScript & Static Analysis Starter Pack](https://bsky.app/starter-pack/joshuakgoldberg.com/3la7gv7wa4722) you can use to quickly fill your feed with people in my area of work.
+
+So long, Twitter.
+It was nice knowing you. 🦋
