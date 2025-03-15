@@ -20,7 +20,7 @@ The Node.js linting world is effectively split into two archetypes:
 Both are exciting and fascinating growth cycles.
 From just headlines you'd think the next mainstream web linter should also be written in native code.
 But I don't think that's the right direction.
-I want a _TypeScript core_ that can build in _typed linting_.
+I want _lint rules written in TypeScript_ with _first-class support for typed linting_.
 
 I'd like to explain what that means, how it's different from the other archetypes, and its benefits.
 
@@ -135,11 +135,11 @@ Let's dig into those points.
 
 Many of the teams excited about their performance improvements from switching off ESLint were "holding it wrong" to begin with.
 ESLint with typed linting is notoriously difficult to configure and properly debug at scale [^tseslint-issue-document-debug-env-vars-debugging-performance].
-I've seen plenty of projects from very capable team experiencing 2x [^cloudflare-workerd-pr-remove-eslint-prettier-config] slowdowns from entries covered in the [typescript-eslint Performance Troubleshooting & FAQs](https://typescript-eslint.io/troubleshooting/typed-linting/performance).
+I've seen plenty of projects from very capable team experiencing, say, 2x slowdowns from entries covered in the [typescript-eslint Performance Troubleshooting & FAQs](https://typescript-eslint.io/troubleshooting/typed-linting/performance) [^cloudflare-workerd-pr-remove-eslint-prettier-config].
 
 Furthermore, ESLint is not optimized for typed linting performance.
-Its caching does not support cross-file information [^tseslint-docs-can-i-use-eslint-cache] and there are clear engine-level optimizations that have not been made [^eslint-rfc-parsing-session-objects].
-Explorations in [TSSLint](https://github.com/johnsoncodehk/tsslint) show a very quick significant performance speedup compared to ESLint.
+Its caching does not support cross-file information [^tseslint-docs-can-i-use-eslint-cache] and there are clear engine-level optimizations yet to be made [^eslint-rfc-parsing-session-objects].
+Explorations in [TSSLint](https://github.com/johnsoncodehk/tsslint), another JIT speed linter, show a very lovely performance speedup compared to ESLint [^tsslint-performance].
 Heck, [Node.js compile caching](https://nodejs.org/en/blog/release/v22.8.0#new-js-api-for-compile-cache) was only recently added to ESLint [^eslint-pr-using-nodejs-compile-cache].
 
 You can't make a fair judgement against linters written in a JavaScript flavor by pointing at ESLint.
@@ -260,8 +260,10 @@ If a native speed linter can show me that it can provide the same developer and 
 
 But, in order to do so, I think we'd need to see a fundamental shift in how developers learn web code.
 The only way I can see the pedagogical benefits of writing rules in JavaScript or TypeScript being overcome is if the majority of developers are already familiar with a native speed language such as Go or Rust.
-That would be a huge shift in the web ecosystem and I don't see it happening any time soon.
-I think the web ecosystem is going to continue to stay JavaScript/TypeScript-first for the forseeable future.
+
+That would be a huge shift in the web ecosystem.
+I don't see it happening any time soon.
+I think the web ecosystem is going to continue to stay JavaScript/TypeScript-first for the foreseeable future.
 
 ## More Thoughts
 
@@ -275,7 +277,7 @@ You can read more of my blog posts to see other aspects of it:
 I'm drafting a much deeper dive into what I would want in a new linter.
 You can preview it on [Blog post: 'If I wrote a linter'](https://github.com/JoshuaKGoldberg/dot-com/pull/284).
 
-[Why I’m skeptical of rewriting JavaScript tools in “faster” languages](https://nolanlawson.com/2024/10/20/why-im-skeptical-of-rewriting-javascript-tools-in-faster-languages/) is a great post on the subject of native speed rewrites.
+Separately, Nolan Lawson's [Why I’m skeptical of rewriting JavaScript tools in “faster” languages](https://nolanlawson.com/2024/10/20/why-im-skeptical-of-rewriting-javascript-tools-in-faster-languages/) is a great post on the subject of native speed rewrites.
 It digs into the differences in runtime performance, contributions, and debuggability.
 
 Nothing I've said here or any in any of those blog posts is set in stone.
@@ -305,6 +307,11 @@ Let me know!
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
 
 [^tseslint-pr-typescript-estree-jump-table]: [typescript-eslint/typescript-eslint#6371 feat(typescript-estree): use a jump table instead of switch/case for conversion logic](https://github.com/typescript-eslint/typescript-eslint/pull/6371)
+
+[^tsslint-performance]:
+    [johnsoncodehk/tsslint#10 Why is this config not correct? (issue comment)](https://github.com/johnsoncodehk/tsslint/issues/10#issuecomment-2461035385).
+    Note that johnsoncodehk is not trying to make direct performance comparisons between TSSLint and other linters yet.
+    The comment should serve only as a proof of concept.
 
 [^typescript-ast-nodes-for-types-caveats]:
     It is possible that the upcoming typescript-go APIs will take in source code locations rather than AST nodes themselves.

@@ -1,11 +1,5 @@
 {
-	"dictionaries": [
-		"css",
-		"html",
-		"node",
-		"npm",
-		"typescript"
-	],
+	"dictionaries": ["css", "html", "node", "npm", "typescript"],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -361,6 +355,7 @@
 		"tsdevtest",
 		"tseslint",
 		"tslinter",
+		"tsslint",
 		"Turbopack",
 		"twoslash",
 		"typerunner",
