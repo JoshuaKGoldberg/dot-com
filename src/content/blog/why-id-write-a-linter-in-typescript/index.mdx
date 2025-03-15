@@ -8,6 +8,10 @@ series: Linters
 title: "Why I'd Write a Linter in TypeScript"
 ---
 
+import freedomFromWant from "~/assets/blog/freedom-from-want.jpg";
+import freedomOfSpeech from "~/assets/blog/freedom-of-speech-tall.jpg";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
 It's an exciting time for web linting.
 ESLint's flat config is stable in production and most popular community plugins support it now.
 2024 continued 2023's big trend of web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org), while 2025 saw [TypeScript announce a rewrite in Go](https://devblogs.microsoft.com/typescript/typescript-native-port/).
@@ -26,6 +30,13 @@ I believe:
 - A web linter should be TypeScript-first for its JavaScript and TypeScript files by default.
 
 I'd like to explain what those points mean, how they're different from the other linter archetypes, and the benefits of this approach.
+
+<LabeledImage
+	alt="Normal Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
+	description="I know everybody wants to rewrite the web dev tooling world in Go and Rust. But hear me out, there are times when the benefits might not be as great as you'd think."
+	original="https://en.wikipedia.org/wiki/Freedom_of_Speech_%28painting%29#/media/File:%22Freedom_of_Speech%22_-_NARA_-_513536.jpg"
+	src={freedomOfSpeech}
+/>
 
 ## 1️⃣ TypeScript Over Native Speed Languages
 
@@ -109,7 +120,7 @@ No native code linter today fully supports [linting with type information](https
 
 That's a transient concern.
 Those linters will eventually support typed linting.
-They're already working on it [^biome-type-aware-linter] [^deno-type-aware-lints] [^oxlint-type-aware-linting] .
+They're already working on it [^biome-type-aware-linter] [^deno-type-aware-lints] [^oxlint-type-aware-linting].
 Lack of typed linting support is not a long-term motivator against writing linters in native code.
 
 For me, it's the drawbacks on _developer_ and _ecosystem_ compatibility that push wanting a linter written in JavaScript or TypeScript.
@@ -130,7 +141,8 @@ I think slower lint speeds is the biggest drawback of a JIT-speed linter.
 However, I think the performance downsides are significantly less many think:
 
 1. ESLint performance is not a fair comparison to native speed linters
-2. Speed of linting an entire project should not be a common use case
+2. JavaScript excels at high-level logic
+3. Linting a full repository is not the most important metric (partial re-lints are)
 
 Let's dig into those points.
 
@@ -149,7 +161,25 @@ You can't make a fair judgement against linters written in a JavaScript flavor b
 ESLint is not the fastest linter running JavaScript on Node.js anymore.
 Judging all JavaScript-speed linters based on ESLint is a [straw man fallacy](https://en.wikipedia.org/wiki/Straw_man).
 
-#### Linting A Full Repository is Not the Most Important Metric
+#### JavaScript Excels at High-Level Logic
+
+Many of the performance gains from rewriting in native speed languages come from low-level optimizations to creating data structures in memory.
+TypeScript's Go rewrite, for example, benefitted heavily from Go's memory layout and allocation models [^typescript-go-discussion-why-go].
+
+Those concerns are much less impactful for the areas of code that operate on already-created data structures.
+Once
+
+I set up a performance benchmark for a JIT speed linting: [lint-rule-jit-on-parsing-native-speed](https://github.com/JoshuaKGoldberg/lint-rule-jit-on-parsing-native-speed).
+It parses 100-line files containing assorted syntax using [swc](https://swc.rs) then passes the result to a rudimentary JavaScript lint rule.
+Its performance on my M1 Mac Studio is about 90 milliseconds to lint 100 files, or about 350 milliseconds to lint 1,000 files.
+
+Consider too that typed linting often takes up 70% or more of the lint time for a file [^tseslint-pr-typescript-estree-jump-table].
+Once native speed linting is unlocked with typescript-go [^tseslint-issue-typescript-go], files that today take 3 seconds would drop to (3 \* 0.3) + (3 \* 0.7 \* 0.1) = just under 1 second.
+That's not including performance benefits from switching the parser to native speed as well.
+
+JIT-speed lint rules backed by native speed parsing and type information are plenty fast enough for the majority of real-world usage scenarios.
+
+#### Linting A Full Repository Is Not the Most Important Metric (Partial Re-Lints Are)
 
 Most performance comparisons of linters compare time to lint a full repository.
 I don't think that's the right metric to focus on.
@@ -163,17 +193,14 @@ Consider a linter that analyzes file imports and exports à la [Knip](https://kn
 That linter could lint only those files, which in the majority of real-world changes, is typically a small percentage of a repository.
 The parts of linting managed by the JIT-speed linter would be a fraction of the work spent on generating type information.
 
-I set up a performance comparison to test that claim: [TODO](TODO).
-It parses a repository of 1,000 files with either Babel (JIT speed) or swc (native speed) then runs a rudimentary JavaScript lint rule on 10 of those files' ASTs.
-The Babel parser takes ~TODO seconds on my M1 Mac Studio, whereas the swc parser and JavaScript lint rule takes ~TODO seconds.
-
-JIT-speed lint rules backed by native speed parsing and type information are plenty fast enough for the majority of real-world usage scenarios.
+In practice, I find developers don't mind typed linting performance as long as it don't noticeably slow down file saves or take noticeably longer than other CI tasks such as unit tests.
+Those are the benchmarks I think we should prioritize measuring and optimizing for.
 
 ## 2️⃣ TypeScript Over JavaScript for ASTs
 
-ESLint core uses the "[ESTree](https://eslint.org/docs/latest/use/core-concepts/glossary#estree)" AST format.
-ESTree is a community specification that is different from the TypeScript AST.
-ESLint itself has no concept of TypeScript in its core architecture or lint rules.
+ESLint core uses the community-specified "[ESTree](https://eslint.org/docs/latest/use/core-concepts/glossary#estree)" AST format.
+ESTree is different and separate from the TypeScript AST.
+ESLint itself has no concept of TypeScript's AST, let alone type information, in its core architecture or parsing [^eslint-issue-make-rules-typescript-syntax-aware].
 
 > 💡 See [ASTs and typescript-eslint](https://typescript-eslint.io/blog/asts-and-typescript-eslint) for how typescript-eslint builds on top of the ESLint ESTree base.
 
@@ -197,7 +224,7 @@ But I want to optimize the architecture to be as straightforward as possible for
 
 Let me explain why.
 
-### TypeScript Nodes Are Essential For TypeScript Types
+### TypeScript Is Essential For Typed Linting
 
 TypeScript's type checking APIs must be provided AST nodes generated by TypeScript [^typescript-ast-nodes-for-types-caveats].
 Specifically, [TypeScript's Type Checker APIs](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#type-checker-apis) are made available by the TypeScript "Program" objects that roughly represent an application being type checked using a TSConfig.
@@ -261,7 +288,7 @@ I think that progress is great evidence that the drawbacks of rewriting lint rul
 I'm open to learning I'm wrong about this.
 If a native speed linter can show me that it can provide the same developer and ecosystem compatibility as a TypeScript-first linter, I'd be happy to change my mind.
 
-But, in order to do so, I think we'd need to see a fundamental shift in how developers learn web code.
+But, in order to do so, I think we'd need to first see a fundamental shift in how developers learn web code.
 The only way I can see the pedagogical benefits of writing rules in JavaScript or TypeScript being overcome is if the majority of developers are already familiar with a native speed language such as Go or Rust.
 
 That would be a huge shift in the web ecosystem.
@@ -287,11 +314,25 @@ Nothing I've said here or any in any of those blog posts is set in stone.
 If you have thoughts here, I'd love to talk with you.
 Let me know!
 
+<LabeledImage
+	alt="Normal Rockwell's 'Freedom From Want': a family excitedly talking as the matriarch and patriarch are about to place a Thanksgiving turkey on the table."
+	description="I want web dev tooling, and linting in particular, to bring people together. Granted, sometimes it's to complain about the lint rules they hate. But sometimes it's for nice things like the bugs linters catch or best practices they educate on..."
+	original="https://en.wikipedia.org/wiki/Norman_Rockwell#/media/File:%22Freedom_From_Want%22_-_NARA_-_513539.jpg"
+	src={freedomFromWant}
+/>
+
+Thanks to Dimitri Mitropoulos from [Michigan TypeScript](https://michigantypescript.com) for reviewing and giving excellent feedback on this post.
+
 [^biome-type-aware-linter]: [biomejs/biome#3187 ☂️ Type-aware linter](https://github.com/biomejs/biome/issues/3187)
 
 [^cloudflare-workerd-pr-remove-eslint-prettier-config]: [cloudflare/workerd#3320 remove eslint-prettier-config](https://github.com/cloudflare/workerd/pull/3320)
 
 [^deno-type-aware-lints]: [denoland/deno_lint#1138 Type-aware lints](https://github.com/denoland/deno_lint/issues/1138)
+
+[^eslint-issue-make-rules-typescript-syntax-aware]:
+    [eslint/eslint#19173 Change Request: Make rules TypeScript syntax-aware](https://github.com/eslint/eslint/issues/19173).
+    Some core ESLint rules may respond to TypeScript-specific nodes and node properties appearing in the AST, but ESLint itself does not produce those properties.
+    It relies on a third-party parser such as `@typescript-eslint/parser`.
 
 [^eslint-issue-tracking-flat-config-support]: [eslint/eslint#18093 📈 Tracking: Flat Config support](https://github.com/eslint/eslint/issues/18093)
 
@@ -301,11 +342,17 @@ Let me know!
 
 [^oxlint-type-aware-linting]: [oxc-project/oxc#3105](https://github.com/oxc-project/oxc/issues/3105)
 
+[^tseslint-docs-can-i-use-eslint-cache]: [typescript-eslint.io > Troubleshooting & FAQs > ESLint > Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint)
+
+[^tseslint-docs-slow-typescript-types]: [typescript-eslint.io > Troubleshooting & FAQs > Typed Linting > Performance > Slow TypeScript Types](https://typescript-eslint.io/troubleshooting/typed-linting/performance#slow-typescript-types)
+
 [^tseslint-issue-conversion-logic-jump-table]: [typescript-eslint/typescript-eslint#6149 Repo: investigate switching core TS->ESTree conversion logic from a "switch/case" to a "jump table" for performance improvements](https://github.com/typescript-eslint/typescript-eslint/issues/6149)
 
 [^tseslint-issue-document-debug-env-vars-debugging-performance]: [typescript-eslint/typescript-eslint#8189 Docs: Document using debug package env variables to debug performance](https://github.com/typescript-eslint/typescript-eslint/issues/8189)
 
 [^tseslint-issue-document-timing-stats-debugging-performance]: [typescript-eslint/typescript-eslint#9135 Docs: add an FAQ section about eslint TIMING/`--stats` and type-aware rules being misleading](https://github.com/typescript-eslint/typescript-eslint/issues/9135)
+
+[^tseslint-issue-typescript-go]: [typescript-eslint/typescript-eslint#10940 Enhancement: Use TypeScript's Go port (tsgo / typescript-go) for type information](https://github.com/typescript-eslint/typescript-eslint/issues/10940)
 
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
 
@@ -321,6 +368,4 @@ Let me know!
     However, both the information retrieved by those APIs and common community tooling built around TypeScript types are centered on TypeScript AST nodes.
     I think it's a safe bet that the TypeScript AST and projects will at the very least be the primary _mental model_ of typed linting for the foreseeable future.
 
-[^tseslint-docs-can-i-use-eslint-cache]: [typescript-eslint.io > Troubleshooting & FAQs > ESLint > Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint)
-
-[^tseslint-docs-slow-typescript-types]: [typescript-eslint.io > Troubleshooting & FAQs > Typed Linting > Performance > Slow TypeScript Types](https://typescript-eslint.io/troubleshooting/typed-linting/performance#slow-typescript-types)
+[^typescript-go-discussion-why-go]: [microsoft/typescript-go#411 Why Go?](https://github.com/microsoft/typescript-go/discussions/411)

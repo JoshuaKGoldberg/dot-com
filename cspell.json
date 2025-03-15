@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -233,6 +239,7 @@
 		"mindshare",
 		"minifiers",
 		"misbalanced",
+		"Mitropoulos",
 		"mochajs",
 		"Mugatu's",
 		"Myriam",
@@ -354,6 +361,7 @@
 		"tsconfigs",
 		"tsdevtest",
 		"tseslint",
+		"tsgo",
 		"tslinter",
 		"tsslint",
 		"Turbopack",
