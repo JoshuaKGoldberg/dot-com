@@ -46,7 +46,7 @@ importers:
         version: 2.0.2
       accessible-astro-components:
         specifier: ^4.0.3
-        version: 4.0.3
+        version: 4.1.0
       astro:
         specifier: ^5.4.2
         version: 5.4.2(@types/node@20.11.24)(jiti@2.4.2)(rollup@4.34.8)(typescript@5.8.2)(yaml@2.7.0)
@@ -1309,8 +1309,8 @@ packages:
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
-  accessible-astro-components@4.0.3:
-    resolution: {integrity: sha512-Lz5owW3TRgQfns6XN3ShxhorrQsLTIARPafkZFMXJhGrGe/NMNe6RqgQ0CVokW91HC0z/qzxgCGRp+11Q1bcwg==}
+  accessible-astro-components@4.1.0:
+    resolution: {integrity: sha512-R1Xrq7n61denF/VxCTxSJdOnCA4nhK/NvsYAe1WXnF1CYJbj4K4J9YwS+GPpJ6pONN3x/qp+bVCMgexRkY8EzQ==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -5537,7 +5537,7 @@ snapshots:
 
   '@vscode/l10n@0.0.18': {}
 
-  accessible-astro-components@4.0.3: {}
+  accessible-astro-components@4.1.0: {}
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
