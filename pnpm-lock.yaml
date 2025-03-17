@@ -99,8 +99,8 @@ importers:
         specifier: ^1.17.0
         version: 1.17.0(eslint@9.21.0(jiti@2.4.2))
       joshuakgoldberg:
-        specifier: ^0.17.0
-        version: 0.17.0
+        specifier: ^0.18.0
+        version: 0.18.0
       knip:
         specifier: ^5.45.0
         version: 5.46.0(@types/node@20.11.24)(typescript@5.8.2)
@@ -2606,8 +2606,8 @@ packages:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
 
-  joshuakgoldberg@0.17.0:
-    resolution: {integrity: sha512-Rz4VLEcchpVxSH7wYB0kuAzopiPdRPTQHNNgbr68bbFLd+gOpaUoe+OQdmRarZbekrFMngtOLwj6r4Kkbw6hyQ==}
+  joshuakgoldberg@0.18.0:
+    resolution: {integrity: sha512-rlKCIj2b+gW46WqEuMmkB9fxXYMrmrZnj0GiZsUO05TCz4oJYg16pZ4mHBLmcTk+XhvcOF9hD0RC3ziVwcmFeQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -7176,7 +7176,7 @@ snapshots:
 
   jiti@2.4.2: {}
 
-  joshuakgoldberg@0.17.0:
+  joshuakgoldberg@0.18.0:
     dependencies:
       chalk: 5.4.1
 
