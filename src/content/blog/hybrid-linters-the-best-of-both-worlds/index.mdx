@@ -25,12 +25,12 @@ Web development linters today are effectively split into two archetypes:
 - Pure native speed (i.e. [Biome](https://biomejs.dev), [deno lint](https://docs.deno.com/runtime/reference/cli/lint), [Oxlint](https://oxc.rs/docs/guide/usage/linter)): often with first-party plugins for those needs
 
 From just headlines you'd think the next mainstream web linter should also be completely written in native code.
-The _**parsing**_ and _**type information**_ portions of it certainly should be for their incredible speed improvements.
+The _**file intake**_ and _**type information**_ portions of it certainly should be for their incredible speed improvements.
 
 But I believe that specifically the _**coordination**_ and _**lint rule**_ layers should still be written in TypeScript.
 TypeScript-first lint rules in particular allow for a more approachable, user-friendly linting ecosystem -- while still benefiting from the incredible performance and user experience work of the recent slate of native speed linters.
 
-Let me explain why I think a third type of linter, a "hybrid" between native speed externals and a TypeScript shell, would bring the best of both worlds.
+Let me explain why I think a third type of linter, a **"hybrid"** between native speed externals and a TypeScript shell, would bring the best of both worlds.
 
 <LabeledImage
 	alt="Normal Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
@@ -44,7 +44,7 @@ Let me explain why I think a third type of linter, a "hybrid" between native spe
 Many of the performance gains from rewriting in native speed languages come from low-level optimizations to creating data structures in memory.
 TypeScript's Go rewrite, for example, benefits greatly from Go's memory layout and allocation models [^typescript-go-discussion-why-go].
 
-The vast majority of time spent in JavaScript core linting is on _parsing_ and _type information_.
+The vast majority of time spent in JavaScript core linting is on _file intake_ and _type information_.
 Generating type information alone often takes 70% of total lint time [^tseslint-pr-typescript-estree-jump-table].
 The remaining time in linting on _coordination_ and _lint rules_ is relatively small by comparison.
 
@@ -150,6 +150,22 @@ I believe keeping as much of a linter as possible in JavaScript/TypeScript, whil
 	src={theConnoisseur}
 />
 
+### Approachability Improves the Core
+
+One common pushback I've received to emphasizing contribution approachability is:
+
+> _"People don't care about approachability, they just want a fast linter with good features."_
+
+Sure, yes, agreed - but those features come from being approachable!
+
+The easier a project is to contribute to, the more likely it is that developers will start contributing to it.
+A significant portion of the core rules of a linter are written by developers who started out writing custom lint rules.
+Most members of linter and plugin maintenance teams I work with started out as ad-hoc external contributors.
+
+The more approachable a linter is, the better it become through community contributions.
+You really, _really_ want contributor-friendly linters and lint rules.
+Even if you're not contributing yourself.
+
 ## Putting it Together
 
 Here are the conclusions I've made so far:
@@ -165,7 +181,7 @@ In other words, I think an ideal web linter uses a JIT speed language for user-f
 | ---------------- | ------ | ------------------------------------------ |
 | Coordination     | JIT    | More approachable; ecosystem compatibility |
 | Lint Rules       | JIT    | More approachable; ecosystem compatibility |
-| Parsing          | Native | Significantly better performance           |
+| File Intake      | Native | Significantly better performance           |
 | Type Information | Native | Significantly better performance           |
 
 ### What It Would Take To Convince Me Otherwise
@@ -181,7 +197,12 @@ Alternately, if a native speed language does take over as a new _de facto_ langu
 It's possible that in a few years, bindings between JavaScript and native languages will be so fast that it becomes reasonable to write a full front-end app in a non-JavaScript/TypeScript language.
 At that point it's possible the web ecosystem would shift to some other language(s).
 
-I don't think any of that is happening anytime soon.
+I am least confident in my points on writing the core coordination logic in JavaScript/TypeScript.
+The core of a linter is much less commonly contributed to than the surrounding rules.
+Depending on what parts of disk scanning, file I/O, and other tasks that work better in native code, the performance penalty of a JIT speed core might be too high.
+I expect to continue experimenting with this to see how much of the linter's coordinating logic can be written in JavaScript/TypeScript without a significant performance penalty.
+
+Anyway, I don't think any of the big shifts that would encourage native code lint rules are happening anytime soon.
 I think learning a new language is too harsh a pre-requisite for dev tooling, that JavaScript/TypeScript is not going to fall by the wayside in the next few years, and that dual-language ecosystems are fundamentally unsustainable.
 But hey, prove me wrong!
 
