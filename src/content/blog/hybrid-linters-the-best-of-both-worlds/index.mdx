@@ -228,6 +228,8 @@ I appreciate your insights and time!
 [^tseslint-docs-can-i-use-eslint-cache]:
     Per [typescript-eslint.io > Troubleshooting & FAQs > ESLint > Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint), ESLint's `--cache` does not work with typed linting.
     ESLint is not natively architected to work as a hybrid linter as proposed in this post.
+    But I am confident that as more linters are created and rely on typed linting, they're going to take on this very impactful performance optimization.
+    [Knip](https://knip.dev) is a great proof-of-concept for fast import analysis that could be used by linters.
 
 [^tseslint-pr-typescript-estree-jump-table]: [typescript-eslint/typescript-eslint#6371 feat(typescript-estree): use a jump table instead of switch/case for conversion logic](https://github.com/typescript-eslint/typescript-eslint/pull/6371)
 
