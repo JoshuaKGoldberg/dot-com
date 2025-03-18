@@ -176,7 +176,8 @@ Here are the conclusions I've made so far:
 1. Hybrid linting performance is more than fast enough for real-world usage scenarios.
 2. Allowing JavaScript plugins slows native speed linters down to hybrid speed already.
 3. JavaScript/TypeScript-first rules are more approachable for the majority of web developers.
-4. Once lint rules are JavaScript-speed, you might as well write coordinating logic in TypeScript as well.
+4. Once lint rules are JavaScript-speed, coordinating logic might as well be in TypeScript too.
+5. Approachability is important for long-term growth of a linter and its plugins.
 
 In other words, I think an ideal web linter uses a JavaScript-speed language for user-facing concerns and a native speed language for externally sourced dependencies:
 
