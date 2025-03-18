@@ -53,7 +53,10 @@ It parses files containing 100 lines of assorted syntax using [swc](https://swc.
 Its performance on my M1 Mac Studio is about **90 milliseconds to lint 100 files**, **350 milliseconds to lint 1,000 files**, and **2.9 seconds to lint 10,000 files**.
 
 This isn't quite as fast as pure native speed linters, but it's still incredibly fast.
-A properly configured linter should be running on files impacted by a change [^tseslint-docs-can-i-use-eslint-cache], which most of the time should not be a large percentage of your project.
+JavaScript engines are remarkably proficient at optimizing the kind of data structures and logic lint rules work in.
+
+Also, keep in mind that a properly configured linter only runs on files impacted by code changes [^tseslint-docs-can-i-use-eslint-cache].
+Most of the time that is not a large percentage of your project.
 
 JavaScript-speed lint rules backed by native speed parsing and type information are more than fast enough for the majority of real-world scenarios.
 
@@ -120,19 +123,19 @@ The core rules of a linter are themselves an important knowledge base and avenue
 Developers should be able to read and understand the core rules of their linter.
 A linter's own rules generally establish best practices and serve as a technical reference.
 
-Any native core linter that also allows JIT speed rule plugins will be stuck between a rock and a hard place:
+Any native core linter that also allows JavaScript-speed rule plugins will be stuck between a rock and a hard place:
 
-- If they split core rules between JIT and native speed, then many end users will be slowed down to hybrid speed linting
-- If they keep most or all core rules at native speed, JIT speed rules will have fewer references for end-users (and take extra maintenance time to document)
+- If they split core rules between JavaScript and native speed, then many end users will be slowed down to hybrid speed linting
+- If they keep most or all core rules at native speed, JavaScript-speed rules will have fewer references for end-users (and take extra maintenance time to document)
 
 Keeping lint rules away from JavaScript/TypeScript incurs a cost.
 Given how likely it is many users will want custom lint rules in JavaScript/TypeScript, and that hybrid speed linting is still wonderfully fast, I don't think there's enough gain in making a majority of a linter's rules native speed.
 
 ### Why Not Native Speed Coordination?
 
-Once your lint rules are majority JIT speed, I don't see much benefit to writing the coordinating logic -arguments parsing, results printing, etc.- in native code.
+Once your lint rules are majority JavaScript-speed, I don't see much benefit to writing the coordinating logic -arguments parsing, results printing, etc.- in native code.
 The most significant performance bottlenecks, _parsing_ and _type information_ are already eliminated by using external native speed dependencies.
-Prioritizing JIT speed for rules means linters are guaranteed to run at hybrid speed already.
+Prioritizing JavaScript-speed for rules means linters are guaranteed to run at hybrid speed already.
 
 On the other hand, the linter's coordinating logic is another important avenue for contribution.
 I've seen many developers start contributing to a linter's rules and then move on to contributing to the linter itself.
@@ -173,16 +176,16 @@ Here are the conclusions I've made so far:
 1. Hybrid linting performance is more than fast enough for real-world usage scenarios.
 2. Allowing JavaScript plugins slows native speed linters down to hybrid speed already.
 3. JavaScript/TypeScript-first rules are more approachable for the majority of web developers.
-4. Once lint rules are JIT speed, you might as well write coordinating logic in TypeScript as well.
+4. Once lint rules are JavaScript-speed, you might as well write coordinating logic in TypeScript as well.
 
-In other words, I think an ideal web linter uses a JIT speed language for user-facing concerns and a native speed language for externally sourced dependencies:
+In other words, I think an ideal web linter uses a JavaScript-speed language for user-facing concerns and a native speed language for externally sourced dependencies:
 
-| Concern          | Speed  | Why                                        |
-| ---------------- | ------ | ------------------------------------------ |
-| Coordination     | JIT    | More approachable; ecosystem compatibility |
-| Lint Rules       | JIT    | More approachable; ecosystem compatibility |
-| File Intake      | Native | Significantly better performance           |
-| Type Information | Native | Significantly better performance           |
+| Concern          | Speed      | Why                                        |
+| ---------------- | ---------- | ------------------------------------------ |
+| Coordination     | JavaScript | More approachable; ecosystem compatibility |
+| Lint Rules       | JavaScript | More approachable; ecosystem compatibility |
+| File Intake      | Native     | Significantly better performance           |
+| Type Information | Native     | Significantly better performance           |
 
 ### What It Would Take To Convince Me Otherwise
 
@@ -199,7 +202,7 @@ At that point it's possible the web ecosystem would shift to some other language
 
 I am least confident in my points on writing the core coordination logic in JavaScript/TypeScript.
 The core of a linter is much less commonly contributed to than the surrounding rules.
-Depending on what parts of disk scanning, file I/O, and other tasks that work better in native code, the performance penalty of a JIT speed core might be too high.
+Depending on what parts of disk scanning, file I/O, and other tasks that work better in native code, the performance penalty of a JavaScript-speed core might be too high.
 I expect to continue experimenting with this to see how much of the linter's coordinating logic can be written in JavaScript/TypeScript without a significant performance penalty.
 
 Anyway, I don't think any of the big shifts that would encourage native code lint rules are happening anytime soon.
