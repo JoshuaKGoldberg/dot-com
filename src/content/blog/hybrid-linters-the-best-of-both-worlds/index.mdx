@@ -134,7 +134,7 @@ Given how likely it is many users will want custom lint rules in JavaScript/Type
 ### Why Not Native Speed Coordination?
 
 Once your lint rules are majority JavaScript-speed, I don't see much benefit to writing the coordinating logic -arguments parsing, results printing, etc.- in native code.
-The most significant performance bottlenecks, _parsing_ and _type information_ are already eliminated by using external native speed dependencies.
+The most significant performance bottlenecks, _file intake_ and _type information_, are already eliminated by using external native speed dependencies.
 Prioritizing JavaScript-speed for rules means linters are guaranteed to run at hybrid speed already.
 
 On the other hand, the linter's coordinating logic is another important avenue for contribution.
@@ -203,7 +203,7 @@ At that point it's possible the web ecosystem would shift to some other language
 
 I am least confident in my points on writing the core coordination logic in JavaScript/TypeScript.
 The core of a linter is much less commonly contributed to than the surrounding rules.
-Depending on what parts of disk scanning, file I/O, and other tasks that work better in native code, the performance penalty of a JavaScript-speed core might be too high.
+The performance penalty of moving disk scanning, file I/O, and/or other tasks to JavaScript might be too high.
 I expect to continue experimenting with this to see how much of the linter's coordinating logic can be written in JavaScript/TypeScript without a significant performance penalty.
 
 Anyway, I don't think any of the big shifts that would encourage native code lint rules are happening anytime soon.
