@@ -1,0 +1,234 @@
+---
+description: "Native speed for parsing and type checking is wonderful. I also believe there are huge benefits to writing lint rules in an ecosystem's primary language. Here's why you want both."
+image:
+  alt: "The face of the man from Normal Rockwell's 'Freedom of Speech': standing up and looking up stoically, about to speak."
+  src: "~/assets/blog/freedom-of-speech.jpg"
+pubDate: 2025-03-20
+series: Linters
+title: "Hybrid Linters: The Best of Both Worlds"
+---
+
+import girlRunningWithWetCanvas from "~/assets/blog/girl-running-with-wet-canvas.jpg";
+import freedomFromWant from "~/assets/blog/freedom-from-want.jpg";
+import freedomOfSpeech from "~/assets/blog/freedom-of-speech-tall.jpg";
+import theConnoisseur from "~/assets/blog/the-connoisseur.jpg";
+import theGreatDebate from "~/assets/blog/the-great-debate.jpg";
+import toughCall from "~/assets/blog/tough-call.jpg";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+
+It's an exciting time for web dev tooling.
+2024 continued 2023's big trend of web tooling was rewriting existing tooling in [Rust](https://www.rust-lang.org), while 2025 saw [TypeScript announce a rewrite in Go](https://devblogs.microsoft.com/typescript/typescript-native-port/).
+
+Web development linters today are effectively split into two archetypes:
+
+- Pure JavaScript (i.e. [ESLint](https://eslint.io)): with community plugins for TypeScript and other common needs
+- Pure native speed (i.e. [Biome](https://biomejs.dev), [deno lint](https://docs.deno.com/runtime/reference/cli/lint), [Oxlint](https://oxc.rs/docs/guide/usage/linter)): often with first-party plugins for those needs
+
+From just headlines you'd think the next mainstream web linter should also be completely written in native code.
+The _**parsing**_ and _**type information**_ portions of it certainly should be for their incredible speed improvements.
+
+But I believe that specifically the _**coordination**_ and _**lint rule**_ layers should still be written in TypeScript.
+TypeScript-first lint rules in particular allow for a more approachable, user-friendly linting ecosystem -- while still benefiting from the incredible performance and user experience work of the recent slate of native speed linters.
+
+Let me explain why I think a third type of linter, a "hybrid" between native speed externals and a TypeScript shell, would bring the best of both worlds.
+
+<LabeledImage
+	alt="Normal Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
+	description="I know everybody wants to rewrite every single dev tool thing in Go and Rust. But hear me out, there are places where TypeScript is still more appropriate. Really!"
+	original="https://prints.nrm.org/detail/261001/rockwell-dewey-vs.-truman-the-great-debate-1948"
+	src={freedomOfSpeech}
+/>
+
+## Hybrid Performance
+
+Many of the performance gains from rewriting in native speed languages come from low-level optimizations to creating data structures in memory.
+TypeScript's Go rewrite, for example, benefits greatly from Go's memory layout and allocation models [^typescript-go-discussion-why-go].
+
+The vast majority of time spent in JavaScript core linting is on _parsing_ and _type information_.
+Generating type information alone often takes 70% of total lint time [^tseslint-pr-typescript-estree-jump-table].
+The remaining time in linting on _coordination_ and _lint rules_ is relatively small by comparison.
+
+I made a proof of concept to show the hybrid model is fast: **[lint-rule-jit-on-parsing-native-speed](https://github.com/JoshuaKGoldberg/lint-rule-jit-on-parsing-native-speed)**.
+It parses files containing 100 lines of assorted syntax using [swc](https://swc.rs), then lints with a rudimentary JavaScript rule.
+Its performance on my M1 Mac Studio is about **90 milliseconds to lint 100 files**, **350 milliseconds to lint 1,000 files**, and **2.9 seconds to lint 10,000 files**.
+
+This isn't quite as fast as pure native speed linters, but it's still incredibly fast.
+A properly configured linter should be running on files impacted by a change [^tseslint-docs-can-i-use-eslint-cache], which most of the time should not be a large percentage of your project.
+
+JavaScript-speed lint rules backed by native speed parsing and type information are more than fast enough for the majority of real-world scenarios.
+
+<LabeledImage
+	alt="Normal Rockwell's 'Girl Running with Wet Canvas': a schoolgirl in red running while holding wet painting supplies and a painting of a white tree on tan grass. She holds a paintbrush in her mouth and has a determined look on her face."
+	description="JavaScript performance can run faster than you think in many use cases."
+	original="https://www.wikiart.org/en/norman-rockwell/girl-running-with-wet-canvas"
+	src={girlRunningWithWetCanvas}
+/>
+
+### JavaScript Plugins Lead to Hybrid Performance
+
+Today's native code linters are starting to allow third-party rules to be written easily in JavaScript/TypeScript [^biome-discussion-plugins-biome-2] [^deno-blog-lint-plugins].
+Doing so solves some native language linting approachability issues.
+Great!
+
+But it does mean that the linters are sometimes effectively hybrid speed already.
+As soon as a linter configuration includes a JavaScript-speed plugin, the linter has to take the cost of spinning up its JavaScript engine and communicating with the JavaScript world.
+
+Larger codebases tend to come from larger and/or longer-lived teams.
+Larger or longer-lived teams tend to have more investment in JavaScript/TypeScript tooling.
+There is a positive correlation between codebases being large enough to need a fast linter and their teams' likelihood of writing custom lint rules in TypeScript.
+
+Consider, too, the common case of a web development team.
+Suppose their TypeScript design system tokens and utilities are referenced in custom lint rules -- a common need.
+Lint rules written in native code would need some interoperability layer to import and use those tokens, assuming those tokens match Rust paradigms.
+Lint rules written in JavaScript/TypeScript can import those tokens directly and stay within a single language's way of thinking.
+
+I think we can expect that larger teams writing their own custom lint rules will lean towards JavaScript/TypeScript.
+If they already have developers writing those languages and native speed linters are still very fast with those rules then there's no strong motivation to instead write rules in native speed code.
+
+Speaking of which...
+
+## Developer Compatibility
+
+One of the best parts of modern linters is the ability for teams to write custom rules in their linter.
+The linter is an important entry point for developers to enter the wonderful world of language tooling.
+Lint rules are self-contained exercises in using "AST"s (Abstract Syntax Trees): the core building block of many web development tools.
+
+Using an alternative language for a linter gates development to developers who are familiar with both languages.
+Most developers writing TypeScript, a high-level memory-managed VM language, aren't also familiar -let alone confident- with lower level languages such as Go or Rust.
+
+> ✋ Please don't reply guy me about how _your_ team has _plenty_ of Go/Rust/Zig/etc. devs.
+> Plenty of teams do.
+> The problem is that most web teams _don't_.
+
+Most developers -especially ["dark matter"](https://www.hanselman.com/blog/dark-matter-developers-the-unseen-99) developers- work in roughly one paradigm.
+In my experiences on web platform teams, it was hard enough to get developers interested in _any_ custom lint rules, let alone ones written in a completely different paradigm than their day-to-day work.
+Any additional cost, such as learning a new language, makes it that much harder to get developers interested in writing custom lint rules.
+
+<LabeledImage
+	alt="Normal Rockwell's 'Freedom From Want': a family excitedly talking as the matriarch and patriarch are about to place a Thanksgiving turkey on the table."
+	description="I want web dev tooling, and linting in particular, to have as many people at the table as possible."
+	original="https://en.wikipedia.org/wiki/Norman_Rockwell#/media/File:%22Freedom_From_Want%22_-_NARA_-_513539.jpg"
+	src={freedomFromWant}
+/>
+
+### Why Not Multiple Rule Languages?
+
+Allowing multiple rule languages does _reduce_ barriers to entry.
+But, I think it fundamentally does not _solve_ the approachability issue.
+
+The core rules of a linter are themselves an important knowledge base and avenue for contribution.
+Developers should be able to read and understand the core rules of their linter.
+A linter's own rules generally establish best practices and serve as a technical reference.
+
+Any native core linter that also allows JIT speed rule plugins will be stuck between a rock and a hard place:
+
+- If they split core rules between JIT and native speed, then many end users will be slowed down to hybrid speed linting
+- If they keep most or all core rules at native speed, JIT speed rules will have fewer references for end-users (and take extra maintenance time to document)
+
+Keeping lint rules away from JavaScript/TypeScript incurs a cost.
+Given how likely it is many users will want custom lint rules in JavaScript/TypeScript, and that hybrid speed linting is still wonderfully fast, I don't think there's enough gain in making a majority of a linter's rules native speed.
+
+### Why Not Native Speed Coordination?
+
+Once your lint rules are majority JIT speed, I don't see much benefit to writing the coordinating logic -arguments parsing, results printing, etc.- in native code.
+The most significant performance bottlenecks, _parsing_ and _type information_ are already eliminated by using external native speed dependencies.
+Prioritizing JIT speed for rules means linters are guaranteed to run at hybrid speed already.
+
+On the other hand, the linter's coordinating logic is another important avenue for contribution.
+I've seen many developers start contributing to a linter's rules and then move on to contributing to the linter itself.
+That's how I got my start in open source!
+
+The JavaScript/TypeScript ecosystem has a rich set of libraries and tools for coordinating logic.
+npm is a massive source of community support.
+There's no need to switch to a smaller ecosystem with different paradigms if there's no significant performance gain to be had.
+I believe keeping as much of a linter as possible in JavaScript/TypeScript, while still using native speed dependencies to optimize performance bottlenecks, is the right balance of approachability and performance.
+
+<LabeledImage
+	alt="Normal Rockwell's 'The Connoisseur': a colorful Jackson Pollock painting on the wall being looked at by an older gentleman in a suit."
+	description="A JavaScript developer studying an error message from the Rust borrow checker."
+	original="https://prints.nrm.org/detail/261064/rockwell-the-connoisseur-1962"
+	src={theConnoisseur}
+/>
+
+## Putting it Together
+
+Here are the conclusions I've made so far:
+
+1. Hybrid linting performance is more than fast enough for real-world usage scenarios.
+2. Allowing JavaScript plugins slows native speed linters down to hybrid speed already.
+3. JavaScript/TypeScript-first rules are more approachable for the majority of web developers.
+4. Once lint rules are JIT speed, you might as well write coordinating logic in TypeScript as well.
+
+In other words, I think an ideal web linter uses a JIT speed language for user-facing concerns and a native speed language for externally sourced dependencies:
+
+| Concern          | Speed  | Why                                        |
+| ---------------- | ------ | ------------------------------------------ |
+| Coordination     | JIT    | More approachable; ecosystem compatibility |
+| Lint Rules       | JIT    | More approachable; ecosystem compatibility |
+| Parsing          | Native | Significantly better performance           |
+| Type Information | Native | Significantly better performance           |
+
+### What It Would Take To Convince Me Otherwise
+
+I'm open to learning I'm wrong about this.
+If a pure native speed linter can show me that it can provide the same developer and ecosystem compatibility as a TypeScript-first linter, I'd be happy to change my mind.
+
+Most importantly, I'd want to see that a large plurality of web developers are happy to learn an additional language to write custom lint rules.
+Several reviewers on this blog post pointed out that if a developer is already willing to learn how to write custom lint rules, then they're likely high-intent and willing to learn a useful language as well.
+Maybe I'm not giving my fellow dev tooling developers enough credit?
+
+Alternately, if a native speed language does take over as a new _de facto_ language of the web, then it would make sense to write linters and their rules in that language as well.
+It's possible that in a few years, bindings between JavaScript and native languages will be so fast that it becomes reasonable to write a full front-end app in a non-JavaScript/TypeScript language.
+At that point it's possible the web ecosystem would shift to some other language(s).
+
+I don't think any of that is happening anytime soon.
+I think learning a new language is too harsh a pre-requisite for dev tooling, that JavaScript/TypeScript is not going to fall by the wayside in the next few years, and that dual-language ecosystems are fundamentally unsustainable.
+But hey, prove me wrong!
+
+<LabeledImage
+	alt="Normal Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
+	description="Predicting the future is hard, especially in a rapidly changing ecosystem like the web's. But it is fun to try."
+	original="https://en.wikipedia.org/wiki/Tough_Call#/media/File:Norman_Rockwell_-_Tough_Call.jpg"
+	src={toughCall}
+/>
+
+## More Thoughts
+
+I've put a lot of thought into how linting plays into the web ecosystem.
+You can read more of my blog posts to see other aspects of it:
+
+- [Why Typed Linting Needs TypeScript Today](/blog/why-typed-linting-needs-typescript-today)
+- [Rust-Based JavaScript Linters: Fast, But No Typed Linting Right Now](/blog/rust-based-javascript-linters-fast-but-no-typed-linting-right-now)
+- [The Blurry Line Between Formatting and Style](/blog/the-blurry-line-between-formatting-and-style)
+
+I'm drafting a much deeper dive into what I would want in a new linter.
+You can preview it on [Blog post: 'If I wrote a linter'](https://github.com/JoshuaKGoldberg/dot-com/pull/284).
+
+Separately, Nolan Lawson's [Why I’m skeptical of rewriting JavaScript tools in “faster” languages](https://nolanlawson.com/2024/10/20/why-im-skeptical-of-rewriting-javascript-tools-in-faster-languages/) is a great post on the subject of native speed rewrites.
+It digs into the differences in runtime performance, contributions, and debuggability.
+
+Nothing I've said here or any in any of those blog posts is set in stone.
+If you have thoughts here, I'd love to talk with you.
+Let me know!
+
+Thanks to the following reviewers for excellent advice and feedback on this post as well as general web linting: [auvred](https://github.com/auvred), [Brad Zacher](https://github.com/bradzacher), [Dimitri Mitropoulos (Michigan TypeScript)](https://michigantypescript.com), and [Joshua Chen](https://github.com/Josh-Cena).
+I appreciate your insights and time!
+
+<LabeledImage
+	alt="Normal Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
+	description="None of those reviewers agree all of my conclusions here. Which is wonderful. Healthy discourse and trying out different approaches makes for a better ecosystem long-term. 🤗"
+	original="https://en.wikipedia.org/wiki/Tough_Call#/media/File:Norman_Rockwell_-_Tough_Call.jpg"
+	src={theGreatDebate}
+/>
+
+[^biome-discussion-plugins-biome-2]: [Announcement: Plugins are coming to Biome 2.0](https://github.com/biomejs/biome/discussions/4428)
+
+[^deno-blog-lint-plugins]: [Deno 2.2: OpenTelemetry, Lint Plugins, node:sqlite > JavaScript plugin API](https://deno.com/blog/v2.2#javascript-plugin-api)
+
+[^tseslint-docs-can-i-use-eslint-cache]:
+    Per [typescript-eslint.io > Troubleshooting & FAQs > ESLint > Can I use ESLint's `--cache` with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint), ESLint's `--cache` does not work with typed linting.
+    ESLint is not natively architected to work as a hybrid linter as proposed in this post.
+
+[^tseslint-pr-typescript-estree-jump-table]: [typescript-eslint/typescript-eslint#6371 feat(typescript-estree): use a jump table instead of switch/case for conversion logic](https://github.com/typescript-eslint/typescript-eslint/pull/6371)
+
+[^typescript-go-discussion-why-go]: [microsoft/typescript-go#411 Why Go?](https://github.com/microsoft/typescript-go/discussions/411)
