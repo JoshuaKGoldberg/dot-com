@@ -52,7 +52,7 @@ const title = createBlogTitle(entry);
 		series={entry.data.series
 			? {
 					entries: blogs.filter(
-						(blog) => blog.data.series === entry.data.series
+						(blog) => blog.data.series === entry.data.series,
 					),
 					entry,
 					series: entry.data.series,
