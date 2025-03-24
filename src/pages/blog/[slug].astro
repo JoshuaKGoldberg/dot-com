@@ -25,13 +25,14 @@ if (!entry) {
 	return Astro.redirect("/404");
 }
 
+const image = entry.data.thumbnail?.src ?? entry.data.image.src.src;
 const rendered = await entry.render();
 const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	image={entry.data.image.src.src}
+	image={image}
 	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">
@@ -51,7 +52,7 @@ const title = createBlogTitle(entry);
 		series={entry.data.series
 			? {
 					entries: blogs.filter(
-						(blog) => blog.data.series === entry.data.series,
+						(blog) => blog.data.series === entry.data.series
 					),
 					entry,
 					series: entry.data.series,
