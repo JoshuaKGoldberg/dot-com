@@ -37,11 +37,6 @@ That assumption can fall apart for network requests if the user has a slow conne
 They'll see the progress bar continuously creep to the right while their computer keeps loading… and loading… and eventually the user loses faith in the loading bars altogether.
 Sad day.
 
-One drawback of the timer approach is that it assumes the task finishes in a relatively predictable amount of time.
-That assumption can fall apart for network requests if the user has a slow connection.
-They'll see the progress bar continuously creep to the right while their computer keeps loading… and loading… and eventually the user loses faith in the loading bars altogether.
-Sad day.
-
 If you _really_ want to get an accurate loading estimate, a few options are:
 
 - Calculate the user's estimated connection speed based on the average of each request's (data size / time taken)

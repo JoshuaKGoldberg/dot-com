@@ -12,6 +12,7 @@ export const collections = {
 					src: image(),
 				}),
 				pubDate: z.coerce.date(),
+				series: z.string().optional(),
 				title: z.string(),
 			}),
 	}),

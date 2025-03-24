@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { Text } from "../Text";
+import BlogSeriesLink from "./BlogSeriesLink.astro";
+
+export interface Props {
+	entries: CollectionEntry<"blog">[];
+	entry: CollectionEntry<"blog">;
+	series: string;
+}
+
+const entries = Astro.props.entries.sort(
+	(a, b) => +b.data.pubDate - +a.data.pubDate,
+);
+
+const entryIndex = entries.findIndex(
+	(entry) => entry.slug === Astro.props.entry.slug,
+);
+
+const previous =
+	entryIndex === entries.length - 1 ? undefined : entries[entryIndex + 1];
+
+const next = entryIndex === 0 ? undefined : entries[entryIndex - 1];
+---
+
+<aside class="series">
+	<Text as="strong" class="series-strong" fontSize="medium" fontWeight="bolder">
+		Series: {Astro.props.series}
+	</Text>
+	{
+		(next || previous) && (
+			<div class="links">
+				{previous && <BlogSeriesLink entry={previous} label="Previous" />}
+				{next && <BlogSeriesLink entry={next} label="Next" />}
+			</div>
+		)
+	}
+</aside>
+
+<style>
+	.series:not(:first-child) {
+		margin-top: 1rem;
+	}
+
+	.series:not(:last-child) {
+		margin-bottom: 1rem;
+	}
+</style>

@@ -1,0 +1,15 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+export interface Props {
+	entry: CollectionEntry<"blog">;
+	label: string;
+}
+---
+
+<div>
+	{Astro.props.label} post:{" "}
+	<a href={`/blog/${Astro.props.entry.slug}`}>
+		{Astro.props.entry.data.title}
+	</a>
+</div>

@@ -1,10 +1,11 @@
 import clsx from "clsx";
 import { type JSX, splitProps } from "solid-js";
 
-import type { FontSize, TextProps } from "./Text";
+import squiggle from "~/assets/icons/squiggle.svg";
 
 import styles from "./Squiggly.module.css";
 import { Text } from "./Text";
+import type { FontSize, TextProps } from "./Text";
 
 const fontSizes: Record<string, string | undefined> = {
 	medium: styles.medium,
@@ -42,6 +43,7 @@ export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 				props.class,
 			)}
 			fontSize={squigglyProps.fontSize}
+			style={`--squiggle: url('${squiggle.src}')`}
 		>
 			{props.children}
 		</Text>

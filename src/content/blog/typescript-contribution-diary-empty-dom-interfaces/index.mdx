@@ -1,0 +1,348 @@
+---
+description: "Glorious hardcoding of a better error message if someone forgets to include the 'dom' lib option."
+image:
+  alt: The Library of the Palais Bourbon in Paris
+  src: "~/assets/blog/library-lunon.jpg"
+pubDate: 2021-06-22
+series: "TypeScript Contribution Diary"
+title: "TypeScript Contribution Diary: Improved errors for empty DOM interfaces"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import libraryNunonWide from "~/assets/blog/library-lunon-wide.jpg";
+
+<LabeledImage
+	alt="Bibliothèque de l'Assemblée Nationale (Lunon)"
+	description="The Library of the Palais Bourbon in Paris"
+	original="https://en.wikipedia.org/wiki/File:Biblioth%C3%A8que_de_l%27Assembl%C3%A9e_Nationale_(Lunon).jpg"
+	src={libraryNunonWide}
+/>
+
+## Problem Statement
+
+TypeScript's `tsconfig.json` compiler options allow us to specify what global type definitions to compile with.
+They default to the built-in `"dom"` typings as well as whatever your `"target"` compiler option specifies:
+
+```json
+{
+	"compilerOptions": {
+		// implicit:
+		// "lib": ["dom", "es2018"],
+		"target": "es2018"
+	}
+}
+```
+
+You might, for example, ask to have `"dom"` and `"es2018"` global types included regardless of your _target_:
+
+```json
+{
+	"compilerOptions": {
+		"lib": ["dom", "es2018"]
+	}
+}
+```
+
+These get a little tricky.
+`"dom"` is included in the default settings when you don't specify your own `"lib"`, but not if you specify a custom one without it.
+If you don't include `"dom"` in the list, type definitions for global DOM elements such as `HTMLElement` won't be included.
+
+```json
+{
+	"compilerOptions": {
+		// DOM types won't be included by default now!
+		"lib": ["es2018"]
+	}
+}
+```
+
+Most projects for code that run in the browser will generally want to include `"dom"`.
+_Not_ including `"dom"` makes sense for projects that execute in a context without the DOM, such as Deno or Node.
+You wouldn't want someone thinking they have access to global values such as `document` if they might not exist.
+
+Some library typings -including the ever-popular `@types/react`- include stub interfaces so that they can be included in non-DOM projects and still refer to those element types.
+
+```ts
+interface Element {}
+interface DocumentFragment {}
+
+interface HTMLElement extends Element {}
+interface HTMLAnchorElement extends HTMLElement {}
+```
+
+Per [TypeScript issue #33907 Give better error messages when properties are accessed on global empty DOM interfaces](https://github.com/microsoft/TypeScript/issues/33907) and its [referenced Tweet](https://twitter.com/rauschma/status/1181852019264503808) it would sure be nice to have a better error message in TypeScript for the case of a developer trying to access a member of an object of one of those blank types!
+
+```ts
+function logElementContent(element: HTMLElement) {
+	console.log(element.textContent);
+	//                  ~~~~~~~~~~~
+	// Property 'textContent' does not exist on type 'HTMLElement'.
+	// Did you forget to include "dom" in your "lib" setting?
+}
+```
+
+### Prior Work
+
+Turns out a Kyle Lin ([@kylejlin](https://github.com/kylejlin)) had already started a solution to [#33907](https://github.com/microsoft/TypeScript/issues/33907): [PR #34407 Improve error messages for empty DOM interface property access](https://github.com/microsoft/TypeScript/pull/34407).
+
+It worked in the following manner:
+
+1. Whenever the `Property '{0}' does not exist on type '{1}'.` diagnostic message _would_ be logged:
+2. If the containing type seemed to be an empty DOM interface per an `isEmptyDomInterface` function,
+3. Use the new diagnostic message that adds _`"Try changing the 'lib' compiler option to include 'dom'."`_.
+
+```ts
+function isEmptyDomInterface(type: Type): boolean {
+	return (
+		isEmptyObjectType(type) &&
+		/\bHTML\w*Element\b(?![:"])/.test(typeToString(type))
+	);
+}
+```
+
+> Confused by that regular expression?
+> You and me both!
+> Skip to the [bottom](#regular-expressions-explained) of this post for an explanation.
+
+I tried out that branch locally and ran it on some violating code.
+
+```ts
+interface HTMLInputElement {}
+
+let element: HTMLInputElement;
+
+element.textContent;
+//      ~~~~~~~~~~~
+// Property 'textContent' does not exist on type 'HTMLInputElement'. Try changing the `lib` compiler option to include 'dom'.
+```
+
+Looks like it already worked great!
+Thanks Kyle!
+
+### Prior Feedback
+
+Kyle's PR had been given feedback but never addressed it before aging away.
+The main changes requested were around that `isEmptyDomInterface` function:
+
+- Rewriting to not use a regular expression
+- Using `type.symbol.escapedName` instead of the more expensive `typeToString`
+
+I really wanted this error message improvement.
+Time for me to dig in! 💪
+
+## A New PR
+
+### Compiler Options
+
+Looking over the original PR, I noticed that the `isEmptyDomInterface` function didn't check what the compiler options for `lib` were specified as.
+I figured it'd be a good idea to add in logic to restrict the new error message on the off chance that someone with `"dom"` in their `lib` was making their own custom interfaces that happened to match the name matching.
+
+Question: how to check compiler options in `checker.ts`?
+
+I ran a text search for _`compiler.*options`_ in the file and found a bunch of references to a `compilerOptions` object.
+Good good.
+
+```ts
+function isEmptyDomInterface(type: Type): boolean {
+    return (
+        compilerOptions.lib &&
+        !compilerOptions.lib.includes("dom") &&
+        // ...
+    );
+}
+```
+
+### Union and Intersection Types
+
+The original PR used a `typeToString` method to convert the original container type's name to a usable string, but
+I was worried that that strategy was inefficient and/or didn't work at all for union and intersection types.
+For example, this type should still trigger the complaint, even though its name string is complex:
+
+```ts
+interface HTMLAreaElement {}
+interface HTMLAudioElement {}
+interface HTMLBaseElement {}
+
+let element: HTMLAreaElement | (HTMLAudioElement & HTMLBaseElement);
+
+element.textContent;
+```
+
+I ran some text searches for names like _`every.*type`_ and didn't see any existing utility function to check that every contained type in a union or intersection matches a function.
+So I wrote my own:
+
+```ts
+function everyContainedType(type: Type, f: (t: Type) => boolean): boolean {
+	return type.flags & TypeFlags.UnionOrIntersection
+		? every((type as UnionOrIntersectionType).types, f)
+		: f(type);
+}
+```
+
+Now that I was testing against individual type names, I simplified the regular expression a bit:
+
+{/* spell-checker: disable */}
+
+```ts
+function containerSeemstoBeEmptyDomElement(containingType: Type): boolean {
+	return (
+		compilerOptions.lib &&
+		!compilerOptions.lib.includes("dom") &&
+		everyContainedType(
+			containingType,
+			(type) =>
+				type.symbol &&
+				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
+					type.symbol.escapedName.toString(),
+				),
+		) &&
+		checker.getPropertiesOfType(containingType).length === 0
+	);
+}
+```
+
+{/* spell-checker: enable */}
+
+> Confused by that regular expression?
+> Skip to the [bottom](#regular-expressions-explained) of this post for an explanation!
+
+### Asking Questions
+
+Comparing my notes to how the original PR implemented empty element detection, I wasn't sure what the best way to determine whether an element is empty.
+The original PR used `isEmptyObjectType` but I'd previously seen a `getPropertiesOfType` function and used it in my own function.
+
+I also didn't understand the request to not use a regular expression.
+It seemed reasonable to me that we'd use some kind of string-based logic to detect names matching `HTML*Element`.
+
+I [sent a new PR](https://github.com/microsoft/TypeScript/pull/43007) and [asked about the regular expressions and empty object detection](https://github.com/microsoft/TypeScript/pull/43007#discussion_r584429414).
+
+## Peer Reviews
+
+### Naming
+
+The first review feedback I got was pretty easy to resolve.
+Do you see the difference?
+
+{/* spell-checker: disable */}
+
+```diff
+- containerSeemstoBeEmptyDomElement(containingType)
++ containerSeemsToBeEmptyDomElement(containingType)
+```
+
+{/* spell-checker: enable */}
+
+🤦.
+
+### Getting Answers
+
+The [responses](https://github.com/microsoft/TypeScript/pull/43007/files/3e595a5f6baac097780e6ecb3d23ec9869d6dd4d#r598024356) to my questions were pretty straightforward:
+
+- Using a regular expression is fine; the original PR's one was just a bit more complicated than it needed to be
+- `isEmptyObjectType` is the right way in this situation to check for an empty object type
+
+It was [also mentioned](https://github.com/microsoft/TypeScript/pull/43007/files/3e595a5f6baac097780e6ecb3d23ec9869d6dd4d#r598024721) that I didn't need to call `toString()` on `type.symbol.escapedName`, since that's already a string.
+
+> TypeScript uses a `__String` type internally to refer to strings whose leading underscore have been escaped by adding extra leading underscores.
+> See the [Basarat article on Nominal Typing](https://basarat.gitbook.io/typescript/main-1/nominaltyping#using-interfaces) for more details.
+
+I used `unescapeLeadingUnderscores` for Ultimate Correctness to sanitize that string.
+
+Applying all the feedback:
+
+```ts
+function containerSeemsToBeEmptyDomElement(containingType: Type): boolean {
+	return (
+		compilerOptions.lib &&
+		!compilerOptions.lib.includes("dom") &&
+		everyContainedType(
+			containingType,
+			(type) =>
+				type.symbol &&
+				/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/.test(
+					unescapeLeadingUnderscores(type.symbol.escapedName),
+				),
+		) &&
+		isEmptyObjectType(containingType)
+	);
+}
+```
+
+> Confused by that regular expression?
+> Skip to the [bottom](#regular-expressions-explained) of this post for an explanation!
+
+### Diagnostic Messages Quotes
+
+The original proposed diagnostic message addition looked like this:
+
+```json
+"... Try changing the `lib` compiler option to include 'dom'."
+```
+
+One [piece of feedback](https://github.com/microsoft/TypeScript/pull/43007/files/3e595a5f6baac097780e6ecb3d23ec9869d6dd4d#r585149336) requested using a consistent quoting style.
+It was noted that other diagnostic messages don't have a consistent style; for now, we went with single quotes consistently.
+
+```json
+"... Try changing the 'lib' compiler option to include 'dom'."
+```
+
+[#43503 Error messages inconsistently use backticks and single quotes](https://github.com/microsoft/TypeScript/issues/43503) was filed to later resolve the general inconsistencies.
+
+## Wrapping Up
+
+I pushed the requested adjustments in the PR and re-requested review.
+It was merged in within a day.
+Yay! 🎉
+
+Thanks to [@kylejlin](https://github.com/kylejlin) for sending the first version of the PR and to [@DanielRosenwasser](https://github.com/DanielRosenwasser) and [@sandersn](https://github.com/sandersn) for the PR reviews (as well as introducing me to the excellent phrase _"Ultimate Correctness"_)!
+
+---
+
+## Regular Expressions, Explained
+
+Regular expressions can be tough to read if you're not familiar with the syntax!
+A regular expression, or "regexp" for short, is a description of what characters to check for, in order, from a string.
+
+I like the [MDN Regular Expressions article](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions); the [Codecademy Learn the Basics of Regular Expressions course](https://www.codecademy.com/learn/introduction-to-regular-expressions) is a solid intro if you want to be more hands-on and guided.
+
+### My Regular Expression
+
+```js
+/^(EventTarget|Node|((HTML[a-zA-Z]*)?Element))$/;
+```
+
+First off, `^` indicates the _beginning_ of a string and `$` indicates the _end_ of a string.
+Using them at the beginning and end of the regular expression means this will only match an _entire_ string: not a partial subset.
+For this regexp or a simpler one like `^Node$`, `BlahNodeBlah` doesn't match but `Node` does.
+
+Next, this regular expression shows off [groups and ranges](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Groups_and_Ranges).
+The `|` pipes indicate that the content must be _any_ of:
+
+- `EventTarget`
+- `Node`
+- `(HTML[a-zA-Z]*)?Element`
+
+That last one is what matches `Element`, `HTMLElement`, and all other names such as `HTMLAudioElement` that have characters between `HTML` and `Element`:
+
+- `[a-zA-Z]` indicates we can have any character in the alphabet between `a-z` or `A-Z`
+- `*` indicates we want the previous character _(here, the alphabet ones)_ to be allowed to repeat >=0 times
+- The `?` in that last option means anything before it is optional
+
+Putting them all together, this regular expression is another way of testing for the name `EventTarget`, `Node`, `Element`, `HTMLElement`, or `HTML` + (some alphabet characters) + `Element`.
+
+### The Original Regular Expression
+
+```ts
+/\bHTML\w*Element\b(?![:"])/;
+```
+
+- Per [MDN's Assertions article](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Assertions), `\b` matches a word boundary
+- Per [MDN's Character Classes article](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes), `\w` matches any alphanumeric character from the basic Latin alphabet, including the underscore.
+- `?!` is another assertion: it matches only if the following characters are _not_ what comes next in the string.
+
+Putting them all together, this was another way of testing that the type has, in order:
+
+1. `HTML`
+2. Any number of alphabetical characters
+3. `Element`
+4. _Not_ `:` or `"` at the end

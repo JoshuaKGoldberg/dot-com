@@ -2,6 +2,7 @@ import type { CollectionEntry } from "astro:content";
 
 import { ContentEntry } from "../entries/ContentEntry";
 import { DateAndMinutes } from "./DateAndMinutes";
+import { createBlogTitle } from "./utils";
 
 export interface BlogEntryProps {
 	blog: CollectionEntry<"blog">;
@@ -21,9 +22,7 @@ export function BlogEntry(props: BlogEntryProps) {
 			subtitle={
 				<DateAndMinutes body={props.blog.body} date={props.blog.data.pubDate} />
 			}
-			title={props.blog.data.title
-				// TODO: use a markdown renderer
-				.replaceAll("`", "")}
+			title={createBlogTitle(props.blog)}
 			url={url()}
 			widths="full"
 		/>
