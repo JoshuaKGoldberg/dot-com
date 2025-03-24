@@ -25,13 +25,14 @@ if (!entry) {
 	return Astro.redirect("/404");
 }
 
+const image = entry.data.thumbnail?.src ?? entry.data.image.src.src;
 const rendered = await entry.render();
 const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={entry.data.description}
-	image={entry.data.image.src.src}
+	image={image}
 	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">
