@@ -226,15 +226,13 @@ export const myPlugin = createPlugin({
 // linter.config.ts
 import { myPlugin } from "@joshuakgoldberg/my-plugin";
 
-[
-	{
-		rules: myPlugin.rules({
-			someRule: {
-				option: "...",
-			},
-		}),
-	},
-];
+{
+	rules: myPlugin.rules({
+		someRule: {
+			option: "...",
+		},
+	}),
+},
 ```
 
 Under that kind of system, users would receive intellisense as they type plugin rules, and all those settings could be type checked.
@@ -274,15 +272,13 @@ export const myPlugin = createPlugin({
 // linter.config.ts
 import { myPlugin } from "@joshuakgoldberg/my-plugin";
 
-[
-	{
-		plugins: [
-			myPlugin({
-				setting: "...",
-			}),
-		],
-	},
-];
+{
+	plugins: [
+		myPlugin({
+			setting: "...",
+		}),
+	],
+}
 ```
 
 As with rules, allowing plugins to define their own settings types would help with the config authoring experience.
@@ -326,6 +322,9 @@ Here's a rough sketch of what the root monorepo config could like with a config 
 // if-i-wrote-a-linter.config.ts
 import { defineConfig } from "@joshuakgoldberg/if-i-wrote-a-linter";
 import { pluginSomeExample } from "@joshuakgoldberg/plugin-some-example";
+
+// VERY ROUGH SKETCH, I THINK I WILL REDO THIS COMPLETELY :)
+// (looking back a few months later I don't find it as readable as I used to...)
 
 export default defineConfig({
 	files: [
