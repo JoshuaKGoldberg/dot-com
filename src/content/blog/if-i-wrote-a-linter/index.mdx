@@ -304,7 +304,7 @@ Nuanced JS configurations from ESLint, on the other hand, are "just JavaScript" 
 That's great for understandability and simplifying the plugin loading model.
 ESLint's flat config is a huge step forward from the confusing `overrides` model of ESLint's legacy configs.
 
-But, I ESLint's flat config has learned the hard way what nuances trip people up this far outside the "walled garden" of pure JSON:
+But, I think ESLint's flat config has learned the hard way what nuances trip people up this far outside the "walled garden" of pure JSON:
 
 - Because all config entries are just JavaScript objects, there's no way to lint only the user's own config entries [^eslint-issue-change-request-report-unnecessary-config-overrides]
 - Directory relativity becomes confusing when nested configs `import` from a higher-up config [^eslint-issue-change-request-inherit-flat-configs-from-root]
