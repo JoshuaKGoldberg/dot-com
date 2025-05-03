@@ -13,6 +13,7 @@ export const collections = {
 				}),
 				pubDate: z.coerce.date(),
 				series: z.string().optional(),
+				thumbnail: image().optional(),
 				title: z.string(),
 			}),
 	}),

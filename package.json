@@ -52,7 +52,7 @@
 		"eslint-plugin-regexp": "^2.7.0",
 		"eslint-plugin-solid": "^0.14.5",
 		"eslint-plugin-yml": "^1.17.0",
-		"joshuakgoldberg": "^0.15.11",
+		"joshuakgoldberg": "^0.18.0",
 		"knip": "^5.45.0",
 		"konami-emoji-blast": "^0.5.9",
 		"markdownlint": "^0.37.4",
