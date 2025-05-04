@@ -63,10 +63,10 @@ If I wrote a linter, it would have a **hybrid core**:
 
 TypeScript is the only tool that can provide full TypeScript type information for JavaScript or TypeScript code [^post-why-typed-linting-needs-typescript-today].
 Typed linting's performance with TypeScript 5.x is troublesome today even for projects that configure it correctly.
-It still feels slow even on linters optimized for it such as [TSSLint](https://github.com/johnsoncodehk/tsslint).
+Even on linters optimized for it such as [TSSLint](https://github.com/johnsoncodehk/tsslint), typed linting is roughly bound to the performance of type checking [^tseslint-troubleshooting-performance].
 
 Good thing [TypeScript's Go port](https://devblogs.microsoft.com/typescript/typescript-native-port) is coming with _10x performance improvements_.
-I believe a linter that uses the 10x faster TypeScript in Go _and_ has built-in support for typed linting would make typed linting well worth its performance cuts.
+I believe a linter that uses the 10x faster TypeScript in Go would make typed linting well worth its performance hit.
 
 ### TypeScript FFI
 
@@ -290,6 +290,8 @@ If this post was of any interest to you I think you'll find them similarly inter
 [^tseslint-extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
 
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
+
+[^tseslint-troubleshooting-performance]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance](https://typescript-eslint.io/troubleshooting/typed-linting/performance)
 
 [^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
 
