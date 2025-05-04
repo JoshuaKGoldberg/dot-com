@@ -1,6 +1,6 @@
 ---
 pubDate: 2025-05-04 10:00 GMT
-description: "This how I would architect a modern linter from scratch: focusing on built-in TypeScript support and a straightforward rule development experience."
+description: "This how I would architect a modern linter from scratch: focusing on built-in TypeScript support, a straightforward rule development experience, and deduplicating tooling."
 image:
   alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
   src: "~/assets/blog/sisyphus.jpg"
@@ -19,7 +19,7 @@ import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
 Today's web linters are great.
-ESLint is robust and has a huge ecosystem of plugins and configs.
+[ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
 Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://github.com/oxc-project/oxc) are fast and easy to set up with their own burgeoning ecosystems.
 
 I've been working on TypeScript linting for almost a decade.
