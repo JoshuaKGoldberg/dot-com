@@ -96,11 +96,11 @@ WebAssembly would be ideal -- except Go's output is still suboptimal for this us
 IPC's isolated processes are much generally easier to work with.
 But, IPC is slower than FFI because it has to serialize and deserialize data between the two processes.
 
-FFI is tricky because Go functions work in a single shared memory space.
+FFI is tricky because Go code works in a single shared memory space.
 Users running the linter would be stuck with whatever version of TypeScript and Go is bundled with the linter.
 
 If I wrote a linter, it would use FFI for as fast type information as possible (until Go's WebAssembly story is more favorable).
-If users are running other Go code, they can always spawn a process for the linter.
+If users are running other Go code, they can always spawn a dedicated process for the linter.
 
 ## Type Aware, Always
 
@@ -172,6 +172,23 @@ I want to make the acts of writing lint rules as streamlined as possible.
 
 If I wrote a linter, it would create only one AST for JavaScript and TypeScript code: TypeScript's.
 
+## Core Common Languages
+
+Building in TypeScript support is a great start, but linting is useful for more than just JavaScript and TypeScript.
+ESLint plugins exist for basically every language that web repositories use.
+I think a modern web linter should encourage applying the same developer assistance and quality checks to all the languages in a project.
+
+If I wrote a linter, it would support all languages that are common to the majority of web projects:
+
+- JavaScript and TypeScript
+- JSON
+- Markdown
+- YML
+
+This means the core linter architecture would be completely agnostic of any specific language.
+It would look like the newer ESLint architecture where each language is its own plugin [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
+Users would of course still be able to write their own plugins for other languages such as Astro and Vue.
+
 ## Embeddable by Design
 
 Right now, most web projects that employ both linting and type checking run them separately in CI.
@@ -196,7 +213,7 @@ I've personally used lint rules to great effect in rolling out design system upd
 
 Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
 Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
-ESLint also doesn't provide very many hooks for changing with fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
+ESLint also doesn't provide very many hooks for changing which fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
 
 If I wrote a linter, I would add in a rich system for rule fixes and suggestions:
 
@@ -206,27 +223,10 @@ If I wrote a linter, I would add in a rich system for rule fixes and suggestions
 
 Between ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) and the controllable fixes & suggestions, I think this linter would allow teams to integrate gradual codemod-driven migrations into daily development.
 
-## Core Common Languages
-
-Linting is useful for more than just JavaScript and TypeScript.
-ESLint plugins exist for basically every language that web repositories use.
-I think a modern web linter should encourage applying the same developer assistance and quality checks to all the languages in a project.
-
-If I wrote a linter, it would support all languages that are common to the majority of web projects:
-
-- JavaScript and TypeScript
-- JSON
-- Markdown
-- YML
-
-This means the core linter architecture would be completely agnostic of any specific language.
-It would look like the newer ESLint architecture where each language is its own plugin [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
-Users would of course still be able to write their own plugins for other languages such as Astro and Vue.
-
 ## Up Next
 
 I find this post's architecture ideas exhilarating and terrifying.
-They're a huge departure from the current state of linting, even stepping in the opposite direction of other linters in many cases.
+They're a huge departure from the current state of web linting, even stepping in the opposite direction of other linters in many cases.
 But I think the potential advantages are huge:
 
 - Combining the performance of native speed with the joy of TypeScript-first lint rules
