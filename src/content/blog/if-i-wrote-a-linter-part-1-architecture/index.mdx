@@ -79,7 +79,7 @@ If a Node.js linter that wants to call to native Go code, it has roughly three c
 
 WebAssembly would be ideal -- except Go's output is still suboptimal for this use case [^go-performance-of-wasm] [^typescript-go-wasm-performance].
 
-IPC's isolated processes are much generally easier to work with.
+IPC's isolated processes are generally much easier to work with.
 But, IPC is slower than FFI because it has to serialize and deserialize data between the two processes.
 
 FFI is tricky because Go code works in a single shared memory space.
