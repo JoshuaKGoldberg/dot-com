@@ -26,7 +26,7 @@ Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](h
 
 I've been working on TypeScript linting for almost a decade.
 I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
-Based on those years of various linters, I've collected a large set of design ideas that I want to see in a new web linter.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try out.
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
 This post is how I would architect it.
@@ -46,21 +46,6 @@ This post is how I would architect it.
 > - Part 2: Developer Experience _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/419 "dot-com pull request 419: Part 2: Developer Experience"))_
 > - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
 > - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
-
-## Formatting Coordination
-
-One of the biggest reasons users move to Biome or Oxc is that those tools perform both _formatting_ and _linting_ with a single devDependency and configuration file.
-In doing so, they provide a much easier setup and maintenance story, as well as sidestep many common ESLint misconfigurations that lead to performance issues [^tseslint-troubleshooting-performance-stylistic] [^tseslint-troubleshooting-performance-prettier] [^tseslint-troubleshooting-performance-import].
-
-I think that's a great idea.
-I still believe _lint rules_ should not be used for formatting [^post-stop-using-eslint-for-formatting] [^post-the-blurry-line-between-formatting-and-style].
-But I've found that if I want to format a file type, there's practically always a linter plugin I'd want for it too.
-If both the formatter and linter are running on the same set of files, deduplicating _coordination_ into the linter makes sense to me.
-
-If I wrote a linter, it would provide "postlint" hooks for tasks on those files [^eslint-issue-change-request-add-a-concept-of-postlint-hooks].
-By default it would at least run a formatter on files after linting them.
-You wouldn't need to include formatting-specific configuration files in your repository at all.
-Formatting would be wholly coordinated by the linter.
 
 ## Hybrid Core
 
@@ -178,16 +163,32 @@ Building in TypeScript support is a great start, but linting is useful for more 
 ESLint plugins exist for basically every language that web repositories use.
 I think a modern web linter should encourage applying the same developer assistance and quality checks to all the languages in a project.
 
-If I wrote a linter, it would support all languages that are common to the majority of web projects:
+If I wrote a linter, it would provide first-party plugins for all languages that are common to the majority of web projects:
 
 - JavaScript and TypeScript
 - JSON
 - Markdown
 - YML
 
-This means the core linter architecture would be completely agnostic of any specific language.
-It would look like the newer ESLint architecture where each language is its own plugin [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
+The core linter architecture would be completely agnostic of any specific language.
+It would look like the newer ESLint architecture where each language is a separate entity [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
+Each language would provide its own parser, type information services, and any other language-specific hooks.
 Users would of course still be able to write their own plugins for other languages such as Astro and Vue.
+
+## Formatting Coordination
+
+One of the biggest reasons users move to Biome or Oxc is that those tools perform both _formatting_ and _linting_ with a single devDependency and configuration file.
+In doing so, they provide a much easier setup and maintenance story, as well as sidestep many common ESLint misconfigurations that lead to performance issues [^tseslint-troubleshooting-performance-stylistic] [^tseslint-troubleshooting-performance-prettier] [^tseslint-troubleshooting-performance-import].
+
+I think that's a great idea.
+I still believe _lint rules_ should not be used for formatting [^post-stop-using-eslint-for-formatting] [^post-the-blurry-line-between-formatting-and-style].
+But I've found that if I want to format a file type, there's practically always a linter plugin I'd want for it too.
+If both the formatter and linter are running on the same set of files, deduplicating _coordination_ into the linter makes sense to me.
+
+If I wrote a linter, it would provide "postlint" hooks for tasks on those files [^eslint-issue-change-request-add-a-concept-of-postlint-hooks].
+By default it would at least run a formatter on files after linting them.
+You wouldn't need to include formatting-specific configuration files in your repository at all.
+Formatting would be wholly coordinated by the linter.
 
 ## Embeddable by Design
 
@@ -215,9 +216,9 @@ Unfortunately, the "one file at a time" model all of today's linters doesn't len
 Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
 ESLint also doesn't provide very many hooks for changing which fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
 
-If I wrote a linter, I would add in a rich system for rule fixes and suggestions:
+If I wrote a linter, it would provide a rich system for rule fixes and suggestions:
 
-- The ability to indicate changes to virtual files other than the one being linted
+- The ability to indicate changes to files other than the one being linted
 - Other file system operations, such as renames and permissions changes
 - Targeting specific fixes and/or suggestions programmatically
 
@@ -233,7 +234,7 @@ But I think the potential advantages are huge:
 - Deduplicating type information computation in CI from 2 jobs to 1
 - Reducing the amount of language plugins from >=2 to 1 for common projects
 - Removing the need for wholly separate codemod platforms
-- Shrinking the config files, devDependencies, scripts for formatting+linting down to 1
+- Shrinking the config files, devDependencies, scripts for formatting+linting down from >=2-3 to 1
 
 Over the next ~week, I'll post more about the developer experience and ecosystem points of this hypothetical linter.
 If this post was of any interest to you I think you'll find them similarly interesting!
