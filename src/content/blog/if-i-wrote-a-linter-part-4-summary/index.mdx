@@ -1,0 +1,57 @@
+---
+pubDate: 2025-05-04 10:02 GMT
+description: "This is all the things I would build into a modern web linter from scratch: architecture, developer experience, and user experience."
+image:
+  alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
+  src: "~/assets/blog/sisyphus.jpg"
+title: "If I Wrote a Linter, Part 3: User Experience"
+---
+
+import {
+	Tabs,
+	TabsList,
+	TabsTab,
+	TabsPanel,
+} from "accessible-astro-components";
+
+import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+> 💡 This post is the fourth in a series.
+> See [1. Architecture](/blog/if-i-wrote-a-linter-1-architecture) for the first post and more context.
+
+This was a long blog post series with a lot of details in each post.
+These were the main points:
+
+- [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture):
+  - [Hybrid core](/blog/if-i-wrote-a-linter-part-1-architecture#hybrid-core): as described in [Hybrid Linters: The Best of Both Worlds](/blog/hybrid-linters-the-best-of-both-worlds)
+  - [Type aware, always](/blog/if-i-wrote-a-linter-part-1-architecture#type-aware-always): with an architecture built for it along with [TypeScript's Go port](https://devblogs.microsoft.com/typescript/typescript-native-port)
+  - [Built-in TypeScript support](/blog/if-i-wrote-a-linter-part-1-architecture#built-in-typescript-support): no need for a separate parser or plugin
+  - [TypeScript's AST](/blog/if-i-wrote-a-linter-part-1-architecture#typescripts-ast): no more TSESTree and dual-tree linting, just TypeScript's AST
+  - [Embeddable by design](/blog/if-i-wrote-a-linter-part-1-architecture#embeddable-by-design): native support for embedding within existing TypeScript services
+- [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience):
+  - [Formatting coordination](/blog/if-i-wrote-a-linter-part-2-developer-experience#formatting-coordination): so you don't have to separately configure a formatter
+  - [Only errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors): no more warnings clogging up projects over time, just errors
+  - [Typed rules](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-rules): type-safe rule options and settings, even in your config files
+  - [Typed plugin settings](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-plugin-settings): type-safe per-plugin settings
+  - [Typed configuration files](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-configuration-files): type-safe config files with a clear, consistent API
+  - [Native workspace support](/blog/if-i-wrote-a-linter-part-2-developer-experience#native-workspace-support): for monorepos that share parts of their configs across projects
+- TODO: the rest
+
+If you just read those high-level points, I hope you're at least excited about the potential for a linter that embraces all those new strategies.
+And if you read the whole post, I hope you enjoyed it as much as I enjoyed writing it.
+These are really exciting times for the JavaScript ecosystem, and I'm excited to see where it goes next.
+
+## Flint
+
+Anyway, I'm going to be prototyping a linter that does all those things over the next few months.
+It's going to be called _**Flint**: A fast, friendly linter_ ❤️‍🔥.
+Or something like that.
+
+If you're interested in following along, you can check out the [Flint GitHub repository](https://github.com/JoshuaKGoldberg/flint).
+If you want to help out, please feel free to open issues or PRs.
+Or just reach out to me on [Bluesky](https://bsky.app/profile/joshuakgoldberg.com).
+I would love to hear your thoughts on this post and the project.
+
+Thanks for reading!
