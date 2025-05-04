@@ -1,0 +1,306 @@
+---
+pubDate: 2025-05-04
+description: "This how I would architect a modern linter from scratch: focusing on built-in TypeScript support, a straightforward rule development experience, and deduplicating tooling."
+image:
+  alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
+  src: "~/assets/blog/tevye-square.png"
+title: "If I Wrote a Linter, Part 1: Architecture"
+---
+
+import {
+	Tabs,
+	TabsList,
+	TabsTab,
+	TabsPanel,
+} from "accessible-astro-components";
+
+import tevyeDancingIfIWasARichMan from "~/assets/blog/tevye-dancing-if-i-was-a-rich-man.webp";
+import tevyeDancingTradition from "~/assets/blog/tevye-dancing-tradition.webp";
+import tevyeWalkingDancingHorse from "~/assets/blog/tevye-walking-dancing-horse.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+Today's web linters are great.
+[ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
+Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://github.com/oxc-project/oxc) are fast and easy to set up with their own burgeoning ecosystems.
+
+I've been working on TypeScript linting for almost a decade.
+I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try out.
+
+I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
+This post is how I would architect it.
+
+<LabeledImage
+	alt="Tevye from Fiddler on the Roof snapping his hands back and forth in a dance."
+	description="Tevye from Fiddler on the Roof imagining being rich (with fast, powerful, easy-to-configure lint rules)."
+	original="https://giphy.com/gifs/classic-movies-musicals-fiddler-on-the-roof-xULW8PseQFMgq8Bums"
+	src={tevyeDancingIfIWasARichMan}
+/>
+
+> 💡 This post is the first in a series:
+>
+> <br />
+>
+> - 👉 [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - Part 2: Developer Experience _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/419 "dot-com pull request 419: Part 2: Developer Experience"))_
+> - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
+
+## Hybrid Core
+
+I want the fantastic performance benefits of recent native speed linters.
+I also want the developer approachability benefits of writing all rules -not just select userland plugins- in TypeScript.
+
+If I wrote a linter, it would have a **hybrid core**:
+
+- _File intake_ and _type information_ would be native speed, for performance
+- _Coordinating logic_ and _rules_ would be TypeScript, to stay approachable for developers
+
+[Hybrid Linters: The Best of Both Worlds](/blog/hybrid-linters-the-best-of-both-worlds) covers this in more detail.
+
+## TypeScript For Type Awareness
+
+TypeScript is the only tool that can provide full TypeScript type information for JavaScript or TypeScript code [^post-why-typed-linting-needs-typescript-today].
+Typed linting's performance with TypeScript 5.x is troublesome today even for projects that configure it correctly.
+Even on linters optimized for it such as [TSSLint](https://github.com/johnsoncodehk/tsslint), typed linting is roughly bound to the performance of type checking [^tseslint-troubleshooting-performance].
+
+Good thing [TypeScript's Go port](https://devblogs.microsoft.com/typescript/typescript-native-port) is coming with _10x performance improvements_.
+I believe a linter that uses the 10x faster TypeScript in Go would make typed linting well worth its performance hit.
+
+### TypeScript FFI
+
+If a Node.js linter that wants to call to native Go code, it has roughly three common options:
+
+- [FFI (Foreign Function Interface)](https://en.wikipedia.org/wiki/Foreign_function_interface): running TypeScript's Go functions within the linting process
+- [IPC (Inter-Process Communication)](https://en.wikipedia.org/wiki/Inter-process_communication): creating a separate TypeScript Go process
+- [WebAssembly](https://en.wikipedia.org/wiki/WebAssembly): compiling TypeScript's Go code to WebAssembly to be run in the linter process
+
+WebAssembly would be ideal -- except Go's output is still suboptimal for this use case [^go-performance-of-wasm] [^typescript-go-wasm-performance].
+
+IPC's isolated processes are much generally easier to work with.
+But, IPC is slower than FFI because it has to serialize and deserialize data between the two processes.
+
+FFI is tricky because Go code works in a single shared memory space.
+Users running the linter would be stuck with whatever version of TypeScript and Go is bundled with the linter.
+
+If I wrote a linter, it would use FFI for as fast type information as possible (until Go's WebAssembly story is more favorable).
+If users are running other Go code, they can always spawn a dedicated process for the linter.
+
+## Type Aware, Always
+
+Many popular lint rules require typed linting to avoid blatant bugs or feature gaps [^eslint-plugin-react-hooks-detection-typed-linting] [^eslint-plugin-vitest-valid-type-type-checking].
+But, ESLint core and its rules are not type-aware.
+Enabling typed linting requires reading additional documentation and implementing additional linter config setup.
+Avoiding common configuration pitfalls [^tseslint-troubleshooting-typed-linting] in that setup is not a straightforward task.
+
+The divide between untyped core rules and typed plugin rules is painful for the ecosystem:
+
+- Core rules are less powerful than they could be
+- Plugins have to choose between being fast and easy to set up vs. slower and type-aware
+- ESLint core isn't structured for cross-file linting, so there are known typed linting performance woes [^eslint-rfc-feat-parsing-session-objects] and intractable editor extension bugs [^vscode-eslint-cross-file-information]
+
+Those extra configuration steps and performance woes are two of the big reasons why typed linting is an optional add-in for most projects.
+Given this hypothetical linter's hybrid core, typed linting would be significantly faster and much easier to set up.
+Removing typed linting's downsides means the linter could make type information always available.
+That would simplify the linting story:
+
+- Core rules don't need to be duplicated by plugins to add in typed linting support
+- Plugins don't have to depend on an ad-hoc non-core project for type information
+- The core linter architecture can be optimized for type-checked linting performance
+
+If I wrote a linter, an equivalent of [typescript-eslint's new Project Service](https://typescript-eslint.io/blog/announcing-typescript-eslint-v8#project-service) would always be enabled for users.
+And with a core architecture optimized for typed linting, linting can be just as fast as type checking.
+Whoo!
+
+## Built-In TypeScript Support
+
+ESLint is one of the few common modern JavaScript utilities that doesn't support parsing TypeScript syntax out-of-the-box.
+Although core rules react well to parsed TypeScript syntax now [^eslint-issue-change-request-make-core-rules-typescript-syntax-aware], your configuration must use typescript-eslint to actually parse that syntax.
+Core ESLint rules also don't understand TypeScript types or concepts.
+
+That's led to the concept of "extension rules" in typescript-eslint [^tseslint-extension-rules]: rules that replace built-in rules to work well with TypeScript syntax and/or types.
+Extension rules are confusing for users and inconvenient to work with for both maintainers and users.
+
+I'm excited that ESLint is rethinking its TypeScript support [^rethinking-typescript-support-in-eslint].
+Hopefully, once the ESLint rewrite [^eslint-discussion-rewrite] comes out, we'll be able to declutter userland configs and deduplicate the extension rules.
+
+If I wrote a linter, it would support TypeScript natively.
+No additional packages or "extension" rules.
+Core rules would understand both TypeScript syntax and type information.
+
+<LabeledImage
+	alt="Tevye from Fiddler on the Roof walking and dancing in front of a single horse-drawn plow."
+	description="Tevye from Fiddler on the Roof celebrating typed linting (the horse begrudgingly keeping up with him)."
+	original="https://giphy.com/gifs/classic-movies-musicals-fiddler-on-the-roof-xULW8PseQFMgq8Bums"
+	src={tevyeWalkingDancingHorse}
+/>
+
+### TypeScript's AST
+
+ESLint's AST representation is [ESTree](https://github.com/estree/estree).
+[`@typescript-eslint/parser`](https://typescript-eslint.io/packages/parser) works by parsing code using TypeScript's parser into TypeScript's AST, then recursively creating a "TSESTree" (ESTree + TypeScript nodes) structure roughly adhering to ESTree from that.
+
+We do this because both of those ASTs are necessary in ESLint's model:
+
+- ESTree: means lint rules have no dependency on the corporate-backed TypeScript -- they are compatible with ESLint core
+- TypeScript's: must be used for nodes passed to TypeScript APIs, most notably for typed linting
+
+The main downside of this dual-tree format is the complication for linter teams and lint rule authors working with TypeScript APIs.
+On the typescript-eslint team, we must dedicate time for every TypeScript AST change to update node conversion logic.
+For lint rule authors, having to convert TSESTree nodes to their TS counterparts before passing to TypeScript APIs is an annoyance.
+We've written utilities to help with common cases [^tseslint-pr-type-checker-wrapper-apis] but the conceptual overhead alone is bad enough.
+
+TypeScript is now the only popular type-oriented language in web code -- there's no longer a strong need to keep lint rules extensible for other languages such as Flow [^flow-blog-clarity-on-direction].
+As much as I like the goal of remaining ESTree/JavaScript-oriented in JavaScript linters, this dual-tree overhead is awful.
+I want to make the acts of writing lint rules as streamlined as possible.
+
+If I wrote a linter, it would create only one AST for JavaScript and TypeScript code: TypeScript's.
+
+## Core Common Languages
+
+Building in TypeScript support is a great start, but linting is useful for more than just JavaScript and TypeScript.
+ESLint plugins exist for basically every language that web repositories use.
+I think a modern web linter should encourage applying the same developer assistance and quality checks to all the languages in a project.
+
+If I wrote a linter, it would provide first-party plugins for all languages that are common to the majority of web projects:
+
+- JavaScript and TypeScript
+- JSON
+- Markdown
+- YML
+
+The core linter architecture would be completely agnostic of any specific language.
+It would look like the newer ESLint architecture where each language is a separate entity [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
+Each language would provide its own parser, type information services, and any other language-specific hooks.
+Users would of course still be able to write their own plugins for other languages such as Astro and Vue.
+
+## Formatting Coordination
+
+One of the biggest reasons users move to Biome or Oxc is that those tools perform both _formatting_ and _linting_ with a single devDependency and configuration file.
+In doing so, they provide a much easier setup and maintenance story, as well as sidestep many common ESLint misconfigurations that lead to performance issues [^tseslint-troubleshooting-performance-stylistic] [^tseslint-troubleshooting-performance-prettier] [^tseslint-troubleshooting-performance-import].
+
+I think that's a great idea.
+I still believe _lint rules_ should not be used for formatting [^post-stop-using-eslint-for-formatting] [^post-the-blurry-line-between-formatting-and-style].
+But I've found that if I want to format a file type, there's practically always a linter plugin I'd want for it too.
+If both the formatter and linter are running on the same set of files, deduplicating _coordination_ into the linter makes sense to me.
+
+If I wrote a linter, it would provide "postlint" hooks for tasks on those files [^eslint-issue-change-request-add-a-concept-of-postlint-hooks].
+By default it would at least run a formatter on files after linting them.
+You wouldn't need to include formatting-specific configuration files in your repository at all.
+Formatting would be wholly coordinated by the linter.
+
+## Embeddable by Design
+
+Right now, most web projects that employ both linting and type checking run them separately in CI.
+Projects typically either run them in parallel across two workflows or in series within the same workflow.
+That's inefficient and slow.
+
+The root problem is that projects typically don't connect the type information generated by type checking (`tsc`) to typed linting in ESLint.
+Projects effectively run a full type-check twice: once with `tsc` and once with typed linting.
+
+Other folks have already started working on this problem.
+[typescript-eslint-language-service](https://github.com/Quramy/typescript-eslint-language-service) is a direction I'd already like to explore in working more closely with typescript-eslint.
+[TSSLint](https://github.com/johnsoncodehk/tsslint) is a recent project that does a great job of integrating with tsserver.
+
+If I wrote a linter, it would have native support for embedding within TypeScript as a [language service plugin](https://www.typescriptlang.org/tsconfig/#plugins).
+I'm not sure yet how this would look -does this happen client-side and CI? only CI?- but I think the potential to deduplicate type information computation in CI is tantalizing.
+
+## Rich Cross File Fixes
+
+A linter is in many ways the best codemod platform for many kinds of migrations.
+It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
+I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
+
+Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
+Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
+ESLint also doesn't provide very many hooks for changing which fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
+
+If I wrote a linter, it would provide a rich system for rule fixes and suggestions:
+
+- The ability to indicate changes to files other than the one being linted
+- Other file system operations, such as renames and permissions changes
+- Targeting specific fixes and/or suggestions programmatically
+
+Between ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) and the controllable fixes & suggestions, I think this linter would allow teams to integrate gradual codemod-driven migrations into daily development.
+
+## Up Next
+
+I find this post's architecture ideas exhilarating and terrifying.
+They're a huge departure from the current state of web linting, even stepping in the opposite direction of other linters in many cases.
+But I think the potential advantages are huge:
+
+- Combining the performance of native speed with the joy of TypeScript-first lint rules
+- Deduplicating type information computation in CI from 2 jobs to 1
+- Reducing the amount of language plugins from >=2 to 1 for common projects
+- Removing the need for wholly separate codemod platforms
+- Shrinking the config files, devDependencies, scripts for formatting+linting down from >=2-3 to 1
+
+Over the next ~week, I'll post more about the developer experience and ecosystem points of this hypothetical linter.
+If this post was of any interest to you I think you'll find them similarly interesting!
+
+> 💡 This post is the first in a series:
+>
+> <br />
+>
+> - 👉 [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - Part 2: Developer Experience _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/419 "dot-com pull request 419: Part 2: Developer Experience"))_
+> - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
+
+<LabeledImage
+	alt="Tevye from Fiddler on the Roof shaking his hands back and forth in a dance, in a barn, while a horse looks on."
+	description="Tevye from Fiddler on the Roof celebrating tradition (of successive waves of dev tooling trying new ideas)."
+	original="https://tenor.com/view/tevye-dancing-fiddler-on-the-roof-chaim-topol-wiggle-gif-16577006"
+	src={tevyeDancingTradition}
+/>
+
+# References
+
+[^eslint-discussion-rewrite]: [eslint/eslint#16557 Complete rewrite of ESLint](https://github.com/eslint/eslint/discussions/16557)
+
+[^eslint-issue-change-request-add-a-concept-of-postlint-hooks]: [Change Request: Add a concept of "postlint" hooks, such as for running a formatter](https://github.com/eslint/eslint/issues/19171)
+
+[^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
+
+[^eslint-issue-change-request-make-core-rules-typescript-syntax-aware]: [eslint/eslint#19173 Change Request: Make core rules TypeScript syntax-aware](https://github.com/eslint/eslint/issues/19173)
+
+[^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
+
+[^eslint-plugin-vitest-valid-type-type-checking]: [vitest-dev/eslint-plugin-vitest#251 valid-type: use type checking to determine test name type?](https://github.com/vitest-dev/eslint-plugin-vitest/issues/251)
+
+[^eslint-rfc-feat-parsing-session-objects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
+
+[^eslint-rfc-language-plugins]: [eslint/rfcs#99 feat: ESLint Language Plugins](https://github.com/eslint/rfcs/pull/99)
+
+[^eslint-rfc-per-rule-autofix-configuration]: [eslint/rfcs#125 feat: Per rule autofix configuration](https://github.com/eslint/rfcs/pull/125)
+
+[^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
+
+[^go-performance-of-wasm]: [golang/go#65440 cmd/compile: performance of go wasm is very poor](https://github.com/golang/go/issues/65440)
+
+[^post-stop-using-eslint-for-formatting]: [Configuring ESLint, Prettier, and TypeScript Together > STOP USING ESLINT FOR FORMATTING](/blog/configuring-eslint-prettier-and-typescript-together/#stop-using-eslint-for-formatting)
+
+[^post-the-blurry-line-between-formatting-and-style]: [The Blurry Line Between Formatting and Style](/blog/the-blurry-line-between-formatting-and-style)
+
+[^post-why-typed-linting-needs-typescript-today]: [Why Typed Linting Needs TypeScript Today](/blog/why-typed-linting-needs-typescript-today)
+
+[^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
+
+[^tseslint-extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
+
+[^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
+
+[^tseslint-troubleshooting-performance]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance](https://typescript-eslint.io/troubleshooting/typed-linting/performance)
+
+[^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
+
+[^tseslint-troubleshooting-performance-prettier]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-prettier`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-prettier)
+
+[^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
+
+[^tseslint-troubleshooting-typed-linting]: [typescript-eslint > Troubleshooting & FAQs > Typed Linting](https://typescript-eslint.io/troubleshooting/typed-linting)
+
+[^typescript-go-wasm-performance]: [microsoft/typescript-go#514 Go WASM performance](https://github.com/microsoft/typescript-go/discussions/514)
+
+[^vscode-eslint-cross-file-information]: [microsoft/vscode-eslint#1774 ESLint does not re-compute cross-file information on file changes](https://github.com/microsoft/vscode-eslint/issues/1774)
