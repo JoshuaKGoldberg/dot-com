@@ -188,13 +188,31 @@ Other folks have already started working on this problem.
 If I wrote a linter, it would have native support for embedding within TypeScript as a [language service plugin](https://www.typescriptlang.org/tsconfig/#plugins).
 I'm not sure yet how this would look -does this happen client-side and CI? only CI?- but I think the potential to deduplicate type information computation in CI is tantalizing.
 
+## Rich Cross File Fixes
+
+A linter is in many ways the best codemod platform for many kinds of migrations.
+It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
+I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
+
+Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
+Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
+ESLint also doesn't provide very many hooks for changing with fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
+
+If I wrote a linter, I would add in a rich system for rule fixes and suggestions:
+
+- The ability to indicate changes to virtual files other than the one being linted
+- Other file system operations, such as renames and permissions changes
+- Targeting specific fixes and/or suggestions programmatically
+
+Between ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) and the controllable fixes & suggestions, I think this linter would allow teams to integrate gradual codemod-driven migrations into daily development.
+
 ## Core Common Languages
 
 Linting is useful for more than just JavaScript and TypeScript.
 ESLint plugins exist for basically every language that web repositories use.
 I think a modern web linter should encourage applying the same developer assistance and quality checks to all the languages in a project.
 
-If I wrote a linter, it would support all languages that are common to a supermajority of web projects:
+If I wrote a linter, it would support all languages that are common to the majority of web projects:
 
 - JavaScript and TypeScript
 - JSON
@@ -203,6 +221,7 @@ If I wrote a linter, it would support all languages that are common to a superma
 
 This means the core linter architecture would be completely agnostic of any specific language.
 It would look like the newer ESLint architecture where each language is its own plugin [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
+Users would of course still be able to write their own plugins for other languages such as Astro and Vue.
 
 ## Up Next
 
@@ -213,6 +232,7 @@ But I think the potential advantages are huge:
 - Combining the performance of native speed with the joy of TypeScript-first lint rules
 - Deduplicating type information computation in CI from 2 jobs to 1
 - Reducing the amount of language plugins from >=2 to 1 for common projects
+- Removing the need for wholly separate codemod platforms
 - Shrinking the config files, devDependencies, scripts for formatting+linting down to 1
 
 Over the next ~week, I'll post more about the developer experience and ecosystem points of this hypothetical linter.
@@ -240,6 +260,8 @@ If this post was of any interest to you I think you'll find them similarly inter
 
 [^eslint-issue-change-request-add-a-concept-of-postlint-hooks]: [Change Request: Add a concept of "postlint" hooks, such as for running a formatter](https://github.com/eslint/eslint/issues/19171)
 
+[^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
+
 [^eslint-issue-change-request-make-core-rules-typescript-syntax-aware]: [eslint/eslint#19173 Change Request: Make core rules TypeScript syntax-aware](https://github.com/eslint/eslint/issues/19173)
 
 [^eslint-plugin-react-hooks-detection-typed-linting]: [facebook/react#25065 Bug: Eslint hooks returned by factory functions not linted](https://github.com/facebook/react/issues/25065)
@@ -249,6 +271,8 @@ If this post was of any interest to you I think you'll find them similarly inter
 [^eslint-rfc-feat-parsing-session-objects]: [eslint/rfcs#102 feat: parsing session objects](https://github.com/eslint/rfcs/pull/102)
 
 [^eslint-rfc-language-plugins]: [eslint/rfcs#99 feat: ESLint Language Plugins](https://github.com/eslint/rfcs/pull/99)
+
+[^eslint-rfc-per-rule-autofix-configuration]: [eslint/rfcs#125 feat: Per rule autofix configuration](https://github.com/eslint/rfcs/pull/125)
 
 [^flow-blog-clarity-on-direction]: [Clarity on Flow's Direction and Open Source Engagement](https://medium.com/flow-type/clarity-on-flows-direction-and-open-source-engagement-e721a4eb4d8b)
 
