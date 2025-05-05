@@ -27,7 +27,7 @@ Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](h
 
 I've been working on TypeScript linting for almost a decade.
 I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
-Based on those years of various linters, I've collected a large set of design ideas that I want to try out.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
 This post is how I would architect it.
@@ -71,7 +71,7 @@ I believe a linter that uses the 10x faster TypeScript in Go would make typed li
 
 ### TypeScript FFI
 
-If a Node.js linter that wants to call to native Go code, it has roughly three common options:
+If a Node.js linter wants to call to native Go code, it has roughly three common options:
 
 - [FFI (Foreign Function Interface)](https://en.wikipedia.org/wiki/Foreign_function_interface): running TypeScript's Go functions within the linting process
 - [IPC (Inter-Process Communication)](https://en.wikipedia.org/wiki/Inter-process_communication): creating a separate TypeScript Go process
