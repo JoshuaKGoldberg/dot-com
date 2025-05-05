@@ -1,6 +1,6 @@
 ---
-pubDate: 2025-05-04 10:01 GMT
-description: "This is all the things I would build into a modern web linter from scratch: architecture, developer experience, and user experience."
+pubDate: 2025-05-05
+description: "This is how I would tailor the developer experience for a modern linter from scratch: focusing on end-to-end type safety, self-apparent configs, and native workspaces."
 image:
   alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
   src: "~/assets/blog/sisyphus.jpg"
@@ -18,14 +18,26 @@ import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
-> 💡 This post is the second in a series.
-> See [1. Architecture](/blog/if-i-wrote-a-linter-1-architecture) for the first and more context.
+> 💡 This post is the second in a series:
+>
+> <br />
+>
+> - [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - 👉 [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
+> - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
 
-My goals with rethinking a linter's user experience are:
+The "developer experience" of a linter an incredibly important part of its usability.
+Many developers dislike any tool that tells them they're wrong.
+Linters also get an unusually bad rap because they often require extra per-project configuration, and any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
+
+My goals with rethinking a linter's developer experience are:
 
 - Clarity: everything should be as easy as possible to understand, even if you're not an expert
 - Minimalism: removing extraneous features and deduplicating tooling configuration
 - Type safety: making as much as possible well-typed, both for plugin authors and end-users
+
+This blog post describes the main changes I would make to the current status quo of the linting developer experience if I wrote a linter.
 
 ## Only Errors
 
@@ -373,6 +385,30 @@ export default defineConfig(
 
 </Tabs>
 
+One downside of this proposed approach is that it requires the user to know and manage their file extensions themselves.
+Knowing that TypeScript files can also be `*.cts`, `*.mts`, `*.tsx`, etc. is a bit of a pain.
+Maybe plugins such as the core linter plugins could provide `globs` constants?
+
+```ts
+import { defineConfig, md, json, ts, yml } from "@joshuakgoldberg/linter";
+
+export default defineConfig({
+	use: [
+		{
+			glob: ts.globs.all,
+			rules: [ts.configs.logical, ts.configs.stylistic],
+		},
+	],
+});
+```
+
+...and what about rules that should be different across different files?
+Maybe some TypeScript rules skip or apply different logic to `.d.ts` files [^tseslint-issue-no-var-declarations]?
+
+I suspect having the rules react to the extension of the file being linted would be enough.
+A rule can skip linting a file based on its file extension, or really any other information it has on the file.
+But we'll see.
+
 ## Native Workspace Support
 
 Larger web repositories these days are often structured as "monorepos", often using the "workspace" feature of their package manager and other tools.
@@ -441,12 +477,16 @@ export default defineConfig({
 
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
 
-[^tseslint-shared-configs]: [typescript-eslint > Users > Shared Configs](https://typescript-eslint.io/users/configs/)
-
 [^tseslint-discord-help-eslint-not-ignoring-js-files]: [Discord help thread: Eslint not ignoring .js files and throwing Definition for rule ... not found error](https://discord.com/channels/1026804805894672454/1283776448188121158)
+
+[^tseslint-issue-no-var-declarations]: [typescript-eslint/typescript-eslint#7941 Base rule extension: no-var configuration for declarations](https://github.com/typescript-eslint/typescript-eslint/issues/7941)
+
+[^tseslint-shared-configs]: [typescript-eslint > Users > Shared Configs](https://typescript-eslint.io/users/configs/)
 
 [^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
 
 [^tseslint-troubleshooting-performance-prettier]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-prettier`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-prettier)
 
 [^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
+
+co-authored-by: kirk (todo add thanks)
