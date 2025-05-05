@@ -36,7 +36,7 @@ Warnings are intended to be transient indicators during migrations or when rules
 In practice, I think the delineation is not worthwhile:
 
 - Using the same red color and terminology for _lint_ errors and _type-checking_ errors is confusing both ideologically and practically.
-  I personally [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, to not conflict with red TypeScript squigglies.
+  I personally use [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, to not conflict with red TypeScript squigglies.
 - Warnings tend to live forever in codebases, which trains developers to ignore lint reports.
 - If a problem can't be determined with certainty, it either should be suppressed using an inline config comment with an explanation, or not turned into a lint rule at all!
 
