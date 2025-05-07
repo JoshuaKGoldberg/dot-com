@@ -4,7 +4,7 @@ description: "This is how I would tailor the developer experience for a modern l
 image:
   alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
   src: "~/assets/blog/sisyphus.jpg"
-title: "If I Wrote a Linter, Part 2: User Experience"
+title: "If I Wrote a Linter, Part 2: Developer Experience"
 ---
 
 import {
@@ -18,6 +18,17 @@ import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
+Today's web linters are great.
+[ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
+Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://github.com/oxc-project/oxc) are fast and easy to set up with their own burgeoning ecosystems.
+
+I've been working on TypeScript linting for almost a decade.
+I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try out.
+
+I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
+This post is how I would craft how developers use it.
+
 > 💡 This post is the second in a series:
 >
 > <br />
@@ -27,17 +38,206 @@ import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 > - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
 > - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
 
+## Developer Experience is Important
+
 The "developer experience" of a linter an incredibly important part of its usability.
+Especially when your tool is made to tell developers when they're "wrong" (or, at least, when developers interpret your tool in that way).
 Many developers dislike any tool that tells them they're wrong.
 Linters also get an unusually bad rap because they often require extra per-project configuration, and any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
 
 My goals with rethinking a linter's developer experience are:
 
+- Approachability: making sure the common user flows are as documented, straightforward, and difficult-to-mess-up as possible
 - Clarity: everything should be as easy as possible to understand, even if you're not an expert
 - Minimalism: removing extraneous features and deduplicating tooling configuration
 - Type safety: making as much as possible well-typed, both for plugin authors and end-users
 
-This blog post describes the main changes I would make to the current status quo of the linting developer experience if I wrote a linter.
+## Comprehensive Rule Reports
+
+Rule reports are the entry point for most developers who experience a linter.
+The little red or yellow squiggly in an editor that shows rule text on hover is how developers learn about the report.
+
+Linters today generally populate hover text with:
+
+- ID/name, linked to the rule's online documentation
+- Text description of the rule report
+
+TODO: example `createWork();` hover
+
+If that message includes too little text, people won't understand the report; too much text, and they won't read any of it.
+That sweet spot of text isn't easy to find.
+For some nuanced rules, such as [typescript-eslint's `@typescript-eslint/no-floating-promises`](https://typescript-eslint.io/rules/no-floating-promises), report descriptions are generally complex to fit in a hover message.
+
+If I wrote a linter, rule report bodies would include something like:
+
+- Primary: a single sentence explaining what's wrong
+- Secondary: additional sentences explaining the problem in more detail
+- Suggestions: recommendations for how to fix the problem
+
+Editor extensions could then visualize these nicely, such as with [VS Code's rich hover message support](https://github.com/microsoft/vscode/blob/977af64fdff5cd967989749204d1e778dfe86f31/src/vscode-dts/vscode.d.ts#L1216).
+
+TODO: example editor mockup
+
+I'd also want to nicely format these in CLI reports:
+
+TODO: example CLI mockup
+
+## Comprehensive Rule Documentation
+
+The next step for many developers who receive a lint report is the rule's documentation page.
+The typescript-eslint site includes a pretty rich display for rules, similar to many other lint sites:
+
+- High-level ID/name and description
+- High-level metadata, such as which config(s) include the rule and whether it requires type information
+- Longer description of the rule
+- Examples of configuring the rule, as well as its options if they exist
+- When _not_ to use the rule
+- Links to the rule's source code, test code, and any related other documentation
+
+Each of those sections are must-haves for any lint rule -- especially one in an open source linter or popular plugin.
+
+If I wrote a linter, I would require all those sections be filled out in every core rule's documentation.
+I would additionally attempt to make sure any popular plugin website templates include the sections and fill them out too.
+
+## Standardized Rule Metadata
+
+I hate how non-standardized the metadata of lint rules is:
+
+- IDs/names: `no-*`? `prefer-*`? Just the `*` (functionality)?
+- Messages: how detailed is the first message? How much should it suggest remediation(s), if at all?
+- Options: an array of literals? an object with keys for option names?
+  - Option defaults: `allow*`? `check*`? `enforce*`? `require*`? Just the `*` (functionality)?
+  - Option defaults: off-by-default? on-by-default?
+
+No linter is consistent with its choices, and community plugins often make very different and inconsistent choices as well.
+This lack of standardization is painful for users.
+Without consistent patterns, it becomes much more difficult to remember how things work consistently.
+
+If I wrote a linter, I would want to standardize the metadata of all rules.
+
+- IDs/names: just the `*` (functionality)
+- Messages: should be resolved by [Comprehensive Rule Reports](#comprehensive-rule-reports)
+- Options: always an object with keys for option names
+  - Option defaults: the default value should always be empty/falsy, and anything else is confusing
+  - Option names: I'm not sure yet of the naming, but _something_ standardized -- maybe...
+  - `allow*` for options that allow something
+  - `check*` for options that turn on a check
+  - `ignore*` for options that turn off a check
+
+### Standardized Rule Names
+
+I would rework the following rule names:
+
+<table>
+	<thead>
+		<tr>
+			<th>Current Rule Name</th>
+			<th>Reworked Rule Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<a
+					href="https://typescript-eslint.io/rules/no-floating-promises"
+					target="_blank"
+				>
+					<code>no-floating-promises</code>
+				</a>
+			</td>
+			<td rowspan="6">
+				<code>floatingPromises</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+### Standardized Rule Options
+
+Looking at the options for `no-floating-promises`, I would rework them like:
+
+<table>
+	<thead>
+		<tr>
+			<th>Current Option Name</th>
+			<th>Reworked Option Name</th>
+			<th>Current Option Default</th>
+			<th>Reworked Option Default</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<code>allowForKnownSafeCalls</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+			<td>
+				<code>[]</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>allowForKnownSafePromises</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+			<td>
+				<code>[]</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>checkThenables</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+			<td>
+				<code></code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>ignoreIIFE</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+			<td>
+				<code></code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<code>ignoreVoid</code>
+			</td>
+			<td>
+				<em>(same)</em>
+			</td>
+			<td>
+				<code>true</code>
+			</td>
+			<td>
+				<code>false</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
 ## Only Errors
 
@@ -463,7 +663,8 @@ export default defineConfig({
 });
 ```
 
-#
+Thanks to [Kirk Waiblinger](https://github.com/kirkwaiblinger), fellow typescript-eslint team member, for very helpful advice on the config file format.
+Kirk in particular ideated preset `glob` values and how to balance clarity of language configurations with its verbosity.
 
 ## References
 
@@ -489,4 +690,6 @@ export default defineConfig({
 
 [^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
 
-co-authored-by: kirk (todo add thanks)
+[^no-floating-promises-ignore-void]:
+    I think allowing `void` by default in no-floating-promises rules is wrong and we should never have kept it.
+    It was a bug in my initial implementation of the rule, and has been infuriating me ever since.

@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -353,6 +359,7 @@
 		"Telerik",
 		"tevye",
 		"themself",
+		"thenables",
 		"Timișoara",
 		"tonyedwardspz",
 		"Toon",
