@@ -1,5 +1,5 @@
 ---
-pubDate: 2025-05-05
+pubDate: 2025-05-08
 description: "This is how I would tailor the developer experience for a modern linter from scratch: focusing on end-to-end type safety, self-apparent configs, and native workspaces."
 image:
   alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
@@ -41,9 +41,8 @@ This post is how I would craft how developers use it.
 ## Developer Experience is Important
 
 The "developer experience" of a linter an incredibly important part of its usability.
-Especially when your tool is made to tell developers when they're "wrong" (or, at least, when developers interpret your tool in that way).
-Many developers dislike any tool that tells them they're wrong.
-Linters also get an unusually bad rap because they often require extra per-project configuration, and any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
+Especially when your tool is made to tell developers when they're "wrong" (which is how many developers interpret linters, sadly).
+Linters get an unusually bad rap because they often require extra per-project configuration, and any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
 
 My goals with rethinking a linter's developer experience are:
 
@@ -101,32 +100,48 @@ I would additionally attempt to make sure any popular plugin website templates i
 
 ## Standardized Rule Metadata
 
-I hate how non-standardized the metadata of lint rules is:
-
-- IDs/names: `no-*`? `prefer-*`? Just the `*` (functionality)?
-- Messages: how detailed is the first message? How much should it suggest remediation(s), if at all?
-- Options: an array of literals? an object with keys for option names?
-  - Option defaults: `allow*`? `check*`? `enforce*`? `require*`? Just the `*` (functionality)?
-  - Option defaults: off-by-default? on-by-default?
-
-No linter is consistent with its choices, and community plugins often make very different and inconsistent choices as well.
-This lack of standardization is painful for users.
+Users like naming and stylistic standardization.
 Without consistent patterns, it becomes much more difficult to remember how things work consistently.
+Rule names, option names, option value defaults, and other strings users need to think of when using a linter are easier to remember when they're consistent.
 
-If I wrote a linter, I would want to standardize the metadata of all rules.
+Unfortunately, no mainstream linter today is consistent with its choices -- even internally.
+Community plugins often make very different and inconsistent choices as well.
+This lack of standardization is painful for users.
 
-- IDs/names: just the `*` (functionality)
-- Messages: should be resolved by [Comprehensive Rule Reports](#comprehensive-rule-reports)
-- Options: always an object with keys for option names
-  - Option defaults: the default value should always be empty/falsy, and anything else is confusing
-  - Option names: I'm not sure yet of the naming, but _something_ standardized -- maybe...
-  - `allow*` for options that allow something
-  - `check*` for options that turn on a check
-  - `ignore*` for options that turn off a check
+If I wrote a linter, it would standardize how rules are named and structured.
 
 ### Standardized Rule Names
 
-I would rework the following rule names:
+Rule names have to make several naming options to choose between:
+
+- Abbreviation:
+  - Abbreviated: [`no-cond-assign`](https://eslint.org/docs/latest/rules/no-cond-assign), [`no-const-assign`](https://eslint.org/docs/latest/rules/no-const-assign) / [noConstAssign](https://biomejs.dev/linter/rules/no-const-assign)
+  - Unabbreviated: [`no-constant-binary-expression`](https://eslint.org/docs/latest/rules/no-constant-binary-expression) / [noConstantBinaryExpression](https://next.biomejs.dev/linter/rules/no-constant-binary-expression)
+- Prefixes:
+  - Definitive: `@typescript-eslint/ban-ts-comment`, `no-await-in-loop`
+  - Loose: `@typescript-eslint/restrict-plus-operands`, `prefer-const`
+  - No prefix: `array-callback-return`
+- Singularity:
+  - Singular: `for-direction`, `default-case-last`
+  - Plural: `no-magic-numbers`, `require-atomic-updates`
+
+Inconsistent answers to each of those choices lead to user confusion:
+
+- Abbreviation:
+  - Having to memorize many abbreviations is an annoyance at best and confusing at worst
+  - Some words abbreviate to coincidentally different meanings, such as "constant" and "const"
+- Prefixes:
+  - Alphabetical sorting of rules places them similarly prefixed rules together, weirdly
+  - Many rules have had to drop their prefix after receiving an option to invert their behavior [^tseslint-discussion-no-prefixing-rule-names]
+- Singularity: the least troublesome, but the inconsistency I still find painful
+
+If I wrote a linter, core rule names would make one choice for each of those naming options:
+
+- Abbreviation: no abbreviation, so users won't have to memorize dozens of abbreviations
+- Singularity: always plural, as that's how one would describe what rules target
+- Prefixes: no prefixes; the rules would be named for the behavior or syntax they target
+
+For example, I would rework the following rule names:
 
 <table>
 	<thead>
@@ -139,20 +154,125 @@ I would rework the following rule names:
 		<tr>
 			<td>
 				<a
+					href="https://eslint.org/docs/latest/rules/array-callback-return"
+					target="_blank"
+				>
+					<code>array-callback-return</code>
+				</a>
+			</td>
+			<td>
+				<code>arrayCallbackReturns</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://typescript-eslint.io/rules/ban-ts-comment"
+					target="_blank"
+				>
+					<code>ban-ts-comment</code>
+				</a>
+			</td>
+			<td>
+				<code>typescriptCommentDirectives</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://eslint.org/docs/latest/rules/no-await-in-loop"
+					target="_blank"
+				>
+					<code>no-await-in-loop</code>
+				</a>
+			</td>
+			<td>
+				<code>loopAwaits</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://eslint.org/docs/latest/rules/no-cond-assign"
+					target="_blank"
+				>
+					<code>no-cond-assign</code>
+				</a>
+			</td>
+			<td>
+				<code>conditionalAssignments</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://eslint.org/docs/latest/rules/no-const-assign"
+					target="_blank"
+				>
+					<code>no-const-assign</code>
+				</a>
+			</td>
+			<td>
+				<code>constAssignments</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://eslint.org/docs/latest/rules/no-constant-binary-expression"
+					target="_blank"
+				>
+					<code>no-constant-binary-expression</code>
+				</a>
+			</td>
+			<td>
+				<code>constantBinaryExpressions</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
 					href="https://typescript-eslint.io/rules/no-floating-promises"
 					target="_blank"
 				>
 					<code>no-floating-promises</code>
 				</a>
 			</td>
-			<td rowspan="6">
+			<td>
 				<code>floatingPromises</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a
+					href="https://typescript-eslint.io/rules/restrict-plus-operands"
+					target="_blank"
+				>
+					<code>restrict-plus-operands</code>
+				</a>
+			</td>
+			<td>
+				<code>plusOperands</code>
 			</td>
 		</tr>
 	</tbody>
 </table>
 
 ### Standardized Rule Options
+
+- Messages: how detailed is the first message? How much should it suggest remediation(s), if at all?
+- Options: an array of literals? an object with keys for option names?
+
+  - Option names: `allow*`? `check*`? `enforce*`? `require*`? Just the `*` (functionality)?
+  - Option value defaults: off-by-default? on-by-default?
+
+- Messages: should be resolved by [Comprehensive Rule Reports](#comprehensive-rule-reports)
+- Options: always an object with keys for option names
+  - Option names: I'm not sure yet of the naming, but _something_ standardized -- maybe...
+    - `allow*` for options that allow something
+    - `check*` for options that turn on a check
+    - `ignore*` for options that turn off a check
+  - Option value defaults: the default value should always be empty/falsy, and anything else is confusing
 
 Looking at the options for `no-floating-promises`, I would rework them like:
 
@@ -238,6 +358,44 @@ Looking at the options for `no-floating-promises`, I would rework them like:
 		</tr>
 	</tbody>
 </table>
+
+### Standardized Type Or Value Specifiers
+
+Some rules allow specifying types or values in their options.
+For example, [`@typescript-eslint/no-restricted-types`](https://typescript-eslint.io/rules/no-restricted-types) allows specifying types in its `types` option:
+
+```js
+"@typescript-eslint/no-restricted-types": [
+	"error",
+	{
+		"types": {
+			"SomeType": "Don't use SomeType because it is unsafe",
+		},
+	},
+]
+```
+
+The problem with using plain strings to target names is that they are ambiguous.
+In the example, _any_ type named `SomeType` would be restricted, even if it is a different type than the one the user intended.
+
+Over in typescript-eslint, we developed a [TypeOrValueSpecifier](https://typescript-eslint.io/linting/type-or-value-specifier) format for specifying types or values in options.
+It allows users to specify not just the name but also the source -global, package, etc.- of a type or value.
+Here's how that would look for specifying `SomeType` from a specific file:
+
+```js
+"@typescript-eslint/no-restricted-types": [
+	"error",
+	{
+		"types": [{
+			"message": "Don't use SomeType because it is unsafe",
+			"type": "SomeType",
+		}],
+	},
+]
+```
+
+If I wrote a linter, core rules would only ever use the TypeOrValueSpecifier format to specify types or values.
+Userland plugins would be strongly encouraged to use the format instead of ambiguous strings.
 
 ## Only Errors
 
@@ -680,9 +838,11 @@ Kirk in particular ideated preset `glob` values and how to balance clarity of la
 
 [^tseslint-discord-help-eslint-not-ignoring-js-files]: [Discord help thread: Eslint not ignoring .js files and throwing Definition for rule ... not found error](https://discord.com/channels/1026804805894672454/1283776448188121158)
 
+[^tseslint-discussion-no-prefixing-rule-names]: [Suggestion: standardize against prefixing rule names with "no-"](https://github.com/typescript-eslint/typescript-eslint/discussions/6022)
+
 [^tseslint-issue-no-var-declarations]: [typescript-eslint/typescript-eslint#7941 Base rule extension: no-var configuration for declarations](https://github.com/typescript-eslint/typescript-eslint/issues/7941)
 
-[^tseslint-shared-configs]: [typescript-eslint > Users > Shared Configs](https://typescript-eslint.io/users/configs/)
+[^tseslint-shared-configs]: [typescript-eslint > Users > Shared Configs](https://typescript-eslint.io/users/configs)
 
 [^tseslint-troubleshooting-performance-import]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `eslint-plugin-import`](https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import)
 
