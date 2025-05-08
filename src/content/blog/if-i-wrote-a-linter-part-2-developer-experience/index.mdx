@@ -98,7 +98,7 @@ I particularly like how some linters will display on the first report per file a
 If I wrote a linter, it would that kind of rich reporter display by default.
 It would at least:
 
-- Default to a "high-level" overview that focuses on summaries, leaving more space for...
+- Default to a "focused" view that only shows a few reports at a time, leaving more space for...
 - Friendly primary + secondary + suggestions text for each spotlighted report, using ...
 - Rich colors to emphasize which parts of reports are most important
 - Trim out unnecessary details, such as parts of file paths above the project root
@@ -107,10 +107,14 @@ Here's a very rough starting mockup:
 
 <LabeledImage
 	alt="Screenshot of a terminal report from npx eslint .: 50:1 Unexpected `await` of a non-Promise (non-'Thenable') value (@typescript-eslint/await-thenable)."
-	note="This is a very rough mockup; please don't read too much into it."
+	note={`This is a very rough mockup of the "focused" view; please don't read too much into it.`}
 	src={vscodeTerminalESLintMockup}
 	wide
 />
+
+The linter's reporting would have to fall back to more primitive colors, or no colors at all, depending on what the running terminal supports.
+I also imagine there could be some interactive controls to let the user collapse/expand the report and navigate between files or reports within a file.
+
 ## Comprehensive Rule Documentation
 
 The next step for many developers who receive a lint report is the rule's documentation page.
@@ -140,6 +144,27 @@ This lack of standardization is painful for users.
 
 If I wrote a linter, it would standardize how rules are named and structured.
 The next few sections will explain those the relevant questions I would standardize answers to.
+
+### Standardized Rule Messages
+
+The text of rule messages is pretty inconsistent across rules, even within the same linter or plugin.
+Older rules tend to have assertive and curt messages, such as:
+
+- [`no-console`](https://eslint.org/docs/latest/rules/no-console): `Unexpected console statement.`
+- [`no-empty`](https://eslint.org/docs/latest/rules/no-empty): `Empty block statement.`
+
+I've found that users don't generally react well to curt messages.
+They can feel like the linter saying something is _absolutely wrong_, even though most lint rules are sometimes wrong.
+There's a reason why many linters put _"When Not To Use"_ sections in their rule documentation pages.
+
+Newer or more recently updated rule messages tend to be more descriptive and speak to the actual problems the rules detect, such as:
+
+- [`no-loss-of-precision`](https://eslint.org/docs/latest/rules/no-useless-assignment): `This number literal will lose precision at runtime.`
+- [`no-useless-assignment`](https://eslint.org/docs/latest/rules/no-useless-assignment): `This assigned value is not used in subsequent statements.`
+
+If I wrote a linter, all core rule messages would have consistent phrasing.
+They would never be dogmatic or overly prescriptive about what the user "should" do.
+They'd instead just speak to the detected potential problem in code.
 
 ### Standardized Rule Names
 
@@ -723,8 +748,10 @@ export default defineConfig({
 });
 ```
 
-Thanks to [Kirk Waiblinger](https://github.com/kirkwaiblinger), fellow typescript-eslint team member, for very helpful advice on the config file format.
-Kirk in particular ideated preset `glob` values and how to balance clarity of language configurations with its verbosity.
+Thanks in particular to [Kirk Waiblinger](https://github.com/kirkwaiblinger), fellow typescript-eslint team member, for very helpful advice on the config file format.
+Kirk ideated preset `glob` values and helped with balancing clarity of language configurations with its verbosity.
+
+Additional thanks to [Dimitri Mitropoulos (Michigan TypeScript)](https://michigantypescript.com) and (TODO grab from social media) for suggesting references of CLI prior art.
 
 ## References
 
