@@ -14,7 +14,8 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
-import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
+import vscodeLintScreenshot from "~/assets/blog/vscode-lint-screenshot.png";
+import vscodeTerminalScreenshot from "~/assets/blog/vscode-terminal-screenshot.png";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
@@ -61,25 +62,42 @@ Linters today generally populate hover text with:
 - ID/name, linked to the rule's online documentation
 - Text description of the rule report
 
-TODO: example `createWork();` hover
+<LabeledImage
+	alt="Screenshot of a VS Code lint hover message: Unexpected `await` of a non-Promise (non-'Thenable') value. eslint(@typescript-eslint/await-thenable)"
+	note="Common VS Code hover display of an ESLint report diagnostic"
+	src={vscodeLintScreenshot}
+/>
+
+<LabeledImage
+	alt="Screenshot of a terminal report from npx eslint .: 50:1 Unexpected `await` of a non-Promise (non-'Thenable') value (@typescript-eslint/await-thenable)."
+	note="Common terminal output from ESLint of a lint report"
+	src={vscodeTerminalScreenshot}
+/>
 
 If that message includes too little text, people won't understand the report; too much text, and they won't read any of it.
-That sweet spot of text isn't easy to find.
-For some nuanced rules, such as [typescript-eslint's `@typescript-eslint/no-floating-promises`](https://typescript-eslint.io/rules/no-floating-promises), report descriptions are generally complex to fit in a hover message.
+But many rules' reports have too much conceptual complexity or too many important nuances to fit in a hover message.
 
 If I wrote a linter, rule report bodies would include something like:
 
 - Primary: a single sentence explaining what's wrong
 - Secondary: additional sentences explaining the problem in more detail
 - Suggestions: recommendations for how to fix the problem
+- Shortcut URL to the rule's documentation page
 
-Editor extensions could then visualize these nicely, such as with [VS Code's rich hover message support](https://github.com/microsoft/vscode/blob/977af64fdff5cd967989749204d1e778dfe86f31/src/vscode-dts/vscode.d.ts#L1216).
+In theory, editor extensions could then visualize these nicely [^vscode-rich-editor-support].
+VS Code is unfortunately still waiting on formatted diagnostic text support [^vscode-eslint-issue-markdown-report] [^pretty-ts-errors-docs-hide-original-errors], but I've seen proof-of-concepts in extensions such as [pretty-ts-errors](https://github.com/yoavbls/pretty-ts-errors).
 
-TODO: example editor mockup
+I'd also want to nicely format these in CLI reports.
+The Biome [^biome-cli-reference] and TSSLint [^tsslint-cli-reference] CLIs are do a great job of making linter reports approachable and clear.
+Bonus shoutouts to Orta's `tsc` explorations [^typescript-pull-orta-cli-reference] and the Rust CLI.
+I particularly like how some linters will display on the first report per file and/or per rule, with an opt-in option to show all.
 
-I'd also want to nicely format these in CLI reports:
+If I wrote a linter, it would that kind of rich reporter display by default.
+I don't have mockups yet, but it would at least:
 
-TODO: example CLI mockup
+- Default to a "high-level" overview that focuses on summaries, leaving more space for...
+- Friendly primary + secondary + suggestions text for each spotlighted report, using ...
+- Rich colors to emphasize which parts of reports are most important
 
 ## Comprehensive Rule Documentation
 
@@ -109,10 +127,11 @@ Community plugins often make very different and inconsistent choices as well.
 This lack of standardization is painful for users.
 
 If I wrote a linter, it would standardize how rules are named and structured.
+The next few sections will explain those the relevant questions I would standardize answers to.
 
 ### Standardized Rule Names
 
-Rule names have to make several naming options to choose between:
+Rule names have to make several choices:
 
 - Abbreviation:
   - Abbreviated: [`no-cond-assign`](https://eslint.org/docs/latest/rules/no-cond-assign), [`no-const-assign`](https://eslint.org/docs/latest/rules/no-const-assign) / [noConstAssign](https://biomejs.dev/linter/rules/no-const-assign)
@@ -120,7 +139,7 @@ Rule names have to make several naming options to choose between:
 - Prefixes:
   - Definitive: `@typescript-eslint/ban-ts-comment`, `no-await-in-loop`
   - Loose: `@typescript-eslint/restrict-plus-operands`, `prefer-const`
-  - No prefix: `array-callback-return`
+  - No prefix: `array-callback-return`, `constructor-super`
 - Singularity:
   - Singular: `for-direction`, `default-case-last`
   - Plural: `no-magic-numbers`, `require-atomic-updates`
@@ -128,12 +147,12 @@ Rule names have to make several naming options to choose between:
 Inconsistent answers to each of those choices lead to user confusion:
 
 - Abbreviation:
-  - Having to memorize many abbreviations is an annoyance at best and confusing at worst
-  - Some words abbreviate to coincidentally different meanings, such as "constant" and "const"
+  - Memorize many abbreviations is an annoyance at best and confusing at worst
+  - Some words abbreviate to different meanings, such as "constant" and "const"
 - Prefixes:
   - Alphabetical sorting of rules places them similarly prefixed rules together, weirdly
-  - Many rules have had to drop their prefix after receiving an option to invert their behavior [^tseslint-discussion-no-prefixing-rule-names]
-- Singularity: the least troublesome, but the inconsistency I still find painful
+  - Many rules have dropped their prefix after adding an option to invert behavior [^tseslint-discussion-no-prefixing-rule-names]
+- Singularity: the least troublesome, but I still find the inconsistency painful
 
 If I wrote a linter, core rule names would make one choice for each of those naming options:
 
@@ -141,225 +160,96 @@ If I wrote a linter, core rule names would make one choice for each of those nam
 - Singularity: always plural, as that's how one would describe what rules target
 - Prefixes: no prefixes; the rules would be named for the behavior or syntax they target
 
-For example, I would rework the following rule names:
+For example, I would rework the following rule names roughly like:
 
-<table>
-	<thead>
-		<tr>
-			<th>Current Rule Name</th>
-			<th>Reworked Rule Name</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<a
-					href="https://eslint.org/docs/latest/rules/array-callback-return"
-					target="_blank"
-				>
-					<code>array-callback-return</code>
-				</a>
-			</td>
-			<td>
-				<code>arrayCallbackReturns</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://typescript-eslint.io/rules/ban-ts-comment"
-					target="_blank"
-				>
-					<code>ban-ts-comment</code>
-				</a>
-			</td>
-			<td>
-				<code>typescriptCommentDirectives</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://eslint.org/docs/latest/rules/no-await-in-loop"
-					target="_blank"
-				>
-					<code>no-await-in-loop</code>
-				</a>
-			</td>
-			<td>
-				<code>loopAwaits</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://eslint.org/docs/latest/rules/no-cond-assign"
-					target="_blank"
-				>
-					<code>no-cond-assign</code>
-				</a>
-			</td>
-			<td>
-				<code>conditionalAssignments</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://eslint.org/docs/latest/rules/no-const-assign"
-					target="_blank"
-				>
-					<code>no-const-assign</code>
-				</a>
-			</td>
-			<td>
-				<code>constAssignments</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://eslint.org/docs/latest/rules/no-constant-binary-expression"
-					target="_blank"
-				>
-					<code>no-constant-binary-expression</code>
-				</a>
-			</td>
-			<td>
-				<code>constantBinaryExpressions</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://typescript-eslint.io/rules/no-floating-promises"
-					target="_blank"
-				>
-					<code>no-floating-promises</code>
-				</a>
-			</td>
-			<td>
-				<code>floatingPromises</code>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<a
-					href="https://typescript-eslint.io/rules/restrict-plus-operands"
-					target="_blank"
-				>
-					<code>restrict-plus-operands</code>
-				</a>
-			</td>
-			<td>
-				<code>plusOperands</code>
-			</td>
-		</tr>
-	</tbody>
-</table>
+| Current Rule Name                                                                                   | Reworked Rule Name            |
+| --------------------------------------------------------------------------------------------------- | ----------------------------- |
+| [array-callback-return](https://eslint.org/docs/latest/rules/array-callback-return)                 | `arrayCallbackReturns`        |
+| [ban-ts-comment](https://typescript-eslint.io/rules/ban-ts-comment)                                 | `typescriptCommentDirectives` |
+| [constructor-super](https://eslint.org/docs/latest/rules/constructor-super)                         | `constructorSuper`            |
+| [default-case-last](https://eslint.org/docs/latest/rules/default-case-last)                         | `defaultCaseLast`             |
+| [for-direction](https://eslint.org/docs/latest/rules/for-direction)                                 | `forLoopDirections`           |
+| [no-await-in-loop](https://eslint.org/docs/latest/rules/no-await-in-loop)                           | `loopAwaits`                  |
+| [no-cond-assign](https://eslint.org/docs/latest/rules/no-cond-assign)                               | `conditionalAssignments`      |
+| [no-const-assign](https://eslint.org/docs/latest/rules/no-const-assign)                             | `constAssignments`            |
+| [no-constant-binary-expression](https://eslint.org/docs/latest/rules/no-constant-binary-expression) | `constantBinaryExpressions`   |
+| [no-floating-promises](https://typescript-eslint.io/rules/no-floating-promises)                     | `floatingPromises`            |
+| [no-magic-numbers](https://eslint.org/docs/latest/rules/no-magic-numbers)                           | `magicNumbers`                |
+| [prefer-const](https://eslint.org/docs/latest/rules/prefer-const)                                   | `constVariables`              |
+| [require-atomic-updates](https://typescript-eslint.io/rules/require-atomic-updates)                 | `atomicUpdates`               |
+| [restrict-plus-operands](https://typescript-eslint.io/rules/restrict-plus-operands)                 | `plusOperands`                |
 
 ### Standardized Rule Options
 
-- Messages: how detailed is the first message? How much should it suggest remediation(s), if at all?
-- Options: an array of literals? an object with keys for option names?
+Rule options have to make an even broader, deeper set of choices:
 
-  - Option names: `allow*`? `check*`? `enforce*`? `require*`? Just the `*` (functionality)?
-  - Option value defaults: off-by-default? on-by-default?
+- Format:
+  - Array: [`array-type`](https://typescript-eslint.io/rules/array-type), [`no-restricted-component-names`](https://eslint.vuejs.org/rules/no-restricted-component-names)
+  - Object with keys for option names: ...almost all other rules
+- Message: how detailed is the first line? How much should it suggest next steps?
+- Name:
+  - Plurality:
+    - Singular: [`no-implicit-coercion` > `boolean`](https://eslint.org/docs/latest/rules/no-implicit-coercion#options)
+    - Plural: [`no-floating-promises` > `checkThenables`](https://typescript-eslint.io/rules/no-floating-promises#checkthenables)
+  - Prefix:
+    - Turning off checks:
+      - `allow*`: [`getter-return` > `allowImplicit`](https://eslint.org/docs/latest/rules/getter-return#options)
+      - `ignore*`: [`no-trailing-spaces` > `ignoreComments`](https://eslint.style/rules/js/no-trailing-spaces#ignorecomments)
+      - `skip*`: [`no-trailing-spaces` > `skipBlankLines`](https://eslint.style/rules/js/no-trailing-spaces#skipblanklines)
+    - Turning on checks:
+      - `check*`: [`prevent-abbreviations` > `checkProperties`](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md#checkproperties)
+      - `enforce*`: [`accessor-pairs` > `enforceForClassMembers`](https://eslint.org/docs/latest/rules/accessor-pairs#enforceforclassmembers)
+      - `include*`: [`no-duplicate-imports` > `includeExports`](https://eslint.org/docs/latest/rules/no-duplicate-imports#options)
+      - `require*`: [`arrow-parens` > `requireForBlockBody`](https://eslint.style/rules/js/arrow-parens#requireforblockbody)
+- Value defaults:
+  - Boolean values:
+    - Off-by-default: [`no-floating-promises` > `ignoreIIFE`](https://typescript-eslint.io/rules/no-floating-promises#ignoreiife)
+    - On-by-default: [`no-floating-promises` > `ignoreVoid`](https://typescript-eslint.io/rules/no-floating-promises#ignorevoid)
+  - Multi-values:
+    - Empty by default: [`no-floating-promises` > `allowForKnownSafeCalls`](https://typescript-eslint.io/rules/no-floating-promises#allowforknownsafecalls)
+    - Starting set: [`restrict-template-expressions` > `allow`](https://typescript-eslint.io/rules/restrict-template-expressions#allow)
 
-- Messages: should be resolved by [Comprehensive Rule Reports](#comprehensive-rule-reports)
-- Options: always an object with keys for option names
-  - Option names: I'm not sure yet of the naming, but _something_ standardized -- maybe...
-    - `allow*` for options that allow something
+What a list!
+
+If I wrote a linter, core rule options would make the same choice consistently:
+
+- Format: an object with keys for option names
+- Messages: see [Comprehensive Rule Reports](#comprehensive-rule-reports)
+- Name:
+  - Plurality: always plural, as that's how one would describe what rule options target
+  - Prefix:
+    - `allow*` for options that add in an array of values
     - `check*` for options that turn on a check
     - `ignore*` for options that turn off a check
-  - Option value defaults: the default value should always be empty/falsy, and anything else is confusing
+- Value defaults:
+  - Boolean values: off-by-default, for simpler truthiness concepts
+  - Multi-values: empty by default, so specifying values doesn't remove defaults
 
-Looking at the options for `no-floating-promises`, I would rework them like:
+Looking at the options for across several rules, I would rework them roughly like:
 
-<table>
-	<thead>
-		<tr>
-			<th>Current Option Name</th>
-			<th>Reworked Option Name</th>
-			<th>Current Option Default</th>
-			<th>Reworked Option Default</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>
-				<code>allowForKnownSafeCalls</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-			<td>
-				<code>[]</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<code>allowForKnownSafePromises</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-			<td>
-				<code>[]</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<code>checkThenables</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-			<td>
-				<code></code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<code>ignoreIIFE</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-			<td>
-				<code></code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<code>ignoreVoid</code>
-			</td>
-			<td>
-				<em>(same)</em>
-			</td>
-			<td>
-				<code>true</code>
-			</td>
-			<td>
-				<code>false</code>
-			</td>
-		</tr>
-	</tbody>
-</table>
+| Current Option Name                                                                                                                      | Reworked Option Name | Current Option Default | Reworked Option Default |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ---------------------- | ----------------------- |
+| [`allow`](https://typescript-eslint.io/rules/restrict-template-expressions#allow)                                                        | _(same)_             | `[{ ... }]`            | `[]`                    |
+| [`allowForKnownSafeCalls`](https://typescript-eslint.io/rules/no-floating-promises#allowforknownsafecalls)                               | _(same)_             | `[]`                   | _(same)_                |
+| [`allowImplicit`](https://eslint.org/docs/latest/rules/getter-return#options)                                                            | `ignoreImplicit`     | `false`                | _(same)_                |
+| [`array-type`](https://typescript-eslint.io/rules/array-type)'s anonymous element                                                        | `style`              | `'array'`              | _(same)_                |
+| [`boolean`](https://eslint.org/docs/latest/rules/no-implicit-coercion#options)                                                           | `booleans`           | `true`                 | `false`                 |
+| [`checkProperties`](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md#checkproperties) | _(same)_             | `false`                | _(same)_                |
+| [`checkThenables`](https://typescript-eslint.io/rules/no-floating-promises#checkthenables)                                               | _(same)_             | `false`                | _(same)_                |
+| [`enforceForClassMembers`](https://eslint.org/docs/latest/rules/accessor-pairs#enforceforclassmembers)                                   | `ignoreClassMembers` | `true`                 | `false`                 |
+| [`ignoreComments`](https://eslint.style/rules/js/no-trailing-spaces#ignorecomments)                                                      | _(same)_             | `false`                | _(same)_                |
+| [`ignoreIIFE`](https://typescript-eslint.io/rules/no-floating-promises#ignoreiife)                                                       | _(same)_             | `false`                | _(same)_                |
+| [`ignoreVoid`](https://typescript-eslint.io/rules/no-floating-promises#ignorevoid)                                                       | _(same)_             | `true`                 | `false`                 |
+| [`includeExports`](https://eslint.org/docs/latest/rules/no-duplicate-imports#options)                                                    | `checkExports`       | `false`                | _(same)_                |
+| [`no-restricted-component-names`](https://eslint.vuejs.org/rules/no-restricted-component-names#options)'s anonymous element              | `names`              | `[]`                   | _(same)_                |
+| [`requireForBlockBody`](https://eslint.style/rules/js/arrow-parens#requireforblockbody)                                                  | `checkBlockBodies`   | `false`                | _(same)_                |
+| [`skipBlankLines`](https://eslint.style/rules/js/no-trailing-spaces#skipblanklines)                                                      | `ignoreBlankLines`   | `false`                | _(same)_                |
 
-### Standardized Type Or Value Specifiers
+Oh, and rule options would be sorted alphabetically in their docs pages.
+I want to be able to O(log(N)) scan a docs page for a rule option.
+Not O(1) search through some arbitrary order.
+
+### Standardized Specifiers
 
 Some rules allow specifying types or values in their options.
 For example, [`@typescript-eslint/no-restricted-types`](https://typescript-eslint.io/rules/no-restricted-types) allows specifying types in its `types` option:
@@ -826,6 +716,8 @@ Kirk in particular ideated preset `glob` values and how to balance clarity of la
 
 ## References
 
+[^biome-cli-reference]: [Biome `no-aria-unsupported-elements` Examples > Invalid](https://biomejs.dev/linter/rules/no-aria-unsupported-elements/#invalid)
+
 [^eslint-issue-change-request-inherit-flat-configs-from-root]: [eslint/eslint#18385 Change Request: Make it easier to inherit flat configs from the repo root #18385](https://github.com/eslint/eslint/issues/18385)
 
 [^eslint-issue-change-request-report-unnecessary-config-overrides]: [eslint/eslint#15476 Change Request: report unnecessary config overrides](https://github.com/eslint/eslint/issues/15476)
@@ -833,6 +725,8 @@ Kirk in particular ideated preset `glob` values and how to balance clarity of la
 [^eslint-pr-docs-warn-severity]: [eslint/eslint#16696 docs: Add explanation of when to use 'warn' severity](https://github.com/eslint/eslint/issues/16696)
 
 [^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
+
+[^pretty-ts-errors-docs-hide-original-errors]: [yoavbls/pretty-ts-errors > docs/hide-original-errors.md](https://github.com/yoavbls/pretty-ts-errors/blob/main/docs/hide-original-errors.md)
 
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
 
@@ -850,6 +744,12 @@ Kirk in particular ideated preset `glob` values and how to balance clarity of la
 
 [^tseslint-troubleshooting-performance-stylistic]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance > `@stylistic/ts/indent` and other stylistic rules rules](https://typescript-eslint.io/troubleshooting/typed-linting/performance#stylistictsindent-and-other-stylistic-rules-rules)
 
-[^no-floating-promises-ignore-void]:
-    I think allowing `void` by default in no-floating-promises rules is wrong and we should never have kept it.
-    It was a bug in my initial implementation of the rule, and has been infuriating me ever since.
+[^tsslint-cli-reference]: [johnsoncodehk/tsslint#50 Include screenshot/gif of the CLI somewhere in this repo?](https://github.com/johnsoncodehk/tsslint/issues/50)
+
+[^typescript-pull-orta-cli-reference]: [Microsoft/TypeScript#49668 Compiler CLI output format update v2](https://github.com/microsoft/TypeScript/issues/45717)
+
+[^vscode-allow-diagnostics-messages-markdown-content]: [microsoft/vscode#54272](https://github.com/microsoft/vscode/issues/54272)
+
+[^vscode-eslint-issue-markdown-report]: [microsoft/vscode-eslint#1761 Support for markdown in the rule's message report](https://github.com/microsoft/vscode-eslint/issues/1761)
+
+[^vscode-rich-editor-support]: [microsoft/vscode `vscode.d.ts`: `DecorationOptions` > `hoverMessage`](https://github.com/microsoft/vscode/blob/977af64fdff5cd967989749204d1e778dfe86f31/src/vscode-dts/vscode.d.ts#L1216)

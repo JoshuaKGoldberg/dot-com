@@ -1,11 +1,5 @@
 {
-	"dictionaries": [
-		"css",
-		"html",
-		"node",
-		"npm",
-		"typescript"
-	],
+	"dictionaries": ["css", "html", "node", "npm", "typescript"],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -398,6 +392,7 @@
 		"Wrocław",
 		"xkcd's",
 		"Xzibit",
+		"yoavbls",
 		"yodawg",
 		"Zacher",
 		"Zakas",
