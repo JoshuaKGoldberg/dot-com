@@ -14,8 +14,9 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
-import vscodeLintScreenshot from "~/assets/blog/vscode-lint-screenshot.png";
-import vscodeTerminalScreenshot from "~/assets/blog/vscode-terminal-screenshot.png";
+import vscodeESLintScreenshot from "~/assets/blog/vscode-eslint-screenshot.png";
+import vscodeTerminalESLintMockup from "~/assets/blog/vscode-terminal-eslint-mockup.png";
+import vscodeTerminalESLintScreenshot from "~/assets/blog/vscode-terminal-eslint-screenshot.png";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
@@ -65,13 +66,15 @@ Linters today generally populate hover text with:
 <LabeledImage
 	alt="Screenshot of a VS Code lint hover message: Unexpected `await` of a non-Promise (non-'Thenable') value. eslint(@typescript-eslint/await-thenable)"
 	note="Common VS Code hover display of an ESLint report diagnostic"
-	src={vscodeLintScreenshot}
+	src={vscodeESLintScreenshot}
+	wide
 />
 
 <LabeledImage
 	alt="Screenshot of a terminal report from npx eslint .: 50:1 Unexpected `await` of a non-Promise (non-'Thenable') value (@typescript-eslint/await-thenable)."
 	note="Common terminal output from ESLint of a lint report"
-	src={vscodeTerminalScreenshot}
+	src={vscodeTerminalESLintScreenshot}
+	wide
 />
 
 If that message includes too little text, people won't understand the report; too much text, and they won't read any of it.
@@ -93,12 +96,21 @@ Bonus shoutouts to Orta's `tsc` explorations [^typescript-pull-orta-cli-referenc
 I particularly like how some linters will display on the first report per file and/or per rule, with an opt-in option to show all.
 
 If I wrote a linter, it would that kind of rich reporter display by default.
-I don't have mockups yet, but it would at least:
+It would at least:
 
 - Default to a "high-level" overview that focuses on summaries, leaving more space for...
 - Friendly primary + secondary + suggestions text for each spotlighted report, using ...
 - Rich colors to emphasize which parts of reports are most important
+- Trim out unnecessary details, such as parts of file paths above the project root
 
+Here's a very rough starting mockup:
+
+<LabeledImage
+	alt="Screenshot of a terminal report from npx eslint .: 50:1 Unexpected `await` of a non-Promise (non-'Thenable') value (@typescript-eslint/await-thenable)."
+	note="This is a very rough mockup; please don't read too much into it."
+	src={vscodeTerminalESLintMockup}
+	wide
+/>
 ## Comprehensive Rule Documentation
 
 The next step for many developers who receive a lint report is the rule's documentation page.
