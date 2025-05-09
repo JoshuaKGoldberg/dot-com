@@ -1,10 +1,10 @@
 ---
-pubDate: 2025-05-04 10:02 GMT
-description: "This is all the things I would build into a modern web linter from scratch: architecture, developer experience, and user experience."
+pubDate: 2025-05-13
+description: "This is how I would steer a new ecosystem around a modern linter from scratch: TODO."
 image:
-  alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
+  alt: "TODO"
   src: "~/assets/blog/sisyphus.jpg"
-title: "If I Wrote a Linter, Part 3: User Experience"
+title: "If I Wrote a Linter, Part 3: Ecosystem"
 ---
 
 import {
@@ -72,42 +72,6 @@ Full explanation docs for all decisions
 ## First Party Community Repositories
 
 First party built in for what is the current slate of popular plugins
-
-# Features for Developers
-
-## Full Virtual File System
-
-[^tseslint-explore-ts-vfs]
-
-something something linting file permissions
-
-## Rich Cross File Fixes
-
-A linter is in many ways the best codemod platform for many kinds of migrations.
-It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
-I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
-
-Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
-Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
-
-If I were to write a linter, I would add in a rich system for rule fixes and suggestions:
-
-- The ability to indicate changes to virtual files other than the one being linted
-- Other file system operations, such as renames and permissions changes
-
-# Implementation
-
-## Session Objects
-
-Full project context available up front including preprocessors and session object
-
-## Pluggable Architecture and APIs
-
-Pluggable api for embedding in places like typescript, TS, config and biome project
-
-# In Summary
-
-## References
 
 [^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
 
