@@ -13,6 +13,7 @@ export interface Props {
 	note?: string;
 	original?: MediaOriginal | string;
 	src: ImageMetadata;
+	wide?: boolean;
 }
 
 const alt =
@@ -35,7 +36,7 @@ const src = Astro.props.src as unknown as string;
 >
 	<Image
 		alt={alt}
-		class="labeled-image"
+		class:list={["labeled-image", Astro.props.wide && "labeled-image-wide"]}
 		inferSize
 		src={src}
 		style={{
@@ -51,6 +52,13 @@ const src = Astro.props.src as unknown as string;
 <style is:inline>
 	.labeled-image {
 		max-height: 25rem;
+	}
+
+	.labeled-image:not(.labeled-image-wide) {
 		max-width: min(100%, 37.5rem);
+	}
+
+	.labeled-image.labeled-image-wide {
+		max-width: 100%;
 	}
 </style>
