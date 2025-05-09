@@ -2,8 +2,8 @@
 pubDate: 2025-05-08
 description: "This is how I would tailor the developer experience for a modern linter from scratch: focusing on end-to-end type safety, self-apparent configs, and native workspaces."
 image:
-  alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
-  src: "~/assets/blog/sisyphus.jpg"
+  alt: "Elsa from Frozen walking up a staircase as she's creating it with ice, singing 'Let It Go'"
+  src: "~/assets/blog/elsa-let-it-go-stairs-square.png"
 title: "If I Wrote a Linter, Part 2: Developer Experience"
 ---
 
@@ -14,6 +14,7 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
+import elsaLetItGoStairs from "~/assets/blog/elsa-let-it-go-stairs.webm";
 import vscodeESLintScreenshot from "~/assets/blog/vscode-eslint-screenshot.png";
 import vscodeTerminalESLintMockup from "~/assets/blog/vscode-terminal-eslint-mockup.png";
 import vscodeTerminalESLintScreenshot from "~/assets/blog/vscode-terminal-eslint-screenshot.png";
@@ -26,10 +27,16 @@ Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](h
 
 I've been working on TypeScript linting for almost a decade.
 I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
-Based on those years of various linters, I've collected a large set of design ideas that I want to try out.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
-This post is how I would craft how developers use it.
+This post is how I would craft they ways developers would interact with it.
+
+<LabeledVideo
+	alt="Elsa from Frozen walking up a staircase as she's creating it with ice, singing 'Let It Go'"
+	description="Elsa breaking free from the shackles of linters reporting both errors and warnings."
+	src={elsaLetItGoStairs}
+/>
 
 > 💡 This post is the second in a series:
 >
@@ -40,18 +47,45 @@ This post is how I would craft how developers use it.
 > - Part 3: Ecosystem _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/420 "dot-com pull request 420 Part 3: Ecosystem"))_
 > - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
 
-## Developer Experience is Important
+## Developer Experience is Crucial
 
 The "developer experience" of a linter an incredibly important part of its usability.
 Especially when your tool is made to tell developers when they're "wrong" (which is how many developers interpret linters, sadly).
-Linters get an unusually bad rap because they often require extra per-project configuration, and any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
 
 My goals with rethinking a linter's developer experience are:
 
-- Approachability: making sure the common user flows are as documented, straightforward, and difficult-to-mess-up as possible
-- Clarity: everything should be as easy as possible to understand, even if you're not an expert
-- Minimalism: removing extraneous features and deduplicating tooling configuration
-- Type safety: making as much as possible well-typed, both for plugin authors and end-users
+- **Approachability**: features should be as straightforward and difficult-to-mess-up as possible
+- **Clarity**: everything should be as easy as possible to understand, even if you're not an expert
+- **Minimalism**: removing extraneous features and deduplicating tooling configuration
+- **Type safety**: making as much as possible well-typed, both for plugin authors and end-users
+
+Linters get an unusually bad rap for a few reasons:
+
+- Any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
+- Linters often require extra per-project configuration.
+- ...did I mention developers _hate_ being told they're wrong?
+
+The more we make a linter accessible and friendly, the more likely developers are to embrace it.
+
+## Only Errors
+
+All mainstream web linters today allow configuring rules as _errors_ or _warnings_.
+Errors are generally visualized with red squigglies and fail builds; warnings are visualized with yellow squigglies and don't fail builds.
+
+Warnings are intended to be transient indicators during migrations or when rules aren't certain about issues [^eslint-pr-docs-warn-severity].
+In practice, I think the delineation is not worthwhile:
+
+- Using the same red color and terminology for _lint_ errors and _type-checking_ errors is confusing.
+  I personally use [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, to not conflict with TypeScript's red squigglies.
+- Warnings tend to live forever in codebases, which trains developers to ignore lint reports.
+- If a problem can't be determined with certainty, it either should be suppressed using an inline config comment with an explanation, or not turned into a lint rule at all!
+
+I think warnings are a bad fit for the migration use case.
+Tools like [eslint-nibble](https://github.com/IanVS/eslint-nibble) and ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) can provide a more comprehensive experience.
+
+If I wrote a linter, I would have it so rules can only be turned off or on.
+All lint rule reports would be errors and visualized with yellow squigglies in errors.
+Gradual onboardings of new rules or rule options would be a separately managed feature.
 
 ## Comprehensive Rule Reports
 
@@ -77,8 +111,9 @@ Linters today generally populate hover text with:
 	wide
 />
 
-If that message includes too little text, people won't understand the report; too much text, and they won't read any of it.
-But many rules' reports have too much conceptual complexity or too many important nuances to fit in a hover message.
+If that message includes too little text, people won't understand the report.
+Too much text, and they won't read any of it.
+Many rules' reports have too much conceptual complexity or too many important nuances to fit in a brief hover message.
 
 If I wrote a linter, rule report bodies would include something like:
 
@@ -87,35 +122,46 @@ If I wrote a linter, rule report bodies would include something like:
 - Suggestions: recommendations for how to fix the problem
 - Shortcut URL to the rule's documentation page
 
+Rich structured rule reports would enable rich displays in reporters that surface those errors to users.
+
+### Comprehensive Editor Reports (In Theory)
+
 In theory, editor extensions could then visualize these nicely [^vscode-rich-editor-support].
-VS Code is unfortunately still waiting on formatted diagnostic text support [^vscode-eslint-issue-markdown-report] [^pretty-ts-errors-docs-hide-original-errors], but I've seen proof-of-concepts in extensions such as [pretty-ts-errors](https://github.com/yoavbls/pretty-ts-errors).
+In practice, VS Code is unfortunately still waiting on formatted diagnostic text support [^vscode-eslint-issue-markdown-report] [^pretty-ts-errors-docs-hide-original-errors].
 
-I'd also want to nicely format these in CLI reports.
-The Biome [^biome-cli-reference] and TSSLint [^tsslint-cli-reference] CLIs are do a great job of making linter reports approachable and clear.
-Bonus shoutouts to Orta's `tsc` explorations [^typescript-pull-orta-cli-reference] and the Rust CLI.
-I particularly like how some linters will display on the first report per file and/or per rule, with an opt-in option to show all.
+I've seen proof-of-concepts in extensions such as [pretty-ts-errors](https://github.com/yoavbls/pretty-ts-errors) -- but they require unseemly workarounds.
 
-TODO: reference other mockups
+Ugh.
 
-If I wrote a linter, it would that kind of rich reporter display by default.
+### Comprehensive CLI Reports
+
+Terminals these days can do a lot more more than just print text in preset colors.
+They can display hex codes, format links as plain text, and even re-render quickly for interactive displays.
+
+The Biome [^biome-cli-reference], TSSLint [^tsslint-cli-reference], and Vitest [^vitest-cli-reference] CLIs do a great job of making rule reports approachable and clear.
+Bonus shoutouts to Orta's `tsc` explorations [^typescript-pull-orta-cli-reference] and userland Rust error reporting crates [^rust-ariadne] [^rust-codespan] [^rust-miette].
+I particularly like how some CLIs display only the first report per file and/or per rule, with an opt-in option to show all.
+
+If I wrote a linter, it would include some kind of interactive rich reporter display by default.
 It would at least:
 
+- Trim out unnecessary details, such as parts of file paths above the project root
 - Default to a "focused" view that only shows a few reports at a time, leaving more space for...
 - Friendly primary + secondary + suggestions text for each spotlighted report, using ...
 - Rich colors to emphasize which parts of reports are most important
-- Trim out unnecessary details, such as parts of file paths above the project root
 
 Here's a very rough starting mockup:
 
 <LabeledImage
 	alt="Mockup of a lint report from 'npx @joshuakgoldberg/linter .'. Top-left in red: ./src/base.ts. Bottom-left in red: x Found 7 reports across 3 files. Top-right in gray: Details: enabled Focused view: enabled. Bottom-right in gray: [v] Report 2 of 3 [^] [<] File 2 of 3 [>]. Center: [awaitThenables] A non-Promise (non-Thenable) value is being awaited, with syntax-highlighted await process(), light blue suggestions, a medium gray-green explanation, and green link to example.com/awaitThenables."
 	note={`This is a very rough mockup of the "focused" view; please don't read too much into it.`}
+	original="https://github.com/JoshuaKGoldberg/repros/tree/linter-report-mockup?tab=readme-ov-file#linter-report-mockup"
 	src={vscodeTerminalESLintMockup}
 	wide
 />
 
 The linter's reporting would have to fall back to more primitive colors, or no colors at all, depending on what the running terminal supports.
-And maybe the settings for _Details_ and _Focused view_ would remain persistent per-package or per-system?
+And maybe the _Details_ and _Focused view_ settings would persist per-package or per-system?
 There's a lot of room for exploration here.
 
 ## Comprehensive Rule Documentation
@@ -147,6 +193,29 @@ This lack of standardization is painful for users.
 
 If I wrote a linter, it would standardize how rules are named and structured.
 The next few sections will explain those the relevant questions I would standardize answers to.
+
+### Standardized Rule Categories
+
+To start, I think developers have generally settled on three categories of lint rules:
+
+- **Formatting**: Rules that don't change the AST
+- **Stylistic**: Rules that change the AST but don't change code logic
+- **Logical**: Rules that change code logic
+
+Those categories are useful for surfacing to developers why a rule would -or wouldn't- be useful.
+Many developers also treat reports differently based on which category they fall into.
+
+If I wrote a linter, I would have all core rules categorized into one of those three categories.
+Plugin rules would be encouraged -but not required- to use them as well.
+
+This would allow developers to react to the metadata in their own tooling.
+For example, developers might want to use an equivalent of `eslint.rules.customizations` to downgrade stylistic rules to blue info squigglies instead of yellow warnings:
+
+```json
+"linter.rules.customizations": [
+	{ "category": "stylistic", "severity": "info" }
+]
+```
 
 ### Standardized Rule Messages
 
@@ -219,6 +288,9 @@ For example, I would rework the following rule names roughly like:
 | [require-atomic-updates](https://typescript-eslint.io/rules/require-atomic-updates)                 | `atomicUpdates`               |
 | [restrict-plus-operands](https://typescript-eslint.io/rules/restrict-plus-operands)                 | `plusOperands`                |
 
+I would also include rule name as a required field in its metadata.
+That way, downstream tooling such as documentation generators and unit testers can rely on it.
+
 ### Standardized Rule Options
 
 Rule options have to make an even broader, deeper set of choices:
@@ -226,7 +298,6 @@ Rule options have to make an even broader, deeper set of choices:
 - Format:
   - Array: [`array-type`](https://typescript-eslint.io/rules/array-type), [`no-restricted-component-names`](https://eslint.vuejs.org/rules/no-restricted-component-names)
   - Object with keys for option names: ...almost all other rules
-- Message: how detailed is the first line? How much should it suggest next steps?
 - Name:
   - Plurality:
     - Singular: [`no-implicit-coercion` > `boolean`](https://eslint.org/docs/latest/rules/no-implicit-coercion#options)
@@ -254,7 +325,6 @@ What a list!
 If I wrote a linter, core rule options would make the same choice consistently:
 
 - Format: an object with keys for option names
-- Messages: see [Comprehensive Rule Reports](#comprehensive-rule-reports)
 - Name:
   - Plurality: always plural, as that's how one would describe what rule options target
   - Prefix:
@@ -264,26 +334,27 @@ If I wrote a linter, core rule options would make the same choice consistently:
 - Value defaults:
   - Boolean values: off-by-default, for simpler truthiness concepts
   - Multi-values: empty by default, so specifying values doesn't remove defaults
+    - If a value is important to include by default, it should be hardcoded on
 
-Looking at the options for across several rules, I would rework them roughly like:
+Here's how the options mentioned in the choices list would look in my linter:
 
-| Current Option Name                                                                                                                      | Reworked Option Name | Current Option Default | Reworked Option Default |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ---------------------- | ----------------------- |
-| [`allow`](https://typescript-eslint.io/rules/restrict-template-expressions#allow)                                                        | _(same)_             | `[{ ... }]`            | `[]`                    |
-| [`allowForKnownSafeCalls`](https://typescript-eslint.io/rules/no-floating-promises#allowforknownsafecalls)                               | _(same)_             | `[]`                   | _(same)_                |
-| [`allowImplicit`](https://eslint.org/docs/latest/rules/getter-return#options)                                                            | `ignoreImplicit`     | `false`                | _(same)_                |
-| [`array-type`](https://typescript-eslint.io/rules/array-type)'s anonymous element                                                        | `style`              | `'array'`              | _(same)_                |
-| [`boolean`](https://eslint.org/docs/latest/rules/no-implicit-coercion#options)                                                           | `booleans`           | `true`                 | `false`                 |
-| [`checkProperties`](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md#checkproperties) | _(same)_             | `false`                | _(same)_                |
-| [`checkThenables`](https://typescript-eslint.io/rules/no-floating-promises#checkthenables)                                               | _(same)_             | `false`                | _(same)_                |
-| [`enforceForClassMembers`](https://eslint.org/docs/latest/rules/accessor-pairs#enforceforclassmembers)                                   | `ignoreClassMembers` | `true`                 | `false`                 |
-| [`ignoreComments`](https://eslint.style/rules/js/no-trailing-spaces#ignorecomments)                                                      | _(same)_             | `false`                | _(same)_                |
-| [`ignoreIIFE`](https://typescript-eslint.io/rules/no-floating-promises#ignoreiife)                                                       | _(same)_             | `false`                | _(same)_                |
-| [`ignoreVoid`](https://typescript-eslint.io/rules/no-floating-promises#ignorevoid)                                                       | _(same)_             | `true`                 | `false`                 |
-| [`includeExports`](https://eslint.org/docs/latest/rules/no-duplicate-imports#options)                                                    | `checkExports`       | `false`                | _(same)_                |
-| [`no-restricted-component-names`](https://eslint.vuejs.org/rules/no-restricted-component-names#options)'s anonymous element              | `names`              | `[]`                   | _(same)_                |
-| [`requireForBlockBody`](https://eslint.style/rules/js/arrow-parens#requireforblockbody)                                                  | `checkBlockBodies`   | `false`                | _(same)_                |
-| [`skipBlankLines`](https://eslint.style/rules/js/no-trailing-spaces#skipblanklines)                                                      | `ignoreBlankLines`   | `false`                | _(same)_                |
+| Current Name                                                                                                                             | Reworked Name        | Current Default | Reworked Default |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | --------------- | ---------------- |
+| ([`array-type`](https://typescript-eslint.io/rules/array-type))                                                                          | `style`              | `'array'`       | _(same)_         |
+| ([`no-restricted-component-names`](https://eslint.vuejs.org/rules/no-restricted-component-names#options))                                | `names`              | `[]`            | _(same)_         |
+| [`allow`](https://typescript-eslint.io/rules/restrict-template-expressions#allow)                                                        | _(same)_             | `[{ ... }]`     | `[]`             |
+| [`allowForKnownSafeCalls`](https://typescript-eslint.io/rules/no-floating-promises#allowforknownsafecalls)                               | _(same)_             | `[]`            | _(same)_         |
+| [`allowImplicit`](https://eslint.org/docs/latest/rules/getter-return#options)                                                            | `ignoreImplicit`     | `false`         | _(same)_         |
+| [`boolean`](https://eslint.org/docs/latest/rules/no-implicit-coercion#options)                                                           | `booleans`           | `true`          | `false`          |
+| [`checkProperties`](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md#checkproperties) | _(same)_             | `false`         | _(same)_         |
+| [`checkThenables`](https://typescript-eslint.io/rules/no-floating-promises#checkthenables)                                               | _(same)_             | `false`         | _(same)_         |
+| [`enforceForClassMembers`](https://eslint.org/docs/latest/rules/accessor-pairs#enforceforclassmembers)                                   | `ignoreClassMembers` | `true`          | `false`          |
+| [`ignoreComments`](https://eslint.style/rules/js/no-trailing-spaces#ignorecomments)                                                      | _(same)_             | `false`         | _(same)_         |
+| [`ignoreIIFE`](https://typescript-eslint.io/rules/no-floating-promises#ignoreiife)                                                       | _(same)_             | `false`         | _(same)_         |
+| [`ignoreVoid`](https://typescript-eslint.io/rules/no-floating-promises#ignorevoid)                                                       | _(same)_             | `true`          | `false`          |
+| [`includeExports`](https://eslint.org/docs/latest/rules/no-duplicate-imports#options)                                                    | `checkExports`       | `false`         | _(same)_         |
+| [`requireForBlockBody`](https://eslint.style/rules/js/arrow-parens#requireforblockbody)                                                  | `checkBlockBodies`   | `false`         | _(same)_         |
+| [`skipBlankLines`](https://eslint.style/rules/js/no-trailing-spaces#skipblanklines)                                                      | `ignoreBlankLines`   | `false`         | _(same)_         |
 
 Oh, and rule options would be sorted alphabetically in their docs pages.
 I want to be able to O(log(N)) scan a docs page for a rule option.
@@ -308,7 +379,7 @@ For example, [`@typescript-eslint/no-restricted-types`](https://typescript-eslin
 The problem with using plain strings to target names is that they are ambiguous.
 In the example, _any_ type named `SomeType` would be restricted, even if it is a different type than the one the user intended.
 
-Over in typescript-eslint, we developed a [TypeOrValueSpecifier](https://typescript-eslint.io/linting/type-or-value-specifier) format for specifying types or values in options.
+Over in typescript-eslint, we developed a [TypeOrValueSpecifier](https://typescript-eslint.io/packages/type-utils/type-or-value-specifier) format for specifying types or values in options.
 It allows users to specify not just the name but also the source -global, package, etc.- of a type or value.
 Here's how that would look for specifying `SomeType` from a specific file:
 
@@ -318,39 +389,24 @@ Here's how that would look for specifying `SomeType` from a specific file:
 	{
 		"types": [{
 			"message": "Don't use SomeType because it is unsafe",
-			"type": "SomeType",
+			"type": {
+				"from": "file",
+				"name": "SomeType",
+				"path": "./src/legacy-types.ts",
+			},
 		}],
 	},
 ]
 ```
 
 If I wrote a linter, core rules would only ever use the TypeOrValueSpecifier format to specify types or values.
-Userland plugins would be strongly encouraged to use the format instead of ambiguous strings.
-
-## Only Errors
-
-All mainstream web linters today allow configuring rules as _errors_ or _warnings_.
-Errors are generally visualized with red squigglies and fail builds; warnings are visualized with yellow squigglies and don't fail builds.
-
-Warnings are intended to be transient indicators during migrations or when rules aren't certain about issues [^eslint-pr-docs-warn-severity].
-In practice, I think the delineation is not worthwhile:
-
-- Using the same red color and terminology for _lint_ errors and _type-checking_ errors is confusing both ideologically and practically.
-  I personally use [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, to not conflict with red TypeScript squigglies.
-- Warnings tend to live forever in codebases, which trains developers to ignore lint reports.
-- If a problem can't be determined with certainty, it either should be suppressed using an inline config comment with an explanation, or not turned into a lint rule at all!
-
-I think warnings are a bad fit for the migration use case.
-Tools like [eslint-nibble](https://github.com/IanVS/eslint-nibble) and ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) can provide a more comprehensive experience.
-
-If I were to write a linter, I would have it so rules can only be turned off or on.
-All lint rule reports would be errors and visualized with yellow squigglies in errors.
-Gradual onboardings of new rules or rule options would be a separately managed feature.
+Plugins would be strongly encouraged to use the format instead of ambiguous strings.
 
 ## Typed Rules
 
-One of my biggest gripes with all existing linter configuration systems today is that _rule options are not type-safe_.
-All mainstream linters today have you specify rules as properties an object, where their string key is their plugin name and rule name, and their value is their severity and any options:
+My biggest gripe with linter configuration systems today is that _rule options are not type-checked_.
+They're only validated at runtime.
+Mainstream linters today have you specify rules as properties an object, where their string key is their plugin name and rule name, and their value is their severity and any options:
 
 ```js
 {
@@ -367,7 +423,7 @@ You don't get editor intellisense while authoring; instead, you have to use [`@e
 I'd love to make a standard plugin creator function that plugin authors are encouraged -even required- to use.
 It could take in a set of rules and return some kind of well-typed function.
 
-Vaguely, maybe it'd use a TypeScript-friendly schema validation library such as [Zod](https://zod.dev) and look something like:
+If I wrote a linter, it would allow [Standard Schema](https://standardschema.dev) descriptions for rule options, which would allow TypeScript-friendly schema validations library like [Zod](https://zod.dev):
 
 ```ts
 import { createRule, createPlugin } from "@joshuakgoldberg/linter";
@@ -469,10 +525,10 @@ I think ESLint's flat config has learned the hard way:
 - Global `ignores` needs a separate function or key from local `ignores` [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file] [^tseslint-discord-help-eslint-not-ignoring-js-files]
 - When plugin configs set file globs and other settings, it's unclear where settings come from
 
-I want a "just JavaScript" config system, but I want it to wholly lean into well-typed functions and objects.
-Each line of the config _file_ should make it clear what is being set -- even if you don't understand the nuances of the config _system_.
+If I wrote a linter, it would have a config system that wholly leans into well-typed functions and objects.
+Each line of the config _file_ would set exactly one thing and make it clear what is being set -- even if you don't understand the nuances of the config _system_.
 
-Here's a rough sketch of what my linter's config could like for a starter TypeScript setup, compared to the closest ESLint equivalent:
+Here's a rough sketch of a starting TypeScript setup, compared to the closest ESLint equivalent:
 
 <Tabs>
 	<TabsList>
@@ -519,9 +575,9 @@ That sketch is different from the current ESLint flat config in a few ways:
 
 - Most settings are moved into an explicit `use` array, each with `glob` and `rules`
 - The traditional `extends` is merged into `rules` with plugins registering themselves automatically, rather than a separate `plugins` object
-- `rules` is an array of type-safe function calls, rather than a non-type-safe key-value object
+- `rules` is a array of type-safe references, rather than a non-type-safe key-value object
 
-Here's how it would look for a repository that configures rules, ignores some files, and adds a plugin with settings:
+Here's a rough sketch that configures rules, ignores some files, and adds a plugin with settings:
 
 <Tabs>
 	<TabsList>
@@ -612,7 +668,7 @@ That sketch shows a few more differences from the current ESLint flat config sys
   - Note: I also want the config system to ignore files listed in your `.gitignore` by default, in addition to ESLint's defaults of `.git/` and `node_modules/`.
 - Settings are specified inline in `use` through their plugin, rather than as a separate catch-all `settings` object
 
-I mentioned in part 1 that I would want this linter to support [common languages in core](/blog/if-i-wrote-a-linter-part-1-architecture#common-languages-in-core).
+I previously mentioned that I would want to [support common languages in core](/blog/if-i-wrote-a-linter-part-1-architecture#common-languages-in-core).
 Here's how the config system would look for a repository that enables logical and stylistic rules on all those languages:
 
 <Tabs>
@@ -673,7 +729,10 @@ export default defineConfig(
 
 </Tabs>
 
-One downside of this proposed approach is that it requires the user to know and manage their file extensions themselves.
+I don't love that my linter sketch has so many more lines than the ESLint equivalent.
+They have fewer overall characters, and I think they're worth it for clarity, but it's a tradeoff.
+
+Another downside of this proposed approach is that it requires the user to know and manage their file extensions themselves.
 Knowing that TypeScript files can also be `*.cts`, `*.mts`, `*.tsx`, etc. is a bit of a pain.
 Maybe plugins such as the core linter plugins could provide `globs` constants?
 
@@ -753,21 +812,82 @@ export default defineConfig({
 
 ## Inline Snapshot Unit Tests
 
-TODO: I want to combine...
+I like the design of [ESLint's `RuleTester`](https://eslint.org/docs/latest/integrate/nodejs-api#ruletester) (and [typescript-eslint's `RuleTester` extension](https://typescript-eslint.io/packages/rule-tester)).
+`RuleTester`'s API allows for clear, succinct descriptions of many isolated test cases at once.
+I prefer it over the [TSLint `*.ts.lint` test files](https://palantir.github.io/tslint/develop/testing-rules) that put all test cases into one big file namespace.
 
-- `RuleTester`: the succinctness of inline cases
-- TSLint/snapshots: being able to have a quick visual display
-- Jest/Vitest-style `-u` snapshots: being able to auto update
-
-TODO: show current state, then...
+Here's an example of a `RuleTester` test for a TypeScript rule:
 
 ```ts
+import { RuleTester } from "eslint";
+import rule from "./preferConst.js";
+
+const ruleTester = new RuleTester();
+
+ruleTester.run("prefer-const", rule, {
+	invalid: [
+		{
+			code: `let value = 123;`,
+			output: `const value = 123;`,
+			errors: [
+				{
+					column: 5,
+					line: 1,
+					data: { name: "value" },
+					messageId: "preferConst",
+				},
+			],
+		},
+	],
+	valid: [
+		`const value = 123;`,
+		`
+			let value = 123;
+			value = 456;
+		`,
+	],
+});
+```
+
+I don't love that we have to specify the rule name manually.
+That's easily solvable by [Standardized Rule Names](#standardized-rule-names)'s note of making that a required rule property.
+
+I also don't love that the `RuleTester` class is packaged with the linter itself.
+Doing so is convenient for plugin developers, but it means the code bloats users' package installations.
+
+My biggest gripes with `RuleTester` are around the `errors` array:
+
+- It doesn't show the full error message, just the data used to create it
+  - Not managing long messages is nice, but text formatting issues can more easily sneak in
+- Specifying location data as 0-4 of `column`, `endColumn`, `line`, and/or `endLine`:
+  - Adding new cases and updating tests for rule changes is cumbersome
+  - Tests tend to be inconsistent about how much location data they include
+
+What I really want here is the best of three worlds:
+
+- ESLint's `RuleTester`: clear and succinct inline cases
+- TSLint's lint files: quick visual display of report spans and messages
+- Jest/Vitest-style inline snapshots [^vitest-inline-snapshots]: being able to auto-update those report spans
+
+If I wrote a linter, it would provide:
+
+- A `RuleTester` equivalent that defines rule reports in an inline string snapshot
+- A first-party plugin that auto-fixes report snapshots to match the current rule reports
+
+Here's how that could look in practice:
+
+```ts
+import { RuleTester } from "@joshuakgoldberg/rule-tester";
+import rule from "./preferConst.js";
+
+const ruleTester = new RuleTester(rule);
+
 ruleTester.run({
 	invalid: [
 		{
 			code: `let value = 123;`,
 			output: `const value = 123;`,
-			reported: `
+			report: `
 				let value = 123;
 				    ^^^^^
 				    [preferConst] Prefer using 'const' for variables that are never reassigned.
@@ -780,23 +900,28 @@ ruleTester.run({
 			let value = 123;
 			value = 456;
 		`,
-		`let value;`,
-		`var value;`,
 	],
 });
 ```
 
-will need a rule auto-fixer to make this ergonomic
-note to put that in ecosystem as first-party
+<small>
+	<em>
+		(I'd use `~`, not `^`, for squigglies, but right now they break syntax
+		highlighting in my MDX extension (known bug)...)
+	</em>
+</small>
 
----
+The `report` field would only show the line being reported on, or the first and last lines if it's a multi-line report.
+
+I'll talk more in the next post in this series about the first-party plugin and other ecosystem tooling.
+
+## Acknowledgements
 
 Thanks in particular to [Kirk Waiblinger](https://github.com/kirkwaiblinger), fellow typescript-eslint team member, for very helpful advice on the config file format.
 Kirk ideated preset `glob` values and helped with balancing clarity of language configurations with its verbosity.
 
-Additional thanks to [Dimitri Mitropoulos (Michigan TypeScript)](https://michigantypescript.com) and (TODO grab from social media) for suggesting references of CLI prior art.
-
-## References
+Additional thanks to [Arend van Beelen](https://fosstodon.org/@arendjr@mstdn.social), [Dimitri Mitropoulos (Michigan TypeScript)](https://michigantypescript.com), and [@tonywu6.org](https://bsky.app/profile/tonywu.org) for suggesting references of CLI prior art.
+Dimitri also helped ideate the rich CLI output format and what to show in the different views.
 
 [^biome-cli-reference]: [Biome `no-aria-unsupported-elements` Examples > Invalid](https://biomejs.dev/linter/rules/no-aria-unsupported-elements/#invalid)
 
@@ -809,6 +934,12 @@ Additional thanks to [Dimitri Mitropoulos (Michigan TypeScript)](https://michiga
 [^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
 
 [^pretty-ts-errors-docs-hide-original-errors]: [yoavbls/pretty-ts-errors > docs/hide-original-errors.md](https://github.com/yoavbls/pretty-ts-errors/blob/main/docs/hide-original-errors.md)
+
+[^rust-ariadne]: [zesterer/ariadne](https://github.com/zesterer/ariadne)
+
+[^rust-codespan]: [brendanzlab/codespan](https://github.com/brendanzlab/codespan)
+
+[^rust-miette]: [zkat/miette](https://github.com/zkat/miette)
 
 [^stackoverflow-parsing-error-was-not-found-by-the-project-service-but-ive-ignored-these-file]: [StackOverflow: Parsing error: was not found by the project service, but I've ignored these files](https://stackoverflow.com/a/78873727/1830407)
 
@@ -829,6 +960,10 @@ Additional thanks to [Dimitri Mitropoulos (Michigan TypeScript)](https://michiga
 [^tsslint-cli-reference]: [johnsoncodehk/tsslint#50 Include screenshot/gif of the CLI somewhere in this repo?](https://github.com/johnsoncodehk/tsslint/issues/50)
 
 [^typescript-pull-orta-cli-reference]: [Microsoft/TypeScript#49668 Compiler CLI output format update v2](https://github.com/microsoft/TypeScript/issues/45717)
+
+[^vitest-cli-reference]: [Vitest Command Line Interface](https://vitest.dev/guide/cli)
+
+[^vitest-inline-snapshots]: [Vitest Inline Snapshots](https://vitest.dev/guide/snapshot.html#inline-snapshots)
 
 [^vscode-allow-diagnostics-messages-markdown-content]: [microsoft/vscode#54272](https://github.com/microsoft/vscode/issues/54272)
 

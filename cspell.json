@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -25,6 +31,7 @@
 		"angsty",
 		"Anisha",
 		"antipattern",
+		"Arend",
 		"Aris",
 		"Arktype",
 		"Ashwin",
@@ -43,6 +50,7 @@
 		"Bakels",
 		"Bana",
 		"Basarat",
+		"Beelen",
 		"bega",
 		"Bekah",
 		"Bibliothèque",
@@ -58,6 +66,7 @@
 		"Borison",
 		"Boshen",
 		"Boulter",
+		"brendanzlab",
 		"Britta",
 		"bsky",
 		"Buckton",
@@ -232,6 +241,7 @@
 		"mhegazy",
 		"Michaël",
 		"microfrontends",
+		"miette",
 		"Milchick",
 		"mindshare",
 		"minifiers",
@@ -356,6 +366,7 @@
 		"thenables",
 		"Timișoara",
 		"tonyedwardspz",
+		"tonywu",
 		"Toon",
 		"transpiles",
 		"triaging",
@@ -383,6 +394,7 @@
 		"Victorien",
 		"vjeux",
 		"Vonschondorf",
+		"Waiblinger",
 		"Weekes",
 		"Whoo",
 		"Whoohoo",
@@ -398,6 +410,8 @@
 		"Zakas",
 		"Zamiell",
 		"Zaytse",
+		"zesterer",
+		"zkat",
 		"zoolander",
 		"zootopia"
 	]
