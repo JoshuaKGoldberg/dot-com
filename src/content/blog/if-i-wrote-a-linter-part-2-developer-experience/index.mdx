@@ -14,7 +14,10 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
+import arnoldMagicSchoolBusMrFreeze from "~/assets/blog/arnold-magic-school-bus-mr-freeze.webm";
+import doYouWannaBuildALinter from "~/assets/blog/do-you-wanna-build-a-linter.webm";
 import elsaLetItGoStairs from "~/assets/blog/elsa-let-it-go-stairs.webm";
+import olafSnowAngelBliss from "~/assets/blog/olaf-snow-angel-bliss.webm";
 import vscodeESLintScreenshot from "~/assets/blog/vscode-eslint-screenshot.png";
 import vscodeTerminalESLintMockup from "~/assets/blog/vscode-terminal-eslint-mockup.png";
 import vscodeTerminalESLintScreenshot from "~/assets/blog/vscode-terminal-eslint-screenshot.png";
@@ -35,6 +38,7 @@ This post is how I would craft they ways developers would interact with it.
 <LabeledVideo
 	alt="Elsa from Frozen walking up a staircase as she's creating it with ice, singing 'Let It Go'"
 	description="Elsa breaking free from the shackles of linters reporting both errors and warnings."
+	original="https://giphy.com/gifs/frozen-movie-disney-Jsdc7bQe7g3WU"
 	src={elsaLetItGoStairs}
 />
 
@@ -49,8 +53,14 @@ This post is how I would craft they ways developers would interact with it.
 
 ## Developer Experience is Crucial
 
-The "developer experience" of a linter an incredibly important part of its usability.
-Especially when your tool is made to tell developers when they're "wrong" (which is how many developers interpret linters, sadly).
+The developer experience of a linter an incredibly important part of its usability.
+Especially when your tool tells developers they're "wrong" (which is how many interpret linters, sadly).
+Linters have have earned that bad reputation for a few reasons:
+
+- Any overly aggressive lint rule makes the act of linting seem unnecessarily painful
+- Linters often require extra per-project configuration
+- Many older lint rules used to be overly prescriptive
+- ...did I mention developers _hate_ being told they're wrong?
 
 My goals with rethinking a linter's developer experience are:
 
@@ -58,12 +68,6 @@ My goals with rethinking a linter's developer experience are:
 - **Clarity**: everything should be as easy as possible to understand, even if you're not an expert
 - **Minimalism**: removing extraneous features and deduplicating tooling configuration
 - **Type safety**: making as much as possible well-typed, both for plugin authors and end-users
-
-Linters get an unusually bad rap for a few reasons:
-
-- Any overly aggressive lint rule makes the act of linting seem unnecessarily painful.
-- Linters often require extra per-project configuration.
-- ...did I mention developers _hate_ being told they're wrong?
 
 The more we make a linter accessible and friendly, the more likely developers are to embrace it.
 
@@ -73,10 +77,10 @@ All mainstream web linters today allow configuring rules as _errors_ or _warning
 Errors are generally visualized with red squigglies and fail builds; warnings are visualized with yellow squigglies and don't fail builds.
 
 Warnings are intended to be transient indicators during migrations or when rules aren't certain about issues [^eslint-pr-docs-warn-severity].
-In practice, I think the delineation is not worthwhile:
+In practice, I think that delineation is not worthwhile:
 
 - Using the same red color and terminology for _lint_ errors and _type-checking_ errors is confusing.
-  I personally use [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, to not conflict with TypeScript's red squigglies.
+  I personally use [VS Code's `eslint.rules.customizations`](https://github.com/microsoft/vscode-eslint/pull/1164) to visualize lint errors with yellow squigglies, so as to not conflict with TypeScript's red squigglies.
 - Warnings tend to live forever in codebases, which trains developers to ignore lint reports.
 - If a problem can't be determined with certainty, it either should be suppressed using an inline config comment with an explanation, or not turned into a lint rule at all!
 
@@ -86,6 +90,13 @@ Tools like [eslint-nibble](https://github.com/IanVS/eslint-nibble) and ESLint's 
 If I wrote a linter, I would have it so rules can only be turned off or on.
 All lint rule reports would be errors and visualized with yellow squigglies in errors.
 Gradual onboardings of new rules or rule options would be a separately managed feature.
+
+<LabeledVideo
+	alt="Olaf from Frozen happily making a snow angel in fresh field of snow"
+	description="Olaf enjoying the pure, untainted bliss of not having multiple severities for linter rule reports."
+	original="https://giphy.com/gifs/disneyanimation-frozen-film-Fjy5XItIvYjEQ"
+	src={olafSnowAngelBliss}
+/>
 
 ## Comprehensive Rule Reports
 
@@ -155,7 +166,10 @@ Here's a very rough starting mockup:
 <LabeledImage
 	alt="Mockup of a lint report from 'npx @joshuakgoldberg/linter .'. Top-left in red: ./src/base.ts. Bottom-left in red: x Found 7 reports across 3 files. Top-right in gray: Details: enabled Focused view: enabled. Bottom-right in gray: [v] Report 2 of 3 [^] [<] File 2 of 3 [>]. Center: [awaitThenables] A non-Promise (non-Thenable) value is being awaited, with syntax-highlighted await process(), light blue suggestions, a medium gray-green explanation, and green link to example.com/awaitThenables."
 	note={`This is a very rough mockup of the "focused" view; please don't read too much into it.`}
-	original="https://github.com/JoshuaKGoldberg/repros/tree/linter-report-mockup?tab=readme-ov-file#linter-report-mockup"
+	original={{
+		href: "https://github.com/JoshuaKGoldberg/repros/tree/linter-report-mockup?tab=readme-ov-file#linter-report-mockup",
+		text: "source",
+	}}
 	src={vscodeTerminalESLintMockup}
 	wide
 />
@@ -196,7 +210,8 @@ The next few sections will explain those the relevant questions I would standard
 
 ### Standardized Rule Categories
 
-To start, I think developers have generally settled on three categories of lint rules:
+How do we even categorize rules?
+I think developers have generally settled on three categories of lint rules:
 
 - **Formatting**: Rules that don't change the AST
 - **Stylistic**: Rules that change the AST but don't change code logic
@@ -401,6 +416,13 @@ Here's how that would look for specifying `SomeType` from a specific file:
 
 If I wrote a linter, core rules would only ever use the TypeOrValueSpecifier format to specify types or values.
 Plugins would be strongly encouraged to use the format instead of ambiguous strings.
+
+<LabeledVideo
+	alt="Arnold from Magic School Bus taking off an astronaut helmet in snow and his face covering with ice, leaving dark glasses"
+	description="Arnold from Magic School Bus leveling up into Mr. Freeze, much like strings leveling up into TypeOrValueSpecifier."
+	original="https://giphy.com/gifs/justin-g-cold-freezing-magic-school-bus-3o6fDMaNGxz2rblFQs"
+	src={arnoldMagicSchoolBusMrFreeze}
+/>
 
 ## Typed Rules
 
@@ -911,9 +933,15 @@ ruleTester.run({
 	</em>
 </small>
 
-The `report` field would only show the line being reported on, or the first and last lines if it's a multi-line report.
+`report` would only show the reported line, or the first and last lines if a multi-line report.
 
 I'll talk more in the next post in this series about the first-party plugin and other ecosystem tooling.
+
+<LabeledVideo
+	alt="Anna from Frozen as a young girl knocking on Elsa's door, asking: 'do you want to build a linter?'"
+	description="Anna seeking to explore new and fun ways to improve the developer experience of web linting."
+	src={doYouWannaBuildALinter}
+/>
 
 ## Acknowledgements
 
