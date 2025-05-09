@@ -107,21 +107,16 @@ It would at least:
 
 Here's a very rough starting mockup:
 
-TODO: add...
-
-- top-right?: `[S]` suggestions toggle
-- bottom-right?: `<` `>` report navigation; `tab` / `shift-tab` file navigation (?)
-
-...with persistent saving in user settings?
-
 <LabeledImage
-	alt="Screenshot of a terminal report from npx eslint .: 50:1 Unexpected `await` of a non-Promise (non-'Thenable') value (@typescript-eslint/await-thenable)."
+	alt="Mockup of a lint report from 'npx @joshuakgoldberg/linter .'. Top-left in red: ./src/base.ts. Bottom-left in red: x Found 7 reports across 3 files. Top-right in gray: Details: enabled Focused view: enabled. Bottom-right in gray: [v] Report 2 of 3 [^] [<] File 2 of 3 [>]. Center: [awaitThenables] A non-Promise (non-Thenable) value is being awaited, with syntax-highlighted await process(), light blue suggestions, a medium gray-green explanation, and green link to example.com/awaitThenables."
 	note={`This is a very rough mockup of the "focused" view; please don't read too much into it.`}
 	src={vscodeTerminalESLintMockup}
 	wide
 />
 
 The linter's reporting would have to fall back to more primitive colors, or no colors at all, depending on what the running terminal supports.
+And maybe the settings for _Details_ and _Focused view_ would remain persistent per-package or per-system?
+There's a lot of room for exploration here.
 
 ## Comprehensive Rule Documentation
 
