@@ -35,7 +35,7 @@ I started **contributing** to [TSLint](https://palantir.github.io/tslint) commun
 Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
-This post is how I would craft they ways developers would interact with it.
+This post is how I would craft the ways developers would interact with it.
 
 <LabeledVideo
 	alt="Elsa from Frozen walking up a staircase as she's creating it with ice, singing 'Let It Go'"
@@ -208,7 +208,7 @@ Community plugins often make very different and inconsistent choices as well.
 This lack of standardization is painful for users.
 
 If I wrote a linter, it would standardize how rules are named and structured.
-The next few sections will explain those the relevant questions I would standardize answers to.
+The next few sections will explain the relevant questions I would standardize answers to.
 
 ### Standardized Rule Categories
 
@@ -267,13 +267,13 @@ Rule names have to make several choices:
   - Loose: `@typescript-eslint/restrict-plus-operands`, `prefer-const`
   - No prefix: `array-callback-return`, `constructor-super`
 - Singularity:
-  - Singular: `for-direction`, `default-case-last`
+  - Singular: `default-case-last`, `for-direction`
   - Plural: `no-magic-numbers`, `require-atomic-updates`
 
 Inconsistent answers to each of those choices lead to user confusion:
 
 - Abbreviation:
-  - Memorize many abbreviations is an annoyance at best and confusing at worst
+  - Memorizing many abbreviations is annoying at best and confusing at worst
   - Some words abbreviate to different meanings, such as "constant" and "const"
 - Prefixes:
   - Alphabetical sorting of rules places them similarly prefixed rules together, weirdly
@@ -486,14 +486,14 @@ Config values would be verified at runtime by the schema validation library.
 
 ## Typed Plugin Settings
 
-An even less type-safe part of other current linters' config systems is the [shared `settings` object](https://eslint.org/docs/latest/use/configure/configuration-files#configuring-shared-settings).
+An even less type-safe part of many current linters' config systems is the [shared `settings` object](https://eslint.org/docs/latest/use/configure/configuration-files#configuring-shared-settings).
 You can put whatever you want in there, and any plugin may read from it.
 
 In theory, cross-plugin shared settings can be used for related plugins, while plugin-specific settings are by convention namespaced under their name.
 In practice, I don't think I've ever used a shared setting across plugins.
 
 If I wrote a linter, I would have plugins define their own settings and settings types.
-They would need to use a TypeScript-friendly schema validation library such as [Zod](https://zod.dev).
+They would need to use a Standard Schema validation library too.
 It could look something like:
 
 ```ts
@@ -783,7 +783,7 @@ But we'll see.
 ### Native Workspace Support
 
 Larger web repositories these days are often structured as "monorepos", often using the "workspace" feature of their package manager and other tools.
-Workspaces are particularly useful when different packages in the same repository use very different technology.
+Workspaces are particularly useful when different packages in the same repository use some very different frameworks.
 
 If I wrote a linter, I would want native support for workspaces.
 I think a root-level lint config file should be able to define common rules and settings for all workspaces.
@@ -911,9 +911,9 @@ Here's how that could look in practice:
 import { RuleTester } from "@joshuakgoldberg/rule-tester";
 import rule from "./preferConst.js";
 
-const ruleTester = new RuleTester(rule);
+const ruleTester = new RuleTester();
 
-ruleTester.run({
+ruleTester.run(rule, {
 	invalid: [
 		{
 			code: `let value = 123;`,
