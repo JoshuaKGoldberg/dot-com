@@ -23,7 +23,7 @@ Today's web linters are great.
 Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://github.com/oxc-project/oxc) are fast and easy to set up with their own burgeoning ecosystems.
 
 I've been working on TypeScript linting for almost a decade.
-I started **contributing** to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
+I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
 Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
@@ -40,13 +40,13 @@ TODO: opening meme
 > - 👉 [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
 > - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
 
-## Consistent Glossary
+## Shared Glossary
 
 Many important linting terms have inconsistent usage or even definitions in the wild today.
 For example, _"stylistic"_ can alternately refer to:
 
-- [Stylistic (Rule)](https://eslint.org/docs/latest/use/core-concepts/glossary#stylistic-rule): The category of lint rules that enforce _formatting_, naming conventions, or consistent usage of equivalent syntaxes
-- [ESLint Stylistic](https://eslint.style): The plugin that ESLint's _formatting_ rules were migrated to, along with a small selection of non-formatting stylistic rules
+- [Stylistic (Rule)](https://eslint.org/docs/latest/use/core-concepts/glossary#stylistic-rule): The category of lint rules that enforce **formatting**, naming conventions, or consistent usage of equivalent syntaxes
+- [ESLint Stylistic](https://eslint.style): The plugin that ESLint's formatting rules were migrated to, along with a small selection of non-formatting stylistic rules
 - [typescript-eslint's stylistic shared configs](https://typescript-eslint.io/users/configs#stylistic), which enforce consistent usage of equivalent syntaxes, as well as general TypeScript best practices that don't impact program logic
 
 ...huh!?
@@ -79,6 +79,7 @@ That includes taking rules from the following plugins:
 - [`@eslint-community/eslint-plugin-eslint-comments`](https://www.npmjs.com/package/@eslint-community/eslint-plugin-eslint-comments)
 - [`eslint-plugin-import`](https://github.com/import-js/eslint-plugin-import)
 - [`eslint-plugin-jsdoc`](https://github.com/gajus/eslint-plugin-jsdoc)
+- [`eslint-plugin-package-json`](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json)
 - [`eslint-plugin-promise`](https://github.com/eslint-community/eslint-plugin-promise)
 - [`eslint-plugin-n`](https://github.com/gajus/eslint-plugin-jsdoc)
 - [`eslint-plugin-regexp`](https://github.com/gajus/eslint-plugin-regexp)
@@ -122,7 +123,7 @@ To start, it would include equivalents of:
 - [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
 - [`eslint-plugin-eslint-plugin`](https://github.com/eslint-community/eslint-plugin-eslint-plugin)
 
-## Centralized Plugin Registry
+## Plugin Registry
 
 Finding the right third-party linter plugins for a project today is a pain.
 ESLint does not yet have a centralized plugin registry [^eslint-issue-plugins-eslint-org].
@@ -168,11 +169,13 @@ ref: bingo-examples
 
 Full explanation docs for all decisions
 
+## Compatibility Layers
+
 ## Troubleshooting Guide
 
 First party built in for what is the current slate of popular plugins
 
-[^awesome-eslint-issue-out-of-date]: TODO file issue on awesome-eslint and mention here: I found them while writing this post
+[^awesome-eslint-issue-out-of-date]: [dustinspecker/awesome-eslint#245 fix: remove deprecated and 404 links](https://github.com/dustinspecker/awesome-eslint/pull/245): I noticed over a dozen archived or dead links in the list while working on this blog post.
 
 [^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
 
