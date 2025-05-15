@@ -190,11 +190,38 @@ I happened to implement a similar feature for my [Bingo](https://create.bingo) a
 [bingo-js > Example Repositories](https://github.com/bingo-js/#example-repositories) contains about a dozen repositories auto-generated from templates and kept up-to-date in CI.
 They each run a GitHub Action that checks in any changes from re-running the template on Renovate pull requests.
 
-## Compatibility Layers
+## One-Way Compatibility
 
-## Troubleshooting Guide
+If you want to get users to adopt a new linter, you need to make it easy for them to migrate from the current dominant market leader: ESLint.
+That migration story needs to be as pleasant as possible.
+If users can't switch from an existing setup confidently and quickly, they won't.
 
-First party built in for what is the current slate of popular plugins
+This represents a difficult challenge for any new linter.
+The more you "break" from the existing ESLint paradigms, the harder it is for users to migrate.
+How much is reasonable to ask users to change?
+
+I think most linters today are going for _two-way compatibility_: porting all of the main concepts from ESLint.
+That includes my least favorite concept, errors vs. warnings [^goldblog-linter-part-2-only-errors].
+
+Two-way compatibility doesn't necessarily mean _full_ compatibility.
+Details might not be the same or fully implemented, such as linters not _(yet?)_ [^oxc-issue-linter-config-file] supporting JS configs rather than JSON.
+But concepts are similar and users can migrate their configs with minimal changes [^biome-guide-migrate-eslint-prettier].
+
+If I wrote a linter, I would go for _one-way compatibility_.
+Meaning: there would be support for all the _use cases_ ESLint supports, but they might not map up to ESLint's _features_.
+For drastically changed concepts, those migrations would one-way port to the linter's equivalents -- which might not preserve the exact original semantics.
+
+Taking errors vs. warnings as an example, the equivalent would be the new linter's "gradual onboardings" system:
+
+- _Feature_: errors vs. warnings would not be preserved
+- _Use case_: marking rules as not ready to cause errors yet would still be supported
+
+The new system would, I think, could be made _better_ at supporting the use case.
+Building a first-class gradual onboardings system into the linter would give more granular control over the rule onboarding process.
+
+### Compatibility Layers
+
+### Migrators
 
 [^awesome-eslint-issue-out-of-date]: [dustinspecker/awesome-eslint#245 fix: remove deprecated and 404 links](https://github.com/dustinspecker/awesome-eslint/pull/245): I noticed over a dozen archived or dead links in the list while working on this blog post.
 
@@ -208,8 +235,16 @@ First party built in for what is the current slate of popular plugins
 
 [^lintbase-about]: [Lintbase](https://github.com/bmish/lintbase) was a project that aimed to do what I'm proposing.
 
+[^oxc-issue-linter-config-file]: [osc-project/oxc#10935 linter: intelligent config file](https://github.com/oxc-project/oxc/issues/10935)
+
 [^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]: [typescript-eslint/typescript-eslint#7936 🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
 
 [^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
 
-[^typescript-eslint-configs]: [typescript-eslint Shared Configs](https://typescript-eslint.io/users/configs)
+[^typescript-eslint-configs]: [typescript-eslint > Shared Configs](https://typescript-eslint.io/users/configs)
+
+[^biome-guide-migrate-eslint-prettier]: [Biome > Migrate from ESLint and Prettier](https://biomejs.dev/guides/migrate-eslint-prettier)
+
+[^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](
+
+[^goldblog-linter-part-2-only-errors]: [If I Wrote a Linter, Part 2: Developer Experience > Only Errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors)
