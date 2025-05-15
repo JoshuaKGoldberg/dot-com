@@ -1,9 +1,9 @@
 ---
 pubDate: 2025-05-15
-description: "This is how I would steer a new ecosystem around a modern linter from scratch: TODO."
+description: "This is how I would steer a new ecosystem around a modern linter from scratch: emphasizing shared terminology, a plugin registry, and one-way compatibility layers."
 image:
-  alt: "TODO"
-  src: "~/assets/blog/sisyphus.jpg"
+  alt: "Troy from Community looking down in horror"
+  src: "~/assets/blog/troy-horrified.png"
 title: "If I Wrote a Linter, Part 3: Ecosystem"
 ---
 
@@ -14,6 +14,9 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
+import troyReturningWithPizza from "~/assets/blog/troy-returning-with-pizza.webm";
+import troySittingConfusedZoomIn from "~/assets/blog/troy-sitting-confused-zoom-in.webm";
+import troyAndAbedHighFiveInspectorSpacetime from "~/assets/blog/troy-and-abed-high-five-inspector-spacetime.webm";
 import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import tslintToESLintConfig from "~/assets/blog/tslint-to-eslint-config.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
@@ -29,8 +32,6 @@ Based on those years of various linters, I've collected a large set of design id
 
 I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
 This post is how I would craft the ecosystem around it.
-
-TODO: opening meme
 
 > 💡 This post is the third in a series:
 >
@@ -78,6 +79,13 @@ Now imagine how confusing this all is for someone new to linting, and/or who doe
 
 If I wrote a linter, I would continue the [ESLint Glossary](https://eslint.org/docs/latest/use/core-concepts/glossary) work by defining single recommended terms for all the shared linting concepts.
 I hope this would help reduce naming conflicts such as what we're seeing with _"config"_, _"format"_, and _"stylistic"_.
+
+<LabeledVideo
+	alt="Troy from Community looking confused and upset with his eyes wide open"
+	description="Troy Barnes from Community, attempting to understand these terms."
+	original="https://giphy.com/gifs/community-shocked-surprised-8d72Pydfl4CAw"
+	src={troySittingConfusedZoomIn}
+/>
 
 ## Common Core Plugins
 
@@ -148,6 +156,13 @@ To start, it would include equivalents of:
 
 Those community plugins would be included in ecosystem tests for the core linter to ensure new core linter releases don't unexpectedly break them [^eslint-rfc-ecosystem-tests].
 
+<LabeledVideo
+	alt="Troy and Abed doing a silly wavy high five sideways, dressed as Inspector Spacetime and Constable Reggie."
+	description="Troy and Abed, enacting a functional delineation between core rules and a community organization."
+	original="https://tenor.com/view/trobed-troy-and-abed-troy-and-abed-in-the-morning-community-community-tv-show-gif-20099276"
+	src={troyAndAbedHighFiveInspectorSpacetime}
+/>
+
 ## Plugin Registry
 
 Finding the right third-party linter plugins for a project today is a pain.
@@ -178,6 +193,13 @@ The registry would be exposed to users in two ways:
 
 Essentially, this would be a tailored _npm for linter plugins_ [^lintbase-about].
 
+<LabeledVideo
+	alt="Troy coming back with pizza to the other Community main cast destroying his on-fire apartment"
+	description="Troy Barnes from Community, looking for the latest relevant linter plugins for a project more than a few months old."
+	original="https://tenor.com/view/community-gif-23728528"
+	src={troyReturningWithPizza}
+/>
+
 ## Config Initializer
 
 Every mainstream linter comes with some kind of configuration file initialization CLI: [`@eslint/config`](https://eslint.org/docs/latest/use/getting-started#quick-start), [`biome init`](https://biomejs.dev/guides/getting-started/#configuration), [`oxlint --init`](https://oxc.rs/docs/guide/usage/linter/cli.html#basic-configuration), etc.
@@ -203,7 +225,7 @@ But, once we factor in the centralized plugin registry and config initializer te
 If I wrote a linter, it would automatically keep a known set of example repositories up-to-date with the latest versions of the linter and a plugin each.
 CI actions would run that update the templates whenever a new version of a dependency is released.
 
-I happened to implement a similar feature for my [Bingo](https://create.bingo) and [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) projects recently.
+I implemented a similar feature for my [Bingo](https://create.bingo) and [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) projects recently.
 [bingo-js > Example Repositories](https://github.com/bingo-js/#example-repositories) contains about a dozen repositories auto-generated from templates.
 The `created-typescript-app*` ones each run a GitHub Action that checks in any changes from re-running CTA on Renovate pull requests.
 
