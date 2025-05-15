@@ -15,9 +15,9 @@ import {
 } from "accessible-astro-components";
 
 import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
+import tslintToESLintConfig from "~/assets/blog/tslint-to-eslint-config.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
-import tslintToESLintConfig from "~/assets/blog/tslint-to-eslint-config.png";
 
 Today's web linters are great.
 [ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
@@ -40,6 +40,22 @@ TODO: opening meme
 > - [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
 > - 👉 [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
 > - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
+
+## Community Discord
+
+Every mainstream linter has some kind of community Discord.
+They each have channels for:
+
+- Automatic posting of new releases
+- General discussion
+- Help forums
+- Project development
+
+I have no new ideas in this space.
+I think the existing Discords are great.
+No complaints here.
+
+If I wrote a linter, it would have a community Discord akin to the existing ones.
 
 ## Shared Glossary
 
@@ -259,10 +275,10 @@ Asking them to manually rewrite a configuration file in a new format is a non-st
 I'm particularly fond of how tslint-to-eslint-config aggressively suggests that users rethink how their configuration files are structured:
 
 <LabeledImage
-	alt="TODO"
+	alt="Running npx tslint-to-eslint-config in a terminal. It has 6 groups of output: green, blue, red, cyan, purple, and green. See link for the full text."
 	note="Example of running npx tslint-to-eslint-config on a project with a TSLint config file"
 	original={{
-		href: "https://github.com/JoshuaKGoldberg/repros/tree/TODO?tab=readme-ov-file#linter-report-mockup",
+		href: "https://github.com/JoshuaKGoldberg/repros/tree/tslint-to-eslint-config?tab=readme-ov-file#tslint-to-eslint-config-example",
 		text: "source",
 	}}
 	src={tslintToESLintConfig}
@@ -281,6 +297,26 @@ It would also provide flags for whether to adopt practices recommended by the ne
 
 Those flags would allow the migration tool to be used as more than just a single-shot _"closest possible equivalent"_ tool.
 It would also help users migrate to best practices and more powerful linter configurations.
+
+## Up Next
+
+Ecosystem work is hard.
+It requires a lot energy and time.
+Many of the core competencies for working with a community ecosystem are different from those for coding.
+I think the ideas in this blog post are a nice blend of the areas.
+
+Next week will see the final entry in this blog post series.
+It'll summarize the entire series, answer FAQs, and provide a few final thoughts.
+I hope you enjoyed this post and the series so far!
+
+> 💡 This post is the third in a series:
+>
+> <br />
+>
+> - [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
+> - 👉 [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
 
 [^awesome-eslint-issue-out-of-date]: [dustinspecker/awesome-eslint#245 fix: remove deprecated and 404 links](https://github.com/dustinspecker/awesome-eslint/pull/245): I noticed over a dozen archived or dead links in the list while working on this blog post.
 
