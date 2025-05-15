@@ -204,8 +204,8 @@ If I wrote a linter, it would automatically keep a known set of example reposito
 CI actions would run that update the templates whenever a new version of a dependency is released.
 
 I happened to implement a similar feature for my [Bingo](https://create.bingo) and [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) projects recently.
-[bingo-js > Example Repositories](https://github.com/bingo-js/#example-repositories) contains about a dozen repositories auto-generated from templates and kept up-to-date in CI.
-They each run a GitHub Action that checks in any changes from re-running the template on Renovate pull requests.
+[bingo-js > Example Repositories](https://github.com/bingo-js/#example-repositories) contains about a dozen repositories auto-generated from templates.
+The `created-typescript-app*` ones each run a GitHub Action that checks in any changes from re-running CTA on Renovate pull requests.
 
 ## One-Way Compatibility
 
