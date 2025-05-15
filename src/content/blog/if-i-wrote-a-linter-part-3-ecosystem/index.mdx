@@ -17,6 +17,7 @@ import {
 import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import tslintToESLintConfig from "~/assets/blog/tslint-to-eslint-config.png";
 
 Today's web linters are great.
 [ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
@@ -196,18 +197,14 @@ If you want to get users to adopt a new linter, you need to make it easy for the
 That migration story needs to be as pleasant as possible.
 If users can't switch from an existing setup confidently and quickly, they won't.
 
-This represents a difficult challenge for any new linter.
-The more you "break" from the existing ESLint paradigms, the harder it is for users to migrate.
-How much is reasonable to ask users to change?
-
-I think most linters today are going for _two-way compatibility_: porting all of the main concepts from ESLint.
-That includes my least favorite concept, errors vs. warnings [^goldblog-linter-part-2-only-errors].
+I think most linters today target _two-way compatibility_.
+Meaning: they support all the _use cases_ ESLint does by porting close equivalents to all of ESLint's _features_.
 
 Two-way compatibility doesn't necessarily mean _full_ compatibility.
 Details might not be the same or fully implemented, such as linters not _(yet?)_ [^oxc-issue-linter-config-file] supporting JS configs rather than JSON.
 But concepts are similar and users can migrate their configs with minimal changes [^biome-guide-migrate-eslint-prettier].
 
-If I wrote a linter, I would go for _one-way compatibility_.
+If I wrote a linter, I would target _one-way compatibility_.
 Meaning: there would be support for all the _use cases_ ESLint supports, but they might not map up to ESLint's _features_.
 For drastically changed concepts, those migrations would one-way port to the linter's equivalents -- which might not preserve the exact original semantics.
 
@@ -216,20 +213,90 @@ Taking errors vs. warnings as an example, the equivalent would be the new linter
 - _Feature_: errors vs. warnings would not be preserved
 - _Use case_: marking rules as not ready to cause errors yet would still be supported
 
-The new system would, I think, could be made _better_ at supporting the use case.
 Building a first-class gradual onboardings system into the linter would give more granular control over the rule onboarding process.
+The new system would, I think, actually be _better_ at supporting the _use case_ by replacing, rather than porting, the specific _feature_.
 
 ### Compatibility Layers
 
-### Migrators
+Existing userland ESLint plugins need to be consumable by the new linter.
+Getting users to write -let alone maintain- a plugin in one linter is hard enough.
+Asking them to additionally work on one more implementation for each new linter is a non-starter.
+
+If I wrote a linter, it would have a compatibility layer for ESLint plugins.
+It would allow you to install an ESLint plugin and directly use its configs and rules in your lint configuration.
+
+Here's a rough sketch of how it might look for a hypothetical `@joshuakgoldberg/eslint-plugin`:
+
+```ts
+// if-i-wrote-a-linter.config.ts
+import { defineConfig, ts } from "@joshuakgoldberg/linter";
+import { wrapPlugin } from "@joshuakgoldberg/linter-eslint";
+import { joshuakgoldberg } from "@joshuakgoldberg/eslint-plugin";
+
+export default defineConfig({
+	use: [
+		{
+			glob: "**/*.ts",
+			rules: [
+				ts.configs.logical,
+				ts.configs.stylistic,
+				wrapPlugin(joshuakgoldberg.configs.recommended),
+			],
+		},
+	],
+});
+```
+
+[ESLint's compatibility utilities](https://eslint.org/blog/2024/05/eslint-compatibility-utilities) are a good reference of prior art for compatibility layers.
+
+### Configuration Migration
+
+Existing user configuration files need to be automatically portable to the new linter's format.
+Getting users to touch their configuration files in one linter -let alone understand mapping between to linters- is hard enough.
+Asking them to manually rewrite a configuration file in a new format is a non-starter.
+
+[ESLint's configuration migrator](https://eslint.org/docs/latest/use/configure/migration-guide#migrate-your-config-file) and [tslint-to-eslint-config](https://github.com/typescript-eslint/tslint-to-eslint-config) are a good references of prior art for migration tooling.
+I'm particularly fond of how tslint-to-eslint-config aggressively suggests that users rethink how their configuration files are structured:
+
+<LabeledImage
+	alt="TODO"
+	note="Example of running npx tslint-to-eslint-config on a project with a TSLint config file"
+	original={{
+		href: "https://github.com/JoshuaKGoldberg/repros/tree/TODO?tab=readme-ov-file#linter-report-mockup",
+		text: "source",
+	}}
+	src={tslintToESLintConfig}
+	wide
+/>
+
+If I wrote a linter, it would provide a configuration migrator utility for ESLint configuration files.
+It would take an existing ESLint configuration file and output as close an approximation in the new linter configuration file as possible.
+
+It would also provide flags for whether to adopt practices recommended by the new linter:
+
+- Adding any plugins from the [plugin registry](#plugin-registry) relevant to existing project dependencies
+- Enabling the linter's gradual onboardings system for rules previously set to warn [^goldblog-linter-part-2-only-errors]
+- If formatting rules are detected, turn them off and instead use the linter's formatter coordination [^goldblog-linter-part-1-formatting-coordination]
+- Using the recommended configs from the linter and its plugins
+
+Those flags would allow the migration tool to be used as more than just a single-shot _"closest possible equivalent"_ tool.
+It would also help users migrate to best practices and more powerful linter configurations.
 
 [^awesome-eslint-issue-out-of-date]: [dustinspecker/awesome-eslint#245 fix: remove deprecated and 404 links](https://github.com/dustinspecker/awesome-eslint/pull/245): I noticed over a dozen archived or dead links in the list while working on this blog post.
+
+[^biome-guide-migrate-eslint-prettier]: [Biome > Migrate from ESLint and Prettier](https://biomejs.dev/guides/migrate-eslint-prettier)
 
 [^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
 
 [^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](https://github.com/eslint/eslint/issues/18824)
 
+[^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](https://github.com/eslint/eslint/issues/18824)
+
 [^eslint-rfc-ecosystem-tests]: [feat: Introduce ecosystem tests for popular plugins](https://github.com/eslint/rfcs/pull/127)
+
+[^goldblog-linter-part-1-formatting-coordination]: [If I Wrote a Linter, Part 1: Architecture > Formatting Coordination](/blog/if-i-wrote-a-linter-part-1-archirecture#formatting-coordination)
+
+[^goldblog-linter-part-2-only-errors]: [If I Wrote a Linter, Part 2: Developer Experience > Only Errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors)
 
 [^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
 
@@ -242,9 +309,3 @@ Building a first-class gradual onboardings system into the linter would give mor
 [^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
 
 [^typescript-eslint-configs]: [typescript-eslint > Shared Configs](https://typescript-eslint.io/users/configs)
-
-[^biome-guide-migrate-eslint-prettier]: [Biome > Migrate from ESLint and Prettier](https://biomejs.dev/guides/migrate-eslint-prettier)
-
-[^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](
-
-[^goldblog-linter-part-2-only-errors]: [If I Wrote a Linter, Part 2: Developer Experience > Only Errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors)
