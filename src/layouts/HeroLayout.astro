@@ -11,6 +11,7 @@ export interface Props {
 	class?: string | undefined;
 	description: string;
 	images: HeroImages;
+	preview?: string;
 	primary: string;
 	slug?: string;
 	title?: string;
@@ -20,16 +21,15 @@ const {
 	description,
 	primary,
 	slug = primary.toLowerCase(),
+	preview,
 	title,
 } = Astro.props;
-
-const image = `images/${slug}`;
 ---
 
 <BaseLayout
 	{...Astro.props}
 	description={description}
-	image={`${image}.png`}
+	image={preview ?? `images/${slug}.png`}
 	title={title ? `${title} | Josh Goldberg` : "Josh Goldberg"}
 >
 	<Hero alt={Astro.props.alt} images={Astro.props.images} primary={primary}>
