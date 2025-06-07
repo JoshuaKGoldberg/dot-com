@@ -19,7 +19,7 @@ importers:
         version: 4.0.11
       '@astrojs/sitemap':
         specifier: ^3.3.1
-        version: 3.3.1
+        version: 3.4.1
       '@astrojs/solid-js':
         specifier: ^5.0.10
         version: 5.0.10(@types/node@20.11.24)(jiti@2.4.2)(solid-js@1.9.6)(yaml@2.7.1)
@@ -199,8 +199,8 @@ packages:
   '@astrojs/rss@4.0.11':
     resolution: {integrity: sha512-3e3H8i6kc97KGnn9iaZBJpIkdoQi8MmR5zH5R+dWsfCM44lLTszOqy1OBfGGxDt56mpQkYVtZJWoxMyWuUZBfw==}
 
-  '@astrojs/sitemap@3.3.1':
-    resolution: {integrity: sha512-GRnDUCTviBSNfXJ0Jmur+1/C+z3g36jy79VyYggfe1uNyEYSTcmAfTTCmbytrRvJRNyJJnSfB/77Gnm9PiXRRg==}
+  '@astrojs/sitemap@3.4.1':
+    resolution: {integrity: sha512-VjZvr1e4FH6NHyyHXOiQgLiw94LnCVY4v06wN/D0gZKchTMkg71GrAHJz81/huafcmavtLkIv26HnpfDq6/h/Q==}
 
   '@astrojs/solid-js@5.0.10':
     resolution: {integrity: sha512-HROXzcxkcK0Ld2XsEaz4wPvOYQSwMwUIqOyZ0ExbrXJfP2i4BiJS9f+2+YV/zYvUS54HG0VE8Vbh2sUycpuFdA==}
@@ -4605,6 +4605,9 @@ packages:
   zod@3.24.3:
     resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
 
+  zod@3.25.56:
+    resolution: {integrity: sha512-rd6eEF3BTNvQnR2e2wwolfTmUTnp70aUTqr0oaGbHifzC3BKJsoV+Gat8vxUMR1hwOKBs6El+qWehrHbCpW6SQ==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -4712,11 +4715,11 @@ snapshots:
       fast-xml-parser: 4.5.3
       kleur: 4.1.5
 
-  '@astrojs/sitemap@3.3.1':
+  '@astrojs/sitemap@3.4.1':
     dependencies:
       sitemap: 8.0.0
       stream-replace-string: 2.0.0
-      zod: 3.24.3
+      zod: 3.25.56
 
   '@astrojs/solid-js@5.0.10(@types/node@20.11.24)(jiti@2.4.2)(solid-js@1.9.6)(yaml@2.7.1)':
     dependencies:
@@ -5802,7 +5805,7 @@ snapshots:
 
   '@types/sax@1.2.7':
     dependencies:
-      '@types/node': 20.11.24
+      '@types/node': 17.0.45
 
   '@types/unist@2.0.11': {}
 
@@ -10052,5 +10055,7 @@ snapshots:
       zod: 3.24.3
 
   zod@3.24.3: {}
+
+  zod@3.25.56: {}
 
   zwitch@2.0.4: {}
