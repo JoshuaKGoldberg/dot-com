@@ -1,10 +1,11 @@
 ---
-pubDate: 2025-05-04 10:02 GMT
-description: "This is all the things I would build into a modern web linter from scratch: architecture, developer experience, and user experience."
+pubDate: 2025-05-16
+description: "This is how I would steer a new ecosystem around a modern linter from scratch: emphasizing shared terminology, a plugin registry, and one-way compatibility layers."
 image:
-  alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
-  src: "~/assets/blog/sisyphus.jpg"
-title: "If I Wrote a Linter, Part 3: User Experience"
+  alt: "Troy from Community looking down in horror"
+  src: "~/assets/blog/troy-horrified.png"
+thumbnail: "~/assets/blog/troy-horrified-wide.png"
+title: "If I Wrote a Linter, Part 3: Ecosystem"
 ---
 
 import {
@@ -14,103 +15,369 @@ import {
 	TabsPanel,
 } from "accessible-astro-components";
 
+import troyReturningWithPizza from "~/assets/blog/troy-returning-with-pizza.webm";
+import troySittingConfusedZoomIn from "~/assets/blog/troy-sitting-confused-zoom-in.webm";
+import troyAndAbedHighFiveInspectorSpacetime from "~/assets/blog/troy-and-abed-high-five-inspector-spacetime.webm";
 import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
+import tslintToESLintConfig from "~/assets/blog/tslint-to-eslint-config.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
-> 💡 This post is the third in a series.
-> See [1. Architecture](/blog/if-i-wrote-a-linter-1-architecture) for the first post and more context.
+Today's web linters are great.
+[ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
+Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) are fast and easy to set up with their own burgeoning ecosystems.
 
-## Consistent Glossary
+I've been working on TypeScript linting for almost a decade.
+I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
-Most developers I've talked to do not understand or use the right terms when talking about linting.
-Heck, most developers don't want to talk about the linter in the first place -- let alone understand the difference between, say, a config and a plugin.
+I see a linter that is **fast by default**, **powerful upon request**, and **straightforward to configure**.
+This post is how I would craft the ecosystem around it.
+
+> 💡 This post is the third in a series:
+>
+> <br />
+>
+> - [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
+> - 👉 [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
+
+## Community Discord
+
+Every mainstream linter has some kind of community Discord.
+They each have channels for:
+
+- Automatic posting of new releases
+- General discussion
+- Help forums
+- Project development
+
+I have no new ideas in this space.
+I think the existing Discords are great.
+No complaints here.
+
+If I wrote a linter, it would have a community Discord akin to the existing ones.
+
+## Shared Glossary
 
 Many important linting terms have inconsistent usage or even definitions in the wild today.
 For example, _"stylistic"_ can alternately refer to:
 
-- [Stylistic (Rule)](https://eslint.org/docs/latest/use/core-concepts/glossary#stylistic-rule): The category of lint rules that enforce _formatting_, naming conventions, or consistent usage of equivalent syntaxes
-- [ESLint Stylistic](https://eslint.style): The plugin that ESLint's _formatting_ rules were migrated to, along with a small selection of non-formatting stylistic rules
+- [Stylistic (Rule)](https://eslint.org/docs/latest/use/core-concepts/glossary#stylistic-rule): The category of lint rules that enforce formatting, naming conventions, or consistent usage of equivalent syntaxes
+- [ESLint Stylistic](https://eslint.style): The plugin that ESLint's formatting rules were migrated to, along with some non-formatting stylistic rules
 - [typescript-eslint's stylistic shared configs](https://typescript-eslint.io/users/configs#stylistic), which enforce consistent usage of equivalent syntaxes, as well as general TypeScript best practices that don't impact program logic
 
-...what!?
+Other ambiguous terms include:
+
+- _"Config"_: a shared config, or a configuration file?
+- _"Format"_: formatting rules, or a formatter like Prettier, or code to prints ESLint reports?
+
+...huh!?
 
 I work on linters and I have a hard time keeping this all straight.
+Now imagine how confusing this all is for someone new to linting, and/or who doesn't care much about their linter.
 
-The [ESLint Glossary](https://eslint.org/docs/latest/use/core-concepts/glossary) is a very good first step towards solidifying terminology.
-I would want to go one step further and have a single term and definition for all the linting concepts that authors and/or end users care about.
-Doing so would provide authors with the guidance to name their configs, plugins, and rules consistently to each other and the linter core.
-Users then would have an easier time navigating the plugin ecosystem and understanding how they all fit together.
+If I wrote a linter, I would continue the [ESLint Glossary](https://eslint.org/docs/latest/use/core-concepts/glossary) work by defining single recommended terms for all the shared linting concepts.
+I hope this would help reduce naming conflicts such as what we're seeing with _"config"_, _"format"_, and _"stylistic"_.
 
-## Granular Rule Categories
+<LabeledVideo
+	alt="Troy from Community looking confused and upset with his eyes wide open"
+	description="Troy Barnes from Community, attempting to understand these terms."
+	original="https://giphy.com/gifs/community-shocked-surprised-8d72Pydfl4CAw"
+	src={troySittingConfusedZoomIn}
+/>
 
-Over the last decade, the linter community learned the hard way that users need properly categorized shared configs.
-If you give everyone one config that mixes _logical_ and _stylistic_ rules the way, say, `eslint-plugin-airbnb` did, users will resent the portions they disagree with and turn away from linting altogether.
-Plugins that include both of those broad areas of rules now tend to provide dedicated shared configs for different areas of rules [^jsdoc-granular-flat-typescript-configs] [^typescript-eslint-configs].
+## Common Core Rules
 
-Once a consistent glossary exists, its definitions can be used to consistently categorize configs and rules.
-Heck, the linter could even provide recommended utilities for generating configs based on rule categories.
-I think that'd go a long way towards further standardizing and making clear the ecosystem of plugin rules.
-At the very least, it'd help encourage plugin authors to make it easier for users to include only the categories of rules they want from the plugin.
+One of the hardest parts of figuring out a project's ecosystem is knowing what to put in core or delegate to users.
+I've seen two prevailing strategies in the wild:
 
-## First Party Templates
+- Lean core (ESLint): only including rules that pertain to JavaScript itself, which reduces its maintenance burden and allows plugins to iterate and learn
+- Heavy core (Biome, deno lint, Oxlint): including common plugins, which increases the power of the linter out of the box and reduces configuration complexity
 
-# Userland Help
+I like the lean core approach for allowing the ecosystem to iterate and learn in areas that aren't solidified yet or are too project-dependent for core.
+I don't believe a linter's core should have rules that don't apply to a supermajority of its users.
+Putting a rule in core is a heavyweight action for that rule.
+Development on the rule slows down as the core team has to be more careful about breaking changes than the typical plugin.
+
+On the other hand, once a plugin is known to be stable and applicable to a supermajority of users, putting it in core can be very useful.
+Core linter rules tend to be more stable than plugin rules and more discoverable by virtue of being in the core documentation website.
+Onboarding a plugin to core means users don't have to go out of their way to set it up.
+
+If I wrote a linter, its core rules would pull in all those from plugins that are:
+
+- Common to roughly all projects that would use the linter
+- Stable enough that they are not still rapidly iterating and making breaking changes
+
+That includes taking rules from the following plugins:
+
+- [`@eslint-community/eslint-plugin-eslint-comments`](https://www.npmjs.com/package/@eslint-community/eslint-plugin-eslint-comments)
+- [`eslint-plugin-import`](https://github.com/import-js/eslint-plugin-import)
+- [`eslint-plugin-jsdoc`](https://github.com/gajus/eslint-plugin-jsdoc)
+- [`eslint-plugin-package-json`](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json)
+- [`eslint-plugin-promise`](https://github.com/eslint-community/eslint-plugin-promise)
+- [`eslint-plugin-regexp`](https://github.com/gajus/eslint-plugin-regexp)
+- [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn)
+
+> Note also from [Part 1 > Core Common Languages](/blog/if-i-wrote-a-linter-part-1-architecture#core-common-languages) that JSON, Markdown, TypeScript, and YML plugins would also be in core.
+
+That does not include the following plugins:
+
+- [`@eslint-community/eslint-plugin-n`](https://www.npmjs.com/package/@eslint-community/eslint-plugin-n): not all projects use Node.js
+- [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) and other frontend plugins: not all projects include frontend code
+- [`eslint-plugin-perfectionist`](https://github.com/azat-io/eslint-plugin-perfectionist): not enough of the community is bought in _(yet?)_
+- [`eslint-plugin-vitest`](https://github.com/vitest-dev/eslint-plugin-vitest) and other test plugins: many projects test with different frameworks
+
+Those plugins are important and should be discoverable.
+The next two sections in this post describe how the linter would help promote them to users.
+
+## Community Organization
+
+The [ESLint Community organization](https://github.com/eslint-community) is wonderful.
+I think it serves a great need for housing high-applicability, high-value community projects that are not able to be part of ESLint core.
+It's a kind of "next step" for finding plugins outside of ESLint core -- not quite "first party", and not an external "third party".
+
+If I wrote a linter, it would lean into having an equivalent community organization.
+That organization would have guidelines for inclusion, including:
+
+- Actively supporting new core linter minor versions soon after release
+- Adherence to the shared linting glossary
+- Documenting all configs, rules, and rule options
+- Maximum time to (re-)triage issues and pull requests
+- Minimum numbers of consuming projects and weekly downloads
+- Not being specific to any one userland framework
+- Providing metadata alongside the `package.json` such as:
+  - Names of any dependencies the plugin is directly for (e.g. `"lodash"`, `"react"`)
+  - Text of when to use the plugin and each of its configs
+
+To start, it would include equivalents of:
+
+- [`@eslint/css`](https://github.com/eslint/css)
+- [`@html-eslint/eslint-plugin`](https://github.com/yeonjuan/html-eslint)
+- [`eslint-fix-utils`](https://github.com/JoshuaKGoldberg/eslint-fix-utils)
+- [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
+- [`eslint-plugin-eslint-plugin`](https://github.com/eslint-community/eslint-plugin-eslint-plugin)
+
+Those community plugins would be included in ecosystem tests for the core linter to ensure new core linter releases don't unexpectedly break them [^eslint-rfc-ecosystem-tests].
+
+<LabeledVideo
+	alt="Troy and Abed doing a silly wavy high five sideways, dressed as Inspector Spacetime and Constable Reggie."
+	description="Troy and Abed, enacting a functional delineation between core rules and a community organization."
+	original="https://tenor.com/view/trobed-troy-and-abed-troy-and-abed-in-the-morning-community-community-tv-show-gif-20099276"
+	src={troyAndAbedHighFiveInspectorSpacetime}
+/>
+
+## Plugin Registry
+
+Much of a linter's ecosystem will always be third-party plugins.
+Finding the right third-party linter plugins for a project today is a pain.
+ESLint does not yet have a centralized listing [^eslint-issue-plugins-eslint-org] or one canonical approach users should take.
+The best process I've come to recommend for any given project is:
+
+1. Search [dustinspecker/awesome-eslint](https://github.com/dustinspecker/awesome-eslint) for plugins that seem relevant to the project
+2. For each dependency the project relies upon, search online for "eslint plugin" and that dependency name
+
+That's a slow, unreliable process.
+Determining which plugins are popular or still actively maintained is time-consuming [^awesome-eslint-issue-out-of-date].
+It would be helpful if there was more automation and centralization around what plugins are available.
+
+If I wrote a linter, I would create a centralized plugin registry of popular userland plugins.
+It would have similar guidelines for inclusion as the community organization, but with more lenient numbers, and allowing framework-specific plugins.
+The registry would automatically update plugin metadata such as:
+
+- How recently the plugin was updated
+- How many open issues exist that haven't been interacted with by a maintainer
+- The latest version of the linter that the plugin formally supports
+
+Plugins that get too out-of-date on any of those metrics would be marked as such in the UI.
+That would allow users to filter and search for plugins that are, say, actively maintained and support the latest version of the linter.
+
+The registry would be exposed to users in two ways:
+
+- API: allowing tooling to be built using known plugin metadata, such as...
+- Website: allowing users to search on that metadata
+
+Essentially, this would be a tailored _npm for linter plugins_ [^lintbase-about].
+
+<LabeledVideo
+	alt="Troy coming back with pizza to the other Community main cast destroying his on-fire apartment"
+	description="Troy Barnes from Community, looking for the latest relevant linter plugins for a project more than a few months old."
+	original="https://tenor.com/view/community-gif-23728528"
+	src={troyReturningWithPizza}
+/>
 
 ## Config Initializer
 
-## Examples
+Every mainstream linter comes with some kind of configuration file initialization CLI: [`@eslint/config`](https://eslint.org/docs/latest/use/getting-started#quick-start), [`biome init`](https://biomejs.dev/guides/getting-started/#configuration), [`oxlint --init`](https://oxc.rs/docs/guide/usage/linter/cli.html#basic-configuration), etc.
+Good!
+Initialization CLIs help users get started quickly and with confidence their configuration is correct.
 
-## FAQs
+My only gripe with those CLIs is that they only cover a few base starting points.
+You're left on your own to figure out how to add plugins not explicitly hardcoded into the CLI.
+`@eslint/config`, for example, offers to support the React and Vue frameworks out-of-the-box, but that's it.
 
-Full explanation docs for all decisions
+If I wrote a linter, its config initializer would use plugin data from the centralized plugin registry to make the setup experience dynamic.
+If run in a project with existing dependencies, it would offer to add the plugins for those plugins into the created configuration.
+It would also offer the user an input to provide dependency names they want to search on plugins for.
 
-## Troubleshooting Guide
+It'd probably have to use a templating system like [Bingo's Stratum](https://www.create.bingo/engines/stratum/about) so plugins can define how they add to a config file.
 
-# Community
+### Initialized Examples
 
-## First Party Community Repositories
+Initialization CLIs are great for previewing changes locally, but many users also want to see examples in documentation form.
+Creating up-to-date documentation examples is a pain to do manually -- especially for community-authored plugins specific to frameworks.
+But, once we factor in the centralized plugin registry and config initializer templating, we can automate that process!
 
-First party built in for what is the current slate of popular plugins
+If I wrote a linter, it would automatically keep a known set of example repositories up-to-date with the latest versions of the linter and a plugin each.
+CI actions would run that update the templates whenever a new version of a dependency is released.
 
-# Features for Developers
+I implemented a similar feature for my [Bingo](https://create.bingo) and [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) projects recently.
+[bingo-js > Example Repositories](https://github.com/bingo-js/#example-repositories) lists several repositories auto-generated from templates.
+The `created-typescript-app*` ones each run a GitHub Action that checks in any changes from re-running CTA on Renovate pull requests.
 
-## Full Virtual File System
+## One-Way Compatibility
 
-[^tseslint-explore-ts-vfs]
+If you want to get users to adopt a new linter, you need to make it easy for them to migrate from the current dominant market leader: ESLint.
+If users can't switch from an existing ESLint setup confidently and quickly, they won't.
 
-something something linting file permissions
+I think most linters today target _two-way compatibility_.
+Meaning: they support all the _use cases_ ESLint does by porting close equivalents to all of ESLint's _features_.
 
-## Rich Cross File Fixes
+Two-way compatibility doesn't necessarily mean _full_ compatibility.
+Details might not be the same or fully implemented, such as native speed linters not _(yet?)_ [^oxc-issue-linter-config-file] supporting JS configs rather than JSON.
+But those linters generally preserve ESLint's features and allow users to migrate their configs with minimal conceptual changes [^biome-guide-migrate-eslint-prettier].
 
-A linter is in many ways the best codemod platform for many kinds of migrations.
-It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
-I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
+My problem with two-way compatibility is twofold:
 
-Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
-Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
+1. It binds the new linter to older designs, even if they aren't what the new linter would prefer (looking at you, errors vs. warnings...)
+2. By not allowing feature breakage, a new linter is restricted from choosing beneficial and splashy new features that can benefit users and drive excitement
 
-If I were to write a linter, I would add in a rich system for rule fixes and suggestions:
+If I wrote a linter, I would target _one-way compatibility_.
+Meaning: there would be support for all the _use cases_ ESLint supports, but they might not map up to ESLint's _features_.
+For drastically changed concepts, those migrations would one-way port to the linter's equivalents -- which might not preserve the exact original semantics.
 
-- The ability to indicate changes to virtual files other than the one being linted
-- Other file system operations, such as renames and permissions changes
+Taking errors vs. warnings as an example, the equivalent would be the new linter's "gradual onboardings" system [^goldblog-linter-part-2-only-errors] [^eslint-blog-bulk-suppressions].
+I'm envisioning a system that allows users to mark swathes of files as still onboarding to new rules.
+Compared to how other linters do it:
 
-# Implementation
+- _Feature_: errors vs. warnings would not be preserved
+- _Use case_: marking rules as not ready to cause errors yet would still be supported
 
-## Session Objects
+Building a first-class gradual onboardings system into the linter would give more granular control over the rule onboarding process.
+The new system would, I think, actually be _better_ at supporting the _use case_ by replacing, rather than porting, the specific _feature_.
 
-Full project context available up front including preprocessors and session object
+### Compatibility Layers
 
-## Pluggable Architecture and APIs
+Existing userland ESLint plugins need to be consumable by the new linter.
+Getting developers to write -let alone maintain- a plugin for one linter is hard enough.
+Asking them to additionally work on one more implementation for each new linter is a non-starter.
 
-Pluggable api for embedding in places like typescript, TS, config and biome project
+If I wrote a linter, it would have a compatibility layer for ESLint plugins.
+It would allow you to install an ESLint plugin and directly use its configs and rules in your lint configuration.
 
-# In Summary
+Here's a rough sketch of how it might look for a hypothetical `@joshuakgoldberg/eslint-plugin`:
 
-## References
+```ts
+// if-i-wrote-a-linter.config.ts
+import { defineConfig, ts } from "@joshuakgoldberg/linter";
+import { wrapPlugin } from "@joshuakgoldberg/linter-eslint";
+import { joshuakgoldberg } from "@joshuakgoldberg/eslint-plugin";
+
+export default defineConfig({
+	use: [
+		{
+			glob: "**/*.ts",
+			rules: [
+				ts.configs.logical,
+				ts.configs.stylistic,
+				wrapPlugin(joshuakgoldberg.configs.recommended),
+			],
+		},
+	],
+});
+```
+
+[ESLint's compatibility utilities](https://eslint.org/blog/2024/05/eslint-compatibility-utilities) are a good reference of prior art for compatibility layers.
+
+### Configuration Migration
+
+Existing user configuration files need to be automatically portable to the new linter's format.
+Getting developers to maintain their configuration files for one linter -let alone understand mapping between multiple linters- is hard enough.
+Asking them to manually rewrite a configuration file in a new format is a non-starter.
+
+[ESLint's configuration migrator](https://eslint.org/docs/latest/use/configure/migration-guide#migrate-your-config-file) and [tslint-to-eslint-config](https://github.com/typescript-eslint/tslint-to-eslint-config) are a good references of prior art for migration tooling.
+I'm particularly fond of how tslint-to-eslint-config aggressively suggests developers rethink how their configuration files are structured:
+
+<LabeledImage
+	alt="Running npx tslint-to-eslint-config in a terminal. It has 6 groups of output: green, blue, red, cyan, purple, and green. See link for the full text."
+	note="Example of running npx tslint-to-eslint-config on a project with a TSLint config file"
+	original={{
+		href: "https://github.com/JoshuaKGoldberg/repros/tree/tslint-to-eslint-config?tab=readme-ov-file#tslint-to-eslint-config-example",
+		text: "source",
+	}}
+	src={tslintToESLintConfig}
+	wide
+/>
+
+If I wrote a linter, it would provide a configuration migrator utility for ESLint configuration files.
+It would take an existing ESLint configuration file and output as close an approximation in the new linter configuration file as possible.
+
+It would also provide flags for whether to adopt practices recommended by the new linter:
+
+- Adding any plugins from the [plugin registry](#plugin-registry) relevant to existing project dependencies
+- Enabling the linter's gradual onboardings system for rules previously set to warn
+- If formatting rules were used, remove them and instead coordinate a formatter [^goldblog-linter-part-1-formatting-coordination]
+- Using the recommended configs from the linter and any enabled plugins
+
+Those flags would allow the migration tool to be used as more than just a single-shot _"closest possible equivalent"_ tool.
+It would also help users migrate to best practices and more powerful linter configurations.
+
+## Up Next
+
+Ecosystem work is hard.
+It requires a lot energy and time.
+I think the ideas in this blog post are a nice blend of the areas, and I'd love to see them tried out in the wild.
+
+~~Next week~~ Later this month will see the final entry in this blog post series.
+It'll summarize the entire series, answer FAQs, and provide a few final thoughts.
+I hope you enjoyed this post and the series so far!
+
+> 💡 This post is the third in a series:
+>
+> <br />
+>
+> - [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
+> - 👉 [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
+> - Part 4: Summary _([coming soon](https://github.com/JoshuaKGoldberg/dot-com/pull/421 "dot-com pull request 421 Part 4: Summary"))_
+
+[^awesome-eslint-issue-out-of-date]: [dustinspecker/awesome-eslint#245 fix: remove deprecated and 404 links](https://github.com/dustinspecker/awesome-eslint/pull/245): I noticed over a dozen archived or dead links in the list while working on this blog post.
+
+[^biome-guide-migrate-eslint-prettier]: [Biome > Migrate from ESLint and Prettier](https://biomejs.dev/guides/migrate-eslint-prettier)
+
+[^eslint-blog-bulk-suppressions]: [ESLint: Introducing bulk suppressions](https://eslint.org/blog/2025/04/introducing-bulk-suppressions/)
 
 [^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
+
+[^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](https://github.com/eslint/eslint/issues/18824)
+
+[^eslint-issue-plugins-eslint-org]: [eslint/eslint#18824 Create plugins.eslint.org website](https://github.com/eslint/eslint/issues/18824)
+
+[^eslint-rfc-ecosystem-tests]: [feat: Introduce ecosystem tests for popular plugins](https://github.com/eslint/rfcs/pull/127)
+
+[^goldblog-linter-part-1-formatting-coordination]: [If I Wrote a Linter, Part 1: Architecture > Formatting Coordination](/blog/if-i-wrote-a-linter-part-1-archirecture#formatting-coordination)
+
+[^goldblog-linter-part-2-only-errors]: [If I Wrote a Linter, Part 2: Developer Experience > Only Errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors)
+
+[^jsdoc-granular-flat-typescript-configs]: [eslint-plugin-jsdoc: Configuration > Granular Flat Configs](https://github.com/gajus/eslint-plugin-jsdoc?tab=readme-ov-file#granular-flat-configs)
+
+[^lintbase-about]: [Lintbase](https://github.com/bmish/lintbase) was a project that aimed to do what I'm proposing.
+
+[^oxc-issue-linter-config-file]: [osc-project/oxc#10935 linter: intelligent config file](https://github.com/oxc-project/oxc/issues/10935)
 
 [^tseslint-discussion-intent-to-use-checker-is-type-assignable-to]: [typescript-eslint/typescript-eslint#7936 🔓 Intent to use: checker.isTypeAssignableTo](https://github.com/typescript-eslint/typescript-eslint/discussions/7936)
 
 [^tseslint-explore-ts-vfs]: [typescript-eslint/typescript-eslint#1891 Explore switching tests to @typescript/vfs](https://github.com/typescript-eslint/typescript-eslint/issues/1891)
+
+[^typescript-eslint-configs]: [typescript-eslint > Shared Configs](https://typescript-eslint.io/users/configs)

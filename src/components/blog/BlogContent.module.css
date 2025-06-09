@@ -130,3 +130,25 @@
 		margin: 0 var(--widthTableOfContents) 0 0;
 	}
 }
+
+.article :global(.tab-panel) {
+	border: none;
+	padding: 0.5rem 0 0;
+}
+
+.article :global(.tab-panel) pre {
+	width: 100%;
+}
+
+.article :global(.tab) {
+	border: 0;
+	border-bottom: 0.25rem solid transparent;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.article :global(.tab)[aria-selected="true"] {
+	background-color: transparent;
+	border-bottom: 0.25rem solid var(--colorForeground);
+	color: var(--colorForeground);
+}
