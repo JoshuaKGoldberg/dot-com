@@ -1,10 +1,10 @@
 ---
-pubDate: 2025-05-04 10:02 GMT
+pubDate: 2025-06-11 10:02 GMT
 description: "This is all the things I would build into a modern web linter from scratch: architecture, developer experience, and user experience."
 image:
   alt: "Tevye from Fiddler on the Roof TODO_ACTIVITY"
   src: "~/assets/blog/sisyphus.jpg"
-title: "If I Wrote a Linter, Part 3: User Experience"
+title: "If I Wrote a Linter, Part 4: Summary"
 ---
 
 import {
@@ -18,40 +18,77 @@ import tevyeDancing from "~/assets/blog/tevye-dancing.webp";
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
 import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
 
-> 💡 This post is the fourth in a series.
-> See [1. Architecture](/blog/if-i-wrote-a-linter-1-architecture) for the first post and more context.
+Today's web linters are great.
+[ESLint](https://eslint.org) is robust and has a huge ecosystem of plugins and configs.
+Newer native speed linters such as [Biome](https://biomejs.dev), [`deno lint`](https://lint.deno.land), and [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) are fast and easy to set up with their own burgeoning ecosystems.
 
-This was a long blog post series with a lot of details in each post.
-These were the main points:
+I've been working on TypeScript linting for almost a decade.
+I started contributing to [TSLint](https://palantir.github.io/tslint) community projects in 2016 and am now a number of the [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) and [ESLint](https://github.com/eslint/eslint) teams.
+Based on those years of various linters, I've collected a large set of design ideas that I want to try.
 
-- [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture):
-  - [Hybrid core](/blog/if-i-wrote-a-linter-part-1-architecture#hybrid-core): as described in [Hybrid Linters: The Best of Both Worlds](/blog/hybrid-linters-the-best-of-both-worlds)
-  - [Type aware, always](/blog/if-i-wrote-a-linter-part-1-architecture#type-aware-always): with an architecture built for it along with [TypeScript's Go port](https://devblogs.microsoft.com/typescript/typescript-native-port)
-  - [Built-in TypeScript support](/blog/if-i-wrote-a-linter-part-1-architecture#built-in-typescript-support): no need for a separate parser or plugin
-  - [TypeScript's AST](/blog/if-i-wrote-a-linter-part-1-architecture#typescripts-ast): no more TSESTree and dual-tree linting, just TypeScript's AST
-  - [Embeddable by design](/blog/if-i-wrote-a-linter-part-1-architecture#embeddable-by-design): native support for embedding within existing TypeScript services
-- [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience):
-  - [Formatting coordination](/blog/if-i-wrote-a-linter-part-2-developer-experience#formatting-coordination): so you don't have to separately configure a formatter
-  - [Only errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors): no more warnings clogging up projects over time, just errors
-  - [Typed rules](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-rules): type-safe rule options and settings, even in your config files
-  - [Typed plugin settings](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-plugin-settings): type-safe per-plugin settings
-  - [Typed configuration files](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-configuration-files): type-safe config files with a clear, consistent API
-  - [Native workspace support](/blog/if-i-wrote-a-linter-part-2-developer-experience#native-workspace-support): for monorepos that share parts of their configs across projects
-- TODO: the rest
+> 💡 This post is the fourth and final in a series:
+>
+> <br />
+>
+> - [Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)
+> - [Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)
+> - [Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)
+> - 👉 [Part 4: Summary](/blog/if-i-wrote-a-linter-part-4-summary)
 
-If you just read those high-level points, I hope you're at least excited about the potential for a linter that embraces all those new strategies.
-And if you read the whole post, I hope you enjoyed it as much as I enjoyed writing it.
-These are really exciting times for the JavaScript ecosystem, and I'm excited to see where it goes next.
+## High-Level Points
+
+Those posts have a lot of ideas I'm excited about.
+You can totally skim this list, it's huge!
+
+- **[Part 1: Architecture](/blog/if-i-wrote-a-linter-part-1-architecture)**:
+  - **[Hybrid core](/blog/if-i-wrote-a-linter-part-1-architecture#hybrid-core)**: native speed parsing for performance; TypeScript for approachable rules
+  - **[TypeScript For Type Awareness](/blog/if-i-wrote-a-linter-part-1-architecture#typescript-for-type-awareness)**: directly using TypeScript for type aware rules
+  - **[Type-Aware, Always](/blog/if-i-wrote-a-linter-part-1-architecture#type-aware-always)**: removing the need to delineate or configure type-awareness
+  - **[Built-In TypeScript Support](/blog/if-i-wrote-a-linter-part-1-architecture#built-in-typescript-support)**: building TypeScript support in core, rather than as a plugin
+  - **[Core Common Languages](/blog/if-i-wrote-a-linter-part-1-architecture#core-common-languages)**: additionally including universally relevant languages in core
+  - **[Formatting Coordination](/blog/if-i-wrote-a-linter-part-1-architecture#formatting-coordination)**: saving users from having to configure a formatter separately
+  - **[Embeddable by Design](/blog/if-i-wrote-a-linter-part-1-architecture#embeddable-by-design)**: to deduplicate running type checking in CI and locally
+  - **[Rich Cross File Fixes](/blog/if-i-wrote-a-linter-part-1-architecture#rich-cross-file-fixes)**: for more powerful rule codemods
+  - **[Cross File Caching](/blog/if-i-wrote-a-linter-part-1-architecture#cross-file-caching)**: to avoid re-running lint rules on unchanged files
+  - **[Watch Mode](/blog/if-i-wrote-a-linter-part-1-architecture#watch-mode)**: for even faster local CLI dev loops
+- **[Part 2: Developer Experience](/blog/if-i-wrote-a-linter-part-2-developer-experience)**:
+  - **[Only Errors](/blog/if-i-wrote-a-linter-part-2-developer-experience#only-errors)**: eliminating complexity and confusion around warnings
+  - **[Comprehensive Rule Reports](/blog/if-i-wrote-a-linter-part-2-developer-experience#comprehensive-rule-reports)**: enforcing friendly and informative messaging
+  - **[Comprehensive Rule Documentation](/blog/if-i-wrote-a-linter-part-2-developer-experience#comprehensive-rule-documentation)**: similarly for documentation pages
+  - **[Standardized Rule Metadata](/blog/if-i-wrote-a-linter-part-2-developer-experience#standardized-rule-metadata)**: for consistent names, descriptions, and other info
+  - **[Typed Rules](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-rules)**: for TypeScript-level rule option help
+  - **[Typed Plugin Settings](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-plugin-settings)**: so plugins can define and use them safely
+  - **[Typed Configuration Files](/blog/if-i-wrote-a-linter-part-2-developer-experience#typed-configuration-files)**: helping users write config files with type safety
+  - **[Inline Snapshot Unit Tests](/blog/if-i-wrote-a-linter-part-2-developer-experience#inline-snapshot-unit-tests)**: for rule tests that are easy to write and maintain
+- **[Part 3: Ecosystem](/blog/if-i-wrote-a-linter-part-3-ecosystem)**:
+  - **[Community Discord](/blog/if-i-wrote-a-linter-part-3-ecosystem#community-discord)**: aligning with the common community platform
+  - **[Shared Glossary](/blog/if-i-wrote-a-linter-part-3-ecosystem#shared-glossary)**: setting up consistent terminology across the ecosystem
+  - **[Common Core Rules](/blog/if-i-wrote-a-linter-part-3-ecosystem#common-core-rules)**: expanding core rules to cover ~universally useful cases
+  - **[Community Organization](/blog/if-i-wrote-a-linter-part-3-ecosystem#community-organization)**: assisting maintenance of high-priority rules
+  - **[Plugin Registry](/blog/if-i-wrote-a-linter-part-3-ecosystem#plugin-registry)**: centralizing a place to discover and register plugins
+  - **[Config Initializer](/blog/if-i-wrote-a-linter-part-3-ecosystem#config-initializer)**: using the registry for starter config generation
+  - **[One-Way Compatibility](/blog/if-i-wrote-a-linter-part-3-ecosystem#one-way-compatibility)**: porting existing use cases to the new architecture
+
+Even if you just read those high-level points and/or don't work on linters yourself, I hope you're at least excited about the potential for a linter that embraces all those new strategies.
+I think trying these ideas out will help take us to a much more pleasant and productive linting experience.
 
 ## Flint
 
-Anyway, I'm going to be prototyping a linter that does all those things over the next few months.
-It's going to be called _**Flint**: A fast, friendly linter_ ❤️‍🔥.
-Or something like that.
+Speaking of which -- I'm going to try these ideas out!
+I'm finally writing my own TypeScript linter.
+It's just a prototype for now, with two intended purposes:
 
-If you're interested in following along, you can check out the [Flint GitHub repository](https://github.com/JoshuaKGoldberg/flint).
-If you want to help out, please feel free to open issues or PRs.
+- To try out these ideas and see how they work in practice
+- To get me deep experience in writing a linter, so I can better contribute to real-world linters
+
+The new linter branding is _**Flint**: A fast, friendly linter_ ❤️‍🔥.
+
+Flint is extremely early stage at the moment.
+I'm hoping to get a usable CLI prototype some time in summer 2025.
+If you're interested in following along -or even better, helping out-, you can check out the [Flint Discord](https://discord.gg/rdC2XPCmn5) and [Flint GitHub repository](https://github.com/JoshuaKGoldberg/flint).
+
+Please feel free to open issues or PRs.
 Or just reach out to me on [Bluesky](https://bsky.app/profile/joshuakgoldberg.com).
-I would love to hear your thoughts on this post and the project.
+I would love to hear your thoughts on this post, linting in general, and the Flint project.
 
 Thanks for reading!
