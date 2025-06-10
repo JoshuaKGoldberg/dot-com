@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -124,6 +130,7 @@
 		"emojiblast",
 		"emojisplosion",
 		"endlines",
+		"Engles",
 		"Enyan",
 		"Esch",
 		"Eugen",
@@ -174,6 +181,7 @@
 		"IYKYK",
 		"Javascripties",
 		"Jérémie",
+		"Jeroen",
 		"jetlagged",
 		"Jlab",
 		"johnsoncodehk",

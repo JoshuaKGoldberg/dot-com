@@ -225,6 +225,38 @@ If I wrote a linter, it would provide a rich system for rule fixes and suggestio
 
 Between ESLint's new [Bulk Suppressions](https://eslint.org/docs/latest/use/suppressions) and the controllable fixes & suggestions, I think this linter would allow teams to integrate gradual codemod-driven migrations into daily development.
 
+## Cross File Caching
+
+> Updated June 11th, 2025: I added this section after the initial post.
+> Thanks [Jeroen Engles](https://bsky.app/profile/jfmengels.bsky.social/post/3lpe2rs2rxk2t) for the prompt!
+
+ESLint core's `--cache` option is a great idea at first glance: why re-lint files that haven't changed?
+Unfortunately, it is fundamentally broken by cross-file information such as typed linting [^tseslint-troubleshooting-cache].
+This means most users of ESLint re-lint the same files over and over in editors and CI regardless of whether changes to other files impact them.
+
+I think a cross-file cache would be a huge win for linting performance.
+Most changes to any one file don't impact the linting of many other files.
+You can see prior art with how TypeScript uses `.tsbuildinfo` files in `--incremental` mode [^tsconfig-incremental].
+
+If I wrote a linter, it would use its native TypeScript awareness to factor in cross-file information for caching.
+Changes to any one file would invalidate the cache for all files that depend on it.
+
+## Watch Mode
+
+> Updated June 11th, 2025: I added this section after the initial post.
+> Thanks [Jeroen Engles](https://bsky.app/profile/jfmengels.bsky.social/post/3lpe2rs2rxk2t) for the prompt!
+
+When you have a lot of tooling complaints in many files, it can be useful to get a full list of them on the CLI.
+It can also be useful to update that list of reports as you fix them.
+I personally use `tsc --watch` for the equivalent TypeScript type errors, but don't have an equivalent way to do that for linting.
+
+Native speed linters without typed linting are fast enough that re-running a lint command takes near-zero time.
+But once we slow down for typed linting having to wait for a full re-lint is painful.
+Once a usable cross-file cache in place, re-running linting should be much faster -- we can unlock a fast `--watch` mode to help with it too.
+
+If I wrote a linter, it would have a `--watch` mode that would re-lint files as they change.
+It would display reports in a live view akin to `tsc --watch` and use cross-file caching to only re-lint files impacted by changes.
+
 ## Up Next
 
 I find this post's architecture ideas exhilarating and terrifying.
@@ -286,9 +318,13 @@ If this post was of any interest to you I think you'll find them similarly inter
 
 [^rethinking-typescript-support-in-eslint]: [eslint/eslint#18830 Rethinking TypeScript support in ESLint](https://github.com/eslint/eslint/discussions/18830)
 
+[^tsconfig-incremental]: [TSConfig Option: Incremental](https://www.typescriptlang.org/tsconfig/#incremental)
+
 [^tseslint-extension-rules]: [typescript-eslint > Rules > Extension Rules](https://typescript-eslint.io/rules/#extension-rules)
 
 [^tseslint-pr-type-checker-wrapper-apis]: [typescript-eslint/typescript-eslint#6404 feat(typescript-estree): add type checker wrapper APIs to ParserServicesWithTypeInformation](https://github.com/typescript-eslint/typescript-eslint/pull/6404)
+
+[^tseslint-troubleshooting-cache]: [typescript-eslint Troubleshooting & FAQs > ESLint > Can I use ESLint's --cache with typescript-eslint?](https://typescript-eslint.io/troubleshooting/faqs/eslint/#can-i-use-eslints---cache-with-typescript-eslint)
 
 [^tseslint-troubleshooting-performance]: [typescript-eslint Troubleshooting & FAQs > Typed Linting > Performance](https://typescript-eslint.io/troubleshooting/typed-linting/performance)
 
