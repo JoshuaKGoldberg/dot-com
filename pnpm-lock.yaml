@@ -31,7 +31,7 @@ importers:
         version: 9.28.0
       '@fontsource-variable/league-spartan':
         specifier: ^5.2.5
-        version: 5.2.5
+        version: 5.2.6
       '@kobalte/core':
         specifier: ^0.13.9
         version: 0.13.10(solid-js@1.9.6)
@@ -758,8 +758,8 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@fontsource-variable/league-spartan@5.2.5':
-    resolution: {integrity: sha512-tZ+/Dy+4wDsNdf9atm7IIpzgOGUKEcj2QnuGEElGer8JhcMcZX3wec9pr26XLLHCD1uHQhD4q34eIdAJSRV2hg==}
+  '@fontsource-variable/league-spartan@5.2.6':
+    resolution: {integrity: sha512-vxIE9JVUw2oJ6myDmxwkPUZGddEHxY8bG4ZTIlF1B6WpT1QDL0Ts6t8QsXyKNoGEJqq1SCmABSdjQkTenTp2Xg==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -5259,7 +5259,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@fontsource-variable/league-spartan@5.2.5': {}
+  '@fontsource-variable/league-spartan@5.2.6': {}
 
   '@humanfs/core@0.19.1': {}
 
