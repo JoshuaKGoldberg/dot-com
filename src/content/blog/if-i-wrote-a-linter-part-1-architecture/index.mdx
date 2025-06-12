@@ -251,8 +251,8 @@ It can also be useful to update that list of reports as you fix them.
 I personally use `tsc --watch` for the equivalent TypeScript type errors, but don't have an equivalent way to do that for linting.
 
 Native speed linters without typed linting are fast enough that re-running a lint command takes near-zero time.
-But once we slow down for typed linting having to wait for a full re-lint is painful.
-Once a usable cross-file cache in place, re-running linting should be much faster -- we can unlock a fast `--watch` mode to help with it too.
+But once we slow down for typed linting, having to wait for a full re-lint is painful.
+Once a usable cross-file cache is in place and re-running linting is be much faster, we can unlock a fast `--watch` mode to help with it too.
 
 If I wrote a linter, it would have a `--watch` mode that would re-lint files as they change.
 It would display reports in a live view akin to `tsc --watch` and use cross-file caching to only re-lint files impacted by changes.
