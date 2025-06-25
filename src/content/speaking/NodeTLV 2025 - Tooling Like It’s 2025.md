@@ -1,6 +1,6 @@
 ---
 category: Conferences
-date: 2025-06-26
+date: 2025-12-16
 event: "NodeTLV 2025"
 href: https://jnation.pt
 location: Tel Aviv, Israel
