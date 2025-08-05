@@ -1,4 +1,3 @@
-// @ts-check
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import eslint from "@eslint/js";
 import astro from "eslint-plugin-astro";
@@ -32,23 +31,19 @@ export default tseslint.config(
 			tsconfigPath: "tsconfig.json",
 		},
 	},
-	eslint.configs.recommended,
-	...astro.configs.recommended,
-	...jsonc.configs["flat/recommended-with-json"],
-	jsxA11y.flatConfigs.recommended,
-	// @ts-expect-error -- Incorrect @types definition
-	...markdown.configs.recommended,
-	solid,
-	...yml.configs["flat/recommended"],
-	...yml.configs["flat/prettier"],
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- Missing src/types.d.ts in linting
+	astro.configs.recommended,
 	comments.recommended,
+	eslint.configs.recommended,
 	jsdoc.configs["flat/contents-typescript-error"],
 	jsdoc.configs["flat/logical-typescript-error"],
 	jsdoc.configs["flat/stylistic-typescript-error"],
+	jsonc.configs["flat/recommended-with-json"],
+	jsxA11y.flatConfigs.recommended,
+	markdown.configs.recommended,
 	packageJson.configs.recommended,
 	perfectionist.configs["recommended-natural"],
 	regexp.configs["flat/recommended"],
+	solid,
 	{
 		// TODO: Enable these :)
 		rules: {
@@ -58,7 +53,7 @@ export default tseslint.config(
 			"solid/self-closing-comp": "off",
 		},
 	},
-	...tseslint.config({
+	{
 		extends: [
 			...tseslint.configs.strictTypeChecked,
 			...tseslint.configs.stylisticTypeChecked,
@@ -67,45 +62,17 @@ export default tseslint.config(
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
-				tsconfigRootDir: import.meta.dirname,
 			},
 		},
-	}),
-	{
-		files: ["*.jsonc"],
-		rules: {
-			"jsonc/comma-dangle": "off",
-			"jsonc/no-comments": "off",
-			"jsonc/sort-keys": "error",
-		},
 	},
 	{
-		extends: [tseslint.configs.disableTypeChecked],
-		files: ["**/*.md/*.ts"],
-		rules: {
-			"n/no-missing-import": [
-				"error",
-				{ allowModules: ["create-typescript-app"] },
-			],
-		},
-	},
-	{
+		extends: [yml.configs["flat/standard"], yml.configs["flat/prettier"]],
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": ["error", { extension: "yml" }],
-			"yml/sort-keys": [
-				"error",
-				{
-					order: { type: "asc" },
-					pathPattern: "^.*$",
-				},
-			],
 			"yml/sort-sequence-values": [
 				"error",
-				{
-					order: { type: "asc" },
-					pathPattern: "^.*$",
-				},
+				{ order: { type: "asc" }, pathPattern: "^.*$" },
 			],
 		},
 	},
