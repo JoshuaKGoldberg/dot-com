@@ -118,16 +118,13 @@ I put a debugger breakpoint in it and looked at the values at runtime.
 The main points that seemed relevant were:
 
 1.  `types`: calling the `typeToAutoImportableTypeNode` function to create an array of `TypeNode`s to be inserted in the new function as parameters
-
     - Looking through `typeToAutoImportableTypeNode`, it included logic to handle `import("...")...` nodes for types declared in other files
 
 2.  `typeParameters`: for each explicit type argument in the call, creating a type parameter node to be inserted in the new function
-
     - Example input: the `T` in `myFunction<T>()`
     - Example output: the `<T>` in `function myFunction<T>() {}`
 
 3.  `parameters`: for each argument in the call (e.g. the `value` in `myFunction(value)`, creating a parameter node to be inserted in the new function
-
     - Example input: the `value` in `myFunction(value)`
     - Example output: the `value: string` in `function myFunction(value: string) {}`
 
