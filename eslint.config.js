@@ -44,8 +44,6 @@ export default tseslint.config(
 	perfectionist.configs["recommended-natural"],
 	regexp.configs["flat/recommended"],
 	solid,
-	yml.configs["flat/prettier"],
-	yml.configs["flat/recommended"],
 	{
 		// TODO: Enable these :)
 		rules: {
@@ -68,22 +66,13 @@ export default tseslint.config(
 		},
 	},
 	{
+		extends: [yml.configs["flat/standard"], yml.configs["flat/prettier"]],
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": ["error", { extension: "yml" }],
-			"yml/sort-keys": [
-				"error",
-				{
-					order: { type: "asc" },
-					pathPattern: "^.*$",
-				},
-			],
 			"yml/sort-sequence-values": [
 				"error",
-				{
-					order: { type: "asc" },
-					pathPattern: "^.*$",
-				},
+				{ order: { type: "asc" }, pathPattern: "^.*$" },
 			],
 		},
 	},
