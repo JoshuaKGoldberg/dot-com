@@ -10,9 +10,10 @@ import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
 import solid from "eslint-plugin-solid/configs/recommended";
 import yml from "eslint-plugin-yml";
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
 	{
 		ignores: [
 			".astro",
