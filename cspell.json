@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -212,6 +218,7 @@
 		"Lasik",
 		"learningtypescript",
 		"lemongrab",
+		"Lesh",
 		"lintbase",
 		"lissa",
 		"Lolex",
@@ -391,6 +398,7 @@
 		"verdot",
 		"Victorien",
 		"vjeux",
+		"Vohr",
 		"Vonschondorf",
 		"Waiblinger",
 		"Weekes",
