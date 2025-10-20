@@ -37,7 +37,7 @@ importers:
         version: 0.13.11(solid-js@1.9.9)
       '@konami-emoji-blast/astro':
         specifier: ^0.1.1
-        version: 0.1.1(astro@5.13.7(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.46.2)(typescript@5.9.3)(yaml@2.8.1))(konami-emoji-blast@0.5.9)
+        version: 0.1.1(astro@5.13.7(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.46.2)(typescript@5.9.3)(yaml@2.8.1))(konami-emoji-blast@0.6.0)
       '@types/eslint-plugin-jsx-a11y':
         specifier: ^6.10.0
         version: 6.10.1(jiti@2.6.1)
@@ -105,8 +105,8 @@ importers:
         specifier: ^5.63.1
         version: 5.66.0(@types/node@24.2.0)(typescript@5.9.3)
       konami-emoji-blast:
-        specifier: ^0.5.9
-        version: 0.5.9
+        specifier: ^0.6.0
+        version: 0.6.0
       markdownlint:
         specifier: ^0.38.0
         version: 0.38.0
@@ -2711,8 +2711,8 @@ packages:
   konami-code-js@0.8.3:
     resolution: {integrity: sha512-TDiZMsSWTPCZVClclyU7HTZC/3Ql972HhvT/D33evd3+8FgR1DZcCVe84kKsSSvDqzJII0R4m74WASZDlcpIoQ==}
 
-  konami-emoji-blast@0.5.9:
-    resolution: {integrity: sha512-iFXd/V/hsOG4W/Oh7L0voKCJjFjJjTyB3nrc1eqr9tT8fkLpRFy5aqXtmEBLt5RKsJDbe6VOtH0lAHdvZmLv9g==}
+  konami-emoji-blast@0.6.0:
+    resolution: {integrity: sha512-+DXeB2quuLE4DQ6C/vth9CB575x8Xg+4YO8ZqaDciWWlS3ek9etMPti4xXRzKZT5/hd7IgkuRITzQ3vNLMbNdg==}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -5002,10 +5002,10 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
-  '@konami-emoji-blast/astro@0.1.1(astro@5.13.7(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.46.2)(typescript@5.9.3)(yaml@2.8.1))(konami-emoji-blast@0.5.9)':
+  '@konami-emoji-blast/astro@0.1.1(astro@5.13.7(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.46.2)(typescript@5.9.3)(yaml@2.8.1))(konami-emoji-blast@0.6.0)':
     dependencies:
       astro: 5.13.7(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.46.2)(typescript@5.9.3)(yaml@2.8.1)
-      konami-emoji-blast: 0.5.9
+      konami-emoji-blast: 0.6.0
 
   '@kurkle/color@0.3.4': {}
 
@@ -7170,7 +7170,7 @@ snapshots:
 
   konami-code-js@0.8.3: {}
 
-  konami-emoji-blast@0.5.9:
+  konami-emoji-blast@0.6.0:
     dependencies:
       emoji-blast: 0.11.0
       konami-code-js: 0.8.3

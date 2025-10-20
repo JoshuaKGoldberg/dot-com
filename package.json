@@ -53,7 +53,7 @@
 		"eslint-plugin-yml": "^1.18.0",
 		"joshuakgoldberg": "^0.20.4",
 		"knip": "^5.63.1",
-		"konami-emoji-blast": "^0.5.9",
+		"konami-emoji-blast": "^0.6.0",
 		"markdownlint": "^0.38.0",
 		"markdownlint-cli": "^0.45.0",
 		"prettier": "^3.6.2",
