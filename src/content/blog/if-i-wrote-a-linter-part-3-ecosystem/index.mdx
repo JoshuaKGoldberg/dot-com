@@ -110,7 +110,7 @@ If I wrote a linter, its core rules would pull in all those from plugins that ar
 - Common to roughly all projects that would use the linter
 - Stable enough that they are not still rapidly iterating and making breaking changes
 
-That includes taking rules from the following plugins:
+For the JavaScript and TypeScript language specifically, that includes taking rules from the following plugins:
 
 - [`@eslint-community/eslint-plugin-eslint-comments`](https://www.npmjs.com/package/@eslint-community/eslint-plugin-eslint-comments)
 - [`eslint-plugin-import`](https://github.com/import-js/eslint-plugin-import)
@@ -119,8 +119,6 @@ That includes taking rules from the following plugins:
 - [`eslint-plugin-promise`](https://github.com/eslint-community/eslint-plugin-promise)
 - [`eslint-plugin-regexp`](https://github.com/gajus/eslint-plugin-regexp)
 - [`eslint-plugin-unicorn`](https://github.com/sindresorhus/eslint-plugin-unicorn)
-
-> Note also from [Part 1 > Core Common Languages](/blog/if-i-wrote-a-linter-part-1-architecture#core-common-languages) that JSON, Markdown, TypeScript, and YML plugins would also be in core.
 
 That does not include the following plugins:
 
@@ -131,6 +129,8 @@ That does not include the following plugins:
 
 Those plugins are important and should be discoverable.
 The next two sections in this post describe how the linter would help promote them to users.
+
+> Note also from [Part 1 > Core Common Languages](/blog/if-i-wrote-a-linter-part-1-architecture#core-common-languages) that JSON, Markdown, TypeScript, and YML plugins would also be in core.
 
 ## Community Organization
 
