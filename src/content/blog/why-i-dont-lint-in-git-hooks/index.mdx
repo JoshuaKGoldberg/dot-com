@@ -1,0 +1,97 @@
+---
+description: "TODO."
+image:
+  alt: "TODO"
+  src: "~/assets/blog/zootopia-flash-mid-smile.png"
+pubDate: 2024-11-22
+title: "Why I Don't Lint in Git Hooks"
+---
+
+[Git hooks](TODO) are a great way to run small automations on your code before it gets packaged into commits and/or pushed to a server.
+I'm a big fan of [Husky](TODO) and [lint-staged](TODO) for connecting Git hooks to standard web dev scripts such as formatting and secrets detection.
+All my repository templates use Git commit hooks to at least format code with [Prettier](https://prettier.io).
+
+In addition to _formatting_, a lot of other repositories additionally run _linting_ in their commit hooks.
+At first thought it makes sense to also lint code, especially in `--fix` mode to autofix complaints when possible.
+Heck, the tool is named `lint-staged`, right?
+
+Unfortunately, modern linting practices with make linting on Git commit hooks much less desirable than they used to be.
+If you use any kind of cross-file linting, such as _typed linting_, then your commit hooks will likely be drastically slower and less comprehensive than you'd think.
+
+## Recap: Cross-File Linting
+
+Traditional JavaScript linters -i.e. [ESLint](https://eslint.org)- were built on the assumption that each lint rule only looks at one file at a time.
+But modern uses of linting for JavaScript and TypeScript code have lint rules that need to understand other files in the project to lint each file.
+For example, [typescript-eslint's typed linting](https://typescript-eslint.io/blog/typed-linting) uses TypeScript APIs that pull in information from potentially many other files.
+
+Cross-file linting, especially typed linting, changes how lint rules behave in two significant ways:
+
+- **[Performance](#performance)**: linting switches from a fast O(files changed) operation to O(size of project).
+- **[Comprehensiveness](#comprehensiveness)**: there is no longer a 1:1 relationship of _files changed_ to _files to be linted_.
+
+Because of those two significant changes, I no longer believe it worthwhile for most JavaScript or TypeScript projects to run a full lint pass on Git commit hooks.
+The rest of this article will dig into the details.
+
+## Performance Gaps
+
+[Typed linting is powerful but slow](TODO).
+Running the TypeScript APIs as part of linting necessitates running much of the TypeScript type checker.
+TypeScript's performance scales linearly with the number of files in your project.
+Projects with several hundred files can often take many seconds to type check with TypeScript.
+
+Most web developers -myself included- are accustomed to Git operations being very quick.
+I find it aggravating when a commit or push operation takes multiple seconds.
+I've seen many developers -again, myself included- grow accustomed to running operations with `--no-verify` to skip long tasks.
+
+## Comprehensiveness Gaps
+
+Because of cross-file linting, changes to one file may change many other files.
+Any commit hook that runs a linter only on changed files might not be linting all impacted files.
+
+That means running a linter on commit must act in one of three ways:
+
+- **Quick**: only linting directly changed files
+  - Upside: faster performance _(ignoring the aforementioned performance issues)_
+  - Downside: missing out on linting other impacted files
+- **Targeted**: programmatically figuring out which files should be linted
+  - Upside: linting all relevant files
+  - Downside: more complex; slower
+- **Full**: linting all files on all commit hooks
+  - Upside: linting all relevant files
+  - Downside: much slower with typed linting
+
+Most projects in the wild use the _quick_ strategy for simplicity's sake.
+But it's not comprehensive, and I've seen developers be annoyed and confused from it missing important linting points.
+
+The _full_ strategy becomes aggravatingly slow with typed linting on large projects, per [Performance Gaps](#performance-gaps).
+I've never seen a team happily choose to stick with it.
+
+Similarly, the _targeted_ strategy becomes slow because you need a tool such as TypeScript to understand which files impact which other files.
+TypeScript allows [global augmentations](TODO) and other strategies that make it impossible to fully analyze dependency graphs purely based on `import` and `export` statements.
+
+## Example: Floating Promise Detection
+
+Suppose
+
+```ts
+// action.ts
+export function action() {
+	// ...
+}
+```
+
+```ts
+// index.ts
+import { action } from "./action";
+
+action();
+```
+
+## Alternatives to Full Linting on Commit Hooks
+
+### CI Checks
+
+### Hybrid Linting Strategies
+
+- dual linting with biome/oxlint and tseslint
+- different config that disables import and typed
