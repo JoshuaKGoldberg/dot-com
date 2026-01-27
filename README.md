@@ -3,7 +3,7 @@
 <p align="center">
 	<!-- prettier-ignore-start -->
 	<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 19" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-19-21bb42.svg" /></a>
+	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 20" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-20-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
 	<a href="https://github.com/JoshuaKGoldberg/dot-com/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
@@ -55,6 +55,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/robin-a-meade"><img src="https://avatars.githubusercontent.com/u/1343270?v=4?s=100" width="100px;" alt="Robin A. Meade"/><br /><sub><b>Robin A. Meade</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Arobin-a-meade" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/sxflynn"><img src="https://avatars.githubusercontent.com/u/2034081?v=4?s=100" width="100px;" alt="Stephen Flynn"/><br /><sub><b>Stephen Flynn</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/issues?q=author%3Asxflynn" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://tonyedwardspz.co.uk/"><img src="https://avatars.githubusercontent.com/u/6146746?v=4?s=100" width="100px;" alt="Tony Edwards"/><br /><sub><b>Tony Edwards</b></sub></a><br /><a href="#ideas-tonyedwardspz" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yonava"><img src="https://avatars.githubusercontent.com/u/76519301?v=4?s=100" width="100px;" alt="Yona Alexander Voss-Andreae"/><br /><sub><b>Yona Alexander Voss-Andreae</b></sub></a><br /><a href="https://github.com/JoshuaKGoldberg/dot-com/commits?author=yonava" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
