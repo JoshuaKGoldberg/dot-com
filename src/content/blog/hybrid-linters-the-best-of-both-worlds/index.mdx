@@ -1,7 +1,7 @@
 ---
 description: "Native speed for parsing and type checking is wonderful. I also want the huge benefits of writing lint rules in an ecosystem's primary language. Here's how I think we can have both."
 image:
-  alt: "The face of the man from Normal Rockwell's 'Freedom of Speech': standing up and looking up stoically, about to speak."
+  alt: "The face of the man from Norman Rockwell's 'Freedom of Speech': standing up and looking up stoically, about to speak."
   src: "~/assets/blog/freedom-of-speech.jpg"
 pubDate: 2025-03-20
 series: Linters
@@ -36,7 +36,7 @@ That's a great goal to have as long as we can still benefit from the incredible 
 Let me explain why I think a third type of linter, a **"hybrid"** between native speed externals and a TypeScript shell, would bring the best of both worlds.
 
 <LabeledImage
-	alt="Normal Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
+	alt="Norman Rockwell's 'Freedom of Speech': a working man standing up in a seated crowd in suits and looking up stoically, about to speak."
 	description="I know everybody wants to rewrite every single dev tool thing in Go and Rust. But hear me out, there are places where TypeScript is still more appropriate. Really!"
 	original="https://en.wikipedia.org/wiki/Freedom_of_Speech_(painting)#/media/File:%22Freedom_of_Speech%22_-_NARA_-_513536.jpg"
 	src={freedomOfSpeech}
@@ -71,7 +71,7 @@ But even if you're re-linting your whole project, ~3 seconds of overhead per 10k
 I think it's safe to predict that JavaScript-speed lint rules backed by native speed parsing and type information will be more than fast enough for real-world linting.
 
 <LabeledImage
-	alt="Normal Rockwell's 'Girl Running with Wet Canvas': a schoolgirl in red running while holding wet painting supplies and a painting of a white tree on tan grass. She holds a paintbrush in her mouth and has a determined look on her face."
+	alt="Norman Rockwell's 'Girl Running with Wet Canvas': a schoolgirl in red running while holding wet painting supplies and a painting of a white tree on tan grass. She holds a paintbrush in her mouth and has a determined look on her face."
 	description="JavaScript performance can run faster than you think in many use cases."
 	original="https://www.wikiart.org/en/norman-rockwell/girl-running-with-wet-canvas"
 	src={girlRunningWithWetCanvas}
@@ -116,7 +116,7 @@ In my experiences on web platform teams, it was hard enough to get developers in
 Any additional cost makes it that much harder to get time for writing custom lint rules.
 
 <LabeledImage
-	alt="Normal Rockwell's 'Freedom From Want': a family excitedly talking as the matriarch and patriarch are about to place a Thanksgiving turkey on the table."
+	alt="Norman Rockwell's 'Freedom From Want': a family excitedly talking as the matriarch and patriarch are about to place a Thanksgiving turkey on the table."
 	description="I want web dev tooling, and linting in particular, to have as many people at the table as possible."
 	original="https://en.wikipedia.org/wiki/Norman_Rockwell#/media/File:%22Freedom_From_Want%22_-_NARA_-_513539.jpg"
 	src={freedomFromWant}
@@ -133,7 +133,7 @@ A linter's own rules generally establish best practices and serve as a technical
 
 Any native core linter that also allows JavaScript-speed rule plugins will be stuck between a rock and a hard place:
 
-- If most or all rules rules are written in native code, it will have far fewer references of JavaScript rules for end-users
+- If most or all rules are written in native code, it will have far fewer references of JavaScript rules for end-users
 - If rules are split between JavaScript and native code, then many end users will be slowed down to hybrid speed linting
 
 Both options incur maintenance cost of separately documenting JavaScript rules and/or having to maintain two documented paths for rules.
@@ -156,7 +156,7 @@ There's little benefit to switching to a smaller ecosystem with different paradi
 I believe keeping as much of a linter as possible in JavaScript/TypeScript, while still using native speed dependencies to optimize performance bottlenecks, is the right balance of approachability and performance.
 
 <LabeledImage
-	alt="Normal Rockwell's 'The Connoisseur': a colorful Jackson Pollock painting on the wall being looked at by an older gentleman in a suit."
+	alt="Norman Rockwell's 'The Connoisseur': a colorful Jackson Pollock painting on the wall being looked at by an older gentleman in a suit."
 	description="A JavaScript developer studying an error message from the Rust borrow checker."
 	original="https://prints.nrm.org/detail/261064/rockwell-the-connoisseur-1962"
 	src={theConnoisseur}
@@ -198,7 +198,7 @@ In other words, I think an ideal web linter uses a JavaScript-speed language for
 | Type Information | Native     | Significantly better performance           |
 
 <LabeledImage
-	alt="Normal Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
+	alt="Norman Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
 	description="Predicting the future is hard, especially in a rapidly changing ecosystem like the web's. But it is fun to try."
 	original="https://en.wikipedia.org/wiki/Tough_Call#/media/File:Norman_Rockwell_-_Tough_Call.jpg"
 	src={toughCall}
@@ -227,7 +227,7 @@ I think learning a new language is too harsh a prerequisite for dev tooling, tha
 But hey, prove me wrong!
 
 <LabeledImage
-	alt="Normal Rockwell's 'Triple Self-Portrait': a painter wearing glasses and smoking a pipe, looking at himself in a mirror, painting himself with pipe but no glasses."
+	alt="Norman Rockwell's 'Triple Self-Portrait': a painter wearing glasses and smoking a pipe, looking at himself in a mirror, painting himself with pipe but no glasses."
 	description="I've tried to be self-reflective and recognize my biases, but I know it's hard to be self-reflective and think critically."
 	original="https://en.wikipedia.org/wiki/Freedom_of_Speech_(painting)#/media/File:%22Freedom_of_Speech%22_-_NARA_-_513536.jpg"
 	src={tripleSelfPortrait}
@@ -256,7 +256,7 @@ Thanks to the following reviewers for excellent advice and feedback on this post
 I appreciate your insights and time!
 
 <LabeledImage
-	alt="Normal Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
+	alt="Norman Rockwell's 'Tough Call': three baseball umpires look upward and one catches rain on a hand, as it starts to rain."
 	description="None of those reviewers agree with all of my conclusions here. Which is wonderful. Healthy discourse and trying out different approaches makes for a better ecosystem long-term. 🤗"
 	original="https://prints.nrm.org/detail/261001/rockwell-dewey-vs.-truman-the-great-debate-1948"
 	src={theGreatDebate}

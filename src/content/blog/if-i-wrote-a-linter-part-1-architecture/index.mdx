@@ -1,6 +1,6 @@
 ---
 pubDate: 2025-05-04
-description: "This how I would architect a modern linter from scratch: focusing on built-in TypeScript support, a straightforward rule development experience, and deduplicating tooling."
+description: "This is how I would architect a modern linter from scratch: focusing on built-in TypeScript support, a straightforward rule development experience, and deduplicating tooling."
 image:
   alt: "Tevye from Fiddler on the Roof snapping his hands back and forth in a dance"
   src: "~/assets/blog/tevye-square.png"
@@ -169,7 +169,7 @@ If I wrote a linter, it would provide first-party plugins for all languages that
 - JavaScript and TypeScript
 - JSON
 - Markdown
-- YML
+- YAML
 
 The core linter architecture would be completely agnostic of any specific language.
 It would look like the newer ESLint architecture where each language is a separate entity [^eslint-discussion-rewrite] [^eslint-rfc-language-plugins].
@@ -178,7 +178,7 @@ Users would of course still be able to write their own plugins for other languag
 
 ## Formatting Coordination
 
-One of the biggest reasons users move to Biome is that those it performs both _formatting_ and _linting_ with a single devDependency and configuration file.
+One of the biggest reasons users move to Biome is that it performs both _formatting_ and _linting_ with a single devDependency and configuration file.
 In doing so, they provide a much easier setup and maintenance story, as well as sidestep many common ESLint misconfigurations that lead to performance issues [^tseslint-troubleshooting-performance-stylistic] [^tseslint-troubleshooting-performance-prettier] [^tseslint-troubleshooting-performance-import].
 
 I think that's a great idea.
@@ -213,7 +213,7 @@ A linter is in many ways the best codemod platform for many kinds of migrations.
 It allows you to define a granular, testable set of migration rules, and then keep them enforced over time so developers don't add regressions.
 I've personally used lint rules to great effect in rolling out design system updates, enforcement of best practices, and other niceties.
 
-Unfortunately, the "one file at a time" model all of today's linters doesn't lend itself well to all the operations a codemod might need.
+Unfortunately, the "one file at a time" model used by today's linters doesn't lend itself well to all the operations a codemod might need.
 Rules may need to make fixes or suggestions to files other than the one being linted [^eslint-issue-change-request-apply-suggestions-to-other-files].
 ESLint also doesn't provide very many hooks for changing which fixes and/or suggestions are applied yet [^eslint-rfc-per-rule-autofix-configuration].
 
@@ -252,7 +252,7 @@ I personally use `tsc --watch` for the equivalent TypeScript type errors, but do
 
 Native speed linters without typed linting are fast enough that re-running a lint command takes near-zero time.
 But once we slow down for typed linting, having to wait for a full re-lint is painful.
-Once a usable cross-file cache is in place and re-running linting is be much faster, we can unlock a fast `--watch` mode to help with it too.
+Once a usable cross-file cache is in place and re-running linting is much faster, we can unlock a fast `--watch` mode to help with it too.
 
 If I wrote a linter, it would have a `--watch` mode that would re-lint files as they change.
 It would display reports in a live view akin to `tsc --watch` and use cross-file caching to only re-lint files impacted by changes.
@@ -292,7 +292,7 @@ If this post was of any interest to you I think you'll find them similarly inter
 
 [^eslint-issue-change-request-add-a-concept-of-postlint-hooks]: [Change Request: Add a concept of "postlint" hooks, such as for running a formatter](https://github.com/eslint/eslint/issues/19171)
 
-[^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881])
+[^eslint-issue-change-request-apply-suggestions-to-other-files]: [eslint/eslint#17881 Change Request: Provide a way for rules to apply suggestions to other files](https://github.com/eslint/eslint/issues/17881)
 
 [^eslint-issue-change-request-make-core-rules-typescript-syntax-aware]: [eslint/eslint#19173 Change Request: Make core rules TypeScript syntax-aware](https://github.com/eslint/eslint/issues/19173)
 
