@@ -109,6 +109,18 @@
 .article table {
 	border-spacing: 0;
 	text-align: left;
+	width: 100%;
+}
+
+.article summary {
+	cursor: pointer;
+	font-size: var(--fontSizeSmall);
+	font-style: italic;
+	text-align: right;
+}
+
+.article astro-island + details {
+	margin-top: -1rem;
 }
 
 .article th {
