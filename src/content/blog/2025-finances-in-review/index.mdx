@@ -1,0 +1,322 @@
+---
+description: "Breaking down the income streams and totals from my fourth and final year as a full-time independent open source maintainer."
+image:
+  alt: Black cat curled upside down in a tan cat window bed
+  src: "~/assets/blog/jerry-and-isabella-butt-to-butt-square.webp"
+pubDate: 2026-02-12
+tags: ["finances", "open source", "recap", "year in review"]
+series: Personal
+title: "2025 Finances In Review"
+---
+
+import jerryAndIsabellaButtToButt from "~/assets/blog/jerry-and-isabella-butt-to-butt-wide.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import { BarChart } from "~/components/BarChart";
+import { PieChart } from "~/components/PieChart";
+
+I've been an independent open source maintainer for the last four years.
+That means I work on shared projects online instead of for any one company.
+And although I'm going back to full-time work later this month, being able to directly contribute to web development tooling for four years has been incredibly fulfilling and rewarding.
+
+The downside of this independent work is that I don't receive a salaried paycheck.
+I've also mostly moved away from contract or freelance work.
+Instead, my income largely comprises of community sponsorships directly related to my open source work.
+
+This blog post shows where that money came from and how it's changed since my [2024 Finances](/blog/2024-finances-in-review).
+I publicize this breakdown to show what it's like being in open source the way I am and to be transparent about donations.
+
+Let's dig in!
+
+## Total Income
+
+I took in a total income of roughly **$73,293** for 2025.
+**$52,265** of that was for open source work.
+
+My open source income grew ~12% from 2024's $46,561.
+Here's how 2025's income split compares to previous years:
+
+<BarChart
+	client:load
+	colors={["#33aa33", "#4256aa"]}
+	data={{
+		datasets: [
+			{
+				data: [20_400, 38_000, 47_269, 52_265],
+				label: "Open Source",
+			},
+			{
+				data: [26_598, 25_700, 13_630, 21_028],
+				label: "Other Work",
+			},
+		],
+		labels: ["2022", "2023", "2024", "2025"],
+	}}
+	id="total-income-years"
+	title="Total Income - Years"
+/>
+
+<details>
+<summary>Table of Numbers</summary>
+
+| Year               | Total Income | Open Source | Non Open Source | % Open Source |
+| ------------------ | ------------ | ----------- | --------------- | ------------- |
+| 2025               | $73,293      | $52,265     | $21,028         | ~71%          |
+| 2024               | $60,191      | $46,561     | $13,630         | ~77%          |
+| 2023 [^past-years] | ~$63,700     | ~$38,000    | ~$25,700        | ~60%          |
+| 2022 [^past-years] | ~$41,100     | ~$20,400    | ~$20,700        | ~50%          |
+
+</details>
+
+This year reversed the trend of skewing income more towards open source from other channels.
+But it was still nice to see the totals for both increase overall.
+
+### Months Breakdown
+
+I think the per-month breakdown of my sources is also useful for showing whether my open source income was stable through the year.
+
+Here's how each revenue source contributed to my totals for each month:
+
+<BarChart
+	client:load
+	colors={["#33aa33", "#4256aa"]}
+	data={{
+		datasets: [
+			{
+				data: [4_355, null, 3_903, 3_227, 3_326, 4_117, 3_343, 3_980, 2_845, 3_659, 3_956, 4_190, 3_758, 11_962],
+				label: "Open Source",
+			},
+			{
+				data: [1_752, null, 378, 882, 475, 1_104, 12_994,556, 413, 1_221, 460, 842, 1_231, 473],
+				label: "Other Work",
+			},
+    	],
+    	labels: [
+			"Average",
+			"",
+    		"January",
+    		"February",
+    		"March",
+    		"April",
+    		"May",
+    		"June",
+    		"July",
+    		"August",
+    		"September",
+    		"October",
+    		"November",
+    		"December",
+    	],
+    }}
+    id="months-breakdown"
+    title="Months Breakdown"
+
+/>
+
+<details>
+<summary>Table of Numbers</summary>
+
+| Month     | Total Income | Open Source | Other Work | % Open Source |
+| --------- | ------------ | ----------- | ---------- | ------------- |
+| _Average_ | _$6,108_     | _$4,355_    | _$1,752_   | _~71%_        |
+| January   | $4,281       | $3,903      | $378       | 91%           |
+| February  | $4,109       | $3,227      | $882       | 79%           |
+| March     | $3,801       | $3,326      | $475       | 87%           |
+| April     | $5,220       | $4,117      | $1,104     | 79%           |
+| May       | $16,337      | $3,343      | $12,994    | 20%           |
+| June      | $4,536       | $3,980      | $556       | 88%           |
+| July      | $3,258       | $2,845      | $413       | 87%           |
+| August    | $4,880       | $3,659      | $1,221     | 75%           |
+| September | $4,416       | $3,956      | $460       | 90%           |
+| October   | $5,032       | $4,190      | $842       | 83%           |
+| November  | $4,989       | $3,758      | $1,231     | 75%           |
+| December  | $12,435      | $11,962     | $473       | 96%           |
+
+</details>
+
+My income was mostly stable through the months, except for two large spikes:
+
+- Open source: end-of-year surge in GitHub Sponsors (thanks again, AWS SDK team!) and typescript-eslint (holiday bonuses)
+- Other work: a sizeable private corporate gig in May
+
+If it weren't for those spikes, my total year intake would have been around $50-$60k.
+
+## Sources Breakdown
+
+A majority of my income comes from open source projects, and a majority of that is from bigger names.
+That income is supplemented by other sources -- mostly private consulting and _Learning TypeScript_ book sales.
+
+Here are the individual categories of income:
+
+<PieChart
+	client:load
+	colors={[
+		"#374EBE",
+		"#777777",
+		"#2DBA4F",
+		"#8D6748",
+		"#341BAB",
+		"#FDD828",
+		"#2F3241",
+		"#DD0029",
+		"#f6914d",
+		"#A177ff",
+		"#6441a5",
+	]}
+	data={{
+		datasets: [
+			{
+				data: [
+					22_276, 12_625, 11_786, 7_019, 6_800, 5_553, 2_900, 2_800, 1_394, 90,
+					50,
+				],
+				label: "Income ($)",
+			},
+		],
+		labels: [
+			"typescript-eslint",
+			"Consulting",
+			"GitHub Sponsors",
+			"Mocha",
+			"ESLint",
+			"Learning TypeScript royalties",
+			"Tidelift",
+			"Yeoman",
+			"Podcasts",
+			"thanks.dev",
+			"Twitch",
+		],
+	}}
+	id="total-income-all-sources"
+	title="Total Income - All Sources"
+/>
+
+<details>
+<summary>Table of Numbers</summary>
+
+| Source                          | Income      |
+| ------------------------------- | ----------- |
+| typescript-eslint               | $22,276     |
+| Consulting                      | $12,625     |
+| GitHub Sponsors                 | $11,786     |
+| Mocha                           | $7,019      |
+| ESLint                          | $6,800      |
+| _Learning TypeScript_ royalties | $5,553      |
+| Tidelift                        | $2,900      |
+| Podcasts                        | $2,800      |
+| Yeoman                          | $1,394      |
+| thanks.dev                      | $90         |
+| Twitch                          | $50         |
+| **Total**                       | **$73,293** |
+
+</details>
+
+I'm glad to have a diverse set of income sources in open source.
+The small- and medium-sized web dev tooling projects I work tend to fluctuate in popularity over time.
+You don't want any one fluctuating project to be a supermajority of income: when it inevitably wanes, so too will overall income.
+
+### Open Source Services Breakdown
+
+The projects breakdown is good for seeing how I earned my income, but doesn't accurately reflect where that revenue comes from.
+Some services such as thanks.dev and Tidelift send income for multiple projects.
+
+Here's a view of how much income came through each open source income service:
+
+<PieChart
+	client:load
+	colors={["#2DBA4F", "#2F3241", "#A177ff", "#6441a5"]}
+	data={{
+		datasets: [
+			{
+				data: [25_891, 12_241, 11_786, 3_177],
+				label: "Income ($)",
+			},
+		],
+		labels: ["Open Collective", "GitHub Sponsors", "Tidelift", "thanks.dev"],
+	}}
+	id="total-income-all-services"
+	title="Total Income - All Services"
+/>
+
+<details>
+<summary>Table of Numbers</summary>
+
+| Source          | Income      |
+| --------------- | ----------- |
+| Open Collective | $25,891     |
+| Tidelift        | $12,241     |
+| GitHub Sponsors | $11,786     |
+| thanks.dev      | $2,347      |
+| **Total**       | **$52,265** |
+
+</details>
+
+This breakdown shows an interesting difference from per-source: although my personal projects mostly weren't sponsored by thanks.dev, it did contribute to larger projects I work on such as typescript-eslint.
+That difference is a symptom of most of my smaller packages not being adopted largely in open source.
+Most of my impact has been in bigger projects.
+
+## Reflecting on 2025
+
+This was a mostly-positive year for me.
+
+$73k was ~91% of my original goal of $80k total income for 2025.
+Both numbers are unusually high for open source.
+I'm very proud of getting as far as I have.
+I've put a lot of time, effort, and thought into making open source maintenance a sustainable job.
+
+This will be my last year for the foreseeable future as an independent open source maintainer.
+It's lonely and isolating to work independently the way I have.
+Although I managed to make open source income workable for myself, none of my projects have similarly active independent open source maintainers.
+I miss working on a sustained team with a myriad of other roles (yes, even a manager!).
+So while I'm proud of what I've achieved over the last four years, now feels like the right stopping point.
+I'm starting a new job at Sentry in February 2026.
+
+> I'll publish a full blog post soon recapping 2025.
+> It'll focus both on my thoughts on independent open source maintenance as well as individual project milestones.
+
+## Your Support Matters
+
+The best way you can support open source maintainers like me is to **sponsor us**.
+That money goes directly to us and helps us focus on open source work.
+The more maintainers who can spend more time in open source, the better the ecosystem is -- both for software and for the experience of being a maintainer.
+
+Each of the larger projects I'm on the team of have an Open Collective you can support financially:
+
+- [opencollective.com/eslint](https://opencollective.com/eslint)
+- [opencollective.com/flint-fyi](https://opencollective.com/flint-fyi)
+- [opencollective.com/mochajs](https://opencollective.com/mochajs)
+- [opencollective.com/typescript-eslint](https://opencollective.com/typescript-eslint)
+
+Although I'm personally going to no longer be dependent on the income, sponsoring these projects helps sustain development for the maintainers who are.
+
+To more broadly to support your dependencies, two aggregator services are particularly good for distributing your donations:
+
+- [thanks.dev](https://thanks.dev)
+- [Tidelift](https://tidelift.com)
+
+Even better than sponsoring me yourself, if you work at a profitable company, consider advocating for your employer to sponsor open source or even sign the [Open Source Pledge](https://opensourcepledge.com).
+Companies sharing some of their profit is a much more sustainable route for the ecosystem than individual charitable donations.
+
+Support doesn't have to be financial.
+Just sharing the word about the importance of open source software and its maintainers can help share the word about how important support is.
+Sharing is caring.
+
+If you do have time, maybe spend a bit of time helping out on GitHub on projects I work on that you find useful.
+The beautify of open source is that it's _open_.
+If you want something, you can always go do it yourself.
+Who knows, maybe you'll fall in love with open source the way I did.
+💚
+
+<LabeledImage
+	alt="Two black cats cuddling together, butt-to-butt, in a window bed."
+	description="Isabella and Jerry pressing their ends together. As one ends, the other begins."
+	src={jerryAndIsabellaButtToButt}
+/>
+
+> Sincere thanks to the many people who sponsored me and/or worked on sponsorship platforms.
+> You all made my work possible.
+> I can't thank you enough.
+> 💙
+
+[^past-years]:
+    2024 is the first year with precise numbers for totals.
+    I'd rounded the totals for [2023 in Review](/blog/2023-in-review) and don't have the energy or time to re-calculate them more precisely.
