@@ -15,8 +15,6 @@ const widths = {
 	third: styles.widthsThird,
 };
 
-export type ContentEntryWidths = keyof typeof widths;
-
 export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
@@ -28,6 +26,8 @@ export interface ContentEntryProps {
 	url: string;
 	widths: ContentEntryWidths;
 }
+
+export type ContentEntryWidths = keyof typeof widths;
 
 export function ContentEntry(props: ContentEntryProps) {
 	return (

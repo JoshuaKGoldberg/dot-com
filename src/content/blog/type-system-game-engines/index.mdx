@@ -458,7 +458,8 @@ type ApplyMoves<
 ```
 
 - First, if the moves extends the empty array (so, if there are no more moves), the resultant type is the board itself.
-- Otherwise, we return a resultant type from `ApplyMoves`. That recursive type system call to `ApplyMoves` takes in the result of applying our first move to the board for a board, and all but the first move from our moves as its array of moves.
+- Otherwise, we return a resultant type from `ApplyMoves`.
+  That recursive type system call to `ApplyMoves` takes in the result of applying our first move to the board for a board, and all but the first move from our moves as its array of moves.
 
 The remaining moves are calculated using a `DropFirst` type that shows off why we just learned about inferred types.
 
@@ -499,7 +500,8 @@ Our output board is the result of all those moves applied on top of each other.
 
 ## Template Literal Types
 
-The last major type system feature we'll look at is also a new one, and is in my opinion one of the stranger –though still very useful– additions to TypeScript. It's also only available on versions 4.1 later.
+The last major type system feature we'll look at is also a new one, and is in my opinion one of the stranger –though still very useful– additions to TypeScript.
+It's also only available on versions 4.1 later.
 
 Template literal types allow us to check for and extract substrings from inferred string types in the type system.
 I'd like to use them to take a starting board and an array of moves, then generate how the board should look after all of them have been applied.
@@ -686,7 +688,8 @@ There's a good bit of code!
 If you're feeling lost in the sea of new complex type syntax, that's great!
 Take some time off, come back to this blog or the slides, and persevere – you'll be able to get through it, and you'll have a more clear understanding of it all if you do.
 
-All concepts are new until you've had the time to play with them for a bit. Everything is complex until you get it.
+All concepts are new until you've had the time to play with them for a bit.
+Everything is complex until you get it.
 
 <LabeledVideo
 	alt="Patrick Star drooling and saying 'uhhh'"

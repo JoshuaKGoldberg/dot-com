@@ -3,9 +3,10 @@ import { type JSX, splitProps } from "solid-js";
 
 import squiggle from "~/assets/icons/squiggle.svg";
 
+import type { FontSize, TextProps } from "./Text";
+
 import styles from "./Squiggly.module.css";
 import { Text } from "./Text";
-import type { FontSize, TextProps } from "./Text";
 
 const fontSizes: Record<string, string | undefined> = {
 	medium: styles.medium,
@@ -19,13 +20,13 @@ const variants = {
 	passive: styles.passive,
 };
 
-export type SquigglyVariant = keyof typeof variants;
-
 export type SquigglyProps<As extends keyof JSX.HTMLElementTags> =
 	TextProps<As> & {
 		fontSize?: FontSize;
 		variant?: SquigglyVariant;
 	};
+
+export type SquigglyVariant = keyof typeof variants;
 
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 	props: SquigglyProps<As>,

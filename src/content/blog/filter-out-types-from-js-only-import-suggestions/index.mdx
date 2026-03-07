@@ -18,7 +18,8 @@ import jerryRainbowStreamerWide from "~/assets/blog/jerry-rainbow-streamer-wide.
 />
 
 Do you write "vanilla" JavaScript (rather than TypeScript) in VS Code?
-If so, have you ever seen the editor suggest importing a type even though types aren't usable in `.js`/co. files?
+If so, have you ever seen the editor suggest importing a type even though types aren't usable in `.js`/co.
+files?
 
 Those suggestions are powered by TypeScript, and I improved them to no longer suggest types in JavaScript-only files.
 This blog post details how I wrote and updated that pull request to TypeScript.
@@ -33,7 +34,8 @@ That's also a little misleading for folks who might be still new to TypeScript a
 
 I figured this would be a fun contribution to get in: filtering out entries from import statements if they're not applicable to the file being imported into.
 
-> Spoiler: here's the [resultant pull request](https://github.com/microsoft/TypeScript/pull/53619). ✨
+> Spoiler: here's the [resultant pull request](https://github.com/microsoft/TypeScript/pull/53619).
+> ✨
 
 ## Digging Into Completions
 
@@ -394,7 +396,8 @@ TypeScript >=5.3 now include the language server improvements.
 
 ## Final Thanks
 
-Thanks as always to [@Andarist](https://github.com/Andarist) for helping review the PR. So much that it was more than reasonable for me to add Mateusz as a co-author 😄.
+Thanks as always to [@Andarist](https://github.com/Andarist) for helping review the PR.
+So much that it was more than reasonable for me to add Mateusz as a co-author 😄.
 
 Thanks to [@RyanCavanaugh](https://github.com/RyanCavanaugh) and [@sandersn](https://github.com/sandersn) for reviewing and merging the PR from the TypeScript team's side.
 Additional thanks to [@awerlogus](https://github.com/awerlogus) for reporting the issue in the first place.

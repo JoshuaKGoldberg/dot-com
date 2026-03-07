@@ -1,6 +1,7 @@
+
 import { CachedFactory } from "cached-factory";
 import { type ActiveElement, Chart, LinearScale, Tooltip } from "chart.js";
-import { type ChartProps, Bar } from "solid-chartjs";
+import { Bar, type ChartProps } from "solid-chartjs";
 import { onMount } from "solid-js";
 
 export interface BarChartProps {
@@ -23,6 +24,8 @@ export function BarChart(props: BarChartProps) {
 		Chart.register(LinearScale, Tooltip);
 	});
 
+	// TODO: Fix reactivity reports added by recent eslint-plugin-solid version
+/* eslint-disable solid/reactivity */
 	const dataLengthTotal = props.data.datasets.reduce(
 		(total, dataset) => total + dataset.data.length,
 		0,
@@ -32,6 +35,7 @@ export function BarChart(props: BarChartProps) {
 	const elementColors = new CachedFactory(() => {
 		return props.colors[(colorIndex++ * fractional) | 0];
 	});
+	/* eslint-enable solid/reactivity */
 
 	// Why the inline CSS instead of CSS modules, you ask?
 	// ...because Astro isn't loading them in production builds:

@@ -104,7 +104,8 @@ I figured that was a reasonable source of information on file names.
 But counting them?
 
 Counting unique objects is generally optimally efficient in JavaScript with a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
-I ran full-text searches on `new Set` and `Set.from` but didn't find anything... which makes sense, as TypeScript works in environments that don't natively have Set.
+I ran full-text searches on `new Set` and `Set.from` but didn't find anything...
+which makes sense, as TypeScript works in environments that don't natively have Set.
 But surely there must be _something_ in TypeScript for counting unique objects? What about the slightly-older [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)?
 
 I tried again searching for `new Map` and found two generic, useful-looking functions at the top of `src/compiler/core.ts`:
@@ -143,7 +144,8 @@ For example:
 ```
 
 The "`code`" field is interesting.
-There are codes around that compilation message from `6001` to `6190`, then gaps around. I assumed this was some kind of organization strategy and added the three new messages in `6191`-`6193`:
+There are codes around that compilation message from `6001` to `6190`, then gaps around.
+I assumed this was some kind of organization strategy and added the three new messages in `6191`-`6193`:
 
 - `Found_1_error_in_1_file: diag(6191, ...)`
 - `Found_0_errors_in_1_file: diag(6192, ...)`
@@ -234,7 +236,8 @@ There were a few big pieces of initial feedback:
 
 Not needing to report file counts actually made my change easier.
 I removed the function that counted unique files with a Map.
-It was a little upsetting at first to not have needed knowledge from the createMap investigation... but on the bright side, I now knew more about TypeScript's internals than I would have otherwise.
+It was a little upsetting at first to not have needed knowledge from the createMap investigation...
+but on the bright side, I now knew more about TypeScript's internals than I would have otherwise.
 That's a good thing!
 😇
 
@@ -261,7 +264,8 @@ Perfect.
 
 ### 5.4 Miscellaneous Feedback
 
-There were a couple small points left, but nothing major. One was a preemptive bug fix (fixed 😌) and the other was a unit test comment (unable to do for a technical reason).
+There were a couple small points left, but nothing major.
+One was a preemptive bug fix (fixed 😌) and the other was a unit test comment (unable to do for a technical reason).
 
 A merge from master, a couple of updates, and the PR was accepted!
 🙌
@@ -274,9 +278,11 @@ A merge from master, a couple of updates, and the PR was accepted!
 
 ## Takeaways
 
-- Find-In-Files, Find-All-References, Go-To-Definition are still best. 🥇
+- Find-In-Files, Find-All-References, Go-To-Definition are still best.
+  🥇
 - It's good to learn things, even if you don't use that knowledge immediately.
-- Reviewers want you to write your best code for the project. Listen to them!
+- Reviewers want you to write your best code for the project.
+  Listen to them!
 - Don't be afraid to ask for clarifications of reviewer comments if you need.
 - Don't be afraid to start a dialog with reviewers if you need.
 

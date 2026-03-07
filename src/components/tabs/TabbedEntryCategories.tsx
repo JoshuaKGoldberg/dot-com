@@ -1,5 +1,5 @@
 import { Tabs } from "@kobalte/core";
-import { For, type JSX, createSignal } from "solid-js";
+import { createSignal, For, type JSX } from "solid-js";
 
 import { TabsList } from "../tabs/TabsList";
 import { TabsSquiggly } from "./TabsSquiggly";

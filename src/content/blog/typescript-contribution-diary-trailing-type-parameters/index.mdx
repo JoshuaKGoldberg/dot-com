@@ -73,7 +73,8 @@ Using the context clues from the "diagnostic" word in the file's name and conten
 
 Running a second full-text search on "`Trailing_comma_not_allowed`" found exactly one method: `checkGrammarForDisallowedTrailingComma`, in `src/compiler/checker.ts`.
 From that name I was pretty sure this was what I needed.
-I _also_ happened to remember reading in the (excellent) [Basarat Gitbook](https://basarat.gitbook.io/typescript/docs/compiler/overview.html) how the "[Checker](https://basarat.gitbooks.io/typescript/content/docs/compiler/checker.html)" in TypeScript is what validates types... and since this was in `checker.ts`, that felt good.
+I _also_ happened to remember reading in the (excellent) [Basarat Gitbook](https://basarat.gitbook.io/typescript/docs/compiler/overview.html) how the "[Checker](https://basarat.gitbooks.io/typescript/content/docs/compiler/checker.html)" in TypeScript is what validates types...
+and since this was in `checker.ts`, that felt good.
 
 ## Step 2: What?
 
@@ -88,7 +89,8 @@ They were under these functions:
 - `checkGrammarHeritageClause`
 - `checkGrammarVariableDeclarationList`
 
-A diligent programmer intent on learning all there is to know about TypeScript might go read and understand each of these... but I could tell from the name that `checkGrammarTypeParameterList` was _probably_ what I needed.
+A diligent programmer intent on learning all there is to know about TypeScript might go read and understand each of these...
+but I could tell from the name that `checkGrammarTypeParameterList` was _probably_ what I needed.
 
 ```ts
 function checkGrammarForDisallowedTrailingComma(
@@ -148,7 +150,8 @@ I marked the baseline as accepted and the rest of the tests passed.
 
 > [Allowed trailing commas in type parameter/argument lists by JoshuaKGoldberg · Pull Request #20599](https://github.com/Microsoft/TypeScript/pull/20599):
 
-> This change is only one source file and one error file... there must be something I'm missing!?
+> This change is only one source file and one error file...
+> there must be something I'm missing!?
 > Fixes #16152
 
 At this point I was still pretty worried about the change being purely subtractive.
@@ -161,13 +164,15 @@ This might sound like a joke, but it isn't: humanizing the process made it feel 
 Even the customary thanks from mhegazy (core TS team member who merged the PR) felt nice.
 😄
 
-I happened to send the pull request in the middle of December, so it wasn't until early January that it was merged in... but it got in without any complaints.
+I happened to send the pull request in the middle of December, so it wasn't until early January that it was merged in...
+but it got in without any complaints.
 
 ## Takeaways
 
 1. Find-in-Files is the only IDE command you need.
 1. TypeScript is just like any large code base: daunting if you let it, approachable if you try.
-1. Code maintainers with senses of humor are best. 🌹
+1. Code maintainers with senses of humor are best.
+   🌹
 
 ---
 

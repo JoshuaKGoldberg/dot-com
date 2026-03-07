@@ -7,13 +7,13 @@ const variants = {
 	square: styles.square,
 };
 
-export type ContentEntryImageVariant = keyof typeof variants;
-
 export interface ContentEntryImageProps {
 	alt: string;
 	src: string;
 	variant: ContentEntryImageVariant;
 }
+
+export type ContentEntryImageVariant = keyof typeof variants;
 
 export function ContentEntryImage(props: ContentEntryImageProps) {
 	return (

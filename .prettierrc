@@ -1,6 +1,10 @@
 {
 	"$schema": "http://json.schemastore.org/prettierrc",
-	"plugins": ["prettier-plugin-astro", "prettier-plugin-packagejson"],
+	"plugins": [
+		"prettier-plugin-astro",
+		"prettier-plugin-packagejson",
+		"prettier-plugin-sentences-per-line"
+	],
 	"overrides": [
 		{
 			"files": "*.astro",
