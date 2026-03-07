@@ -1,4 +1,3 @@
-
 import { CachedFactory } from "cached-factory";
 import { type ActiveElement, Chart, LinearScale, Tooltip } from "chart.js";
 import { Bar, type ChartProps } from "solid-chartjs";
@@ -25,7 +24,7 @@ export function BarChart(props: BarChartProps) {
 	});
 
 	// TODO: Fix reactivity reports added by recent eslint-plugin-solid version
-/* eslint-disable solid/reactivity */
+	/* eslint-disable solid/reactivity */
 	const dataLengthTotal = props.data.datasets.reduce(
 		(total, dataset) => total + dataset.data.length,
 		0,

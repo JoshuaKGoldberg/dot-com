@@ -24,13 +24,14 @@ const fontWeights = {
 
 export type FontWeight = keyof typeof fontWeights;
 
-export type TextProps<As extends keyof JSX.HTMLElementTags> = JSX.HTMLElementTags[As] & {
-	as: As;
-	children: JSX.Element;
-	class?: string | undefined;
-	fontSize?: FontSize;
-	fontWeight?: FontWeight;
-};
+export type TextProps<As extends keyof JSX.HTMLElementTags> =
+	JSX.HTMLElementTags[As] & {
+		as: As;
+		children: JSX.Element;
+		class?: string | undefined;
+		fontSize?: FontSize;
+		fontWeight?: FontWeight;
+	};
 
 export function Text<As extends keyof JSX.HTMLElementTags>(
 	props: TextProps<As>,
