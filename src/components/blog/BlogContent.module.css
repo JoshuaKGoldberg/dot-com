@@ -136,6 +136,11 @@
 	font-size: var(--fontSizeSmaller);
 }
 
+.article small {
+	display: flex;
+	gap: 0.35rem;
+}
+
 @media (min-width: 1017px) {
 	.article {
 		max-width: calc(var(--widthSlim) + 4rem);
