@@ -96,8 +96,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(eslint@10.0.3(jiti@2.6.1))
       joshuakgoldberg:
-        specifier: ^0.20.4
-        version: 0.20.4
+        specifier: ^0.21.0
+        version: 0.21.0
       knip:
         specifier: ^5.86.0
         version: 5.86.0(@types/node@24.2.0)(typescript@5.9.3)
@@ -114,7 +114,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2(prettier@3.8.1)
       prettier-plugin-sentences-per-line:
-        specifier: ^0.2.0
+        specifier: ^0.2.3
         version: 0.2.3(prettier@3.8.1)
       reading-time:
         specifier: 2.0.0-1
@@ -2859,8 +2859,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  joshuakgoldberg@0.20.4:
-    resolution: {integrity: sha512-aZvXbp4R0AJK/mwmCY7AQN3+TGIbwQ1wK8kM2NfXkBcXyDUKX0BSJoFyGz2ofGZDGj4o7gMJl4PaKSlOhYjN9g==}
+  joshuakgoldberg@0.21.0:
+    resolution: {integrity: sha512-67GZp15nHdVDyYojpEybFnqrRSrATCxj7J+NTSV+sNNXEewjYCd5gDSz1E7Jzsi3vHfVv0bZKZRGWIT7D7r9/w==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -7386,7 +7386,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  joshuakgoldberg@0.20.4:
+  joshuakgoldberg@0.21.0:
     dependencies:
       chalk: 5.6.2
 
