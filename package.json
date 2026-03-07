@@ -55,7 +55,7 @@
 		"eslint-plugin-regexp": "^3.0.0",
 		"eslint-plugin-solid": "^0.14.5",
 		"eslint-plugin-yml": "^3.3.1",
-		"joshuakgoldberg": "^0.21.1",
+		"joshuakgoldberg": "^0.21.2",
 		"knip": "^5.86.0",
 		"konami-emoji-blast": "^0.6.0",
 		"prettier": "^3.8.1",
