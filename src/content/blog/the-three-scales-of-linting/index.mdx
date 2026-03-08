@@ -1,0 +1,84 @@
+---
+description: "TODO"
+image:
+  alt: "TODO"
+  src: "~/assets/blog/zootopia-flash-mid-smile.png"
+pubDate: 2025-07-08
+series: Linters
+title: "The Three Scales of Linting"
+---
+
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+
+There's been a lot of movement around linting and performance in web development recently.
+Ultra-fast native speed linters such as Biome, deno lint, and Oxlint paved the way for shockingly fast speedups -- at the cost of switching languages.
+TypeScript-native projects such as tsl, TSSLint, and my own Flint are working on integrating more closely with TypeScript to attain some of those performance benefits while retaining the familiarity of TypeScript.
+
+Developers are already posting performance comparisons between many of these linters.
+I'm excited about the industry-wide push for faster linting.
+But "linting" is not a simple scenario to measure the performance of.
+"Linting" can mean any of three very different performance scenarios, which I call the three scales of linting:
+
+1. **Granular**: a small number of files at a time, such as one or more open files in an editor
+2. **Impacted**: a discrete set of files, along with any files impacted by those changes
+3. **Thorough**: re-linting an entire project due to a widespread update such as the linter itself
+
+Linter behavior across these three stages can vary widely.
+When comparing performance between linters, it's important to understand which of these three scales is being measured.
+
+## Granular
+
+> _A small number of files at a time, such as one or more open files in an editor._
+
+_Granular_ linting is by far the most common linting scenario.
+It typically occurs via an editor extension when a user changes one or more files that are open in their editor.
+Editor extensions generally re-lint open files whenever characters change.
+
+Granular linting almost always happens on a single file at a time.
+But it can also happen on multiple files at once, most commonly when a user changes something in one file that impacts one or more other open files.
+A user saving many files at a time with a bulk edit is another common cause of multi-file granular linting.
+
+## Impacted
+
+> _A discrete set of files, along with any files impacted by those changes._
+
+_Impacted_ is the optimal case of linting in CI.
+If your pull request only impacts a known set of source files, not your `package.json` or other global information, you typically wouldn't want to re-lint every single file in the codebase.
+You'd typically only want to re-lint the files that are changed and any files that transitively import from them.
+
+Most changesets / pull requests only impact a small number of related files.
+
+## Thorough
+
+> _Ae-linting an entire project due to a widespread update such as the linter itself._
+
+## Why This Matters Now
+
+Today's linters generally only support the _Exhaustive_ level.
+
+### JavaScript Linters
+
+ESLint does not support any concept of cross-file information [^TODO] and so its cache cannot recognize cross-file impacts of changes [^TODO].
+Its editor extensions, as a result, have bugs around re-linting files as their dependencies change [^TODO].
+
+This is slow and wasteful.
+Large swathes of users mistakenly believe typed linting
+
+### Native Linters
+
+Native speed linters such as Biome and Oxlint run so absurdly quickly that they haven't had a need for caching.
+They also haven't generally supported type information in core (more on this later).
+
+## Next Generation Support
+
+### Typed Native Linters
+
+Biome recently added a partial re-implementation of TypeScript's type retrieval APIs [^TODO].
+It remains to be seen whether that addition will slow Biome down to the point of a cache being worthwhile.
+
+### Hybrid Linters
+
+I'm still of the belief that ["hybrid" linters](/blog/hybrid-linters-the-best-of-both-worlds) are the way to go for mainstream linting.
+My [Flint](https://github.com/JoshuaKGoldberg/flint) project has a rudimentary file cache designed for typed linting.
+Initial performance measurements have been promising: for a ~TODO file project with ~TODO _Impacted_ files, lint time typically shrinks from ~TODO seconds to ~TODO seconds.
