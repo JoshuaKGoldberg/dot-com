@@ -1,0 +1,517 @@
+---
+description: "Looking back at the accomplishments and goals from my fourth and final year as a full-time independent open source maintainer."
+image:
+  alt: "Smiling photo of Dimitri and Katharine and me in SquiggleConf 2025 shirts at the Boston harbor"
+  src: "~/assets/blog/squiggleconf-2025-organizers-square.png"
+pubDate: 2026-03-08
+tags:
+  [
+    "conferences",
+    "open source",
+    "organizing",
+    "recap",
+    "speaking",
+    "year in review",
+  ]
+series: Personal
+title: "2025 In Review"
+---
+
+import emojiblastHomepageBlasts from "~/assets/blog/emojiblast-homepage-blasts.webm";
+import squiggleconf2025Everyone from "~/assets/blog/squiggleconf-2025-everyone.webp";
+import squiggleconf2025Organizers from "~/assets/blog/squiggleconf-2025-organizers.webp";
+import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
+import LabeledVideo from "~/components/blog/mdx/LabeledVideo.astro";
+import { PieChart } from "~/components/PieChart";
+
+I like looking back at large time periods and the major events that happened during them.
+It's useful to reflect back on what the most important happenings were, and to learn from any missed opportunities or mistakes.
+Let's do that now for 2025.
+
+## Finances
+
+> 👉 [2025 Finances in Review](/blog/2025-finances-in-review) covers my 2025 finances.
+
+My earnings in 2025 were larger than [2024 Finances in Review](/blog/2024-finances-in-review).
+I took in a total income of roughly **$73k** for 2025, compared to $60k for 2024.
+
+$73k for the year is unusually high for an independent open source maintainer as well as unusually low for an developer with a decade of programming experience based in a major American city.
+More on that at the end.
+
+## Goals
+
+I'd mentioned yearly goals in [My Plans for 2025](/blog/my-plans-for-2025) last year.
+Many of those goals had concrete objectives.
+Did I satisfy those objectives?
+
+| Status     | Count | Percentage |
+| ---------- | ----- | ---------- |
+| Total      | 46    | _-_        |
+| ✅ Hit     | 27    | ~59%       |
+| ⏳ Partial | 11    | ~24%       |
+| ❌ Miss    | 8     | ~17%       |
+
+...for the most part!
+Over 80% of my objectives were at least partially done.
+I completely did over half my objectives.
+
+Let's compare with [2024's year-long goals](/blog/2024-in-review#goals) and [2023's year-long goals](/blog/2023-in-review#year-long-goals):
+
+| Year | Count | Miss / % | Partial / % | Hit/ %    |
+| ---- | ----- | -------- | ----------- | --------- |
+| 2025 | 46    | 8 / ~17% | 11 / ~24%   | 27 / ~59% |
+| 2024 | 37    | 8 / ~22% | 14 / ~38%   | 15 / ~41% |
+| 2023 | 34    | 7 / ~21% | 10 / ~29%   | 17 / ~50% |
+
+Much, much better than before!
+Both _Miss_ and _Partial_ went down in percentage.
+_Hit_ jumped to the highest in my three years of tracking goals.
+You love to see it.
+
+The higher total count came from me being more granular in tracking goals.
+Let's take a look those specific goals, by area.
+
+### Open Source
+
+The biggest and most important area of goals for me is my open source work.
+My primary occupation in 2025 was doing this full-time, and my area of focus was tooling for web developers.
+The following projects are the ones I saw as providing the most positive impact for the ecosystem.
+
+#### [typescript-eslint](https://typescript-eslint.io)
+
+> [My Plans for 2025 > typescript-eslint](/blog/my-plans-for-2025#typescript-eslint)
+
+| Objective                                        | Status                               |
+| ------------------------------------------------ | ------------------------------------ |
+| Rework the website to better explain the project | ✅ Done: redesigned landing page     |
+| Finish the year with &lt;250 issues              | ✅ Close enough: ~255 open           |
+| Publish &ge;4 long-requested blog posts          | ⏳ Partial: 3 of 4 published         |
+| Close out &ge;3 of 4 issues from 2019            | ⏳ Partial: 2 of 4 closed            |
+| Close out &ge;20 of 26 issues from 2019-2020     | ⏳ Partial: 11 closed; 15 still open |
+
+typescript-eslint is the project I'm most closely associated with.
+I spend more time on it than any other project and receive more income from it than any other two sources combined.
+
+One of typescript-eslint's biggest user pain points is general confusion over what the project actually is.
+The project's old, verbose landing page only somewhat helped with that.
+We [revamped the typescript-eslint.io homepage](https://github.com/typescript-eslint/typescript-eslint/pull/11345) in 2025 to be more succinct and direct with important information.
+
+We also published 3 blog posts through the first week of January for more targeted areas of common user confusion:
+
+- [Avoiding `any`s with Linting and TypeScript](https://typescript-eslint.io/blog/avoiding-anys)
+- [Typed Linting with Project Service](https://typescript-eslint.io/blog/project-service)
+- [Revamping the `ban-types` rule](https://typescript-eslint.io/blog/revamping-the-ban-types-rule)
+
+I'd also wanted to trim down the issue backlog a fair bit, to make the project easier to manage.
+We have a lot of old long-awaited issues sitting for many years.
+Although we got the total number down to about what I'd hoped for, we still have many issues from 5 or more years ago.
+
+I'd say 2025 was overall a pretty good year for typescript-eslint.
+We addressed some long-requested documentation points and kept the issue tracker managed.
+Life is good.
+
+#### [ESLint](https://eslint.org)
+
+> [My Plans for 2025 > ESLint](/blog/my-plans-for-2025#eslint)
+
+| Objective                                  | Status                                  |
+| ------------------------------------------ | --------------------------------------- |
+| Consistently work as an ESLint team member | ⏳ Only consistently active some months |
+
+As with 2024, I didn't work as much on ESLint as I'd hoped to through the year.
+I love the ESLint project and am in theory excited about it.
+Earlier in the year I had several months with consistent work.
+
+But in practice, ESLint is a relatively older project with a technical steering committe that I differ in opinion on for many key points.
+There aren't that many areas of work in it that I'm intrinsically motivated to do.
+I think it's to be expected that I stabilize at a handful of hours of month.
+
+#### [Mocha](https://mochajs.org)
+
+> [My Plans for 2025 > create-typescript-app](/blog/my-plans-for-2025#mocha)
+
+| Objective                                                 | Status                                  |
+| --------------------------------------------------------- | --------------------------------------- |
+| Release the new Mocha website                             | ✅ Shipped!                             |
+| Release Mocha 12 with long-pending small breaking changes | ⏳ Still partially-complete and in beta |
+| Provide first-party TypeScript types with Mocha           | ❌ Not started                          |
+
+This year saw more pre-work on Mocha than real user-facing features.
+The biggest point of success was shipping the new [mochajs.org](https://mochajs.org) built on Astro Starlight.
+That was lovely and allowed us to remove a ton of old website-only devDependencies from the Mocha repository.
+
+But, we had less maintainer time than I'd expected, and still haven't finished merging all the PRs for [mocha/milestone/66 v12.0.0](https://github.com/mochajs/mocha/milestone/66).
+Fixing old annoyances and removing long-deprecated features will be good for the project.
+It's a bummer to not have gotten v12 or [mocha#4154 🚀 Feature: TypeScript .d.ts type declarations](https://github.com/mochajs/mocha/issues/4154) out the door yet.
+
+#### [Yeoman](https://yeoman.io)
+
+> [My Plans for 2025 > Yeoman](/blog/my-plans-for-2025#yeoman)
+
+| Objective                                                                       | Status               |
+| ------------------------------------------------------------------------------- | -------------------- |
+| End 2025 having triaged and reviewed all Yeoman issues and pull requests        | ✅ Roughly done      |
+| Update `yo` and other packages to no longer print deprecation warnings when run | ⏳ Still in progress |
+| Clean up all known out-of-date information on [yeoman.io](https://yeoman.io)    | ❌ Not started       |
+
+Yeoman is a weird one.
+I started 2025 with a lot of enthusiasm and work on triaging issues and reviewing PRs.
+I even made some progress on fixing old issues myself.
+
+But, as the year went on, I started to fall behind on other projects, and deprioritized Yeoman work.
+At this point most of the feature work done on Yeoman is still from [mshima](http://github.com/mshima), who predates my involvement.
+
+I still harbor fond feelings for the project and would like to finish getting it stabilized.
+Eventually.
+
+#### [Bingo](https://create.bingo)
+
+> [My Plans for 2025 > Bingo](/blog/my-plans-for-2025#bingo)
+
+| Objective                                                               | Status                                |
+| ----------------------------------------------------------------------- | ------------------------------------- |
+| Create in-memory, Handlebars-based, and Blocks-based templating systems | ✅ All shipped                        |
+| Create an automated repository migration flow based on GitHub Actions   | ✅ Running on most of my repositories |
+| Release a well-documented Bingo v1                                      | ⏳ Not 1.0, but fairly stable         |
+
+The [Bingo](https://create.bingo) project -formerly named `create`- is my take on a templating engine.
+Its feature set represents points that I think no existing engine comes close to capturing a majority of.
+
+Bingo went pretty darn well in 2025!
+I figured out all of the core design principles necessary for use in create-typescript-app.
+CTA is now wholly built on top of Bingo, and most of my CTA-templated repositories use its transitions flow to stay up-to-date automatically.
+
+Through working on Bingo, I discovered quite a few unexpected design questions for it that will need to be resolved before reaching 1.0.
+But in the meantime it's stable and ready for general use.
+
+#### [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app)
+
+> [My Plans for 2025 > create-typescript-app](/blog/my-plans-for-2025#create-typescript-app)
+
+| Objective                                                          | Status                   |
+| ------------------------------------------------------------------ | ------------------------ |
+| Release a stable create-typescript-app@v2 built on Bingo           | ✅ Shipped               |
+| Reduce root files from 19 to 16                                    | ⏳ Down to 17            |
+| Close out 14 of the 19 open issues I'd filed through 2022 and 2023 | ⏳ Down to 14 (closed 5) |
+| Support monorepos                                                  | ❌ Not started           |
+
+As with Bingo, create-typescript-app is also pretty darn stable.
+I'm generally happy with it: in particular using its Bingo/Stratum-based templates to keep many of my repositories up-to-date automatically.
+
+I wish I'd had time to put more effort into housekeeping for it.
+It's got several older issues and general points of cleanup I think I could close out with a little more dedicated though.
+Monorepo support for my other, bigger projects would be great.
+Ah well.
+
+#### [Flint](https://flint.fyi)
+
+> [My Plans for 2025 > Mint](/blog/my-plans-for-2025#mint)
+
+| Objective                                                                      | Status     |
+| ------------------------------------------------------------------------------ | ---------- |
+| Publish a blog post fully describing my idealized general web linter           | ✅ Shipped |
+| Prototype a general web linter with first-class support for cross-file linting | ✅ Shipped |
+
+I absolutely crushed this set of goals.
+
+First, I published not one but _five_ blog posts deep diving into web linting ideals:
+
+- [Hybrid Linters: The Best of Both Worlds](https://www.joshuakgoldberg.com/blog/hybrid-linters-the-best-of-both-worlds)
+- [If I Wrote a Linter, Part 1: Architecture](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-1-architecture)
+- [If I Wrote a Linter, Part 2: Developer Experience](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-2-developer-experience)
+- [If I Wrote a Linter, Part 3: Ecosystem](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-3-ecosystem)
+- [If I Wrote a Linter, Part 4: Summary](https://www.joshuakgoldberg.com/blog/if-i-wrote-a-linter-part-4-summary)
+
+Then, I more than just prototyped a new linter: I started a full new project!
+[Flint](https://flint.fyi) is a "fast, friendly linter for JavaScript, TypeScript, and more".
+It has all sorts of goodies I'd only dreamed of for 2025:
+
+- Language-agnostic core with support for all the main web programming languages
+- Rich cross-file linting, including fixes/suggestions and caching
+- Plans detailing how over a thousand of the most popular lint rules are to be categorized
+- Hundreds of those rules implemented with documentation and high test coverage
+- An [awesome team of lovely people](https://flint.fyi/project/team) helping out
+
+Flint will now be my primary project in 2026.
+I'm thrilled.
+❤️‍🔥
+
+#### OctoGuide
+
+> [My Plans for 2025 > Glint](/blog/my-plans-for-2025#glint)
+
+| Objective                                             | Status     |
+| ----------------------------------------------------- | ---------- |
+| Make a stable lint experience for GitHub repositories | ✅ Shipped |
+| Onboard OctoGuide to be used in create-typescript-app | ✅ Shipped |
+
+This year, I finally did the thing!
+[Octoguide](https://github.com/octoguide/bot) is a standalone... well, we don't want to call it a _linter_, because that has a bad taste for many developers.
+It's a bot that helps contributors work well in repositories.
+
+It's shipped and stable.
+And even has a co-maintainer (shoutout [CyleWaitForIt](https://github.com/cylewaitforit)!).
+Whoohoo!
+
+#### TypeStat (`ts-lift`)
+
+> [My Plans for 2025 > TypeStat (`ts-lift`)](/blog/my-plans-for-2025#typestat-ts-lift)
+
+| Objective                                                            | Status                       |
+| -------------------------------------------------------------------- | ---------------------------- |
+| Rebrand, re-document, and stabilize TypeStat as a `ts-lift` monorepo | ❌ Prototyped, but not ready |
+| Create a `ts-initialize` project within `ts-lift`                    | ❌ Not started               |
+| Create a `ts-enhance` project within `ts-lift`                       | ❌ Not started               |
+
+I ran out of time and did not work on the TypeStat re-architecture.
+The create-typescript-app monorepo support I'd hoped to make this easier also didn't land in 2025.
+Ah well.
+
+At this point, I think it'd be better for me to:
+
+1. Focus on [Flint](https://flint.fyi), as its cross-file linting support is likely to take over some areas of `ts-enhance`
+2. Wait until I'm more experienced with AI agents to see how they should interact with the project
+
+Further procrastination for this one.
+
+### Other Projects
+
+These projects aren't widely known names the way the larger ones.
+They're smaller time investments that I think are valuable in their own right.
+
+#### [eslint-plugin-expect-type](https://github.com/JoshuaKGoldberg/eslint-plugin-expect-type)
+
+> [My Plans for 2025 > eslint-plugin-expect-type](/blog/my-plans-for-2025#eslint-plugin-expect-type)
+
+| Objective                      | Status          |
+| ------------------------------ | --------------- |
+| Get adopted by DefinitelyTyped | ❌ Not accepted |
+
+Unfortunately, I didn't have bandwidth to work with the DefinitelyTyped (TypeScript) team on adoption in DT.
+They're almost exclusively focusing on the typescript-go port.
+Jake Bailey also raised a good point that depending on an external plugin for such a core are of DT linting restricts their ability to iterate.
+So, no progress on adoption.
+
+#### [eslint-plugin-package-json](https://github.com/JoshuaKGoldberg/eslint-plugin-package-json)
+
+> [My Plans for 2025 > eslint-plugin-package-json](/blog/my-plans-for-2025#eslint-plugin-package-json)
+
+| Objective                                                                  | Status  |
+| -------------------------------------------------------------------------- | ------- |
+| Objective: Finish achieving feature parity with other package.json linters | ✅ Done |
+
+We did the thing!
+eslint-plugin-package-json is at least approximately feature complete with every other tool I'd found to validate `package.json` files.
+It even boasts some newly made rules that few-to-no other tools have.
+
+Additional shoutout to [Michael Faith](https://github.com/michaelfaith) for joining on as a maintainer for this project, as well as dependencies like [`eslint-fix-utils`](https://github.com/JoshuaKGoldberg/eslint-fix-utils) and [package-json-validator](https://github.com/JoshuaKGoldberg/package-json-validator).
+Michael's done a ton of work, including most of the recent activity in all three repositories over the last few months.
+I have passed on ownership of all three of those repositories to Michael.
+Hell yeah!
+
+#### Other Packages
+
+> [My Plans for 2025 > Other Packages](/blog/my-plans-for-2025#other-packages)
+
+| Objective                                                             | Status  |
+| --------------------------------------------------------------------- | ------- |
+| Objective: Maintain open source repositories in my areas of interest. | ✅ Done |
+
+I did the things.
+[github.com/JoshuaKGoldberg#what-im-working-on](https://github.com/JoshuaKGoldberg#what-im-working-on) has tables of the projects I work on.
+
+## Community Engagement
+
+As with 2024, I again held off of too traveling to a large number of events.
+For speaking, I only went to a total of five conferences.
+For organizing, I continued to work on two event series:
+
+- [Boston TS Club](https://bostonts.club): a monthly meetup for TypeScript developers in the Boston area
+- [SquiggleConf](https://squiggleconf.com): _"a conference for excellent web dev tooling"_ held yearly in Boston
+
+I also include general education work as part of community engagement, including blogging and speaking at conferences.
+Like it or not, I'm someone people look to for linting and TypeScript advice.
+Many of the ecosystem changes I push for require solid resources in both spoken -e.g. conference talks- and written -i.e. blog posts and documentation- form.
+
+Let's see how I did with my 2025 community engagement goals...
+
+### Conferences
+
+> [My Plans for 2025 > Conferences](/blog/my-plans-for-2025#conferences)
+
+| Objective                                | Status                      |
+| ---------------------------------------- | --------------------------- |
+| Give all conference talks I'm happy with | ✅ Yes, I personally think? |
+
+I was happy with my conference talks this year!
+By only giving on average one every two months, I was able to put a lot of craft and thought into each one.
+I think my conference talks have generally been objectively pretty good.
+I think they have clear narratives and code examples that explain useful topics around TypeScript.
+
+That being said, I'm not great at soliciting feedback.
+If you have feedback for how I can improve, please let me know!
+😊
+
+### Blogging
+
+| Objective                                                 | Status                               |
+| --------------------------------------------------------- | ------------------------------------ |
+| Publish at least one blog post every three weeks          | ✅ On average, one every ~2.75 weeks |
+| Publish at least one post in each blog every three months | ⏳ Mixed                             |
+
+I published a total of 19 posts in 2025 (and the first few days of January):
+
+- [Bingo's blog](https://create.bingo/blog): 2
+- [Flint's blog](https://flint/fyi/blog): 2
+- [_Learning TypeScript_ articles](https://learningtypescript.com/articles): 2
+- [This personal blog](/blog): 10
+- [typescript-eslint's blog](https://typescript-eslint.io/blog): 3
+
+That's an average of (52 weeks in 2025) / (19 posts in 2025) = ~2.737 weeks per post.
+Which is better than I expected!
+I think splitting up my _"If I Wrote a Linter"_ series helped with that number.
+
+On the other hand, two of my main three blog areas didn't hit the frequency averages I'd hoped for:
+
+- _Learning TypeScript_: ❌ 1 every 6 months
+- Personal: ✅ 1 every ~1.2 months
+- typescript-eslint: ⏳ 1 every 4 months
+
+More consistency would have been better for those not-so-frequent two areas.
+_Learning TypeScript_'s articles in particular are both generally useful to TypeScript developers and help with book sales.
+I'd have really liked to have found more time for them.
+
+### Boston TS Club
+
+> [My Plans for 2025 > Boston TS Club](/blog/my-plans-for-2025#boston-ts)
+
+| Objective                                                          | Status  |
+| ------------------------------------------------------------------ | ------- |
+| Produce ten successful monthly meetups for Boston TS Club          | ✅ Done |
+| Create and keep schedules for those meetups                        | ✅ Done |
+| Step down as "director" and eliminate the singular leadership role | ✅ Done |
+
+💯.
+🔥.
+Absolute success.
+
+We held 11 monthly meetups (January through November) and one workshop in collaboration with [Boston Code and Coffee](https://www.bostoncodeandcoffee.com).
+I think by now we're all feeling very practiced with how it's going.
+Multiple events went smoothly with only 1-2 core organizers in attendance.
+
+We also did away with the "director" role.
+Our meetings have an autonomous system with no single person in charge.
+I'm very pleased about that.
+
+### SquiggleConf 2025
+
+> [My Plans for 2025 > SquiggleConf](/blog/my-plans-for-2025#squiggleconf)
+
+| Objective                                                     | Status                            |
+| ------------------------------------------------------------- | --------------------------------- |
+| Successfully run SquiggleConf 2025 without any major problems | ✅ It went great!                 |
+| Get 150 peak attendance                                       | ✅ We did it!                     |
+| Break even 💸                                                 | ✅ Depending on the math: we did! |
+| Don't burn out                                                | ✅ I feel good!                   |
+
+💯.
+🔥.
+Absolute success!
+
+- Approximately 150 attendees including staff and volunteers
+- A universally well-received talk lineup and out-of-conference events
+- No major calamities during the conference
+
+The conference was, again, _awesome_.
+I had so many great chats with attendees, speakers, and volunteers.
+The speakers were fantastic: we received lots of great feedback on the talks, and many of the speakers went out of their way to engage with the audience throughout the event.
+I thoroughly enjoyed the out-of-conference events such as the volunteering event, after-conference hangout,
+
+Our selection of speakers, as with Boston TS Club, was more diverse than the industry's average.
+Roughly 33% of the talk speakers do not identify as men.
+As with 2024, I would have preferred closer to 50%, but given how many conferences I've turned down per my [speaker rider's request to not have a supermajority of white dudes](https://github.com/JoshuaKGoldberg/speaker-rider?tab=readme-ov-file#diversity-equity-and-inclusion), I am not upset about this.
+
+As for breaking even, we'll post a 2025 finances in review post soon.
+The tl;dr will be: if you don't count one-time equipment purchases (that we will eventually sell), we at least broke even!
+Whew!
+
+Two even brighter notes than 2024:
+
+- I didn't burn out! The second year had far fewer "unknown unknowns" than the first.
+- Katharine Mitropoulous joined the core organizing teama and was an absolute superhero.
+
+_We did it, Dimitri and Katharine!_
+
+<LabeledImage
+	alt="Smiling photo of Dimitri and Katharine and me in SquiggleConf 2025 shirts at the Boston harbor"
+	description="We did it, Dimitri and Katharine!"
+	src={squiggleconf2025Organizers}
+/>
+
+## Personal
+
+### Health
+
+> [My Plans for 2025 > Health](/blog/my-plans-for-2025#health)
+
+| Objective                                         | Status             |
+| ------------------------------------------------- | ------------------ |
+| Eat healthy, balanced meals most days of the week | ✅ Yes, most weeks |
+| Reliably work out about three times a week        | ✅ Yes, most weeks |
+
+I did well for my health in 2025!
+I'm now in the habit of going to bed around 10-11pm and waking up around 6-7am (this helps tremendously with my chronic insomnia).
+I cook most of my meals at home and work out a little over three days a week on average.
+
+It feels really, _really_ good to keep making progess on my personal health.
+Or from another perspective: I feel much less... _yucky_ much of the time.
+
+Progress. 💪
+
+### Personal Accountability
+
+> [My Plans for 2025 > Personal Accountability](/blog/my-plans-for-2025#personal-accountability)
+
+| Objective                                               | Status |
+| ------------------------------------------------------- | ------ |
+| Have confidence in the amount of work I've accomplished | ✅ Yes |
+| Feel good about the amount of work I've accomplished    | ✅ Yes |
+
+Perhaps related to the health improvements, I actually feel very good about 2025.
+Although I didn't hit most of my goals, I got a ton of great work out the door and shipped most of the impactful points.
+
+It fels weird to think back on my mental state from two or more years ago.
+I was much more scattered and stressed back then.
+I'm relieved to not be so much now.
+
+## Closing Thoughts
+
+2025 was a good year for me.
+I didn't get everything I wanted done, but I got through a good number of the expected tasks.
+And I stabilized a heck of a lot of my projects.
+It feels really good to think about the state of them, especially compared to last year
+
+The biggest learning from the year was that independent open source work is too independent for me.
+As I mentioned in my [2025 Finances in Review](/blog/2025-finances-in-review), it's lonely and isolating to work independently the way I have.
+There are so few full-time indie open source maintainers, most of us are either spread thin across a bunch of different projects or work long-term on larger projects.
+But even working long-term on larger projects isn't the same as having a dedicated team, manager, mentor, HR, etc.
+
+Even if I were to spend several more years and get my open source sponsorships to a long-term sustainable level, I don't think I'd be happy long-term in open source.
+The current nature of the industry discourages people from doing what I have.
+What rare maniac would forgo a real developer's benefits+salary to work on grossly underfunded projects and get yelled at by strangers online?
+It's a ridiculous endeavor.
+
+Some other open source maintainers have had a better go at it.
+Many have gotten involved with fellow maintainers and projects, staving off the isolation.
+I'm really happy for them.
+But I've learned that I'm not made to stay in open source more than a few years at a time.
+
+Thanks again to all the awesome people who've helped make my open source journey and 2025 wonderful.
+I appreciate you all more than I can express here, and I'm looking forward to continuing to work with you in my spare time.
+💖
+
+<LabeledImage
+	alt="High-level photo of everyone kneeling or standing, smiling, in the front of an auditorium. On the screen, the SquiggleConf 2025 logo is visible."
+	description="Group photo of everyone at SquiggleConf 2025. I was elated the whole time."
+	src={squiggleconf2025Everyone}
+/>
