@@ -1,16 +1,24 @@
+---
+import XMark from "astro-heroicons/micro/XMark.astro";
+import Moon from "astro-heroicons/outline/Moon.astro";
+import Sun from "astro-heroicons/outline/Sun.astro";
+---
+
 <div class="theme-buttons">
 	<button
 		aria-label="Theme toggle (enable JavaScript to use)"
 		class="theme-button"
 		id="themeToggle"
 	>
+		<Moon id="moon" width={24} height={24} />
+		<Sun id="sun" width={28} height={28} />
 	</button>
 	<button
 		aria-label="Clear theme preference (enable JavaScript to use)"
 		class="theme-button"
 		id="themeClear"
 	>
-		✖
+		<XMark width={16} height={16} />
 	</button>
 </div>
 
@@ -39,6 +47,8 @@
 	}
 
 	function initialize() {
+		html().classList.remove("theme-animated");
+
 		const startingTheme =
 			typeof localStorage !== "undefined" && localStorage.getItem("theme");
 
@@ -51,12 +61,14 @@
 		updateElementsForTheme(theme);
 
 		clear().addEventListener("click", () => {
+			html().classList.add("theme-animated");
 			localStorage.removeItem("theme");
 			clear().classList.remove("clear-active");
 			updateElementsForTheme(getThemePreference());
 		});
 
 		toggle().addEventListener("click", () => {
+			html().classList.add("theme-animated");
 			clear().classList.add("clear-active");
 
 			const newTheme = html().classList.contains("dark") ? "light" : "dark";
@@ -73,12 +85,19 @@
 <style>
 	.theme-buttons {
 		position: relative;
+		mask-image: linear-gradient(
+			to bottom,
+			black calc(95% - 0.35rem),
+			transparent 95%
+		);
+		padding: 0 1rem;
 	}
 
 	.theme-button {
 		background: none;
 		border: transparent;
 		cursor: pointer;
+		display: flex;
 	}
 
 	#themeToggle {
@@ -88,39 +107,78 @@
 		width: 2.25rem;
 	}
 
-	#themeToggle::after,
-	#themeToggle::before {
+	#themeToggle svg {
 		display: block;
 		top: 0;
 		position: absolute;
 		transform-origin: bottom center;
-		transition:
-			var(--transitionMedium) opacity,
-			var(--transitionMedium) transform;
+		animation-duration: var(--transitionSlow);
+		animation-fill-mode: both;
+		animation-timing-function: ease;
 	}
 
-	#themeToggle::after {
-		content: "🌞";
+	#moon {
+		margin-top: 0.15rem;
 	}
 
-	#themeToggle::before {
-		content: "🌝";
-	}
-
-	html.dark #themeToggle::after {
+	html.dark #sun {
+		opacity: 0;
 		transform: rotate(90deg);
-		opacity: 0;
 	}
 
-	html:not(.dark) #themeToggle::before {
-		transform: rotate(-90deg);
+	html.dark #moon {
+		opacity: 1;
+		transform: rotate(0deg);
+	}
+
+	html:not(.dark) #moon {
 		opacity: 0;
+		transform: rotate(90deg);
+	}
+
+	html:not(.dark) #sun {
+		opacity: 1;
+		transform: rotate(0deg);
+	}
+
+	html.theme-animated.dark #sun,
+	html.theme-animated:not(.dark) #moon {
+		animation-name: orbitOutRight;
+		animation-delay: 0s;
+	}
+
+	html.theme-animated.dark #moon,
+	html.theme-animated:not(.dark) #sun {
+		animation-name: orbitInLeft;
+		animation-delay: calc(var(--transitionSlow) / 2);
+	}
+
+	@keyframes orbitInLeft {
+		from {
+			transform: rotate(-90deg);
+			opacity: 0;
+		}
+		to {
+			transform: rotate(0deg);
+			opacity: 1;
+		}
+	}
+
+	@keyframes orbitOutRight {
+		from {
+			transform: rotate(0deg);
+			opacity: 1;
+		}
+		to {
+			transform: rotate(90deg);
+			opacity: 0;
+		}
 	}
 
 	#themeClear {
 		color: var(--colorForeground);
 		position: absolute;
-		right: -1rem;
+		right: -1.5rem;
 		margin-top: 0;
 		opacity: 1;
 		transition:

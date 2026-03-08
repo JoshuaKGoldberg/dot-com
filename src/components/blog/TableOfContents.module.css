@@ -24,8 +24,8 @@
 	max-height: 0;
 	overflow: hidden;
 	transition:
-		max-height var(--transitionSlow),
-		visibility var(--transitionSlow);
+		max-height var(--transitionSlowest),
+		visibility var(--transitionSlowest);
 	width: 100%;
 }
 
