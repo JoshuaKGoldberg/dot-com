@@ -50,6 +50,9 @@ importers:
       astro:
         specifier: ^5.18.0
         version: 5.18.0(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2)
+      astro-heroicons:
+        specifier: 2.1.5-1
+        version: 2.1.5-1
       cached-factory:
         specifier: ^0.1.0
         version: 0.1.0
@@ -1754,6 +1757,9 @@ packages:
   astro-eslint-parser@1.3.0:
     resolution: {integrity: sha512-aOLc/aDR7lTWAHlytEefwn4Y6qs6uMr69DZvUx2A1AOAZsWhGB/paiRWPtVchh9wzMvLeqr+DkbENhVreVr9AQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  astro-heroicons@2.1.5-1:
+    resolution: {integrity: sha512-Ciy8T7YkH+ZIIUR6czHH8FG/tpI1jGpbUQhlRjB0bi9FTy3gZ1YoQqNhteGeZQHmak+t1GTwfr3b/Vv5ls7Wiw==}
 
   astro@5.18.0:
     resolution: {integrity: sha512-CHiohwJIS4L0G6/IzE1Fx3dgWqXBCXus/od0eGUfxrZJD2um2pE7ehclMmgL/fXqbU7NfE1Ze2pq34h2QaA6iQ==}
@@ -5880,6 +5886,8 @@ snapshots:
       semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
+
+  astro-heroicons@2.1.5-1: {}
 
   astro@5.18.0(@types/node@24.2.0)(jiti@2.6.1)(rollup@4.59.0)(typescript@5.9.3)(yaml@2.8.2):
     dependencies:

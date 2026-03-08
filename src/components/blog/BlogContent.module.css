@@ -5,7 +5,7 @@
 	gap: 1rem;
 	font-weight: 300;
 	line-height: var(--lineHeightParagraph);
-	transition: line-height var(--transitionSlow);
+	transition: line-height var(--transitionSlowest);
 }
 
 .article a {

@@ -29,7 +29,8 @@
 
 		--transitionFast: 117ms;
 		--transitionMedium: 280ms;
-		--transitionSlow: 700ms;
+		--transitionSlow: 490ms;
+		--transitionSlowest: 700ms;
 
 		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
 
