@@ -10,14 +10,6 @@ export interface ProjectEntryProps {
 	project: Project;
 }
 
-function projectUrl({ owner = "JoshuaKGoldberg", repo, url }: ProjectBase) {
-	return url ?? `https://github.com/${owner}/${repo}`;
-}
-
-function projectTitle(project: ProjectBase) {
-	return project.name ?? project.repo;
-}
-
 export function ProjectEntry(props: ProjectEntryProps) {
 	return (
 		<ContentEntry
@@ -57,4 +49,12 @@ export function ProjectEntry(props: ProjectEntryProps) {
 			)}
 		</ContentEntry>
 	);
+}
+
+function projectTitle(project: ProjectBase) {
+	return project.name ?? project.repo;
+}
+
+function projectUrl({ owner, repo, url }: ProjectBase) {
+	return url ?? `https://github.com/${owner}/${repo}`;
 }

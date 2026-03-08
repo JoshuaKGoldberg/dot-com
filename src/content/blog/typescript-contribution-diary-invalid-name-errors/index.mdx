@@ -98,7 +98,8 @@ To verify, I checked what a few different JavaScript engines emit for the `const
 - Internet Explorer: `The use of a keyword for an identifier is invalid`
 
 Wow.
-I never thought I'd see the day when the _Internet Explorer_ error message is better than both Chrome's and Firefox's. 😂
+I never thought I'd see the day when the _Internet Explorer_ error message is better than both Chrome's and Firefox's.
+😂
 
 Anyway, none of these were particularly better than what I was thinking of, so I added `'{0}' is not allowed as a variable declaration name.` as a new diagnostic to `diagnosticMessages.json`.
 
@@ -165,7 +166,8 @@ Is there a specific `SyntaxKind` range, or pre-existing utility, or...?
 I knew to start that it wouldn't be easy to set up an allowlist of ok `SyntaxKind` members, as that list would huge: `BreakKeyword`, `CaseKeyword`, `ClassKeyword`, ...
 
 I ran a few searches for regular expression terms like `/is.*valid.*identifier/` but didn't find any good utilities.
-Fortunately, the cases we're looking for are uniformly those where an English keyword (e.g. `case`) is the culprit, so... maybe we could filter on tokens that start with a valid `a-Z` letter?
+Fortunately, the cases we're looking for are uniformly those where an English keyword (e.g. `case`) is the culprit, so...
+maybe we could filter on tokens that start with a valid `a-Z` letter?
 
 A little bit of searching for `/string.*token/` and `/token.*string/` found a `tokenToString` utility for converting a token to its string.
 Great!
@@ -209,7 +211,8 @@ Super!
 ## Testing it Out
 
 I built these changes locally and ran `built/local/tsc.js` on a file containing `const case = 123;`.
-The errors were... somewhat encouraging!
+The errors were...
+somewhat encouraging!
 
 ```text
 index.ts:6:7 - error TS1389: 'case' is not allowed as a variable declaration name.
@@ -261,7 +264,8 @@ case ParsingContext.VariableDeclarations:
 
 ### Avoiding Array Allocations
 
-> [Comment](https://github.com/microsoft/TypeScript/pull/40105#discussion_r471921411): Nit: I kinda dislike allocating an array on each of these, but maybe it's fine. I would have just made it take the error-reporting callback.
+> [Comment](https://github.com/microsoft/TypeScript/pull/40105#discussion_r471921411): Nit: I kinda dislike allocating an array on each of these, but maybe it's fine.
+> I would have just made it take the error-reporting callback.
 
 Reasonable! Creating and spreading arrays is admittedly an odd thing to do here.
 
@@ -284,7 +288,8 @@ function abortParsingListOrMoveToNextToken(kind: ParsingContext) {
 
 ### Clarifying Scope
 
-> [Comment](https://github.com/microsoft/TypeScript/pull/40105#issuecomment-675258119): Does this also fix [#11648](https://github.com/microsoft/TypeScript/issues/11648). If not, that's okay, keep the change separate.
+> [Comment](https://github.com/microsoft/TypeScript/pull/40105#issuecomment-675258119): Does this also fix [#11648](https://github.com/microsoft/TypeScript/issues/11648).
+> If not, that's okay, keep the change separate.
 
 Correct, this change does not affect other forms of intolerant parser weirdness.
 

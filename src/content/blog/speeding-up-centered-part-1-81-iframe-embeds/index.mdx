@@ -78,7 +78,8 @@ The first issue I looked at on was the [centered.app/quotes](https://centered.ap
 It contains 81 `<iframe>` embeds of tweets from various happy users.
 The team had noticed the page takes a long time to load and spikes the user's CPU in the process.
 
-I tried visiting centered.app/quotes, and ... wow!
+I tried visiting centered.app/quotes, and ...
+wow!
 They were right.
 It was _aggravatingly_ slow.
 
@@ -89,7 +90,8 @@ It was _aggravatingly_ slow.
 />
 
 On my Mac Mini with an M1 Max chip, the page took _ten seconds_ to populate page
-content. Yikes! Users tend to abandon pages after ~2-3 seconds at most, let alone
+content.
+Yikes! Users tend to abandon pages after ~2-3 seconds at most, let alone
 double digits.
 
 I'm guessing this particular page had started off with only a small number of quotes to load, then slowly expanded and slowed down over time.

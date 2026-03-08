@@ -1,7 +1,7 @@
 import type { MarkdownHeading } from "astro";
 
 import clsx from "clsx";
-import { For, createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, For } from "solid-js";
 
 import { Squiggly } from "../Squiggly";
 import { Text } from "../Text";

@@ -107,7 +107,9 @@ If you started with this TSLint `rules` configuration...
 
 ### Rule Options
 
-Many lint rules take in some configuration settings, a.k.a. rule options, a.k.a. rule arguments, that modify the behavior of the rules in some known way.
+Many lint rules take in some configuration settings, a.k.a.
+rule options, a.k.a.
+rule arguments, that modify the behavior of the rules in some known way.
 TSLint's [`prefer-readonly`](https://palantir.github.io/tslint/rules/prefer-readonly) rule is a rule that uses a single option:
 
 - When configured as `prefer-readonly: true`, it ensures _all_ `private` class members whose values are never modified after initialization are declared with the `private` modifier
@@ -241,7 +243,8 @@ We've covered converting TSLint rules to their equivalent ESLint rules, converti
 Here's another case: _what if there is no ESLint equivalent yet?_
 
 Suppose you've written a beautiful custom TSLint rule and haven't yet converted it to ESLint, but you want to Do The Right Thing and switch your linter over.
-You _could_ run both ESLint and TSLint as separate commands, and only use TSLint for your custom rule... _or_ you could use [`typescript-eslint/eslint-plugin-tslint`](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin-tslint) to run TSLint _as an ESLint rule_.
+You _could_ run both ESLint and TSLint as separate commands, and only use TSLint for your custom rule...
+_or_ you could use [`typescript-eslint/eslint-plugin-tslint`](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin-tslint) to run TSLint _as an ESLint rule_.
 
 This package gives you an ESLint rule named `@typescript-eslint/tslint/config` that itself takes in a TSLint configuration and runs TSLint within your ESLint run.
 
@@ -323,14 +326,16 @@ Re-running tslint-to-eslint-config every few version releases is likely to get y
 
 Adding to the complication: both ESLint and TSLint can extend from community rulesets such as [tslint-microsoft-contrib](https://npmjs.com/package/tslint-microsoft-contrib) and [eslint-plugin-react](https://npmjs.com/package/eslint-plugin-react).
 
-This all means tslint-to-eslint-config needs to respect whatever ESLint configuration file exists on disk. There can now be at least _four_ sources of information for what goes into your ESLint configuration:
+This all means tslint-to-eslint-config needs to respect whatever ESLint configuration file exists on disk.
+There can now be at least _four_ sources of information for what goes into your ESLint configuration:
 
 - ESLint rules enabled directly in an existing ESLint configuration
 - ESLint rules enabled via an extended ruleset
 - TSLint rules enabled directly in an existing TSLint configuration
 - TSLint rules enabled via an extended ruleset
 
-_(even worse, a few ESLint environment or parser settings are also read from your `package.json` and/or `tsconfig.json` if available... yikes!)_
+_(even worse, a few ESLint environment or parser settings are also read from your `package.json` and/or `tsconfig.json` if available...
+yikes!)_
 
 What a nightmare.
 

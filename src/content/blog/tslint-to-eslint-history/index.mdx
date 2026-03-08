@@ -17,14 +17,16 @@ title: "TSLint to ESLint Part 1: Historical Context"
 Before we talk about today's solutions for linters, let's talk a bit about the necessary vocabulary.
 
 - **JavaScript** (**JS**) is our favorite dynamic, quasi-functional, quasi-object-oriented language of the web.
-- **ECMAScript** (**ES**) is the specification upon which JavaScript is based... so really, it's a fancy way of saying JavaScript.
+- **ECMAScript** (**ES**) is the specification upon which JavaScript is based...
+  so really, it's a fancy way of saying JavaScript.
 - **TypeScript** (**TS**) is a superset of JavaScript that adds types.
 - **Linters** are programs that scan source code for common logic and style complaints.
 
 ## Linters
 
 Today's accepted standard linter for JavaScript is [ESLint](https://eslint.org).
-It has great support for configuration, custom rules, editor plugins, and community rulesets... but we haven't always had such great tooling!
+It has great support for configuration, custom rules, editor plugins, and community rulesets...
+but we haven't always had such great tooling!
 The concept of a configurable linter is pretty recent in the grand scheme of JavaScript history.
 
 ### JSLint
@@ -50,14 +52,16 @@ Yuck.
 
 ### ESLint
 
-2013 saw the initial release of ESLint by Nicholas C. Zakas.
+2013 saw the initial release of ESLint by Nicholas C.
+Zakas.
 _What a tool!_
 ESLint got right what JSLint and JSHint struggled with from the start - a skeleton core with separate, pluggable rules in and out of the base project.
 Its API allowed community-recommended configurations such as the [Airbnb config](https://www.npmjs.com/package/eslint-config-airbnb).
 
 See the [ESLint introduction post](https://humanwhocodes.com/blog/2013/07/16/introducing-eslint) for some amusing discussions around ESLint's creation:
 
-> _"And so I somewhat regrettably introduce ESLint"_- Nicholas C. Zakas, 2013
+> _"And so I somewhat regrettably introduce ESLint"_- Nicholas C.
+> Zakas, 2013
 
 ### TSLint
 
@@ -66,7 +70,8 @@ _What about TypeScript_?
 
 Developers at Palantir, a tech company with an interesting reputation, released an equivalent tool to ESHint/ESLint named [TSLint](https://palantir.github.io/tslint) in 2013 to go along with the then-fledgling TypeScript.
 
-TSLint didn't have the rich feature support or community backing of ESLint, but your alternative was to compile your code to JavaScript and run ESLint on the results... which killed off compatibility with many stylistic rules.
+TSLint didn't have the rich feature support or community backing of ESLint, but your alternative was to compile your code to JavaScript and run ESLint on the results...
+which killed off compatibility with many stylistic rules.
 _(TypeScript's emitted code can be messy and doesn't preserve many whitespace choices from its source.)_
 We managed.
 
@@ -98,7 +103,8 @@ What a maintenance burden!
 You could also blame, in part, the difficulties of promoting open source in a for-profit organization.
 TSLint went mostly or partially unmaintained for long periods several times through 2017 and 2018.
 
-You could _also_ blame, in part, the rising controversies behind its backing sponsor Palantir - a company with numerous data privacy and government involvement controversies, particularly around the U.S. Immigration and Customs Enforcement (ICE).
+You could _also_ blame, in part, the rising controversies behind its backing sponsor Palantir - a company with numerous data privacy and government involvement controversies, particularly around the U.S.
+Immigration and Customs Enforcement (ICE).
 TSLint gained internet interest in 2018 when a notable JavaScript community member flooded its GitHub issues with political issues ([example](https://github.com/palantir/tslint/issues/4141)).
 
 Did one or two of these maintenance issues cause the others?

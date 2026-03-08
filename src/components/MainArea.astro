@@ -1,11 +1,4 @@
 ---
-import type { JSX } from "solid-js";
-
-export interface Props {
-	as: keyof JSX.IntrinsicElements;
-	class?: string | undefined;
-}
-
 const { as: As, ...rest } = Astro.props;
 ---
 
