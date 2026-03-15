@@ -39,7 +39,7 @@
 		"@konami-emoji-blast/astro": "^0.2.0",
 		"@types/eslint-plugin-jsx-a11y": "^6.10.1",
 		"accessible-astro-components": "^5.1.2",
-		"astro": "^5.18.0",
+		"astro": "^6.0.0",
 		"astro-heroicons": "2.1.5-1",
 		"cached-factory": "^0.1.0",
 		"chart.js": "^4.5.1",
