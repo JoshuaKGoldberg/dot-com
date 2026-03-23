@@ -57,7 +57,7 @@
 		"eslint-plugin-solid": "^0.14.5",
 		"eslint-plugin-yml": "^3.3.1",
 		"joshuakgoldberg": "^0.21.4",
-		"knip": "^5.86.0",
+		"knip": "^6.0.0",
 		"konami-emoji-blast": "^0.6.0",
 		"prettier": "^3.8.1",
 		"prettier-plugin-astro": "^0.14.1",
