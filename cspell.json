@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".github",
 		"dist",
@@ -171,6 +177,7 @@
 		"humblebrag",
 		"hyperfocusing",
 		"ified",
+		"inclusivity",
 		"influencers",
 		"intaking",
 		"Ioana",
