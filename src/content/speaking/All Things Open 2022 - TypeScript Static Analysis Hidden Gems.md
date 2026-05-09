@@ -8,4 +8,5 @@ links:
   Demo: "https://typescript-static-analysis-hidden-gems.vercel.app"
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtRH7pSjEMV1rrpTqQ"
   Repo: "https://github.com/JoshuaKGoldberg/typescript-static-analysis-hidden-gems"
+location: Raleigh, USA
 ---

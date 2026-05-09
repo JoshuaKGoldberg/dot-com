@@ -8,4 +8,5 @@ links:
   Demo: "https://webxr-karaoke-demo.glitch.me"
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtQ8tOAxwVUF_gTUPg?e=X0uUHn"
   Repo: "https://github.com/karaokenite/karaokenite-react"
+location: "Newquay, England"
 ---

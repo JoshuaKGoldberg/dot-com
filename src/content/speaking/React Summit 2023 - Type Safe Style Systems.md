@@ -2,7 +2,7 @@
 category: Conferences
 date: 2023-11-13
 event: "React Summit 2023"
-location: New York, USA
+location: New York City, New York USA
 links:
   Repo: "https://github.com/JoshuaKGoldberg/type-safe-style-systems"
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvuMi-FLvoFlHme1QPg"

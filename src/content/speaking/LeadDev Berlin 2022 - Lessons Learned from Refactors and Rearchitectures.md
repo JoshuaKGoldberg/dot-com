@@ -7,4 +7,5 @@ event: "LeadDev Berlin 2022"
 links:
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtRBZoYOVyAnuPeClQ"
   Video: "https://leaddev.com/leaddev-berlin/videos"
+location: Berlin, Germany
 ---

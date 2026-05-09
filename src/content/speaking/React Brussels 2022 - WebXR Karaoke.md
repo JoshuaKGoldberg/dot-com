@@ -9,4 +9,5 @@ links:
   Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtQ-v1RPuPSQg0LZRA"
   Repo: "https://github.com/karaokenite/karaokenite-react"
   Video: "https://www.youtube.com/watch?v=W7YIQ5qkrok"
+location: Brussels, Belgium
 ---

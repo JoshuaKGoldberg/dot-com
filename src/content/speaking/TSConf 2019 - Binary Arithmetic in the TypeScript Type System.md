@@ -2,6 +2,7 @@
 category: Conferences
 date: 2019-10-11
 href: https://tsconf.io/2019
+location: Seattle, USA
 title: "Binary Arithmetic in the TypeScript Type System"
 event: "TSConf 2019"
 links:
