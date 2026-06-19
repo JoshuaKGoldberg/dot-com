@@ -1,0 +1,110 @@
+---
+description: "What's in a name? Blood, sweat, and tears. Naming things is hard."
+image:
+  alt: todo
+  src: create-typescript-app.png
+pubDate: 2023-09-25
+tags: ["typestat", "naming", "ts-lift", "typescript"]
+title: "Renaming a Package"
+---
+
+import createTypeScriptApp from "./create-typescript-app.png";
+
+Natural languages are imprecise and vague.
+Programming concepts and tools we describe using natural language are precise and purposeful.
+It's a recipe for disaster.
+
+I've twice now had to name a surprisingly difficult-to-name package.
+This post is the saga of the two processes I went through.
+
+## Take One
+
+Back in 2019, I'd created a package that converts JavaScript code to TypeScript code.
+By nature that means it can also improve types in existing TypeScript code.
+I'd settled on the following marketing bits:
+
+- Description: _"Converts JavaScript to TypeScript and TypeScript to better TypeScript."_
+- Name: _**TypeStat**_
+
+I liked the name TypeStat.
+A lot of other TypeScript packages at the time had names starting with _"Type"_, such as TypeDoc and ???.
+In medicine, "stat" means "as soon as possible": thematically appropriate for the library's goal of getting you TypeScript types quickly
+TypeStat seemed like a great idea at the time.
+
+I even created a cute logo for TypeStat, putting a ➕ in place of the "TS" in the TypeScript logo:
+
+### The Problem With TypeStat
+
+Nobody knows what the name "TypeStat" means!
+Every time I introduced it at an event, people would struggle to remember the name.
+I've gotten a steady tricle of feedback from other developers over the years that it was a confusing name.
+
+TypeStat needed to go.
+
+## Good Timing
+
+Towards the end of this past summer (2023), I was focusing on cleaning up [create-typescript-app](https://github.com/JoshuaKGoldberg/create-typescript-app) to be used in the rest of my repositories.
+create-typescript-app was picking up adoption online and growing in GitHub stars & contributions organically.
+I wanted to give it a nice logo... and TypeStat's '➕' logo would be _fantastic_.
+
+It was the perfect storm.
+All I had to do now was find a new name for TypeStat.
+How difficult could that be?
+
+> TODO: Arrested Development gif
+> "It's one name, Josh. How much could it be? Three hours?"
+
+## Take Two
+
+This time around, I wanted to switch the name to one starting with _"ts-"_.
+That format is a more recent trend in TypeScript packages (ts-api-utils, ts-loader, ...) and I like it for consistency.
+
+Right from the start I knew a great _"ts-"_ name for TypeStat: _"ts-up"_.
+It conveys that you're TypeScript-ing "up" your code, and also lifting your types quality up.
+But, the tsup package had already laid claim to that name.
+Alas.
+
+### Boundless Possibilities
+
+I next tried to think of similar names, like _ts-convert_.
+But I realized quickly that the package name would need to convey both parts of TypeStat's purpose:
+
+- _Addition_: adding in TypeScript types to JavaScript or TypeScript files missing them
+- _Improvement_: improving existing types in TypeScript files
+
+ts-add?
+ts-better?
+ts-on?
+It seemed like every potential name I thought of was either too vague or only covered one of the two purposes.
+;
+
+### False Hope
+
+One name that did stick out to me was _ts-aid_.
+I liked ts-aid for similar reasons to TypeStat:
+
+- It
+
+## Getting Serious
+
+At this point I was feeling frustrated.
+I'd wanted a new name fast, but was getting lost in all the options.
+It was time to get organized about coming to a decision.
+
+### Crowdsourcing
+
+### Getting Organized
+
+When I'm having a hard time choosing betwen many competing options, one of my go-to strategies is making a comparison table.
+I'll identify the important aspects to judge each option on, identify all the potentially viable options, and fill out the table.
+
+## Why Care?
+
+Why put so much thought, energy, and work into finding the right package name?
+Because names are important.
+
+Names are how users discover your package, then remember it later on.
+If someone is Googling or searching in npm for a a phrase like _"convert to typescript"_, they're much more likely to try out a name that seems to match what they're looking for.
+
+Also, finding the right name for a thing is fun.
+I get a similar kick from it as from figuring out a clean architecture for a coding problem.
