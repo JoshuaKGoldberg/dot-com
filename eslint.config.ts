@@ -87,4 +87,11 @@ export default defineConfig(
 			],
 		},
 	},
+	{
+		files: ["pnpm-workspace.yaml"],
+		rules: {
+			// pnpm only reads this exact file name
+			"yml/file-extension": "off",
+		},
+	},
 );
