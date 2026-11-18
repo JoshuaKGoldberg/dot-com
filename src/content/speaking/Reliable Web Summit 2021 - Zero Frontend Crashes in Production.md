@@ -5,6 +5,6 @@ href: https://reliablewebsummit.com/session/achieving-zero-frontend-crashes-in-p
 title: '"Zero" Frontend Crashes in Production'
 event: "Reliable Web Summit 2021"
 links:
-  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtF3JLBcCyJSXhJABQ?e=6Xxnht"
+  Slides: "https://github.com/JoshuaKGoldberg/talks/blob/main/packages/2021-08-21-zero-frontend-crashes-in-production/README.md"
   Video: "https://www.youtube.com/watch?v=dfLa5DWZdbY&t=41s&ab_channel=ng-conf"
 ---

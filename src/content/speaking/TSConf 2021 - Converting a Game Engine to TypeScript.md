@@ -5,6 +5,6 @@ href: https://tsconf.io/2021
 title: "Converting a Game Engine to TypeScript"
 event: "TSConf 2021"
 links:
-  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtF61-wTnqOSTx3QNA?e=xzAuNg"
+  Slides: "https://github.com/JoshuaKGoldberg/talks/blob/main/packages/2021-09-10-converting-a-game-engine-to-typescript/README.md"
   Video: "https://www.youtube.com/watch?v=xTpRPGqiSUY"
 ---
