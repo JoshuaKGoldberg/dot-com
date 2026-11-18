@@ -121,7 +121,7 @@ importers:
         version: 3.0.2(prettier@3.8.1)
       prettier-plugin-sentences-per-line:
         specifier: ^0.2.3
-        version: 0.2.3(prettier@3.8.1)
+        version: 0.2.5(prettier@3.8.1)
       reading-time:
         specifier: 2.0.0-1
         version: 2.0.0-1
@@ -3938,8 +3938,8 @@ packages:
       prettier:
         optional: true
 
-  prettier-plugin-sentences-per-line@0.2.3:
-    resolution: {integrity: sha512-zuzFfs97g9xo0wE4hX/RbAaTWrbW0NgqiPXcW7LR4mzQInCHLuTx8W/t6S1IqHSwegHoxHIgJSKBq02AH7IQJw==}
+  prettier-plugin-sentences-per-line@0.2.5:
+    resolution: {integrity: sha512-vvUaFbXexU1eV1EjER5Dmb9sTnBiLrtomKQpMya50MorB5Ab2ANQrt43f1wv1ZY5zDT/OhD43fxOw9Yehai+mw==}
     peerDependencies:
       prettier: ^3
 
@@ -4143,8 +4143,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  sentences-per-line@0.5.2:
-    resolution: {integrity: sha512-Ch7cTyoP+nEo5+iZozSAeJ4c8R3jglpFwQMoQ98dn7wOa0QhXJjgO1wrjZgQJahSDB30BXfJ2PEBrlfhx8vK8A==}
+  sentences-per-line@0.5.6:
+    resolution: {integrity: sha512-Nr8nl/K1oqxcSX5jle3/dDlQyej1DYzhoSTbWRMNECV/NTl5KTIjxhgElmn167PEAqgMEdaXMRQo7kaGbXUS5Q==}
     engines: {node: '>=22.14.0'}
 
   seroval-plugins@1.6.12:
@@ -9165,10 +9165,10 @@ snapshots:
     optionalDependencies:
       prettier: 3.8.1
 
-  prettier-plugin-sentences-per-line@0.2.3(prettier@3.8.1):
+  prettier-plugin-sentences-per-line@0.2.5(prettier@3.8.1):
     dependencies:
       prettier: 3.8.1
-      sentences-per-line: 0.5.2
+      sentences-per-line: 0.5.6
 
   prettier@3.8.1: {}
 
@@ -9475,7 +9475,7 @@ snapshots:
 
   semver@7.8.6: {}
 
-  sentences-per-line@0.5.2: {}
+  sentences-per-line@0.5.6: {}
 
   seroval-plugins@1.6.12(seroval@1.6.12):
     dependencies:
