@@ -6,7 +6,7 @@ title: "Type System React"
 event: "React Day Berlin 2023"
 links:
   Repo: "https://github.com/JoshuaKGoldberg/type-system-react"
-  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvuQNfsGTs7ru1I3Axw"
+  Slides: "https://github.com/JoshuaKGoldberg/talks/blob/main/packages/2023-12-08-type-system-react/README.md"
   Video: "https://portal.gitnation.org/contents/type-system-react"
 location: Online
 ---

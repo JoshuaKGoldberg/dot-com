@@ -6,7 +6,7 @@ title: "TypeScript Static Analysis Hidden Gems"
 event: "All Things Open 2022"
 links:
   Demo: "https://typescript-static-analysis-hidden-gems.vercel.app"
-  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvtRH7pSjEMV1rrpTqQ"
+  Slides: "https://github.com/JoshuaKGoldberg/talks/blob/main/packages/2022-10-30-typescript-static-analysis-hidden-gems/README.md"
   Repo: "https://github.com/JoshuaKGoldberg/typescript-static-analysis-hidden-gems"
 location: Raleigh, USA
 ---

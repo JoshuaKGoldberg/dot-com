@@ -3,7 +3,7 @@ category: Conferences
 date: 2024-04-09
 event: "Emerging Tech East 2024"
 links:
-  Slides: "https://1drv.ms/p/s!AvUc1cvPrJnWvucT2vxxg8ukjPe3ww"
+  Slides: "https://github.com/JoshuaKGoldberg/talks/blob/main/packages/2024-04-09-understanding-typescript-fixing-the-billion-dollar-mistake-and-other-concepts/README.md"
   Video: "https://www.youtube.com/watch?v=xiqG1rrHRgA&ab_channel=ChariotSolutions"
 location: Philadelphia, USA
 href: https://emergingtecheast.com
