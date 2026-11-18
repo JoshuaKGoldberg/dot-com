@@ -73,8 +73,10 @@ function getSomeValues() {
 				};
 		}
 	}
+
 	return { next };
 }
+
 // Logs "foo", then "bar"
 const iterator = getSomeValues();
 while (true) {
@@ -82,6 +84,7 @@ while (true) {
 	if (done) {
 		break;
 	}
+
 	console.log(value);
 }
 ```
@@ -137,6 +140,7 @@ function step(result) {
 		resolve(result.value);
 		return;
 	}
+
 	return new Promise(function (resolve) {
 		resolve(result.value);
 	}).then(fulfilled, rejected);
@@ -221,6 +225,7 @@ function jQueryPromiseFactory(callback) {
 	} catch (error) {
 		deferred.reject(error);
 	}
+
 	return promise;
 }
 ```
@@ -241,6 +246,7 @@ function step(result) {
 		resolve(result.value);
 		return;
 	}
+
 	return jQueryPromiseFactory(function (resolve) {
 		resolve(result.value);
 	}).then(fulfilled, rejected);
@@ -267,6 +273,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 			reject(e);
 		}
 	}
+
 	function rejected(value) {
 		try {
 			step(generator["throw"](value));
@@ -274,6 +281,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 			reject(e);
 		}
 	}
+
 	function step(result) {
 		result.done
 			? resolve(result.value)
@@ -281,6 +289,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 					resolve(result.value);
 				}).then(fulfilled, rejected);
 	}
+
 	step((generator = generator.apply(thisArg, _arguments || [])).next());
 });
 ```
@@ -298,6 +307,7 @@ function step(result) {
 		resolve(result.value);
 		return;
 	}
+
 	// Part 2
 	result.value
 		.then(function (resolvedValue) {
@@ -323,6 +333,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 			reject(e);
 		}
 	}
+
 	function rejected(value) {
 		try {
 			step(generator["throw"](value));
@@ -330,12 +341,14 @@ return jQueryPromiseFactory(function (resolve, reject) {
 			reject(e);
 		}
 	}
+
 	function step(result) {
 		// Part 1
 		if (!result.value || !result.value.then) {
 			resolve(result.value);
 			return;
 		}
+
 		// Part 2
 		result.value
 			.then(function (resolvedValue) {
@@ -345,6 +358,7 @@ return jQueryPromiseFactory(function (resolve, reject) {
 				rejected(rejectedError);
 			});
 	}
+
 	step((generator = generator.apply(thisArg, _arguments || [])).next());
 });
 ```

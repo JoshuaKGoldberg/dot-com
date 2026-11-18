@@ -1,8 +1,14 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"automerge": true,
-	"internalChecksFilter": "strict",
+	"extends": [
+		":preserveSemverRanges",
+		"config:best-practices",
+		"replacements:all"
+	],
+	"ignoreDeps": ["codecov/codecov-action"],
 	"labels": ["dependencies"],
+	"minimumReleaseAge": "7 days",
 	"packageRules": [
 		{
 			"groupName": "Astro",
@@ -15,5 +21,8 @@
 			]
 		}
 	],
-	"stabilityDays": 3
+	"patch": {
+		"enabled": false
+	},
+	"postUpdateOptions": ["pnpmDedupe"]
 }

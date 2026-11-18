@@ -1,0 +1,86 @@
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm build
+
+  check:
+    name: Astro Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm check
+
+  dedupe_check:
+    name: Dedupe Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm dedupe --check
+
+  engines_check:
+    name: Engines Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - uses: actions/setup-node@v6
+        with:
+          cache: pnpm
+          node-version: 22.23.4
+      - run: pnpm install --prod --engine-strict --ignore-scripts
+
+  format_check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm format --list-different
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm astro sync
+      - run: pnpm lint
+
+  lint_knip:
+    name: Lint Knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm lint:knip
+
+  lint_spelling:
+    name: Lint Spelling
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm lint:spelling
+
+  type_check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/prepare
+      - run: pnpm astro sync
+      - run: pnpm tsc
+
+name: CI
+
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
