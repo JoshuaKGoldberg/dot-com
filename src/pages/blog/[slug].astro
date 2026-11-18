@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry } from "astro:content";
+import { getCollection, getEntry, render } from "astro:content";
 
 import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
@@ -15,7 +15,7 @@ export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
 
 	return blogs.map((blog) => ({
-		params: { slug: blog.slug },
+		params: { slug: blog.id },
 	}));
 }
 
@@ -26,7 +26,7 @@ if (!entry) {
 }
 
 const image = entry.data.thumbnail?.src ?? entry.data.image.src.src;
-const rendered = await entry.render();
+const rendered = await render(entry);
 const title = createBlogTitle(entry);
 ---
 

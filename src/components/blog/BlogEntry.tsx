@@ -9,7 +9,7 @@ export interface BlogEntryProps {
 }
 
 export function BlogEntry(props: BlogEntryProps) {
-	const url = () => `/blog/${props.blog.slug}`;
+	const url = () => `/blog/${props.blog.id}`;
 
 	return (
 		<ContentEntry

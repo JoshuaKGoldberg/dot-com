@@ -15,7 +15,7 @@ const entries = Astro.props.entries.sort(
 );
 
 const entryIndex = entries.findIndex(
-	(entry) => entry.slug === Astro.props.entry.slug,
+	(entry) => entry.id === Astro.props.entry.id,
 );
 
 const previous =
