@@ -3,5 +3,17 @@
 	"automerge": true,
 	"internalChecksFilter": "strict",
 	"labels": ["dependencies"],
+	"packageRules": [
+		{
+			"groupName": "Astro",
+			"matchPackageNames": [
+				"@astrojs/**",
+				"@konami-emoji-blast/astro",
+				"accessible-astro-components",
+				"astro",
+				"astro-heroicons"
+			]
+		}
+	],
 	"stabilityDays": 3
 }

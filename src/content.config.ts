@@ -1,8 +1,11 @@
 import { rssSchema } from "@astrojs/rss";
-import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
 
 export const collections = {
 	blog: defineCollection({
+		loader: glob({ base: "./src/content/blog", pattern: "*/index.mdx" }),
 		schema: ({ image }) =>
 			rssSchema.extend({
 				description: z.string(),
@@ -18,12 +21,13 @@ export const collections = {
 			}),
 	}),
 	speaking: defineCollection({
+		loader: glob({ base: "./src/content/speaking", pattern: "*.md" }),
 		schema: z.object({
 			category: z.string(),
 			date: z.date(),
 			event: z.string(),
 			href: z.string(),
-			links: z.record(z.string()).optional(),
+			links: z.record(z.string(), z.string()).optional(),
 			location: z.string().optional(),
 			title: z.string().optional(),
 		}),

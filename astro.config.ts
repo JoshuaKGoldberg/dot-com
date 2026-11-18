@@ -1,3 +1,4 @@
+import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
@@ -13,6 +14,7 @@ export default defineConfig({
 	},
 	integrations: [konamiEmojiBlast(), solidJs(), mdx(), sitemap()],
 	markdown: {
+		processor: unified(),
 		syntaxHighlight: "prism",
 	},
 	prefetch: true,

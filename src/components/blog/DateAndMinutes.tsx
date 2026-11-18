@@ -5,14 +5,15 @@ import readingTime from "reading-time";
 import styles from "./DateAndMinutes.module.css";
 
 export interface DateAndMinutesProps {
-	body: string;
+	body: string | undefined;
 	children?: JSX.Element;
 	date: Date;
 	year?: "numeric" | undefined;
 }
 
 export function DateAndMinutes(props: DateAndMinutesProps) {
-	const estimate = () => Math.ceil(readingTime(props.body).minutes / 5) * 5;
+	const estimate = () =>
+		Math.ceil(readingTime(props.body ?? "").minutes / 5) * 5;
 
 	return (
 		<>
