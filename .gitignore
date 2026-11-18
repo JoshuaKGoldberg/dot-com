@@ -1,5 +1,5 @@
-.astro/
-.DS_Store
-dist/
-node_modules/
 *.psd
+.DS_Store
+.astro/
+/node_modules
+dist/

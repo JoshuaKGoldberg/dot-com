@@ -5,6 +5,8 @@ import astro from "eslint-plugin-astro";
 import jsdoc from "eslint-plugin-jsdoc";
 import jsonc from "eslint-plugin-jsonc";
 import jsxA11y from "eslint-plugin-jsx-a11y";
+import markdownLinks from "eslint-plugin-markdown-links";
+import n from "eslint-plugin-n";
 import packageJson from "eslint-plugin-package-json";
 import perfectionist from "eslint-plugin-perfectionist";
 import * as regexp from "eslint-plugin-regexp";
@@ -37,6 +39,7 @@ export default defineConfig(
 			jsdoc.configs["flat/logical-typescript-error"],
 			jsdoc.configs["flat/stylistic-typescript-error"],
 			jsxA11y.flatConfigs.recommended,
+			n.configs["flat/recommended"],
 			perfectionist.configs["recommended-natural"],
 			regexp.configs["flat/recommended"],
 			// @ts-expect-error -- Types incompatibility
@@ -51,6 +54,19 @@ export default defineConfig(
 			},
 		},
 		rules: {
+			// Stylistic concerns that don't interfere with Prettier
+			"logical-assignment-operators": [
+				"error",
+				"always",
+				{ enforceForIfStatements: true },
+			],
+			"no-useless-rename": "error",
+			"object-shorthand": "error",
+			"operator-assignment": "error",
+
+			// TypeScript already checks imports, including Astro's virtual modules
+			"n/no-missing-import": "off",
+
 			// TODO: Enable these :)
 			"solid/jsx-no-undef": "off",
 			"solid/no-unknown-namespaces": "off",
@@ -58,6 +74,7 @@ export default defineConfig(
 			"solid/self-closing-comp": "off",
 			"solid/style-prop": "off",
 		},
+		settings: { perfectionist: { partitionByComment: true, type: "natural" } },
 	},
 	astro.configs.recommended,
 	{
@@ -65,11 +82,7 @@ export default defineConfig(
 		files: ["**/*.json"],
 	},
 	{
-		extends: [packageJson.configs.recommended],
-		files: ["**/package.json"],
-	},
-	{
-		extends: [markdown.configs.recommended],
+		extends: [markdown.configs.recommended, markdownLinks.configs.recommended],
 		files: ["**/*.md"],
 		rules: {
 			// https://github.com/eslint/markdown/issues/294
@@ -77,10 +90,23 @@ export default defineConfig(
 		},
 	},
 	{
+		extends: [tseslint.configs.disableTypeChecked],
+		files: ["**/*.md/*.ts"],
+		rules: { "n/no-missing-import": "off" },
+	},
+	{
+		files: ["**/*.test.*", "eslint.config.*"],
+		rules: { "n/no-unsupported-features/node-builtins": "off" },
+	},
+	{
 		extends: [yml.configs["flat/standard"], yml.configs["flat/prettier"]],
 		files: ["**/*.{yml,yaml}"],
 		rules: {
-			"yml/file-extension": ["error", { extension: "yml" }],
+			"yml/file-extension": "error",
+			"yml/sort-keys": [
+				"error",
+				{ order: { type: "asc" }, pathPattern: "^.*$" },
+			],
 			"yml/sort-sequence-values": [
 				"error",
 				{ order: { type: "asc" }, pathPattern: "^.*$" },
@@ -88,9 +114,7 @@ export default defineConfig(
 		},
 	},
 	{
-		files: ["pnpm-workspace.yaml"],
-		rules: {
-			"yml/file-extension": "off",
-		},
+		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
+		files: ["package.json"],
 	},
 );

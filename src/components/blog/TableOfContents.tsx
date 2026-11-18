@@ -39,13 +39,13 @@ export function TableOfContents(props: TableOfContentsProps) {
 				case 2:
 					groups.push({
 						children: [],
-						heading: heading,
+						heading,
 					});
 					break;
 				case 3:
 					groups[groups.length - 1].children.push({
 						children: [],
-						heading: heading,
+						heading,
 					});
 					break;
 				case 4:
