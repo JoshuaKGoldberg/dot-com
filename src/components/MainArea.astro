@@ -2,7 +2,9 @@
 const { as: As, ...rest } = Astro.props;
 ---
 
-<As {...rest} class:list={["mainArea", rest.class]}><slot /></As>
+<As {...rest} class:list={["mainArea", rest.class]}>
+	<slot />
+</As>
 
 <style>
 	.mainArea {

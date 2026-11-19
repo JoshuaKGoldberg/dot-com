@@ -27,13 +27,11 @@ const categories = {
 	title="Speaking"
 >
 	<Fragment slot="secondary">
-		I talk about static analysis and co-organize <Anchor
-			href="https://squiggleconf.com"
-			target="_blank"
-			variant="passive"
-		>
+		I talk about static analysis and co-organize{" "}
+		<Anchor href="https://squiggleconf.com" target="_blank" variant="passive">
 			SquiggleConf
-		</Anchor>.
+		</Anchor>
+		.
 	</Fragment>
 	<BodyContents>
 		<SpeakingsTabbed categories={categories} client:load />

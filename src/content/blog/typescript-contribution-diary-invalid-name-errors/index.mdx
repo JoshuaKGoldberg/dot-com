@@ -136,7 +136,8 @@ class C3 {
 }
 ```
 
-`'typeof' is not an allowed variable name.` is maybe equally confusing as `Variable declaration expected.`? Unclear.
+`'typeof' is not an allowed variable name.` is maybe equally confusing as `Variable declaration expected.`?
+Unclear.
 
 ### Arguably Degraded Quality
 
@@ -267,7 +268,8 @@ case ParsingContext.VariableDeclarations:
 > [Comment](https://github.com/microsoft/TypeScript/pull/40105#discussion_r471921411): Nit: I kinda dislike allocating an array on each of these, but maybe it's fine.
 > I would have just made it take the error-reporting callback.
 
-Reasonable! Creating and spreading arrays is admittedly an odd thing to do here.
+Reasonable!
+Creating and spreading arrays is admittedly an odd thing to do here.
 
 `parsingContextErrors` is only ever called by `abortParsingListOrMoveToNextToken`, so I had it directly call `parseErrorAtCurrentToken` instead of a callback.
 

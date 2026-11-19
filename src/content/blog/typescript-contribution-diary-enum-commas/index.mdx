@@ -48,7 +48,8 @@ This past September I figured it was time to finally resolve it.
 
 The first question I needed to ask was: _how does TypeScript parse in a source file and convert that into an AST?_
 
-...hang on, I've already started that investigation! My previous post, [Identifiers after Numeric Literals](https://medium.com/@joshuakgoldberg/typescript-contribution-diary-errors-for-identifiers-after-numeric-literals-130e3d77a1df), already describes that in its [Enter the Compiler](https://medium.com/@joshuakgoldberg/typescript-contribution-diary-errors-for-identifiers-after-numeric-literals-130e3d77a1df#8171) section.
+...hang on, I've already started that investigation!
+My previous post, [Identifiers after Numeric Literals](https://medium.com/@joshuakgoldberg/typescript-contribution-diary-errors-for-identifiers-after-numeric-literals-130e3d77a1df), already describes that in its [Enter the Compiler](https://medium.com/@joshuakgoldberg/typescript-contribution-diary-errors-for-identifiers-after-numeric-literals-130e3d77a1df#8171) section.
 
 From that post, we already know that TypeScript's `parser.ts` uses a function called `parseSourceFileWorker`, which creates `sourceFile.statements` with a `parseList` function.
 For _this_ investigation, the starting question within the parser was: _what causes TypeScript to produce the `',' expected` complaint?_

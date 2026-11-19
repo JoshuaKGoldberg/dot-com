@@ -12,10 +12,13 @@ interface Props {
 	height="315"
 	src={Astro.props.src}
 	title={Astro.props.title}
-	width="560"></iframe>
+	width="560"
+></iframe>
 <em class="embedded-iframe-em">
 	<slot name="primary" />
-	<small><slot name="secondary" /></small>
+	<small>
+		<slot name="secondary" />
+	</small>
 </em>
 
 <style is:inline>

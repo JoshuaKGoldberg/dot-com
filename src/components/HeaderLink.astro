@@ -20,7 +20,7 @@ const active =
 	fontSize="medium"
 	fontWeight="bolder"
 	href={href}
-	{...href.startsWith("http") && { target: "_blank" }}
+	{...(href.startsWith("http") && { target: "_blank" })}
 	variant={active ? "passive" : "onHover"}
 >
 	<slot />

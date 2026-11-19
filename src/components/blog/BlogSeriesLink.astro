@@ -9,7 +9,5 @@ interface Props {
 
 <div>
 	{Astro.props.label} post:{" "}
-	<a href={`/blog/${Astro.props.entry.id}`}>
-		{Astro.props.entry.data.title}
-	</a>
+	<a href={`/blog/${Astro.props.entry.id}`}>{Astro.props.entry.data.title}</a>
 </div>
