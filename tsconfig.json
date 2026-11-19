@@ -1,13 +1,12 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"exactOptionalPropertyTypes": false,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
 		"moduleResolution": "Bundler",
 		"noUncheckedIndexedAccess": false,
 		"paths": {
-			"~/*": ["src/*"]
+			"~/*": ["./src/*"]
 		},
 		"target": "es2022"
 	},
