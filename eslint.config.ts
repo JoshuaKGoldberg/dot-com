@@ -42,7 +42,6 @@ export default defineConfig(
 			n.configs["flat/recommended"],
 			perfectionist.configs["recommended-natural"],
 			regexp.configs["flat/recommended"],
-			// @ts-expect-error -- Types incompatibility
 			solid.configs["flat/recommended"],
 			tseslint.configs.strictTypeChecked,
 			tseslint.configs.stylisticTypeChecked,
