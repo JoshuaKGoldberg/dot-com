@@ -72,8 +72,8 @@ importers:
         specifier: ^9.7.0
         version: 9.7.0
       emoji-blast:
-        specifier: ^0.11.0
-        version: 0.11.0
+        specifier: ^0.12.0
+        version: 0.12.0
       eslint:
         specifier: ^10.0.3
         version: 10.15.0(jiti@2.7.0)
@@ -2686,6 +2686,10 @@ packages:
 
   emoji-blast@0.11.0:
     resolution: {integrity: sha512-RYy1ZjHqYQLjOkficpqzvAzGfE1GUcn1Bp7Ec1wq0lVIoRgNLMx4lRZWo9p0HsEawrI9Zmh0mloLXcf8ewIzfQ==}
+    engines: {node: '>=18'}
+
+  emoji-blast@0.12.0:
+    resolution: {integrity: sha512-qhYbW3ztK7/vOI18q8M6OalUf3GbWUzfJ/Cmyzenyv0HcVlk8uwk/czRLoVbcixu8faC/91nXlp9mXSc+ZMprw==}
     engines: {node: '>=18'}
 
   emoji-regex@10.6.0:
@@ -7509,6 +7513,8 @@ snapshots:
       '@emmetio/css-abbreviation': 2.1.8
 
   emoji-blast@0.11.0: {}
+
+  emoji-blast@0.12.0: {}
 
   emoji-regex@10.6.0: {}
 

@@ -53,7 +53,7 @@
 		"chart.js": "^4.5.1",
 		"clsx": "^2.1.1",
 		"cspell": "^9.7.0",
-		"emoji-blast": "^0.11.0",
+		"emoji-blast": "^0.12.0",
 		"eslint": "^10.0.3",
 		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-jsdoc": "^62.7.1",
