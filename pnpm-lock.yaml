@@ -60,8 +60,8 @@ importers:
         specifier: 2.1.5-1
         version: 2.1.5-1
       cached-factory:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.3.0
+        version: 0.3.0
       chart.js:
         specifier: ^4.5.1
         version: 4.5.1
@@ -2384,8 +2384,8 @@ packages:
   cacheable@2.5.0:
     resolution: {integrity: sha512-60cyAOytib/OzBw1JNSoSV/boK1AtHryDIjvVBk7XbN4ugfkM3+Sry7fEjNgPMGgOjuaZPAp8ruZ0Cxafwyq9g==}
 
-  cached-factory@0.1.0:
-    resolution: {integrity: sha512-IGOSWu+NuED5UzCRmBeqQPZ8z7SkgrD/nN67W2iY1Qv83CVhevyMexkGclJ86saXisIqxoOnbeiTWvsCHRqJBw==}
+  cached-factory@0.3.0:
+    resolution: {integrity: sha512-8PWf78SYJg9kGpUNlqOlg2iE4nu/iW7FidBVdvEZPy0GJRUyN91X7q0VzX/oyJE6bGrgr/bR0VhcGF87vgeQaw==}
     engines: {node: '>=18'}
 
   call-bind-apply-helpers@1.0.2:
@@ -7182,7 +7182,7 @@ snapshots:
       keyv: 5.6.0
       qified: 0.10.1
 
-  cached-factory@0.1.0: {}
+  cached-factory@0.3.0: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:

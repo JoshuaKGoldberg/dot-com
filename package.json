@@ -49,7 +49,7 @@
 		"accessible-astro-components": "^5.8.1",
 		"astro": "^7.4.13",
 		"astro-heroicons": "2.1.5-1",
-		"cached-factory": "^0.1.0",
+		"cached-factory": "^0.3.0",
 		"chart.js": "^4.5.1",
 		"clsx": "^2.1.1",
 		"cspell": "^9.7.0",
