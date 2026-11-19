@@ -19,6 +19,12 @@
 				"astro",
 				"astro-heroicons"
 			]
+		},
+		{
+			"description": "The Engines Check job installs on the minimum Node.js version from package.json's engines, so keep the two in sync manually.",
+			"enabled": false,
+			"matchDepNames": ["node"],
+			"matchFileNames": [".github/workflows/ci.yaml"]
 		}
 	],
 	"patch": {
