@@ -41,18 +41,11 @@ const channels = [
 
 <span class:list={["shares", Astro.props.class]}>
 	<slot />
-	{
-		channels.map(([network, href, image]) => (
-			<a
-				class="share"
-				href={href}
-				target="_blank"
-				title={`Share on ${network}`}
-			>
-				<SocialImage alt={`${network} logo`} class="share-img" image={image} />
-			</a>
-		))
-	}
+	{channels.map(([network, href, image]) => (
+		<a class="share" href={href} target="_blank" title={`Share on ${network}`}>
+			<SocialImage alt={`${network} logo`} class="share-img" image={image} />
+		</a>
+	))}
 </span>
 
 <style>

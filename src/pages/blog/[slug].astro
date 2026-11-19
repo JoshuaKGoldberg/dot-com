@@ -49,15 +49,17 @@ const title = createBlogTitle(entry);
 	</BodyContents>
 	<BlogContent
 		rendered={rendered}
-		series={entry.data.series
-			? {
-					entries: blogs.filter(
-						(blog) => blog.data.series === entry.data.series,
-					),
-					entry,
-					series: entry.data.series,
-				}
-			: undefined}
+		series={
+			entry.data.series
+				? {
+						entries: blogs.filter(
+							(blog) => blog.data.series === entry.data.series,
+						),
+						entry,
+						series: entry.data.series,
+					}
+				: undefined
+		}
 	>
 		<BlogShareBottom
 			description={entry.data.description}

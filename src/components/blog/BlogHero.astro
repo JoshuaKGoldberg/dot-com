@@ -32,11 +32,9 @@ interface Props {
 			</div>
 			<div class="hero-title">
 				<HeroTitle>
-					{
-						Astro.props.title
-							// TODO: use a markdown renderer
-							.replaceAll("`", "")
-					}
+					{Astro.props.title
+						// TODO: use a markdown renderer
+						.replaceAll("`", "")}
 				</HeroTitle>
 			</div>
 			<div class="hero-tertiary">
@@ -55,24 +53,16 @@ interface Props {
 				</HeroTertiary>
 			</div>
 		</div>
-		<HeroSecondary size="wide">
-			{Astro.props.description}
-		</HeroSecondary>
+		<HeroSecondary size="wide">{Astro.props.description}</HeroSecondary>
 	</div>
-	{
-		Astro.props.download && (
-			<div class="download">
-				💾
-				<a
-					href={Astro.props.download}
-					rel="noopener noreferrer"
-					target="_blank"
-				>
-					Download the slides here!
-				</a>
-			</div>
-		)
-	}
+	{Astro.props.download && (
+		<div class="download">
+			💾
+			<a href={Astro.props.download} rel="noopener noreferrer" target="_blank">
+				Download the slides here!
+			</a>
+		</div>
+	)}
 </div>
 
 <style>

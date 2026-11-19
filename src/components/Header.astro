@@ -18,11 +18,9 @@ const links = [
 		<ThemeToggle />
 	</div>
 	<div class="links">
-		{
-			links.map(([text, href]) => {
-				return <HeaderLink href={href}>{text}</HeaderLink>;
-			})
-		}
+		{links.map(([text, href]) => {
+			return <HeaderLink href={href}>{text}</HeaderLink>;
+		})}
 	</div>
 </Text>
 

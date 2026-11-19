@@ -216,9 +216,7 @@ Using `Cell` and `TicTacToeBoard` as bases, we can create a conditional `Victory
 type Victory<Player, Board> = Board extends WinningBoard<Player> ? true : false;
 
 type WinningBoard<Player> =
-	| DiagonalVictory<Player>
-	| HorizontalVictory<Player>
-	| VerticalVictory<Player>;
+	DiagonalVictory<Player> | HorizontalVictory<Player> | VerticalVictory<Player>;
 ```
 
 The diagonal win condition for a player is hit when either of the diagonal lines on the board can only be that player's pieces.
@@ -484,7 +482,9 @@ type TwoAppliedMoves = ApplyMoves<StartingBoard, [["X", 0, 1], ["O", 2, 2]]>;
 */
 ```
 
-Amazing! Yes! Hooray! 🙌
+Amazing!
+Yes!
+Hooray! 🙌
 By harnessing the power of inferred types and joining them with recursive type definitions, we're able to apply a list of moves stored in the type system to a board.
 Our output board is the result of all those moves applied on top of each other.
 

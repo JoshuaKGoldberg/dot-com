@@ -106,7 +106,8 @@ But counting them?
 Counting unique objects is generally optimally efficient in JavaScript with a [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set).
 I ran full-text searches on `new Set` and `Set.from` but didn't find anything...
 which makes sense, as TypeScript works in environments that don't natively have Set.
-But surely there must be _something_ in TypeScript for counting unique objects? What about the slightly-older [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)?
+But surely there must be _something_ in TypeScript for counting unique objects?
+What about the slightly-older [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)?
 
 I tried again searching for `new Map` and found two generic, useful-looking functions at the top of `src/compiler/core.ts`:
 
@@ -288,4 +289,5 @@ A merge from master, a couple of updates, and the PR was accepted!
 
 ---
 
-Thanks for reading! I hope you got something out of it! 💖
+Thanks for reading!
+I hope you got something out of it! 💖

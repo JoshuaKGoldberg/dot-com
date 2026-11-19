@@ -110,7 +110,9 @@ const metaPairs = [
 		title="RSS Feed"
 		type="application/rss+xml"
 	/>
-	{metaPairs.map((meta) => <meta {...meta} />)}
+	{metaPairs.map((meta) => (
+		<meta {...meta} />
+	))}
 	<meta content={description} name="description" />
 	<meta content={keywords.join()} name="keywords" />
 	<meta content={Astro.generator} name="generator" />

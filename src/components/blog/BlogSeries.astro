@@ -28,14 +28,12 @@ const next = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 	<Text as="strong" class="series-strong" fontSize="medium" fontWeight="bolder">
 		Series: {Astro.props.series}
 	</Text>
-	{
-		(next || previous) && (
-			<div class="links">
-				{previous && <BlogSeriesLink entry={previous} label="Previous" />}
-				{next && <BlogSeriesLink entry={next} label="Next" />}
-			</div>
-		)
-	}
+	{(next || previous) && (
+		<div class="links">
+			{previous && <BlogSeriesLink entry={previous} label="Previous" />}
+			{next && <BlogSeriesLink entry={next} label="Next" />}
+		</div>
+	)}
 </aside>
 
 <style>

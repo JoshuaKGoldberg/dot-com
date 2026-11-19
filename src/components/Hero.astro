@@ -15,9 +15,7 @@ interface Props {
 		<HeroImage alt={Astro.props.alt} size="large" src={Astro.props.images} />
 	</div>
 	<div class="half second">
-		<HeroTitle>
-			{Astro.props.primary}
-		</HeroTitle>
+		<HeroTitle>{Astro.props.primary}</HeroTitle>
 		<slot />
 	</div>
 </div>

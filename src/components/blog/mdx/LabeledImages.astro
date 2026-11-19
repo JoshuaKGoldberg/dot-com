@@ -16,25 +16,23 @@ interface Props {
 
 <LabeledMedia description={Astro.props.description}>
 	<div class="labeled-images">
-		{
-			Astro.props.images.map((image) => (
-				<div class="labeled-image-container">
-					<img
-						alt={image.alt}
-						class="labeled-image"
-						src={typeof image.src === "string" ? image.src : image.src.src}
-					/>
-					{image.description && (
-						<div class="labeled-image-description">{image.description}</div>
-					)}
-					{image.original && (
-						<span class="labeled-image-original">
-							[<a href={image.original}>original</a>]
-						</span>
-					)}
-				</div>
-			))
-		}
+		{Astro.props.images.map((image) => (
+			<div class="labeled-image-container">
+				<img
+					alt={image.alt}
+					class="labeled-image"
+					src={typeof image.src === "string" ? image.src : image.src.src}
+				/>
+				{image.description && (
+					<div class="labeled-image-description">{image.description}</div>
+				)}
+				{image.original && (
+					<span class="labeled-image-original">
+						[<a href={image.original}>original</a>]
+					</span>
+				)}
+			</div>
+		))}
 	</div>
 </LabeledMedia>
 

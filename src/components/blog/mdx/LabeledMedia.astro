@@ -20,18 +20,14 @@ const descriptions =
 <label class="labeled-media-media">
 	<slot />
 	<small class="labeled-media-small">
-		{
-			descriptions?.map((description) => (
-				<>
-					<span class="labeled-media-description">{description}</span>{" "}
-				</>
-			))
-		}
-		{
-			Astro.props.original && (
-				<MediaOriginalNote original={Astro.props.original} />
-			)
-		}
+		{descriptions?.map((description) => (
+			<>
+				<span class="labeled-media-description">{description}</span>{" "}
+			</>
+		))}
+		{Astro.props.original && (
+			<MediaOriginalNote original={Astro.props.original} />
+		)}
 		{Astro.props.note && <em class="labeled-media-note">{Astro.props.note}</em>}
 	</small>
 </label>

@@ -90,7 +90,9 @@ If your code is well written, it likely follows good coding principles such as [
 Your classes and functions should have single responsibilities; the implementation details of dependencies should be abstracted away by their interfaces; changes to one component's behavior shouldn't require obscure changes to the internals of others.
 
 Code that violates good coding principles likely violates good testability too: [god classes](https://en.wikipedia.org/wiki/God_object) are inherently difficult to capture all cases of; depending on implementation details of dependencies necessitates awkwardly implementation-specific tests...
-But does the reverse hold true? Does writing testable code imply adherence to SOLID? Surely there must be some overlap!
+But does the reverse hold true?
+Does writing testable code imply adherence to SOLID?
+Surely there must be some overlap!
 
 If high coverage encourages well-separated components, and well-separated components are much easier with SOLID principles, then it follows that requiring high coverage is _a_ way of reinforcing SOLID.
 
@@ -216,7 +218,8 @@ Since it's bad practice to test internals but generally impossible to hit this s
 But adding never-to-be-run code is not the best way of handling this kind of validation!
 
 Let's take a step back and evaluate whether this _complex private method_ (often a red flag) violates the _[Single Responsibility Principle](https://en.wikipedia.org/wiki/Single-responsibility_principle)_ to do something its class shouldn't be taking care of.
-Is creating a handler for a fruit part of that component's responsibilities? Likely not; that should be a separate class or function.
+Is creating a handler for a fruit part of that component's responsibilities?
+Likely not; that should be a separate class or function.
 
 ```js
 const handlers = new Map<string, () => IHandler>([
@@ -258,9 +261,11 @@ declare abstract class AbstractHost {
 
 Forcing you to extend the constructor is troublesome because it makes it impossible to test the sub-class without coincidentally calling the parent constructor.
 If the class does very little, such as set up dependency injections, that might be fine...
-but what if the parent class makes network calls, connects to databases, or performs other operations unfriendly to tests? Not good!
+but what if the parent class makes network calls, connects to databases, or performs other operations unfriendly to tests?
+Not good!
 Class extensions make it impossible to stub out the dependency on the library because you're _forced_ to include the library in your code.
-How would you stop that network call from happening when testing behavior intended to call `act`? You can't!
+How would you stop that network call from happening when testing behavior intended to call `act`?
+You can't!
 Oh no!
 
 It's a sad fact of life that the universe contains _bad code_ (often written by _good developers_) you'll need to interact with, and you might need to unit test your sub-classes of that _bad code_.
