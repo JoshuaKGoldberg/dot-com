@@ -72,7 +72,7 @@
 		"konami-emoji-blast": "^0.7.0",
 		"lint-staged": "^17.6.0",
 		"prettier": "^3.8.1",
-		"prettier-plugin-astro": "^0.14.1",
+		"prettier-plugin-astro": "^1.0.0",
 		"prettier-plugin-curly": "^0.4.1",
 		"prettier-plugin-packagejson": "^3.0.2",
 		"prettier-plugin-padding-lines": "^0.1.0",
