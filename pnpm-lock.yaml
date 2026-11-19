@@ -114,8 +114,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       joshuakgoldberg:
-        specifier: ^0.21.4
-        version: 0.21.4
+        specifier: ^0.25.0
+        version: 0.25.0
       knip:
         specifier: ^6.0.0
         version: 6.45.1
@@ -2422,6 +2422,10 @@ packages:
     resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
+  chalk@6.0.1:
+    resolution: {integrity: sha512-/Ce6KNm3vIbWdMlNna6RVIZ/ICQxnJxCicet5LBKK9ZffBkqzDw0xh9EiKSljdRtiIQ1S1z4YgcscUUGzNCWrA==}
+    engines: {node: '>=22'}
+
   change-case@5.4.4:
     resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
@@ -3470,8 +3474,8 @@ packages:
     resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
     hasBin: true
 
-  joshuakgoldberg@0.21.4:
-    resolution: {integrity: sha512-ebhcunChWfBMcOq3x7lrbzgdEHw9ZEV6SNPVKwC5xT7d7v34uGzgsAgFmNTEDpXqtWfSQgKRyMVHmEFzl/ch5w==}
+  joshuakgoldberg@0.25.0:
+    resolution: {integrity: sha512-wFoUoQkQGkjFlbcpDZghaqqTEIBORtWGP7tr27b6bwhVOy9J3jpMfBHXNM23l53Szlg6I3Njyg5379RgmhqrzA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -7218,6 +7222,8 @@ snapshots:
 
   chalk@5.6.2: {}
 
+  chalk@6.0.1: {}
+
   change-case@5.4.4: {}
 
   character-entities-html4@2.1.0: {}
@@ -8561,9 +8567,9 @@ snapshots:
 
   jiti@2.7.0: {}
 
-  joshuakgoldberg@0.21.4:
+  joshuakgoldberg@0.25.0:
     dependencies:
-      chalk: 5.6.2
+      chalk: 6.0.1
 
   js-tokens@4.0.0: {}
 
