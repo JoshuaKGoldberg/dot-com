@@ -65,6 +65,7 @@ pnpm tsc --project worker
 
 The site is a [Cloudflare Worker](https://developers.cloudflare.com/workers/static-assets) configured in `wrangler.jsonc`.
 Cloudflare builds and deploys it on every push to `main`.
+It serves `www.joshuakgoldberg.com`, and a Cloudflare redirect rule sends `joshuakgoldberg.com` to `www`.
 
 Files in the Astro build are always served first.
 Any other path is looked up in the `joshuakgoldberg-files` [R2](https://developers.cloudflare.com/r2) bucket by `worker/index.ts`.

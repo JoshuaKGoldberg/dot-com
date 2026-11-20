@@ -28,7 +28,7 @@ export default {
 			{ onlyIf: request.headers },
 		);
 		if (object) {
-			return toResponse(object, request.method);
+			return toResponse(object, key, request.method);
 		}
 
 		// Like Apache, send /folder to /folder/ when the folder has an index.html
@@ -56,10 +56,19 @@ function toKey(pathname: string) {
 	}
 }
 
-function toResponse(object: R2Object | R2ObjectBody, method: string) {
+function toResponse(
+	object: R2Object | R2ObjectBody,
+	key: string,
+	method: string,
+) {
 	const headers = new Headers();
 	object.writeHttpMetadata(headers);
 	headers.set("etag", object.httpEtag);
+
+	// Other sites load the karaoke images, as the old Apache .htaccess allowed
+	if (key.startsWith("karaoke/")) {
+		headers.set("access-control-allow-origin", "*");
+	}
 
 	// R2 leaves out the body when the request's If-None-Match etc. matched
 	if (!("body" in object)) {
