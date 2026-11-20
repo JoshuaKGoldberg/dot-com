@@ -12,4 +12,11 @@
 			"bucket_name": "joshuakgoldberg-files",
 		},
 	],
+	"routes": [
+		{
+			"custom_domain": true,
+			"pattern": "www.joshuakgoldberg.com",
+		},
+	],
+	"workers_dev": true,
 }
