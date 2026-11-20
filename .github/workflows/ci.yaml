@@ -76,6 +76,7 @@ jobs:
       - uses: ./.github/actions/prepare
       - run: pnpm astro sync
       - run: pnpm tsc
+      - run: pnpm tsc --project worker
 
 name: CI
 

@@ -55,6 +55,31 @@ Add `--watch` to keep the type checker running in a watch mode that updates the 
 pnpm tsc --watch
 ```
 
+The Cloudflare Worker in `worker/` has its own TypeScript project:
+
+```shell
+pnpm tsc --project worker
+```
+
+## Deployment
+
+The site is a [Cloudflare Worker](https://developers.cloudflare.com/workers/static-assets) configured in `wrangler.jsonc`.
+Cloudflare builds and deploys it on every push to `main`.
+
+Files in the Astro build are always served first.
+Any other path is looked up in the `joshuakgoldberg-files` [R2](https://developers.cloudflare.com/r2) bucket by `worker/index.ts`.
+That bucket holds files that aren't checked into this repository, such as old talks and downloads, at the same paths they're served from.
+
+To preview the site the way Cloudflare serves it, build it and then run the Worker locally:
+
+```shell
+pnpm build
+pnpm preview:worker
+```
+
+Local previews use an empty local copy of the bucket.
+Add files to it with `pnpm wrangler r2 object put joshuakgoldberg-files/<path> --file <file> --local`.
+
 ## 🧞 Astro Commands
 
 All Astro commands are run from the root of the project, from a terminal:

@@ -1,5 +1,6 @@
 *.psd
 .DS_Store
 .astro/
+.wrangler/
 /node_modules
 dist/
