@@ -6,6 +6,15 @@
 	"compatibility_date": "2026-11-18",
 	"main": "worker/index.ts",
 	"name": "dot-com",
+	// The Worker only reads FILES, so previews can share the production bucket.
+	"previews": {
+		"r2_buckets": [
+			{
+				"binding": "FILES",
+				"bucket_name": "joshuakgoldberg-files",
+			},
+		],
+	},
 	"r2_buckets": [
 		{
 			"binding": "FILES",
