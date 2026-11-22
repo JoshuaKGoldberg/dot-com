@@ -1,0 +1,60 @@
+/* #272 Section Marks: a tiny ridge-and-aurora doodle after each section title. */
+
+.site .qa-mark {
+	margin-left: 0.7rem;
+	overflow: visible;
+	vertical-align: -0.05em;
+}
+
+.site .qa-mark-ridge {
+	fill: none;
+	stroke: var(--siteAccent);
+	stroke-dasharray: 1;
+	stroke-dashoffset: 1;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-opacity: 0.7;
+	stroke-width: 1.1;
+}
+
+.site .qa-mark-sky {
+	opacity: 0;
+	transform: rotate(var(--lean, 0deg));
+	transform-box: fill-box;
+	transform-origin: 50% 100%;
+	transition: opacity 1.4s ease 1.4s, transform 0.8s ease-out;
+}
+
+.site .qa-mark-aurora {
+	fill: none;
+	stroke: #4aa58f;
+	stroke-linecap: round;
+	stroke-opacity: 0.55;
+	stroke-width: 1;
+}
+
+html.dark .site .qa-mark-aurora {
+	stroke: #6fe3b4;
+	stroke-opacity: 0.7;
+}
+
+.site .qa-mark.is-drawn .qa-mark-ridge {
+	stroke-dashoffset: 0;
+	transition: stroke-dashoffset 1.6s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.site .qa-mark.is-drawn .qa-mark-sky {
+	opacity: var(--glow, 0.8);
+}
+
+html.reduce-motion .site .qa-mark-ridge,
+html.reduce-motion .site .qa-mark-sky {
+	transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .qa-mark-ridge,
+	.site .qa-mark-sky {
+		transition: none !important;
+	}
+}

@@ -1,0 +1,52 @@
+/* Token plan
+ * Families: IBM Plex Serif 400, Sans 400/500, Mono 400 (dates).
+ * Scale: hero 61px, -0.035em; tagline Sans 1.3rem; ratio 2.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: A single engineered family with developer identity; mono only for dates and locations.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "IBM Plex Serif Fallback"; src: local("Georgia"); size-adjust: 104.8%; ascent-override: 97.3%; descent-override: 25.8%; line-gap-override: 0%; }
+@font-face { font-family: "IBM Plex Sans Fallback"; src: local("Arial"); size-adjust: 101.1%; ascent-override: 100.9%; descent-override: 26.7%; line-gap-override: 0%; }
+@font-face { font-family: "IBM Plex Mono Fallback"; src: local("Courier New"); size-adjust: 100.0%; ascent-override: 102.0%; descent-override: 27.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #397 IBM Plex: Serif hero, Sans text, Mono for the graph labels. One family with a developer identity. */
+.site {
+	--tyDisplay: "IBM Plex Serif", "IBM Plex Serif Fallback", Georgia, serif;
+	--tyBody: "IBM Plex Sans", "IBM Plex Sans Fallback", system-ui, sans-serif;
+	--tyMono: "IBM Plex Mono", "IBM Plex Mono Fallback", ui-monospace, Menlo, monospace;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.5rem, 12.5cqi, 4.3rem);
+	--tyTitleW: 400;
+	--tyTitleLs: -0.035em;
+	--tyTitleLh: 1;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.3rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.005em;
+	--tyTagLh: 1.4;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.15rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1rem;
+	--tyUiW: 500;
+	--tyNavSize: 1rem;
+	--tyLogoSize: 1.1rem;
+	--tySocialSize: 0.95rem;
+	--tySecSize: 1.9rem;
+	--tySecW: 400;
+	--tySecLs: -0.025em;
+	--tyItemW: 500;
+	--tyItemSize: 1.15rem;
+	--tyMetaFont: var(--tyMono);
+	--tyMetaSize: 0.8rem;
+	--tyMetaLs: 0;
+}

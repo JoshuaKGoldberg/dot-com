@@ -1,0 +1,11 @@
+/* 293. Margin Meteors: soft top aurora; meteors streak through the side margins. */
+.site {
+	--siteBg: #fdffff; --siteFg: #283556; --siteFgStrong: #142842; --siteMuted: #4a5a7a;
+	--siteAccent: #2160b0; --siteSquiggle: #d98d4a; --siteSubtle: #e6ecf6;
+}
+html.dark .site {
+	--siteBg: #0a1020; --siteFg: #d6e2f2; --siteFgStrong: #f4f8ff; --siteMuted: #a5b6d2;
+	--siteAccent: #8ab8ff; --siteSquiggle: #f0b45a; --siteSubtle: #121c36;
+}
+.site .scenery-a { background: linear-gradient(#eef1fb 0%, var(--siteBg) 40%); }
+html.dark .site .scenery-a { background: linear-gradient(#050a18 0%, var(--siteBg) 45%); }

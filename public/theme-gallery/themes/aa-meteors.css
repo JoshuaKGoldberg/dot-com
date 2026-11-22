@@ -1,0 +1,29 @@
+@import url("./_aurora-d/base.css");
+
+.site {
+	--siteBg: #f1eff9;
+	--siteFg: #232a4a;
+	--siteFgStrong: #0f1430;
+	--siteMuted: #4f587c;
+	--siteAccent: #2f6fb5;
+	--siteSquiggle: #e09a4a;
+	--siteSubtle: #e2e0f2;
+}
+
+html.dark .site {
+	--siteBg: #050a1a;
+	--siteFg: #d6e2f2;
+	--siteFgStrong: #f4f8ff;
+	--siteMuted: #a5b6d2;
+	--siteAccent: #ffd58a;
+	--siteSquiggle: #f0b45a;
+	--siteSubtle: #0f1a38;
+}
+
+.site .scenery-a {
+	background: linear-gradient(#aab6e6, #f8e4dc 80%, #c9bfd8);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#01030b, #1c2d58 80%, #0b1633);
+}

@@ -1,0 +1,28 @@
+/* _refined-e/base.css: shared footer-stage layout + margin sky for wave-12 footer themes. Keeps Josh's real colors. */
+.site .site-page { padding-bottom: 0; }
+.site .site-footer {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	margin-top: 1.5rem;
+	min-height: 260px;
+	opacity: 1;
+	padding: 0 0 2.1rem;
+	position: relative;
+}
+.site .site-footer > :not(.ra-foot) { position: relative; z-index: 3; }
+.site .site-footer p { margin: 0 0 0.6rem; }
+.site .ra-foot { bottom: 0; contain: layout paint; overflow: hidden; pointer-events: none; position: absolute; top: 0; z-index: 0; }
+.site .ra-foot > * { pointer-events: none; }
+
+.site .ra-margin-sky { inset: 0; pointer-events: none; position: absolute; }
+.site .ra-ms { height: 100%; left: 0; position: absolute; top: 0; width: 100%; will-change: opacity; }
+.site .ra-ms.stars { animation: ra-tw 7s ease-in-out infinite alternate; }
+.site .ra-ms.stars.s1 { animation-duration: 11s; animation-delay: -4s; }
+.site .ra-ms.wisp { animation: ra-wisp 40s ease-in-out infinite alternate; }
+@keyframes ra-tw { from { opacity: 0.45; } to { opacity: 1; } }
+@keyframes ra-wisp { from { opacity: 0.7; transform: translate3d(0, 0, 0); } to { opacity: 1; transform: translate3d(0, 6px, 0); } }
+@media (max-width: 860px) { .site .ra-margin-sky { display: none; } }
+@media (prefers-reduced-motion: reduce) { .site .ra-ms { animation: none; } }
+html.reduce-motion .site .ra-ms { animation: none; }

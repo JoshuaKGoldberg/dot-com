@@ -1,0 +1,54 @@
+/* Token plan
+ * Families: Mona Sans wdth 75-125 x wght 300-900.
+ * Scale: hero two lines, wdth 125 wght 640 at 80px, -0.035em; tagline wdth 88 at 1.3rem; ratio 3.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: GitHub's variable width axis: wide confident hero, condensed body for density.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Mona+Sans:wdth,wght@75..125,300..900&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Mona Sans Fallback"; src: local("Arial"); size-adjust: 101.4%; ascent-override: 107.5%; descent-override: 31.6%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #398 Mona Sans: wide and confident for the hero (wdth 125), tight for the body (wdth 88). */
+.site {
+	--tyDisplay: "Mona Sans", "Mona Sans Fallback", Arial, sans-serif;
+	--tyBody: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 16.5cqi, 5.2rem);
+	--tyTitleW: 640;
+	--tyTitleWd: 580;
+	--tyTitleVs: "wdth" 125;
+	--tyTitleLs: -0.035em;
+	--tyTitleLh: 0.95;
+	--tyTitleShift: -0.05em;
+	--tyTagSize: 1.3rem;
+	--tyTagW: 400;
+	--tyTagVs: "wdth" 88;
+	--tyTagLs: 0;
+	--tyTagLh: 1.35;
+	--tyTagMax: 24em;
+
+	--tyBodyW: 380;
+	--tyAboutSize: 1.2rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 560;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.15rem;
+	--tyLogoW: 650;
+	--tySecSize: 1.9rem;
+	--tySecW: 650;
+	--tySecWd: 600;
+	--tySecVs: "wdth" 112;
+	--tySecLs: -0.03em;
+	--tyItemW: 600;
+	--tyItemVs: "wdth" 100;
+	--tyItemSize: 1.2rem;
+	--tyMetaSize: 0.9rem;
+	--tyMetaW: 450;
+}
+.site .site-about, .site .site-item-description { font-variation-settings: "wdth" 92; }

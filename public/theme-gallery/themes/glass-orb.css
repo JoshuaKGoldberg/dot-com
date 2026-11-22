@@ -1,0 +1,33 @@
+.site {
+	--siteBg: #f3f6fa;
+	--siteFg: #243049;
+	--siteFgStrong: #101a30;
+	--siteMuted: #5a6882;
+	--siteAccent: #0f6fbd;
+	--siteSquiggle: #3fb0d8;
+	--siteSubtle: #dbe6f1;
+	--orbLine: 20, 50, 110;
+	--orbBlobA: 120, 190, 255;
+	--orbBlobB: 255, 170, 200;
+	--orbBlobC: 150, 235, 200;
+}
+
+html.dark .site {
+	--siteBg: #080d18;
+	--siteFg: #d3deee;
+	--siteFgStrong: #f0f5fc;
+	--siteMuted: #8d9bb5;
+	--siteAccent: #7cc4ff;
+	--siteSquiggle: #4cb4f0;
+	--siteSubtle: #12203a;
+	--orbLine: 140, 190, 255;
+	--orbBlobA: 40, 110, 220;
+	--orbBlobB: 170, 60, 150;
+	--orbBlobC: 30, 160, 140;
+}
+
+.site .site-scenery .scenery-a canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}

@@ -1,0 +1,57 @@
+/* Token plan
+ * Families: Cormorant Garamond 500-700 + Source Serif 4 400 + Courier Prime 400 (dates).
+ * Scale: hero wght 600 at 76px; tagline Source Serif 1.3rem; ratio 3.6x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #51: specimen-sheet feel; typewriter face limited to dates and locations.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500..700&family=Source+Serif+4:opsz,wght@8..60,400&family=Courier+Prime:wght@400&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Cormorant Garamond Fallback"; src: local("Georgia"); size-adjust: 88.0%; ascent-override: 104.6%; descent-override: 33.0%; line-gap-override: 0%; }
+@font-face { font-family: "Source Serif 4 Fallback"; src: local("Georgia"); size-adjust: 90.4%; ascent-override: 115.1%; descent-override: 37.6%; line-gap-override: 0%; }
+@font-face { font-family: "Courier Prime Fallback"; src: local("Courier New"); size-adjust: 99.9%; ascent-override: 78.1%; descent-override: 34.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #402 (from #51) Specimen drawer: Cormorant Garamond display, Source Serif 4 text, Courier Prime for dates and graph captions only. */
+.site {
+	--tyDisplay: "Cormorant Garamond", "Cormorant Garamond Fallback", Garamond, Georgia, serif;
+	--tyBody: "Source Serif 4", "Source Serif 4 Fallback", Georgia, serif;
+	--tyMono: "Courier Prime", "Courier Prime Fallback", "Courier New", monospace;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 15.5cqi, 5.6rem);
+	--tyTitleW: 600;
+	--tyTitleWd: 560;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.045em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.3rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.35;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.6;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.1rem;
+	--tyLogoSize: 1.5rem;
+	--tySocialSize: 1.05rem;
+	--tySecSize: 2.3rem;
+	--tySecW: 600;
+	--tySecWd: 560;
+	--tyItemFont: var(--tyBody);
+	--tyItemW: 400;
+	--tyItemSize: 1.25rem;
+	--tyMetaFont: var(--tyMono);
+	--tyMetaSize: 0.8rem;
+	--tyMetaLs: 0.02em;
+}
+.site .site-logo { font-family: var(--tyDisplay); font-weight: 600; }
+.site .site-item-title { text-decoration-thickness: 1px; }

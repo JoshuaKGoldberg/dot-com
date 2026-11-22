@@ -1,0 +1,405 @@
+/* ---- shared plumbing: zero JavaScript, no themes/<id>.js ---- */
+
+@property --sway {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	scroll-timeline: --pg block;
+	transition: --sway 1.6s linear(0, 0.2 6%, 0.62 14%, 0.97 22%, 1.12 30%, 1.13 36%, 1.06 46%, 0.98 58%, 0.99 70%, 1.005 82%, 1);
+}
+
+.site:has(.site-link:hover, .site-nav-link:hover, .site-item:hover) {
+	--sway: 1;
+}
+
+/* soft scrims so prose stays readable over the scene; sections read as clearings */
+.site-header,
+.site-hero,
+.site-about,
+.site-section,
+.site-footer {
+	background: color-mix(in srgb, var(--siteBg) var(--scrim, 82%), transparent);
+	border-radius: 1.4rem;
+	box-shadow: 0 0 1.6rem 0.9rem color-mix(in srgb, var(--siteBg) calc(var(--scrim, 82%) * 0.9), transparent);
+	box-sizing: border-box;
+	padding: 0.9rem 1.4rem;
+}
+
+.site-hero {
+	margin-block: 5rem 3.2rem;
+	padding: 1.6rem 1.8rem;
+}
+
+.site-about,
+.site-section {
+	margin-bottom: 3.2rem;
+}
+
+.site-about {
+	padding-block: 1.4rem;
+}
+
+.site-footer {
+	margin-top: 4rem;
+	opacity: 1;
+	padding-block: 1.4rem;
+}
+
+.site-page {
+	padding-bottom: 46vh;
+}
+
+.site-portrait img {
+	box-shadow: 0 6px 22px 0 color-mix(in srgb, var(--siteFgStrong) 22%, transparent);
+}
+
+/* badge + tags, in the spirit of #158 */
+.site .overlay-b::before {
+	background: var(--badgeBg);
+	border: 1.5px solid var(--badgeLine);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: "0 KB JavaScript \A shipped by this theme";
+	font: 700 0.72rem/1.25 var(--siteFont);
+	left: 1rem;
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: absolute;
+	text-align: center;
+	white-space: pre;
+}
+
+.site .overlay-b::after {
+	background: var(--badgeBg);
+	border: 1px solid var(--badgeLine);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: var(--tags);
+	font: 600 0.64rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+	max-width: 22rem;
+	opacity: 0.92;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 760px) {
+	.site .overlay-b::after {
+		display: none;
+	}
+}
+
+/* gentle scroll-driven reveals (only when motion is welcome) */
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title) {
+			animation: zjd-rise linear both;
+			animation-range: entry 0% entry 80%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjd-rise {
+	from {
+		opacity: 0;
+		translate: 0 1.2rem;
+	}
+}
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c)::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+}
+
+.site :is(.site-header, .site-main, .site-footer)::before,
+.site :is(.site-header, .site-main, .site-footer)::after {
+	content: "";
+	pointer-events: none;
+	position: fixed;
+	z-index: -1;
+}
+/*
+ * Sky to Lake III: Birch Canopy. Zero JS, there is no themes/zj-descent-birch.js.
+ *   scroll-timeline                -> you look up through the leaves, then the trunks slide past, then you reach the floor
+ *   mask + gradient                -> leaf clusters, boughs, ferns and the brook are alpha masks tinted by gradients
+ *   repeating-conic-gradient       -> sunbeams fanning through the canopy
+ *   @property --sway + linear()    -> hover a link and the beams sway and the brook glints, on a spring
+ *   html.dark                      -> a moonlit variant with silver trunks
+ */
+
+@property --sk0 { inherits: true; initial-value: #8fd0ec; syntax: "<color>"; }
+.site {
+	--siteBg: #f7fbf1;
+	--siteFg: #223224;
+	--siteFgStrong: #0f2112;
+	--siteMuted: #546a52;
+	--siteAccent: #2a7a2a;
+	--siteSquiggle: #7cbf3a;
+	--siteSubtle: #dcebcb;
+	--scrim: 82%;
+	--leaf-far-a: #b7de72;
+	--leaf-far-b: #7fbc4a;
+	--leaf-near-a: #8fc74a;
+	--leaf-near-b: #3f8a2c;
+	--bough: #3a2c1e;
+	--moss-a: #6c9a3c;
+	--moss-b: #3f6a2a;
+	--moss-c: #223d1a;
+	--fern-a: #6fae42;
+	--fern-b: #2f6a26;
+	--fern-c: #1b4220;
+	--water-a: #6db0bf;
+	--water-b: #c4ecef;
+	--sk0: #8fd0ec;
+	--sk1: #e2f3dc;
+	--badgeBg: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	--badgeFg: var(--siteFgStrong);
+	--badgeLine: color-mix(in srgb, var(--siteSquiggle) 75%, transparent);
+	--tags: "scroll-timeline \00b7 mask \00b7 conic-gradient \00b7 @property \00b7 linear()";
+}
+
+html.dark .site {
+	--siteBg: #0b1a17;
+	--siteFg: #d6e8de;
+	--siteFgStrong: #f1faf4;
+	--siteMuted: #93b0a2;
+	--siteAccent: #8de39a;
+	--siteSquiggle: #6fe0a0;
+	--siteSubtle: #12302a;
+	--scrim: 80%;
+	--leaf-far-a: #2c5a58;
+	--leaf-far-b: #173c3e;
+	--leaf-near-a: #1d4a3a;
+	--leaf-near-b: #0b2a24;
+	--bough: #060d0c;
+	--moss-a: #2a4a38;
+	--moss-b: #173126;
+	--moss-c: #0a1a14;
+	--fern-a: #2c6a4a;
+	--fern-b: #123a2a;
+	--fern-c: #061a12;
+	--water-a: #1d4a63;
+	--water-b: #7fc2d8;
+	--sk0: #0a2a3a;
+	--sk1: #2f5c58;
+}
+
+/* ---- sky glimpsed through the leaves: two pre-colored layers crossfaded by scroll opacity ---- */
+
+.site {
+	--sk0e: #bfe6e8;
+	--sk1e: #f4f1cf;
+}
+
+html.dark .site {
+	--sk0e: #123c4a;
+	--sk1e: #4b7a70;
+}
+
+.site::before,
+.site-page::before {
+	background: linear-gradient(180deg, var(--sk0), var(--sk1));
+	contain: paint;
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: fixed;
+	top: var(--barHeight, 0);
+	will-change: opacity;
+	z-index: -3;
+}
+
+.site-page::before {
+	background: linear-gradient(180deg, var(--sk0e), var(--sk1e));
+	opacity: 0;
+	z-index: -2;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site-page::before {
+			animation: zjb-sky linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zjb-sky { to { opacity: 1; } }
+
+/* ---- sunbeams (rotated by scroll, not re-painted) ---- */
+
+.site .scenery-a::before {
+	background: repeating-conic-gradient(from 168deg at 62% -18%, rgb(255 250 205 / 0.55) 0 2.4deg, transparent 2.4deg 7.5deg);
+	contain: paint;
+	inset: 0;
+	mask: radial-gradient(ellipse 90% 85% at 62% -10%, #000 20%, transparent 78%);
+	opacity: 0.8;
+	transform: rotate(calc(var(--sway) * 6deg));
+	transform-origin: 62% -18%;
+	will-change: transform;
+}
+
+html.dark .site .scenery-a::before {
+	transform-origin: 70% -18%;
+	background: repeating-conic-gradient(from 168deg at 70% -18%, rgb(190 225 255 / 0.28) 0 2deg, transparent 2deg 8deg);
+}
+
+.site .scenery-a::after {
+	background: linear-gradient(180deg, #fff, #e2f1f4);
+	height: 55vh;
+	left: -10vw;
+	mask: url("zj-descent-birch/clouds.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0.55;
+	top: 0;
+	width: 240vw;
+}
+
+html.dark .site .scenery-a::after {
+	background: #4a7e86;
+	opacity: 0.25;
+}
+
+/* ---- canopy: far leaves, near leaves, boughs ---- */
+
+/* scenery-b is an unmasked holder so its masked pseudos are never clipped by a host mask */
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site-footer::before {
+	height: 105vh;
+	inset: 0 0 auto 0;
+}
+
+.site .scenery-b::before {
+	background: linear-gradient(180deg, var(--leaf-far-a), var(--leaf-far-b));
+	mask: url("zj-descent-birch/leaves-b.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0.9;
+	translate: 0 -55vh;
+}
+
+.site .scenery-b::after {
+	background: linear-gradient(180deg, var(--leaf-near-b) -10%, var(--leaf-near-a) 70%);
+	mask: url("zj-descent-birch/leaves-a.svg") 160px 0 / auto 118% repeat-x;
+	translate: 0 -62vh;
+}
+
+.site-footer::before {
+	background: var(--bough);
+	left: 0;
+	mask: url("zj-descent-birch/boughs.svg") 0 0 / auto 100% repeat-x;
+	right: 0;
+	translate: 0 -80vh;
+	top: 0;
+}
+
+/* ---- trunks: full-height, so they always run off the top and bottom of the frame (no floating ends) ---- */
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	height: 170vh;
+	inset: 0 0 auto 0;
+}
+
+/* static (reduced-motion) composition: far trunks stand behind the floor */
+.site .scenery-c::before {
+	background: url("zj-descent-birch/birch-far.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0.8;
+}
+
+.site .scenery-c::after {
+	background: url("zj-descent-birch/birch-near.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0;
+}
+
+html.dark .site .scenery-c::before { background-image: url("zj-descent-birch/birch-far-dark.svg"); }
+html.dark .site .scenery-c::after { background-image: url("zj-descent-birch/birch-near-dark.svg"); }
+
+/* ---- forest floor: moss, far ferns, near ferns, a brook ---- */
+
+.site-header::before,
+.site-header::after,
+.site-main::before,
+.site-main::after {
+	left: 0;
+	right: 0;
+	translate: 0 0;
+}
+
+.site-header::before {
+	background:
+		radial-gradient(ellipse 18% 22% at 14% 30%, rgb(190 230 110 / 0.32), transparent),
+		radial-gradient(ellipse 22% 24% at 62% 46%, rgb(190 230 110 / 0.26), transparent),
+		radial-gradient(ellipse 16% 28% at 86% 28%, rgb(150 210 100 / 0.3), transparent),
+		radial-gradient(ellipse 30% 18% at 38% 70%, rgb(10 30 10 / 0.28), transparent),
+		linear-gradient(180deg, var(--moss-a), var(--moss-b) 45%, var(--moss-c));
+	bottom: 0;
+	height: 46vh;
+	mask: url("zj-descent-birch/ground-edge.svg") 0 bottom / auto 100% repeat-x;
+}
+
+.site-header::after {
+	background: linear-gradient(180deg, var(--fern-a), var(--fern-b));
+	bottom: 31vh;
+	height: 17vh;
+	mask: url("zj-descent-birch/ferns-far.svg") 0 bottom / auto 100% repeat-x;
+}
+
+.site-main::before {
+	background:
+		repeating-linear-gradient(103deg, rgb(255 255 255 / 0.3) 0 2px, transparent 2px 23px),
+		repeating-linear-gradient(97deg, rgb(255 255 255 / 0.22) 0 1px, transparent 1px 37px),
+		linear-gradient(90deg, var(--water-a), var(--water-b) 40%, var(--water-a) 75%, var(--water-b));
+	bottom: 5vh;
+	height: 22vh;
+	mask: url("zj-descent-birch/brook.svg") 0 0 / 100% 100% no-repeat;
+	opacity: calc(0.85 + var(--sway) * 0.1);
+}
+
+.site-main::after {
+	background: linear-gradient(180deg, var(--fern-a) 5%, var(--fern-b) 45%, var(--fern-c));
+	bottom: -2vh;
+	height: 27vh;
+	mask: url("zj-descent-birch/ferns.svg") 0 bottom / auto 100% repeat-x;
+}
+
+/* ---- scroll maps the journey ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer),
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::before,
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::after {
+			animation-fill-mode: both;
+			animation-timeline: --pg;
+			animation-timing-function: linear;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::before { animation-name: zjb-beam; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a::after { animation-name: zjb-clouds; animation-range: 0% 50%; }
+		html:not(.reduce-motion) .site .scenery-b::before { animation-name: zjb-leaf-far; animation-range: 0% 55%; }
+		html:not(.reduce-motion) .site .scenery-b::after { animation-name: zjb-leaf-near; animation-range: 0% 50%; }
+		html:not(.reduce-motion) .site .site-footer::before { animation-name: zjb-bough; animation-range: 0% 44%; }
+		html:not(.reduce-motion) .site .scenery-c::before { animation-name: zjb-far; animation-range: 8% 64%; }
+		html:not(.reduce-motion) .site .scenery-c::after { animation-name: zjb-near; animation-range: 16% 74%; }
+		html:not(.reduce-motion) .site .site-header::before { animation-name: zjb-ground; animation-range: 52% 100%; }
+		html:not(.reduce-motion) .site .site-header::after { animation-name: zjb-ground; animation-range: 52% 100%; }
+		html:not(.reduce-motion) .site .site-main::before { animation-name: zjb-ground; animation-range: 52% 100%; }
+		html:not(.reduce-motion) .site .site-main::after { animation-name: zjb-ground; animation-range: 52% 100%; }
+	}
+}
+
+@keyframes zjb-beam { to { rotate: 14deg; } }
+@keyframes zjb-clouds { to { translate: 0 -30vh; } }
+@keyframes zjb-leaf-far { to { translate: 0 -105vh; } }
+@keyframes zjb-leaf-near { to { translate: 0 -125vh; } }
+@keyframes zjb-bough { to { translate: 0 -150vh; } }
+@keyframes zjb-far { 0% { opacity: 0; translate: 0 -20vh; } 40%, 100% { opacity: 0.8; translate: 0 0; } }
+@keyframes zjb-near { 0% { opacity: 0; translate: 0 -5vh; } 25%, 70% { opacity: 1; } 100% { opacity: 0; translate: 0 -70vh; } }
+@keyframes zjb-ground { from { translate: 0 60vh; } to { translate: 0 0; } }

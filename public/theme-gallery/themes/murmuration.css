@@ -1,0 +1,31 @@
+/* 78 — Murmuration Text */
+@import url("./_kit/kit.css");
+
+.site {
+	--siteBg: #eef2f6;
+	--siteFg: #1f2b3d;
+	--siteFgStrong: #0d1626;
+	--siteMuted: #546179;
+	--siteAccent: #1b4fb5;
+	--siteSquiggle: #2d6fe0;
+	--siteSubtle: #d9e2ec;
+}
+html.dark .site {
+	--siteBg: #080d18;
+	--siteFg: #d9e4f0;
+	--siteFgStrong: #f3f8ff;
+	--siteMuted: #8fa2bd;
+	--siteAccent: #86bfff;
+	--siteSquiggle: #6fd6e6;
+	--siteSubtle: #101c30;
+}
+.site .site-title { letter-spacing: -0.02em; }
+.site .scenery-a {
+	background:
+		radial-gradient(70% 60% at 50% 42%, color-mix(in srgb, var(--siteAccent) 10%, transparent), transparent 70%);
+}
+.site .site-about p,
+.site .site-item,
+.site .site-section-title {
+	text-shadow: 0 0 5px var(--siteBg), 0 0 12px var(--siteBg), 0 0 22px var(--siteBg);
+}

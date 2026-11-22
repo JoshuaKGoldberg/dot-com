@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@600;700;800&display=swap");
+
+.site {
+	--siteBg: #f1f4f7;
+	--siteFg: #27303d;
+	--siteFgStrong: #0e141d;
+	--siteMuted: #5d6b7c;
+	--siteAccent: #1766c9;
+	--siteSquiggle: #f08a24;
+	--siteSubtle: #dbe3ec;
+	--siteFont: "Barlow", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Barlow Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+	--chTile-a: #2f86f0;
+	--chTile-b: #1459b8;
+	--chTile-text: #fff;
+	--chMetal: 74 84 98;
+	--chMetalHi: 214 222 232;
+	--chPin: #8a97a8;
+}
+
+html.dark .site {
+	--siteBg: #0a0f17;
+	--siteFg: #d3dce8;
+	--siteFgStrong: #f2f6fb;
+	--siteMuted: #92a2b6;
+	--siteAccent: #6db3ff;
+	--siteSquiggle: #ffae5c;
+	--siteSubtle: #131c2a;
+	--chTile-a: #7fbcff;
+	--chTile-b: #3d86e0;
+	--chTile-text: #07101d;
+	--chMetal: 150 164 184;
+	--chMetalHi: 235 242 250;
+	--chPin: #5e6c80;
+}
+
+.site .scenery-a {
+	background:
+		repeating-linear-gradient(90deg, rgb(20 40 70 / 0.035) 0 1px, transparent 1px 48px),
+		linear-gradient(180deg, #e6ecf3, var(--siteBg) 40%);
+}
+
+html.dark .site .scenery-a {
+	background:
+		repeating-linear-gradient(90deg, rgb(150 190 255 / 0.04) 0 1px, transparent 1px 48px),
+		linear-gradient(180deg, #101a2a, var(--siteBg) 40%);
+}
+
+.site-title,
+.site-section-title,
+.site-item-title {
+	font-family: var(--siteFontDisplay);
+	letter-spacing: 0.005em;
+}
+
+.site-title {
+	font-size: clamp(3rem, 7vw, 4.6rem);
+	font-weight: 800;
+	text-transform: uppercase;
+}
+
+.site-section-title {
+	font-size: 2rem;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.site-item-title {
+	font-size: 1.6rem;
+	font-weight: 700;
+}
+
+.site .site-header {
+	position: relative;
+	z-index: 6;
+}
+
+.site .ch-stage {
+	flex: 1 0 100%;
+	height: 158px;
+	order: 5;
+	position: relative;
+}
+
+.site .ch-canvas {
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+
+.site .site-logo.ch-logo {
+	font-size: 0;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .ch-letter {
+	align-items: center;
+	background: linear-gradient(180deg, var(--chTile-a), var(--chTile-b));
+	border-radius: 7px;
+	box-shadow:
+		inset 0 1px 0 rgb(255 255 255 / 0.45),
+		inset 0 -2px 0 rgb(0 0 0 / 0.22),
+		0 4px 8px rgb(0 0 0 / 0.28);
+	color: var(--chTile-text);
+	cursor: grab;
+	display: flex;
+	font: 800 1.9rem/1 var(--siteFontDisplay);
+	height: 42px;
+	justify-content: center;
+	left: 0;
+	letter-spacing: 0.01em;
+	pointer-events: auto;
+	position: absolute;
+	text-transform: uppercase;
+	top: 0;
+	touch-action: none;
+	user-select: none;
+	-webkit-user-select: none;
+	will-change: transform;
+	z-index: 2;
+}
+
+.site .ch-letter:nth-child(even) {
+	background: linear-gradient(180deg, var(--chTile-b), color-mix(in srgb, var(--chTile-b) 70%, #000));
+}
+
+html.dark .site .ch-letter:nth-child(even) {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--chTile-a) 70%, #fff), var(--chTile-a));
+}
+
+.site .ch-letter::before,
+.site .ch-letter::after {
+	background: rgb(0 0 0 / 0.55);
+	border-radius: 50%;
+	box-shadow: 0 1px 0 rgb(255 255 255 / 0.25);
+	content: "";
+	height: 5px;
+	position: absolute;
+	top: calc(50% - 2.5px);
+	width: 5px;
+}
+
+.site .ch-letter::before {
+	left: 3px;
+}
+
+.site .ch-letter::after {
+	right: 3px;
+}
+
+.site .ch-letter.is-gap {
+	background: none;
+	box-shadow: none;
+	pointer-events: none;
+}
+
+.site .ch-letter.is-gap::before,
+.site .ch-letter.is-gap::after {
+	display: none;
+}
+
+.site .ch-letter.is-grabbed {
+	cursor: grabbing;
+	filter: none;
+	z-index: 4;
+}
+
+.site .ch-logo:focus-visible .ch-letter {
+	outline: 2px solid var(--siteSquiggle);
+	outline-offset: 2px;
+}
+
+.site .ch-controls {
+	align-items: center;
+	bottom: 0.9rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	justify-content: flex-end;
+	max-width: calc(100% - 1.6rem);
+	pointer-events: none;
+	position: absolute;
+	right: 0.8rem;
+	z-index: 5;
+}
+
+.site .ch-hint,
+.site .ch-btn {
+	background: color-mix(in srgb, var(--siteBg) 94%, transparent);
+	border: 1px solid rgb(var(--chMetal) / 0.45);
+	border-radius: 999px;
+	color: var(--siteMuted);
+	font: 500 0.78rem/1 var(--siteFont);
+	padding: 0.5rem 0.85rem;
+}
+
+.site .ch-hint {
+	transition: opacity 0.6s;
+}
+
+.site .ch-hint.is-gone {
+	opacity: 0;
+}
+
+.site .ch-btn {
+	box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.site .ch-btn:hover {
+	border-color: var(--siteAccent);
+}
+
+.site .ch-btn[aria-pressed="true"] {
+	background: var(--siteFgStrong);
+	color: var(--siteBg);
+}
+
+.site .ch-btn:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+	.site .ch-hint {
+		display: none;
+	}
+}

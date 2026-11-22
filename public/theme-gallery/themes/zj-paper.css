@@ -1,0 +1,329 @@
+/*
+ * Zero JS: Paper Cut. There is no zj-paper.js: everything here is CSS.
+ *   clip-path       -> three layers of cut paper: far ridge, mid ridge, foreground hills
+ *   scroll-driven   -> the layers slide at different speeds (parallax, transform only)
+ *   sibling-index() + sin() -> every card sits at its own slightly-off angle
+ *   box-shadow      -> stacked paper rings around the portrait; cards lift off the page on :hover
+ *   baked noise     -> one tiny tiled data-URI image gives the whole page paper grain
+ */
+
+.site {
+	--siteBg: #f8ecd6;
+	--siteFg: #3b2f2a;
+	--siteFgStrong: #231a16;
+	--siteMuted: #75655c;
+	--siteAccent: #b5472f;
+	--siteSquiggle: #e07a4f;
+	--siteSubtle: #f1dfc1;
+	--card: #fffaf0;
+	--sun: #f2a65a;
+	--ridge1: #ecbd9f;
+	--ridge2: #d08f80;
+	--ridge3: #6f9879;
+	--ribbon: #d2573a;
+	--cast: 0.17;
+
+	background: linear-gradient(180deg, #f9e9cf, #f6d9b5);
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #171b38;
+	--siteFg: #e4e2f3;
+	--siteFgStrong: #fbfaff;
+	--siteMuted: #a3a6cc;
+	--siteAccent: #ffc98a;
+	--siteSquiggle: #ffb06a;
+	--siteSubtle: #222850;
+	--card: #252b56;
+	--sun: #f5ebc6;
+	--ridge1: #2b3366;
+	--ridge2: #343c78;
+	--ridge3: #1f2650;
+	--ribbon: #6c5bd0;
+	--cast: 0.38;
+
+	background: linear-gradient(180deg, #121634, #1f2550);
+}
+
+/* ---- the paper scene ---- */
+
+.site .scenery-a {
+	background: radial-gradient(circle at 80% 17%, var(--sun) 0 5.4rem, transparent 5.45rem);
+}
+
+.site .scenery-a::before,
+.site .scenery-b::before,
+.site .scenery-c::before,
+.site .scenery-a::after,
+.site .scenery-b::after,
+.site .scenery-c::after {
+	content: "";
+	inset: auto 0 -18vh 0;
+	position: absolute;
+	will-change: transform;
+}
+
+/* cast shadows: the same shape, nudged up and darkened, peeks out above each cut edge */
+.site .scenery-a::before,
+.site .scenery-b::before,
+.site .scenery-c::before {
+	background: rgb(30 14 8 / var(--cast));
+	translate: 0 -0.4rem;
+}
+
+.site .scenery-a::before,
+.site .scenery-a::after {
+	--shape: polygon(0 100%, 0 58%, 10% 40%, 18% 52%, 30% 26%, 41% 48%, 52% 34%, 63% 54%, 74% 30%, 86% 50%, 94% 38%, 100% 52%, 100% 100%);
+	clip-path: var(--shape);
+	height: calc(64vh + 18vh);
+}
+
+.site .scenery-b::before,
+.site .scenery-b::after {
+	clip-path: polygon(0 100%, 0 62%, 8% 70%, 17% 44%, 27% 66%, 38% 40%, 49% 64%, 60% 46%, 72% 70%, 83% 42%, 92% 62%, 100% 48%, 100% 100%);
+	height: calc(48vh + 18vh);
+}
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	clip-path: polygon(0 100%, 0 40%, 6% 52%, 14% 30%, 24% 56%, 34% 36%, 46% 60%, 57% 34%, 69% 58%, 80% 38%, 90% 56%, 100% 36%, 100% 100%);
+	height: calc(30vh + 18vh);
+}
+
+.site .scenery-a::after {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--ridge1) 85%, #fff), var(--ridge1) 40%);
+}
+
+.site .scenery-b::after {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--ridge2) 85%, #fff), var(--ridge2) 40%);
+}
+
+.site .scenery-c::after {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--ridge3) 85%, #fff), var(--ridge3) 40%);
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before,
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: pc-far linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::before,
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: pc-mid linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::before,
+		html:not(.reduce-motion) .site .scenery-c::after {
+			animation: pc-near linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+/* the shadow pseudo-elements carry their own translate, so the keyframes use `transform` */
+@keyframes pc-far {
+	to {
+		transform: translateY(-7vh);
+	}
+}
+
+@keyframes pc-mid {
+	to {
+		transform: translateY(-13vh);
+	}
+}
+
+@keyframes pc-near {
+	to {
+		transform: translateY(-17vh);
+	}
+}
+
+/* paper grain: a baked, tiled SVG noise, rasterized once */
+.site .overlay-a {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .55 -.18'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+	opacity: 0.55;
+}
+
+/* ---- paper cards ---- */
+
+.site-page {
+	padding-bottom: 5rem;
+}
+
+.site-header {
+	background: var(--card);
+	border-radius: 3px 6px 3px 5px;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 0.14), 0 4px 8px -3px rgb(0 0 0 / 0.22);
+	padding: 0.7rem 1.3rem;
+}
+
+.site-hero,
+.site-about,
+.site-footer {
+	background: var(--card);
+	border-radius: 3px 7px 4px 6px;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 0.14), 0 6px 12px -4px rgb(0 0 0 / 0.26);
+	opacity: 1;
+	padding: 1.6rem 2rem;
+}
+
+.site-hero {
+	margin: 3.2rem 0 2rem;
+	rotate: -0.35deg;
+}
+
+.site-about {
+	margin: 0 auto 2.4rem;
+	rotate: 0.3deg;
+}
+
+.site-footer {
+	margin-top: 2rem;
+	rotate: -0.25deg;
+}
+
+.site-portrait img {
+	box-shadow:
+		0 0 0 0.35rem var(--card),
+		0 0.1rem 0.3rem 0.35rem rgb(0 0 0 / 0.2),
+		0 0 0 0.85rem var(--ribbon),
+		0 0.2rem 0.5rem 0.85rem rgb(0 0 0 / 0.22);
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+.site-section {
+	margin-bottom: 2.8rem;
+}
+
+/* ribbon section titles with notched ends */
+.site-section-title {
+	background: var(--ribbon);
+	box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.16);
+	clip-path: polygon(0 0, 100% 0, calc(100% - 0.7rem) 50%, 100% 100%, 0 100%, 0.7rem 50%);
+	color: #fff;
+	display: inline-block;
+	margin: 0 0 1.1rem -0.6rem;
+	padding: 0.3rem 1.8rem 0.35rem 1.5rem;
+	text-shadow: 0 1px 0 rgb(0 0 0 / 0.25);
+}
+
+.site-item {
+	background: var(--card);
+	border-radius: 3px 6px 3px 5px;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 0.13), 0 3px 6px -2px rgb(0 0 0 / 0.18);
+	isolation: isolate;
+	padding: 1rem 1.3rem 0.95rem;
+	position: relative;
+	rotate: calc(sin(sibling-index() * 83deg) * 0.55deg);
+	transition:
+		rotate 0.35s cubic-bezier(0.3, 1.6, 0.5, 1),
+		translate 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* the lift: a larger, softer shadow fades in beneath the card */
+.site-item::after {
+	border-radius: inherit;
+	box-shadow: 0 16px 22px -8px rgb(30 14 8 / 0.4), 0 2px 4px rgb(30 14 8 / 0.18);
+	content: "";
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.3s;
+	z-index: -1;
+}
+
+.site-item:hover,
+.site-item:focus-within {
+	rotate: 0deg;
+	translate: 0 -0.35rem;
+}
+
+.site-item:hover::after,
+.site-item:focus-within::after {
+	opacity: 1;
+}
+
+/* a punched hole + stitched edge on posts, like a catalogue card */
+.site-post {
+	background-image: radial-gradient(circle at 0.65rem 50%, var(--siteSubtle) 0 0.22rem, transparent 0.25rem);
+	padding-left: 2rem;
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--card);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(var(--ribbon), var(--sun), var(--ridge3), var(--ribbon));
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: pc-spin 6s linear infinite;
+	}
+}
+
+@keyframes pc-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: var(--card);
+	border-radius: 0.3rem;
+	bottom: 1rem;
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+	color: var(--siteMuted);
+	content: "clip-path \00b7  scroll-driven \00b7  sibling-index() \00b7  sin()";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

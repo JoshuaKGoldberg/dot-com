@@ -1,0 +1,53 @@
+/* Token plan
+ * Families: Ysabeau wght 200-600, one family.
+ * Scale: hero wght 260 (dark 300) at 80px, -0.025em; tagline 1.65rem wght 300; ratio 3.0x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Garamond-shaped humanist sans: light weights are soft and starlike on navy; one family, contrast from size and weight.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Ysabeau:wght@200..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Ysabeau Fallback"; src: local("Arial"); size-adjust: 93.3%; ascent-override: 112.5%; descent-override: 31.1%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #394 Ysabeau: a Garamond-inspired humanist sans; light weights for a soft hero, one family at every level with optical sizes of its own. */
+.site {
+	--tyDisplay: "Ysabeau", "Ysabeau Fallback", system-ui, sans-serif;
+	--tyBody: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 16.5cqi, 5.8rem);
+	--tyTitleW: 260;
+	--tyTitleWd: 300;
+	--tyTitleLs: -0.025em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.05em;
+	--tyTagSize: 1.65rem;
+	--tyTagW: 300;
+	--tyTagLs: 0;
+	--tyTagLh: 1.25;
+	--tyTagMax: 20em;
+
+	--tyBodyW: 380;
+	--tyAboutSize: 1.45rem;
+	--tyAboutLh: 1.5;
+	--tyDescSize: 1.2rem;
+	--tyDescLh: 1.5;
+	--tyUiW: 450;
+	--tyNavSize: 1.25rem;
+	--tyLogoSize: 1.45rem;
+	--tyLogoW: 550;
+	--tySocialSize: 1.15rem;
+	--tySecSize: 2.4rem;
+	--tySecW: 300;
+	--tySecWd: 340;
+	--tySecLs: -0.015em;
+	--tyItemW: 550;
+	--tyItemSize: 1.45rem;
+	--tyMetaSize: 1rem;
+	--tyMetaLs: 0.02em;
+	--tyMetaW: 400;
+}

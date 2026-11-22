@@ -1,0 +1,51 @@
+/* Token plan
+ * Families: Instrument Serif 400 + Instrument Sans 400-600 (watchlist font; Josh likes #57).
+ * Scale: hero 83px upright, -0.015em, lh .88; tagline Instrument Sans 1.3rem; ratio 4.0x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Condensed display serif needs scale; set upright with whole-line contrast against the sans, never an italic accent word.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Instrument+Sans:wght@400..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Instrument Serif Fallback"; src: local("Georgia"); size-adjust: 74.1%; ascent-override: 133.6%; descent-override: 41.8%; line-gap-override: 0%; }
+@font-face { font-family: "Instrument Sans Fallback"; src: local("Arial"); size-adjust: 100.9%; ascent-override: 96.1%; descent-override: 24.8%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #404 (from #57) Instrument Serif headline with Instrument Sans body. Set upright, tight and large, one weight: no italic accent word. */
+.site {
+	--tyDisplay: "Instrument Serif", "Instrument Serif Fallback", Georgia, serif;
+	--tyBody: "Instrument Sans", "Instrument Sans Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 17cqi, 6rem);
+	--tyTitleW: 400;
+	--tyTitleLs: -0.015em;
+	--tyTitleLh: 0.88;
+	--tyTitleShift: -0.04em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.3rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.005em;
+	--tyTagLh: 1.35;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.5rem;
+	--tyLogoFont: var(--tyDisplay);
+	--tySocialSize: 1rem;
+	--tySecSize: 2.4rem;
+	--tySecW: 400;
+	--tySecLs: -0.005em;
+	--tyItemW: 600;
+	--tyItemSize: 1.15rem;
+	--tyMetaSize: 0.88rem;
+	--tyMetaW: 450;
+}
+.site .site-logo { font-family: var(--tyDisplay); font-weight: 400; }

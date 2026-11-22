@@ -1,0 +1,35 @@
+@import url("_sensor/kit.css");
+
+/* 185 Local Sky: sky colour, sun position and the moon's phase come from the date, the timezone and a latitude guess. No network. */
+.site { --sky1: #c3e0fb; --sky2: #e9f5fc; --starOp: 0; }
+.site .scenery-a { background: linear-gradient(var(--sky1) 0%, var(--sky2) 42%, var(--siteBg) 72%); }
+.site .scenery-b {
+	background:
+		radial-gradient(1.5px 1.5px at 8% 12%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 17% 31%, #cfe0ff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 26% 8%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 38% 22%, #fff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 47% 14%, #cfe0ff 50%, transparent 52%), radial-gradient(1px 1px at 58% 35%, #fff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 66% 9%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 74% 27%, #fff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 83% 16%, #cfe0ff 50%, transparent 52%), radial-gradient(1px 1px at 91% 36%, #fff 50%, transparent 52%),
+		radial-gradient(1px 1px at 12% 44%, #fff 50%, transparent 52%), radial-gradient(1px 1px at 52% 5%, #fff 50%, transparent 52%);
+	opacity: 0;
+}
+html.dark .site .scenery-b { opacity: var(--starOp); }
+.site .ls-sun {
+	background: radial-gradient(circle, #fff3c4 0 34%, #fbbf24 36% 52%, rgba(251, 191, 36, 0.35) 54% 62%, transparent 72%);
+	border-radius: 50%;
+	height: 6rem; left: 0; margin: -3rem; position: absolute; top: 0; width: 6rem;
+	will-change: transform;
+}
+html.dark .site .ls-sun { background: radial-gradient(circle, #f6d58f 0 24%, #c98a35 26% 38%, rgba(201, 138, 53, 0.22) 40% 56%, transparent 70%); }
+.site .ls-moonwrap { position: absolute; right: max(4vw, 2rem); text-align: center; top: 9%; }
+.site .ls-moon { display: block; filter: drop-shadow(0 0 14px rgba(255, 244, 214, 0.55)); height: 6.2rem; margin: 0 auto; width: 6.2rem; }
+html:not(.dark) .site .ls-moon { filter: drop-shadow(0 0 6px rgba(40, 53, 86, 0.18)); }
+.site .ls-cap { color: var(--siteMuted); font: 600 0.78rem/1.2 var(--siteFont); margin-top: 0.35rem; }
+.site .ls-cap b { color: var(--siteFgStrong); display: block; font-size: 0.85rem; }
+.site .scenery-c {
+	background: linear-gradient(to top, color-mix(in srgb, var(--siteSubtle) 90%, transparent), transparent 18%);
+}
+.site .ls-facts { display: grid; font-size: 0.82rem; gap: 0.15rem 0.6rem; grid-template-columns: auto 1fr; margin: 0; }
+.site .ls-facts dt { color: var(--siteMuted); }
+.site .ls-facts dd { color: var(--siteFgStrong); font-variant-numeric: tabular-nums; font-weight: 600; margin: 0; }
+@media (max-width: 700px) { .site .ls-moonwrap { right: 1rem; top: 15%; } .site .ls-moon { height: 4.2rem; width: 4.2rem; } }

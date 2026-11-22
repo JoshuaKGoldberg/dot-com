@@ -1,0 +1,21 @@
+@import url("./_aurora-e/base.css");
+
+/* 257. Watercolor Aurora: wet-on-wet washes, painted pines, paper grain. */
+.site {
+	--siteBg: #f7f1e4; --siteFg: #2b3a3d; --siteFgStrong: #12262a; --siteMuted: #56696b;
+	--siteAccent: #1d7a72; --siteSquiggle: #d9798e; --siteSubtle: #ebe3d1;
+	--ae-scrim: color-mix(in srgb, var(--siteBg) 62%, transparent);
+}
+html.dark .site {
+	--siteBg: #0a0f2a; --siteFg: #dde6ea; --siteFgStrong: #f6fafb; --siteMuted: #a3b4c4;
+	--siteAccent: #86f0cf; --siteSquiggle: #f08fb0; --siteSubtle: #141c42;
+}
+.site .scenery-a {
+	background: radial-gradient(80% 50% at 50% 100%, rgba(240, 190, 170, 0.35), transparent 70%), linear-gradient(#dbe8ea 0%, #ece9dc 42%, #f7ecd9 100%);
+}
+html.dark .site .scenery-a {
+	background: radial-gradient(80% 40% at 50% 100%, rgba(70, 60, 130, 0.35), transparent 70%), linear-gradient(#050820 0%, #0d1438 50%, #18214a 100%);
+}
+.site .overlay-a .ae-paper {
+	position: absolute; inset: 0; pointer-events: none; background-size: 192px 192px;
+}

@@ -1,0 +1,338 @@
+/*
+ * Zero JS: Hue World. There is no zj-hue-world.js: everything here is CSS.
+ *   @property <integer> --h -> ONE typed hue drives every color on the page, and it actually transitions
+ *   :has()                  -> hover a nav link or a section anywhere and the whole world re-tints to match
+ *   oklch()                 -> palette steps stay perceptually even at any hue, light or dark
+ *   scroll-driven           -> scrolling crossfades two pre-tinted scenery layers (compositor-only `opacity`)
+ *   counter()               -> the little dial reads out the live hue
+ * The planet, its ring and the dial are gradients; they re-color for free because they read --h.
+ */
+
+@property --h {
+	inherits: true;
+	initial-value: 232;
+	syntax: "<integer>";
+}
+
+@property --hl {
+	inherits: false;
+	initial-value: 0;
+	syntax: "<integer>";
+}
+
+.site {
+	--hu: var(--h);
+	--siteBg: oklch(0.975 0.02 var(--hu));
+	--siteFg: oklch(0.28 0.04 var(--hu));
+	--siteFgStrong: oklch(0.18 0.05 var(--hu));
+	--siteMuted: oklch(0.5 0.04 var(--hu));
+	--siteAccent: oklch(0.5 0.17 var(--hu));
+	--siteSquiggle: oklch(0.72 0.17 var(--hu));
+	--siteSubtle: oklch(0.92 0.035 var(--hu));
+	--card: oklch(1 0.01 var(--hu) / 0.6);
+	--planetL: 0.7;
+
+	scroll-timeline: --pg block;
+	transition: --h 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark .site {
+	--siteBg: oklch(0.19 0.035 var(--hu));
+	--siteFg: oklch(0.9 0.02 var(--hu));
+	--siteFgStrong: oklch(0.97 0.012 var(--hu));
+	--siteMuted: oklch(0.72 0.045 var(--hu));
+	--siteAccent: oklch(0.8 0.14 var(--hu));
+	--siteSquiggle: oklch(0.7 0.17 var(--hu));
+	--siteSubtle: oklch(0.26 0.05 var(--hu));
+	--card: oklch(0.24 0.04 var(--hu) / 0.55);
+	--planetL: 0.58;
+}
+
+/* ---- the hue is set by whatever you are pointing at ---- */
+
+.site:has(.site-nav-link:nth-child(1):hover) { --h: 150; }
+.site:has(.site-nav-link:nth-child(2):hover) { --h: 292; }
+.site:has(.site-nav-link:nth-child(3):hover) { --h: 28; }
+.site:has(.site-nav-link:nth-child(4):hover) { --h: 196; }
+.site:has(.site-posts:hover) { --h: 334; }
+.site:has(.site-projects:hover) { --h: 58; }
+.site:has(.site-talks:hover) { --h: 176; }
+.site:has(.site-logo:hover, .site-theme-toggle:hover) { --h: 232; }
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+/* ---- scenery: two tinted blob layers that crossfade with scroll, a planet with bands, its ring in two halves ---- */
+
+.site {
+	--px: 88%;
+	--py: 30%;
+	--ps: 26rem;
+}
+
+.site .scenery-a::before,
+.site .scenery-b {
+	contain: paint;
+	will-change: opacity;
+}
+
+/* blobs at the base hue, fading out as you scroll */
+.site .scenery-a::before {
+	background:
+		radial-gradient(46vmax 34vmax at -6% 4%, oklch(0.86 0.1 var(--hu) / 0.5), transparent 70%),
+		radial-gradient(40vmax 30vmax at 104% 62%, oklch(0.86 0.12 calc(var(--hu) + 55) / 0.4), transparent 70%),
+		radial-gradient(50vmax 30vmax at 40% 112%, oklch(0.88 0.1 calc(var(--hu) - 50) / 0.4), transparent 70%);
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+/* the same blobs drifted 90deg of hue, fading in */
+.site .scenery-b {
+	background:
+		radial-gradient(46vmax 34vmax at -6% 4%, oklch(0.86 0.1 calc(var(--hu) + 90) / 0.5), transparent 70%),
+		radial-gradient(40vmax 30vmax at 104% 62%, oklch(0.86 0.12 calc(var(--hu) + 145) / 0.4), transparent 70%),
+		radial-gradient(50vmax 30vmax at 40% 112%, oklch(0.88 0.1 calc(var(--hu) + 40) / 0.4), transparent 70%);
+	opacity: 0;
+}
+
+html.dark .site .scenery-a::before {
+	background:
+		radial-gradient(46vmax 34vmax at -6% 4%, oklch(0.42 0.14 var(--hu) / 0.55), transparent 70%),
+		radial-gradient(40vmax 30vmax at 104% 62%, oklch(0.4 0.14 calc(var(--hu) + 55) / 0.45), transparent 70%),
+		radial-gradient(50vmax 30vmax at 40% 112%, oklch(0.36 0.12 calc(var(--hu) - 50) / 0.45), transparent 70%);
+}
+
+html.dark .site .scenery-b {
+	background:
+		radial-gradient(46vmax 34vmax at -6% 4%, oklch(0.42 0.14 calc(var(--hu) + 90) / 0.55), transparent 70%),
+		radial-gradient(40vmax 30vmax at 104% 62%, oklch(0.4 0.14 calc(var(--hu) + 145) / 0.45), transparent 70%),
+		radial-gradient(50vmax 30vmax at 40% 112%, oklch(0.36 0.12 calc(var(--hu) + 40) / 0.45), transparent 70%);
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: hw-fade-out linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b {
+			animation: hw-fade-in linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes hw-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes hw-fade-in {
+	to {
+		opacity: 1;
+	}
+}
+
+/* the planet (scenery-c, behind its front ring) */
+.site .scenery-c::after {
+	aspect-ratio: 1;
+	background:
+		radial-gradient(circle at 30% 26%, oklch(1 0.05 var(--hu) / 0.55), transparent 42%),
+		repeating-linear-gradient(-14deg, transparent 0 2rem, oklch(1 0.03 var(--hu) / 0.12) 2rem 3.1rem, oklch(0.3 0.1 calc(var(--hu) + 40) / 0.14) 3.1rem 3.7rem),
+		radial-gradient(circle at 36% 30%, oklch(var(--planetL) 0.17 calc(var(--hu) + 20)), oklch(calc(var(--planetL) - 0.2) 0.16 calc(var(--hu) + 50)) 100%);
+	border-radius: 50%;
+	content: "";
+	left: var(--px);
+	opacity: 0.55;
+	position: absolute;
+	top: var(--py);
+	translate: -50% -50%;
+	width: var(--ps);
+	z-index: 0;
+}
+
+/* the ring: an ellipse border, split so the back half passes behind the planet and the front half in front */
+.site .scenery-a::after,
+.site .scenery-c::before {
+	border: 0.45rem solid oklch(0.82 0.09 calc(var(--hu) + 25) / 0.5);
+	border-radius: 50%;
+	content: "";
+	height: calc(var(--ps) * 0.3);
+	left: var(--px);
+	position: absolute;
+	rotate: -16deg;
+	top: var(--py);
+	translate: -50% -50%;
+	width: calc(var(--ps) * 1.7);
+}
+
+.site .scenery-a::after {
+	clip-path: inset(0 0 50% 0);
+}
+
+.site .scenery-c::before {
+	clip-path: inset(50% 0 0 0);
+	z-index: 1;
+}
+
+/* ---- the world dial (bottom right): ring, needle and live readout ---- */
+
+.site .site-overlay::before {
+	bottom: 3.3rem;
+	color: var(--siteFgStrong);
+	content: "hue " counter(hw) "\00b0";
+	counter-reset: hw var(--h);
+	font: 700 0.7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	position: absolute;
+	right: 1rem;
+	text-align: center;
+	width: 4.4rem;
+}
+
+.site .overlay-a::before,
+.site .overlay-a::after {
+	border-radius: 50%;
+	bottom: 4.9rem;
+	content: "";
+	height: 4.4rem;
+	left: auto;
+	position: absolute;
+	right: 1rem;
+	top: auto;
+	width: 4.4rem;
+}
+
+.site .overlay-a::before {
+	background: conic-gradient(in oklch longer hue, oklch(0.78 0.16 0), oklch(0.78 0.16 360));
+	-webkit-mask: radial-gradient(circle, transparent 58%, #000 60%);
+	mask: radial-gradient(circle, transparent 58%, #000 60%);
+}
+
+.site .overlay-a::after {
+	background: radial-gradient(circle at 50% 0.45rem, var(--siteFgStrong) 0 0.24rem, var(--siteBg) 0.26rem 0.38rem, transparent 0.4rem);
+	rotate: calc(var(--hu) * 1deg);
+}
+
+/* ---- local hue wiggle on items ---- */
+
+.site-item {
+	border-left: 3px solid oklch(0.72 0.14 calc(var(--hu) + var(--hl)));
+	border-radius: 0 0.7rem 0.7rem 0;
+	padding: 0.5rem 1rem 0.55rem 1.1rem;
+	transition:
+		--hl 0.5s,
+		background-color 0.4s;
+}
+
+.site-item:hover,
+.site-item:focus-within {
+	--hl: 46;
+	background: var(--card);
+}
+
+.site-item-title {
+	color: oklch(from var(--siteFgStrong) l c calc(var(--hu) + var(--hl)));
+}
+
+html.dark .site-item-title {
+	color: oklch(from var(--siteFgStrong) 0.92 0.08 calc(var(--hu) + var(--hl)));
+}
+
+.site-section-title {
+	color: var(--siteAccent);
+}
+
+.site-nav-link {
+	transition: color 0.3s;
+}
+
+.site-hero .site-title {
+	background: linear-gradient(90deg, var(--siteFgStrong), oklch(from var(--siteAccent) l c calc(var(--hu) + 60)));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 0.35rem var(--siteSubtle), 0 0 0 0.6rem oklch(0.75 0.14 var(--hu) / 0.55), 0 0.5rem 2rem oklch(0.6 0.15 var(--hu) / 0.35);
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(oklch(0.75 0.17 var(--hu)), oklch(0.78 0.17 calc(var(--hu) + 90)), oklch(0.75 0.17 var(--hu)));
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: hw-spin 6s linear infinite;
+	}
+}
+
+@keyframes hw-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "@property <integer> \00b7  :has() \00b7  oklch() \00b7  opacity crossfade";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+
+	.site .site-overlay::before,
+	.site .overlay-a::before,
+	.site .overlay-a::after {
+		display: none;
+	}
+}

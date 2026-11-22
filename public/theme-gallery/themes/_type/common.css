@@ -1,0 +1,121 @@
+@import "./fit.css";
+/* Shared typesetting for the ty-* themes. Each theme sets the --ty* custom properties on .site; this maps them onto the page.
+   Every selector is scoped under .site. Dark mode uses the *Wd variants (slightly lighter weights) and an off-white. */
+
+.site {
+	font-optical-sizing: auto;
+	font-kerning: normal;
+	font-variant-ligatures: common-ligatures contextual;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* ---- hero ---- */
+/* the headline gets more of the row: a smaller portrait share and a tighter gap (the base is 16rem + 2.5rem) */
+@media (min-width: 701px) {
+	.site .site-hero { grid-template-columns: minmax(8rem, 10.5rem) 1fr; column-gap: 2.25rem; }
+}
+.site .site-hero-text { container-type: inline-size; }
+.site .site-title {
+	color: var(--tyTitleColor, var(--siteFgStrong));
+	font-family: var(--tyDisplay, var(--siteFontDisplay));
+	/* always one line: the size is capped by what fits the hero column (--tyFit = 95 / the string's advance width in em, set per theme in fit.css) */
+	font-size: min(var(--tyTitleSize, clamp(2.5rem, 6vw, 3.75rem)), calc(var(--tyFit, 14) * 1cqi));
+	white-space: nowrap;
+	font-weight: var(--tyTitleW, 600);
+	font-variation-settings: var(--tyTitleVs, normal);
+	font-feature-settings: var(--tyTitleFeat, normal);
+	letter-spacing: var(--tyTitleLs, -0.02em);
+	line-height: var(--tyTitleLh, 1);
+	margin: 0 0 var(--tyTitleGap, 0.9rem) var(--tyTitleShift, -0.04em);
+	text-wrap: nowrap;
+}
+html.dark .site .site-title {
+	color: var(--tyTitleColorDark, #e9eff7);
+	font-weight: var(--tyTitleWd, var(--tyTitleW, 600));
+	font-variation-settings: var(--tyTitleVsDark, var(--tyTitleVs, normal));
+}
+.site .ty-l { display: inline; }
+.site .site-tagline {
+	font-family: var(--tyTagFont, var(--tyBody, var(--siteFont)));
+	font-size: var(--tyTagSize, 1.5rem);
+	font-weight: var(--tyTagW, 400);
+	font-variation-settings: var(--tyTagVs, normal);
+	font-feature-settings: var(--tyTagFeat, normal);
+	letter-spacing: var(--tyTagLs, 0em);
+	line-height: var(--tyTagLh, 1.25);
+	margin: 0 0 var(--tyTagGap, 1.15rem);
+	max-width: var(--tyTagMax, 24em);
+	text-wrap: balance;
+}
+html.dark .site .site-tagline {
+	color: var(--tyTagColorDark, #d3e0ee);
+	font-weight: calc(var(--tyTagW, 400) + 30);
+	letter-spacing: calc(var(--tyTagLs, 0em) + 0.004em);
+}
+
+/* ---- the rest of the page ---- */
+.site { font-family: var(--tyBody, var(--siteFont)); }
+.site .site-header { font-family: var(--tyUi, var(--tyBody)); font-weight: var(--tyUiW, 500); letter-spacing: var(--tyUiLs, 0); }
+.site .site-logo { font-size: var(--tyLogoSize, 1.2rem); font-weight: var(--tyLogoW, var(--tyUiW, 500)); }
+.site .site-nav-link { font-size: var(--tyNavSize, 1.1rem); font-weight: var(--tyUiW, 500); }
+.site .site-theme-toggle { font-size: 1.15rem; }
+.site .site-socials { font-family: var(--tyUi, var(--tyBody)); font-size: var(--tySocialSize, 1.05rem); font-weight: var(--tyUiW, 500); letter-spacing: var(--tyUiLs, 0); }
+
+.site .site-about {
+	font-size: var(--tyAboutSize, 1.25rem);
+	font-weight: var(--tyBodyW, 400);
+	letter-spacing: var(--tyBodyLs, 0em);
+	line-height: var(--tyAboutLh, 1.55);
+	text-wrap: pretty;
+}
+/* dark-surface compensation (light text on navy reads thinner): one step more weight, a little more leading and tracking */
+html.dark .site .site-about, html.dark .site .site-item-description {
+	font-weight: calc(var(--tyBodyW, 400) + 40);
+	letter-spacing: calc(var(--tyBodyLs, 0em) + 0.005em);
+}
+html.dark .site .site-about { line-height: calc(var(--tyAboutLh, 1.55) + 0.05); }
+html.dark .site .site-item-description { line-height: calc(var(--tyDescLh, 1.55) + 0.05); }
+.site .site-section-title {
+	font-family: var(--tySecFont, var(--tyDisplay));
+	font-size: var(--tySecSize, 1.9rem);
+	font-weight: var(--tySecW, var(--tyTitleW, 600));
+	font-variation-settings: var(--tySecVs, normal);
+	letter-spacing: var(--tySecLs, -0.01em);
+	line-height: 1.15;
+}
+html.dark .site .site-section-title { font-weight: var(--tySecWd, var(--tySecW, var(--tyTitleWd, 600))); }
+.site .site-item-title {
+	font-family: var(--tyItemFont, var(--tyBody));
+	font-size: var(--tyItemSize, 1.25rem);
+	font-weight: var(--tyItemW, 600);
+	font-variation-settings: var(--tyItemVs, normal);
+	letter-spacing: var(--tyItemLs, 0);
+	line-height: 1.3;
+}
+.site .site-item-description {
+	font-size: var(--tyDescSize, 1.0625rem);
+	font-weight: var(--tyBodyW, 400);
+	line-height: var(--tyDescLh, 1.55);
+	letter-spacing: var(--tyBodyLs, 0em);
+	text-wrap: pretty;
+}
+.site .site-item-meta {
+	font-family: var(--tyMetaFont, var(--tyUi, var(--tyBody)));
+	font-size: var(--tyMetaSize, 0.95rem);
+	font-weight: var(--tyMetaW, var(--tyBodyW, 400));
+	font-variant-numeric: var(--tyMetaNums, normal);
+	letter-spacing: var(--tyMetaLs, 0.01em);
+	text-transform: var(--tyMetaCase, none);
+}
+.site .site-footer { font-family: var(--tyUi, var(--tyBody)); font-weight: var(--tyFootW, 400); }
+.site .site-footer .vs-credit, .site .site-footer .vs-credit * { font-family: var(--tyCreditFont, var(--tyUi, var(--tyBody))); }
+
+/* the footer credit and graph captions: sentence case, no tracked caps (overrides the base theme's uppercase labels) */
+.site [class*="vs-credit"], .site .site-footer > [class*="vs-credit"] { font-variant-caps: normal; letter-spacing: 0.02em; text-transform: none; }
+
+/* 800px and under: keep the pair, trim the scale a little */
+@media (max-width: 700px) {
+	.site .site-title { margin-left: 0; }
+	.site .site-tagline { font-size: min(var(--tyTagSize, 1.5rem), 1.1rem); }
+}

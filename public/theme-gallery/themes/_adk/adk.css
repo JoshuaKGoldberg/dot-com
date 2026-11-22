@@ -1,0 +1,161 @@
+/* Shared styling for the Adirondacks x code themes (#196-205): tone-driven text colours, veil, Scene chip. */
+
+.site {
+	--siteFg: #1d2a44;
+	--siteFgStrong: #0e1a33;
+	--siteMuted: #3d4f70;
+	--siteAccent: #0b4fa0;
+	--siteSquiggle: #2f86d6;
+	--siteSubtle: rgba(255, 255, 255, 0.4);
+	--adk-veil: rgba(255, 255, 255, 0.4);
+	--adk-halo: rgba(255, 255, 255, 0.8);
+	--adk-chip-bg: rgba(255, 255, 255, 0.78);
+	--adk-chip-fg: #1d2a44;
+	--adk-chip-line: rgba(29, 42, 68, 0.25);
+}
+
+.site[data-tone="dark"] {
+	--siteFg: #e6edf8;
+	--siteFgStrong: #ffffff;
+	--siteMuted: #b9c6de;
+	--siteAccent: #a3cfff;
+	--siteSquiggle: #8fb4ff;
+	--siteSubtle: rgba(0, 0, 10, 0.4);
+	--adk-chip-bg: rgba(8, 12, 30, 0.72);
+	--adk-chip-fg: #e6edf8;
+	--adk-chip-line: rgba(200, 215, 255, 0.28);
+}
+
+.site .adk-canvas {
+	display: block;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .adk-veil {
+	background: linear-gradient(
+		90deg,
+		transparent calc(50% - 34rem),
+		var(--adk-veil) calc(50% - 20rem),
+		var(--adk-veil) calc(50% + 20rem),
+		transparent calc(50% + 34rem)
+	);
+}
+
+@media (max-width: 760px) {
+	.site .adk-veil {
+		background: var(--adk-veil);
+	}
+}
+
+.site .site-page {
+	text-shadow: 0 0 0.5em var(--adk-halo), 0 0 1.2em var(--adk-halo);
+}
+
+.site .site-portrait img {
+	box-shadow: 0 3px 22px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* Scene chip */
+.site .adk-chip {
+	bottom: 0.9rem;
+	color: var(--adk-chip-fg);
+	font: 500 0.72rem/1.3 ui-monospace, "SF Mono", Menlo, monospace;
+	pointer-events: auto;
+	position: absolute;
+	right: 0.9rem;
+	text-shadow: none;
+	z-index: 5;
+}
+
+.site .adk-chip-toggle {
+	align-items: center;
+	background: var(--adk-chip-bg);
+	border: 1px solid var(--adk-chip-line);
+	border-radius: 999px;
+	color: inherit;
+	cursor: pointer;
+	display: flex;
+	font: inherit;
+	gap: 0.5rem;
+	padding: 0.4rem 0.8rem;
+}
+
+.site .adk-chip-toggle:hover {
+	border-color: var(--siteAccent);
+}
+
+.site .adk-dot {
+	background: var(--siteAccent);
+	border-radius: 50%;
+	height: 0.5rem;
+	width: 0.5rem;
+}
+
+.site .adk-chip-body {
+	background: var(--adk-chip-bg);
+	border: 1px solid var(--adk-chip-line);
+	border-radius: 0.8rem;
+	bottom: calc(100% + 0.5rem);
+	display: grid;
+	gap: 0.45rem;
+	min-width: 15rem;
+	padding: 0.8rem;
+	position: absolute;
+	right: 0;
+}
+
+.site .adk-chip-body[hidden] {
+	display: none;
+}
+
+.site .adk-row {
+	align-items: center;
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: 4.2rem 1fr auto;
+}
+
+.site .adk-row input,
+.site .adk-row select {
+	accent-color: var(--siteAccent);
+	background: transparent;
+	border: 1px solid var(--adk-chip-line);
+	border-radius: 0.3rem;
+	color: inherit;
+	font: inherit;
+	min-width: 0;
+	padding: 0.15rem 0.3rem;
+}
+
+.site .adk-row input[type="range"] {
+	border: 0;
+	padding: 0;
+}
+
+.site .adk-row select option {
+	color: #111;
+}
+
+.site .adk-mini {
+	background: transparent;
+	border: 1px solid var(--adk-chip-line);
+	border-radius: 0.3rem;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	padding: 0.15rem 0.45rem;
+}
+
+.site .adk-mini:hover {
+	border-color: var(--siteAccent);
+}
+
+.site .adk-foot {
+	display: flex;
+	justify-content: flex-end;
+}

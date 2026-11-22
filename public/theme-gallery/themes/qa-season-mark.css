@@ -1,0 +1,135 @@
+/* #274 Season Mark: the plain site; a 20px seasonal glyph beside the logo. */
+
+.site {
+	--qsmInk: #4f86b8;
+}
+
+html.dark .site {
+	--qsmInk: #86bde8;
+}
+
+.site .site-header {
+	column-gap: 0.55rem;
+}
+
+.site .qsm-mark {
+	align-items: center;
+	color: var(--qsmInk);
+	cursor: default;
+	display: inline-flex;
+	height: 22px;
+	justify-content: center;
+	position: relative;
+	width: 22px;
+}
+
+.site .qsm-mark svg {
+	display: block;
+	opacity: 0.85;
+	position: relative;
+	transition: transform 0.5s;
+}
+
+.site .qsm-mark:hover svg {
+	transform: rotate(18deg) scale(1.08);
+}
+
+.site .qsm-halo {
+	background:
+		radial-gradient(circle at 40% 55%, rgba(90, 210, 170, 0.5), transparent 60%),
+		radial-gradient(circle at 65% 40%, rgba(150, 140, 240, 0.4), transparent 62%);
+	border-radius: 50%;
+	inset: -7px;
+	opacity: calc(0.28 + var(--le, 0) * 0.55);
+	position: absolute;
+	transform: translate(var(--lx, 0), var(--ly, 0));
+	will-change: transform, opacity;
+}
+
+html.dark .site .qsm-halo {
+	opacity: calc(0.35 + var(--le, 0) * 0.65);
+}
+
+.site .qsm-autumn svg {
+	color: #b9754a;
+}
+
+html.dark .site .qsm-autumn svg {
+	color: #d9a272;
+}
+
+.site .qsm-spring svg {
+	color: #5aa07c;
+}
+
+.site .qsm-summer svg {
+	color: #8a8f3a;
+}
+
+html.dark .site .qsm-summer svg {
+	color: #d8dc7c;
+}
+
+.site .qsm-glow {
+	animation: qsm-pulse 3.6s ease-in-out infinite;
+	opacity: 0.5;
+}
+
+@keyframes qsm-pulse {
+	50% {
+		opacity: 0.1;
+	}
+}
+
+.site .qsm-fall {
+	left: 0;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	will-change: transform, opacity;
+}
+
+.site .qsm-fall svg {
+	display: block;
+}
+
+.site .qsm-fall-leaf {
+	color: #c4916a;
+}
+
+.site .qsm-fall-flake {
+	color: #8fbbdc;
+}
+
+.site .qsm-fall-petal {
+	color: #d8a1b5;
+}
+
+.site .qsm-fall-firefly {
+	color: #b9bf5a;
+}
+
+@media (max-width: 700px) {
+	.site .qsm-fall {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .qsm-glow {
+		animation: none;
+	}
+
+	.site .qsm-mark svg {
+		transition: none;
+	}
+}
+
+html.reduce-motion .site .qsm-glow {
+	animation: none;
+}
+
+html.reduce-motion .site .qsm-mark svg {
+	transition: none;
+}

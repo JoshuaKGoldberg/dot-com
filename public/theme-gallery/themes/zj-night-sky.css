@@ -1,0 +1,405 @@
+/*
+ * Zero JS: Night Sky. No script, just CSS. Every star is a gradient tile, no box-shadow lists.
+ *   tiled radial-gradients     -> five star layers at prime tile sizes (97, 131, 149, 211 ...), so no repeat is ever visible
+ *   opacity twinkle            -> each layer breathes on its own period (3s, 5s, 11s), not each star: cheap and still alive
+ *   keyframe windows           -> two shooting stars that fire for 4% of a 17s / 23s cycle
+ *   scroll-driven, compositor  -> the moon rises through the right margin (translate) and waxes from crescent to full (a full disc fading in over a crescent)
+ */
+
+.site {
+	--siteBg: #f4f2fb;
+	--siteFg: #272540;
+	--siteFgStrong: #12102a;
+	--siteMuted: #59577a;
+	--siteAccent: #5a3fcb;
+	--siteSquiggle: #8e72f2;
+	--siteSubtle: #e5e1f5;
+	--sky-top: #cfd6f6;
+	--sky-bot: #f8e7ee;
+	--star: 70 62 150;
+	--star-o: 0.55;
+	--warm: 190 120 60;
+	--milky: 120 100 220;
+	--milky-o: 0.14;
+	--moon-a: #fff6dc;
+	--moon-b: #e8d9a8;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #050716;
+	--siteFg: #d9dcf2;
+	--siteFgStrong: #f6f7ff;
+	--siteMuted: #9a9dc2;
+	--siteAccent: #b4a4ff;
+	--siteSquiggle: #8d78ff;
+	--siteSubtle: #12163a;
+	--sky-top: #01020a;
+	--sky-bot: #101640;
+	--star: 255 255 255;
+	--star-o: 1;
+	--warm: 255 226 178;
+	--milky: 150 140 255;
+	--milky-o: 0.3;
+	--moon-a: #ffffff;
+	--moon-b: #c4cdf0;
+}
+
+/* ---- the sky and the first star layer ---- */
+
+.site .scenery-a {
+	background:
+		radial-gradient(circle 0.9px at 13px 17px, rgb(var(--star) / 0.75) 92%, transparent),
+		radial-gradient(circle 0.7px at 131px 43px, rgb(var(--star) / 0.6) 92%, transparent),
+		radial-gradient(circle 1px at 29px 139px, rgb(var(--star) / 0.7) 92%, transparent),
+		radial-gradient(circle 0.8px at 91px 97px, rgb(var(--star) / 0.55) 92%, transparent),
+		radial-gradient(circle 0.7px at 160px 163px, rgb(var(--star) / 0.6) 92%, transparent),
+		radial-gradient(circle 0.8px at 73px 11px, rgb(var(--star) / 0.5) 92%, transparent),
+		radial-gradient(circle 0.8px at 201px 31px, rgb(var(--star) / 0.65) 92%, transparent),
+		radial-gradient(circle 0.7px at 41px 199px, rgb(var(--star) / 0.55) 92%, transparent),
+		radial-gradient(circle 0.9px at 121px 123px, rgb(var(--star) / 0.7) 92%, transparent),
+		linear-gradient(var(--sky-top), var(--sky-bot));
+	background-size: 179px 181px, 179px 181px, 179px 181px, 179px 181px, 179px 181px, 179px 181px, 241px 233px, 241px 233px, 241px 233px, 100% 100%;
+	background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 7px 11px, 7px 11px, 7px 11px, 0 0;
+}
+
+/* layer two: bigger stars with halos, twinkling slowly */
+.site .scenery-a::before,
+.site .scenery-a::after {
+	content: "";
+	inset: 0;
+	position: absolute;
+	will-change: opacity;
+}
+
+.site .scenery-a::before {
+	background:
+		radial-gradient(circle 1.5px at 40px 60px, rgb(var(--star)) 90%, transparent),
+		radial-gradient(circle 7px at 40px 60px, rgb(var(--star) / 0.2), transparent),
+		radial-gradient(circle 1.2px at 150px 140px, rgb(var(--star)) 90%, transparent),
+		radial-gradient(circle 6px at 150px 140px, rgb(var(--star) / 0.16), transparent),
+		radial-gradient(circle 1.4px at 100px 20px, rgb(var(--star)) 90%, transparent),
+		radial-gradient(circle 6px at 100px 20px, rgb(var(--star) / 0.16), transparent);
+	background-size: 211px 197px;
+	opacity: var(--star-o);
+}
+
+/* layer three: warm and cool stars at another prime */
+.site .scenery-a::after {
+	background:
+		radial-gradient(circle 1.3px at 30px 90px, rgb(var(--warm)) 90%, transparent),
+		radial-gradient(circle 5px at 30px 90px, rgb(var(--warm) / 0.2), transparent),
+		radial-gradient(circle 1.2px at 110px 40px, rgb(170 200 255 / 0.95) 90%, transparent),
+		radial-gradient(circle 5px at 110px 40px, rgb(170 200 255 / 0.18), transparent);
+	background-size: 149px 151px;
+	opacity: var(--star-o);
+}
+
+/* ---- the Milky Way: a rotated band of fine dust, masked into a soft stripe ---- */
+
+.site .scenery-b {
+	background:
+		radial-gradient(ellipse 100% 100% at 50% 50%, rgb(var(--milky) / var(--milky-o)), transparent 68%),
+		radial-gradient(circle 0.7px at 9px 14px, rgb(var(--star) / 0.9) 92%, transparent),
+		radial-gradient(circle 0.7px at 31px 41px, rgb(var(--star) / 0.8) 92%, transparent),
+		radial-gradient(circle 0.6px at 47px 23px, rgb(var(--star) / 0.8) 92%, transparent),
+		radial-gradient(circle 0.7px at 17px 51px, rgb(var(--star) / 0.7) 92%, transparent);
+	background-size: 100% 100%, 53px 59px, 79px 73px, 101px 97px, 41px 43px;
+	inset: -40vmax -20vmax;
+	mask: linear-gradient(transparent 38%, #000 50%, transparent 62%);
+	rotate: -27deg;
+}
+
+/* ---- the moon: a halo box, with the lit disc and its phase mask inside ---- */
+
+.site .scenery-c {
+	background: radial-gradient(closest-side, rgb(var(--star) / 0.16), transparent);
+	height: 15rem;
+	inset: auto;
+	left: 0;
+	top: 0;
+	translate: calc(100vw - 14rem) 60vh;
+	width: 15rem;
+}
+
+html:not(.dark) .site .scenery-c {
+	background: radial-gradient(closest-side, rgb(255 225 150 / 0.4), transparent);
+}
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	background:
+		radial-gradient(circle at 30% 32%, rgb(0 0 0 / 0.1) 0 9%, transparent 10%),
+		radial-gradient(circle at 62% 60%, rgb(0 0 0 / 0.08) 0 12%, transparent 13%),
+		radial-gradient(circle at 55% 25%, rgb(0 0 0 / 0.07) 0 6%, transparent 7%),
+		radial-gradient(circle at 38% 38%, var(--moon-a), var(--moon-b));
+	border-radius: 50%;
+	content: "";
+	height: 5.5rem;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 5.5rem;
+}
+
+/* the waxing crescent is always there... */
+.site .scenery-c::before {
+	mask:
+		radial-gradient(circle at calc(50% + 36%) 44%, transparent 0 47%, #000 48%),
+		radial-gradient(circle at 50% 50%, #000 0 49%, transparent 50%);
+	mask-composite: intersect;
+}
+
+/* ...and the full disc fades in over it as you scroll, so the lit area grows (opacity only) */
+.site .scenery-c::after {
+	opacity: 0;
+	will-change: opacity;
+}
+
+@supports (animation-timeline: scroll()) {
+	.site .scenery-c {
+		animation: zn-moon linear both;
+		animation-timeline: --pg;
+		will-change: transform;
+	}
+
+	.site .scenery-c::after {
+		animation: zn-wax linear both;
+		animation-timeline: --pg;
+	}
+}
+
+@keyframes zn-moon {
+	from {
+		translate: calc(100vw - 14rem) 62vh;
+	}
+
+	to {
+		translate: calc(100vw - 14rem) 2vh;
+	}
+}
+
+@keyframes zn-wax {
+	to {
+		opacity: 1;
+	}
+}
+
+/* ---- shooting stars: two pseudo-elements of the scenery wrapper, each firing for 4% of its cycle ---- */
+
+.site .site-scenery::before,
+.site .site-scenery::after {
+	background: linear-gradient(90deg, transparent, rgb(var(--star)));
+	border-radius: 2px;
+	content: "";
+	height: 2px;
+	opacity: 0;
+	position: absolute;
+	width: 9rem;
+}
+
+.site .site-scenery::before {
+	left: 9%;
+	rotate: 24deg;
+	top: 9%;
+}
+
+.site .site-scenery::after {
+	background: linear-gradient(90deg, transparent, rgb(var(--warm)));
+	left: 78%;
+	rotate: 155deg;
+	top: 17%;
+	width: 7rem;
+}
+
+/* ---- motion ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-a::before {
+		animation: zn-twinkle 3s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-a::after {
+		animation: zn-twinkle 5s ease-in-out -1.7s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-a {
+		animation: zn-breathe 11s ease-in-out -4s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .site-scenery::before {
+		animation: zn-shoot-a 17s linear -9s infinite;
+	}
+
+	html:not(.reduce-motion) .site .site-scenery::after {
+		animation: zn-shoot-b 23s linear -3s infinite;
+	}
+
+	html:not(.reduce-motion) .site .scenery-b {
+		animation: zn-drift 97s ease-in-out infinite alternate;
+	}
+}
+
+@keyframes zn-twinkle {
+	from {
+		opacity: var(--star-o);
+	}
+
+	to {
+		opacity: calc(var(--star-o) * 0.35);
+	}
+}
+
+@keyframes zn-breathe {
+	to {
+		opacity: 0.88;
+	}
+}
+
+@keyframes zn-drift {
+	to {
+		translate: 3vmax 1vmax;
+	}
+}
+
+@keyframes zn-shoot-a {
+	0%,
+	100% {
+		opacity: 0;
+		translate: 0 0;
+	}
+
+	0.6% {
+		opacity: 1;
+	}
+
+	4% {
+		opacity: 0;
+		translate: 30vw 13vw;
+	}
+
+	4.1% {
+		opacity: 0;
+	}
+}
+
+@keyframes zn-shoot-b {
+	0%,
+	100% {
+		opacity: 0;
+		translate: 0 0;
+	}
+
+	0.6% {
+		opacity: 1;
+	}
+
+	4% {
+		opacity: 0;
+		translate: -28vw 12vw;
+	}
+
+	4.1% {
+		opacity: 0;
+	}
+}
+
+/* ---- content ---- */
+
+.site-item {
+	border-radius: 0.9rem;
+	margin-inline: -0.9rem;
+	padding: 0.55rem 0.9rem;
+	transition: background-color 0.25s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--siteBg) 55%, transparent);
+}
+
+html.dark .site .site-title {
+	text-shadow: 0 0 1.8rem rgb(150 140 255 / 0.45);
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--siteSquiggle) 55%, transparent), 0 0 2.2rem rgb(var(--milky) / 0.35);
+}
+
+@media (max-width: 1000px) {
+	.site .scenery-c {
+		opacity: 0.45;
+	}
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(250 90% 70%), hsl(45 95% 65%), hsl(250 90% 70%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "tiled gradients · primes · @property · scroll-driven";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

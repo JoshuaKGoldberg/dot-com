@@ -1,0 +1,18 @@
+@import url("./_aurora-e/base.css");
+
+/* 259. Aurora Fog: volumetric shader aurora over a parallaxing valley. */
+.site {
+	--siteBg: #eef3f4; --siteFg: #1f3640; --siteFgStrong: #0d222b; --siteMuted: #496570;
+	--siteAccent: #0b6f78; --siteSquiggle: #5fb8a8; --siteSubtle: #d8e6e8;
+}
+html.dark .site {
+	--siteBg: #060d1a; --siteFg: #d6e5ec; --siteFgStrong: #f1f9fb; --siteMuted: #9db6c2;
+	--siteAccent: #7ff0cb; --siteSquiggle: #4fd9b0; --siteSubtle: #10202c;
+}
+.site .scenery-a { background: linear-gradient(#a9cfe0 0%, #d9e8ec 45%, #f3ece0 78%, #dfe7e6 100%); }
+html.dark .site .scenery-a { background: linear-gradient(#03060f 0%, #08142a 38%, #14274a 70%, #22385e 100%); }
+.site .scenery-c .ae-mist {
+	position: absolute; left: -20%; width: 140%; height: 22%; pointer-events: none;
+	animation: ae-drift 60s ease-in-out infinite alternate;
+}
+.site .scenery-c .ae-mist.b { animation-duration: 85s; animation-direction: alternate-reverse; }

@@ -1,0 +1,19 @@
+@import url("_toy/toy.css");
+
+/* Stack the Talks: warm conference-stage palette; the talk list stays readable until you play. */
+.site {
+	--toyAccent: #c2410c;
+	--toyAccent2: #0f766e;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #fb923c;
+	--toyAccent2: #5eead4;
+	--toyOnAccent: #1c0a02;
+}
+
+.site .site-talks .site-item {
+	border-left: 4px solid var(--toyAccent);
+	padding-left: 0.9rem;
+}

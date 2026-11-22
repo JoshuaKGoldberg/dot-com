@@ -1,0 +1,7 @@
+@import url("./_fr-b/base.css");
+
+/* Dawn: a warm blush page in light mode. */
+.site {
+	--siteBg: #f7eff1;
+	--siteSubtle: #ecdde6;
+}

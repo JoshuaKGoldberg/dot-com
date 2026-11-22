@@ -1,0 +1,429 @@
+/*
+ * Zero JS: Constellation Links. There is no zj-constellation.js: everything here is CSS.
+ *   anchor positioning -> every star is placed with anchor(); every line is a box stretched BETWEEN two stars
+ *                         (top/left/right/bottom all come from anchor()), with a corner-to-corner gradient as the stroke
+ *   :hover + sibling   -> hover an item and its star flares and both lines touching it glow
+ *   @property          -> the glow is a typed number that eases in and out
+ * The page's own links are the stars: the nav links and the twelve items are joined into one constellation.
+ */
+
+@property --glow {
+	inherits: false;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	--siteBg: #f3efe3;
+	--siteFg: #24284a;
+	--siteFgStrong: #10143a;
+	--siteMuted: #5d628a;
+	--siteAccent: #3a46b8;
+	--siteSquiggle: #5b6bff;
+	--siteSubtle: #e4dfcf;
+	--star: #3a46b8;
+	--line: 58 70 184;
+	--lit: #d9a21b;
+	--dust: 40 52 130;
+
+	background: linear-gradient(180deg, #f6f1e4, #ebe5d2);
+}
+
+html.dark .site {
+	--siteBg: #060a1c;
+	--siteFg: #d6dcf5;
+	--siteFgStrong: #f3f5ff;
+	--siteMuted: #98a1cf;
+	--siteAccent: #a9b8ff;
+	--siteSquiggle: #7f93ff;
+	--siteSubtle: #101736;
+	--star: #dfe6ff;
+	--line: 150 168 255;
+	--lit: #ffd978;
+	--dust: 200 215 255;
+
+	background: linear-gradient(180deg, #050816, #0b1330 70%, #131c44);
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+/* ---- the sky: nebula + three tiled starfields (different prime tile sizes never visibly repeat) ---- */
+
+.site .scenery-a {
+	background:
+		radial-gradient(50vmax 30vmax at 12% 8%, rgb(120 90 255 / 0.12), transparent 70%),
+		radial-gradient(40vmax 30vmax at 90% 80%, rgb(40 150 255 / 0.1), transparent 70%);
+}
+
+.site .scenery-b,
+.site .scenery-c {
+	background-repeat: repeat;
+	opacity: 0.8;
+}
+
+.site .scenery-b {
+	background-image:
+		radial-gradient(1.2px 1.2px at 23px 41px, rgb(var(--dust) / 0.9), transparent),
+		radial-gradient(1px 1px at 131px 97px, rgb(var(--dust) / 0.7), transparent),
+		radial-gradient(1.6px 1.6px at 77px 163px, rgb(var(--dust) / 0.9), transparent),
+		radial-gradient(1px 1px at 181px 19px, rgb(var(--dust) / 0.6), transparent);
+	background-size: 211px 197px, 173px 229px, 257px 251px, 307px 283px;
+}
+
+.site .scenery-c {
+	background-image:
+		radial-gradient(1.4px 1.4px at 61px 83px, rgb(var(--dust) / 0.9), transparent),
+		radial-gradient(1px 1px at 149px 29px, rgb(var(--dust) / 0.7), transparent),
+		radial-gradient(1.8px 1.8px at 211px 131px, rgb(var(--dust) / 1), transparent);
+	background-size: 241px 193px, 199px 263px, 317px 277px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-b {
+		animation: cs-twinkle 5s ease-in-out infinite;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c {
+		animation: cs-twinkle 7s ease-in-out -3s infinite;
+	}
+}
+
+@keyframes cs-twinkle {
+	50% {
+		opacity: 0.35;
+	}
+}
+
+/* ---- stars: the ::before of each item title, named so the next line can find it ---- */
+
+.site-item-title::before,
+.site-socials .site-link::before {
+	--sz: 0.36rem;
+	background: radial-gradient(circle, var(--star) 0 38%, color-mix(in srgb, var(--star) 35%, transparent) 44%, transparent 72%);
+	border-radius: 50%;
+	content: "";
+	height: calc(var(--sz) * 2.6);
+	pointer-events: none;
+	position: absolute;
+	transition: scale 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+	translate: -50% -50%;
+	width: calc(var(--sz) * 2.6);
+}
+
+/* the line lives on the meta row: after this item's star, and after the previous item's star */
+.site-item-meta::after {
+	--stroke: rgb(var(--line) / calc(0.3 + var(--glow) * 0.65));
+	--diag-dl: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--stroke) 50%, transparent calc(50% + 1px));
+	--diag-dr: linear-gradient(to top right, transparent calc(50% - 1px), var(--stroke) 50%, transparent calc(50% + 1px));
+	content: "";
+	pointer-events: none;
+	position: absolute;
+	transition: --glow 0.4s;
+	z-index: -1;
+}
+
+/* Each item's star gets its own name (--s1 .. --s12); the line on item N stretches between --s(N-1) and --sN.
+   Odd stars sit in the outer gutter, even stars in the inner one, so the lines zigzag. */
+.site-posts .site-item:nth-child(1) .site-item-title::before {
+	anchor-name: --s1;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-posts .site-item:nth-child(2) .site-item-title::before {
+	anchor-name: --s2;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-posts .site-item:nth-child(3) .site-item-title::before {
+	anchor-name: --s3;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-posts .site-item:nth-child(4) .site-item-title::before {
+	anchor-name: --s4;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-projects .site-item:nth-child(1) .site-item-title::before {
+	anchor-name: --s5;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-projects .site-item:nth-child(2) .site-item-title::before {
+	anchor-name: --s6;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-projects .site-item:nth-child(3) .site-item-title::before {
+	anchor-name: --s7;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-projects .site-item:nth-child(4) .site-item-title::before {
+	anchor-name: --s8;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-talks .site-item:nth-child(1) .site-item-title::before {
+	anchor-name: --s9;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-talks .site-item:nth-child(2) .site-item-title::before {
+	anchor-name: --s10;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-talks .site-item:nth-child(3) .site-item-title::before {
+	anchor-name: --s11;
+	left: -3.6rem;
+	top: 55%;
+}
+
+.site-talks .site-item:nth-child(4) .site-item-title::before {
+	anchor-name: --s12;
+	left: -0.8rem;
+	top: 62%;
+}
+
+.site-posts .site-item:nth-child(2) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s2 center);
+	left: anchor(--s1 center);
+	right: anchor(--s2 center);
+	top: anchor(--s1 center);
+}
+
+.site-posts .site-item:nth-child(3) .site-item-meta::after {
+	background: var(--diag-dl);
+	bottom: anchor(--s3 center);
+	left: anchor(--s3 center);
+	right: anchor(--s2 center);
+	top: anchor(--s2 center);
+}
+
+.site-posts .site-item:nth-child(4) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s4 center);
+	left: anchor(--s3 center);
+	right: anchor(--s4 center);
+	top: anchor(--s3 center);
+}
+
+.site-projects .site-item:nth-child(1) .site-item-meta::after {
+	background: var(--diag-dl);
+	bottom: anchor(--s5 center);
+	left: anchor(--s5 center);
+	right: anchor(--s4 center);
+	top: anchor(--s4 center);
+}
+
+.site-projects .site-item:nth-child(2) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s6 center);
+	left: anchor(--s5 center);
+	right: anchor(--s6 center);
+	top: anchor(--s5 center);
+}
+
+.site-projects .site-item:nth-child(3) .site-item-meta::after {
+	background: var(--diag-dl);
+	bottom: anchor(--s7 center);
+	left: anchor(--s7 center);
+	right: anchor(--s6 center);
+	top: anchor(--s6 center);
+}
+
+.site-projects .site-item:nth-child(4) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s8 center);
+	left: anchor(--s7 center);
+	right: anchor(--s8 center);
+	top: anchor(--s7 center);
+}
+
+.site-talks .site-item:nth-child(1) .site-item-meta::after {
+	background: var(--diag-dl);
+	bottom: anchor(--s9 center);
+	left: anchor(--s9 center);
+	right: anchor(--s8 center);
+	top: anchor(--s8 center);
+}
+
+.site-talks .site-item:nth-child(2) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s10 center);
+	left: anchor(--s9 center);
+	right: anchor(--s10 center);
+	top: anchor(--s9 center);
+}
+
+.site-talks .site-item:nth-child(3) .site-item-meta::after {
+	background: var(--diag-dl);
+	bottom: anchor(--s11 center);
+	left: anchor(--s11 center);
+	right: anchor(--s10 center);
+	top: anchor(--s10 center);
+}
+
+.site-talks .site-item:nth-child(4) .site-item-meta::after {
+	background: var(--diag-dr);
+	bottom: anchor(--s12 center);
+	left: anchor(--s11 center);
+	right: anchor(--s12 center);
+	top: anchor(--s11 center);
+}
+
+.site-posts .site-item:first-child .site-item-meta::after {
+	display: none;
+}
+
+/* hover: the star flares, and the line into it and the line out of it both glow */
+.site-item:hover .site-item-title::before,
+.site-item:focus-within .site-item-title::before {
+	background: radial-gradient(circle, #fff 0 22%, var(--lit) 30%, color-mix(in srgb, var(--lit) 40%, transparent) 50%, transparent 74%);
+	scale: 2.2;
+}
+
+.site-item:hover .site-item-meta::after,
+.site-item:focus-within .site-item-meta::after,
+.site-item:hover + .site-item .site-item-meta::after {
+	--glow: 1;
+}
+
+.site-list:has(.site-item:hover) .site-item:not(:hover) .site-item-description {
+	opacity: 0.7;
+}
+
+/* ---- the socials: a three-star zigzag above the links ---- */
+
+.site-socials li:nth-child(odd) .site-link::before {
+	anchor-name: --ha;
+	left: 50%;
+	top: 150%;
+}
+
+.site-socials li:nth-child(even) .site-link::before {
+	anchor-name: --hb;
+	left: 50%;
+	top: 230%;
+}
+
+.site-socials li::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
+}
+
+.site-socials li:nth-child(2)::after {
+	background: linear-gradient(to top right, transparent calc(50% - 1px), rgb(var(--line) / 0.6) 50%, transparent calc(50% + 1px));
+	bottom: anchor(--hb center);
+	left: anchor(--ha center);
+	right: anchor(--hb center);
+	top: anchor(--ha center);
+}
+
+.site-socials li:nth-child(3)::after {
+	background: linear-gradient(to bottom right, transparent calc(50% - 1px), rgb(var(--line) / 0.6) 50%, transparent calc(50% + 1px));
+	bottom: anchor(--hb center);
+	left: anchor(--hb center);
+	right: anchor(--ha center);
+	top: anchor(--ha center);
+}
+
+.site-socials .site-link:hover::before {
+	background: radial-gradient(circle, #fff 0 22%, var(--lit) 30%, color-mix(in srgb, var(--lit) 40%, transparent) 50%, transparent 74%);
+	scale: 2.2;
+}
+
+@media (max-width: 700px) {
+	.site-item-title::before,
+	.site-item-meta::after,
+	.site-socials li::after,
+	.site-socials .site-link::before {
+		display: none;
+	}
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(#7f93ff, #ffd978, #9ae3ff, #7f93ff);
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: cs-spin 6s linear infinite;
+	}
+}
+
+@keyframes cs-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "anchor() \00b7  anchor-name \00b7  position-anchor \00b7  :hover + sibling";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

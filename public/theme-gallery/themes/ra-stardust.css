@@ -1,0 +1,5 @@
+/* 306 Stardust Currents: margin stardust advected by a cursor-stirred velocity field, a level-1 raised aurora, watercolor footer. */
+@import url("./_refined-c/base.css");
+.site .rac-footer .rac-paper { position: absolute; inset: 0; background-size: 160px 160px; opacity: 0.9; }
+.site .rac-footer canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.site .rac-wash { -webkit-mask-image: linear-gradient(transparent, #000 45%); mask-image: linear-gradient(transparent, #000 45%); }

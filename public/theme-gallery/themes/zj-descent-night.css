@@ -1,0 +1,618 @@
+/* ---- shared plumbing: zero JavaScript, no themes/<id>.js ---- */
+
+@property --sway {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	scroll-timeline: --pg block;
+	transition: --sway 1.6s linear(0, 0.2 6%, 0.62 14%, 0.97 22%, 1.12 30%, 1.13 36%, 1.06 46%, 0.98 58%, 0.99 70%, 1.005 82%, 1);
+}
+
+.site:has(.site-link:hover, .site-nav-link:hover, .site-item:hover) {
+	--sway: 1;
+}
+
+/* soft scrims so prose stays readable over the scene; sections read as clearings */
+.site-header,
+.site-hero,
+.site-about,
+.site-section,
+.site-footer {
+	background: color-mix(in srgb, var(--siteBg) var(--scrim, 82%), transparent);
+	border-radius: 1.4rem;
+	box-shadow: 0 0 1.6rem 0.9rem color-mix(in srgb, var(--siteBg) calc(var(--scrim, 82%) * 0.9), transparent);
+	box-sizing: border-box;
+	padding: 0.9rem 1.4rem;
+}
+
+.site-hero {
+	margin-block: 5rem 3.2rem;
+	padding: 1.6rem 1.8rem;
+}
+
+.site-about,
+.site-section {
+	margin-bottom: 3.2rem;
+}
+
+.site-about {
+	padding-block: 1.4rem;
+}
+
+.site-footer {
+	margin-top: 4rem;
+	opacity: 1;
+	padding-block: 1.4rem;
+}
+
+.site-page {
+	padding-bottom: 46vh;
+}
+
+.site-portrait img {
+	box-shadow: 0 6px 22px 0 color-mix(in srgb, var(--siteFgStrong) 22%, transparent);
+}
+
+/* badge + tags, in the spirit of #158 */
+.site .overlay-b::before {
+	background: var(--badgeBg);
+	border: 1.5px solid var(--badgeLine);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: "0 KB JavaScript \A shipped by this theme";
+	font: 700 0.72rem/1.25 var(--siteFont);
+	left: 1rem;
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: absolute;
+	text-align: center;
+	white-space: pre;
+}
+
+.site .overlay-b::after {
+	background: var(--badgeBg);
+	border: 1px solid var(--badgeLine);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: var(--tags);
+	font: 600 0.64rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+	max-width: 22rem;
+	opacity: 0.92;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 760px) {
+	.site .overlay-b::after {
+		display: none;
+	}
+}
+
+/* gentle scroll-driven reveals (only when motion is welcome) */
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title) {
+			animation: zjd-rise linear both;
+			animation-range: entry 0% entry 80%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjd-rise {
+	from {
+		opacity: 0;
+		translate: 0 1.2rem;
+	}
+}
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c)::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+}
+
+.site :is(.site-header, .site-main, .site-footer)::before,
+.site :is(.site-header, .site-main, .site-footer)::after {
+	content: "";
+	pointer-events: none;
+	position: fixed;
+	z-index: -1;
+}
+/*
+ * Sky to Lake V: Night. Zero JS, there is no themes/zj-descent-night.js.
+ *   @property --auh + scroll-timeline -> the aurora's hue walks from green to violet as you descend
+ *   masks (ray stripes x edge fade)   -> aurora curtains, each with its own stripe period, sway and phase
+ *   scaleY(-1) + striped mask         -> the moon, stars and aurora mirrored into a black lake
+ *   box-shadow clusters + opacity     -> fireflies that fade in only while you are in the trees
+ *   @property --sway + linear()       -> hover a link: the aurora swells and the fireflies lift, on a spring
+ * Light mode is the blue hour before it gets fully dark.
+ */
+
+@property --sk0 { inherits: true; initial-value: #01030a; syntax: "<color>"; }
+@property --sk1 { inherits: true; initial-value: #081a2e; syntax: "<color>"; }
+@property --sk2 { inherits: true; initial-value: #16403f; syntax: "<color>"; }
+
+.site {
+	--siteBg: #eef0f8;
+	--siteFg: #1f2744;
+	--siteFgStrong: #0d1230;
+	--siteMuted: #54607f;
+	--siteAccent: #3a46b8;
+	--siteSquiggle: #5a7cf0;
+	--siteSubtle: #d9ddf0;
+	--scrim: 82%;
+	--star-o: 0.5;
+	--aur-o: 0.55;
+	--ridge: #2c3b66;
+	--ridge-b: #1c284a;
+	--spruce: #16223d;
+	--spruce-far: #2f3e66;
+	--trunk: #0d152a;
+	--lake0: #8d9fcf;
+	--lake1: #26365f;
+	--lake2: #0b1430;
+	--moon: #fffbe9;
+	--sk0: #263a78;
+	--sk1: #5d7cb8;
+	--sk2: #d3cfe0;
+	--badgeBg: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	--badgeFg: var(--siteFgStrong);
+	--badgeLine: color-mix(in srgb, var(--siteSquiggle) 70%, transparent);
+	--tags: "scroll-timeline \00b7 @property \00b7 mask-composite \00b7 box-reflect-ish \00b7 linear()";
+}
+
+html.dark .site {
+	--siteBg: #060b17;
+	--siteFg: #d3deee;
+	--siteFgStrong: #f4f9ff;
+	--siteMuted: #8fa3bf;
+	--siteAccent: #7cf0c4;
+	--siteSquiggle: #4de8b0;
+	--siteSubtle: #0e1d30;
+	--scrim: 80%;
+	--star-o: 1;
+	--aur-o: 0.95;
+	--ridge: #040a14;
+	--ridge-b: #02050b;
+	--spruce: #03070d;
+	--spruce-far: #07101c;
+	--trunk: #020409;
+	--lake0: #0f2a38;
+	--lake1: #040a14;
+	--lake2: #01030a;
+	--sk0: #01030a;
+	--sk1: #071729;
+	--sk2: #1c5558;
+}
+
+/* the scenery container sinks below the aurora/hue layers, which are explicitly ordered above it */
+.site .site-scenery {
+	z-index: -10;
+}
+
+/* ---- sky + stars ---- */
+
+.site .scenery-a {
+	background: linear-gradient(180deg, var(--sk0) 0%, var(--sk1) 52%, var(--sk2) 100%);
+	inset: 0 0 -10vh 0;
+}
+
+.site .scenery-a::before,
+.site .scenery-a::after {
+	inset: 0 0 8vh 0;
+	mask: linear-gradient(180deg, #000 55%, transparent 98%);
+	opacity: var(--star-o);
+}
+
+.site .scenery-a::before {
+	background:
+		radial-gradient(circle at 68px 291px, rgb(255 255 255 / 0.63) 0, rgb(255 255 255 / 0.63) 0.4px, transparent 1.6px),
+		radial-gradient(circle at 253px 230px, rgb(255 255 255 / 0.83) 0, rgb(255 255 255 / 0.83) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 107px 48px, rgb(255 255 255 / 0.51) 0, rgb(255 255 255 / 0.51) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 199px 221px, rgb(255 255 255 / 0.88) 0, rgb(255 255 255 / 0.88) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 1px 356px, rgb(255 255 255 / 0.63) 0, rgb(255 255 255 / 0.63) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 117px 302px, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0.95) 0.4px, transparent 1.6px),
+		radial-gradient(circle at 15px 11px, rgb(255 255 255 / 0.82) 0, rgb(255 255 255 / 0.82) 0.4px, transparent 1.6px),
+		radial-gradient(circle at 4px 195px, rgb(255 255 255 / 0.61) 0, rgb(255 255 255 / 0.61) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 216px 14px, rgb(255 255 255 / 0.61) 0, rgb(255 255 255 / 0.61) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 224px 253px, rgb(255 255 255 / 0.62) 0, rgb(255 255 255 / 0.62) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 118px 346px, rgb(255 255 255 / 0.88) 0, rgb(255 255 255 / 0.88) 0.5px, transparent 1.9px),
+		radial-gradient(circle at 148px 11px, rgb(255 255 255 / 0.92) 0, rgb(255 255 255 / 0.92) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 284px 328px, rgb(255 255 255 / 0.59) 0, rgb(255 255 255 / 0.59) 0.4px, transparent 1.6px),
+		radial-gradient(circle at 151px 61px, rgb(255 255 255 / 0.67) 0, rgb(255 255 255 / 0.67) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 256px 216px, rgb(255 255 255 / 0.92) 0, rgb(255 255 255 / 0.92) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 343px 97px, rgb(255 255 255 / 0.64) 0, rgb(255 255 255 / 0.64) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 255px 258px, rgb(255 255 255 / 0.79) 0, rgb(255 255 255 / 0.79) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 17px 245px, rgb(255 255 255 / 0.87) 0, rgb(255 255 255 / 0.87) 0.5px, transparent 1.9px),
+		radial-gradient(circle at 206px 212px, rgb(255 255 255 / 0.59) 0, rgb(255 255 255 / 0.59) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 280px 359px, rgb(255 255 255 / 0.87) 0, rgb(255 255 255 / 0.87) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 44px 224px, rgb(255 255 255 / 0.75) 0, rgb(255 255 255 / 0.75) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 83px 266px, rgb(255 255 255 / 0.69) 0, rgb(255 255 255 / 0.69) 0.6px, transparent 2.2px),
+		radial-gradient(circle at 15px 240px, rgb(255 255 255 / 0.65) 0, rgb(255 255 255 / 0.65) 0.4px, transparent 1.6px),
+		radial-gradient(circle at 314px 303px, rgb(255 255 255 / 0.70) 0, rgb(255 255 255 / 0.70) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 87px 86px, rgb(255 255 255 / 0.61) 0, rgb(255 255 255 / 0.61) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 6px 102px, rgb(255 255 255 / 0.96) 0, rgb(255 255 255 / 0.96) 0.7px, transparent 2.5px);
+	background-size: 360px 360px;
+}
+
+.site .scenery-a::after {
+	background:
+		radial-gradient(circle at 57px 93px, rgb(255 255 255 / 0.68) 0, rgb(255 255 255 / 0.68) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 173px 315px, rgb(255 255 255 / 0.80) 0, rgb(255 255 255 / 0.80) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 36px 162px, rgb(255 255 255 / 0.82) 0, rgb(255 255 255 / 0.82) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 380px 455px, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0.95) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 28px 372px, rgb(255 255 255 / 0.97) 0, rgb(255 255 255 / 0.97) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 389px 433px, rgb(255 255 255 / 0.78) 0, rgb(255 255 255 / 0.78) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 241px 236px, rgb(255 255 255 / 0.59) 0, rgb(255 255 255 / 0.59) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 177px 139px, rgb(255 255 255 / 1.00) 0, rgb(255 255 255 / 1.00) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 186px 456px, rgb(255 255 255 / 0.87) 0, rgb(255 255 255 / 0.87) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 372px 362px, rgb(255 255 255 / 0.99) 0, rgb(255 255 255 / 0.99) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 456px 165px, rgb(255 255 255 / 0.86) 0, rgb(255 255 255 / 0.86) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 472px 255px, rgb(255 255 255 / 0.64) 0, rgb(255 255 255 / 0.64) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 510px 512px, rgb(255 255 255 / 0.83) 0, rgb(255 255 255 / 0.83) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 465px 472px, rgb(255 255 255 / 0.78) 0, rgb(255 255 255 / 0.78) 1.1px, transparent 3.3px);
+	background-size: 520px 520px;
+}
+
+/* ---- aurora: two curtains with their own stripe periods, hue offsets and sway ---- */
+
+/* each curtain exists as three pre-colored copies (hue 148 green, 220 blue, 292 violet) that
+   scroll-driven opacity crossfades, so the hue walk never touches style or paint */
+
+.site::before,
+.site::after,
+.site-page::before,
+.site-page::after,
+.site-header::before,
+.site-header::after {
+	content: "";
+	contain: paint;
+	left: 2vw;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	transform-origin: 50% 100%;
+	width: 96vw;
+	will-change: transform, opacity;
+}
+
+.site-header::before { --h: 148; }
+.site-page::before { --h: 220; }
+.site-page::after { --h: 292; }
+.site-header::after { --h: 148; }
+.site::before { --h: 220; }
+.site::after { --h: 292; }
+
+.site-header::before,
+.site-page::before,
+.site-page::after {
+	background: linear-gradient(0deg, hsl(var(--h) 90% 55% / 0) 0%, hsl(var(--h) 95% 62% / 0.95) 30%, hsl(calc(var(--h) + 40) 90% 68% / 0.7) 66%, transparent 100%);
+	height: 64vh;
+	mask:
+		linear-gradient(90deg, transparent 0, #000 20%, #000 80%, transparent 100%),
+		linear-gradient(0deg, transparent 0, #000 30%, #000 60%, transparent 100%),
+		repeating-linear-gradient(90deg, rgb(0 0 0 / 0.35) 0, #000 22px, rgb(0 0 0 / 0.2) 48px, #000 70px, rgb(0 0 0 / 0.5) 96px);
+	mask-composite: intersect;
+	opacity: var(--aur-o);
+	scale: 1 calc(1 + var(--sway) * 0.14);
+	z-index: -6;
+}
+
+.site-header::after,
+.site::before,
+.site::after {
+	background: linear-gradient(0deg, transparent 0%, hsl(calc(var(--h) + 75) 90% 64% / 0.8) 38%, hsl(calc(var(--h) + 30) 95% 74% / 0.5) 72%, transparent 100%);
+	height: 54vh;
+	left: 10vw;
+	mask:
+		linear-gradient(90deg, transparent 0, #000 25%, #000 70%, transparent 100%),
+		linear-gradient(0deg, transparent 0, #000 40%, #000 60%, transparent 100%),
+		repeating-linear-gradient(90deg, rgb(0 0 0 / 0.2) 0, #000 14px, rgb(0 0 0 / 0.5) 34px, rgb(0 0 0 / 0.1) 52px, #000 66px);
+	mask-composite: intersect;
+	opacity: calc(var(--aur-o) * 0.8);
+	top: 7vh;
+	width: 80vw;
+	z-index: -5;
+}
+
+/* the moon (above the aurora, below the shore) */
+.site-footer::after {
+	background:
+		radial-gradient(circle at 40% 36%, transparent 0 3.2vmin, rgb(120 130 160 / 0.28) 3.4vmin 4.4vmin, transparent 4.6vmin),
+		radial-gradient(circle at 62% 66%, rgb(120 130 160 / 0.25) 0 1.6vmin, transparent 1.8vmin),
+		radial-gradient(circle at 34% 58%, rgb(120 130 160 / 0.2) 0 1.1vmin, transparent 1.3vmin),
+		radial-gradient(circle at 38% 34%, #fffef4, var(--moon) 55%, #cfd8ea);
+	border-radius: 50%;
+	box-shadow: 0 0 5vmin 1.2vmin rgb(200 220 255 / 0.28), 0 0 14vmin 4vmin rgb(150 190 255 / 0.14);
+	height: 12vmin;
+	left: var(--moonx);
+	top: 16vh;
+	width: 12vmin;
+}
+
+/* ---- far shore: a ridge with its spruce baked into one silhouette, standing on solid ground below the waterline ---- */
+
+.site .scenery-b {
+	background: linear-gradient(180deg, var(--ridge) 0, var(--ridge-b) 36vh, var(--ridge-b) 100%);
+	bottom: -32vh;
+	height: 106vh;
+	inset: auto 0 -32vh 0;
+	mask:
+		url("zj-descent-night/ridge-shore.svg") left 0 / auto 36vh repeat-x,
+		linear-gradient(#000, #000) 0 36vh / 100% 70vh no-repeat;
+}
+
+/* ---- the lake ---- */
+
+.site {
+	--moonx: 80vw;
+}
+
+.site .scenery-c {
+	background: linear-gradient(180deg, var(--lake0), var(--lake1) 30%, var(--lake2));
+	height: 38vh;
+	inset: auto 0 0 0;
+}
+
+/* moon on the water, torn into ripple strokes */
+.site .scenery-c::before {
+	background: radial-gradient(ellipse 5vmin 100% at 50% 0%, #fff8dc 0%, rgb(232 238 255 / 0.75) 40%, transparent 100%);
+	height: 100%;
+	left: calc(var(--moonx) - 8vmin);
+	mask:
+		repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 6px) 0 0 / 100% 100%,
+		linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+	mask-composite: intersect;
+	top: 0;
+	width: 28vmin;
+}
+
+/* stars and a wash of aurora, mirrored */
+.site .scenery-c::after {
+	background:
+		linear-gradient(0deg, transparent, hsl(255 85% 55% / 0.35) 90%),
+		radial-gradient(circle at 57px 93px, rgb(255 255 255 / 0.68) 0, rgb(255 255 255 / 0.68) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 173px 315px, rgb(255 255 255 / 0.80) 0, rgb(255 255 255 / 0.80) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 36px 162px, rgb(255 255 255 / 0.82) 0, rgb(255 255 255 / 0.82) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 380px 455px, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0.95) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 28px 372px, rgb(255 255 255 / 0.97) 0, rgb(255 255 255 / 0.97) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 389px 433px, rgb(255 255 255 / 0.78) 0, rgb(255 255 255 / 0.78) 0.9px, transparent 2.9px),
+		radial-gradient(circle at 241px 236px, rgb(255 255 255 / 0.59) 0, rgb(255 255 255 / 0.59) 0.7px, transparent 2.5px),
+		radial-gradient(circle at 177px 139px, rgb(255 255 255 / 1.00) 0, rgb(255 255 255 / 1.00) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 186px 456px, rgb(255 255 255 / 0.87) 0, rgb(255 255 255 / 0.87) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 372px 362px, rgb(255 255 255 / 0.99) 0, rgb(255 255 255 / 0.99) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 456px 165px, rgb(255 255 255 / 0.86) 0, rgb(255 255 255 / 0.86) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 472px 255px, rgb(255 255 255 / 0.64) 0, rgb(255 255 255 / 0.64) 1.3px, transparent 3.9px),
+		radial-gradient(circle at 510px 512px, rgb(255 255 255 / 0.83) 0, rgb(255 255 255 / 0.83) 1.1px, transparent 3.3px),
+		radial-gradient(circle at 465px 472px, rgb(255 255 255 / 0.78) 0, rgb(255 255 255 / 0.78) 1.1px, transparent 3.3px);
+	background-size: 100% 100%, 520px 520px;
+	height: 100%;
+	inset: 0 0 auto 0;
+	mask: repeating-linear-gradient(180deg, #000 0 4px, transparent 4px 8px), linear-gradient(180deg, #000, transparent 85%);
+	mask-composite: intersect;
+	opacity: 0.5;
+	transform: scaleY(-1);
+}
+
+/* the shore, mirrored dimly in the water (hangs from the waterline, moves with the lake) */
+.site-footer::before {
+	background: linear-gradient(180deg, var(--spruce-far), transparent 90%);
+	bottom: 0;
+	height: 36vh;
+	left: 0;
+	mask:
+		url("zj-descent-night/ridge-shore.svg") left bottom / auto 100% repeat-x,
+		repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 6px);
+	mask-composite: intersect;
+	opacity: 0.4;
+	right: 0;
+	top: calc(62vh);
+	transform: scaleY(-1);
+}
+
+/* ---- trees that pass overhead: bottom-anchored spruce bank, then full-height trunks (no floating ends) ---- */
+
+.site-main::before,
+.site-main::after {
+	left: 0;
+	right: 0;
+}
+
+.site-main::before {
+	background: linear-gradient(180deg, var(--spruce-far), var(--spruce));
+	bottom: 0;
+	height: 62vh;
+	mask: url("zj-descent-night/spruce-mid.svg") left bottom / auto 100% repeat-x;
+	opacity: 0;
+}
+
+.site-main::after {
+	background: linear-gradient(180deg, var(--spruce-far), var(--trunk) 55%);
+	height: 170vh;
+	mask: url("zj-descent-night/trunks.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0;
+	top: 0;
+}
+
+/* ---- fireflies: overlay layers, faded in by scroll, hovering over the margins ---- */
+
+.site .overlay-a {
+	opacity: 0.7;
+}
+
+.site .overlay-a::before,
+.site .overlay-a::after {
+	border-radius: 50%;
+	content: "";
+	height: 3px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 3px;
+}
+
+.site .overlay-a::before {
+	box-shadow:
+		14.0vw 60.7vh 7px 1px #ffe27a,
+		77.4vw 40.7vh 7px 1px #e8ff9a,
+		80.2vw 80.2vh 7px 1.5px #ffe27a,
+		16.1vw 48.4vh 7px 0.5px #ffe27a,
+		87.5vw 81.5vh 7px 0.5px #ffe27a,
+		23.1vw 42.4vh 7px 1px #fff3a0,
+		17.8vw 89.2vh 7px 1px #ffe27a,
+		19.6vw 64.9vh 7px 1px #fff3a0,
+		5.0vw 52.2vh 7px 1px #ffe27a,
+		94.8vw 63.6vh 7px 1.5px #e8ff9a,
+		14.9vw 72.7vh 7px 1.5px #e8ff9a,
+		76.6vw 55.7vh 7px 1.5px #ffe27a,
+		91.4vw 58.3vh 7px 1.5px #ffe27a,
+		91.7vw 51.8vh 7px 1px #ffe27a;
+	color: #ffe98a;
+}
+
+.site .overlay-a::after {
+	box-shadow:
+		4.3vw 62.2vh 8px 0.5px #fff3a0,
+		10.8vw 91.4vh 8px 0.5px #fff3a0,
+		83.9vw 83.7vh 8px 1px #fff3a0,
+		22.4vw 86.4vh 8px 1px #e8ff9a,
+		8.8vw 75.1vh 8px 1px #ffe27a,
+		15.3vw 77.6vh 8px 0.5px #ffe27a,
+		12.4vw 45.0vh 8px 1px #ffe27a,
+		8.4vw 79.5vh 8px 1.5px #e8ff9a,
+		11.3vw 56.1vh 8px 0.5px #e8ff9a,
+		7.7vw 84.7vh 8px 0.5px #fff3a0,
+		23.9vw 69.1vh 8px 1px #ffe27a,
+		79.2vw 77.7vh 8px 1px #fff3a0,
+		90.0vw 64.7vh 8px 1px #fff3a0,
+		15.0vw 75.5vh 8px 1px #fff3a0;
+}
+
+html:not(.dark) .site .overlay-a {
+	display: none;
+}
+
+@media (max-width: 760px) {
+	.site .overlay-a {
+		display: none;
+	}
+}
+
+/* ---- scroll maps the journey ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer, .overlay-a),
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::before,
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::after {
+			animation-fill-mode: both;
+			animation-timeline: --pg;
+			animation-timing-function: linear;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a { animation-name: zjn-sky-pan; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a::before { animation-name: zjn-stars; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a::after { animation-name: zjn-stars; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .site-footer::after { animation-name: zjn-moon; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-b { animation-name: zjn-ridge; animation-range: 0% 85%; }
+		html:not(.reduce-motion) .site .scenery-c { animation-name: zjn-lake; animation-range: 45% 95%; }
+		html:not(.reduce-motion) .site .site-footer::before { animation-name: zjn-lake; animation-range: 45% 95%; }
+		html:not(.reduce-motion) .site .site-main::before { animation-name: zjn-spruce; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .site-main::after { animation-name: zjn-trunks; animation-range: 14% 76%; }
+		html:not(.reduce-motion) .site .overlay-a { animation-name: zjn-flies; animation-range: 14% 96%; }
+	}
+}
+
+@keyframes zjn-sky-pan { to { translate: 0 -10vh; } }
+@keyframes zjn-stars { to { translate: 0 -6vh; } }
+@keyframes zjn-aurora-0 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 1.000); } 10% { translate: 0 -3.3vh; opacity: calc(var(--aur-o) * 0.776); } 20% { translate: 0 -6.7vh; opacity: calc(var(--aur-o) * 0.564); } 30% { translate: 0 -10.0vh; opacity: calc(var(--aur-o) * 0.364); } 40% { translate: 0 -13.3vh; opacity: calc(var(--aur-o) * 0.176); } 50% { translate: 0 -16.7vh; opacity: calc(var(--aur-o) * 0.000); } 60% { translate: 0 -20.0vh; opacity: calc(var(--aur-o) * 0.000); } 70% { translate: 0 -23.3vh; opacity: calc(var(--aur-o) * 0.000); } 80% { translate: 0 -26.7vh; opacity: calc(var(--aur-o) * 0.000); } 90% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.000); } 100% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.000); } }
+@keyframes zjn-aurora-b-0 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 0.800); } 10% { translate: 0 -4.2vh; opacity: calc(var(--aur-o) * 0.582); } 20% { translate: 0 -8.4vh; opacity: calc(var(--aur-o) * 0.393); } 30% { translate: 0 -12.7vh; opacity: calc(var(--aur-o) * 0.233); } 40% { translate: 0 -16.9vh; opacity: calc(var(--aur-o) * 0.102); } 50% { translate: 0 -21.1vh; opacity: calc(var(--aur-o) * 0.000); } 60% { translate: 0 -25.3vh; opacity: calc(var(--aur-o) * 0.000); } 70% { translate: 0 -29.6vh; opacity: calc(var(--aur-o) * 0.000); } 80% { translate: 0 -33.8vh; opacity: calc(var(--aur-o) * 0.000); } 90% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.000); } 100% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.000); } }
+@keyframes zjn-aurora-1 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 0.000); } 10% { translate: 0 -3.3vh; opacity: calc(var(--aur-o) * 0.194); } 20% { translate: 0 -6.7vh; opacity: calc(var(--aur-o) * 0.376); } 30% { translate: 0 -10.0vh; opacity: calc(var(--aur-o) * 0.545); } 40% { translate: 0 -13.3vh; opacity: calc(var(--aur-o) * 0.703); } 50% { translate: 0 -16.7vh; opacity: calc(var(--aur-o) * 0.842); } 60% { translate: 0 -20.0vh; opacity: calc(var(--aur-o) * 0.545); } 70% { translate: 0 -23.3vh; opacity: calc(var(--aur-o) * 0.313); } 80% { translate: 0 -26.7vh; opacity: calc(var(--aur-o) * 0.144); } 90% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.040); } 100% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.000); } }
+@keyframes zjn-aurora-b-1 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 0.000); } 10% { translate: 0 -4.2vh; opacity: calc(var(--aur-o) * 0.146); } 20% { translate: 0 -8.4vh; opacity: calc(var(--aur-o) * 0.262); } 30% { translate: 0 -12.7vh; opacity: calc(var(--aur-o) * 0.350); } 40% { translate: 0 -16.9vh; opacity: calc(var(--aur-o) * 0.409); } 50% { translate: 0 -21.1vh; opacity: calc(var(--aur-o) * 0.439); } 60% { translate: 0 -25.3vh; opacity: calc(var(--aur-o) * 0.293); } 70% { translate: 0 -29.6vh; opacity: calc(var(--aur-o) * 0.177); } 80% { translate: 0 -33.8vh; opacity: calc(var(--aur-o) * 0.089); } 90% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.030); } 100% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.000); } }
+@keyframes zjn-aurora-2 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 0.000); } 10% { translate: 0 -3.3vh; opacity: calc(var(--aur-o) * 0.000); } 20% { translate: 0 -6.7vh; opacity: calc(var(--aur-o) * 0.000); } 30% { translate: 0 -10.0vh; opacity: calc(var(--aur-o) * 0.000); } 40% { translate: 0 -13.3vh; opacity: calc(var(--aur-o) * 0.000); } 50% { translate: 0 -16.7vh; opacity: calc(var(--aur-o) * 0.000); } 60% { translate: 0 -20.0vh; opacity: calc(var(--aur-o) * 0.136); } 70% { translate: 0 -23.3vh; opacity: calc(var(--aur-o) * 0.208); } 80% { translate: 0 -26.7vh; opacity: calc(var(--aur-o) * 0.216); } 90% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.160); } 100% { translate: 0 -30.0vh; opacity: calc(var(--aur-o) * 0.200); } }
+@keyframes zjn-aurora-b-2 { 0% { translate: 0 -0.0vh; opacity: calc(var(--aur-o) * 0.000); } 10% { translate: 0 -4.2vh; opacity: calc(var(--aur-o) * 0.000); } 20% { translate: 0 -8.4vh; opacity: calc(var(--aur-o) * 0.000); } 30% { translate: 0 -12.7vh; opacity: calc(var(--aur-o) * 0.000); } 40% { translate: 0 -16.9vh; opacity: calc(var(--aur-o) * 0.000); } 50% { translate: 0 -21.1vh; opacity: calc(var(--aur-o) * 0.000); } 60% { translate: 0 -25.3vh; opacity: calc(var(--aur-o) * 0.073); } 70% { translate: 0 -29.6vh; opacity: calc(var(--aur-o) * 0.118); } 80% { translate: 0 -33.8vh; opacity: calc(var(--aur-o) * 0.133); } 90% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.120); } 100% { translate: 0 -38.0vh; opacity: calc(var(--aur-o) * 0.150); } }
+@keyframes zjn-moon { to { translate: 0 -10vh; } }
+@keyframes zjn-lake { from { translate: 0 42vh; } }
+@keyframes zjn-ridge { from { translate: 0 34vh; } }
+@keyframes zjn-spruce { 0% { opacity: 1; translate: 0 100vh; } 30%, 60% { opacity: 1; translate: 0 0; } 90%, 100% { opacity: 0; translate: 0 0; } }
+@keyframes zjn-trunks { 0% { opacity: 0; translate: 0 -10vh; } 25%, 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -70vh; } }
+@keyframes zjn-flies { 0% { opacity: 0; } 22% { opacity: 0.9; } 70% { opacity: 0.9; } 100% { opacity: 0.25; } }
+
+/* ambient motion, only where motion is welcome: sway, twinkle, drift */
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-header::before {
+		animation: zjn-aurora-0 linear both, zjn-sway-a 17s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .site-page::before {
+		animation: zjn-aurora-1 linear both, zjn-sway-a 17s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .site-page::after {
+		animation: zjn-aurora-2 linear both, zjn-sway-a 17s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .site-header::after {
+		animation: zjn-aurora-b-0 linear both, zjn-sway-b 23s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site::before {
+		animation: zjn-aurora-b-1 linear both, zjn-sway-b 23s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site::after {
+		animation: zjn-aurora-b-2 linear both, zjn-sway-b 23s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .scenery-a::after {
+		animation: zjn-stars linear both, zjn-twinkle 5s ease-in-out infinite alternate;
+		animation-range: 0% 100%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation: zjn-lake linear both, zjn-wobble 4.5s ease-in-out infinite alternate;
+		animation-range: 45% 95%, normal;
+		animation-timeline: --pg, auto;
+	}
+
+	html:not(.reduce-motion) .site .overlay-a {
+		transform: translateY(calc(var(--sway) * -2.5vh));
+	}
+
+	html:not(.reduce-motion) .site .overlay-a::before {
+		animation: zjn-drift-a 11s ease-in-out infinite alternate, zjn-blink 3.4s ease-in-out infinite;
+	}
+
+	html:not(.reduce-motion) .site .overlay-a::after {
+		animation: zjn-drift-b 14s ease-in-out infinite alternate, zjn-blink 4.7s ease-in-out infinite 1.3s;
+	}
+}
+
+@keyframes zjn-sway-a { from { transform: skewX(-7deg) translateX(-3vw); } to { transform: skewX(6deg) translateX(3vw); } }
+@keyframes zjn-sway-b { from { transform: skewX(8deg) translateX(4vw); } to { transform: skewX(-5deg) translateX(-4vw); } }
+@keyframes zjn-twinkle { from { opacity: calc(var(--star-o) * 0.35); } to { opacity: var(--star-o); } }
+@keyframes zjn-wobble { from { transform: scaleY(1) translateX(-4px); } to { transform: scaleY(1.04) translateX(5px); } }
+@keyframes zjn-drift-a { from { translate: 0 0; } to { translate: 1.5vw -4vh; } }
+@keyframes zjn-drift-b { from { translate: 0 0; } to { translate: -2vw -5vh; } }
+@keyframes zjn-blink { 0%, 100% { opacity: 1; } 45% { opacity: 0.25; } 60% { opacity: 0.9; } }

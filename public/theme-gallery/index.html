@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<title>joshuakgoldberg.com theme gallery</title>
+		<link href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Ctext y=%2213%22 font-size=%2214%22%3E〰%3C/text%3E%3C/svg%3E" rel="icon" />
+		<link href="gallery.css" rel="stylesheet" />
+		<link href="site.css" rel="stylesheet" />
+		<link href="" id="theme-css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="gallery-bar" id="gallery-bar">
+			<button class="gallery-button" id="prev" title="Previous theme (←)" type="button">←</button>
+			<div class="gallery-current">
+				<span class="gallery-number" id="current-number"></span>
+				<span class="gallery-name" id="current-name"></span>
+				<span class="gallery-group" id="current-group"></span>
+			</div>
+			<button class="gallery-button" id="next" title="Next theme (→)" type="button">→</button>
+			<span class="gallery-spacer"></span>
+			<button class="gallery-button" id="open-palette" title="Pick a theme (⌘K or T)" type="button">
+				Themes <kbd>T</kbd>
+			</button>
+			<button class="gallery-button" id="toggle-mode" title="Light / dark (D)" type="button">
+				<span id="mode-label">Dark</span> <kbd>D</kbd>
+			</button>
+			<button class="gallery-button" id="toggle-motion" title="Simulate reduced motion (M)" type="button">
+				<span id="motion-label">Motion on</span> <kbd>M</kbd>
+			</button>
+			<button class="gallery-button" id="toggle-info" title="Concept notes (I)" type="button">
+				Notes <kbd>I</kbd>
+			</button>
+			<button class="gallery-button" id="toggle-bar" title="Hide this bar (H)" type="button">
+				Hide <kbd>H</kbd>
+			</button>
+		</div>
+
+		<aside class="gallery-info" hidden id="gallery-info"></aside>
+
+		<div class="gallery-palette" hidden id="gallery-palette">
+			<div class="gallery-palette-box">
+				<input
+					aria-label="Filter themes"
+					autocomplete="off"
+					id="palette-input"
+					placeholder="> Preferences: Color Theme"
+					type="text"
+				/>
+				<ul id="palette-list" role="listbox"></ul>
+			</div>
+		</div>
+
+		<div class="site" id="site">
+			<div aria-hidden="true" class="site-scenery">
+				<div class="scenery-a"></div>
+				<div class="scenery-b"></div>
+				<div class="scenery-c"></div>
+			</div>
+
+			<div class="site-page">
+				<header class="site-header">
+					<a class="site-logo" href="#">Josh Goldberg</a>
+					<button aria-label="Toggle theme" class="site-theme-toggle" type="button"><span aria-hidden="true">☀</span></button>
+					<nav aria-label="Main" class="site-nav">
+						<a class="site-nav-link" href="#">Book</a>
+						<a class="site-nav-link is-active" href="#">Blog</a>
+						<a class="site-nav-link" href="#">Projects</a>
+						<a class="site-nav-link" href="#">Speaking</a>
+					</nav>
+				</header>
+
+				<main class="site-main">
+					<section class="site-hero">
+						<picture class="site-portrait">
+							<img alt="Josh's half-smiling happy face" class="site-portrait-light" src="assets/josh-light.webp" />
+							<img alt="" class="site-portrait-dark" src="assets/josh-dark.webp" />
+						</picture>
+						<div class="site-hero-text">
+							<h1 class="site-title">Hi! I'm Josh.</h1>
+							<p class="site-tagline">I'm an open source maintainer in the TypeScript ecosystem.</p>
+							<ul class="site-socials">
+								<li><a class="site-link" href="#">Bluesky</a></li>
+								<li><a class="site-link" href="#">GitHub</a></li>
+								<li><a class="site-link" href="#">Mastodon</a></li>
+							</ul>
+						</div>
+					</section>
+
+					<section class="site-about">
+						<p>I work to make web development better, most notably on <a class="site-link" href="#">typescript-eslint</a>: a powerful static analysis toolset for JavaScript and TypeScript code.</p>
+						<p>I'm the author of <a class="site-link" href="#">Learning TypeScript</a> (O'Reilly), a Microsoft MVP, a conference speaker, a community organizer, and a dev at <a class="site-link" href="#">Sentry</a>.</p>
+					</section>
+
+					<section class="site-section site-posts">
+						<h2 class="site-section-title">Recent writing</h2>
+						<ol class="site-list">
+							<li class="site-item site-post">
+								<a class="site-item-title site-link" href="#">Stepping Back from Open Source (Mostly)</a>
+								<p class="site-item-description">Leaving most of my open source projects in security mode and/or with other maintainers.</p>
+								<span class="site-item-meta"><time>Aug 10, 2026</time> · <span class="site-item-minutes">6 minute read</span></span>
+							</li>
+							<li class="site-item site-post">
+								<a class="site-item-title site-link" href="#">2025 In Review</a>
+								<p class="site-item-description">Looking back at the accomplishments and goals from my fourth and final year as a full-time independent open source maintainer.</p>
+								<span class="site-item-meta"><time>Mar 8, 2026</time> · <span class="site-item-minutes">20 minute read</span></span>
+							</li>
+							<li class="site-item site-post">
+								<a class="site-item-title site-link" href="#">If I Wrote a Linter, Part 4: Summary</a>
+								<p class="site-item-description">Summarizing the last three posts of ideas for a new linter, along with next steps for its Flint prototype.</p>
+								<span class="site-item-meta"><time>Jun 10, 2025</time> · <span class="site-item-minutes">5 minute read</span></span>
+							</li>
+							<li class="site-item site-post">
+								<a class="site-item-title site-link" href="#">Hybrid Linters: The Best of Both Worlds</a>
+								<p class="site-item-description">Native speed for parsing and type checking is wonderful. I also want the huge benefits of writing lint rules in an ecosystem's primary language.</p>
+								<span class="site-item-meta"><time>Mar 20, 2025</time> · <span class="site-item-minutes">12 minute read</span></span>
+							</li>
+						</ol>
+					</section>
+
+					<section class="site-section site-projects">
+						<h2 class="site-section-title">Projects</h2>
+						<ul class="site-list">
+							<li class="site-item site-project">
+								<a class="site-item-title site-link" href="#">typescript-eslint</a>
+								<p class="site-item-description">Tooling that enables ESLint and Prettier to support TypeScript.</p>
+								<span class="site-item-meta">TypeScript · ★ 16k</span>
+							</li>
+							<li class="site-item site-project">
+								<a class="site-item-title site-link" href="#">create-typescript-app</a>
+								<p class="site-item-description">Quickstart-friendly TypeScript template with comprehensive tooling.</p>
+								<span class="site-item-meta">TypeScript · ★ 1k</span>
+							</li>
+							<li class="site-item site-project">
+								<a class="site-item-title site-link" href="#">Flint</a>
+								<p class="site-item-description">An experimental fast, friendly linter for the web.</p>
+								<span class="site-item-meta">TypeScript · prototype</span>
+							</li>
+							<li class="site-item site-project">
+								<a class="site-item-title site-link" href="#">emoji-blast</a>
+								<p class="site-item-description">Blasts emoji like fireworks all up in your HTML page.</p>
+								<span class="site-item-meta">TypeScript · 🎆</span>
+							</li>
+						</ul>
+					</section>
+
+					<section class="site-section site-talks">
+						<h2 class="site-section-title">Speaking</h2>
+						<ul class="site-list">
+							<li class="site-item site-talk">
+								<a class="site-item-title site-link" href="#">You Could Lint More</a>
+								<p class="site-item-description">revo.js 2023</p>
+								<span class="site-item-meta"><time>Oct 6, 2023</time> · Timișoara, Romania</span>
+							</li>
+							<li class="site-item site-talk">
+								<a class="site-item-title site-link" href="#">Type-Safe Style Systems: The Future of CSS</a>
+								<p class="site-item-description">revo.js 2023</p>
+								<span class="site-item-meta"><time>Oct 5, 2023</time> · Timișoara, Romania</span>
+							</li>
+							<li class="site-item site-talk">
+								<a class="site-item-title site-link" href="#">TypeScript for JavaScripties</a>
+								<p class="site-item-description">Wey Wey Web 2023</p>
+								<span class="site-item-meta"><time>Nov 2023</time> · Málaga, Spain</span>
+							</li>
+							<li class="site-item site-talk">
+								<a class="site-item-title site-link" href="#">Learning TypeScript Book, typescript-eslint</a>
+								<p class="site-item-description">devtools.fm</p>
+								<span class="site-item-meta">Podcast</span>
+							</li>
+						</ul>
+					</section>
+				</main>
+
+				<footer class="site-footer">
+					<p>Made with <span class="site-heart">💙</span> in Boston<br />using Astro, Solid, and TypeScript.</p>
+					<a class="site-link" href="#">view source</a>
+				</footer>
+			</div>
+
+			<div aria-hidden="true" class="site-overlay">
+				<div class="overlay-a"></div>
+				<div class="overlay-b"></div>
+			</div>
+		</div>
+
+		<script src="gallery.js" type="module"></script>
+	</body>
+</html>

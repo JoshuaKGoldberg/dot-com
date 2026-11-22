@@ -1,0 +1,100 @@
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import "./_type2/post.css";
+
+/* token plan
+   #416 Redaction Scale. Decay is tied to size down a 1.333 scale off 17.6px: hero 120px Redaction 20 (visible chew even at that size), section + post headings Redaction 35, item titles and post meta Redaction 50, so the smaller the glyph the more the pixels show.
+   Source Serif text (opsz 16) reads; Hedvig Letters Sans carries nav and UI. Hero 120px vs 25px tagline (4.8x).
+   Why: one rule drives both hierarchy and erosion. About 80 KB.
+   One line always: the size is min(150px cap, fit to the hero column via --tyFit = 95 / measured advance width), so it never wraps or scrolls. Wide hero: the headline takes the whole row, portrait and tagline sit beneath. */
+
+/* fonts: pinned static instances (single weight/opsz), latin subset only, so each face is ~15-25 KB and a mode only downloads the weights it uses */
+@font-face { font-family: "Redaction 20"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/redaction20/v1/MCoUzALt383bETVNKs4Y6KvoANAE62zuoQ.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Redaction 35"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/redaction35/v1/uk-kEGGrqbEl-mHvw5bcHUCZ4AR13IxD7A.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Redaction 50"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/redaction50/v1/5DCQAKnyxzvD5t8d28rUMlS_2gdKF8Hptg.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjihdqnhtdDs4DrjTMXw.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pRl9tDMQCjDDUXmAz.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Hedvig Letters Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/hedvigletterssans/v5/CHy_V_PfGVjobSBkihHWDT98RVp37w8jcJpH3B4jm10.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Code"; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/l/font?kit=HI_diYsKILxRpg3hIP6sJ7fM7PqPMcMnZFqUwX28DMyQhMthTXUdfJisohA1qWA&skey=d94d317bc78fd84e&v=v32) format("woff2"); }
+@font-face { font-family: "SS Text Dk"; font-style: normal; font-weight: 400 500; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEFF2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6kDXr4Y3qwzQ.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text Dk"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pRl9tDMQCjDDUXmAz.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "SS Text Fallback"; src: local("Georgia"); size-adjust: 104.5%; ascent-override: 99.6%; descent-override: 32.5%; line-gap-override: 0%; }
+@font-face { font-family: "Hedvig Letters Sans Fallback"; src: local("Arial"); size-adjust: 101.5%; ascent-override: 100.5%; descent-override: 31.5%; line-gap-override: 0%; }
+/* fb:end */
+
+.site {
+	--tyDisplay: "Redaction 20", Georgia, serif;
+	--tyBody: "Hedvig Letters Sans", "Hedvig Letters Sans Fallback", Arial, sans;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+	--t2Font: "SS Text", "SS Text Fallback", Georgia, serif;
+	--t2CodeFont: "Code", ui-monospace, Menlo, monospace;
+	--tyTitleSize: 9.375rem;
+	--tyFit: 14.94;
+	--tyTitleW: 400;
+	--tyTitleWd: 400;
+	--tyTitleLs: -0.025em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.04em;
+	--tyTitleGap: 1.2rem;
+	--tyTagFont: var(--t2Font);
+	--tyTagSize: 1.55rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 20em;
+	--tyBodyW: 400;
+	--tyAboutSize: 1.25rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyUiLs: 0.005em;
+	--tyNavSize: 1.15rem;
+	--tyLogoSize: 1.25rem;
+	--tySecFont: "Redaction 35", Georgia, serif;
+	--tySecSize: 2.7rem;
+	--tySecW: 400;
+	--tySecWd: 400;
+	--tySecLs: -0.012em;
+	--tyItemFont: "Redaction 50", Georgia, serif;
+	--tyItemW: 400;
+	--tyItemSize: 1.6rem;
+	--tyItemLs: 0;
+	--tyMetaFont: "Redaction 50", Georgia, serif;
+	--tyMetaSize: 1.15rem;
+	--tyMetaNums: normal;
+	--tyMetaLs: 0.01em;
+	--tyCreditFont: var(--tyBody);
+	--t2Size: 1.125rem;
+	--t2Lh: 1.64;
+	--t2W: 400;
+	--t2DarkW: 40;
+	--t2Measure: 65ch;
+	--t2TitleFont: "Redaction 35", Georgia, serif;
+	--t2TitleSize: 2.9rem;
+	--t2TitleW: 400;
+	--t2TitleWd: 400;
+	--t2TitleLs: -0.01em;
+	--t2TitleLh: 1.06;
+	--t2MetaFont: "Redaction 50", Georgia, serif;
+	--t2MetaSize: 1.15rem;
+	--t2MetaW: 400;
+	--t2CodeSize: 0.86em;
+}
+
+html.dark .site .t2-post .t2-post-meta { font-weight: var(--t2MetaW, 400); }
+/* wide hero: the headline takes the whole row (always one line, sized to fit by --tyFit); portrait and tagline sit beneath it */
+@media (min-width: 701px) {
+	.site .site-hero { container-type: inline-size; grid-template-columns: minmax(8rem, 10.5rem) 1fr; column-gap: 2.25rem; row-gap: 1.5rem; }
+	.site .site-hero-text { display: contents; container-type: normal; }
+	.site .site-title { grid-column: 1 / -1; grid-row: 1; margin-bottom: 0; }
+	.site .site-portrait { grid-column: 1; grid-row: 2 / span 2; }
+	.site .site-tagline { grid-column: 2; grid-row: 2; align-self: end; margin-bottom: 0.4rem; }
+	.site .site-socials { grid-column: 2; grid-row: 3; align-self: start; }
+}
+/* dark-surface compensation for the text face: a small variable-weight instance (400-500) only downloads in dark mode */
+html.dark .site {
+	--t2Font: "SS Text Dk", "SS Text Fallback", Georgia, serif;
+}

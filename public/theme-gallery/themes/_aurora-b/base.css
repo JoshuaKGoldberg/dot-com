@@ -1,0 +1,103 @@
+/* forest-kit shared chrome: text scrim, hint pill, small controls. Themes set the --fk-* variables. */
+.site {
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 64%, transparent);
+	--fk-chip: color-mix(in srgb, var(--siteBg) 80%, transparent);
+	--fk-chip-fg: var(--siteFgStrong);
+}
+
+.site .site-page::before {
+	background: linear-gradient(90deg, transparent, var(--fk-scrim) 11rem, var(--fk-scrim) calc(100% - 11rem), transparent);
+	content: "";
+	inset: 0 -1rem;
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
+}
+
+.site .site-header {
+	position: relative;
+}
+
+.site .fk-canvas {
+	pointer-events: none;
+}
+
+.site .overlay-b {
+	pointer-events: none;
+}
+
+.site .fk-hint {
+	background: var(--fk-chip);
+	border-radius: 14px;
+	bottom: 0.9rem;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 0.12);
+	color: var(--fk-chip-fg);
+	font-size: 0.8rem;
+	font-weight: 600;
+	inset: auto auto 0.9rem 1rem;
+	letter-spacing: 0.01em;
+	padding: 0.35rem 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 1.2s ease 0.2s;
+		max-width: min(14.5rem, calc(100% - 2rem));
+}
+
+.site .fk-hint.is-gone {
+	opacity: 0;
+}
+
+.site .fk-ui {
+	align-items: center;
+	background: var(--fk-chip);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 1px 8px rgb(0 0 0 / 0.14);
+	color: var(--fk-chip-fg);
+	display: flex;
+	font-size: 0.82rem;
+	font-weight: 600;
+	gap: 0.6rem;
+	padding: 0.3rem 0.5rem 0.3rem 0.9rem;
+	pointer-events: auto;
+	position: absolute;
+	right: 1rem;
+}
+
+.site .fk-ui button,
+.site .fk-ui .fk-btn {
+	background: color-mix(in srgb, var(--siteAccent) 18%, transparent);
+	border: 0;
+	border-radius: 999px;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	padding: 0.3rem 0.8rem;
+}
+
+.site .fk-ui button:hover {
+	background: color-mix(in srgb, var(--siteAccent) 32%, transparent);
+}
+
+.site .fk-ui button[aria-pressed="true"] {
+	background: var(--siteAccent);
+	color: var(--siteBg);
+}
+
+.site .fk-ui input[type="range"] {
+	accent-color: var(--siteAccent);
+	cursor: pointer;
+	width: 9rem;
+}
+
+.site .fk-ui button:focus-visible,
+.site .fk-ui input:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+@media (max-width: 700px) {
+	.site .fk-hint {
+		display: none;
+	}
+}

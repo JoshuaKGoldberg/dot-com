@@ -1,0 +1,172 @@
+/* 11 — Bega River Sunset */
+.site {
+	--siteBg: #fdf1e6;
+	--siteFg: #3a2c45;
+	--siteFgStrong: #2a1a38;
+	--siteMuted: #6e5668;
+	--siteAccent: #a8365e;
+	--siteSquiggle: #e0708a;
+	--siteSubtle: #f5cdbd;
+	--horizon: 58%;
+}
+html.dark .site {
+	--siteBg: #1a1029;
+	--siteFg: #e8d9ea;
+	--siteFgStrong: #fbf0f4;
+	--siteMuted: #b49bb8;
+	--siteAccent: #ff9fb4;
+	--siteSquiggle: #ff8aa6;
+	--siteSubtle: #3a2250;
+}
+
+/* sky + water share one gradient so the river reflects the sky */
+.site .scenery-a {
+	background:
+		linear-gradient(180deg,
+			#fdeee0 0%, #fcdcc7 24%, #f8c4bc 44%, #f0a9b4 57.5%,
+			#f3b3b9 58.5%, #f7c7bd 70%, #fbdccf 84%, #fdeade 100%);
+}
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(60% 6% at 50% var(--horizon), rgba(255, 140, 120, 0.42), transparent 100%),
+		linear-gradient(180deg,
+			#140b22 0%, #261336 30%, #3d1d49 48%, #5a2a56 57.5%,
+			#4d2650 58.5%, #34193f 72%, #22112f 88%, #190e27 100%);
+}
+
+/* far bank trees + reflection */
+.site .scenery-b {
+	-webkit-mask: none;
+	background: none;
+}
+.site .scenery-b::before,
+.site .scenery-b::after {
+	background: #4a2d4a;
+	content: "";
+	height: 110px;
+	left: 0;
+	mask: url("bega-river/trees.svg") repeat-x 0 100% / 1200px 110px;
+	-webkit-mask: url("bega-river/trees.svg") repeat-x 0 100% / 1200px 110px;
+	position: absolute;
+	right: 0;
+}
+.site .scenery-b::before {
+	bottom: calc(100% - var(--horizon) - 1px);
+	opacity: 0.24;
+}
+.site .scenery-b::after {
+	-webkit-mask: url("bega-river/trees.svg") repeat-x 0 100% / 1200px 110px, linear-gradient(0deg, transparent, #000);
+	-webkit-mask-composite: source-in;
+	mask: url("bega-river/trees.svg") repeat-x 0 100% / 1200px 110px, linear-gradient(0deg, transparent, #000);
+	mask-composite: intersect;
+	opacity: 0.16;
+	top: calc(var(--horizon) + 1px);
+	transform: scaleY(-1);
+}
+html.dark .site .scenery-b::before {
+	background: #0c0616;
+	opacity: 0.85;
+}
+html.dark .site .scenery-b::after {
+	background: #0c0616;
+	opacity: 0.45;
+}
+
+/* ripples */
+.site .scenery-c {
+	background:
+		url("bega-river/ripples-light.svg") 0 0 / 400px 200px repeat,
+		url("bega-river/ripples2-light.svg") 120px 40px / 640px 320px repeat;
+	-webkit-mask: linear-gradient(180deg, #000, rgba(0, 0, 0, 0.55));
+	top: var(--horizon);
+}
+html.dark .site .scenery-c {
+	opacity: 0.6;
+}
+html.dark .site .scenery-c {
+	background:
+		url("bega-river/ripples-dark.svg") 0 0 / 400px 200px repeat,
+		url("bega-river/ripples2-dark.svg") 120px 40px / 640px 320px repeat;
+}
+
+/* lamp dots along the bank (dark only) */
+html.dark .site .site-scenery::before {
+	background:
+		radial-gradient(circle, #ffd9a0 0 1.6px, rgba(255, 190, 120, 0.28) 2px, transparent 7px) 0 0 / 97px 14px repeat-x,
+		radial-gradient(circle, #ffe8c0 0 1.4px, rgba(255, 190, 120, 0.22) 2px, transparent 6px) 41px 0 / 143px 14px repeat-x;
+	bottom: calc(100% - var(--horizon) - 12px);
+	content: "";
+	height: 14px;
+	left: 0;
+	opacity: 0.7;
+	position: absolute;
+	right: 0;
+}
+/* lamp reflections */
+html.dark .site .site-scenery::after {
+	-webkit-mask: url("bega-river/rail.svg") repeat-x 0 100% / 480px 150px;
+	mask: url("bega-river/rail.svg") repeat-x 0 100% / 480px 150px;
+}
+
+/* foreground railing (mask-coloured) */
+.site .site-scenery::after {
+	background: #5a3050;
+	bottom: 0;
+	content: "";
+	height: 150px;
+	left: 0;
+	mask: url("bega-river/rail.svg") repeat-x 0 100% / 480px 150px;
+	-webkit-mask: url("bega-river/rail.svg") repeat-x 0 100% / 480px 150px;
+	opacity: 0.2;
+	position: absolute;
+	right: 0;
+	top: auto;
+	inset: auto 0 0 0;
+}
+html.dark .site .site-scenery::after {
+	background: #05020b;
+	opacity: 0.8;
+}
+/* lamp glow in the overlay-free layer: tiled with the railing */
+.site .overlay-a {
+	background: radial-gradient(circle at 240px 16px, rgba(255, 224, 170, 0.0), transparent 0);
+}
+html.dark .site .overlay-a {
+	background: radial-gradient(circle at 240px 16px, rgba(255, 205, 140, 0.55) 0 2px, rgba(255, 190, 120, 0.12) 12px, transparent 46px) 0 100% / 480px 150px repeat-x;
+	bottom: 0;
+	height: 150px;
+	inset: auto 0 0 0;
+	opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-c {
+		animation:
+			bega-drift 90s linear infinite,
+			bega-shimmer 7s ease-in-out infinite alternate;
+	}
+	html.dark:not(.reduce-motion) .site .scenery-c {
+		animation-name: bega-drift, bega-shimmer-dark;
+	}
+	@keyframes bega-shimmer-dark {
+		from {
+			opacity: 0.3;
+		}
+		to {
+			opacity: 0.62;
+		}
+	}
+	@keyframes bega-drift {
+		to {
+			background-position: 400px 0, -520px 40px;
+		}
+	}
+	@keyframes bega-shimmer {
+		from {
+			opacity: 0.55;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+}

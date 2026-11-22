@@ -1,0 +1,37 @@
+@import url("./_aurora-b/base.css");
+
+/* 248. Dusk to Aurora: scroll (or the local time) carries the valley from sunset to night. */
+.site {
+	--siteBg: #f7eef0;
+	--siteFg: #2d2a48;
+	--siteFgStrong: #181633;
+	--siteMuted: #4f4a6e;
+	--siteAccent: #7a2f8f;
+	--siteSquiggle: #e0763e;
+	--siteSubtle: #eadbe6;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+}
+
+html.dark .site {
+	--siteBg: #120f2a;
+	--siteFg: #ece6f4;
+	--siteFgStrong: #fbf8ff;
+	--siteMuted: #c0b7d8;
+	--siteAccent: #ffc27a;
+	--siteSquiggle: #ff9a5c;
+	--siteSubtle: #221c48;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+}
+
+.site .scenery-a {
+	background: linear-gradient(#e9a98f, #f8d2b0 55%, #fde8c8);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#2a2a62, #6b3f7a 55%, #d9626a);
+}
+
+.site .fk-ui output {
+	display: inline-block;
+	min-width: 5.2em;
+}

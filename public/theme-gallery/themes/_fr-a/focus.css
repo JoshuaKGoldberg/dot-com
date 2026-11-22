@@ -1,0 +1,51 @@
+/* Shared by fr-focus-6/7/8/breath. No scrims, no text shadows: the text column stays plain. */
+.site {
+	--siteBg: #f3f8fa;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d3e4ea;
+}
+html.dark .site {
+	--siteBg: #070d20;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+}
+.site .fr-topwrap { position: absolute; inset: 0 0 auto 0; height: 300px; pointer-events: none; will-change: transform, opacity; }
+.site .fr-sky { position: absolute; left: 0; top: 0; width: 100%; height: 170px; display: block; }
+.site .fr-band { position: absolute; left: 0; top: 0; width: 100%; display: block; }
+.site .fr-side { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: block; }
+
+.site .fr-hint {
+	background: color-mix(in srgb, var(--siteBg) 80%, transparent);
+	border-radius: 14px;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 0.12);
+	color: var(--siteFgStrong);
+	font-size: 0.8rem;
+	font-weight: 600;
+	inset: auto auto 0.9rem 1rem;
+	max-width: min(14.5rem, calc(100% - 2rem));
+	padding: 0.35rem 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 1.2s ease 0.2s;
+}
+.site .fr-hint.is-gone { opacity: 0; }
+
+/* Footer scene: treeline over a lake mirroring the aurora. */
+.site .site-footer.fr-foot {
+	position: relative;
+	min-height: 340px;
+	margin-bottom: -3rem;
+	padding: 44px 0 0;
+	box-sizing: border-box;
+	opacity: 1;
+}
+.site .site-footer.fr-foot > :not(.fr-foot-canvas) { position: relative; z-index: 1; }
+.site .fr-foot-canvas { position: absolute; bottom: 0; pointer-events: none; z-index: 0; display: block; }

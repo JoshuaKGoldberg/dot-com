@@ -1,0 +1,12 @@
+/* 297. Fog Band: fog-soft WebGL aurora across the top; the page body stays plain. */
+.site {
+	--siteBg: #fdffff; --siteMuted: #4d5d7e;
+}
+html.dark .site {
+	--siteBg: #090f1d; --siteFg: #dae7f3; --siteMuted: #a3b4c8; --siteSubtle: #0f2237;
+}
+.site .ma-fog-band { background: linear-gradient(#f1fafb, transparent 85%); position: absolute; left: 0; top: 0; width: 100%; height: 40%; inset: 0 0 auto 0; overflow: hidden; contain: paint; }
+.site .ma-fog-band.is-fallback {
+	background: radial-gradient(60% 70% at 62% 30%, rgba(90, 220, 180, 0.28), rgba(110, 160, 255, 0.14) 55%, transparent 80%);
+}
+html.dark .site .ma-fog-band { background: linear-gradient(#060b17, transparent 85%); }

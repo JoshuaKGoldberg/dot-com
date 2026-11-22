@@ -1,0 +1,44 @@
+@import url("_sensor/kit.css");
+
+/* 178 Webcam ASCII: a third hero column that renders either the portrait, a demo feed, or you. */
+.site .site-hero { grid-template-columns: minmax(8rem, 12rem) minmax(8rem, 13rem) 1fr; gap: 1.75rem; }
+.site .wa-frame {
+	align-self: center;
+	aspect-ratio: 1;
+	background: #0b1424;
+	border: 1px solid color-mix(in srgb, var(--siteFg) 18%, transparent);
+	border-radius: 0.9rem;
+	container-type: inline-size;
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+}
+.site .wa-ascii {
+	color: #d4e8ff;
+	font: 700 calc(100cqw / 60 / 0.6) / calc(100cqw / 30) ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	letter-spacing: 0;
+	margin: 0;
+	padding: 0;
+	white-space: pre;
+}
+.site .wa-frame[data-source="camera"] { border-color: var(--siteAccent); }
+.site .wa-badge {
+	background: rgba(11, 20, 36, 0.85);
+	border-radius: 99px;
+	bottom: 0.4rem;
+	color: #a9bdd9;
+	font: 700 0.65rem/1 var(--siteFont);
+	left: 0.4rem;
+	letter-spacing: 0.06em;
+	padding: 0.25rem 0.5rem;
+	position: absolute;
+	text-transform: uppercase;
+}
+.site .wa-frame[data-source="camera"] .wa-badge::before {
+	background: #e11d48; border-radius: 50%; content: ""; display: inline-block; height: 0.45rem; margin-right: 0.35rem; width: 0.45rem;
+}
+.site .scenery-a { background: radial-gradient(ellipse 70% 40% at 20% 0%, color-mix(in srgb, var(--siteSubtle) 80%, transparent), transparent 70%); }
+@media (max-width: 860px) {
+	.site .site-hero { grid-template-columns: 1fr 1fr; }
+	.site .site-hero-text { grid-column: 1 / -1; }
+}

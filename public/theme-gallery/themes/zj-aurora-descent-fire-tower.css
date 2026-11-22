@@ -1,0 +1,440 @@
+/*
+ * Aurora Descent III: Fire Tower. Zero JS, there is no themes/zj-aurora-descent-fire-tower.js.
+ *   Aurora ribbons over the High Peaks. A fire tower is baked onto a bald summit that climbs past as you scroll
+ *   (it rises from below, crosses the screen and leaves), then a treeline, then a frozen-still lake of stars and aurora.
+ *   Compositor-only scrolling: every scroll-driven animation touches only translate and opacity.
+ *     - sky, stars, five aurora curtains, range, summit, treeline and lake each slide at their own depth
+ *     - colour changes by crossfading pre-coloured curtains with opacity
+ *   Ambient shimmer: prime-period transform (sway/skew) and irregular opacity flares, ONE animation per curtain (19-37s).
+ *   Baked art: curtains and the lake reflection are WebP rendered offline from SVG (see _gen/); the summit, tower and
+ *   krummholz are one SVG, and every tree stands on the ground of its own tile, so nothing floats.
+ * Light mode is twilight: a blue-hour sky with a pale aurora. Reduced motion shows the finished composition.
+ */
+
+/* ---- shared plumbing: zero JavaScript, no themes/zj-aurora-descent-fire-tower.js ---- */
+
+.site {
+	scroll-timeline: --pg block;
+}
+
+/* soft scrims so prose stays readable over the scene; sections read as clearings */
+.site-header,
+.site-hero,
+.site-about,
+.site-section,
+.site-footer {
+	background: color-mix(in srgb, var(--siteBg) var(--scrim, 82%), transparent);
+	border-radius: 1.4rem;
+	box-shadow: 0 0 1.6rem 0.9rem color-mix(in srgb, var(--siteBg) calc(var(--scrim, 82%) * 0.9), transparent);
+	box-sizing: border-box;
+	padding: 0.9rem 1.4rem;
+}
+
+.site-hero {
+	margin-block: 5rem 3.2rem;
+	padding: 1.6rem 1.8rem;
+}
+
+.site-about,
+.site-section {
+	margin-bottom: 3.2rem;
+}
+
+.site-about {
+	padding-block: 1.4rem;
+}
+
+.site-footer {
+	margin-top: 4rem;
+	opacity: 1;
+	padding-block: 1.4rem;
+}
+
+.site-page {
+	padding-bottom: 46vh;
+}
+
+.site-portrait img {
+	box-shadow: 0 6px 22px 0 color-mix(in srgb, var(--siteFgStrong) 22%, transparent);
+}
+
+/* badge + tags, in the spirit of #158 */
+.site .overlay-b::before {
+	background: var(--badgeBg);
+	border: 1.5px solid var(--badgeLine);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: "0 KB JavaScript \A shipped by this theme";
+	font: 700 0.72rem/1.25 var(--siteFont);
+	left: 1rem;
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: absolute;
+	text-align: center;
+	white-space: pre;
+}
+
+.site .overlay-b::after {
+	background: var(--badgeBg);
+	border: 1px solid var(--badgeLine);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: var(--tags);
+	font: 600 0.64rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+	max-width: 22rem;
+	opacity: 0.92;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 760px) {
+	.site .overlay-b::after {
+		display: none;
+	}
+}
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c)::after,
+.site .site-scenery::before,
+.site .site-scenery::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+}
+
+.site :is(.site-header, .site-main, .site-footer, .site-page)::before,
+.site :is(.site-header, .site-main, .site-footer, .site-page)::after,
+.site::before,
+.site::after {
+	content: "";
+	pointer-events: none;
+	position: fixed;
+	z-index: -1;
+}
+
+/* every animated layer is its own compositor layer: only translate / transform / opacity ever change */
+.site :is(.scenery-a, .scenery-b, .scenery-c),
+.site :is(.scenery-a, .scenery-b, .scenery-c, .site-scenery, .site-header, .site-main, .site-footer, .site-page, .site)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c, .site-scenery, .site-header, .site-main, .site-footer, .site-page, .site)::after {
+	contain: paint;
+	will-change: transform, opacity;
+}
+
+
+.site {
+	--siteBg: #f1f0f9;
+	--siteFg: #1f2548;
+	--siteFgStrong: #0e1236;
+	--siteMuted: #4f5a82;
+	--siteAccent: #3a3fb4;
+	--siteSquiggle: #6f7df0;
+	--siteSubtle: #dcddf0;
+	--scrim: 83%;
+	--tw-lo: 0.08;
+	--tw-hi: 0.4;
+	--lake: 30vh;
+	--farH: 40vh;
+	--midH: 74vh;
+	--shoreH: 46vh;
+	--aw: max(125vw, 170vh);
+	--ah: calc(var(--aw) / 3);
+	--gf: #8b86b5;
+	--gm: #1c2458;
+	--gs: #141a48;
+	--badgeBg: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	--badgeFg: var(--siteFgStrong);
+	--badgeLine: color-mix(in srgb, var(--siteSquiggle) 70%, transparent);
+	--tags: "scroll-timeline \00b7 translate + opacity only \00b7 prime-period shimmer \00b7 baked rays";
+}
+
+html.dark .site {
+	--siteBg: #050a14;
+	--siteFg: #d4e2ee;
+	--siteFgStrong: #f3faff;
+	--siteMuted: #8fa6bf;
+	--siteAccent: #7cf0c4;
+	--siteSquiggle: #4de8b0;
+	--siteSubtle: #0d1d30;
+	--scrim: 80%;
+	--tw-lo: 0.4;
+	--tw-hi: 0.95;
+	--gf: #1b4650;
+	--gm: #0a202b;
+	--gs: #01040a;
+}
+
+/* ---- sky: one tall gradient that pans up so the horizon glow arrives with the lake ---- */
+
+.site::before {
+	background: linear-gradient(180deg, #1b2a78 0, #3a4c9c 24%, #727dbd 46%, #c28fba 62%, #f0b3a6 71%, #b79fca 82%, #6a68a8 100%);
+	height: 150vh;
+	inset: var(--barHeight, 0px) 0 auto 0;
+}
+
+html.dark .site::before {
+	background: linear-gradient(180deg, #01030a 0, #040c1c 22%, #07182c 44%, #0b2c3a 60%, #17504f 71%, #0b2b36 84%, #04101a 100%);
+}
+
+/* stars: two sets that twinkle out of phase; faint at twilight */
+.site .site-scenery::before,
+.site .site-scenery::after {
+	inset: 0;
+}
+
+.site .site-scenery::before {
+	background: url("zj-aurora-descent-fire-tower/stars-a.svg") 0 0 / 1200px 900px repeat;
+	height: 130vh;
+	opacity: 0.4;
+}
+
+.site .site-scenery::after {
+	background: url("zj-aurora-descent-fire-tower/stars-b.svg") 0 0 / 1400px 900px repeat;
+	height: 130vh;
+	opacity: 0.35;
+}
+
+html.dark .site .site-scenery::before { opacity: 0.95; }
+html.dark .site .site-scenery::after { opacity: 0.8; }
+
+/* ---- the aurora: three groups, two curtains each. The host moves + fades with scroll; its curtains only shimmer ---- */
+
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site .scenery-c::before,
+.site .scenery-c::after {
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	height: var(--ah);
+	left: 50%;
+	margin-left: calc(var(--aw) / -2);
+	width: var(--aw);
+}
+
+.site .scenery-a::before { background-image: url("zj-aurora-descent-fire-tower/aur-a.webp"); top: -4vh; }
+.site .scenery-a::after { background-image: url("zj-aurora-descent-fire-tower/aur-b.webp"); top: -16vh; }
+.site .scenery-b::before { background-image: url("zj-aurora-descent-fire-tower/aur-c.webp"); top: -9vh; }
+.site .scenery-b::after { background-image: url("zj-aurora-descent-fire-tower/aur-d.webp"); top: -15vh; }
+.site .scenery-c::before { background-image: url("zj-aurora-descent-fire-tower/aur-e.webp"); top: -2vh; }
+
+/* ---- the land: each silhouette is a ridge with its trees baked in, plus ground that runs well below the waterline ---- */
+
+.site-page::before,
+.site-header::before,
+.site-header::after {
+	left: 0;
+	right: 0;
+}
+
+.site-page::before {
+	background:
+		url("zj-aurora-descent-fire-tower/peaks-l.svg") 0 0 / auto var(--farH) repeat-x,
+		linear-gradient(var(--gf), var(--gf)) 0 calc(var(--farH) - 1px) / 100% 100% no-repeat;
+	height: calc(var(--farH) + 70vh);
+	top: calc(100% - var(--lake) - var(--farH));
+}
+
+.site-header::before {
+	background:
+		url("zj-aurora-descent-fire-tower/summit-l.svg") 100% 0 / auto var(--midH) repeat-x,
+		linear-gradient(var(--gm), var(--gm)) 0 calc(var(--midH) - 1px) / 100% 100% no-repeat;
+	height: calc(var(--midH) + 70vh);
+	top: calc(100% - var(--lake) - var(--midH));
+}
+
+.site-header::after {
+	background:
+		url("zj-aurora-descent-fire-tower/trees-l.svg") 0 0 / auto var(--shoreH) repeat-x,
+		linear-gradient(var(--gs), var(--gs)) 0 calc(var(--shoreH) - 1px) / 100% 100% no-repeat;
+	height: calc(var(--shoreH) + 70vh);
+	top: calc(100% - var(--lake) - var(--shoreH));
+}
+
+html.dark .site-page::before { background-image: url("zj-aurora-descent-fire-tower/peaks-d.svg"), linear-gradient(var(--gf), var(--gf)); }
+html.dark .site-header::before { background-image: url("zj-aurora-descent-fire-tower/summit-d.svg"), linear-gradient(var(--gm), var(--gm)); }
+html.dark .site-header::after { background-image: url("zj-aurora-descent-fire-tower/trees-d.svg"), linear-gradient(var(--gs), var(--gs)); }
+
+/* ---- the lake and everything mirrored in it. All of these share one scroll animation, so they move as one body ---- */
+
+.site-main::before,
+.site-main::after,
+.site-footer::before,
+.site-footer::after {
+	left: 0;
+	right: 0;
+	top: calc(100% - var(--lake));
+}
+
+.site-main::before {
+	background:
+		linear-gradient(180deg, rgb(255 214 214 / 0.55) 0, rgb(255 214 214 / 0) 2.4vh),
+		linear-gradient(180deg, #6a76b4 0, #3a4586 28%, #1d2563 62%, #131a4c 100%);
+	bottom: 0;
+}
+
+html.dark .site-main::before {
+	background:
+		linear-gradient(180deg, rgb(130 255 205 / 0.4) 0, rgb(130 255 205 / 0) 2.4vh),
+		linear-gradient(180deg, #0f3a40 0, #082229 30%, #04121a 64%, #020a10 100%);
+}
+
+/* the aurora, mirrored: same width and centring as the sky curtains so it lines up */
+.site-main::after {
+	background: url("zj-aurora-descent-fire-tower/refl.webp") 0 0 / 100% 100% no-repeat;
+	height: calc(var(--aw) * 0.2167);
+	left: 50%;
+	margin-left: calc(var(--aw) / -2);
+	right: auto;
+	width: var(--aw);
+	opacity: 0.8;
+}
+
+/* the ridge, mirrored */
+.site-footer::before {
+	background: url("zj-aurora-descent-fire-tower/refl-trees-l.svg") 0 0 / auto var(--shoreH) repeat-x;
+	height: var(--shoreH);
+	opacity: 0.55;
+}
+
+html.dark .site-footer::before { background-image: url("zj-aurora-descent-fire-tower/refl-trees-d.svg"); opacity: 0.7; }
+
+/* reflected stars and glints */
+.site-footer::after {
+	background: url("zj-aurora-descent-fire-tower/stars-b.svg") 0 0 / 1400px 900px repeat;
+	bottom: 0;
+	opacity: 0.3;
+	transform: scaleY(-1);
+}
+
+html.dark .site-footer::after { opacity: 0.55; }
+
+/* ---- scroll maps the descent: only translate and opacity ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c),
+		html:not(.reduce-motion) .site :is(.site-scenery, .site-header, .site-main, .site-footer, .site-page, .site)::before,
+		html:not(.reduce-motion) .site :is(.site-header, .site-main, .site-page)::after {
+			animation-fill-mode: both;
+			animation-timeline: --pg;
+			animation-timing-function: linear;
+		}
+
+		html:not(.reduce-motion) .site::before { animation-name: zaf-sky; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a { animation-name: zaf-aur-a; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-b { animation-name: zaf-aur-b; animation-range: 0% 90%; }
+		html:not(.reduce-motion) .site .scenery-c { animation-name: zaf-aur-c; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site-page::before { animation-name: zaf-far; animation-range: 0% 92%; }
+		html:not(.reduce-motion) .site-header::before { animation-name: zaf-mid; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site-header::after { animation-name: zaf-shore; animation-range: 6% 96%; }
+		html:not(.reduce-motion) .site-main::before { animation-name: zaf-lake; animation-range: 34% 100%; }
+		html:not(.reduce-motion) .site-footer::before { animation-name: zaf-lake; animation-range: 34% 100%; }
+		html:not(.reduce-motion) .site-footer::after { animation: zaf-lake linear both; animation-timeline: --pg; animation-range: 34% 100%; }
+	}
+}
+
+@keyframes zaf-sky { to { translate: 0 -46vh; } }
+@keyframes zaf-aur-a { 0% { opacity: 0.45; } 50% { opacity: 1; } 100% { opacity: 0.5; translate: 0 -22vh; } }
+@keyframes zaf-aur-b { 0% { opacity: 1; } 100% { opacity: 0.4; translate: 0 -30vh; } }
+@keyframes zaf-aur-c { 0% { opacity: 0.8; } 100% { opacity: 0.85; translate: 0 -16vh; } }
+@keyframes zaf-far { from { translate: 0 46vh; } }
+@keyframes zaf-mid { from { translate: 0 100vh; } to { translate: 0 -22vh; } }
+@keyframes zaf-shore { from { translate: 0 84vh; } }
+@keyframes zaf-lake { from { translate: 0 42vh; } }
+
+/* ---- ambient shimmer: only where motion is welcome ---- */
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-a::before {
+		animation: zaf-am-a1 29s ease-in-out -4s infinite;
+		transform-origin: 50% 75%;
+	}
+	@keyframes zaf-am-a1 {
+		0% { transform: translate3d(-3.00vw, 0, 0) skewX(-4.00deg) scaleY(0.970); opacity: 0.78; }
+		18% { opacity: 0.91; }
+		26% { opacity: 0.81; }
+		29% { transform: translate3d(2.40vw, 0, 0) skewX(2.40deg) scaleY(1.050); }
+		42% { opacity: 0.87; }
+		60% { opacity: 0.62; }
+		67% { opacity: 0.94; }
+		84% { transform: translate3d(-1.20vw, 0, 0) skewX(-3.60deg) scaleY(1.020); }
+		85% { opacity: 0.91; }
+		100% { transform: translate3d(-3.00vw, 0, 0) skewX(-4.00deg) scaleY(0.970); opacity: 0.78; }
+	}
+	html:not(.reduce-motion) .site .scenery-a::after {
+		animation: zaf-am-a2 23s ease-in-out -9s infinite;
+		transform-origin: 50% 75%;
+	}
+	@keyframes zaf-am-a2 {
+		0% { transform: translate3d(-4.00vw, 0, 0) skewX(-5.00deg) scaleY(0.970); opacity: 0.68; }
+		10% { opacity: 0.88; }
+		19% { transform: translate3d(3.20vw, 0, 0) skewX(3.00deg) scaleY(1.050); }
+		23% { transform: translate3d(-1.60vw, 0, 0) skewX(-4.50deg) scaleY(1.020); }
+		31% { opacity: 0.80; }
+		41% { opacity: 0.77; }
+		58% { opacity: 0.76; }
+		68% { opacity: 0.68; }
+		85% { opacity: 0.82; }
+		100% { transform: translate3d(-4.00vw, 0, 0) skewX(-5.00deg) scaleY(0.970); opacity: 0.68; }
+	}
+	html:not(.reduce-motion) .site .scenery-b::before {
+		animation: zaf-am-b1 19s ease-in-out -2s infinite;
+		transform-origin: 50% 75%;
+	}
+	@keyframes zaf-am-b1 {
+		0% { transform: translate3d(-2.60vw, 0, 0) skewX(-5.00deg) scaleY(0.970); opacity: 0.84; }
+		15% { opacity: 0.82; }
+		30% { opacity: 0.90; }
+		39% { opacity: 0.69; }
+		42% { transform: translate3d(2.08vw, 0, 0) skewX(3.00deg) scaleY(1.050); }
+		61% { opacity: 0.79; }
+		69% { opacity: 1.00; }
+		85% { opacity: 0.96; }
+		87% { transform: translate3d(-1.04vw, 0, 0) skewX(-4.50deg) scaleY(1.020); }
+		100% { transform: translate3d(-2.60vw, 0, 0) skewX(-5.00deg) scaleY(0.970); opacity: 0.84; }
+	}
+	html:not(.reduce-motion) .site .scenery-b::after {
+		animation: zaf-am-b2 31s ease-in-out -14s infinite;
+		transform-origin: 50% 75%;
+	}
+	@keyframes zaf-am-b2 {
+		0% { transform: translate3d(-3.40vw, 0, 0) skewX(-6.00deg) scaleY(0.970); opacity: 0.62; }
+		10% { opacity: 0.61; }
+		25% { opacity: 0.41; }
+		42% { transform: translate3d(2.72vw, 0, 0) skewX(3.60deg) scaleY(1.050); opacity: 0.86; }
+		50% { transform: translate3d(-1.36vw, 0, 0) skewX(-5.40deg) scaleY(1.020); }
+		60% { opacity: 0.79; }
+		69% { opacity: 0.68; }
+		83% { opacity: 0.48; }
+		100% { transform: translate3d(-3.40vw, 0, 0) skewX(-6.00deg) scaleY(0.970); opacity: 0.62; }
+	}
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation: zaf-am-c1 37s ease-in-out -6s infinite;
+		transform-origin: 50% 75%;
+	}
+	@keyframes zaf-am-c1 {
+		0% { transform: translate3d(-2.20vw, 0, 0) skewX(-3.00deg) scaleY(0.970); opacity: 0.80; }
+		17% { opacity: 0.98; }
+		31% { opacity: 0.97; }
+		38% { opacity: 0.82; }
+		44% { transform: translate3d(1.76vw, 0, 0) skewX(1.80deg) scaleY(1.050); }
+		57% { transform: translate3d(-0.88vw, 0, 0) skewX(-2.70deg) scaleY(1.020); }
+		62% { opacity: 0.88; }
+		75% { opacity: 0.67; }
+		85% { opacity: 0.73; }
+		100% { transform: translate3d(-2.20vw, 0, 0) skewX(-3.00deg) scaleY(0.970); opacity: 0.80; }
+	}
+	html:not(.reduce-motion) .site .site-scenery::before { animation: zaf-tw-a 5s ease-in-out infinite alternate; }
+	html:not(.reduce-motion) .site .site-scenery::after { animation: zaf-tw-b 7s ease-in-out -3s infinite alternate; }
+	@keyframes zaf-tw-a { from { opacity: var(--tw-lo, 0.2); } to { opacity: var(--tw-hi, 0.55); } }
+	@keyframes zaf-tw-b { from { opacity: calc(var(--tw-lo, 0.2) * 0.6); } to { opacity: var(--tw-hi, 0.55); } }
+	html:not(.reduce-motion) .site .site-main::after { animation: zaf-lake linear both, zaf-rf-sw 17s ease-in-out infinite alternate, zaf-rf-pl 11s ease-in-out infinite; animation-range: 34% 100%, normal, normal; animation-timeline: --pg, auto, auto; transform-origin: 50% 0; }
+	@keyframes zaf-rf-sw { from { transform: translate3d(-1.4vw, 0, 0) scaleY(0.97); } to { transform: translate3d(1.8vw, 0, 0) scaleY(1.04); } }
+	@keyframes zaf-rf-pl { 0% { opacity: 0.62; } 21% { opacity: 0.92; } 38% { opacity: 0.7; } 60% { opacity: 1; } 82% { opacity: 0.66; } 100% { opacity: 0.62; } }
+	@keyframes zaf-rm-sw { from { transform: translate3d(-0.5vw, 0, 0); } to { transform: translate3d(0.6vw, 0, 0); } }
+	@keyframes zaf-gl { from { opacity: 0.15; } to { opacity: 0.6; } }
+}

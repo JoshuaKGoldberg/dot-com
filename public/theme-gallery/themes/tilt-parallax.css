@@ -1,0 +1,68 @@
+@import url("_sensor/kit.css");
+
+/* 176 Tilt Parallax: three depth layers translated by device tilt (or the simulator). */
+.site {
+	--ridgeFar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C215 L25%2C210 L50%2C206 L75%2C202 L100%2C201 L125%2C200 L150%2C199 L175%2C198 L200%2C195 L225%2C191 L250%2C186 L275%2C180 L300%2C175 L325%2C171 L350%2C169 L375%2C170 L400%2C174 L425%2C178 L450%2C183 L475%2C185 L500%2C185 L525%2C181 L550%2C173 L575%2C162 L600%2C149 L625%2C136 L650%2C124 L675%2C115 L700%2C110 L725%2C108 L750%2C111 L775%2C116 L800%2C122 L825%2C128 L850%2C134 L875%2C139 L900%2C144 L925%2C149 L950%2C154 L975%2C161 L1000%2C170 L1025%2C179 L1050%2C190 L1075%2C199 L1100%2C207 L1125%2C211 L1150%2C212 L1175%2C209 L1200%2C203 L1225%2C195 L1250%2C187 L1275%2C181 L1300%2C178 L1325%2C178 L1350%2C181 L1375%2C187 L1400%2C195 L1425%2C202 L1450%2C208 L1475%2C211 L1500%2C211 L1525%2C208 L1550%2C203 L1575%2C197 L1600%2C191 L1600%2C400 Z' fill='%23cfe2f1'/%3E%3C/svg%3E");
+	--ridgeMid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C210 L25%2C205 L50%2C200 L75%2C197 L100%2C197 L125%2C198 L150%2C202 L175%2C206 L200%2C209 L225%2C211 L250%2C210 L275%2C206 L300%2C198 L325%2C188 L350%2C177 L375%2C166 L400%2C157 L425%2C150 L450%2C148 L475%2C148 L500%2C151 L525%2C156 L550%2C162 L575%2C167 L600%2C172 L625%2C177 L650%2C181 L675%2C185 L700%2C191 L725%2C197 L750%2C205 L775%2C214 L800%2C223 L825%2C230 L850%2C236 L875%2C238 L900%2C238 L925%2C234 L950%2C228 L975%2C221 L1000%2C214 L1025%2C209 L1050%2C207 L1075%2C207 L1100%2C211 L1125%2C216 L1150%2C223 L1175%2C228 L1200%2C232 L1225%2C234 L1250%2C233 L1275%2C229 L1300%2C224 L1325%2C219 L1350%2C214 L1375%2C209 L1400%2C205 L1425%2C201 L1450%2C197 L1475%2C193 L1500%2C187 L1525%2C179 L1550%2C170 L1575%2C161 L1600%2C152 L1600%2C400 Z' fill='%23bcd9e6'/%3E%3C/svg%3E");
+	--ridgeNear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C222 L25%2C214 L50%2C205 L75%2C196 L100%2C190 L125%2C187 L150%2C186 L175%2C188 L200%2C192 L225%2C197 L250%2C202 L275%2C207 L300%2C211 L325%2C215 L350%2C218 L375%2C223 L400%2C228 L425%2C234 L450%2C241 L475%2C248 L500%2C255 L525%2C261 L550%2C264 L575%2C264 L600%2C262 L625%2C257 L650%2C251 L675%2C245 L700%2C240 L725%2C236 L750%2C235 L775%2C237 L800%2C241 L825%2C246 L850%2C250 L875%2C254 L900%2C256 L925%2C256 L950%2C253 L975%2C250 L1000%2C245 L1025%2C241 L1050%2C236 L1075%2C233 L1100%2C230 L1125%2C227 L1150%2C224 L1175%2C219 L1200%2C214 L1225%2C207 L1250%2C199 L1275%2C192 L1300%2C186 L1325%2C182 L1350%2C181 L1375%2C184 L1400%2C190 L1425%2C198 L1450%2C208 L1475%2C217 L1500%2C225 L1525%2C231 L1550%2C235 L1575%2C236 L1600%2C236 L1600%2C400 Z' fill='%23a6cfd2'/%3E%3C/svg%3E");
+}
+html.dark .site {
+	--ridgeFar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C215 L25%2C210 L50%2C206 L75%2C202 L100%2C201 L125%2C200 L150%2C199 L175%2C198 L200%2C195 L225%2C191 L250%2C186 L275%2C180 L300%2C175 L325%2C171 L350%2C169 L375%2C170 L400%2C174 L425%2C178 L450%2C183 L475%2C185 L500%2C185 L525%2C181 L550%2C173 L575%2C162 L600%2C149 L625%2C136 L650%2C124 L675%2C115 L700%2C110 L725%2C108 L750%2C111 L775%2C116 L800%2C122 L825%2C128 L850%2C134 L875%2C139 L900%2C144 L925%2C149 L950%2C154 L975%2C161 L1000%2C170 L1025%2C179 L1050%2C190 L1075%2C199 L1100%2C207 L1125%2C211 L1150%2C212 L1175%2C209 L1200%2C203 L1225%2C195 L1250%2C187 L1275%2C181 L1300%2C178 L1325%2C178 L1350%2C181 L1375%2C187 L1400%2C195 L1425%2C202 L1450%2C208 L1475%2C211 L1500%2C211 L1525%2C208 L1550%2C203 L1575%2C197 L1600%2C191 L1600%2C400 Z' fill='%2316294a'/%3E%3C/svg%3E");
+	--ridgeMid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C210 L25%2C205 L50%2C200 L75%2C197 L100%2C197 L125%2C198 L150%2C202 L175%2C206 L200%2C209 L225%2C211 L250%2C210 L275%2C206 L300%2C198 L325%2C188 L350%2C177 L375%2C166 L400%2C157 L425%2C150 L450%2C148 L475%2C148 L500%2C151 L525%2C156 L550%2C162 L575%2C167 L600%2C172 L625%2C177 L650%2C181 L675%2C185 L700%2C191 L725%2C197 L750%2C205 L775%2C214 L800%2C223 L825%2C230 L850%2C236 L875%2C238 L900%2C238 L925%2C234 L950%2C228 L975%2C221 L1000%2C214 L1025%2C209 L1050%2C207 L1075%2C207 L1100%2C211 L1125%2C216 L1150%2C223 L1175%2C228 L1200%2C232 L1225%2C234 L1250%2C233 L1275%2C229 L1300%2C224 L1325%2C219 L1350%2C214 L1375%2C209 L1400%2C205 L1425%2C201 L1450%2C197 L1475%2C193 L1500%2C187 L1525%2C179 L1550%2C170 L1575%2C161 L1600%2C152 L1600%2C400 Z' fill='%23112340'/%3E%3C/svg%3E");
+	--ridgeNear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 400' preserveAspectRatio='none'%3E%3Cpath d='M0%2C400 L0%2C222 L25%2C214 L50%2C205 L75%2C196 L100%2C190 L125%2C187 L150%2C186 L175%2C188 L200%2C192 L225%2C197 L250%2C202 L275%2C207 L300%2C211 L325%2C215 L350%2C218 L375%2C223 L400%2C228 L425%2C234 L450%2C241 L475%2C248 L500%2C255 L525%2C261 L550%2C264 L575%2C264 L600%2C262 L625%2C257 L650%2C251 L675%2C245 L700%2C240 L725%2C236 L750%2C235 L775%2C237 L800%2C241 L825%2C246 L850%2C250 L875%2C254 L900%2C256 L925%2C256 L950%2C253 L975%2C250 L1000%2C245 L1025%2C241 L1050%2C236 L1075%2C233 L1100%2C230 L1125%2C227 L1150%2C224 L1175%2C219 L1200%2C214 L1225%2C207 L1250%2C199 L1275%2C192 L1300%2C186 L1325%2C182 L1350%2C181 L1375%2C184 L1400%2C190 L1425%2C198 L1450%2C208 L1475%2C217 L1500%2C225 L1525%2C231 L1550%2C235 L1575%2C236 L1600%2C236 L1600%2C400 Z' fill='%230c1b33'/%3E%3C/svg%3E");
+}
+.site .site-scenery { overflow: hidden; }
+.site .site-scenery > * { inset: -7% -7%; will-change: transform; }
+.site .scenery-a {
+	background:
+		radial-gradient(circle at 74% 24%, #fff6d8 0 3.2%, rgba(255, 224, 160, 0.55) 3.4% 9%, transparent 22%),
+		linear-gradient(#bfe0fb 0%, #e6f3fc 38%, var(--siteBg) 72%);
+}
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(circle at 74% 24%, #f4f1e6 0 2.4%, rgba(190, 205, 235, 0.28) 2.6% 7%, transparent 18%),
+		radial-gradient(1.5px 1.5px at 12% 18%, #fff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 28% 9%, #cfe0ff 50%, transparent 52%),
+		radial-gradient(1px 1px at 41% 26%, #fff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 55% 12%, #fff 50%, transparent 52%),
+		radial-gradient(1px 1px at 63% 33%, #cfe0ff 50%, transparent 52%),
+		radial-gradient(1.5px 1.5px at 88% 14%, #fff 50%, transparent 52%),
+		radial-gradient(1px 1px at 93% 38%, #fff 50%, transparent 52%),
+		radial-gradient(1px 1px at 7% 40%, #fff 50%, transparent 52%),
+		linear-gradient(#050b1d 0%, #0e1b38 45%, var(--siteBg) 80%);
+}
+.site .scenery-a::after, .site .scenery-b::after, .site .scenery-c::after {
+	background-position: bottom; background-repeat: no-repeat; background-size: 100% 52%;
+	content: ""; inset: 0; position: absolute;
+}
+.site .scenery-a::after { background-image: var(--ridgeFar); background-size: 100% 62%; bottom: 14%; }
+.site .scenery-b::after { background-image: var(--ridgeMid); background-size: 100% 52%; bottom: 6%; }
+.site .scenery-c::after { background-image: var(--ridgeNear); background-size: 100% 42%; }
+/* sparse foreground motes in the overlay: sit above content, tiny, never block input */
+.site .overlay-a {
+	background:
+		radial-gradient(circle 3px at 12% 62%, rgba(255, 255, 255, 0.75) 98%, transparent),
+		radial-gradient(circle 2px at 31% 82%, rgba(255, 255, 255, 0.6) 98%, transparent),
+		radial-gradient(circle 4px at 77% 70%, rgba(255, 255, 255, 0.55) 98%, transparent),
+		radial-gradient(circle 2px at 92% 88%, rgba(255, 255, 255, 0.7) 98%, transparent);
+	inset: -7% -7%;
+	will-change: transform;
+}
+html.dark .site .overlay-a {
+	background:
+		radial-gradient(circle 3px at 12% 62%, rgba(180, 210, 255, 0.55) 98%, transparent),
+		radial-gradient(circle 2px at 31% 82%, rgba(180, 210, 255, 0.45) 98%, transparent),
+		radial-gradient(circle 4px at 77% 70%, rgba(180, 210, 255, 0.4) 98%, transparent),
+		radial-gradient(circle 2px at 92% 88%, rgba(180, 210, 255, 0.5) 98%, transparent);
+}
+.site .site-portrait { will-change: transform; }
+
+/* tilt readout: a tiny level bubble inside the panel */
+.site .tp-bubble {
+	aspect-ratio: 3 / 1; background: color-mix(in srgb, var(--siteSubtle) 70%, transparent); border-radius: 0.6rem; position: relative;
+}
+.site .tp-bubble::before, .site .tp-bubble::after { background: color-mix(in srgb, var(--siteFg) 25%, transparent); content: ""; position: absolute; }
+.site .tp-bubble::before { height: 1px; left: 0; right: 0; top: 50%; }
+.site .tp-bubble::after { bottom: 0; left: 50%; top: 0; width: 1px; }
+.site .tp-dot { background: var(--siteAccent); border-radius: 50%; height: 0.9rem; left: 50%; margin: -0.45rem; position: absolute; top: 50%; width: 0.9rem; }
+@media (max-width: 700px) { .site .site-scenery > *, .site .overlay-a { inset: -10% -10%; } }

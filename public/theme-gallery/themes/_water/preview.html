@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>water.js preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; font: 13px/1.4 system-ui, sans-serif; background: #070b10; color: #9fb4bf; }
+  body.light { background: #dfe8ec; color: #345; }
+  .bar { display: flex; gap: 8px; align-items: center; padding: 10px 14px; flex-wrap: wrap; }
+  button { font: inherit; padding: 4px 10px; border-radius: 6px; border: 1px solid #456; background: #12202a; color: inherit; cursor: pointer; }
+  body.light button { background: #fff; border-color: #9ab; }
+  button[aria-pressed="true"] { outline: 2px solid #5fd6a8; }
+  .stage { position: relative; margin: 0 auto; width: 1200px; max-width: 100%; }
+  .stage canvas { display: block; }
+  .stage .still { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+  p.note { padding: 0 14px; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span>weather</span>
+  <button data-w="calm" aria-pressed="true">calm</button>
+  <button data-w="drizzle" aria-pressed="false">drizzle</button>
+  <button data-w="wind" aria-pressed="false">wind</button>
+  <span>mode</span>
+  <button data-m="dark" aria-pressed="true">night</button>
+  <button data-m="light" aria-pressed="false">day</button>
+  <button id="swell">send swell</button>
+  <button id="drop">drop</button>
+  <button id="toggle" aria-pressed="true">running</button>
+  <button id="mirror" aria-pressed="false">show raw reflection</button>
+</div>
+<div class="stage" id="stage"></div>
+<p class="note">Move the pointer over the water to leave a wake. Pilings reflect waves.</p>
+
+<script type="module">
+import { createWaterSim } from "./water.js";
+
+const q = new URLSearchParams(location.search);
+const W = +q.get("w") || 1200, H = +q.get("h") || 280;
+let mode = q.get("mode") === "light" ? "light" : "dark";
+let weather = q.get("weather") || "calm";
+const reducedQ = q.get("reduced") === "1";
+const stage = document.getElementById("stage");
+stage.style.width = W + "px";
+
+// 6 pilings: two converging rows of a dock receding toward the far horizon (region px, y down)
+const obstacles = [
+  { x: 330, y: 232, r: 3.6 }, { x: 560, y: 238, r: 3.6 },
+  { x: 440, y: 150, r: 2.6 }, { x: 590, y: 152, r: 2.6 },
+  { x: 508, y: 102, r: 1.8 }, { x: 600, y: 102, r: 1.8 },
+];
+
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+
+function makeReflection(dark) {
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d");
+  const r = rng(7);
+  // mirrored sky: brightest at the horizon (top), deepening downward
+  const sky = g.createLinearGradient(0, 0, 0, H);
+  if (dark) { sky.addColorStop(0, "#1c4a55"); sky.addColorStop(0.18, "#10303d"); sky.addColorStop(0.6, "#071a28"); sky.addColorStop(1, "#040d17"); }
+  else { sky.addColorStop(0, "#f6e3cf"); sky.addColorStop(0.2, "#bfd6e0"); sky.addColorStop(0.65, "#8fb4c9"); sky.addColorStop(1, "#6f9ab4"); }
+  g.fillStyle = sky; g.fillRect(0, 0, W, H);
+  if (dark) {
+    // aurora curtains: per-column gradients so it reads as soft vertical rays
+    for (let x = 0; x < W; x += 2) {
+      const t = x / W;
+      const hgt = 80 + 60 * Math.sin(x * 0.011) + 30 * Math.sin(x * 0.029 + 1) + 14 * Math.sin(x * 0.17);
+      const y0 = 22 + 24 * Math.sin(x * 0.007 + 0.6);
+      const a = 0.10 + 0.12 * (0.5 + 0.5 * Math.sin(x * 0.05 + Math.sin(x * 0.013) * 3)) * (0.4 + 0.6 * Math.sin(Math.PI * Math.min(1, t * 1.1)));
+      const gr = g.createLinearGradient(0, y0, 0, y0 + hgt);
+      gr.addColorStop(0, "rgba(90,255,190,0)");
+      gr.addColorStop(0.18, `rgba(80,255,180,${a * 1.5})`);
+      gr.addColorStop(0.6, `rgba(60,200,170,${a * 0.6})`);
+      gr.addColorStop(1, "rgba(120,120,255,0)");
+      g.fillStyle = gr; g.fillRect(x, y0, 2.5, hgt);
+    }
+    // moon glow
+    const mg = g.createRadialGradient(W * 0.62, 18, 0, W * 0.62, 18, 120);
+    mg.addColorStop(0, "rgba(230,250,240,0.85)"); mg.addColorStop(0.08, "rgba(190,240,225,0.35)"); mg.addColorStop(1, "rgba(120,200,190,0)");
+    g.fillStyle = mg; g.fillRect(0, 0, W, 200);
+    // stars
+    for (let i = 0; i < 140; i++) { g.fillStyle = `rgba(255,255,255,${0.2 + r() * 0.5})`; g.fillRect(r() * W, 10 + r() * (H - 10) * 0.9, 1.3, 1.3); }
+  } else {
+    const sg = g.createRadialGradient(W * 0.55, 0, 0, W * 0.55, 0, 260);
+    sg.addColorStop(0, "rgba(255,248,230,0.8)"); sg.addColorStop(1, "rgba(255,248,230,0)");
+    g.fillStyle = sg; g.fillRect(0, 0, W, 260);
+    for (let i = 0; i < 6; i++) { // soft clouds
+      const cx = r() * W, cy = 40 + r() * 120;
+      const cg = g.createRadialGradient(cx, cy, 0, cx, cy, 120);
+      cg.addColorStop(0, "rgba(255,255,255,0.35)"); cg.addColorStop(1, "rgba(255,255,255,0)");
+      g.save(); g.translate(cx, cy); g.scale(1, 0.25); g.translate(-cx, -cy); g.fillStyle = cg; g.fillRect(cx - 130, cy - 130, 260, 260); g.restore();
+    }
+  }
+  // ridge silhouettes (mirrored: hang down from the horizon)
+  const ridges = dark ? ["#0a1a20", "#07131a"] : ["#7f9fae", "#5d7f8f"];
+  [[46, 0.9], [26, 1.7]].forEach(([amp, f], k) => {
+    g.fillStyle = ridges[k]; g.beginPath(); g.moveTo(0, 0);
+    for (let x = 0; x <= W; x += 6) g.lineTo(x, amp * (0.55 + 0.45 * Math.sin(x * 0.006 * f + k * 2) * Math.sin(x * 0.019 * f + 1) + 0.25 * Math.sin(x * 0.05 + k)));
+    g.lineTo(W, 0); g.fill();
+  });
+  // dock reflection: posts + deck shadow hanging down from each waterline contact
+  for (const o of obstacles) {
+    const len = o.r * 28;
+    const pg = g.createLinearGradient(0, o.y, 0, o.y + len);
+    pg.addColorStop(0, dark ? "rgba(6,10,12,0.95)" : "rgba(40,36,34,0.85)");
+    pg.addColorStop(1, dark ? "rgba(6,10,12,0)" : "rgba(40,36,34,0)");
+    g.fillStyle = pg; g.fillRect(o.x - o.r, o.y, o.r * 2, len);
+  }
+  g.fillStyle = dark ? "rgba(4,8,10,0.22)" : "rgba(40,36,34,0.15)";
+  g.beginPath(); g.moveTo(300, 246); g.lineTo(640, 250); g.lineTo(612, 98); g.lineTo(500, 96); g.fill();
+  return c;
+}
+
+let water = null;
+let reflections = { dark: null, light: null };
+let userStopped = false;
+
+function build() {
+  water?.destroy();
+  stage.replaceChildren();
+  const dark = mode === "dark";
+  reflections[mode] ??= makeReflection(dark);
+  document.body.classList.toggle("light", !dark);
+  water = createWaterSim({ width: W, height: H, dark, reduced: reducedQ, force2d: q.get('force2d') === '1', obstacles, reflection: reflections[mode], weather });
+  stage.append(water.canvas);
+  window.__water = water;
+  if (!userStopped) water.start();
+}
+
+for (const b of document.querySelectorAll("[data-w]")) b.onclick = () => {
+  weather = b.dataset.w; water.setWeather(weather);
+  document.querySelectorAll("[data-w]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+};
+for (const b of document.querySelectorAll("[data-m]")) b.onclick = () => {
+  mode = b.dataset.m; build();
+  document.querySelectorAll("[data-m]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+};
+document.getElementById("swell").onclick = () => water.swell(1.2);
+document.getElementById("drop").onclick = () => water.disturb(W * 0.4, H * 0.55, 0.3);
+document.getElementById("toggle").onclick = (e) => {
+  userStopped = !userStopped; userStopped ? water.stop() : water.start();
+  e.target.textContent = userStopped ? "stopped" : "running"; e.target.setAttribute("aria-pressed", !userStopped);
+};
+document.getElementById("mirror").onclick = (e) => {
+  const on = e.target.getAttribute("aria-pressed") !== "true";
+  e.target.setAttribute("aria-pressed", on);
+  water.canvas.style.display = on ? "none" : "block";
+  if (on) stage.append(reflections[mode]); else reflections[mode].remove();
+};
+document.querySelectorAll("[data-w]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.w === weather));
+document.querySelectorAll("[data-m]").forEach((x) => x.setAttribute("aria-pressed", x.dataset.m === mode));
+build();
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+@import url("../_refined-d/paper.css");
+/* Wave 14 (E) shared styles: paper footer to the very bottom, squiggle layers, star canvas. */
+
+.site .scenery-b { contain: paint; }
+.site .scenery-c { contain: paint; }
+
+.site .site-page { padding-bottom: 0; }
+
+.site .site-footer {
+	padding-bottom: 6.5rem;
+	padding-top: 7rem;
+	position: relative;
+}
+.site .site-footer > p,
+.site .site-footer > a { position: relative; z-index: 1; }
+
+.site .rpf { bottom: 0; contain: paint; pointer-events: none; position: absolute; top: 0; --k: 2; }
+.site .rpf-grain {
+	-webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.7) 45%, #000);
+	mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.7) 45%, #000);
+}
+.site .rpf .rp-w i { animation-play-state: paused; }
+.site .rpf.is-live .rp-w i { animation-play-state: running; }
+.site .rpf-1 { bottom: -120px; height: 270px; left: -6%; width: 40%; }
+.site .rpf-2 { --per: 50s; --delay: -10s; bottom: -140px; height: 290px; left: 22%; width: 38%; }
+.site .rpf-3 { --per: 38s; --delay: -20s; bottom: -110px; height: 250px; left: 46%; width: 36%; }
+.site .rpf-4 { --per: 56s; --delay: -6s; bottom: -130px; height: 280px; right: -6%; width: 40%; }
+.site .rpf-5 { --per: 44s; --delay: -28s; bottom: -40px; height: 170px; left: 10%; width: 26%; }
+.site .rpf-6 { --per: 46s; --delay: -16s; bottom: -40px; height: 170px; right: 8%; width: 26%; }
+@media (prefers-reduced-motion: reduce) { .site .rpf .rp-w i { animation: none; } }
+html.reduce-motion .site .rpf .rp-w i { animation: none; }
+
+@media (max-width: 860px) { .site .dl-stars { display: none; } }
+
+/* ---- squiggle overlay (::before) shared by spotlight / rainbow ---- */
+.site .site-link::before {
+	background: var(--dl-g, none);
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: var(--dl-p, 0);
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+/* the wave canvas replaces the static squiggle while it is live */
+.site .site-link.dl-live::after { opacity: 0; }
+.site .site-link .dl-wave {
+	display: block;
+	left: -0.2em;
+	pointer-events: none;
+	position: absolute;
+}

@@ -1,0 +1,5 @@
+/* 299. Contour Margins: topographic lines in both margins; the page body stays plain. */
+.site { --siteMuted: #4d5d7e; }
+html.dark .site { --siteBg: #0a1020; --siteMuted: #a3b4c8; --siteSubtle: #0f2237; }
+.site .ma-contours { position: absolute; inset: 0; overflow: hidden; contain: paint; }
+.site .ma-contours canvas { position: absolute; top: 0; pointer-events: none; }

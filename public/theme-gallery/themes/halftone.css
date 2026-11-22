@@ -1,0 +1,32 @@
+/* 17 — Halftone Gradient */
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap");
+
+.site {
+	--siteBg: #f7f4ec;
+	--siteFg: #22263a;
+	--siteFgStrong: #0f1220;
+	--siteMuted: #5c5f72;
+	--siteAccent: #1d3fa8;
+	--siteSquiggle: #3a5bd0;
+	--siteSubtle: #e8e3d6;
+	--siteFont: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+}
+html.dark .site {
+	--siteBg: #050506;
+	--siteFg: #e6e3da;
+	--siteFgStrong: #fbf9f2;
+	--siteMuted: #9b988f;
+	--siteAccent: #f3d48a;
+	--siteSquiggle: #e8c670;
+	--siteSubtle: #17171a;
+}
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+.site .site-tagline,
+.site .site-about,
+.site .site-item-description {
+	font-weight: 400;
+}

@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..800&display=swap");
+
+.site {
+	--siteBg: #f4ecda;
+	--siteFg: #3b2f22;
+	--siteFgStrong: #1f160d;
+	--siteMuted: #7a6a56;
+	--siteAccent: #a3361b;
+	--siteSquiggle: #c8553a;
+	--siteSubtle: #e4d6bb;
+	--siteFont: "Fraunces", "League Spartan", Georgia, serif;
+	--siteFontDisplay: "Fraunces", Georgia, serif;
+}
+
+html.dark .site {
+	--siteBg: #140b09;
+	--siteFg: #e9cdc4;
+	--siteFgStrong: #ffe9e1;
+	--siteMuted: #b48f84;
+	--siteAccent: #ff6a45;
+	--siteSquiggle: #ff5230;
+	--siteSubtle: #2b1410;
+}
+
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.site .site-about,
+.site .site-item-description {
+	font-weight: 400;
+}
+
+/* The print itself: paper tone in light mode, safelight in dark. Static gradients only. */
+.site .scenery-a {
+	background: radial-gradient(90vmax 60vmax at 50% 20%, color-mix(in srgb, var(--siteSubtle) 80%, var(--siteBg)), var(--siteBg));
+}
+
+html.dark .site .scenery-a {
+	background: radial-gradient(70vmax 50vmax at 50% 0%, #3a120c, #140b09 70%);
+}
+
+.site .site-portrait img {
+	filter: sepia(0.35) contrast(1.05);
+}
+
+/* Undeveloped print: opacity is the only thing that animates (compositor-only). */
+.site .dev-veil {
+	background-color: #efe3c8;
+	background-blend-mode: normal;
+	background-size: 96px;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	will-change: opacity;
+}
+
+html.dark .site .dev-veil {
+	background-color: #240806;
+}
+
+.site .dev-vignette {
+	background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgb(60 25 10 / 0.45) 100%);
+	inset: 0;
+	opacity: 0.1;
+	position: absolute;
+}
+
+html.dark .site .dev-vignette {
+	background: radial-gradient(ellipse at 50% 45%, transparent 50%, rgb(0 0 0 / 0.6) 100%);
+}
+
+.site .dev-card {
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 0.5rem;
+	box-shadow: 0 10px 26px -14px rgb(40 15 0 / 0.55);
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.7rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.45rem;
+	padding: 0.6rem 0.75rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	width: 17rem;
+}
+
+.site .dev-title {
+	color: var(--siteAccent);
+	font: 800 0.75rem/1 var(--siteFontDisplay);
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+}
+
+.site .dev-title::before {
+	background: #ff3b1f;
+	border-radius: 50%;
+	box-shadow: 0 0 8px 1px #ff3b1f;
+	content: "";
+	display: inline-block;
+	height: 0.45rem;
+	margin-right: 0.5rem;
+	vertical-align: 0.05em;
+	width: 0.45rem;
+}
+
+.site .dev-tray {
+	background: color-mix(in srgb, var(--siteMuted) 16%, transparent);
+	border-radius: 3px;
+	height: 2.2rem;
+	margin: 0.15rem 0;
+	overflow: hidden;
+	position: relative;
+}
+
+.site .dev-tick,
+.site .dev-flag {
+	background: color-mix(in srgb, var(--siteFgStrong) 55%, transparent);
+	bottom: 0;
+	height: calc(var(--h) * 100%);
+	position: absolute;
+	width: 3px;
+}
+
+.site .dev-flag {
+	background: var(--siteAccent);
+	height: 100%;
+	width: 2px;
+}
+
+.site .dev-flag::after {
+	background: var(--siteBg);
+	color: var(--siteAccent);
+	content: attr(data-label);
+	font-size: 0.56rem;
+	left: 3px;
+	padding: 0 2px;
+	position: absolute;
+	top: 1px;
+}
+
+.site .dev-playhead {
+	background: #ff3b1f;
+	box-shadow: 0 0 6px #ff3b1f;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 2px;
+	z-index: 2;
+}
+
+.site .dev-status {
+	color: var(--siteMuted);
+	min-height: 3.9em;
+}
+
+.site .dev-replay {
+	background: var(--siteAccent);
+	border: 0;
+	border-radius: 999px;
+	color: var(--siteBg);
+	cursor: pointer;
+	font: 700 0.72rem/1 var(--siteFont);
+	justify-self: start;
+	letter-spacing: 0.04em;
+	padding: 0.45rem 0.9rem;
+	pointer-events: auto;
+}
+
+.site .dev-replay:hover,
+.site .dev-replay:focus-visible {
+	filter: brightness(1.12);
+}
+
+@media (max-width: 900px) {
+	.site .dev-card {
+		width: 13rem;
+	}
+
+	.site .dev-status {
+		display: none;
+	}
+}

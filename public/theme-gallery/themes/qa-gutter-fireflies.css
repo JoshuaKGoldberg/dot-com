@@ -1,0 +1,13 @@
+/* #271 Gutter Fireflies: the plain site; fireflies only in the side gutters, dark mode only. */
+
+.site .qa-gutters {
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .qa-gutter {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+}

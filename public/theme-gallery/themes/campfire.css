@@ -1,0 +1,39 @@
+@import url("./forest-kit/base.css");
+
+/* 94. Campfire Shore: night (or dusk) on the lake, a fire in the margin, birds roosting above it. */
+.site {
+	--siteBg: #f8eee8;
+	--siteFg: #3a2a3f;
+	--siteFgStrong: #231629;
+	--siteMuted: #5f4a63;
+	--siteAccent: #a3392f;
+	--siteSquiggle: #e8803a;
+	--siteSubtle: #ecd9d2;
+}
+
+html.dark .site {
+	--siteBg: #080d1f;
+	--siteFg: #e3e8f4;
+	--siteFgStrong: #fff6ea;
+	--siteMuted: #aab5d0;
+	--siteAccent: #ffb072;
+	--siteSquiggle: #ff9a4a;
+	--siteSubtle: #141d3c;
+}
+
+.site .scenery-a {
+	background: linear-gradient(#4a5a96, #c78fa6 55%, #f6b878 80%);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#04071a, #0d1838 60%, #1d2a50);
+}
+
+.site .site-page::before {
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+}
+
+.site .fk-ui .fk-fire-label {
+	min-width: 4.2rem;
+	opacity: 0.85;
+}

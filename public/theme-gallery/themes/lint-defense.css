@@ -1,0 +1,14 @@
+@import url("_toy/toy.css");
+
+/* Lint Defense: editor-ish accents; squiggles are enemies only when you opt in. */
+.site {
+	--toyAccent: #d6336c;
+	--toyAccent2: #1c7ed6;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #ff8787;
+	--toyAccent2: #74c0fc;
+	--toyOnAccent: #2a0a0a;
+}

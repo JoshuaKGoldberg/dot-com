@@ -1,0 +1,110 @@
+/* _aurora-d shared chrome: calm reading scrim, hint pill, layer defaults. */
+.site {
+	--ad-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+	--ad-chip: color-mix(in srgb, var(--siteBg) 82%, transparent);
+}
+
+.site .site-page::before {
+	background: linear-gradient(90deg, transparent, var(--ad-scrim) 10rem, var(--ad-scrim) calc(100% - 10rem), transparent);
+	content: "";
+	inset: 0 -1rem;
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
+}
+
+.site .site-header {
+	position: relative;
+}
+
+.site .ad-root {
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .ad-root canvas,
+.site .ad-root .ad-clip {
+	display: block;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+}
+
+.site .ad-clip {
+	overflow: hidden;
+}
+
+.site .ad-land {
+	will-change: transform;
+}
+
+.site .ad-tw {
+	animation: ad-twinkle 5.3s ease-in-out infinite alternate;
+	will-change: opacity;
+}
+
+.site .ad-tw.b {
+	animation-duration: 7.9s;
+	animation-delay: -3s;
+}
+
+.site .ad-spin {
+	animation: ad-spin 2600s linear infinite;
+	will-change: transform;
+}
+
+@keyframes ad-twinkle {
+	from {
+		opacity: 0.25;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes ad-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+html.reduce-motion .site .ad-tw,
+html.reduce-motion .site .ad-spin {
+	animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .ad-tw,
+	.site .ad-spin {
+		animation: none;
+	}
+}
+
+.site .ad-hint {
+	background: var(--ad-chip);
+	border-radius: 14px;
+	bottom: 0.9rem;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 0.14);
+	color: var(--siteFgStrong);
+	font-size: 0.8rem;
+	font-weight: 600;
+	left: 1rem;
+	max-width: min(16rem, calc(100% - 2rem));
+	padding: 0.35rem 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 1.2s ease 0.2s;
+}
+
+.site .ad-hint.is-gone {
+	opacity: 0;
+}
+
+@media (max-width: 700px) {
+	.site .ad-hint {
+		display: none;
+	}
+}

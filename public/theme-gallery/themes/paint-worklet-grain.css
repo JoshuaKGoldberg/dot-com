@@ -1,0 +1,288 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Public+Sans:wght@300..700&display=swap");
+
+@property --grain-ink-a {
+	inherits: true;
+	initial-value: #2a55c8;
+	syntax: "<color>";
+}
+
+@property --grain-ink-b {
+	inherits: true;
+	initial-value: #e0407a;
+	syntax: "<color>";
+}
+
+@property --grain-shift {
+	inherits: true;
+	initial-value: 1.2px;
+	syntax: "<length>";
+}
+
+@property --grain-seed {
+	inherits: false;
+	initial-value: 1;
+	syntax: "<number>";
+}
+
+@property --grain-density {
+	inherits: true;
+	initial-value: 1;
+	syntax: "<number>";
+}
+
+.site {
+	--siteBg: #f6f1e6;
+	--siteFg: #2a2622;
+	--siteFgStrong: #15110e;
+	--siteMuted: #6a6159;
+	--siteAccent: #2252d0;
+	--siteSquiggle: #e0407a;
+	--siteSubtle: #e8e0d0;
+	--siteFont: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Bricolage Grotesque", var(--siteFont);
+	--siteMaxWidth: 54rem;
+
+	/* Two inks, both derived from the accent with OKLCH relative color syntax. */
+	--grain-ink-a: oklch(from var(--siteAccent) l c h);
+	--grain-ink-b: oklch(from var(--siteAccent) calc(l + 0.12) calc(c + 0.03) calc(h + 150));
+	--grain-density: 1;
+}
+
+html.dark .site {
+	--siteBg: #151318;
+	--siteFg: #e6dfd6;
+	--siteFgStrong: #faf4ea;
+	--siteMuted: #a49c93;
+	--siteAccent: #7ea1ff;
+	--siteSquiggle: #ff7aa8;
+	--siteSubtle: #221f28;
+}
+
+/* ---- Fallback (no Houdini): hard-offset second ink plus an SVG feTurbulence grain ---- */
+.grain-card,
+.site-portrait,
+.nav-chip,
+.site-theme-toggle {
+	--grain-shift: 1.2px;
+	background-color: color-mix(in oklab, var(--grain-ink-a) 5%, transparent);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2  0 0 0 0 .28  0 0 0 0 .6  0 0 0 1.6 -.72'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	border: 1.5px solid var(--grain-ink-a);
+	box-shadow: var(--grain-shift) var(--grain-shift) 0 var(--grain-ink-b);
+	transition: --grain-shift 0.22s ease, translate 0.22s ease;
+}
+
+/* ---- Houdini enhancement ---- */
+.site.grain-paint .grain-card,
+.site.grain-paint .site-portrait,
+.site.grain-paint .nav-chip,
+.site.grain-paint .site-theme-toggle {
+	background-color: transparent;
+	background-image: paint(grain);
+	border-color: transparent;
+	box-shadow: none;
+}
+
+.site.grain-paint .nav-chip,
+.site.grain-paint .site-theme-toggle {
+	--grain-kind: button;
+}
+
+.site.grain-paint .site-portrait {
+	--grain-kind: frame;
+}
+
+.site.grain-paint .site-section-title::after {
+	background-image: paint(grain);
+	--grain-kind: rule;
+}
+
+.site-section-title::after {
+	background: var(--grain-ink-a);
+	content: "";
+	display: block;
+	height: 7px;
+	margin-top: 0.55rem;
+	translate: 0 0;
+}
+
+html:not(.dark) .site .site-section-title::after,
+.site-section-title::after {
+	box-shadow: 2px 2px 0 var(--grain-ink-b);
+}
+
+.site.grain-paint .site-section-title::after {
+	box-shadow: none;
+	background-color: transparent;
+}
+
+/* Hovering a card nudges the misregistration by about a pixel */
+.grain-card:hover,
+.nav-chip:hover,
+.site-theme-toggle:hover {
+	--grain-shift: 2.6px;
+}
+
+.grain-card:hover {
+	translate: 0 -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.grain-card,
+	.site-portrait,
+	.nav-chip,
+	.site-theme-toggle {
+		transition: none;
+	}
+}
+
+html.reduce-motion .grain-card,
+html.reduce-motion .site-portrait,
+html.reduce-motion .nav-chip,
+html.reduce-motion .site-theme-toggle {
+	transition: none;
+}
+
+/* ---- Layout & type ---- */
+.site-header {
+	padding-bottom: 1rem;
+}
+
+.site .site-logo {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.55rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.site-theme-toggle {
+	border-radius: 0;
+	color: var(--siteFg);
+	height: 2.4rem;
+	width: 2.4rem;
+}
+
+.site .site-nav-link {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.05rem;
+	font-weight: 700;
+}
+
+/* paint() is not applied to <a href>, so each nav link sits inside a chip that carries the texture. */
+.nav-chip {
+	display: inline-block;
+	padding: 0.35rem 0.9rem;
+}
+
+.site .site-nav-link.is-active {
+	color: var(--siteAccent);
+}
+
+.site-nav {
+	gap: 0.7rem;
+}
+
+.site-hero {
+	margin: 3.6rem 0 3.4rem;
+}
+
+.site-portrait {
+	padding: 0.7rem 0.9rem 0.9rem 0.7rem;
+}
+
+.site-portrait img {
+	box-shadow: none;
+	filter: saturate(1.15) contrast(1.05);
+}
+
+.site-title {
+	font-size: clamp(3rem, 7.5vw, 5rem);
+	font-weight: 800;
+	letter-spacing: -0.045em;
+	line-height: 0.9;
+}
+
+.site-tagline {
+	font-weight: 400;
+}
+
+.site-socials {
+	font-weight: 600;
+}
+
+.site-about {
+	font-size: 1.22rem;
+	font-weight: 400;
+	line-height: 1.55;
+}
+
+.site-section-title {
+	font-size: 1.9rem;
+	font-weight: 800;
+	letter-spacing: -0.035em;
+	margin-bottom: 1.5rem;
+}
+
+.site-list {
+	gap: 1.3rem;
+}
+
+.site-projects .site-list {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grain-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 1.25rem 1.35rem 1.1rem;
+}
+
+.site-item {
+	display: block;
+}
+
+.site-item:nth-child(1) > .grain-card {
+	--grain-seed: 1;
+}
+.site-item:nth-child(2) > .grain-card {
+	--grain-seed: 2;
+}
+.site-item:nth-child(3) > .grain-card {
+	--grain-seed: 3;
+}
+.site-item:nth-child(4) > .grain-card {
+	--grain-seed: 4;
+}
+
+.site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.4rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	line-height: 1.12;
+}
+
+.site-item-description {
+	font-weight: 400;
+}
+
+.site-item-meta {
+	font-size: 0.85rem;
+	font-weight: 500;
+	margin-top: auto;
+	padding-top: 0.3rem;
+}
+
+.site-talks .grain-card {
+	padding-block: 1rem 0.9rem;
+}
+
+.site-footer {
+	padding-top: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site-projects .site-list {
+		grid-template-columns: 1fr;
+	}
+}

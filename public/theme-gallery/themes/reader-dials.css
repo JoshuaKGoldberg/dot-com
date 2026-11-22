@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Next:wght@400..800&display=swap");
+
+.site {
+	--dTextSize: 1;
+	--dMeasure: 62ch;
+	--dSpace: 1;
+	--dLine: 1.58;
+	--dMotion: 1;
+	--dBorder: 1px;
+	--dFocus: 3px;
+
+	--siteBg: #fbfaf7; --siteFg: #2a2d34; --siteFgStrong: #12141a; --siteMuted: #4d535f;
+	--siteAccent: #1b4fb8; --siteSquiggle: #1b4fb8; --siteSubtle: #e4e1d8;
+	--siteFont: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 58rem;
+	--panelBg: #ffffff; --panelLine: #b9b5a6; --panelInk: #12141a; --chipOn: #1b4fb8; --chipOnInk: #fff; --ring: #b45309;
+	font-size: calc(1.125rem * var(--dTextSize));
+	line-height: var(--dLine);
+}
+html.dark .site {
+	--siteBg: #14161b; --siteFg: #dcdfe6; --siteFgStrong: #f6f7fa; --siteMuted: #a6adbb;
+	--siteAccent: #8db4ff; --siteSquiggle: #8db4ff; --siteSubtle: #262a33;
+	--panelBg: #1d2027; --panelLine: #5a606e; --panelInk: #f6f7fa; --chipOn: #8db4ff; --chipOnInk: #0b0d12; --ring: #ffb454;
+}
+@media (prefers-contrast: more) {
+	.site:not([data-contrast]) { --dBorder: 2px; --siteFg: #000; --siteMuted: #1a1a1a; }
+	html.dark .site:not([data-contrast]) { --siteFg: #fff; --siteMuted: #f0f0f0; }
+}
+.site[data-contrast="high"] { --dBorder: 2px; --siteFg: #000; --siteFgStrong: #000; --siteMuted: #1c1c1c; --siteAccent: #0a3a9e; --siteSquiggle: #0a3a9e; --panelLine: #000; --siteBg: #fff; --dFocus: 4px; }
+.site[data-contrast="xhigh"] { --dBorder: 3px; --siteFg: #000; --siteFgStrong: #000; --siteMuted: #000; --siteAccent: #0000c8; --siteSquiggle: #0000c8; --panelLine: #000; --siteBg: #fff; --panelBg: #fff; --chipOn: #000; --dFocus: 5px; }
+html.dark .site[data-contrast="high"] { --siteFg: #fff; --siteFgStrong: #fff; --siteMuted: #f2f2f2; --siteAccent: #a9c7ff; --siteSquiggle: #a9c7ff; --panelLine: #fff; --siteBg: #000; --panelBg: #0a0a0a; }
+html.dark .site[data-contrast="xhigh"] { --siteFg: #fff; --siteFgStrong: #fff; --siteMuted: #fff; --siteAccent: #ffff00; --siteSquiggle: #ffff00; --panelLine: #fff; --siteBg: #000; --panelBg: #000; --chipOn: #ffff00; --chipOnInk: #000; --panelInk: #fff; }
+.site[data-contrast="xhigh"] { --chipOnInk: #fff; }
+.site[data-contrast="high"] .site-link::after, .site[data-contrast="xhigh"] .site-link::after { opacity: 1; }
+
+.site[data-motion="off"] *, .site[data-motion="off"] *::before, .site[data-motion="off"] *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+
+.site-page { max-width: var(--siteMaxWidth); padding-top: calc(1.75rem * var(--dSpace)); }
+.site-hero { margin: calc(3rem * var(--dSpace)) 0 calc(2.5rem * var(--dSpace)); gap: calc(2rem * var(--dSpace)); }
+.site-portrait img { box-shadow: none; border: var(--dBorder) solid var(--panelLine); }
+.site-title { font-size: clamp(2.3rem, 6vw, 3.4rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.01em; }
+.site-tagline { font-size: 1.3rem; font-weight: 400; line-height: 1.35; }
+.site-about, .site-item-description, .site-footer { font-weight: 400; opacity: 1; }
+.site-about { font-size: 1.1rem; line-height: var(--dLine); max-width: var(--dMeasure); margin: 0 0 calc(3rem * var(--dSpace)); text-align: left; }
+.site-section { max-width: none; margin-bottom: calc(3rem * var(--dSpace)); }
+.site-section-title { font-size: 1.6rem; border-bottom: var(--dBorder) solid var(--panelLine); padding-bottom: .4rem; margin-bottom: calc(1rem * var(--dSpace)); }
+.site-list { gap: calc(1.3rem * var(--dSpace)); }
+.site-item { max-width: var(--dMeasure); }
+.site-item-title { font-size: 1.2rem; font-weight: 700; }
+.site-item-description { line-height: var(--dLine); margin: .25rem 0; }
+.site-item-meta { font-size: .9rem; color: var(--siteMuted); }
+.site-link::after { height: .26em; }
+
+.site-header { padding-bottom: calc(.9rem * var(--dSpace)); border-bottom: var(--dBorder) solid var(--panelLine); gap: .75rem 1.25rem; }
+.site-logo { font-weight: 800; font-size: 1.25rem; }
+.site-nav-link { font-size: 1.05rem; font-weight: 600; padding: .3rem .6rem; border-radius: .4rem; }
+.site-nav-link.is-active { color: var(--siteAccent); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.site :is(a, button, input, [tabindex]):focus-visible { outline: var(--dFocus) solid var(--ring); outline-offset: 3px; border-radius: 4px; }
+
+.site-theme-toggle { display: none; }
+.dials-gear {
+	order: 2; margin-left: auto; display: inline-flex; align-items: center; gap: .5rem; font: inherit; font-weight: 700; font-size: .95rem;
+	background: var(--panelBg); color: var(--panelInk); border: var(--dBorder) solid var(--panelLine); border-radius: 999px; padding: .35rem .85rem .35rem .6rem; cursor: pointer;
+}
+.dials-gear:hover { background: var(--siteSubtle); }
+.dials-gear[aria-expanded="true"] { background: var(--chipOn); color: var(--chipOnInk); border-color: var(--chipOn); }
+.dials-gear svg { width: 1.25rem; height: 1.25rem; transition: transform .5s; }
+.dials-gear[aria-expanded="true"] svg { transform: rotate(60deg); }
+.site-nav { order: 1; margin-left: auto; gap: .25rem; }
+.site-logo { order: 0; }
+.dials-gear { margin-left: 0; }
+
+.dials-panel {
+	margin: calc(.4rem * var(--dSpace)) 0 0; background: var(--panelBg); color: var(--siteFg); border: var(--dBorder) solid var(--panelLine); border-radius: 16px;
+	padding: 1.1rem 1.25rem 1.25rem; box-shadow: 0 14px 30px -20px rgb(20 20 40 / .45);
+	order: 4; width: 100%; font-size: 1rem; line-height: 1.4;
+}
+.dials-panel[hidden] { display: none; }
+.dials-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.dials-head h2 { margin: 0; font-size: 1.15rem; font-weight: 800; color: var(--siteFgStrong); }
+.dials-head p { margin: 0; font-size: .85rem; color: var(--siteMuted); }
+.dials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem 1.75rem; }
+.dials-group { border: 0; padding: 0; margin: 0; min-width: 0; }
+.dials-group legend, .dials-label { display: flex; justify-content: space-between; width: 100%; padding: 0; font-weight: 700; font-size: .9rem; color: var(--siteFgStrong); margin-bottom: .45rem; }
+.dials-value { font-weight: 600; color: var(--siteMuted); font-variant-numeric: tabular-nums; }
+.dials-seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: var(--dBorder) solid var(--panelLine); border-radius: 10px; overflow: hidden; }
+.dials-seg label { position: relative; }
+.dials-seg input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.dials-seg span { display: block; text-align: center; padding: .5rem .3rem; font-size: .88rem; font-weight: 600; border-left: var(--dBorder) solid var(--panelLine); line-height: 1.2; }
+.dials-seg label:first-child span { border-left: 0; }
+.dials-seg input:checked + span { background: var(--chipOn); color: var(--chipOnInk); }
+.dials-seg input:checked + span::before { content: "✓ "; }
+.dials-seg input:focus-visible + span { outline: var(--dFocus) solid var(--ring); outline-offset: -4px; }
+.dials-seg input:hover:not(:checked) + span { background: var(--siteSubtle); }
+.dials-range { width: 100%; accent-color: var(--chipOn); height: 1.6rem; margin: 0; }
+.dials-ticks { display: flex; justify-content: space-between; font-size: .75rem; color: var(--siteMuted); }
+.dials-switch { display: flex; align-items: center; justify-content: space-between; gap: 1rem; font-weight: 700; font-size: .9rem; color: var(--siteFgStrong); cursor: pointer; position: relative; }
+.dials-switch input { position: absolute; opacity: 0; right: 0; width: 3.1rem; height: 1.7rem; margin: 0; cursor: pointer; }
+.dials-track { flex: none; width: 3.1rem; height: 1.7rem; box-sizing: border-box; border-radius: 999px; border: var(--dBorder) solid var(--panelLine); background: var(--siteSubtle); position: relative; transition: background .2s; }
+.dials-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: calc(1.7rem - 10px); height: calc(1.7rem - 10px); border-radius: 50%; background: var(--panelInk); transition: transform .2s; }
+.dials-switch input:checked ~ .dials-track { background: var(--chipOn); }
+.dials-switch input:checked ~ .dials-track::after { transform: translateX(1.4rem); background: var(--chipOnInk); }
+.dials-switch input:focus-visible ~ .dials-track { outline: var(--dFocus) solid var(--ring); outline-offset: 3px; }
+.dials-hint { margin: .35rem 0 0; font-size: .82rem; color: var(--siteMuted); }
+.dials-foot { margin-top: 1.1rem; display: flex; gap: .75rem; align-items: center; justify-content: space-between; flex-wrap: wrap; font-size: .82rem; color: var(--siteMuted); }
+.dials-reset { font: inherit; font-weight: 700; background: none; border: var(--dBorder) solid var(--panelLine); border-radius: 8px; padding: .35rem .9rem; color: var(--panelInk); cursor: pointer; }
+.dials-reset:hover { background: var(--siteSubtle); }

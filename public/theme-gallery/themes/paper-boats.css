@@ -1,0 +1,18 @@
+@import url("_toy/toy.css");
+
+/* Paper Boats: a notebook-margin page; the stream appears in the right margin when you play. */
+.site {
+	--toyAccent: #e8590c;
+	--toyAccent2: #1c7ed6;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #ffa94d;
+	--toyAccent2: #74c0fc;
+	--toyOnAccent: #1a0f02;
+}
+
+.site .site-page {
+	background-image: linear-gradient(to right, transparent 1.2rem, color-mix(in srgb, var(--toyAccent2) 22%, transparent) 1.2rem, color-mix(in srgb, var(--toyAccent2) 22%, transparent) calc(1.2rem + 1px), transparent calc(1.2rem + 1px));
+}

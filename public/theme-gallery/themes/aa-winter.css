@@ -1,0 +1,32 @@
+@import url("./_aurora-b/base.css");
+
+/* 246. Winter Aurora: snow-laden spruce, a frozen lake that mirrors the aurora, slow snowfall. */
+.site {
+	--siteBg: #eef3f8;
+	--siteFg: #1f3350;
+	--siteFgStrong: #0d1e36;
+	--siteMuted: #3d546f;
+	--siteAccent: #0b5fa8;
+	--siteSquiggle: #3bb8a0;
+	--siteSubtle: #d5e1ec;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+}
+
+html.dark .site {
+	--siteBg: #060d1e;
+	--siteFg: #dbe7f5;
+	--siteFgStrong: #f4f8fd;
+	--siteMuted: #a4b6d0;
+	--siteAccent: #86e0c0;
+	--siteSquiggle: #4fd6b0;
+	--siteSubtle: #12213f;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 50%, transparent);
+}
+
+.site .scenery-a {
+	background: linear-gradient(#aebdd4, #d9e0ea 50%, #f0f1f5);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#050a1c, #0c1836 50%, #1b2d58);
+}

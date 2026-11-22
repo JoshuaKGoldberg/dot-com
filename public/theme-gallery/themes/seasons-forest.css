@@ -1,0 +1,49 @@
+@import url("./forest-kit/base.css");
+
+/* 93. Four Seasons: the page is calm; the forest behind it moves through the year. */
+.site {
+	--siteBg: #eef3f4;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d8e5e9;
+}
+
+html.dark .site {
+	--siteBg: #0b1329;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+}
+
+.site .scenery-a {
+	background: linear-gradient(#4f94dc, #dcecf5 66%, #5f8fa6);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#050a1c, #1a2750 66%, #0b1634);
+}
+
+.site .site-page::before {
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 52%, transparent);
+}
+
+.site .fk-ui.seasons {
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	max-width: calc(100% - 2rem);
+}
+
+.site .fk-ui.seasons output {
+	min-width: 5.6em;
+	text-align: right;
+}
+
+.site .fk-ui.seasons input[type="range"] {
+	width: 10rem;
+}

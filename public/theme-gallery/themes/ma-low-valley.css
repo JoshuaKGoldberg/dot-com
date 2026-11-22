@@ -1,0 +1,99 @@
+/* 281 Low Valley: the #91 valley scaled back to the bottom quarter and the side edges, with a small cursor aurora above. */
+html.dark .site {
+	--siteBg: #0a111f;
+	--siteSubtle: #10243a;
+}
+
+.site .ma-layer {
+	contain: paint;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	will-change: transform;
+}
+
+.site .ma-pines {
+	top: auto;
+	transform-origin: 50% 100%;
+}
+
+.site .ma-pines.is-right {
+	left: auto;
+	right: 0;
+}
+
+.site .ma-bird-track {
+	animation: ma-fly var(--dur, 60s) linear infinite;
+	animation-delay: var(--delay, 0s);
+	height: 20px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: var(--y, 40%);
+	width: 100%;
+	will-change: transform;
+}
+
+.site .ma-bird-track.is-back {
+	animation-direction: reverse;
+}
+
+.site .ma-bird {
+	animation: ma-flap var(--flap, 0.9s) ease-in-out infinite alternate;
+	display: block;
+	height: auto;
+	opacity: 0.7;
+	transform-origin: 50% 60%;
+	width: var(--size, 18px);
+}
+
+html.dark .site .ma-bird {
+	color: #b9c8ea;
+	opacity: 0.55;
+}
+
+.site .ma-bird {
+	color: #4d6585;
+}
+
+@keyframes ma-fly {
+	from {
+		transform: translate3d(-8%, 0, 0);
+	}
+
+	to {
+		transform: translate3d(106%, 0, 0);
+	}
+}
+
+@keyframes ma-flap {
+	from {
+		transform: scaleY(1);
+	}
+
+	to {
+		transform: scaleY(0.45);
+	}
+}
+
+html.reduce-motion .site .ma-bird-track,
+html.reduce-motion .site .ma-bird {
+	animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .ma-bird-track,
+	.site .ma-bird {
+		animation: none;
+	}
+}
+
+@keyframes ma-sway {
+	from {
+		rotate: -0.35deg;
+	}
+
+	to {
+		rotate: 0.35deg;
+	}
+}

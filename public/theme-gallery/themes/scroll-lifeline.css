@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap");
+
+.site {
+	--siteBg: #f3f6f1;
+	--siteFg: #1d2a26;
+	--siteFgStrong: #0b1612;
+	--siteMuted: #556560;
+	--siteAccent: #0b7a68;
+	--siteSquiggle: #19a88f;
+	--siteSubtle: #dbe6df;
+	--siteFont: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 50rem;
+	--mono: "Space Mono", ui-monospace, monospace;
+	--cell: 12px;
+	--lifeOpacity: 0.24;
+	--hair: rgb(20 60 50 / 0.18);
+	/* The grid layer's cells use an OKLCH tint of the background. */
+	--lifeCell: oklch(from var(--siteBg) calc(l - 0.16) 0.07 170);
+}
+
+html.dark .site {
+	--siteBg: #0c1311;
+	--siteFg: #d5e3dd;
+	--siteFgStrong: #f1faf6;
+	--siteMuted: #8fa59d;
+	--siteAccent: #5fe0bf;
+	--siteSquiggle: #3cc3a2;
+	--siteSubtle: #14211d;
+	--lifeOpacity: 0.3;
+	--hair: rgb(150 240 210 / 0.16);
+	--lifeCell: oklch(from var(--siteBg) calc(l + 0.3) 0.09 170);
+}
+
+/* Faint graph paper */
+.site .scenery-b {
+	background:
+		repeating-linear-gradient(0deg, var(--hair) 0 1px, transparent 1px var(--cell)),
+		repeating-linear-gradient(90deg, var(--hair) 0 1px, transparent 1px var(--cell));
+	opacity: 0.35;
+}
+
+/* The Life sprite: 40 generations stacked vertically, one generation visible at a time. */
+.site .scenery-a {
+	background-image: var(--lifeSprite, none);
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	background-size: 100% 4000%;
+	bottom: auto;
+	height: var(--lifeH, 100%);
+	image-rendering: pixelated;
+	opacity: var(--lifeOpacity);
+	right: auto;
+	width: var(--lifeW, 100%);
+}
+
+@keyframes life-generation {
+	from {
+		background-position-y: 0%;
+	}
+
+	to {
+		background-position-y: 100%;
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site {
+			scroll-timeline: --life y;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a {
+			animation: life-generation steps(40, jump-none) both;
+			animation-timeline: --life;
+		}
+	}
+}
+
+/* Reduced motion: one frozen generation. */
+html.reduce-motion .site .scenery-a {
+	background-position-y: calc(100% * 14 / 39);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-a {
+		background-position-y: calc(100% * 14 / 39);
+	}
+}
+
+/* ---- Page ---- */
+.site-header {
+	border-bottom: 1px solid var(--hair);
+	padding-bottom: 1rem;
+}
+
+.site .site-logo {
+	font-size: 1.3rem;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.site .site-nav-link {
+	font-family: var(--mono);
+	font-size: 0.9rem;
+	text-transform: lowercase;
+}
+
+.site-hero {
+	margin: 4rem 0 3.5rem;
+}
+
+.site-portrait img {
+	border-radius: 0.5rem;
+	box-shadow: 6px 6px 0 var(--siteSubtle), 0 0 0 1px var(--hair);
+}
+
+.site-title {
+	font-size: clamp(3rem, 7vw, 4.8rem);
+	font-weight: 700;
+	letter-spacing: -0.05em;
+}
+
+.site-tagline {
+	font-weight: 400;
+}
+
+.site-socials {
+	font-family: var(--mono);
+	font-size: 0.9rem;
+}
+
+.site-about {
+	font-size: 1.22rem;
+	font-weight: 400;
+	text-align: left;
+}
+
+.site-section-title {
+	align-items: center;
+	display: flex;
+	font-size: 1.7rem;
+	font-weight: 700;
+	gap: 1rem;
+	letter-spacing: -0.03em;
+}
+
+/* A glider, from five square cells. */
+.site-section-title::before {
+	background: var(--siteAccent);
+	box-shadow:
+		6px 0 0 var(--siteAccent),
+		12px 6px 0 var(--siteAccent),
+		0 12px 0 var(--siteAccent),
+		6px 12px 0 var(--siteAccent),
+		12px 12px 0 var(--siteAccent);
+	content: "";
+	flex: none;
+	height: 5px;
+	margin: 0 0.9rem 0.9rem 0;
+	width: 5px;
+}
+
+.site-item {
+	background: color-mix(in oklab, var(--siteBg) 82%, transparent);
+	border-left: 3px solid var(--siteAccent);
+	padding: 0.2rem 0 0.2rem 1rem;
+}
+
+.site-item-title {
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.site-item-description {
+	font-weight: 400;
+}
+
+.site-item-meta {
+	font-family: var(--mono);
+	font-size: 0.8rem;
+}
+
+.site-projects .site-list {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.6rem 2rem;
+}
+
+.site-footer {
+	font-size: 0.95rem;
+}
+
+.life-note {
+	color: var(--siteMuted);
+	font-family: var(--mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.08em;
+	margin: 1.6rem 0 0;
+	opacity: 0.85;
+}
+
+@media (max-width: 700px) {
+	.site-projects .site-list {
+		grid-template-columns: 1fr;
+	}
+}

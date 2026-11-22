@@ -1,0 +1,51 @@
+@import url("./forest-kit/base.css");
+
+/* fr-focus-fireflies: edge-only focus aurora, see themes.js blurb. */
+.site {
+	--siteBg: #eaf2f5;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d3e4ea;
+}
+
+html.dark .site {
+	--siteBg: #0b1329;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+}
+
+.site .scenery-a {
+	background: none;
+}
+
+.site .site-page::before {
+	display: none;
+}
+
+.site .site-page {
+	padding-bottom: 280px;
+	z-index: 1;
+}
+
+.site .fr-foot {
+	height: var(--fr-band, 440px);
+	margin-top: calc(var(--fr-band, 440px) * -1);
+	pointer-events: none;
+	position: relative;
+	z-index: 0;
+}
+
+.site .fr-foot canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+}

@@ -1,0 +1,129 @@
+.site {
+	--siteBg: #f8f3ee;
+	--siteFg: #2d3345;
+	--siteFgStrong: #181d2e;
+	--siteMuted: #646a7c;
+	--siteAccent: #3a68a6;
+	--siteSquiggle: #7a9cc4;
+	--siteSubtle: #e8e1dc;
+	--sky: linear-gradient(180deg, #e9eef3 0%, #f4eee9 45%, #f8e9dc 100%);
+	--err: rgba(196, 128, 124, 0.34);
+	--warn: rgba(214, 172, 108, 0.36);
+	--info: rgba(128, 162, 198, 0.36);
+	--err2: rgba(196, 128, 124, 0.2);
+	--sun: rgba(255, 238, 200, 0.7);
+}
+
+html.dark .site {
+	--siteBg: #14131f;
+	--siteFg: #dcdbe6;
+	--siteFgStrong: #f4f2fa;
+	--siteMuted: #a09fb4;
+	--siteAccent: #9bbcea;
+	--siteSquiggle: #7f9fd0;
+	--siteSubtle: #26233a;
+	--sky: linear-gradient(180deg, #14172b 0%, #231f38 55%, #3a2a3a 100%);
+	--err: rgba(178, 100, 106, 0.26);
+	--warn: rgba(196, 146, 84, 0.24);
+	--info: rgba(96, 128, 186, 0.3);
+	--err2: rgba(178, 100, 106, 0.16);
+	--sun: rgba(255, 214, 160, 0.3);
+}
+
+.site .site-scenery .scenery-a {
+	background: var(--sky);
+}
+
+.site .site-scenery .scenery-b,
+.site .site-scenery .scenery-c,
+.site .site-scenery .scenery-b::before,
+.site .site-scenery .scenery-b::after {
+	background-repeat: repeat-x;
+	content: "";
+	inset: auto;
+	left: 0;
+	position: absolute;
+	width: 200%;
+}
+
+/* big slow cloud layer */
+.site .site-scenery .scenery-b {
+	background-image:
+		radial-gradient(34% 30% at 20% 30%, var(--info), transparent 100%),
+		radial-gradient(28% 26% at 62% 22%, var(--warn), transparent 100%),
+		radial-gradient(30% 28% at 88% 38%, var(--err), transparent 100%);
+	background-size: 50% 100%;
+	filter: blur(30px);
+	height: 70%;
+	top: 0;
+}
+
+/* nearer mist layer, lower and faster */
+.site .site-scenery .scenery-b::before {
+	background-image:
+		radial-gradient(26% 24% at 14% 70%, var(--warn), transparent 100%),
+		radial-gradient(34% 22% at 54% 82%, var(--info), transparent 100%),
+		radial-gradient(24% 20% at 84% 66%, var(--err2), transparent 100%);
+	background-size: 50% 100%;
+	height: 60%;
+	top: 50%;
+}
+
+.site .site-scenery .scenery-b::after {
+	background-image:
+		radial-gradient(40% 14% at 30% 50%, var(--info), transparent 100%),
+		radial-gradient(36% 12% at 76% 40%, var(--err2), transparent 100%);
+	background-size: 50% 100%;
+	height: 40%;
+	top: 25%;
+}
+
+/* rare thin shaft of sun */
+.site .site-scenery .scenery-c {
+	background: linear-gradient(100deg, transparent 47%, var(--sun) 50%, transparent 53%);
+	background-repeat: no-repeat;
+	inset: -10% auto auto 0;
+	height: 130%;
+	left: 58%;
+	opacity: 0;
+	transform: rotate(-14deg);
+	transform-origin: top center;
+	width: 22%;
+	filter: blur(2px);
+}
+
+@keyframes dw-drift {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes dw-shaft {
+	0%,
+	58% {
+		opacity: 0;
+	}
+	66%,
+	74% {
+		opacity: 1;
+	}
+	84%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-scenery .scenery-b {
+		animation: dw-drift 120s linear infinite;
+	}
+	html:not(.reduce-motion) .site .site-scenery .scenery-b::before {
+		animation: dw-drift 80s linear infinite;
+	}
+	html:not(.reduce-motion) .site .site-scenery .scenery-b::after {
+		animation: dw-drift 100s linear infinite reverse;
+	}
+	html:not(.reduce-motion) .site .site-scenery .scenery-c {
+		animation: dw-shaft 95s ease-in-out infinite;
+	}
+}

@@ -1,0 +1,500 @@
+/*
+ * Zero JS: AST View. No script, just CSS. The page is annotated as the syntax tree it already is.
+ *   ::before / ::after         -> node-type labels and tree connectors on every node
+ *   counters                   -> ObjectExpression [n] indices, numbering each list's children
+ *   :hover on ancestors        -> hovering a leaf lights its whole chain: outline per ancestor, root to leaf
+ *   :has()                     -> the status bar spells out the path to whatever you are hovering
+ *   gradients as tree lines    -> elbows and trunks drawn with background layers, no images
+ */
+
+.site {
+	--siteBg: #fafafd;
+	--siteFg: #262b3d;
+	--siteFgStrong: #111426;
+	--siteMuted: #5f6580;
+	--siteAccent: #5b3fc9;
+	--siteSquiggle: #8a6cf0;
+	--siteSubtle: #e8e8f4;
+	--t-type: #7a3fc4;
+	--t-key: #1b64ad;
+	--t-str: #167a39;
+	--t-num: #a8500a;
+	--tree: color-mix(in srgb, var(--siteMuted) 70%, transparent);
+	--siteFontMono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html.dark .site {
+	--siteBg: #0e1018;
+	--siteFg: #d7dbec;
+	--siteFgStrong: #f4f6ff;
+	--siteMuted: #8f96b4;
+	--siteAccent: #b9a3ff;
+	--siteSquiggle: #9d82ff;
+	--siteSubtle: #1a1d2b;
+	--t-type: #cba8ff;
+	--t-key: #7fc2ff;
+	--t-str: #86dd9f;
+	--t-num: #ffb86b;
+}
+
+/* ---- scenery: indent guides and a ghost brace ---- */
+
+.site .scenery-a {
+	background:
+		repeating-linear-gradient(90deg, transparent 0 calc(2.4rem - 1px), color-mix(in srgb, var(--siteMuted) 12%, transparent) calc(2.4rem - 1px) 2.4rem);
+	mask: linear-gradient(180deg, #000 20%, transparent 95%);
+}
+
+.site .scenery-b::before {
+	bottom: -4vmin;
+	color: color-mix(in srgb, var(--t-type) 6%, transparent);
+	content: "{ }";
+	font: 800 min(46vmin, 30rem) / 1 var(--siteFontMono);
+	position: absolute;
+	right: 2vw;
+}
+
+/* ---- node labels ---- */
+
+.site :is(.site-header, .site-hero, .site-about, .site-section, .site-footer, .site-item) {
+	position: relative;
+}
+
+.site :is(.site-header, .site-hero, .site-about, .site-section, .site-footer, .site-item, .site-list)::before {
+	background: var(--siteBg);
+	border-radius: 0.2rem;
+	color: var(--t-type);
+	font: 600 0.62rem/1 var(--siteFontMono);
+	letter-spacing: 0.01em;
+	opacity: 0.55;
+	padding: 0.15rem 0.3rem;
+	position: absolute;
+	right: 0;
+	top: -0.65rem;
+	transition: opacity 0.2s;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site-header::before {
+	content: "JSXElement  <header>";
+	top: -1.1rem;
+}
+
+.site-hero::before {
+	content: "JSXElement  <section.hero>";
+	top: -1.1rem;
+}
+
+.site-about::before {
+	content: "JSXElement  <section.about>  ·  2 JSXText";
+	top: -1.1rem;
+}
+
+.site-posts::before {
+	content: "JSXElement  <section.posts>";
+	top: -0.4rem;
+}
+
+.site-projects::before {
+	content: "JSXElement  <section.projects>";
+	top: -0.4rem;
+}
+
+.site-talks::before {
+	content: "JSXElement  <section.talks>";
+	top: -0.4rem;
+}
+
+.site-footer::before {
+	content: "JSXElement  <footer>";
+	top: -1rem;
+}
+
+.site-list {
+	counter-reset: ix -1;
+	position: relative;
+}
+
+.site-item {
+	counter-increment: ix;
+}
+
+.site-list::before {
+	content: "ArrayExpression  ·  elements: 4";
+	left: 1.4rem;
+	right: auto;
+	top: -1.9rem;
+}
+
+.site-item::before {
+	content: "ObjectExpression  [" counter(ix) "]";
+	top: -0.55rem;
+}
+
+.site-section-title {
+	position: relative;
+}
+
+.site-section-title::after {
+	color: var(--t-key);
+	content: "h2";
+	font: 600 0.62rem/1 var(--siteFontMono);
+	left: calc(100% + 0.7rem);
+	opacity: 0;
+	position: absolute;
+	top: 0.45rem;
+	transition: opacity 0.2s;
+}
+
+.site-section-title:hover::after {
+	content: "Identifier · name: <h2>";
+	opacity: 1;
+}
+
+/* Properties of an item reveal as you hover it. */
+.site-item :is(.site-item-title, .site-item-description, .site-item-meta)::before {
+	background: var(--siteBg);
+	border-radius: 0.2rem;
+	font: 600 0.6rem/1 var(--siteFontMono);
+	opacity: 0;
+	padding: 0.12rem 0.28rem;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	translate: 0 -50%;
+	transition: opacity 0.2s;
+	white-space: pre;
+}
+
+.site-item .site-item-title::before {
+	color: var(--t-key);
+	content: "Property title: StringLiteral";
+	left: calc(100% + 0.8rem);
+	right: auto;
+	top: 0.1em;
+	translate: none;
+}
+
+.site-item .site-item-description::before {
+	color: var(--t-str);
+	content: "Property description: StringLiteral";
+	right: 0.6rem;
+	top: 50%;
+}
+
+.site-item .site-item-meta::before {
+	color: var(--t-num);
+	content: "Property meta: TemplateLiteral";
+	right: 0.6rem;
+	top: auto;
+	bottom: 0.1rem;
+	translate: none;
+}
+
+.site-item:hover :is(.site-item-title, .site-item-description, .site-item-meta)::before {
+	opacity: 0.95;
+}
+
+/* ---- tree connectors, drawn as gradients ---- */
+
+.site-list {
+	margin-left: 0.3rem;
+	padding-left: 1.5rem;
+}
+
+.site-item::after {
+	background:
+		linear-gradient(var(--tree), var(--tree)) 0 0 / 2px 100% no-repeat,
+		linear-gradient(var(--tree), var(--tree)) 0 1.1rem / 1.1rem 2px no-repeat;
+	bottom: -1.4rem;
+	content: "";
+	left: -1.5rem;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 1.2rem;
+}
+
+.site-item:last-child::after {
+	bottom: 0;
+	background:
+		linear-gradient(var(--tree), var(--tree)) 0 0 / 2px 1.1rem no-repeat,
+		linear-gradient(var(--tree), var(--tree)) 0 1.1rem / 1.1rem 2px no-repeat;
+}
+
+.site-item {
+	border-radius: 0.5rem;
+	margin-inline: -0.6rem;
+	padding: 0.3rem 0.6rem 0.4rem;
+}
+
+/* ---- hover: every ancestor of the hovered node lights up, from the root down to the leaf ---- */
+
+.site :is(.site-header, .site-hero, .site-about, .site-section, .site-footer):hover {
+	outline: 1px dashed color-mix(in srgb, var(--t-type) 40%, transparent);
+	outline-offset: 0.5rem;
+}
+
+.site :is(.site-header, .site-hero, .site-about, .site-section, .site-footer, .site-item, .site-list):hover::before {
+	opacity: 1;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--t-type) 8%, transparent);
+	outline: 1px solid color-mix(in srgb, var(--t-type) 55%, transparent);
+	outline-offset: 0;
+}
+
+.site-item:hover::after {
+	--tree: var(--t-type);
+}
+
+.site-link:hover {
+	background: color-mix(in srgb, var(--t-key) 16%, transparent);
+	border-radius: 0.2rem;
+	outline: 1px solid var(--t-key);
+}
+
+.site-title:hover {
+	outline: 1px solid var(--t-str);
+	outline-offset: 0.2rem;
+}
+
+/* ---- the status bar: path to whatever is hovered ---- */
+
+.site .overlay-a::before {
+	background: color-mix(in srgb, var(--siteBg) 92%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	content: "Program";
+	font: 600 0.68rem/1 var(--siteFontMono);
+	left: 50%;
+	padding: 0.42rem 0.6rem;
+	position: absolute;
+	translate: -50% 0;
+	white-space: pre;
+}
+
+.site .overlay-a::after {
+	color: var(--siteMuted);
+	content: "";
+	font: 600 0.6rem/1 var(--siteFontMono);
+	left: 50%;
+	position: absolute;
+	translate: -50% 0;
+	bottom: 2.9rem;
+}
+
+.site:has(.site-header:hover) .overlay-a::before {
+	content: "Program › JSXElement<header>";
+}
+
+.site:has(.site-logo:hover) .overlay-a::before {
+	content: "Program › header › a.site-logo › JSXText";
+}
+
+.site:has(.site-nav-link:hover) .overlay-a::before {
+	content: "Program › header › nav › a.site-nav-link";
+}
+
+.site:has(.site-hero:hover) .overlay-a::before {
+	content: "Program › main › section.hero";
+}
+
+.site:has(.site-title:hover) .overlay-a::before {
+	content: "Program › main › section.hero › h1.site-title › JSXText";
+}
+
+.site:has(.site-socials .site-link:hover) .overlay-a::before {
+	content: "Program › main › section.hero › ul.socials › li › a";
+}
+
+.site:has(.site-about:hover) .overlay-a::before {
+	content: "Program › main › section.about › p";
+}
+
+.site:has(.site-about .site-link:hover) .overlay-a::before {
+	content: "Program › main › section.about › p › a.site-link";
+}
+
+.site:has(.site-footer:hover) .overlay-a::before {
+	content: "Program › footer › p";
+}
+
+.site:has(.site-posts:hover) .overlay-a::before {
+	content: "Program › main › section.posts";
+}
+
+.site:has(.site-posts .site-section-title:hover) .overlay-a::before {
+	content: "Program › main › section.posts › h2 › JSXText";
+}
+
+.site:has(.site-posts .site-list:hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › ArrayExpression";
+}
+
+.site:has(.site-projects:hover) .overlay-a::before {
+	content: "Program › main › section.projects";
+}
+
+.site:has(.site-projects .site-section-title:hover) .overlay-a::before {
+	content: "Program › main › section.projects › h2 › JSXText";
+}
+
+.site:has(.site-projects .site-list:hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › ArrayExpression";
+}
+
+.site:has(.site-talks:hover) .overlay-a::before {
+	content: "Program › main › section.talks";
+}
+
+.site:has(.site-talks .site-section-title:hover) .overlay-a::before {
+	content: "Program › main › section.talks › h2 › JSXText";
+}
+
+.site:has(.site-talks .site-list:hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › ArrayExpression";
+}
+
+.site:has(.site-posts .site-item:nth-child(1):hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › li[0] › ObjectExpression";
+}
+
+.site:has(.site-posts .site-item:nth-child(2):hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › li[1] › ObjectExpression";
+}
+
+.site:has(.site-posts .site-item:nth-child(3):hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › li[2] › ObjectExpression";
+}
+
+.site:has(.site-posts .site-item:nth-child(4):hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › li[3] › ObjectExpression";
+}
+
+.site:has(.site-projects .site-item:nth-child(1):hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › li[0] › ObjectExpression";
+}
+
+.site:has(.site-projects .site-item:nth-child(2):hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › li[1] › ObjectExpression";
+}
+
+.site:has(.site-projects .site-item:nth-child(3):hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › li[2] › ObjectExpression";
+}
+
+.site:has(.site-projects .site-item:nth-child(4):hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › li[3] › ObjectExpression";
+}
+
+.site:has(.site-talks .site-item:nth-child(1):hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › li[0] › ObjectExpression";
+}
+
+.site:has(.site-talks .site-item:nth-child(2):hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › li[1] › ObjectExpression";
+}
+
+.site:has(.site-talks .site-item:nth-child(3):hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › li[2] › ObjectExpression";
+}
+
+.site:has(.site-talks .site-item:nth-child(4):hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › li[3] › ObjectExpression";
+}
+
+.site:has(.site-posts .site-item .site-link:hover) .overlay-a::before {
+	content: "Program › main › section.posts › ul › li › Property(title) › a.site-link";
+}
+
+.site:has(.site-projects .site-item .site-link:hover) .overlay-a::before {
+	content: "Program › main › section.projects › ul › li › Property(title) › a.site-link";
+}
+
+.site:has(.site-talks .site-item .site-link:hover) .overlay-a::before {
+	content: "Program › main › section.talks › ul › li › Property(title) › a.site-link";
+}
+
+@media (max-width: 900px) {
+	.site .overlay-a::before,
+	.site .overlay-a::after {
+		display: none;
+	}
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(265 85% 65%), hsl(205 90% 58%), hsl(265 85% 65%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "::before · counters · :hover · :has()";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

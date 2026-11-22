@@ -1,0 +1,29 @@
+/* 77 — Silk Threads */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400..700&family=Jost:wght@300..700&display=swap");
+
+.site {
+	--siteBg: #f7f2ec;
+	--siteFg: #3a2f3d;
+	--siteFgStrong: #231a28;
+	--siteMuted: #75677a;
+	--siteAccent: #8a2f62;
+	--siteSquiggle: #c0527f;
+	--siteSubtle: #eadfd8;
+	--siteFont: "Jost", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Cormorant Garamond", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #0e0a14;
+	--siteFg: #e5dbea;
+	--siteFgStrong: #faf4fc;
+	--siteMuted: #a596ae;
+	--siteAccent: #f0a8d0;
+	--siteSquiggle: #e8b6f0;
+	--siteSubtle: #1d1426;
+}
+.site .site-title { font-weight: 600; letter-spacing: -0.01em; line-height: 0.95; }
+.site .site-section-title { font-weight: 600; font-size: 2.1rem; }
+.site .site-tagline { font-weight: 300; }
+.site .site-portrait img { box-shadow: 0 0 0 3px var(--siteBg), 0 0 0 4px color-mix(in srgb, var(--siteAccent) 55%, transparent), 0 12px 34px -10px color-mix(in srgb, var(--siteAccent) 50%, transparent); }
+.site .site-main { position: relative; }

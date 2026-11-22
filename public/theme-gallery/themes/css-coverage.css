@@ -1,0 +1,142 @@
+.site {
+	--siteBg: #f6f3ee;
+	--siteFg: #2c2a2e;
+	--siteFgStrong: #141216;
+	--siteMuted: #6a666f;
+	--siteAccent: #c2410c;
+	--siteSquiggle: #f97316;
+	--siteSubtle: #e8e2d8;
+}
+
+html.dark .site {
+	--siteBg: #0b0a0e;
+	--siteFg: #dcd8e0;
+	--siteFgStrong: #faf7fc;
+	--siteMuted: #a39eab;
+	--siteAccent: #ff9a5c;
+	--siteSquiggle: #ff7a30;
+	--siteSubtle: #1c1a22;
+}
+
+.site .site-title {
+	letter-spacing: -0.02em;
+}
+
+/* The glow: box-shadows scaled by --heat (0..1), set per element by the script. Nothing here applies until toggled on. */
+.site [data-heat] {
+	transition: box-shadow 0.7s ease-out, background-color 0.7s ease-out;
+}
+
+.site[data-coverage="on"] [data-heat] {
+	--hue: calc(215 + 165 * var(--heat));
+	background-color: hsl(var(--hue) 100% 60% / calc(0.03 + var(--heat) * 0.07));
+	border-radius: 0.35rem;
+	box-shadow:
+		0 0 calc(4px + var(--heat) * 16px) calc(var(--heat) * 2px) hsl(var(--hue) 100% 58% / calc(0.1 + var(--heat) * 0.34)),
+		inset 0 0 calc(var(--heat) * 14px) hsl(var(--hue) 100% 62% / calc(var(--heat) * 0.2));
+}
+
+html:not(.dark) .site[data-coverage="on"] [data-heat] {
+	--hue: calc(215 + 160 * var(--heat));
+	box-shadow:
+		0 0 calc(3px + var(--heat) * 12px) calc(var(--heat) * 1px) hsl(var(--hue) 95% 50% / calc(0.08 + var(--heat) * 0.3)),
+		inset 0 0 calc(var(--heat) * 10px) hsl(var(--hue) 95% 55% / calc(var(--heat) * 0.16));
+}
+
+html.reduce-motion .site [data-heat] {
+	transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site [data-heat] {
+		transition: none;
+	}
+}
+
+.site .cg-card {
+	background: color-mix(in srgb, var(--siteBg) 94%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.7rem;
+	bottom: 1rem;
+	box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.45);
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.66rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.4rem;
+	left: 1rem;
+	padding: 0.6rem 0.75rem 0.7rem;
+	position: fixed;
+	width: 17rem;
+	z-index: 20;
+}
+
+.site .cg-title {
+	color: var(--siteFgStrong);
+	font: 800 0.8rem/1 var(--siteFont);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.site .cg-toggle {
+	background: var(--siteAccent);
+	border: 0;
+	border-radius: 999px;
+	color: var(--siteBg);
+	cursor: pointer;
+	font: 700 0.78rem/1 var(--siteFont);
+	justify-self: start;
+	padding: 0.5rem 1rem;
+}
+
+.site .cg-toggle[aria-pressed="true"] {
+	background: transparent;
+	box-shadow: inset 0 0 0 1.5px var(--siteAccent);
+	color: var(--siteAccent);
+}
+
+.site .cg-status {
+	color: var(--siteMuted);
+}
+
+.site .cg-sheet {
+	align-items: center;
+	display: grid;
+	gap: 0.1rem 0.5rem;
+	grid-template-columns: 1fr auto;
+}
+
+.site .cg-sheet span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.site .cg-sheet i {
+	background: color-mix(in srgb, var(--siteMuted) 25%, transparent);
+	border-radius: 2px;
+	grid-column: 1 / -1;
+	grid-row: 2;
+	height: 4px;
+	overflow: hidden;
+	position: relative;
+}
+
+.site .cg-sheet i::after {
+	background: linear-gradient(90deg, hsl(215 95% 58%), hsl(320 90% 58%), hsl(20 95% 55%));
+	content: "";
+	inset: 0 auto 0 0;
+	position: absolute;
+	width: var(--used);
+}
+
+.site .cg-detail {
+	color: var(--siteMuted);
+	min-height: 3.2em;
+	overflow-wrap: anywhere;
+}
+
+@media (max-width: 800px) {
+	.site .cg-card {
+		display: none;
+	}
+}

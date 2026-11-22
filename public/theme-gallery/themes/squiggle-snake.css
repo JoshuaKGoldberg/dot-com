@@ -1,0 +1,14 @@
+@import url("_toy/toy.css");
+
+/* Squiggle Snake: the page's own squiggle brand colour becomes the snake. */
+.site {
+	--toyAccent: #0a84d6;
+	--toyAccent2: #ff5d8f;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #4cc2ff;
+	--toyAccent2: #ff7ab0;
+	--toyOnAccent: #04121d;
+}

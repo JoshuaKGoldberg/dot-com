@@ -1,0 +1,594 @@
+/*
+ * Zero JS: Interactive. No script, just CSS. A pointer, a few presses, and :has().
+ *   invisible hover cells   -> five pseudo-elements on five distinct elements tile the viewport. Hovering a pseudo
+ *                              hovers its host, so .site:has(host:hover) can set typed --cx / --cy / --zh.
+ *   @property + linear()    -> the orb's position and hue are typed, and spring-eased, so it overshoots and settles
+ *   sticky, not fixed       -> the cells are position: sticky so the mouse wheel still scrolls the page through them
+ *   :has() + sibling combos -> hovering an item makes its neighbours squeeze aside, like an accordion
+ *   :active / :focus        -> press-and-hold squishes; click the sun and it stays focused, which is party mode
+ */
+
+@property --cx {
+	inherits: true;
+	initial-value: 50vw;
+	syntax: "<length>";
+}
+
+@property --cy {
+	inherits: true;
+	initial-value: 90vh;
+	syntax: "<length>";
+}
+
+@property --zh {
+	inherits: true;
+	initial-value: 262;
+	syntax: "<number>";
+}
+
+@property --awake {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	--siteBg: #fbf9ff;
+	--siteFg: #2b2638;
+	--siteFgStrong: #14101f;
+	--siteMuted: #685f7c;
+	--siteAccent: hsl(var(--zh) 70% 38%);
+	--siteSquiggle: hsl(var(--zh) 95% 62%);
+	--siteSubtle: #ece6f7;
+	--vh: calc(100vh - var(--barHeight, 0px));
+	--wash: 0.2;
+	--spring: linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163 27%, 1.154, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1);
+}
+
+html.dark .site {
+	--siteBg: #110d1b;
+	--siteFg: #e4def0;
+	--siteFgStrong: #faf7ff;
+	--siteMuted: #a79cbd;
+	--siteAccent: hsl(var(--zh) 95% 76%);
+	--siteSquiggle: hsl(var(--zh) 95% 66%);
+	--siteSubtle: #221a33;
+	--wash: 0.3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site {
+		transition:
+			--cx 1.1s var(--spring),
+			--cy 1.1s var(--spring),
+			--zh 0.6s ease,
+			--awake 0.4s ease;
+	}
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * The hover grid. Containers can't swallow the pointer, only the text inside them can, so the
+ * empty space is free for the cells. Cell hosts: scenery-a/b/c, the scenery wrapper, and the page.
+ * ------------------------------------------------------------------------------------------- */
+
+.site :is(.site-page, .site-main, .site-header, .site-hero, .site-hero-text, .site-about, .site-section, .site-list, .site-socials, .site-nav, .site-footer, .site-portrait) {
+	pointer-events: none;
+}
+
+.site-page :is(a, button, p, h1, h2, li, img, time, span) {
+	pointer-events: auto;
+}
+
+/* The scenery layer becomes sticky instead of fixed, so wheel scrolling passes through it. */
+.site .site-scenery {
+	bottom: auto;
+	height: var(--vh);
+	inset-inline: 0;
+	margin-bottom: calc(var(--vh) * -1);
+	position: sticky;
+	top: 0;
+}
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site .site-scenery::before,
+.site .site-page::before {
+	content: "";
+	display: block;
+	opacity: 0;
+	pointer-events: auto;
+	position: absolute;
+	transition: opacity 0.5s;
+	z-index: -1;
+}
+
+.site .scenery-a::before {
+	background: radial-gradient(closest-side, hsl(330 95% 65% / var(--wash)), transparent);
+	height: 50%;
+	left: 0;
+	top: 0;
+	width: 33.34%;
+}
+
+.site .scenery-b::before {
+	background: radial-gradient(closest-side, hsl(200 95% 60% / var(--wash)), transparent);
+	height: 50%;
+	left: 33.33%;
+	top: 0;
+	width: 33.34%;
+}
+
+.site .scenery-c::before {
+	background: radial-gradient(closest-side, hsl(150 85% 50% / var(--wash)), transparent);
+	height: 50%;
+	left: 66.66%;
+	top: 0;
+	width: 33.34%;
+}
+
+.site .site-scenery::before {
+	background: radial-gradient(closest-side, hsl(40 95% 58% / var(--wash)), transparent);
+	height: 50%;
+	left: 0;
+	top: 50%;
+	width: 50%;
+}
+
+/* The page's own cell is sticky too: in flow, zero height, pinned to the bottom-right quarter. */
+.site .site-page::before {
+	background: radial-gradient(closest-side, hsl(275 90% 66% / var(--wash)), transparent);
+	height: calc(var(--vh) / 2);
+	margin-bottom: calc(var(--vh) / -2);
+	margin-left: calc((100% - 100vw) / 2 + 50vw);
+	position: sticky;
+	top: 50%;
+	width: 50vw;
+}
+
+/* Which cell is under the pointer? Set the orb's target and hue, and wake it up. */
+.site:has(.scenery-a:hover) {
+	--awake: 1;
+	--cx: 16.7vw;
+	--cy: 25vh;
+	--zh: 330;
+}
+
+.site:has(.scenery-b:hover) {
+	--awake: 1;
+	--cx: 50vw;
+	--cy: 25vh;
+	--zh: 200;
+}
+
+.site:has(.scenery-c:hover) {
+	--awake: 1;
+	--cx: 83.3vw;
+	--cy: 25vh;
+	--zh: 150;
+}
+
+.site:has(.site-scenery:hover):not(:has(.scenery-a:hover, .scenery-b:hover, .scenery-c:hover)) {
+	--awake: 1;
+	--cx: 25vw;
+	--cy: 75vh;
+	--zh: 40;
+}
+
+.site:has(.site-page:hover):not(:has(.site-page *:hover)) {
+	--awake: 1;
+	--cx: 75vw;
+	--cy: 75vh;
+	--zh: 275;
+}
+
+/* Reading a nav link recolors the world a little (typed --zh again). */
+.site:has(.site-nav-link:nth-child(1):hover) {
+	--zh: 25;
+}
+
+.site:has(.site-nav-link:nth-child(2):hover) {
+	--zh: 160;
+}
+
+.site:has(.site-nav-link:nth-child(3):hover) {
+	--zh: 205;
+}
+
+.site:has(.site-nav-link:nth-child(4):hover) {
+	--zh: 330;
+}
+
+.site:has(.scenery-a:hover) .scenery-a::before,
+.site:has(.scenery-b:hover) .scenery-b::before,
+.site:has(.scenery-c:hover) .scenery-c::before,
+.site:has(.site-scenery:hover):not(:has(.scenery-a:hover, .scenery-b:hover, .scenery-c:hover)) .site-scenery::before,
+.site:has(.site-page:hover):not(:has(.site-page *:hover)) .site-page::before {
+	opacity: 1;
+}
+
+/* ---- the orb: a lantern with a face, riding --cx/--cy; it naps when the pointer is on the text ---- */
+
+.site .site-page::after {
+	animation: none;
+	background:
+		radial-gradient(circle 0.17rem at 38% 50%, #1b1230 98%, transparent) 0 0 / 100% 100% no-repeat,
+		radial-gradient(ellipse 0.38rem calc(0.05rem + 0.38rem * var(--awake)) at 34% 48%, #fff 97%, transparent) 0 0 / 100% 100% no-repeat,
+		radial-gradient(circle 0.17rem at 74% 50%, #1b1230 98%, transparent) 0 0 / 100% 100% no-repeat,
+		radial-gradient(ellipse 0.38rem calc(0.05rem + 0.38rem * var(--awake)) at 70% 48%, #fff 97%, transparent) 0 0 / 100% 100% no-repeat,
+		radial-gradient(circle at 35% 28%, hsl(var(--zh) 95% 82%), hsl(var(--zh) 90% 58%) 58%, hsl(var(--zh) 85% 36%));
+	border-radius: 50%;
+	box-shadow: 0 0 2.6rem 0.5rem hsl(var(--zh) 95% 60% / calc(0.18 + 0.3 * var(--awake)));
+	content: "";
+	height: 3.2rem;
+	left: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	translate: calc(var(--cx) - 1.6rem) calc(var(--cy) - 1.6rem);
+	width: 3.2rem;
+	z-index: 5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-page::after {
+		animation: zi-breathe 5s ease-in-out infinite;
+	}
+}
+
+@keyframes zi-breathe {
+	0%,
+	88%,
+	100% {
+		scale: 1 1;
+	}
+
+	40% {
+		scale: 1.04 0.96;
+	}
+
+	93% {
+		scale: 1.12 0.8;
+	}
+}
+
+/* ---- toys: items, portrait, links, heart. All springs. ---- */
+
+.site-item {
+	border-radius: 1rem;
+	margin-inline: -0.9rem;
+	padding: 0.6rem 0.9rem;
+	transition:
+		translate 0.7s var(--spring),
+		scale 0.5s var(--spring),
+		background-color 0.3s,
+		box-shadow 0.3s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, hsl(var(--zh) 90% 70%) 16%, transparent);
+	box-shadow: inset 4px 0 0 var(--siteSquiggle);
+	scale: 1.025;
+}
+
+.site-item:active {
+	scale: 0.975;
+}
+
+/* Accordion: neighbours squeeze away from the hovered item. */
+.site-item:hover + .site-item {
+	translate: 0 0.7rem;
+}
+
+.site-item:has(+ .site-item:hover) {
+	translate: 0 -0.7rem;
+}
+
+.site-portrait {
+	transition:
+		rotate 0.8s var(--spring),
+		scale 0.8s var(--spring);
+}
+
+.site-portrait img {
+	pointer-events: auto;
+}
+
+.site-portrait:has(img:hover) {
+	rotate: -7deg;
+	scale: 1.07;
+}
+
+.site-portrait:has(img:active) {
+	rotate: 12deg;
+	scale: 0.88;
+}
+
+.site-title {
+	transition:
+		letter-spacing 0.6s var(--spring),
+		scale 0.6s var(--spring);
+	transform-origin: left;
+}
+
+.site-hero:has(.site-portrait img:active) .site-title {
+	letter-spacing: 0.12em;
+	scale: 1.05;
+}
+
+.site-nav-link,
+.site-socials .site-link,
+.site-logo {
+	display: inline-block;
+	transition:
+		rotate 0.5s var(--spring),
+		scale 0.5s var(--spring);
+}
+
+.site-nav-link:hover,
+.site-socials .site-link:hover {
+	rotate: -4deg;
+	scale: 1.14;
+}
+
+.site-nav-link:active,
+.site-socials .site-link:active {
+	scale: 0.9;
+}
+
+.site-link:focus-visible,
+.site-theme-toggle:focus-visible {
+	outline: 3px solid var(--siteSquiggle);
+	outline-offset: 5px;
+	border-radius: 0.4rem;
+}
+
+.site-section-title {
+	display: inline-block;
+	position: relative;
+}
+
+.site-section-title::after {
+	background: var(--siteSquiggle);
+	bottom: -0.35em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	position: absolute;
+	right: 0;
+	scale: 0 1;
+	transform-origin: left;
+	transition: scale 0.7s var(--spring);
+}
+
+.site-section:hover .site-section-title::after {
+	scale: 1 1;
+}
+
+.site-heart {
+	cursor: pointer;
+	display: inline-block;
+	transition:
+		rotate 0.5s var(--spring),
+		scale 0.5s var(--spring);
+}
+
+.site-heart:hover {
+	scale: 1.5;
+}
+
+.site-heart:active {
+	rotate: 30deg;
+	scale: 2.8;
+}
+
+.site-theme-toggle {
+	border-radius: 50%;
+	cursor: pointer;
+	padding: 0.2rem 0.4rem;
+	transition:
+		rotate 0.8s var(--spring),
+		scale 0.5s var(--spring);
+}
+
+.site-theme-toggle:hover {
+	scale: 1.2;
+}
+
+.site-theme-toggle:active {
+	rotate: 90deg;
+	scale: 0.8;
+}
+
+/* Affordance: a tiny hint under the header. */
+.site-header {
+	position: relative;
+}
+
+.site-header::after {
+	color: var(--siteMuted);
+	content: "poke around: hover things, press and hold the portrait, click the sun for party mode, drift your pointer through the margins";
+	font: 600 0.64rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	left: 0;
+	letter-spacing: 0.01em;
+	opacity: 0.8;
+	position: absolute;
+	top: calc(100% + 0.7rem);
+}
+
+/* ---- party mode: click the sun, it keeps :focus until you click elsewhere ---- */
+
+.site .site-main::before,
+.site .site-main::after {
+	content: "";
+	left: 50%;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 50%;
+	transition: opacity 0.6s;
+	z-index: -1;
+}
+
+.site .site-main::before {
+	aspect-ratio: 1;
+	background: conic-gradient(hsl(0 95% 62%), hsl(60 95% 55%), hsl(120 85% 50%), hsl(190 95% 55%), hsl(260 90% 65%), hsl(320 95% 62%), hsl(0 95% 62%));
+	height: 150vmax;
+	translate: -50% -50%;
+}
+
+.site .site-main::after {
+	background:
+		radial-gradient(circle 4px at 20px 30px, hsl(330 95% 60%), transparent),
+		radial-gradient(circle 3px at 90px 90px, hsl(200 95% 55%), transparent),
+		radial-gradient(circle 4px at 150px 20px, hsl(48 95% 55%), transparent),
+		radial-gradient(circle 3px at 50px 140px, hsl(150 85% 45%), transparent);
+	background-size: 173px 167px, 131px 137px, 211px 199px, 97px 101px;
+	height: calc(100vh + 200px);
+	left: 0;
+	top: -200px;
+	width: 100vw;
+}
+
+.site:has(.site-theme-toggle:focus) .site-main::before {
+	opacity: 0.14;
+}
+
+.site:has(.site-theme-toggle:focus) .site-main::after {
+	opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site:has(.site-theme-toggle:focus) .site-main::before {
+		animation: zi-spin 14s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site:has(.site-theme-toggle:focus) .site-main::after {
+		animation: zi-fall 3.1s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site:has(.site-theme-toggle:focus) .site-item {
+		animation: zi-wiggle 0.5s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site:has(.site-theme-toggle:focus) .site-item:nth-child(2n) {
+		animation-delay: -0.25s;
+		animation-direction: alternate-reverse;
+	}
+
+	html:not(.reduce-motion) .site:has(.site-theme-toggle:focus) .site-title {
+		animation: zi-hue 3s linear infinite;
+	}
+}
+
+.site:has(.site-theme-toggle:focus) .site-title {
+	background: linear-gradient(90deg, #ff3d7f, #ffb400, #3ddc84, #2aa9ff, #a35bff, #ff3d7f) 0 0 / 200% 100%;
+	background-clip: text;
+	color: transparent;
+}
+
+@keyframes zi-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@keyframes zi-fall {
+	to {
+		transform: translateY(200px);
+	}
+}
+
+@keyframes zi-wiggle {
+	from {
+		rotate: -0.6deg;
+	}
+
+	to {
+		rotate: 0.6deg;
+	}
+}
+
+@keyframes zi-hue {
+	to {
+		background-position: 200% 0;
+	}
+}
+
+@media (max-width: 900px) {
+	.site .site-page::after,
+	.site-header::after {
+		display: none;
+	}
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(330 95% 62%), hsl(200 95% 58%), hsl(330 95% 62%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: ":hover · :active · :focus · :has() · linear()";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

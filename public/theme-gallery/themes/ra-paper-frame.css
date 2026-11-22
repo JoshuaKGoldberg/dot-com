@@ -1,0 +1,29 @@
+@import url("./_refined-d/paper.css");
+/* #311 Paper Frame: grain and blurry pastel washes around every edge. */
+
+.site .scenery-b { contain: paint; }
+
+/* grain concentrates toward the edges and thins out over the text */
+.site .rp-frame-grain {
+	-webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 36rem), transparent calc(50% - 26rem), transparent calc(50% + 26rem), #000 calc(50% + 36rem), #000 100%), linear-gradient(180deg, #000 0, transparent 70px, transparent calc(100% - 70px), #000 100%);
+	mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 36rem), transparent calc(50% - 26rem), transparent calc(50% + 26rem), #000 calc(50% + 36rem), #000 100%), linear-gradient(180deg, #000 0, transparent 70px, transparent calc(100% - 70px), #000 100%);
+}
+
+.site .rp-hair {
+	border: 1px solid rgba(96, 120, 150, 0.14);
+	border-radius: 3px;
+	inset: 12px;
+	position: absolute;
+}
+html.dark .site .rp-hair { border-color: rgba(150, 180, 230, 0.1); }
+
+.site .rp-f1 { height: 46vh; left: -14vw; top: -22vh; width: 32vw; }
+.site .rp-f2 { --delay: -12s; --per: 50s; height: 44vh; right: -14vw; top: -24vh; width: 32vw; }
+.site .rp-f3 { --delay: -22s; height: 40vh; bottom: -24vh; left: -14vw; width: 32vw; }
+.site .rp-f4 { --per: 56s; height: 40vh; bottom: -24vh; right: -14vw; width: 32vw; }
+.site .rp-f5 { --delay: -8s; height: 46vh; left: -17vw; top: 28vh; width: 28vw; }
+.site .rp-f6 { --delay: -30s; height: 46vh; right: -17vw; top: 34vh; width: 28vw; }
+
+@media (max-width: 700px) {
+	.site .rp-f5, .site .rp-f6 { display: none; }
+}

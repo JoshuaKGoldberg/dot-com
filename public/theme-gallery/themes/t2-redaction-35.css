@@ -1,0 +1,84 @@
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import "./_type2/post.css";
+
+/* token plan
+   #414 Redaction 35. Redaction 35 at 104px on one line: at this size the decay is plainly visible (chewed serifs, pixel notches). Reserved for display sizes >= 35px; Source Serif text (opsz 16) and a 600 Source Serif head cut do the reading.
+   Scale 1.25 off 18px; hero 104px vs 24px italic tagline (4.3x). One intentional decay level on hero, section headings and post title.
+   Why: decay is the point here, so it gets the room; the serif beneath carries the actual reading. About 70 KB.
+   One line always: the size is min(104px cap, fit to the hero column via --tyFit = 95 / measured advance width), so it never wraps or scrolls. */
+
+/* fonts: pinned static instances (single weight/opsz), latin subset only, so each face is ~15-25 KB and a mode only downloads the weights it uses */
+@font-face { font-family: "Redaction 35"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/redaction35/v1/uk-kEGGrqbEl-mHvw5bcHUCZ4AR13IxD7A.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6OAVIJmeUDygwjihdqnhtdDs4DrjTMXw.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pRl9tDMQCjDDUXmAz.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Head"; font-style: normal; font-weight: 600; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEFy2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvUvf6OAVIJmeUDygwjisltnhtdDs4DrjTMXw.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Code"; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/l/font?kit=HI_diYsKILxRpg3hIP6sJ7fM7PqPMcMnZFqUwX28DMyQhMthTXUdfJisohA1qWA&skey=d94d317bc78fd84e&v=v32) format("woff2"); }
+@font-face { font-family: "SS Text Dk"; font-style: normal; font-weight: 400 500; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEFF2_tTDB4M7-auWDN0ahZJW3IX2ih5nk3AucvU_f6kDXr4Y3qwzQ.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SS Text Dk"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/sourceserif4/v15/vEF02_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb80S2D2QYxoUKIkn98pRl9tDMQCjDDUXmAz.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "SS Text Fallback"; src: local("Georgia"); size-adjust: 104.5%; ascent-override: 99.6%; descent-override: 32.5%; line-gap-override: 0%; }
+/* fb:end */
+
+.site {
+	--tyDisplay: "Redaction 35", Georgia, serif;
+	--tyBody: "SS Text", "SS Text Fallback", Georgia, serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+	--t2Font: "SS Text", "SS Text Fallback", Georgia, serif;
+	--t2CodeFont: "Code", ui-monospace, Menlo, monospace;
+	--tyTitleSize: 6.5rem;
+	--tyFit: 14.6;
+	--tyTitleW: 400;
+	--tyTitleWd: 400;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 0.92;
+	--tyTitleShift: -0.04em;
+	--tyTitleGap: 1.2rem;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.5rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 21em;
+	--tyBodyW: 400;
+	--tyAboutSize: 1.25rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.15rem;
+	--tyLogoSize: 1.25rem;
+	--tySecFont: var(--tyDisplay);
+	--tySecSize: 2.5rem;
+	--tySecW: 400;
+	--tySecWd: 400;
+	--tySecLs: -0.012em;
+	--tyItemFont: "SS Head", Georgia, serif;
+	--tyItemW: 600;
+	--tyItemSize: 1.35rem;
+	--tyMetaSize: 0.95rem;
+	--tyMetaNums: lining-nums;
+	--tyCreditFont: var(--tyBody);
+	--t2Size: 1.125rem;
+	--t2Lh: 1.64;
+	--t2W: 400;
+	--t2Measure: 66ch;
+	--t2TitleFont: var(--tyDisplay);
+	--t2TitleSize: 2.457rem;
+	--t2TitleW: 400;
+	--t2TitleWd: 400;
+	--t2TitleLs: -0.01em;
+	--t2TitleLh: 1.08;
+	--t2MetaFont: var(--tyBody);
+	--t2MetaSize: 0.9rem;
+	--t2MetaW: 400;
+	--t2CodeSize: 0.86em;
+}
+
+.site .site-tagline { font-style: italic; }
+/* dark-surface compensation for the text face: a small variable-weight instance (400-500) only downloads in dark mode */
+html.dark .site {
+	--tyBody: "SS Text Dk", "SS Text Fallback", Georgia, serif;
+	--t2Font: "SS Text Dk", "SS Text Fallback", Georgia, serif;
+}

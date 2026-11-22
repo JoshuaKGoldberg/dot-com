@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap");
+.site { --siteFont: "Public Sans", ui-sans-serif, system-ui, sans-serif; --siteBg: #fcfbf7; --siteFg: #2a2f45; --siteFgStrong: #1b1f38; --siteAccent: #d9481f; --siteSquiggle: #2f7bf0; --siteSubtle: #ece7d9; --siteMuted: #646a82; }
+html.dark .site { --siteBg: #14131f; --siteFg: #e3e2f0; --siteFgStrong: #fff; --siteAccent: #ff8a5c; --siteSquiggle: #6aa5ff; --siteSubtle: #25233a; --siteMuted: #a6a5c4; }
+.site .site-title, .site .site-section-title { position: relative; line-height: 1; }
+.site .tf-host { display: block; }
+.site .tf-svg { display: block; height: 1em; width: auto; overflow: visible; }
+.site .site-title { font-size: clamp(2.7rem, 6.4vw, 4rem); margin-bottom: 1rem; }
+.site .site-section-title { font-size: 2.3rem; margin-bottom: 0.9rem; }
+.site .tf-live { position: absolute; left: 0; top: 0; width: 100%; height: 100%; color: transparent; font-size: 1em; white-space: nowrap; overflow: hidden; user-select: text; font-weight: 600; }
+.site .site-title:hover, .site .site-section-title:hover { cursor: cell; }
+.site .tf-spec { position: absolute; inset: 0; opacity: 0.07; display: flex; flex-direction: column; justify-content: space-around; padding: 3rem 0; overflow: hidden; }
+.site .tf-row { height: 11vh; display: flex; justify-content: center; }
+.site .tf-row .tf-svg { height: 100%; max-width: 98vw; }
+html.dark .site .tf-spec { opacity: 0.09; }
+.site .tf-hint { position: absolute; right: 1rem; bottom: 0.9rem; font-size: 0.8rem; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 88%, transparent); padding: 0.3rem 0.65rem; border-radius: 1rem; border: 1px solid var(--siteSubtle); }
+@media (max-width: 800px) { .site .tf-hint { display: none; } }

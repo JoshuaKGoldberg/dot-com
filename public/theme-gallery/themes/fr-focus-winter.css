@@ -1,0 +1,51 @@
+@import url("./forest-kit/base.css");
+
+/* 330: #244 focus over a snowy #91 valley with a frozen, reflective lake and slow snow. */
+.site {
+	--siteBg: #eef3f8;
+	--siteFg: #1f3350;
+	--siteFgStrong: #0d1e36;
+	--siteMuted: #3d546f;
+	--siteAccent: #0b5fa8;
+	--siteSquiggle: #3bb8a0;
+	--siteSubtle: #d5e1ec;
+}
+
+html.dark .site {
+	--siteBg: #060d1e;
+	--siteFg: #dbe7f5;
+	--siteFgStrong: #f4f8fd;
+	--siteMuted: #a4b6d0;
+	--siteAccent: #86e0c0;
+	--siteSquiggle: #4fd6b0;
+	--siteSubtle: #12213f;
+}
+
+.site .scenery-a {
+	background: none;
+}
+
+.site .site-page::before {
+	display: none;
+}
+
+.site .site-page {
+	padding-bottom: 280px;
+	z-index: 1;
+}
+
+.site .fr-foot {
+	height: var(--fr-band, 440px);
+	margin-top: calc(var(--fr-band, 440px) * -1);
+	pointer-events: none;
+	position: relative;
+	z-index: 0;
+}
+
+.site .fr-foot canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+}

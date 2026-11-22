@@ -1,0 +1,14 @@
+@import url("_toy/toy.css");
+
+/* Constellation Maker: dusk-blue accents; your saved constellations hang over the page. */
+.site {
+	--toyAccent: #4c6ef5;
+	--toyAccent2: #e8a317;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #91a7ff;
+	--toyAccent2: #ffe066;
+	--toyOnAccent: #0d1330;
+}

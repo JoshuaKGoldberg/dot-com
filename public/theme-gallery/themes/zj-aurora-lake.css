@@ -1,0 +1,327 @@
+/*
+ * Zero JS: Aurora Lake. No script, just CSS.
+ *   clip-path                -> the Adirondack ridge and its pine-tooth skyline
+ *   -webkit-box-reflect      -> sky, aurora and ridge mirrored into the lake (Chromium)
+ *   masks + prime periods    -> aurora curtains that sway out of phase with each other
+ *   scroll-driven animation  -> the curtains drift sideways as you scroll
+ */
+
+.site {
+	--siteBg: #eef3f4;
+	--siteFg: #1f2c3a;
+	--siteFgStrong: #0c1722;
+	--siteMuted: #4d6075;
+	--siteAccent: #0a7a74;
+	--siteSquiggle: #2fc7ac;
+	--siteSubtle: #d3e4e7;
+	--sky-top: #7fa9c4;
+	--sky-low: #f1e6da;
+	--ridge: #7fa3a8;
+	--ridge-hi: #98b8bc;
+	--lake-tint: 205 235 238;
+	--aurora-a: 160 85% 45%;
+	--aurora-b: 285 70% 62%;
+	--aurora-alpha: 0.5;
+	--star: 255 255 255 / 0.5;
+
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #050d17;
+	--siteFg: #d3e4ee;
+	--siteFgStrong: #f2fbff;
+	--siteMuted: #8ea8b8;
+	--siteAccent: #6ff0c4;
+	--siteSquiggle: #3df2a8;
+	--siteSubtle: #0e2332;
+	--sky-top: #030710;
+	--sky-low: #0d2b3b;
+	--ridge: #01040a;
+	--ridge-hi: #04101a;
+	--lake-tint: 3 14 24;
+	--aurora-a: 155 95% 58%;
+	--aurora-b: 290 85% 66%;
+	--aurora-alpha: 0.42;
+	--star: 255 255 255 / 0.9;
+}
+
+/* The sky and everything that gets mirrored live in the top half. */
+.site .scenery-a,
+.site .scenery-b {
+	bottom: 50%;
+	-webkit-box-reflect: below 0 linear-gradient(to bottom, transparent 15%, rgb(0 0 0 / 0.85));
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(1px 1px at 17px 23px, rgb(var(--star)), transparent),
+		radial-gradient(1.2px 1.2px at 71px 61px, rgb(var(--star)), transparent),
+		radial-gradient(1px 1px at 113px 111px, rgb(var(--star)), transparent),
+		linear-gradient(var(--sky-top), var(--sky-low));
+	background-size:
+		131px 127px,
+		173px 149px,
+		211px 199px,
+		100% 100%;
+	overflow: hidden;
+}
+
+/* Two aurora curtains: vertical rays at prime widths, masked into soft folds. */
+.site .scenery-a::before,
+.site .scenery-a::after {
+	content: "";
+	inset: -10% -25% 8% -25%;
+	mask:
+		linear-gradient(0deg, transparent 4%, #000 30%, #000 52%, transparent 96%),
+		linear-gradient(90deg, transparent 0, #000 22%, #000 70%, transparent 100%);
+	mask-composite: intersect;
+	position: absolute;
+	will-change: transform;
+}
+
+.site .scenery-a::before {
+	background:
+		repeating-linear-gradient(90deg, transparent 0 11px, hsl(var(--aurora-a) / 0.55) 17px 19px, transparent 27px 37px),
+		repeating-linear-gradient(90deg, transparent 0 23px, hsl(var(--aurora-a) / 0.35) 31px 35px, transparent 47px 61px),
+		linear-gradient(0deg, hsl(var(--aurora-a) / 0.25), transparent 70%);
+	opacity: var(--aurora-alpha);
+}
+
+.site .scenery-a::after {
+	background:
+		repeating-linear-gradient(90deg, transparent 0 13px, hsl(var(--aurora-b) / 0.5) 19px 21px, transparent 31px 43px),
+		repeating-linear-gradient(90deg, transparent 0 29px, hsl(var(--aurora-a) / 0.3) 37px 39px, transparent 53px 71px);
+	opacity: calc(var(--aurora-alpha) * 0.7);
+	top: 5%;
+}
+
+/* The ridge: a clipped silhouette with a toothed pine line, reflected like the sky. */
+.site .scenery-b::after {
+	background: linear-gradient(180deg, var(--ridge-hi), var(--ridge) 60%);
+	clip-path: polygon(0 100%, 0% 42%, 1% 39%, 3% 43%, 4% 40%, 6% 44%, 7% 43%, 9% 47%, 10% 45%, 11% 50%, 13% 48%, 14% 53%, 16% 51%, 17% 56%, 19% 54%, 20% 58%, 21% 56%, 23% 60%, 24% 57%, 26% 61%, 27% 58%, 29% 61%, 30% 58%, 31% 61%, 33% 57%, 34% 60%, 36% 56%, 37% 59%, 39% 56%, 40% 58%, 41% 55%, 43% 58%, 44% 55%, 46% 58%, 47% 55%, 49% 59%, 50% 57%, 51% 61%, 53% 59%, 54% 63%, 56% 62%, 57% 67%, 59% 66%, 60% 71%, 61% 69%, 63% 74%, 64% 73%, 66% 78%, 67% 77%, 69% 81%, 70% 79%, 71% 83%, 73% 81%, 74% 84%, 76% 81%, 77% 84%, 79% 80%, 80% 83%, 81% 78%, 83% 80%, 84% 75%, 86% 76%, 87% 71%, 89% 72%, 90% 66%, 91% 67%, 93% 61%, 94% 62%, 96% 57%, 97% 57%, 99% 52%, 100% 54%, 100% 100%);
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+/* A far island ridge for depth (the clip lives on children so the parent's reflection survives). */
+.site .scenery-b::before {
+	background: var(--ridge-hi);
+	clip-path: polygon(0 100%, 0 80%, 10% 74%, 25% 82%, 40% 70%, 55% 80%, 70% 72%, 85% 81%, 100% 76%, 100% 100%);
+	content: "";
+	inset: 0;
+	opacity: 0.55;
+	position: absolute;
+}
+
+/* The lake: tinted water over the reflection, with two shimmer layers drifting at prime speeds. */
+.site .scenery-c {
+	background: linear-gradient(to bottom, rgb(var(--lake-tint) / 0.15), rgb(var(--lake-tint) / 0.55) 70%);
+	overflow: hidden;
+	top: 50%;
+}
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	content: "";
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: calc(100% + 240px);
+}
+
+.site .scenery-c::before {
+	background: radial-gradient(ellipse 70px 1.5px at 30% 40%, rgb(255 255 255 / 0.5), transparent),
+		radial-gradient(ellipse 40px 1px at 80% 75%, rgb(255 255 255 / 0.4), transparent);
+	background-size: 173px 47px;
+	mask: linear-gradient(#000, transparent 90%);
+}
+
+.site .scenery-c::after {
+	background: radial-gradient(ellipse 90px 1.5px at 60% 30%, rgb(255 255 255 / 0.4), transparent),
+		radial-gradient(ellipse 50px 1px at 15% 80%, rgb(255 255 255 / 0.35), transparent);
+	background-size: 229px 61px;
+	mask: linear-gradient(#000, transparent 90%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-a::before {
+		animation: zj-sway-a 31s ease-in-out infinite alternate, zj-breathe 17s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-a::after {
+		animation: zj-sway-b 23s ease-in-out -9s infinite alternate, zj-breathe 13s ease-in-out -4s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation: zj-drift-a 29s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation: zj-drift-b 37s linear infinite;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site .scenery-a {
+			animation: zj-parallax linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zj-sway-a {
+	from {
+		transform: translateX(-4%) skewX(-6deg) scaleY(0.92);
+	}
+
+	to {
+		transform: translateX(5%) skewX(7deg) scaleY(1.08);
+	}
+}
+
+@keyframes zj-sway-b {
+	from {
+		transform: translateX(6%) skewX(8deg) scaleY(1.05);
+	}
+
+	to {
+		transform: translateX(-5%) skewX(-5deg) scaleY(0.9);
+	}
+}
+
+@keyframes zj-breathe {
+	from {
+		opacity: 0.25;
+	}
+
+	to {
+		opacity: var(--aurora-alpha);
+	}
+}
+
+@keyframes zj-drift-a {
+	to {
+		transform: translateX(-173px);
+	}
+}
+
+@keyframes zj-drift-b {
+	to {
+		transform: translateX(-229px);
+	}
+}
+
+/* Scrolling slides the whole sky's hue a touch: cheap, since only the reflection repaints. */
+@keyframes zj-parallax {
+	to {
+		translate: -3vw 0;
+	}
+}
+
+/* ---- content ---- */
+
+.site-title {
+	text-shadow: 0 0 1.2rem rgb(var(--lake-tint) / 0.7);
+}
+
+html.dark .site .site-title {
+	text-shadow: 0 0 1.6rem rgb(61 242 168 / 0.35);
+}
+
+.site-item {
+	backdrop-filter: none;
+	border-radius: 0.7rem;
+	margin-inline: -0.8rem;
+	padding: 0.5rem 0.8rem;
+	transition: background-color 0.25s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--siteBg) 70%, transparent);
+}
+
+.site-hero,
+.site-about,
+.site-section {
+	text-shadow: 0 0 0.6em color-mix(in srgb, var(--siteBg) 80%, transparent);
+}
+
+.site-footer {
+	background: color-mix(in srgb, var(--siteBg) 70%, transparent);
+	border-radius: 0.8rem;
+	padding: 0.8rem;
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(160 90% 55%), hsl(290 80% 65%), hsl(160 90% 55%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "clip-path · box-reflect · mask · scroll-driven";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

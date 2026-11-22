@@ -1,0 +1,532 @@
+/*
+ * Zero JS: Randomized. No script, just CSS. Nothing here is random, it just never lines up.
+ *   prime-period animations   -> every blob runs 3 animations with periods 7..43s (lcm is years)
+ *   negative animation-delay  -> the page starts mid-chaos, not at frame zero
+ *   nth-child scatter         -> tilt, hue and offset from overlapping 2n/3n/5n patterns, golden-angle hues
+ *   sibling-index()/random()  -> real per-element randomness under @supports, where the browser has it
+ *   @counter-style + @property -> two dice that roll themselves on unrelated clocks
+ */
+
+@property --d1 {
+	inherits: false;
+	initial-value: 1;
+	syntax: "<integer>";
+}
+
+@property --d2 {
+	inherits: false;
+	initial-value: 1;
+	syntax: "<integer>";
+}
+
+@counter-style zr-dice {
+	symbols: "\2680" "\2681" "\2682" "\2683" "\2684" "\2685";
+	system: fixed;
+}
+
+.site {
+	--siteBg: #fffaf3;
+	--siteFg: #2c2733;
+	--siteFgStrong: #15111c;
+	--siteMuted: #6c6377;
+	--siteAccent: #b4234f;
+	--siteSquiggle: #ff5e8a;
+	--siteSubtle: #f3e8da;
+	--card-l: 92%;
+	--card-s: 85%;
+	--blob-a: 0.3;
+}
+
+html.dark .site {
+	--siteBg: #14101c;
+	--siteFg: #e6e0ee;
+	--siteFgStrong: #fbf8ff;
+	--siteMuted: #a79db8;
+	--siteAccent: #ff8fb0;
+	--siteSquiggle: #ff6f9c;
+	--siteSubtle: #261e33;
+	--card-l: 17%;
+	--card-s: 40%;
+	--blob-a: 0.38;
+}
+
+/* ---- six blobs, each moved by three animations whose periods share no factors ---- */
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c)::after {
+	border-radius: 50%;
+	content: "";
+	height: 34vmax;
+	left: 0;
+	opacity: var(--blob-a);
+	position: absolute;
+	top: 0;
+	width: 34vmax;
+	will-change: transform;
+}
+
+.site .scenery-a::before {
+	background: radial-gradient(closest-side, hsl(340 95% 65%), transparent);
+	left: 4%;
+	top: 2%;
+}
+
+.site .scenery-a::after {
+	background: radial-gradient(closest-side, hsl(200 95% 60%), transparent);
+	left: 58%;
+	top: 8%;
+}
+
+.site .scenery-b::before {
+	background: radial-gradient(closest-side, hsl(48 98% 60%), transparent);
+	left: 30%;
+	top: 40%;
+}
+
+.site .scenery-b::after {
+	background: radial-gradient(closest-side, hsl(150 80% 52%), transparent);
+	left: 70%;
+	top: 52%;
+}
+
+.site .scenery-c::before {
+	background: radial-gradient(closest-side, hsl(275 85% 66%), transparent);
+	left: -6%;
+	top: 56%;
+}
+
+.site .scenery-c::after {
+	background: radial-gradient(closest-side, hsl(18 95% 62%), transparent);
+	left: 44%;
+	top: 70%;
+}
+
+/* confetti: tiled dots at different primes, so the pattern never visibly repeats */
+.site .site-scenery {
+	background:
+		radial-gradient(3px 3px at 14px 22px, hsl(340 90% 60% / 0.55), transparent),
+		radial-gradient(2.5px 2.5px at 83px 71px, hsl(200 90% 55% / 0.55), transparent),
+		radial-gradient(3px 3px at 151px 133px, hsl(48 95% 55% / 0.6), transparent),
+		radial-gradient(2px 2px at 211px 29px, hsl(150 70% 45% / 0.55), transparent),
+		radial-gradient(3px 3px at 37px 181px, hsl(275 80% 62% / 0.5), transparent);
+	background-size: 97px 103px, 131px 137px, 173px 167px, 229px 223px, 257px 251px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-a::before {
+		animation:
+			zr-x 23s ease-in-out -7s infinite alternate,
+			zr-y 17s ease-in-out -3s infinite alternate,
+			zr-s 11s ease-in-out -5s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-a::after {
+		animation:
+			zr-x 29s ease-in-out -11s infinite alternate-reverse,
+			zr-y 19s ease-in-out -13s infinite alternate,
+			zr-s 13s ease-in-out -2s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-b::before {
+		animation:
+			zr-x 31s ease-in-out -17s infinite alternate,
+			zr-y 37s ease-in-out -19s infinite alternate-reverse,
+			zr-s 7s ease-in-out -1s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-b::after {
+		animation:
+			zr-x 41s ease-in-out -23s infinite alternate-reverse,
+			zr-y 43s ease-in-out -29s infinite alternate,
+			zr-s 17s ease-in-out -9s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation:
+			zr-x 19s ease-in-out -4s infinite alternate,
+			zr-y 29s ease-in-out -21s infinite alternate-reverse,
+			zr-s 23s ease-in-out -8s infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation:
+			zr-x 13s ease-in-out -6s infinite alternate-reverse,
+			zr-y 31s ease-in-out -15s infinite alternate,
+			zr-s 19s ease-in-out -12s infinite alternate;
+	}
+}
+
+@keyframes zr-x {
+	from {
+		translate: -14vw 0;
+	}
+
+	to {
+		translate: 18vw 0;
+	}
+}
+
+@keyframes zr-y {
+	from {
+		transform: translateY(-12vh);
+	}
+
+	to {
+		transform: translateY(14vh);
+	}
+}
+
+@keyframes zr-s {
+	from {
+		scale: 0.7;
+	}
+
+	to {
+		scale: 1.25;
+	}
+}
+
+/* ---- scatter: overlapping nth-child patterns stand in for randomness ---- */
+
+.site-posts {
+	--o: 0;
+}
+
+.site-projects {
+	--o: 4;
+}
+
+.site-talks {
+	--o: 9;
+}
+
+.site-item {
+	--i: 1;
+	--h: calc((var(--o) + var(--i)) * 137.5);
+	--a: 0;
+	--b: 0;
+	--c: 0;
+	background: linear-gradient(100deg, hsl(var(--h) var(--card-s) var(--card-l)), transparent 85%);
+	border-left: 4px solid hsl(var(--h) 85% 58%);
+	border-radius: 0.2rem 0.9rem 0.9rem 0.2rem;
+	margin-inline: -0.9rem;
+	padding: 0.6rem 0.9rem;
+	rotate: calc(var(--a) * 0.9deg - var(--b) * 0.7deg + var(--c) * 0.4deg);
+	transition:
+		rotate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+		translate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+	translate: calc(var(--b) * 0.5rem - var(--a) * 0.2rem) 0;
+}
+
+.site-item:nth-child(1) {
+	--i: 1;
+}
+
+.site-item:nth-child(2) {
+	--i: 2;
+}
+
+.site-item:nth-child(3) {
+	--i: 3;
+}
+
+.site-item:nth-child(4) {
+	--i: 4;
+}
+
+.site-item:nth-child(2n) {
+	--a: 1;
+}
+
+.site-item:nth-child(3n) {
+	--b: 1;
+}
+
+.site-item:nth-child(5n + 1),
+.site-item:nth-child(7n + 3) {
+	--c: 1;
+}
+
+.site-item:hover {
+	rotate: 0deg;
+	translate: 0.4rem -3px;
+}
+
+.site-item-title {
+	background: linear-gradient(transparent 62%, hsl(var(--h) 95% 70% / 0.55) 62%);
+	padding-inline: 0.15rem;
+}
+
+html.dark .site-item-title {
+	background: linear-gradient(transparent 62%, hsl(var(--h) 80% 45% / 0.55) 62%);
+}
+
+/* Real per-element randomness, where supported: each item rolls its own hue and tilt. */
+@supports (width: sibling-index()) {
+	.site-item {
+		--i: sibling-index();
+	}
+}
+
+@supports (width: random(1px, 2px)) {
+	.site-item {
+		rotate: random(--zr-rot, -1.4deg, 1.4deg);
+		translate: random(--zr-off, -0.3rem, 0.7rem) 0;
+	}
+
+	.site-item:hover {
+		rotate: 0deg;
+		translate: 0.4rem -3px;
+	}
+}
+
+.site-section-title {
+	display: inline-block;
+	rotate: -1.5deg;
+}
+
+.site-section-title:nth-of-type(odd) {
+	rotate: 1deg;
+}
+
+.site-portrait {
+	animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-portrait {
+		animation:
+			zr-wob-a 13s ease-in-out -3s infinite alternate,
+			zr-wob-b 11s ease-in-out -7s infinite alternate;
+	}
+}
+
+@keyframes zr-wob-a {
+	from {
+		rotate: -4deg;
+	}
+
+	to {
+		rotate: 5deg;
+	}
+}
+
+@keyframes zr-wob-b {
+	from {
+		translate: -4px 3px;
+	}
+
+	to {
+		translate: 5px -4px;
+	}
+}
+
+/* The title's color shimmer is a band that slides across it on `translate` (compositor only).
+ * `lighten` (light mode) / `darken` (dark mode) blends tint only the glyphs, never the page behind them. */
+.site-title {
+	display: block;
+	max-width: 100%;
+	overflow: hidden;
+	position: relative;
+	width: fit-content;
+}
+
+.site .site-title::after {
+	background: linear-gradient(90deg, transparent, var(--siteSquiggle) 35%, var(--siteAccent) 65%, transparent);
+	content: "";
+	contain: paint;
+	inset: 0 auto 0 0;
+	mix-blend-mode: lighten;
+	pointer-events: none;
+	position: absolute;
+	translate: -100% 0;
+	width: 60%;
+	will-change: transform;
+}
+
+html.dark .site .site-title::after {
+	mix-blend-mode: darken;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-title::after {
+		animation: zr-shine 19s linear -5s infinite;
+	}
+}
+
+@keyframes zr-shine {
+	to {
+		translate: 260% 0;
+	}
+}
+
+/* ---- two dice on unrelated clocks, using integers as state ---- */
+
+.site .overlay-a::before,
+.site .overlay-a::after {
+	background: var(--siteBg);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 0.5rem;
+	bottom: 0.9rem;
+	color: var(--siteFgStrong);
+	content: counter(d, zr-dice);
+	font-size: 2rem;
+	line-height: 1;
+	padding: 0.1rem 0.3rem 0.2rem;
+	position: absolute;
+}
+
+.site .overlay-a::before {
+	counter-reset: d var(--d1);
+	left: calc(50% - 2.4rem);
+}
+
+.site .overlay-a::after {
+	counter-reset: d var(--d2);
+	left: calc(50% + 0.4rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-a::before {
+		animation: zr-die-a 5s step-end -2s infinite;
+	}
+
+	html:not(.reduce-motion) .site .overlay-a::after {
+		animation: zr-die-b 7s step-end -4s infinite;
+	}
+}
+
+@keyframes zr-die-a {
+	0% {
+		--d1: 3;
+	}
+
+	14% {
+		--d1: 6;
+	}
+
+	29% {
+		--d1: 1;
+	}
+
+	43% {
+		--d1: 4;
+	}
+
+	57% {
+		--d1: 2;
+	}
+
+	71% {
+		--d1: 5;
+	}
+
+	86% {
+		--d1: 4;
+	}
+}
+
+@keyframes zr-die-b {
+	0% {
+		--d2: 5;
+	}
+
+	17% {
+		--d2: 2;
+	}
+
+	31% {
+		--d2: 6;
+	}
+
+	52% {
+		--d2: 3;
+	}
+
+	66% {
+		--d2: 1;
+	}
+
+	83% {
+		--d2: 4;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .overlay-a::before,
+	.site .overlay-a::after {
+		display: none;
+	}
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(340 95% 62%), hsl(200 95% 58%), hsl(340 95% 62%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "primes · nth-child · random() · @counter-style";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

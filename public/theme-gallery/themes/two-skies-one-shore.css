@@ -1,0 +1,188 @@
+/* 1. Two Skies, One Shore: tall sky, thin mirrored lake, low pine ridge. */
+.site {
+	--sky-top: #b9d3ee;
+	--sky-mid: #d6e5f1;
+	--sky-hor: #f6e7d6;
+	--lake-top: #ecdccb;
+	--lake-bot: #a9c3da;
+	--ridge: #8fa8b3;
+	--ridge-far: #b5c8d0;
+	--streak: #ffffff;
+	--siteBg: #d6e5f1;
+	--siteFg: #22304d;
+	--siteFgStrong: #101f3a;
+	--siteMuted: #46587a;
+	--siteAccent: #0f5fb8;
+	--siteSquiggle: #3d9be0;
+	--siteSubtle: #c4d8e8;
+}
+
+html.dark .site {
+	--sky-top: #0b0e2c;
+	--sky-mid: #181c4a;
+	--sky-hor: #3a3668;
+	--lake-top: #2c2a58;
+	--lake-bot: #0a0d28;
+	--ridge: #0a0d26;
+	--ridge-far: #11143a;
+	--streak: #b9b8f0;
+	--siteBg: #0d1030;
+	--siteFg: #d9e2f4;
+	--siteFgStrong: #f2f5fc;
+	--siteMuted: #a2aed0;
+	--siteAccent: #8fc2ff;
+	--siteSquiggle: #8f9cff;
+	--siteSubtle: #1a1e4a;
+}
+
+.site .scenery-a {
+	background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-hor) 100%);
+	bottom: auto;
+	height: 85%;
+	overflow: hidden;
+}
+
+/* Pale wisps by day, Milky Way smear by night. */
+.site .scenery-a::before {
+	content: "";
+	inset: -20% -30% auto;
+	height: 70%;
+	position: absolute;
+	background:
+		radial-gradient(ellipse 22% 16% at 22% 55%, rgba(255, 255, 255, 0.5), transparent 70%),
+		radial-gradient(ellipse 30% 12% at 70% 35%, rgba(255, 255, 255, 0.4), transparent 70%),
+		radial-gradient(ellipse 18% 10% at 45% 78%, rgba(255, 244, 232, 0.5), transparent 70%);
+	filter: blur(14px);
+	top: 10%;
+}
+
+html.dark .site .scenery-a::before {
+	background:
+		radial-gradient(ellipse 34% 7% at 50% 50%, rgba(200, 190, 255, 0.2), transparent 75%),
+		radial-gradient(ellipse 18% 4% at 32% 52%, rgba(255, 225, 250, 0.16), transparent 75%),
+		radial-gradient(ellipse 22% 5% at 66% 47%, rgba(170, 190, 255, 0.16), transparent 75%),
+		radial-gradient(ellipse 60% 14% at 50% 50%, rgba(140, 130, 220, 0.1), transparent 75%);
+	filter: blur(16px);
+	height: 60%;
+	top: 4%;
+	transform: rotate(-24deg);
+}
+
+.site .stars-svg {
+	fill: #fff;
+	inset: 0;
+	position: absolute;
+}
+
+.site .stars-svg ellipse {
+	fill: #eef0ff;
+}
+
+html:not(.dark) .site .stars-svg {
+	display: none;
+}
+
+.site .scenery-b {
+	background: linear-gradient(to bottom, var(--lake-top), var(--lake-bot));
+	height: 15%;
+	overflow: hidden;
+	top: auto;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 5px);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 5px);
+}
+
+.site .lake-reflection {
+	filter: blur(3px);
+	height: 100%;
+	left: 0;
+	opacity: 0.28;
+	position: absolute;
+	top: 0;
+	transform: scaleY(-1);
+	transform-origin: center top;
+	width: 100%;
+}
+
+.site .lake-reflection path {
+	fill: var(--ridge);
+}
+
+.site .shimmer {
+	filter: blur(1.2px);
+	height: 100%;
+	left: 0;
+	opacity: 0.4;
+	position: absolute;
+	top: 0;
+	width: 200%;
+}
+
+.site .shimmer-b {
+	opacity: 0.22;
+	top: 8%;
+}
+
+.site .shimmer-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .shimmer .streak {
+	stroke: var(--streak);
+}
+
+html.dark .site .shimmer {
+	opacity: 0.2;
+}
+
+.site .scenery-c {
+	bottom: calc(15% - 1px);
+	height: clamp(70px, 15vh, 150px);
+	top: auto;
+}
+
+.site .ridge-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .ridge-svg .far {
+	fill: var(--ridge-far);
+}
+
+.site .ridge-svg .near {
+	fill: var(--ridge);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .shimmer {
+		animation: shimmer-drift 60s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .shimmer-b {
+		animation-duration: 90s;
+		animation-direction: reverse;
+	}
+
+	html:not(.reduce-motion) .site .stars-svg .twinkle {
+		animation: twinkle var(--tw-d, 10s) ease-in-out var(--tw-delay, 0s) infinite;
+	}
+}
+
+@keyframes shimmer-drift {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes twinkle {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.15;
+	}
+}

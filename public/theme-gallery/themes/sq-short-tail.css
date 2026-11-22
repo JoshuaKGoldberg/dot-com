@@ -1,0 +1,9 @@
+@import "./rn-dark-tuned.css";
+@import "./_sq/base.css";
+
+/* #469: the mark is only a few letters wide at rest and extends along the whole link on hover or focus (pure CSS). */
+.site .sq-link {
+	--sq-bw: min(3.1em, 100%);
+	transition: background-size 0.55s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.site .sq-link:is(:hover, :focus-visible) { --sq-bw: 100%; }

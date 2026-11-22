@@ -1,0 +1,100 @@
+/* 20 — Annotation Constellations */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
+.site {
+	--siteBg: #f6f0e1;
+	--siteFg: #2c2b2a;
+	--siteFgStrong: #151514;
+	--siteMuted: #66625a;
+	--siteAccent: #3e4a63;
+	--siteSquiggle: #7b8497;
+	--siteSubtle: #e8dfca;
+	--ac-star: 52, 50, 48;
+	--ac-edge: 52, 50, 48;
+	--ac-edge-alpha: 0.2;
+	--ac-label: 52, 50, 48;
+	--ac-label-alpha: 0.34;
+	--siteFont: "Inter", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Cormorant Garamond", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #060a16;
+	--siteFg: #d9e1f0;
+	--siteFgStrong: #f4f7ff;
+	--siteMuted: #8f9bb5;
+	--siteAccent: #a9c4ff;
+	--siteSquiggle: #7f9cd8;
+	--siteSubtle: #101a33;
+	--ac-star: 236, 240, 255;
+	--ac-edge: 160, 190, 255;
+	--ac-edge-alpha: 0.18;
+	--ac-label: 190, 210, 255;
+	--ac-label-alpha: 0.3;
+}
+.site .site-title {
+	font-size: clamp(3rem, 7vw, 4.4rem);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 0.88;
+}
+.site .site-section-title {
+	font-size: 2rem;
+	font-weight: 600;
+}
+
+/* sky wash */
+.site .scenery-b {
+	background: radial-gradient(ellipse 70% 55% at 72% 28%, rgba(180, 160, 120, 0.1), transparent 70%);
+}
+html.dark .site .scenery-b {
+	background:
+		radial-gradient(ellipse 60% 50% at 72% 26%, rgba(70, 100, 190, 0.14), transparent 70%),
+		radial-gradient(ellipse 50% 40% at 15% 85%, rgba(90, 70, 170, 0.1), transparent 70%);
+}
+
+.site .ac-svg {
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+}
+.site .ac-ring {
+	fill: none;
+	stroke: rgba(var(--ac-edge), 0.08);
+	stroke-width: 0.8;
+}
+.site .ac-edge {
+	stroke: rgba(var(--ac-edge), var(--ac-edge-alpha));
+	stroke-width: 0.7;
+}
+.site .ac-star {
+	fill: rgba(var(--ac-star), 0.72);
+}
+html:not(.dark) .site .ac-star {
+	fill: rgba(var(--ac-star), 0.1);
+	stroke: rgba(var(--ac-star), 0.55);
+	stroke-width: 0.8;
+}
+.site .ac-label {
+	fill: rgba(var(--ac-label), var(--ac-label-alpha));
+	font: 400 9px "IBM Plex Mono", ui-monospace, monospace;
+	letter-spacing: 0.02em;
+}
+.site .ac-infer {
+	stroke: rgba(var(--ac-edge), 0.34);
+	stroke-dasharray: 3 3;
+	stroke-width: 0.8;
+}
+.site .ac-infer-label {
+	font-style: italic;
+	opacity: 0.9;
+}
+@keyframes ac-twinkle {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.35;
+	}
+}

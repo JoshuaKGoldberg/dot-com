@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;800&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #f2f4f8;
+	--siteFg: #232a3b;
+	--siteFgStrong: #0e1424;
+	--siteMuted: #596178;
+	--siteAccent: #2457d6;
+	--siteSquiggle: #4f86ff;
+	--siteSubtle: #e0e5ee;
+	--siteFont: "Manrope", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Manrope", ui-sans-serif, system-ui, sans-serif;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #080b14;
+	--siteFg: #d2d9ec;
+	--siteFgStrong: #f3f6ff;
+	--siteMuted: #8d97b5;
+	--siteAccent: #9fc0ff;
+	--siteSquiggle: #6f9bff;
+	--siteSubtle: #101830;
+}
+
+.site .scenery-a canvas {
+	display: block;
+}
+
+.site-title {
+	font-size: clamp(3rem, 7vw, 5rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	white-space: nowrap;
+}
+
+.site-section-title {
+	font-size: 2.2rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+/* once the 3D type is live the DOM text stays (selectable, readable by assistive tech) but is not painted */
+.site.lit-3d .site-title,
+.site.lit-3d .site-section-title {
+	color: transparent;
+}
+
+.site.lit-3d .site-title::selection,
+.site.lit-3d .site-section-title::selection {
+	background: color-mix(in srgb, var(--siteAccent) 35%, transparent);
+}

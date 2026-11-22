@@ -1,0 +1,6 @@
+@import url("./parallax-adirondacks.css");
+
+/* 241: #91 valley with the sky deepened so the soft aurora can glow. */
+html.dark .site .scenery-a {
+	background: linear-gradient(#02050f, #0a1230 62%, #0f1c3a 80%);
+}

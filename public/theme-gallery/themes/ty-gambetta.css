@@ -1,0 +1,53 @@
+/* Token plan
+ * Families: Gambetta 300-700 (Fontshare) + Host Grotesk 300-600.
+ * Scale: hero wght 500 (dark 450) at 71px, -0.03em; tagline Host Grotesk 1.35rem; ratio 3.3x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: A sharp-wedged contemporary serif with a neutral warm sans that is not a Fontshare default.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://api.fontshare.com/v2/css?f[]=gambetta@1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Gambetta Fallback"; src: local("Georgia"); size-adjust: 96.3%; ascent-override: 96.6%; descent-override: 30.1%; line-gap-override: 0%; }
+@font-face { font-family: "Host Grotesk Fallback"; src: local("Arial"); size-adjust: 102.4%; ascent-override: 98.6%; descent-override: 31.2%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #399 Gambetta (Fontshare): a contemporary serif with sharp wedges; Host Grotesk as the neutral sans. */
+.site {
+	--tyDisplay: "Gambetta", "Gambetta Fallback", Georgia, serif;
+	--tyBody: "Host Grotesk", "Host Grotesk Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 14.5cqi, 5rem);
+	--tyTitleW: 500;
+	--tyTitleWd: 450;
+	--tyTitleLs: -0.03em;
+	--tyTitleLh: 0.95;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.35rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.22rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.08rem;
+	--tyLogoSize: 1.3rem;
+	--tyLogoW: 500;
+	--tySecSize: 2.2rem;
+	--tySecW: 500;
+	--tySecWd: 450;
+	--tySecLs: -0.02em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 600;
+	--tyItemSize: 1.35rem;
+	--tyItemLs: -0.01em;
+	--tyMetaSize: 0.9rem;
+	--tyMetaLs: 0.015em;
+}

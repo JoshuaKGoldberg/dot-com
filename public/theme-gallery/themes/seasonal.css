@@ -1,0 +1,191 @@
+.site {
+	--siteMaxWidth: 52rem;
+	transition: background-color 0.4s, color 0.4s;
+}
+html.reduce-motion .site { transition: none; }
+@media (prefers-reduced-motion: reduce) { .site { transition: none; } }
+
+.site-page { padding-top: 0.5rem; }
+.site-header { padding: 0.9rem 0 1rem; border-bottom: 1px solid var(--siteSubtle); position: relative; }
+.site-nav-link { font-size: 1.2rem; }
+.site-nav-link.is-active { color: var(--siteAccent); }
+.site-logo { color: var(--siteAccent); }
+.site-hero { margin: 3.2rem 0 2.4rem; }
+.site-portrait img { box-shadow: 0 0 0 4px var(--siteBg), 0 0 0 6px var(--siteSquiggle); }
+.site-about { text-align: left; margin-left: 0; font-weight: 400; }
+.site-section { max-width: none; }
+.site-section-title { font-size: 1.9rem; display: flex; align-items: center; gap: 0.7rem; }
+.site-section-title::after { background: var(--siteSubtle); content: ""; flex: 1; height: 2px; border-radius: 2px; }
+.site-list { gap: 0.9rem; }
+.site-item { border-left: 3px solid var(--siteSquiggle); padding: 0.15rem 0 0.15rem 1rem; }
+.site-item-description { font-weight: 400; }
+.site-footer { text-align: left; opacity: 1; color: var(--siteMuted); }
+
+/* banner */
+.se-banner {
+	align-items: center;
+	background: var(--siteAccent);
+	border-radius: 0 0 0.9rem 0.9rem;
+	color: var(--siteBg);
+	display: flex;
+	font-size: 1.05rem;
+	font-weight: 700;
+	gap: 1rem;
+	justify-content: center;
+	margin: 0 0 0.6rem;
+	padding: 0.55rem 1rem;
+	position: relative;
+}
+.se-banner[hidden] { display: none; }
+.se-dismiss {
+	background: transparent;
+	border: 1.5px solid currentColor;
+	border-radius: 50%;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	height: 1.7rem;
+	line-height: 1;
+	position: absolute;
+	right: 0.7rem;
+	width: 1.7rem;
+}
+.se-dismiss:focus-visible { outline: 2px solid var(--siteBg); outline-offset: 2px; }
+
+/* date picker */
+.se-sim {
+	align-items: center;
+	background: var(--siteBg);
+	border: 1px solid var(--siteSubtle);
+	border-radius: 0.9rem;
+	bottom: 1rem;
+	box-shadow: 0 12px 30px -8px rgb(0 0 0 / 0.35);
+	color: var(--siteFgStrong);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.9rem;
+	font-weight: 600;
+	gap: 0.45rem 0.7rem;
+	left: 1rem;
+	max-width: min(24rem, calc(100% - 2rem));
+	padding: 0.7rem 0.9rem;
+	position: fixed;
+	z-index: 40;
+}
+.se-sim label { align-items: center; display: flex; gap: 0.5rem; }
+.se-sim input {
+	background: var(--siteSubtle);
+	border: 1px solid var(--siteMuted);
+	border-radius: 0.4rem;
+	color: var(--siteFgStrong);
+	font: inherit;
+	padding: 0.2rem 0.4rem;
+	color-scheme: light dark;
+}
+.se-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; width: 100%; }
+.se-chips button {
+	background: transparent;
+	border: 1px solid var(--siteMuted);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.75rem;
+	padding: 0.1rem 0.55rem;
+}
+.se-chips button:hover { background: var(--siteAccent); color: var(--siteBg); border-color: var(--siteAccent); }
+.se-active { color: var(--siteAccent); width: 100%; font-size: 0.82rem; }
+
+/* decorations. Static only; every one sits in a background/overlay layer. */
+.site .overlay-a, .site .overlay-b, .site .scenery-a, .site .scenery-b { transition: opacity 0.4s; }
+
+/* Halloween: cobweb corner + stitched rule */
+.site[data-season="halloween"] .overlay-a {
+	background: var(--siteMuted);
+	-webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none' stroke='white' stroke-width='1.2'><path d='M0 0 L120 0 M0 0 L110 40 M0 0 L85 85 M0 0 L40 110 M0 0 L0 120'/><path d='M18 0 Q14 14 0 18 M38 0 Q30 30 0 38 M60 0 Q48 48 0 60 M84 0 Q66 66 0 84 M110 0 Q84 84 0 110'/></svg>") top left / 9rem 9rem no-repeat;
+	mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' fill='none' stroke='white' stroke-width='1.2'><path d='M0 0 L120 0 M0 0 L110 40 M0 0 L85 85 M0 0 L40 110 M0 0 L0 120'/><path d='M18 0 Q14 14 0 18 M38 0 Q30 30 0 38 M60 0 Q48 48 0 60 M84 0 Q66 66 0 84 M110 0 Q84 84 0 110'/></svg>") top left / 9rem 9rem no-repeat;
+	opacity: 0.55;
+}
+.site[data-season="halloween"] .site-section-title::after { background: repeating-linear-gradient(90deg, var(--siteAccent) 0 10px, transparent 10px 18px); height: 3px; }
+.site[data-season="halloween"] .scenery-a { background: radial-gradient(ellipse at 50% 120%, color-mix(in srgb, var(--siteAccent) 22%, transparent), transparent 60%); }
+
+/* Winter: a static string of lights and snowy dots */
+.site[data-season="winter"] .overlay-a {
+	background:
+		radial-gradient(circle at 20px 18px, #e63946 6px, transparent 7px) 0 0 / 160px 30px repeat-x,
+		radial-gradient(circle at 60px 20px, #f4c542 6px, transparent 7px) 0 0 / 160px 30px repeat-x,
+		radial-gradient(circle at 100px 18px, #2fb27a 6px, transparent 7px) 0 0 / 160px 30px repeat-x,
+		radial-gradient(circle at 140px 20px, #4aa3ff 6px, transparent 7px) 0 0 / 160px 30px repeat-x,
+		linear-gradient(var(--siteMuted), var(--siteMuted)) 0 6px / 100% 1px no-repeat;
+	height: 30px;
+	bottom: auto;
+	opacity: 0.9;
+}
+.site[data-season="winter"] .scenery-a {
+	background-image:
+		radial-gradient(circle, rgb(255 255 255 / 0.9) 0 2px, transparent 3px),
+		radial-gradient(circle, rgb(255 255 255 / 0.7) 0 1.5px, transparent 2.5px);
+	background-position: 0 0, 37px 61px;
+	background-size: 97px 97px, 131px 131px;
+	opacity: 0.6;
+}
+html:not(.dark) .site[data-season="winter"] .scenery-a { background-image: radial-gradient(circle, #b6d4ea 0 2px, transparent 3px), radial-gradient(circle, #cfe2f1 0 1.5px, transparent 2.5px); }
+.site[data-season="winter"] .site-item { border-left-style: dotted; }
+
+/* TypeScript release day: blue band, version pill, static confetti */
+.site[data-season="release"] .overlay-a { background: var(--siteSquiggle); height: 6px; bottom: auto; }
+.site[data-season="release"] .site-logo::after {
+	background: var(--siteSquiggle);
+	border-radius: 0.4rem;
+	color: #fff;
+	content: "v7.0";
+	font-size: 0.75rem;
+	font-weight: 800;
+	margin-left: 0.5rem;
+	padding: 0.15rem 0.45rem;
+	position: static;
+	mask: none;
+	height: auto;
+	display: inline-block;
+	opacity: 1;
+	letter-spacing: 0.04em;
+}
+.site[data-season="release"] .scenery-a {
+	background:
+		radial-gradient(circle at 12% 8%, #3178c6 3px, transparent 4px),
+		radial-gradient(circle at 24% 14%, #f4c542 3px, transparent 4px),
+		radial-gradient(circle at 78% 10%, #ef6f6c 3px, transparent 4px),
+		radial-gradient(circle at 90% 18%, #3178c6 3px, transparent 4px),
+		radial-gradient(circle at 6% 26%, #2fb27a 2.5px, transparent 3.5px),
+		radial-gradient(circle at 95% 34%, #f4c542 2.5px, transparent 3.5px);
+	opacity: 0.55;
+}
+
+/* Hacktoberfest: faint hex lattice + purple pill */
+.site[data-season="hacktoberfest"] .scenery-a {
+	background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='98' viewBox='0 0 56 98' fill='none' stroke='%238b5cf6' stroke-width='1'><path d='M28 2 L54 17 L54 47 L28 62 L2 47 L2 17Z M28 62 L28 92 M2 47 L2 77 L28 92 L54 77 L54 47'/></svg>");
+	opacity: 0.18;
+}
+.site[data-season="hacktoberfest"] .site-item { border-left-color: var(--siteAccent); border-radius: 0 0.5rem 0.5rem 0; }
+.site[data-season="hacktoberfest"] .site-section-title::before { content: "<>"; color: var(--siteAccent); font-family: ui-monospace, Menlo, monospace; font-size: 0.8em; }
+
+/* SquiggleConf week: a hand-run squiggle along the header */
+.site[data-season="squiggleconf"] .site-header { border-bottom: 0; }
+.site[data-season="squiggleconf"] .site-header::after {
+	background: var(--siteSquiggle);
+	bottom: -0.4rem;
+	content: "";
+	height: 14px;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	position: absolute;
+	right: 0;
+}
+.site[data-season="squiggleconf"] .site-section-title::after { background: var(--siteSquiggle); mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%; height: 12px; }
+.site[data-season="squiggleconf"] .site-title { text-decoration: underline wavy var(--siteSquiggle) 3px; text-underline-offset: 0.12em; }
+
+@media (max-width: 700px) {
+	.se-sim { left: 0.5rem; right: 0.5rem; max-width: none; bottom: 0.5rem; }
+}
+.site[data-season="winter"] .site-page { padding-top: 2.1rem; }
+.site[data-season="release"] .site-page { padding-top: 0.9rem; }

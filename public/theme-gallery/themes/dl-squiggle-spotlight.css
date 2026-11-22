@@ -1,0 +1,12 @@
+@import url("./_dl-e/base.css");
+/* #354 Squiggle Spotlight: the ::before layer is a rainbow patch positioned by --dl-x / --dl-w (set from JS on hover). */
+.site .site-link::before {
+	background:
+		linear-gradient(90deg, transparent 0%, #f0457d 16%, #f58a1f 31%, #e8b800 44%, #1fb872 57%, #0fb4d8 70%, #5468ff 83%, #a35cf0 93%, transparent 100%)
+		no-repeat calc(var(--dl-x, 0) * 1px - var(--dl-w, 100) * 0.5px) 0 / calc(var(--dl-w, 100) * 1px) 100%;
+}
+html.dark .site .site-link::before {
+	background:
+		linear-gradient(90deg, transparent 0%, #ff6f9c 16%, #ffa94d 31%, #ffe066 44%, #6ee7a0 57%, #4fd8f0 70%, #7b8cff 83%, #c58cff 93%, transparent 100%)
+		no-repeat calc(var(--dl-x, 0) * 1px - var(--dl-w, 100) * 0.5px) 0 / calc(var(--dl-w, 100) * 1px) 100%;
+}

@@ -1,0 +1,53 @@
+@import url("_sensor/kit.css");
+
+/* 180 Battery Aware: effects scale down as the (real or simulated) battery drops. */
+.site { --batDim: 0; }
+.site .scenery-a { background: linear-gradient(#e9f4fb, var(--siteBg) 70%); }
+html.dark .site .scenery-a { background: linear-gradient(#0e2038, var(--siteBg) 70%); }
+.site .ba-orb {
+	animation: ba-drift var(--dur, 30s) ease-in-out infinite alternate;
+	background: radial-gradient(circle, var(--c, var(--siteSquiggle)) 0%, transparent 68%);
+	border-radius: 50%;
+	height: var(--s, 34vmax);
+	left: var(--x);
+	opacity: 0.22;
+	position: absolute;
+	top: var(--y);
+	width: var(--s, 34vmax);
+	will-change: transform;
+}
+html.dark .site .ba-orb { opacity: 0.3; }
+.site .ba-orb:nth-child(1) { --x: -8%; --y: -10%; --dur: 34s; --c: #38bdf8; }
+.site .ba-orb:nth-child(2) { --x: 62%; --y: 4%; --dur: 27s; --c: #a78bfa; --s: 28vmax; }
+.site .ba-orb:nth-child(3) { --x: 18%; --y: 52%; --dur: 38s; --c: #34d399; --s: 30vmax; }
+.site .ba-orb:nth-child(4) { --x: 70%; --y: 58%; --dur: 31s; --c: #fbbf24; --s: 24vmax; }
+.site .ba-orb:nth-child(5) { --x: 40%; --y: 20%; --dur: 42s; --c: #f472b6; --s: 20vmax; }
+@keyframes ba-drift { to { transform: translate3d(7vmax, 5vmax, 0) scale(1.15); } }
+html.reduce-motion .site .ba-orb { animation: none; }
+@media (prefers-reduced-motion: reduce) { .site .ba-orb { animation: none; } }
+
+/* tiers: set on #site as data-tier by the script */
+.site[data-tier="ok"] .ba-orb:nth-child(n + 4),
+.site[data-tier="low"] .ba-orb,
+.site[data-tier="saver"] .ba-orb { display: none; }
+.site[data-tier="ok"] .ba-orb { animation-play-state: paused; }
+.site[data-tier="low"] .site-link::after, .site[data-tier="saver"] .site-link::after { opacity: 0.55; }
+.site[data-tier="saver"] .site-portrait img { box-shadow: none; }
+.site[data-tier="saver"] .scenery-a { background: var(--siteBg); }
+.site[data-tier="saver"] .site-hero, .site[data-tier="saver"] .site-section { animation: none; }
+.site[data-tier="saver"] .site-link::after { display: none; }
+.site[data-tier="saver"] .site-link { text-decoration: underline; text-underline-offset: 0.2em; }
+.site .scenery-c {
+	background: color-mix(in srgb, #0b1220 calc(var(--batDim) * 100%), transparent);
+	transition: background-color 0.4s;
+}
+html:not(.dark) .site .scenery-c { background: color-mix(in srgb, #283556 calc(var(--batDim) * 100%), transparent); }
+
+/* gauge */
+.site .ba-gauge { align-items: center; display: flex; gap: 0.6rem; }
+.site .ba-cell { border: 2px solid var(--siteFgStrong); border-radius: 0.25rem; height: 1.3rem; padding: 2px; position: relative; width: 2.8rem; }
+.site .ba-cell::after { background: var(--siteFgStrong); border-radius: 0 2px 2px 0; content: ""; height: 0.5rem; position: absolute; right: -6px; top: 0.3rem; width: 4px; }
+.site .ba-fill { background: #16a34a; border-radius: 1px; display: block; height: 100%; transform-origin: left; transition: transform 0.2s; width: 100%; }
+.site .ba-cell[data-tier="ok"] .ba-fill { background: #ca8a04; }
+.site .ba-cell[data-tier="low"] .ba-fill, .site .ba-cell[data-tier="saver"] .ba-fill { background: #dc2626; }
+.site .ba-tier { color: var(--siteMuted); font-size: 0.78rem; }

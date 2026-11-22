@@ -1,0 +1,56 @@
+/* Token plan
+ * Families: EB Garamond 400-600 + Hanken Grotesk 300-600.
+ * Scale: hero wght 500 at ~73px, -0.02em, lh .92; tagline Hanken 1.25rem; ratio 3.7x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Garamond's small x-height needs size, so the hero is large; a soft grotesk keeps body legible and the contrast between lines structural, not just weight.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400..600&family=Hanken+Grotesk:wght@300..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "EB Garamond Fallback"; src: local("Georgia"); size-adjust: 86.2%; ascent-override: 117.1%; descent-override: 34.8%; line-gap-override: 0%; }
+@font-face { font-family: "Hanken Grotesk Fallback"; src: local("Arial"); size-adjust: 100.1%; ascent-override: 99.9%; descent-override: 30.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #388 EB Garamond: timeless, medium weight at large size; Hanken Grotesk for text and UI. */
+.site {
+	--tyDisplay: "EB Garamond", "EB Garamond Fallback", Garamond, Georgia, serif;
+	--tyBody: "Hanken Grotesk", "Hanken Grotesk Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 15cqi, 5.4rem);
+	--tyTitleW: 500;
+	--tyTitleWd: 450;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 0.92;
+	--tyTitleShift: -0.05em;
+	--tyTitleFeat: "liga", "dlig" 0, "kern";
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.25rem;
+	--tyTagW: 400;
+	--tyTagLs: 0.012em;
+	--tyTagLh: 1.4;
+	--tyTagMax: 25em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.6;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 450;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.5rem;
+	--tyLogoW: 500;
+	--tySecSize: 2.3rem;
+	--tySecW: 500;
+	--tySecWd: 450;
+	--tySecLs: -0.015em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 600;
+	--tyItemSize: 1.5rem;
+	--tyItemLs: -0.005em;
+	--tyMetaSize: 0.9rem;
+	--tyMetaLs: 0.03em;
+	--tyMetaNums: tabular-nums;
+}

@@ -1,0 +1,41 @@
+@import url("./forest-kit/base.css");
+
+/* 97. Living Woodcut: the linocut lake (#5) in motion; wind, birds, and a rain toggle. */
+.site {
+	--paper: #f0e8d4;
+	--siteBg: #f0e8d4;
+	--siteFg: #26334a;
+	--siteFgStrong: #141f35;
+	--siteMuted: #4d5c75;
+	--siteAccent: #2a5a8c;
+	--siteSquiggle: #c27a2a;
+	--siteSubtle: #e3d9c0;
+}
+
+html.dark .site {
+	--paper: #111a2e;
+	--siteBg: #111a2e;
+	--siteFg: #dde4e6;
+	--siteFgStrong: #f4efe0;
+	--siteMuted: #9bb0b6;
+	--siteAccent: #9fd0cf;
+	--siteSquiggle: #e0c78e;
+	--siteSubtle: #1b2842;
+}
+
+.site .scenery-a {
+	background: var(--paper);
+}
+
+.site .scenery-c {
+	background-repeat: repeat;
+	background-size: 160px 160px;
+}
+
+.site .site-page::before {
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 62%, transparent);
+}
+
+.site .fk-ui.rain button {
+	letter-spacing: 0.02em;
+}

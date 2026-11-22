@@ -1,0 +1,66 @@
+/* Mist Footer: a thin lake above the footer text, in its own block (never behind text). */
+.site .qa-lake {
+	contain: layout paint;
+	height: 92px;
+	margin: 3rem auto 0.5rem;
+	max-width: 100%;
+	position: relative;
+}
+
+.site .qa-lake-line {
+	background: linear-gradient(90deg, transparent, var(--siteSubtle) 12%, var(--siteSubtle) 88%, transparent);
+	height: 1px;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 38px;
+}
+
+html.dark .site .qa-lake-line {
+	background: linear-gradient(90deg, transparent, rgba(147, 165, 191, 0.3) 12%, rgba(147, 165, 191, 0.3) 88%, transparent);
+}
+
+.site .qa-lake canvas {
+	height: 54px;
+	left: 0;
+	position: absolute;
+	top: 39px;
+	width: 100%;
+}
+
+/* Mist: a few soft gradient wisps hugging the waterline, moved with transform only. */
+.site .qa-mist {
+	background: radial-gradient(closest-side, rgba(190, 215, 235, 0.45), transparent);
+	height: 26px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 26px;
+	width: 260px;
+	will-change: transform;
+}
+
+html.dark .site .qa-mist {
+	background: radial-gradient(closest-side, rgba(150, 175, 225, 0.2), transparent);
+}
+
+.site .qa-mist:nth-of-type(2) { top: 30px; width: 340px; }
+.site .qa-mist:nth-of-type(3) { top: 22px; width: 200px; }
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .qa-mist {
+		animation: qa-mist-drift 60s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .qa-mist:nth-of-type(2) { animation-delay: -30s; animation-duration: 76s; }
+	html:not(.reduce-motion) .site .qa-mist:nth-of-type(3) { animation-delay: -12s; animation-duration: 52s; }
+}
+
+html.reduce-motion .site .qa-mist {
+	transform: translateX(120px);
+}
+
+@keyframes qa-mist-drift {
+	from { transform: translateX(-300px); }
+	to { transform: translateX(900px); }
+}

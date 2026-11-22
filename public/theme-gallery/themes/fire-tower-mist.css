@@ -1,0 +1,175 @@
+/* 3. Fire Tower Mist: stacked ridges fading into fog, a tiny fire tower on the farthest one. */
+.site {
+	--sky-top: #cdd9e4;
+	--sky-mid: #e4e9ec;
+	--sky-hor: #f0efea;
+	--horizon-warm: rgba(240, 200, 160, 0.4);
+	--r1: #cfd9e1;
+	--r2: #bccad5;
+	--r3: #a8bac7;
+	--r4: #90a9b6;
+	--r5: #7a959f;
+	--fog: 247, 245, 241;
+	--fog-o: 0.6;
+	--lake: #e2e9eb;
+	--tower: #8798a6;
+	--siteBg: #e4e9ec;
+	--siteFg: #243350;
+	--siteFgStrong: #121f38;
+	--siteMuted: #46587a;
+	--siteAccent: #0f5fb8;
+	--siteSquiggle: #e07a30;
+	--siteSubtle: #d3dfe6;
+}
+
+html.dark .site {
+	--sky-top: #131b40;
+	--sky-mid: #24325f;
+	--sky-hor: #4a5f90;
+	--horizon-warm: rgba(200, 130, 120, 0.18);
+	--r1: #3d5083;
+	--r2: #33456f;
+	--r3: #2a3a63;
+	--r4: #202e54;
+	--r5: #172244;
+	--fog: 100, 124, 182;
+	--fog-o: 0.5;
+	--lake: #34476f;
+	--tower: #1a2549;
+	--siteBg: #131b40;
+	--siteFg: #dae5f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a5b4d2;
+	--siteAccent: #8fc2ff;
+	--siteSquiggle: #f0a05a;
+	--siteSubtle: #1d2a52;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 22% at 78% 72%, var(--horizon-warm), transparent 70%),
+		linear-gradient(to bottom, var(--sky-top), var(--sky-mid) 55%, var(--sky-hor) 85%);
+}
+
+.site .mist-stack {
+	bottom: 7%;
+	height: 60%;
+	inset: auto 0 7%;
+	overflow: hidden;
+	position: absolute;
+}
+
+.site .ridge-layer,
+.site .fog-layer {
+	bottom: 0;
+	display: block;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+.site .fog-layer {
+	width: 200%;
+}
+
+.site .fog-layer svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .ridge-layer.l1 path.ridge { fill: var(--r1); }
+.site .ridge-layer.l2 path.ridge { fill: var(--r2); }
+.site .ridge-layer.l3 path.ridge { fill: var(--r3); }
+.site .ridge-layer.l4 path.ridge { fill: var(--r4); }
+.site .ridge-layer.l5 path.ridge { fill: var(--r5); }
+
+.site .tower-shape {
+	fill: none;
+	stroke: var(--tower);
+	stroke-linecap: round;
+	stroke-width: 0.9;
+}
+
+.site .tower-cab {
+	fill: var(--tower);
+}
+
+.site .tower-light {
+	display: none;
+	fill: #ffb852;
+}
+
+.site .tower-halo {
+	fill: rgba(255, 184, 82, 0.18);
+}
+
+html.dark .site .tower-light {
+	display: block;
+}
+
+.site .maple {
+	fill: #d9803f;
+	opacity: 0.4;
+}
+
+html.dark .site .maple {
+	display: none;
+}
+
+.site .fog-layer ellipse {
+	fill: rgb(var(--fog));
+}
+
+.site .fog-layer {
+	opacity: var(--fog-o);
+}
+
+.site .fog-layer.f2 {
+	opacity: calc(var(--fog-o) * 1.1);
+}
+
+.site .scenery-c {
+	background: linear-gradient(to bottom, var(--lake), color-mix(in srgb, var(--lake) 88%, var(--sky-hor)));
+	height: 8%;
+	top: auto;
+	z-index: 2;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6px);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 6px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .fog-layer {
+		animation: fog-drift 100s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .fog-layer.f2 {
+		animation-duration: 120s;
+		animation-direction: reverse;
+	}
+
+	html:not(.reduce-motion) .site .fog-layer.f3 {
+		animation-duration: 90s;
+	}
+
+	html:not(.reduce-motion) .site .tower-light {
+		animation: cab-pulse 7s ease-in-out infinite;
+	}
+}
+
+@keyframes fog-drift {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes cab-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.65;
+	}
+}

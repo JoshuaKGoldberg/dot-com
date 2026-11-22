@@ -1,0 +1,17 @@
+@import url("./_refined-e/base.css");
+
+/* 353: #315's fog footer + calmer top aurora; hidden margin stars; the squiggle keeps a fading hue trail where the cursor ran. */
+.site .ra-foot canvas { image-rendering: auto; }
+
+.site .site-link::before {
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+.site .site-link::before { background: var(--dl-trail, none); }

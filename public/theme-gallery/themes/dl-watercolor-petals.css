@@ -1,0 +1,18 @@
+@import url("./_dl-b/base.css");
+/* #346 Watercolor & Petals: squiggles warm through a pigment hue shift near the pointer. */
+.site .site-link::before {
+	background: linear-gradient(90deg, #e8527a, #f0773c, #e9a521, #ee6f9a, #e8527a, #f0773c) var(--dl-x, 50%) 0 / 260% 100%;
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: calc(var(--dl-w, 0) * 0.95);
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+}
+html.dark .site .site-link::before {
+	background-image: linear-gradient(90deg, #ff8fb0, #ffa070, #ffd070, #ff9cc0, #ff8fb0, #ffa070);
+}
+.site .site-link::after { opacity: calc(0.9 - var(--dl-w, 0) * 0.9); }

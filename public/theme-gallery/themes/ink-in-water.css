@@ -1,0 +1,44 @@
+/* 76 — Ink in Water */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..800&family=League+Spartan:wght@300..800&display=swap");
+
+.site {
+	--siteBg: #f6f4ee;
+	--siteFg: #25304a;
+	--siteFgStrong: #121a30;
+	--siteMuted: #5a6479;
+	--siteAccent: #2a3fb0;
+	--siteSquiggle: #3d5bd9;
+	--siteSubtle: #e6e2d6;
+	--siteFontDisplay: "Fraunces", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #060b14;
+	--siteFg: #d6e2ee;
+	--siteFgStrong: #f2f7fb;
+	--siteMuted: #8ea0b8;
+	--siteAccent: #7fb4ff;
+	--siteSquiggle: #5fd0d0;
+	--siteSubtle: #0e1a2a;
+}
+.site .site-title {
+	font-variation-settings: "opsz" 144;
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+.site .site-section-title { font-weight: 600; }
+.site .site-portrait img { box-shadow: 0 0 0 1px var(--siteSubtle), 0 8px 30px -8px color-mix(in srgb, var(--siteAccent) 40%, transparent); }
+.site .scenery-a { overflow: hidden; }
+.site .ink-hint {
+	bottom: 1.1rem;
+	color: var(--siteMuted);
+	font: 500 0.78rem/1 var(--siteFont);
+	left: 1.2rem;
+	letter-spacing: 0.06em;
+	pointer-events: none;
+	position: fixed;
+	text-transform: uppercase;
+	transition: opacity 1.2s;
+	z-index: 20;
+}
+.site .ink-hint[data-hide] { opacity: 0; }

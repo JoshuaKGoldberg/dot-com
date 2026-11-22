@@ -1,0 +1,10 @@
+@import "./rn-dark-tuned.css";
+@import "./_sq/base.css";
+
+/* #471: no resting squiggle. Links are set apart by colour alone at rest (>= 3:1 against the surrounding body text, measured in the report);
+   on hover/focus the fine wave draws in and the colour deepens, plus the focus ring, so the cue is never colour only. */
+.site .sq-link { color: #4e7ece; }
+html:not(.dark) .site .sq-link { color: #5084e4; }
+.site .sq-link:is(:hover, :focus-visible) { color: #8db4f2; }
+html:not(.dark) .site .sq-link:is(:hover, :focus-visible) { color: #1b43a0; }
+.site .site-item-title.sq-link, .site .site-footer .sq-link { transition: color 0.2s ease; }

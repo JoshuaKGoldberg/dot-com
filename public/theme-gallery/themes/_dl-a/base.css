@@ -1,0 +1,54 @@
+.site .scenery-b { contain: paint; }
+
+.site .site-page {
+	padding-bottom: 0;
+}
+
+/* the footer runs to the very end of the page so its washes never stop short in a hard line */
+.site .site-footer {
+	padding-bottom: 6.5rem;
+	padding-top: 7rem;
+	position: relative;
+}
+
+.site .site-footer > p,
+.site .site-footer > a {
+	position: relative;
+	z-index: 1;
+}
+
+.site .rpf {
+	bottom: 0;
+	contain: paint;
+	top: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+/* grain fades in from the top of the footer so it never meets the prose above */
+.site .rpf-grain {
+	-webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.7) 45%, #000);
+	mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.7) 45%, #000);
+}
+
+.site .rpf { --k: 2; }
+.site .rpf .rp-w i { animation-play-state: paused; }
+.site .rpf.is-live .rp-w i { animation-play-state: running; }
+
+.site .rpf-1 { bottom: -120px; height: 270px; left: -6%; width: 40%; }
+.site .rpf-2 { --per: 50s; --delay: -10s; bottom: -140px; height: 290px; left: 22%; width: 38%; }
+.site .rpf-3 { --per: 38s; --delay: -20s; bottom: -110px; height: 250px; left: 46%; width: 36%; }
+.site .rpf-4 { --per: 56s; --delay: -6s; bottom: -130px; height: 280px; right: -6%; width: 40%; }
+.site .rpf-5 { --per: 44s; --delay: -28s; bottom: -40px; height: 170px; left: 10%; width: 26%; }
+.site .rpf-6 { --per: 46s; --delay: -16s; bottom: -40px; height: 170px; right: 8%; width: 26%; }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .rpf .rp-w i { animation: none; }
+}
+
+html.reduce-motion .site .rpf .rp-w i { animation: none; }
+
+/* squiggle delights: the per-link canvas replaces the mask underline while active */
+.site .site-link::after { transition: opacity 0.25s; }
+.site .site-link[data-dl]::after { opacity: 0; }
+.site .site-link > .dl-sq { pointer-events: none; position: absolute; z-index: 1; }

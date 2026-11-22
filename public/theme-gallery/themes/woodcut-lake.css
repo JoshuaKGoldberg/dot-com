@@ -1,0 +1,66 @@
+/* 5. Woodcut Lake: a muted linocut on paper. Light is cream and slate; dark is an inverted print. */
+.site {
+	--paper: #f0e8d4;
+	--ink: #4a647e;
+	--ink-deep: #2e4259;
+	--sun: #c99238;
+	--siteBg: #f0e8d4;
+	--siteFg: #26334a;
+	--siteFgStrong: #141f35;
+	--siteMuted: #4d5c75;
+	--siteAccent: #2a5a8c;
+	--siteSquiggle: #c27a2a;
+	--siteSubtle: #e3d9c0;
+	--siteFont: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+}
+
+html.dark .site {
+	--paper: #111a2e;
+	--ink: #5f8e92;
+	--ink-deep: #6a979b;
+	--sun: #efe2c4;
+	--siteBg: #111a2e;
+	--siteFg: #dde4e6;
+	--siteFgStrong: #f4efe0;
+	--siteMuted: #9bb0b6;
+	--siteAccent: #9fd0cf;
+	--siteSquiggle: #e0c78e;
+	--siteSubtle: #1b2842;
+}
+
+.site .scenery-a {
+	background: var(--paper);
+}
+
+.site .cut-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .cut-svg .paper { fill: var(--paper); stroke: var(--paper); }
+.site .cut-svg .ink { fill: var(--ink); stroke: var(--ink); }
+.site .cut-svg .ink-deep { fill: var(--ink-deep); stroke: var(--ink-deep); }
+.site .cut-svg .sun { fill: var(--sun); stroke: var(--sun); }
+.site .cut-svg .cut { fill: none; stroke: var(--paper); stroke-linecap: round; }
+.site .cut-svg .nofill { fill: none; }
+.site .cut-svg .stroke-only { fill: none; }
+
+.site .grain {
+	inset: 0;
+	mix-blend-mode: multiply;
+	opacity: 0.55;
+}
+
+html.dark .site .grain {
+	mix-blend-mode: screen;
+	opacity: 0.28;
+}
+
+.site .scenery-b {
+	background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(120, 90, 40, 0.1));
+}
+
+html.dark .site .scenery-b {
+	background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(0, 0, 10, 0.25));
+}

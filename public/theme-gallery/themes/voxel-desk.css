@@ -1,0 +1,58 @@
+/* 83 — Voxel Desk */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400..900&display=swap");
+
+.site {
+	--siteBg: #f6efe4;
+	--siteFg: #3b3330;
+	--siteFgStrong: #1f1816;
+	--siteMuted: #7a6c63;
+	--siteAccent: #c2502e;
+	--siteSquiggle: #e0833a;
+	--siteSubtle: #eadfcd;
+	--siteFont: "Nunito", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 64rem;
+}
+html.dark .site {
+	--siteBg: #14121c;
+	--siteFg: #e6dfec;
+	--siteFgStrong: #fbf7ff;
+	--siteMuted: #a79db5;
+	--siteAccent: #ffb067;
+	--siteSquiggle: #ff9a55;
+	--siteSubtle: #1f1b2b;
+}
+.site .site-title { font-size: clamp(2.2rem, 4.6vw, 3.2rem); font-weight: 900; letter-spacing: -0.02em; }
+.site .site-section-title { font-weight: 800; }
+.site .site-hero { gap: 2rem; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr) minmax(15rem, 21rem); }
+.site .site-tagline { font-size: 1.3rem; }
+.site .site-portrait img { border-radius: 18%; }
+
+.site .diorama {
+	aspect-ratio: 1;
+	cursor: grab;
+	position: relative;
+	touch-action: pan-y;
+	user-select: none;
+	-webkit-user-select: none;
+	width: 100%;
+}
+.site .diorama:active { cursor: grabbing; }
+.site .diorama canvas { display: block; height: 100%; width: 100%; }
+.site .diorama-hint {
+	bottom: -0.2rem;
+	color: var(--siteMuted);
+	font: 700 0.7rem/1 var(--siteFont);
+	left: 0;
+	letter-spacing: 0.08em;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	text-align: center;
+	text-transform: uppercase;
+}
+@media (max-width: 900px) {
+	.site .site-hero { grid-template-columns: 1fr; }
+	.site .diorama { max-width: 22rem; }
+}

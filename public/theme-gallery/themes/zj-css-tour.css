@@ -1,0 +1,379 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..800&family=JetBrains+Mono:wght@500;700&display=swap");
+
+/*
+ * Zero JS: Modern CSS Tour. There is no zj-css-tour.js: everything here is CSS.
+ * A small gallery of modern CSS, labelled like museum placards (the numbered plates are generated
+ * with counter() on ::before, so they cost no markup). Each placard sits over the thing it names:
+ *   1  scroll-state(stuck)       the header is sticky; a plate and a bar appear only while it is stuck
+ *   2  text-wrap: balance        hero title and tagline even out their lines
+ *   3  text-wrap: pretty         no lonely words on the last line of the about text
+ *   4  oklch(from ...)           every post's hue is derived from ONE accent with relative color + sibling-index()
+ *   5  interpolate-size          project details animate from height: 0 to auto (hover or focus a project)
+ *   6  @starting-style           hover a talk: its note fades in from display: none
+ *   7  light-dark()              every color below is a light-dark() pair, no dark-mode override block at all
+ *   @scope + native nesting      this file's placards
+ */
+
+.site {
+	color-scheme: light;
+	interpolate-size: allow-keywords;
+	--siteBg: light-dark(#f6f1e6, #15161b);
+	--siteFg: light-dark(#2d2924, #e6e2d8);
+	--siteFgStrong: light-dark(#17140f, #fbf8ef);
+	--siteMuted: light-dark(#6b645a, #a39e92);
+	--siteAccent: light-dark(#8f3a12, #f0aa70);
+	--siteSquiggle: light-dark(#d4672c, #e98a4e);
+	--siteSubtle: light-dark(#e9e1d0, #22242c);
+	--siteFontDisplay: "Fraunces", Georgia, serif;
+	--plate: light-dark(#fffdf6, #1e2028);
+	--plate-line: light-dark(#d9cfba, #34363f);
+	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.dark .site {
+	color-scheme: dark;
+}
+
+/* ---- the gallery room: wall, spotlight, picture rail, floor ---- */
+
+.site .scenery-a {
+	background:
+		radial-gradient(60vmax 50vmax at 50% -18%, light-dark(rgb(255 244 214 / 0.9), rgb(255 226 170 / 0.13)), transparent 70%),
+		linear-gradient(180deg, transparent 0 7.2rem, light-dark(rgb(120 96 60 / 0.16), rgb(255 255 255 / 0.06)) 7.2rem calc(7.2rem + 1px), transparent calc(7.2rem + 1px));
+}
+
+.site .scenery-b {
+	background:
+		linear-gradient(0deg, light-dark(#d8ccb2, #0c0d11) 0 5.5vh, transparent 5.5vh),
+		repeating-linear-gradient(90deg, transparent 0 9rem, light-dark(rgb(90 70 40 / 0.18), rgb(255 255 255 / 0.05)) 9rem calc(9rem + 1px));
+	-webkit-mask: linear-gradient(0deg, #000 0 5.5vh, transparent 5.5vh);
+	mask: linear-gradient(0deg, #000 0 5.5vh, transparent 5.5vh);
+}
+
+/* ---- 1. scroll-state(stuck): a sticky header that notices it is stuck ---- */
+
+.site-header {
+	container-type: scroll-state;
+	isolation: isolate;
+	padding-block: 0.8rem;
+	position: sticky;
+	top: 0;
+	z-index: 20;
+}
+
+.site-header::before {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border-bottom: 1px solid var(--plate-line);
+	content: "";
+	inset: 0 -50vw;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.3s;
+	z-index: -1;
+}
+
+.site-header::after {
+	counter-increment: tour;
+	opacity: 0;
+	position: absolute;
+	right: 0;
+	top: calc(100% + 0.5rem);
+	transition:
+		opacity 0.3s,
+		translate 0.3s;
+	translate: 0 -0.4rem;
+}
+
+@container scroll-state(stuck: top) {
+	.site-header::before,
+	.site-header::after {
+		opacity: 1;
+	}
+
+	.site-header::after {
+		translate: 0 0;
+	}
+}
+
+.site-page {
+	counter-reset: tour;
+}
+
+/* ---- placards: generated number plates, drawn by one shared rule ---- */
+
+.site-header::after,
+.site-hero-text::after,
+.site-about::before,
+.site-posts::before,
+.site-projects::before,
+.site-talks::before,
+.site-footer::before {
+	background: var(--plate);
+	border: 1px solid var(--plate-line);
+	border-left: 4px solid var(--siteAccent);
+	border-radius: 0.2rem;
+	box-shadow: 0 1px 0 var(--plate-line);
+	color: var(--siteMuted);
+	counter-increment: tour;
+	display: block;
+	font: 500 0.7rem/1.35 var(--mono);
+	letter-spacing: 0.01em;
+	padding: 0.45rem 0.75rem;
+	text-wrap: balance;
+	width: fit-content;
+}
+
+.site-hero-text::after {
+	content: "№ " counter(tour, decimal-leading-zero) "  text-wrap: balance — title and tagline share their lines evenly";
+	margin-top: 1.1rem;
+	max-width: 24rem;
+}
+
+.site-header::after {
+	content: "№ " counter(tour, decimal-leading-zero) "  @container scroll-state(stuck: top)";
+}
+
+.site-about::before {
+	content: "№ " counter(tour, decimal-leading-zero) "  text-wrap: pretty — no lonely last-line words";
+	margin: 0 auto 1.2rem;
+}
+
+.site-posts::before {
+	content: "№ " counter(tour, decimal-leading-zero) "  oklch(from var(--accent) l c calc(h + n)) — each post's hue is derived";
+	margin-bottom: 1.1rem;
+}
+
+.site-projects::before {
+	content: "№ " counter(tour, decimal-leading-zero) "  interpolate-size — hover a project: height 0 → auto";
+	margin-bottom: 1.1rem;
+}
+
+.site-talks::before {
+	content: "№ " counter(tour, decimal-leading-zero) "  @starting-style — hover a talk: display none → block";
+	margin-bottom: 1.1rem;
+}
+
+.site-footer::before {
+	content: "№ " counter(tour, decimal-leading-zero) "  light-dark() — flip the theme: zero override rules";
+	margin: 0 auto 1.1rem;
+}
+
+/* ---- @scope + nesting: section headings are styled by scope, and never reach into the lists ---- */
+
+@scope (.site-section) to (.site-list) {
+	:scope {
+		position: relative;
+	}
+
+	.site-section-title {
+		font-family: var(--siteFontDisplay);
+		font-variation-settings: "opsz" 72;
+		font-weight: 700;
+
+		&::after {
+			background: linear-gradient(90deg, var(--siteAccent), transparent);
+			content: "";
+			display: block;
+			height: 2px;
+			margin-top: 0.3rem;
+			width: min(12rem, 60%);
+		}
+	}
+}
+
+/* ---- 2 + 3. text-wrap ---- */
+
+.site-title {
+	font-family: var(--siteFontDisplay);
+	font-variation-settings: "opsz" 144;
+	font-weight: 800;
+	letter-spacing: -0.025em;
+	text-wrap: balance;
+}
+
+.site-tagline {
+	text-wrap: balance;
+}
+
+.site-about p {
+	text-wrap: pretty;
+}
+
+.site-item-description {
+	text-wrap: pretty;
+}
+
+/* ---- 4. relative colors: posts take their hue from one accent ---- */
+
+.site-post {
+	--k: calc(sibling-index() * 42);
+	border-left: 3px solid oklch(from var(--siteAccent) l c calc(h + var(--k)));
+	padding-left: 1rem;
+}
+
+.site-post .site-item-meta {
+	color: oklch(from var(--siteMuted) l calc(c + 0.045) calc(h + var(--k)));
+}
+
+.site-post .site-item-title {
+	color: oklch(from var(--siteFgStrong) l calc(c + 0.03) calc(h + var(--k)));
+}
+
+/* ---- 5. interpolate-size: a project's details open from height 0 to auto ---- */
+
+.site-projects .site-item {
+	background: var(--plate);
+	border: 1px solid var(--plate-line);
+	border-radius: 0.3rem;
+	padding: 0.8rem 1rem;
+	transition: box-shadow 0.3s;
+}
+
+.site-projects .site-item-meta {
+	display: block;
+	height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transition:
+		height 0.45s cubic-bezier(0.2, 0.9, 0.3, 1),
+		opacity 0.3s;
+}
+
+.site-projects .site-item:hover .site-item-meta,
+.site-projects .site-item:focus-within .site-item-meta {
+	height: auto;
+	opacity: 1;
+}
+
+.site-projects .site-item:hover {
+	box-shadow: 0 0.6rem 1.2rem -0.8rem light-dark(rgb(60 40 10 / 0.45), rgb(0 0 0 / 0.8));
+}
+
+/* ---- 6. @starting-style: a note that animates in from display: none ---- */
+
+.site-talks .site-item {
+	position: relative;
+}
+
+.site-talks .site-item::after {
+	background: var(--siteAccent);
+	border-radius: 999px;
+	color: var(--siteBg);
+	content: "@starting-style \2736";
+	display: none;
+	font: 700 0.64rem/1 var(--mono);
+	opacity: 0;
+	padding: 0.35rem 0.6rem;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	top: 0.2rem;
+	transition:
+		opacity 0.35s,
+		translate 0.35s cubic-bezier(0.2, 1.2, 0.4, 1),
+		display 0.35s allow-discrete;
+	translate: 0 0;
+
+	@starting-style {
+		opacity: 0;
+		translate: 0.8rem 0;
+	}
+}
+
+.site-talks .site-item:hover::after,
+.site-talks .site-item:focus-within::after {
+	display: block;
+	opacity: 1;
+
+	@starting-style {
+		opacity: 0;
+		translate: 0.8rem 0;
+	}
+}
+
+/* ---- 7. footer: light-dark() everywhere above, so nothing here is special ---- */
+
+.site-footer {
+	border-top: 1px solid var(--plate-line);
+	padding-top: 1.4rem;
+}
+
+/* respect reduced motion: no transitions at all */
+html.reduce-motion .site * {
+	transition-duration: 0s !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site * {
+		transition-duration: 0s !important;
+	}
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--plate);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(#d4672c, #e9b44c, #3f8f7a, #5b6fd6, #d4672c);
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: ct-spin 6s linear infinite;
+	}
+}
+
+@keyframes ct-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+.site .site-overlay::after {
+	background: var(--plate);
+	border: 1px solid var(--plate-line);
+	border-radius: 0.3rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "@starting-style \00b7  light-dark() \00b7  oklch(from) \00b7  interpolate-size \00b7  text-wrap \00b7  scroll-state \00b7  @scope";
+	font: 600 0.62rem/1 var(--mono);
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 900px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

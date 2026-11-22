@@ -1,0 +1,35 @@
+.site {
+	--siteBg: #f1f0e8;
+	--siteFg: #34382f;
+	--siteFgStrong: #1b1f19;
+	--siteMuted: #686d5f;
+	--siteAccent: #5b6f3c;
+	--siteSquiggle: #94a86a;
+	--siteSubtle: #e1e3d4;
+	--fiberLo: 122, 134, 100;
+	--fiberHi: 255, 255, 250;
+}
+
+html.dark .site {
+	--siteBg: #17111f;
+	--siteFg: #e0d8ea;
+	--siteFgStrong: #f7f2fc;
+	--siteMuted: #a79db8;
+	--siteAccent: #d3a5f2;
+	--siteSquiggle: #b07ad8;
+	--siteSubtle: #261a35;
+	--fiberLo: 40, 24, 58;
+	--fiberHi: 190, 140, 230;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(90% 70% at 50% 30%, transparent 40%, rgba(60, 70, 40, 0.1) 100%),
+		radial-gradient(60% 45% at 30% 10%, rgba(255, 255, 240, 0.7), transparent 70%);
+}
+
+html.dark .site .site-scenery .scenery-a {
+	background:
+		radial-gradient(90% 70% at 50% 30%, transparent 35%, rgba(0, 0, 0, 0.35) 100%),
+		radial-gradient(60% 45% at 30% 10%, rgba(150, 90, 200, 0.2), transparent 70%);
+}

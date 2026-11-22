@@ -1,0 +1,33 @@
+/* 129 — Tall Grass */
+.site {
+	--siteBg: #f6f9ee;
+	--siteFg: #2a3a2a;
+	--siteFgStrong: #162416;
+	--siteMuted: #5a6b55;
+	--siteAccent: #3f7a3a;
+	--siteSquiggle: #6aa85c;
+	--siteSubtle: #e1ebcf;
+}
+html.dark .site {
+	--siteBg: #0b1614;
+	--siteFg: #d5e6dc;
+	--siteFgStrong: #f0f8f3;
+	--siteMuted: #94b0a2;
+	--siteAccent: #8fd4a6;
+	--siteSquiggle: #6cbf8a;
+	--siteSubtle: #12261f;
+}
+.site .scenery-a {
+	background: linear-gradient(to bottom, transparent 55%, rgba(170, 205, 140, 0.22));
+}
+html.dark .site .scenery-a {
+	background: radial-gradient(ellipse at 50% 110%, rgba(60, 130, 100, 0.28), transparent 60%);
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

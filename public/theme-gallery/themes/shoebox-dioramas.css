@@ -1,0 +1,125 @@
+/* 174. Shoebox Dioramas: every section is a cardboard box with layered scenery that parallaxes with scroll and pointer. */
+.site {
+	--siteBg: #fffaf2;
+	--siteFg: #38302a;
+	--siteFgStrong: #1d1712;
+	--siteMuted: #6b5f55;
+	--siteAccent: #a8481c;
+	--siteSquiggle: #e0782f;
+	--siteSubtle: #eadfcc;
+	--box-a: #c9996a;
+	--box-b: #a97b4e;
+	--box-c: #8a6039;
+	--box-top: #6f4a2b;
+	--desk: #d8c9ae;
+}
+html.dark .site {
+	--siteBg: #1d2240;
+	--siteFg: #e6e9f6;
+	--siteFgStrong: #fff;
+	--siteMuted: #a9b1d4;
+	--siteAccent: #ffb77a;
+	--siteSquiggle: #ffb34a;
+	--siteSubtle: #2a315c;
+	--box-a: #6a4a33;
+	--box-b: #523824;
+	--box-c: #3f2a1a;
+	--box-top: #2c1c10;
+	--desk: #1a1c2c;
+}
+.site .scenery-a {
+	background:
+		repeating-linear-gradient(90deg, rgb(0 0 0 / 0.04) 0 2px, transparent 2px 9px),
+		radial-gradient(ellipse at 50% 20%, rgb(255 255 255 / 0.35), transparent 70%),
+		var(--desk);
+}
+html.dark .site .scenery-a {
+	background:
+		repeating-linear-gradient(90deg, rgb(255 255 255 / 0.02) 0 2px, transparent 2px 9px),
+		radial-gradient(ellipse at 50% 20%, rgb(120 140 255 / 0.12), transparent 70%),
+		var(--desk);
+}
+.site .site-page { max-width: 54rem; }
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .dio {
+	background: var(--box-b);
+	border-radius: 0.5rem;
+	box-shadow: 0 18px 30px -14px rgb(0 0 0 / 0.55), 0 2px 0 rgb(0 0 0 / 0.2);
+	isolation: isolate;
+	margin: 0 0 5rem;
+	max-width: none;
+	overflow: hidden;
+	padding: 9.5rem 2.6rem 2.8rem;
+	position: relative;
+	text-align: left;
+}
+.site .site-hero.dio { display: block; margin-top: 2.5rem; padding-top: 7rem; }
+.site .site-about.dio { margin: 0 0 5rem; max-width: none; font-size: 1.1rem; }
+.site .site-footer.dio { margin-bottom: 1rem; padding-top: 8rem; opacity: 1; }
+.site .dio-scene {
+	inset: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.site .dio-l {
+	inset: -1.5rem;
+	position: absolute;
+	transition: transform 0.25s ease-out;
+	transform: translate3d(calc(var(--px, 0) * var(--d) * -22px), calc(var(--py, 0) * var(--d) * -10px), 0);
+	will-change: transform;
+}
+.site .dio-l svg {
+	display: block;
+	left: 1.5rem;
+	position: absolute;
+	top: 1.5rem;
+}
+.site .dio-card {
+	background: color-mix(in srgb, var(--siteBg) 92%, transparent);
+	border-radius: 0.7rem;
+	box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(0 0 0 / 0.06);
+	padding: 1.4rem 1.7rem 1.5rem;
+	position: relative;
+	z-index: 1;
+}
+.site .site-hero .dio-card { align-items: center; display: grid; gap: 2rem; grid-template-columns: minmax(8rem, 12rem) 1fr; margin: 0; }
+.site .site-about .dio-card { text-align: center; }
+.site .site-section .dio-card { text-align: left; }
+.site .site-footer .dio-card { text-align: center; padding-block: 1rem; }
+/* cardboard walls of the box (trapezoids receding to the back) */
+.site .dio-walls { inset: 0; pointer-events: none; position: absolute; z-index: 2; }
+.site .dio-walls i { inset: 0; position: absolute; }
+.site .dio-walls i:nth-child(1) { background: linear-gradient(var(--box-top), var(--box-c)); clip-path: polygon(0 0, 100% 0, calc(100% - 1.4rem) 1.1rem, 1.4rem 1.1rem); }
+.site .dio-walls i:nth-child(2) { background: linear-gradient(90deg, var(--box-a), var(--box-b)); clip-path: polygon(0 0, 1.4rem 1.1rem, 1.4rem calc(100% - 1.3rem), 0 100%); }
+.site .dio-walls i:nth-child(3) { background: linear-gradient(270deg, var(--box-c), var(--box-b)); clip-path: polygon(100% 0, calc(100% - 1.4rem) 1.1rem, calc(100% - 1.4rem) calc(100% - 1.3rem), 100% 100%); }
+.site .dio-walls i:nth-child(4) { background: linear-gradient(var(--box-b), var(--box-a)); clip-path: polygon(0 100%, 100% 100%, calc(100% - 1.4rem) calc(100% - 1.3rem), 1.4rem calc(100% - 1.3rem)); }
+.site .dio-walls::after {
+	border-radius: 0.5rem;
+	box-shadow: inset 0 0 0 2px rgb(255 235 200 / 0.28), inset 0 0 40px rgb(0 0 0 / 0.28);
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+@media (max-width: 760px) {
+	.site .dio { padding: 7rem 1.6rem 2rem; }
+	.site .site-hero .dio-card { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site .dio-l {
+			animation: dio-par linear both;
+			animation-timeline: view();
+		}
+	}
+}
+@keyframes dio-par {
+	from { translate: 0 calc(var(--d) * -46px); }
+	to { translate: 0 calc(var(--d) * 46px); }
+}
+html.reduce-motion .site .dio-l { transition: none; transform: none; }

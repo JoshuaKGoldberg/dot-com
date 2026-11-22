@@ -1,0 +1,31 @@
+.site {
+	--siteBg: #eaeff4;
+	--siteFg: #26323f;
+	--siteFgStrong: #101a26;
+	--siteMuted: #586676;
+	--siteAccent: #1b6a9c;
+	--siteSquiggle: #4aa3cf;
+	--siteSubtle: #d6dfe8;
+}
+
+html.dark .site {
+	--siteBg: #0a1017;
+	--siteFg: #d3dde8;
+	--siteFgStrong: #f0f5fa;
+	--siteMuted: #8d9db0;
+	--siteAccent: #86c7ee;
+	--siteSquiggle: #4aa3cf;
+	--siteSubtle: #111c28;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(70% 50% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 70%),
+		linear-gradient(180deg, #dbe4ec 0%, #e8eef3 60%, #eef2f4 100%);
+}
+
+html.dark .site .site-scenery .scenery-a {
+	background:
+		radial-gradient(70% 50% at 50% 0%, rgba(90, 130, 170, 0.18), transparent 70%),
+		linear-gradient(180deg, #0c141d 0%, #09101a 100%);
+}

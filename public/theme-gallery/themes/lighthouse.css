@@ -1,0 +1,339 @@
+.site {
+	--siteBg: #f7f3ee;
+	--siteFg: #2a2f3d;
+	--siteFgStrong: #141a2a;
+	--siteMuted: #5e6678;
+	--siteAccent: #b4321f;
+	--siteSquiggle: #e8a32c;
+	--siteSubtle: #ebe3d8;
+}
+
+html.dark .site {
+	--siteBg: #050912;
+	--siteFg: #d6deee;
+	--siteFgStrong: #f4f7ff;
+	--siteMuted: #93a0bb;
+	--siteAccent: #ffb15c;
+	--siteSquiggle: #f6c35a;
+	--siteSubtle: #101a2e;
+}
+
+.site .site-title {
+	letter-spacing: -0.02em;
+}
+
+/* Sky: dawn in light mode, night with a baked star field in dark. */
+.site .scenery-a {
+	background: linear-gradient(180deg, #cfe0ef 0%, #f1e6dc 62%, #f7d9c0 100%);
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(1.2px 1.2px at 8% 12%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 19% 28%, #cfdcff 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 33% 9%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 47% 21%, #fff 50%, transparent 51%),
+		radial-gradient(1.2px 1.2px at 62% 7%, #ffe9d0 50%, transparent 51%),
+		radial-gradient(1px 1px at 74% 25%, #fff 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 88% 13%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 95% 34%, #cfdcff 50%, transparent 51%),
+		radial-gradient(circle 46px at 84% 20%, rgb(240 244 255 / 0.5), transparent 70%),
+		radial-gradient(ellipse 120% 50% at 50% 100%, #1d2f55 0%, transparent 70%),
+		linear-gradient(180deg, #02050c 0%, #0a1430 70%, #172647 100%);
+}
+
+.site .lh-shore {
+	bottom: 0;
+	height: 24vh;
+	left: 0;
+	position: absolute;
+	right: 0;
+}
+
+.site .lh-shore svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .lh-sea-far {
+	fill: #a9c4d8;
+}
+
+.site .lh-sea {
+	fill: #8fb0c9;
+}
+
+.site .lh-rock {
+	fill: #6d6a68;
+}
+
+.site .lh-rock2 {
+	fill: #55524f;
+}
+
+html.dark .site .lh-sea-far {
+	fill: #0d1c38;
+}
+
+html.dark .site .lh-sea {
+	fill: #0a1630;
+}
+
+html.dark .site .lh-rock {
+	fill: #14171f;
+}
+
+html.dark .site .lh-rock2 {
+	fill: #0b0d13;
+}
+
+/* The tower. --beam (0.18..1) and --reach are set from the live score. */
+.site .lh {
+	--beam: 0.18;
+	--reach: 0.6;
+	aspect-ratio: 120 / 400;
+	bottom: 8.5vh;
+	height: clamp(280px, 56vh, 540px);
+	left: 4vw;
+	position: absolute;
+}
+
+.site .lh-svg {
+	display: block;
+	height: 100%;
+	overflow: visible;
+	position: relative;
+	width: 100%;
+	z-index: 2;
+}
+
+.site .lh-base {
+	fill: #55524f;
+}
+
+html.dark .site .lh-base {
+	fill: #0b0d13;
+}
+
+.site .lh-white {
+	fill: #f4efe8;
+}
+
+.site .lh-red {
+	fill: #c23a24;
+}
+
+.site .lh-deck {
+	fill: #2b2d36;
+}
+
+.site .lh-glass {
+	fill: #ffe9a8;
+	opacity: calc(0.35 + var(--beam) * 0.65);
+}
+
+.site .lh-mullion {
+	stroke: #2b2d36;
+	stroke-width: 1.6;
+}
+
+.site .lh-roof {
+	fill: #8f2a1c;
+}
+
+.site .lh-window {
+	fill: #2b2d36;
+}
+
+html.dark .site .lh-white {
+	fill: #cfd3de;
+}
+
+html.dark .site .lh-red {
+	fill: #a03020;
+}
+
+/* Beam: clip-path wedge anchored at the lamp (50% / 28.25% of the tower box), rotated by a compositor animation. */
+.site .lh-beam {
+	background: linear-gradient(90deg, rgb(255 238 176 / calc(0.55 * var(--beam))), rgb(255 238 176 / calc(0.16 * var(--beam))) 45%, transparent 100%);
+	clip-path: polygon(0 47%, 100% 0, 100% 100%, 0 53%);
+	height: 44vh;
+	left: 50%;
+	margin-top: -22vh;
+	mask: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+	pointer-events: none;
+	position: absolute;
+	top: 28.25%;
+	transform: rotate(-3deg) scaleX(var(--reach));
+	transform-origin: 0 50%;
+	width: 150vw;
+	will-change: transform;
+	z-index: 1;
+}
+
+.site .lh-beam-back {
+	opacity: 0.55;
+	transform: rotate(-182deg) scaleX(calc(var(--reach) * 0.4)) scaleY(0.5);
+}
+
+html:not(.dark) .site .lh-beam {
+	background: linear-gradient(90deg, rgb(255 214 120 / calc(0.55 * var(--beam))), rgb(255 226 150 / calc(0.2 * var(--beam))) 45%, transparent 100%);
+}
+
+.site .lh-halo {
+	background: radial-gradient(circle, rgb(255 236 170 / calc(0.9 * var(--beam))) 0%, rgb(255 226 150 / calc(0.3 * var(--beam))) 30%, transparent 68%);
+	height: 14rem;
+	left: 50%;
+	margin: -7rem 0 0 -7rem;
+	position: absolute;
+	top: 28.25%;
+	width: 14rem;
+	z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .lh-beam:not(.lh-beam-back) {
+		animation: lh-sweep 9s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .lh-halo {
+		animation: lh-pulse 4.5s ease-in-out infinite alternate;
+	}
+}
+
+@keyframes lh-sweep {
+	from {
+		transform: rotate(-11deg) scaleX(var(--reach));
+	}
+	to {
+		transform: rotate(7deg) scaleX(var(--reach));
+	}
+}
+
+@keyframes lh-pulse {
+	to {
+		opacity: 0.7;
+	}
+}
+
+/* Score plaque. */
+.site .lh-plaque {
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.8rem;
+	bottom: 1rem;
+	box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.5);
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.66rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.5rem;
+	padding: 0.65rem 0.8rem;
+	position: absolute;
+	right: 1rem;
+	width: 16.5rem;
+}
+
+.site .lh-plaque[data-band="good"] {
+	--band: #1fa347;
+}
+
+.site .lh-plaque[data-band="ok"] {
+	--band: #e0a21f;
+}
+
+.site .lh-plaque[data-band="poor"] {
+	--band: #e04b3a;
+}
+
+.site .lh-plaque[data-band="pending"] {
+	--band: var(--siteMuted);
+}
+
+html.dark .site .lh-plaque[data-band="good"] {
+	--band: #4fe07c;
+}
+
+.site .lh-heading {
+	align-items: center;
+	display: flex;
+	gap: 0.7rem;
+}
+
+.site .lh-ring {
+	--score: 0;
+	align-items: center;
+	background: conic-gradient(var(--band) calc(var(--score) * 1%), color-mix(in srgb, var(--siteMuted) 25%, transparent) 0);
+	border-radius: 50%;
+	display: grid;
+	flex: none;
+	height: 3.4rem;
+	place-items: center;
+	width: 3.4rem;
+}
+
+.site .lh-ring b {
+	background: color-mix(in srgb, var(--siteBg) 98%, transparent);
+	border-radius: 50%;
+	color: var(--band);
+	display: grid;
+	font: 800 1.2rem/1 var(--siteFont);
+	height: 2.7rem;
+	place-items: center;
+	width: 2.7rem;
+}
+
+.site .lh-title {
+	color: var(--siteFgStrong);
+	font: 800 0.75rem/1.1 var(--siteFont);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.site .lh-note {
+	color: var(--siteMuted);
+	font-size: 0.6rem;
+	margin-top: 0.15rem;
+}
+
+.site .lh-parts {
+	display: grid;
+	gap: 0.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.site .lh-parts li {
+	align-items: center;
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: 2.2rem 1fr 4rem;
+}
+
+.site .lh-parts i {
+	background: color-mix(in srgb, var(--siteMuted) 25%, transparent);
+	border-radius: 2px;
+	height: 4px;
+	position: relative;
+}
+
+.site .lh-parts i::after {
+	background: var(--band);
+	border-radius: 2px;
+	content: "";
+	inset: 0 auto 0 0;
+	position: absolute;
+	width: var(--p);
+}
+
+.site .lh-parts b {
+	color: var(--siteFgStrong);
+	text-align: right;
+}
+
+@media (max-width: 900px) {
+	.site .lh-plaque {
+		display: none;
+	}
+}

@@ -1,0 +1,96 @@
+/* #273 Corner Window: the plain site plus a small round window in the corner. */
+
+.site .qcw-window {
+	background: var(--siteSubtle);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 35%, transparent);
+	border-radius: 50%;
+	bottom: 1.1rem;
+	cursor: pointer;
+	height: 56px;
+	overflow: hidden;
+	padding: 0;
+	pointer-events: auto;
+	position: fixed;
+	right: 1.1rem;
+	transition:
+		border-color 0.3s,
+		transform 0.3s;
+	width: 56px;
+	z-index: 12;
+}
+
+.site .qcw-window canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .qcw-window:hover,
+.site .qcw-window:focus-visible {
+	border-color: var(--siteAccent);
+	transform: scale(1.06);
+}
+
+.site .qcw-window:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+.site .qcw-window.is-inline {
+	display: block;
+	margin: 1.5rem auto 0;
+	position: relative;
+	right: auto;
+	bottom: auto;
+}
+
+.site .qcw-panel {
+	background: var(--siteBg);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 30%, transparent);
+	border-radius: 14px;
+	bottom: 5.2rem;
+	box-shadow: 0 6px 28px -10px rgba(10, 30, 60, 0.35);
+	overflow: hidden;
+	padding: 0;
+	pointer-events: auto;
+	position: fixed;
+	right: 1.1rem;
+	width: 300px;
+	z-index: 13;
+}
+
+.site .qcw-panel[hidden] {
+	display: none;
+}
+
+.site .qcw-panel.is-narrow {
+	left: 50%;
+	right: auto;
+	transform: translateX(-50%);
+	width: min(300px, 92vw);
+}
+
+.site .qcw-big {
+	display: block;
+	height: auto;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+}
+
+.site .qcw-caption {
+	color: var(--siteMuted);
+	font-size: 0.85rem;
+	font-weight: 400;
+	margin: 0;
+	padding: 0.5rem 0.8rem 0.65rem;
+}
+
+@media not all and (prefers-reduced-motion: no-preference) {
+	.site .qcw-window {
+		transition: none;
+	}
+}
+
+html.reduce-motion .site .qcw-window {
+	transition: none;
+}

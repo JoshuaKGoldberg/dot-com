@@ -1,0 +1,94 @@
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import "./_type2/post.css";
+
+/* token plan
+   #409 Newsreader Tight. Newsreader pinned per job: display opsz 72 at weight 300 (340 dark) at 112px, tracking -0.035em; Hanken Grotesk 400 for UI; Newsreader text opsz 16 (400, 450 dark) for the post.
+   Scale 1.25 off 18px (18/22/28/35/44/55/69); the hero sits well above the scale on purpose and is 112px vs a 22px tagline (5x).
+   Why: Josh likes Newsreader; the generic move is a mid-weight serif at 60px. Here the display optical size runs huge and light, and everything small is a static pinned instance (about 100 KB total).
+   One line always: the size is min(150px cap, fit to the hero column via --tyFit = 95 / measured advance width), so it never wraps or scrolls. Wide hero: the headline takes the whole row, portrait and tagline sit beneath. */
+
+/* fonts: pinned static instances (single weight/opsz), latin subset only, so each face is ~15-25 KB and a mode only downloads the weights it uses */
+@font-face { font-family: "NR Display"; font-style: normal; font-weight: 300; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBt4ByzBDXXD9JVF438wJo_wC-ZFHDWwgUii.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Head"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBv4ByzBDXXD9JVF438weI_wC-ZFHDWwgUii.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBCzBDXXD9JVF438weI_wC-ZFHDWwgUii.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9kfjOCX1hbuyalUrK439vogqC9yFZCYg7oRZaLP4obnf7fTXglsMwoT9ZHFjSShVCjzSY.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Hanken"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/hankengrotesk/v12/ieVq2YZDLWuGJpnzaiwFXS9tYvBRzyFLlZg_f_Ncs2Zq5vBM731BKcyK.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Code"; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/l/font?kit=-F63fjptAgt5VM-kVkqdyU8n5i0g0F9lte44crAY&skey=b40c83751ce1954d&v=v23) format("woff2"); }
+@font-face { font-family: "NR Text Dk"; font-style: normal; font-weight: 400 500; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9VfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBAbNJYQ5ayZC.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text Dk"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9kfjOCX1hbuyalUrK439vogqC9yFZCYg7oRZaLP4obnf7fTXglsMwoT9ZHFjSShVCjzSY.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "NR Display Fallback"; src: local("Georgia"); size-adjust: 96.5%; ascent-override: 76.7%; descent-override: 26.9%; line-gap-override: 0%; }
+@font-face { font-family: "NR Text Fallback"; src: local("Georgia"); size-adjust: 95.3%; ascent-override: 77.6%; descent-override: 27.3%; line-gap-override: 0%; }
+@font-face { font-family: "Hanken Fallback"; src: local("Arial"); size-adjust: 101.2%; ascent-override: 98.8%; descent-override: 29.6%; line-gap-override: 0%; }
+/* fb:end */
+
+.site {
+	--tyDisplay: "NR Display", "NR Display Fallback", Georgia, serif;
+	--tyBody: "Hanken", "Hanken Fallback", Arial, sans;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+	--t2Font: "NR Text", "NR Text Fallback", Georgia, serif;
+	--t2CodeFont: "Code", ui-monospace, Menlo, monospace;
+	--tyTitleSize: 9.375rem;
+	--tyFit: 16.5;
+	--tyTitleW: 300;
+	--tyTitleWd: 340;
+	--tyTitleLs: -0.035em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.05em;
+	--tyTitleGap: 1.2rem;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.4rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 21em;
+	--tyBodyW: 400;
+	--tyAboutSize: 1.25rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.15rem;
+	--tyLogoSize: 1.25rem;
+	--tySecFont: "NR Head", Georgia, serif;
+	--tySecSize: 2.197rem;
+	--tySecW: 400;
+	--tySecWd: 440;
+	--tySecLs: -0.012em;
+	--tyItemFont: "NR Head", Georgia, serif;
+	--tyItemW: 400;
+	--tyItemSize: 1.5rem;
+	--tyMetaSize: 0.95rem;
+	--tyMetaNums: oldstyle-nums;
+	--tyCreditFont: var(--tyBody);
+	--t2Size: 1.1875rem;
+	--t2Lh: 1.65;
+	--t2W: 400;
+	--t2Measure: 64ch;
+	--t2TitleFont: "NR Head", Georgia, serif;
+	--t2TitleSize: 2.457rem;
+	--t2TitleW: 400;
+	--t2TitleWd: 440;
+	--t2TitleLs: -0.02em;
+	--t2TitleLh: 1.08;
+	--t2MetaFont: var(--tyBody);
+	--t2MetaSize: 0.9rem;
+	--t2MetaW: 400;
+	--t2CodeSize: 0.84em;
+}
+
+/* wide hero: the headline takes the whole row (always one line, sized to fit by --tyFit); portrait and tagline sit beneath it */
+@media (min-width: 701px) {
+	.site .site-hero { container-type: inline-size; grid-template-columns: minmax(8rem, 10.5rem) 1fr; column-gap: 2.25rem; row-gap: 1.5rem; }
+	.site .site-hero-text { display: contents; container-type: normal; }
+	.site .site-title { grid-column: 1 / -1; grid-row: 1; margin-bottom: 0; }
+	.site .site-portrait { grid-column: 1; grid-row: 2 / span 2; }
+	.site .site-tagline { grid-column: 2; grid-row: 2; align-self: end; margin-bottom: 0.4rem; }
+	.site .site-socials { grid-column: 2; grid-row: 3; align-self: start; }
+}
+/* dark-surface compensation for the text face: a small variable-weight instance (400-500) only downloads in dark mode */
+html.dark .site {
+	--t2Font: "NR Text Dk", "NR Text Fallback", Georgia, serif;
+}

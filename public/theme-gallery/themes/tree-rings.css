@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@300;400;600;700&display=swap");
+.site { --siteFont: "Karla", ui-sans-serif, system-ui, sans-serif; --siteFontDisplay: "Young Serif", Georgia, serif; --siteBg: #fbf7ef; --siteFg: #3a2a1a; --siteFgStrong: #2a1a0b; --siteMuted: #7a6248; --siteAccent: #9a4a12; --siteSquiggle: #c8742c; --siteSubtle: #eadcc2; }
+html.dark .site { --siteBg: #120d09; --siteFg: #ead9c2; --siteFgStrong: #fff1de; --siteMuted: #b79d7e; --siteAccent: #ffb26b; --siteSquiggle: #ff9a4a; --siteSubtle: #2b1d12; }
+.site-title { font-weight: 400; line-height: 1; }
+.site-section-title { font-weight: 400; }
+@media (min-width: 1100px) { .site .site-page { margin-left: 2rem; margin-right: auto; } }
+.site .scenery-a { -webkit-mask-image: linear-gradient(90deg, transparent 36%, #000 62%); mask-image: linear-gradient(90deg, transparent 36%, #000 62%); }
+.site .tr-note { position: absolute; right: 1.25rem; bottom: 1rem; font-size: 0.82rem; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 85%, transparent); padding: 0.3rem 0.7rem; border-radius: 1rem; }
+@media (max-width: 800px) { .site .tr-note { display: none; } }

@@ -1,0 +1,155 @@
+/* 105. Storm Over the Lake: drag clouds, click for lightning, rain rings the water. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--sky-top: #7c8da2;
+	--sky-mid: #a9b6c3;
+	--sky-hor: #d3d6d5;
+	--sun: rgba(255, 255, 255, 0);
+	--sun-glow: rgba(255, 255, 255, 0);
+	--peak-far: #8c9cb0;
+	--peak-far-forest: #7a8ba0;
+	--peak-mid-rock: #7b8d9b;
+	--peak-mid: #5f767f;
+	--shore: #46606a;
+	--bank: #34504f;
+	--fore: #223e3c;
+	--fore-b: #2c4b47;
+	--lake-a: #9fb1c0;
+	--lake-b: #5d788f;
+	--siteBg: #aab7c4;
+	--siteFg: #12203a;
+	--siteFgStrong: #08122a;
+	--siteMuted: #26375a;
+	--cloud: #eef2f6;
+	--cloud-d: #5d6978;
+	--rain: 214, 226, 240;
+	--bolt: 236, 238, 255;
+}
+
+html.dark .site {
+	--sky-top: #04050d;
+	--sky-mid: #0d1024;
+	--sky-hor: #232746;
+	--sun: rgba(0, 0, 0, 0);
+	--sun-glow: rgba(0, 0, 0, 0);
+	--peak-far: #232a52;
+	--peak-far-forest: #1c2244;
+	--peak-mid-rock: #1d2347;
+	--peak-mid: #141a38;
+	--lake-a: #1c2048;
+	--lake-b: #080b22;
+	--cloud: #4a5273;
+	--cloud-d: #131730;
+	--rain: 170, 184, 235;
+	--bolt: 214, 220, 255;
+}
+
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 85%, transparent);
+}
+
+.site .st-cloud {
+	height: 140px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 400px;
+	will-change: transform;
+}
+
+.site .st-cloud svg {
+	display: block;
+	height: 100%;
+	overflow: visible;
+	width: 100%;
+}
+
+.site .st-cloud .c-dark {
+	fill: var(--cloud-d);
+	opacity: 0;
+}
+
+.site .st-cloud .c-lit {
+	fill: #fff;
+	opacity: 0;
+	transition: opacity 0.12s;
+}
+
+.site .st-cloud.lit .c-lit {
+	opacity: 0.7;
+}
+
+.site .st-flash {
+	inset: 0;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .st-canvas {
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}
+
+.site .st-btn,
+.site .st-hint {
+	font-family: var(--siteFont);
+}
+
+.site .st-btn {
+	align-items: center;
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgba(10, 20, 40, 0.18);
+	color: var(--tag-fg);
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 0.95rem;
+	font-weight: 700;
+	gap: 0.5rem;
+	padding: 0.5rem 0.95rem;
+	pointer-events: auto;
+	position: absolute;
+	right: 0.9rem;
+	z-index: 3;
+}
+
+.site .st-btn:hover,
+.site .st-btn:focus-visible {
+	background: var(--siteAccent);
+	color: #fff;
+	outline: none;
+}
+
+html.dark .site .st-btn:hover,
+html.dark .site .st-btn:focus-visible {
+	color: #0b1020;
+}
+
+.site .st-hint {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 10px;
+	bottom: 0.9rem;
+	color: var(--tag-fg);
+	font-size: 0.82rem;
+	font-weight: 600;
+	left: 0.9rem;
+	padding: 0.4rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	z-index: 3;
+}
+
+@media (max-width: 700px) {
+	.site .st-hint {
+		display: none;
+	}
+}

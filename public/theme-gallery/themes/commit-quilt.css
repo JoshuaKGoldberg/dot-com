@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito:wght@300..800&display=swap");
+.site { --siteFont: "Nunito", ui-sans-serif, system-ui, sans-serif; --siteFontDisplay: "Fraunces", Georgia, serif; --siteBg: #fbf5e8; --siteFg: #3a3022; --siteFgStrong: #271d10; --siteMuted: #6f604a; --siteAccent: #b4452c; --siteSquiggle: #e0883a; --siteSubtle: #eadfc6; }
+html.dark .site { --siteBg: #121723; --siteFg: #e4e0d4; --siteFgStrong: #fff6e2; --siteMuted: #a8a393; --siteAccent: #ff9b7a; --siteSquiggle: #f0a94a; --siteSubtle: #232c3f; }
+.site-title { font-weight: 800; }
+.site-section-title { font-weight: 800; }
+.site .site-page { max-width: 46rem; }
+.site .site-page > .site-header, .site .site-page > .site-main, .site .site-page > .site-footer { background: color-mix(in srgb, var(--siteBg) 92%, transparent); }
+.site .site-header { padding: 0.9rem 1.4rem; border-radius: 0 0 1rem 1rem; border: 2px dashed color-mix(in srgb, var(--siteMuted) 55%, transparent); border-top: 0; }
+.site .site-main { margin-top: 1.5rem; padding: 0.5rem 1.6rem 1.5rem; border-radius: 1rem; border: 2px dashed color-mix(in srgb, var(--siteMuted) 55%, transparent); }
+.site .site-footer { margin-top: 1.5rem; padding: 1rem; border-radius: 1rem; border: 2px dashed color-mix(in srgb, var(--siteMuted) 55%, transparent); opacity: 1; }
+.site .site-page { padding-top: 0; }
+.site .site-hero { margin: 2rem 0 2rem; gap: 1.5rem; }
+.site .cq-legend { position: absolute; left: 0.7rem; bottom: 0.8rem; max-width: 15rem; font-size: 0.8rem; line-height: 1.35; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 92%, transparent); padding: 0.45rem 0.7rem; border-radius: 0.7rem; border: 2px dashed color-mix(in srgb, var(--siteMuted) 50%, transparent); }
+.site .cq-legend b { color: var(--siteFgStrong); }
+.site .cq-sw { display: block; margin-top: 0.2rem; }
+.site .cq-sw i { display: inline-block; width: 0.8rem; height: 0.8rem; margin-right: 0.15rem; border-radius: 2px; }
+@media (max-width: 1150px) { .site .cq-legend { display: none; } }

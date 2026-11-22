@@ -1,0 +1,134 @@
+/* 18 — Bauhaus Color-Block */
+@import url("https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800&display=swap");
+
+.site {
+	--siteBg: #f4eedf;
+	--siteFg: #2a2a2e;
+	--siteFgStrong: #141416;
+	--siteMuted: #5e5a52;
+	--siteAccent: #b23a2e;
+	--siteSquiggle: #c9a227;
+	--siteSubtle: #e6dfcc;
+	--siteFont: "Jost", "Futura", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Jost", "Futura", sans-serif;
+	--red: #b5362b;
+	--ochre: #c9992a;
+	--blue: #2a58b0;
+	--ink: #141416;
+	--shape-alpha: 0.13;
+	--ochre-boost: 1.5;
+	--blue-boost: 1.5;
+}
+html.dark .site {
+	--siteBg: #0f0f11;
+	--siteFg: #e4e0d6;
+	--siteFgStrong: #f8f4ea;
+	--siteMuted: #a09b90;
+	--siteAccent: #e0867a;
+	--siteSquiggle: #d1a53a;
+	--siteSubtle: #1d1d21;
+	--red: #a0362f;
+	--ochre: #b58a22;
+	--blue: #34559c;
+	--ink: #e4e0d6;
+	--shape-alpha: 0.17;
+	--ochre-boost: 1;
+	--blue-boost: 1.2;
+}
+
+.site .site-scenery {
+	--scroll: 0;
+}
+
+/* quarter circle, top-right corner */
+.site .scenery-a {
+	background: var(--red);
+	border-radius: 0 0 0 100%;
+	height: clamp(180px, 26vw, 340px);
+	inset: auto;
+	left: auto;
+	opacity: var(--shape-alpha);
+	right: 0;
+	top: 0;
+	transform: translateY(calc(var(--scroll) * -0.04px));
+	width: clamp(180px, 26vw, 340px);
+}
+/* tall ochre bar, left margin */
+.site .scenery-b {
+	background: var(--ochre);
+	bottom: auto;
+	height: clamp(220px, 46vh, 420px);
+	inset: auto;
+	left: clamp(14px, 3vw, 56px);
+	opacity: calc(var(--shape-alpha) * var(--ochre-boost));
+	top: 12%;
+	transform: translateY(calc(var(--scroll) * -0.08px));
+	width: clamp(26px, 4.4vw, 64px);
+}
+/* blue square, bottom-left / right margin + thin rule */
+.site .scenery-c {
+	background: var(--blue);
+	bottom: auto;
+	height: clamp(90px, 14vw, 190px);
+	inset: auto;
+	opacity: calc(var(--shape-alpha) * var(--blue-boost));
+	right: clamp(16px, 4vw, 80px);
+	top: 62%;
+	transform: translateY(calc(var(--scroll) * -0.12px));
+	width: clamp(90px, 14vw, 190px);
+}
+/* thin rule, full-width hairline low in the left margin */
+.site .site-scenery::before,
+.site .site-scenery::after {
+	content: "";
+	position: absolute;
+}
+.site .site-scenery::before {
+	background: var(--ink);
+	height: 3px;
+	left: 0;
+	opacity: calc(var(--shape-alpha) * 2.2);
+	top: 84%;
+	transform: translateY(calc(var(--scroll) * -0.16px));
+	width: clamp(120px, 16vw, 240px);
+}
+.site .site-scenery::after {
+	background: var(--ink);
+	bottom: 0;
+	left: clamp(14px, 3vw, 56px);
+	opacity: calc(var(--shape-alpha) * 1.6);
+	top: 60%;
+	width: 2px;
+}
+
+/* typography: strong geometric headings */
+.site .site-title {
+	font-size: clamp(2.6rem, 6.6vw, 4.4rem);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 0.86;
+	text-transform: uppercase;
+}
+.site .site-section-title {
+	border-bottom: 4px solid var(--red);
+	display: inline-block;
+	font-size: 1.35rem;
+	font-weight: 800;
+	letter-spacing: 0.14em;
+	padding-bottom: 0.2rem;
+	text-transform: uppercase;
+}
+.site .site-logo {
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+.site .site-nav-link {
+	font-size: 1.1rem;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.site .site-tagline {
+	font-weight: 500;
+}

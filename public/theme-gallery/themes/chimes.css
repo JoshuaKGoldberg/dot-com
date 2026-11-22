@@ -1,0 +1,164 @@
+/* 121 — Wind Chimes: a small rack hangs top-right; sound stays off until the chip is pressed. */
+/* shared hint chip */
+.site .dl-chip {
+	align-items: center;
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 999px;
+	bottom: 1rem;
+	box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	display: inline-flex;
+	font: 600 0.85rem/1 var(--siteFont);
+	gap: 0.5rem;
+	padding: 0.45rem 0.7rem 0.45rem 0.6rem;
+	position: fixed;
+	right: 1rem;
+	transition: transform 0.15s, background-color 0.15s, border-color 0.15s;
+	z-index: 40;
+}
+
+.site .dl-chip:hover {
+	border-color: var(--siteAccent);
+	transform: translateY(-1px);
+}
+
+.site .dl-chip:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+.site .dl-chip[aria-pressed="true"] {
+	background: var(--siteAccent);
+	border-color: var(--siteAccent);
+	color: var(--siteBg);
+}
+
+.site .dl-chip kbd {
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	font: 700 0.7rem/1 var(--siteFont);
+	opacity: 0.7;
+	padding: 0.15rem 0.3rem;
+}
+
+.site .dl-chip::after {
+	border-radius: inherit;
+	box-shadow: 0 0 0 0 var(--siteAccent);
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .dl-chip::after {
+		animation: dl-ping 1.8s 1.2s 2 ease-out;
+	}
+}
+
+@keyframes dl-ping {
+	0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--siteAccent) 55%, transparent); }
+	100% { box-shadow: 0 0 0 14px transparent; }
+}
+
+.dl-sr {
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+
+.site .ch-rack {
+	display: flex;
+	gap: 0.55rem;
+	height: 5.6rem;
+	padding: 0.9rem 0.8rem 0;
+	position: fixed;
+	right: 1rem;
+	top: var(--barHeight);
+	z-index: 35;
+	opacity: 0.7;
+	transition: opacity 0.3s;
+}
+
+.site .ch-rack.is-on {
+	opacity: 1;
+}
+
+.site .ch-rack:hover {
+	opacity: 1;
+}
+
+.site .ch-bar {
+	background: linear-gradient(#a9825a, #7c5a3a);
+	border-radius: 3px;
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+	height: 0.45rem;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0.45rem;
+}
+
+.site .ch-tube {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	height: calc(3.1rem - var(--i) * 0.28rem);
+	margin-top: 0.55rem;
+	padding: 0;
+	position: relative;
+	transform-origin: 50% 0;
+	width: 0.7rem;
+}
+
+.site .ch-tube::before {
+	background: var(--siteMuted);
+	content: "";
+	height: 0.6rem;
+	left: 50%;
+	opacity: 0.7;
+	position: absolute;
+	top: -0.6rem;
+	width: 1px;
+}
+
+.site .ch-tube span {
+	background: linear-gradient(90deg, #8fa3b8, #e9f0f7 40%, #a2b4c6 70%, #70859b);
+	border-radius: 2px 2px 4px 4px;
+	bottom: 0;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+	display: block;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	transition: filter 0.4s;
+}
+
+html.dark .site .ch-tube span {
+	background: linear-gradient(90deg, #5d7188, #c4d4e4 40%, #7f93a8 70%, #475a70);
+}
+
+.site .ch-tube.ch-glow span {
+	background: var(--siteAccent);
+}
+
+.site .ch-tube:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 3px;
+}
+
+@media (max-width: 1100px) {
+	.site .ch-rack {
+		bottom: 3.4rem;
+		top: auto;
+		transform: scale(0.85);
+		transform-origin: 100% 100%;
+	}
+}

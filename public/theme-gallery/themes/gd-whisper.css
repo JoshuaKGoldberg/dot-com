@@ -1,0 +1,4 @@
+@import url("./_vs4/base.css");
+
+/* footer: a large mirrored aurora fills the bottom ~520px; the credit sits well inside it with room below */
+.site .site-footer { min-height: 360px; } /* was 600px: halves the empty space above the credit */

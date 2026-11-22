@@ -1,0 +1,23 @@
+@import url("_toy/toy.css");
+
+/* Rhythm Nav: the real nav links are the lanes; pulses are driven from JS while playing. */
+.site {
+	--toyAccent: #7048e8;
+	--toyAccent2: #f03e7e;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #b197fc;
+	--toyAccent2: #ff8ab4;
+	--toyOnAccent: #130a2e;
+}
+
+.site .site-nav-link {
+	will-change: auto;
+}
+
+.site .toy-chip {
+	right: auto;
+	left: 1rem;
+}

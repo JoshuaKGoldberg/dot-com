@@ -1,0 +1,5 @@
+/* #286 Quiet Winter: the plain site, with frost in the margins and along the bottom. */
+html.dark .site {
+	--siteBg: #0a1122;
+	--siteSubtle: #0f2238;
+}

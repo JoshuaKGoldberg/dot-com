@@ -1,0 +1,37 @@
+.site {
+	--siteBg: #eef0fb;
+	--siteFg: #2a2f55;
+	--siteFgStrong: #14173a;
+	--siteMuted: #5f6590;
+	--siteAccent: #4b44c9;
+	--siteSquiggle: #8a7cf0;
+	--siteSubtle: #dcdff5;
+	--starRgb: 52, 54, 130;
+	--starWarm: 190, 110, 90;
+}
+
+html.dark .site {
+	--siteBg: #050816;
+	--siteFg: #d8defa;
+	--siteFgStrong: #f3f5ff;
+	--siteMuted: #959cc6;
+	--siteAccent: #a9b6ff;
+	--siteSquiggle: #7f8cf0;
+	--siteSubtle: #121a3a;
+	--starRgb: 235, 240, 255;
+	--starWarm: 255, 214, 170;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(80% 60% at 20% 110%, rgba(255, 184, 150, 0.42), transparent 70%),
+		radial-gradient(60% 50% at 90% 0%, rgba(150, 140, 255, 0.28), transparent 70%),
+		linear-gradient(180deg, #e3e6fa 0%, #f1ecf8 100%);
+}
+
+html.dark .site .site-scenery .scenery-a {
+	background:
+		radial-gradient(80% 60% at 20% 115%, rgba(120, 70, 150, 0.35), transparent 70%),
+		radial-gradient(60% 50% at 90% 0%, rgba(50, 70, 190, 0.28), transparent 70%),
+		linear-gradient(180deg, #060a1c 0%, #0b0f28 100%);
+}

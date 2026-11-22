@@ -1,0 +1,108 @@
+/* #108 Typewriter Mode: plain site; the opt-in re-type styling lives under .tw-on. */
+.site .dx-chip {
+	align-items: center;
+	background: var(--siteBg);
+	border: 1px solid var(--siteSubtle);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgb(20 40 66 / 0.12);
+	color: var(--siteMuted);
+	display: inline-flex;
+	font: 600 0.8rem/1 var(--siteFont);
+	gap: 0.15rem;
+	padding: 0.25rem;
+	position: fixed;
+	right: 0.9rem;
+	z-index: 12;
+}
+
+.site .dx-chip button {
+	align-items: center;
+	background: none;
+	border: 0;
+	border-radius: 999px;
+	color: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	font: inherit;
+	gap: 0.45rem;
+	padding: 0.35rem 0.6rem;
+}
+
+.site .dx-chip button:hover,
+.site .dx-chip button:focus-visible {
+	background: var(--siteSubtle);
+	color: var(--siteFgStrong);
+	outline: none;
+}
+
+.site .dx-chip button[aria-pressed="true"] { color: var(--siteAccent); }
+.site .dx-chip kbd {
+	border: 1px solid currentColor;
+	border-radius: 4px;
+	font: 700 0.7rem/1 ui-monospace, monospace;
+	opacity: 0.8;
+	padding: 0.18rem 0.32rem;
+}
+
+.site .dx-chip svg { height: 1.1em; width: 1.1em; }
+
+/* Opt-in state */
+.site.tw-on {
+	--siteBg: #f4eedd;
+	--siteFg: #2d2a26;
+	--siteFgStrong: #1b1916;
+	--siteMuted: #6b6254;
+	--siteSubtle: #ddd3bb;
+	--siteAccent: #b3261e;
+	--siteSquiggle: #b3261e;
+	--siteFont: "Special Elite", "American Typewriter", "Courier New", monospace;
+	--siteFontDisplay: var(--siteFont);
+	letter-spacing: -0.01em;
+	transition: background-color 0.5s, color 0.5s;
+}
+
+html.dark .site.tw-on {
+	--siteBg: #1b1815;
+	--siteFg: #e6dcc6;
+	--siteFgStrong: #f7efdc;
+	--siteMuted: #a79d89;
+	--siteSubtle: #3a342b;
+	--siteAccent: #ff8a7a;
+	--siteSquiggle: #ff8a7a;
+}
+
+.site.tw-on .site-page { text-shadow: 0 0 0.6px currentColor; }
+.site.tw-on .site-title { font-weight: 400; line-height: 1; }
+.site.tw-on .site-about { font-weight: 400; }
+.site.tw-on .site-link::after { mask: none; background: repeating-linear-gradient(90deg, var(--siteSquiggle) 0 4px, transparent 4px 7px); height: 2px; bottom: -0.15em; }
+
+.site .tw-rest { visibility: hidden; }
+.site.tw-typing .site-link::after { opacity: 0; }
+
+.site .tw-caret {
+	background: var(--siteAccent);
+	height: 1.2em;
+	left: 0;
+	opacity: 0.85;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+	width: 0.6em;
+	z-index: 11;
+}
+
+.site .tw-caret.is-idle { animation: tw-blink 1s steps(1) infinite; }
+.site .tw-caret.is-jump { transition-duration: 0.2s; }
+.site .tw-caret.is-hit { transition: none; }
+
+@keyframes tw-blink { 50% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .tw-caret.is-idle { animation: none; }
+	.site.tw-on { transition: none; }
+}
+
+html.reduce-motion .site .tw-caret.is-idle { animation: none; }
+html.reduce-motion .site.tw-on { transition: none; }

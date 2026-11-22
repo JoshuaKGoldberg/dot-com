@@ -1,0 +1,147 @@
+/* 7. Atacama Night: dry dark ridge, diagonal Milky Way band, slow stars. Light is a pre-dawn lavender with ochre rock. */
+.site {
+	--sky-top: #cdc7e6;
+	--sky-mid: #e0dcf0;
+	--sky-hor: #f3e2dc;
+	--ridge-far: #dec6a4;
+	--ridge-near: #cfae82;
+	--ridge-rim: rgba(255, 232, 190, 0.5);
+	--star-o: 0.35;
+	--mw-o: 0.25;
+	--siteBg: #e0dcf0;
+	--siteFg: #2a2f52;
+	--siteFgStrong: #181c3e;
+	--siteMuted: #4f5680;
+	--siteAccent: #4a3fb0;
+	--siteSquiggle: #b9742a;
+	--siteSubtle: #d9d3ea;
+}
+
+html.dark .site {
+	--sky-top: #03040d;
+	--sky-mid: #0a0e26;
+	--sky-hor: #261d36;
+	--ridge-far: #14121f;
+	--ridge-near: #08080f;
+	--ridge-rim: rgba(200, 120, 80, 0.16);
+	--star-o: 1;
+	--mw-o: 1;
+	--siteBg: #07091c;
+	--siteFg: #dde2f2;
+	--siteFgStrong: #f4f5fb;
+	--siteMuted: #a3a9c6;
+	--siteAccent: #9fb4ff;
+	--siteSquiggle: #e4a35e;
+	--siteSubtle: #14183a;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 70% 20% at 30% 100%, color-mix(in srgb, var(--sky-hor) 80%, transparent), transparent 80%),
+		linear-gradient(to bottom, var(--sky-top), var(--sky-mid) 60%, var(--sky-hor) 100%);
+	overflow: hidden;
+}
+
+/* Milky Way: soft blurred ellipses along a diagonal, plus a dark dust lane. */
+.site .mw {
+	height: 38%;
+	inset: auto;
+	left: -20%;
+	opacity: var(--mw-o);
+	top: 22%;
+	transform: rotate(-31deg);
+	width: 140%;
+}
+
+.site .mw-glow {
+	background:
+		radial-gradient(ellipse 22% 28% at 50% 50%, rgba(230, 215, 255, 0.2), transparent 70%),
+		radial-gradient(ellipse 38% 24% at 38% 52%, rgba(180, 170, 240, 0.15), transparent 72%),
+		radial-gradient(ellipse 32% 20% at 66% 46%, rgba(240, 200, 220, 0.13), transparent 72%),
+		radial-gradient(ellipse 58% 36% at 50% 50%, rgba(120, 130, 220, 0.1), transparent 75%),
+		radial-gradient(ellipse 12% 14% at 18% 55%, rgba(255, 225, 200, 0.12), transparent 70%);
+	filter: blur(18px);
+	inset: 0;
+	position: absolute;
+}
+
+.site .mw-dust {
+	background:
+		radial-gradient(ellipse 26% 8% at 46% 48%, rgba(3, 4, 14, 0.5), transparent 75%),
+		radial-gradient(ellipse 16% 6% at 70% 54%, rgba(3, 4, 14, 0.4), transparent 75%),
+		radial-gradient(ellipse 20% 5% at 24% 44%, rgba(3, 4, 14, 0.35), transparent 75%);
+	filter: blur(10px);
+	inset: 0;
+	position: absolute;
+}
+
+html:not(.dark) .site .mw-dust {
+	display: none;
+}
+
+.site .stars-svg {
+	inset: 0;
+	opacity: var(--star-o);
+	position: absolute;
+}
+
+.site .stars-svg ellipse {
+	fill: #eef0ff;
+}
+
+.site .scenery-c {
+	bottom: 0;
+	height: clamp(100px, 22vh, 220px);
+	top: auto;
+}
+
+.site .dune-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .dune-svg .far {
+	fill: var(--ridge-far);
+}
+
+.site .dune-svg .near {
+	fill: var(--ridge-near);
+}
+
+.site .dune-svg .rim {
+	fill: none;
+	stroke: var(--ridge-rim);
+	stroke-width: 1.2;
+}
+
+.site .shooting {
+	background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.85));
+	height: 1.5px;
+	left: 0;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	transform-origin: right center;
+	width: 120px;
+}
+
+html:not(.dark) .site .shooting {
+	display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .stars-svg .twinkle {
+		animation: twinkle var(--tw-d, 10s) ease-in-out var(--tw-delay, 0s) infinite;
+	}
+}
+
+@keyframes twinkle {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.2;
+	}
+}

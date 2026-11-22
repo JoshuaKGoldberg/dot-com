@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap");
+.site { --siteFont: "Outfit", ui-sans-serif, system-ui, sans-serif; --siteBg: #eef6fc; --siteSubtle: #cfe3f2; --siteFg: #243756; }
+html.dark .site { --siteBg: #0c1424; --siteSubtle: #1b2b45; --siteFg: #dbe6f4; }
+.site .site-scenery { background: linear-gradient(180deg, #cde5f7 0%, #eef6fc 55%, #fdffff 100%); }
+html.dark .site .site-scenery { background: linear-gradient(180deg, #0a1020 0%, #14213a 60%, #1c2c48 100%); }
+.site .scenery-a { overflow: hidden; }
+.site .ww-wrap { position: absolute; inset: 0; transform: translate3d(0, calc(var(--scroll, 0) * -0.04px), 0); }
+.site .ww-word { position: absolute; left: 0; top: var(--y); font-size: var(--s); font-weight: 700; letter-spacing: -0.03em; line-height: 1; white-space: nowrap; color: #3b6fa8; opacity: var(--a); will-change: transform; transform: translate3d(var(--sx), 0, 0); animation: ww-drift var(--dur) linear var(--delay) infinite; }
+.site .ww-word::before { content: ""; position: absolute; left: -25%; right: -25%; top: -60%; bottom: -60%; z-index: -1; background: radial-gradient(closest-side, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0)); opacity: 4; }
+html.dark .site .ww-word { color: #9cc4f5; }
+html.dark .site .ww-word::before { background: radial-gradient(closest-side, rgba(80, 110, 170, 0.5), rgba(80, 110, 170, 0)); }
+@keyframes ww-drift { from { transform: translate3d(-45vw, 0, 0); } to { transform: translate3d(110vw, 0, 0); } }
+@media (prefers-reduced-motion: reduce) { .site .ww-word { animation: none; } }
+html.reduce-motion .site .ww-word { animation: none; }
+.site .ww-chip { position: absolute; right: 0.9rem; bottom: 1rem; max-width: 13.5rem; font-size: 0.85rem; line-height: 1.35; color: var(--siteFg); background: color-mix(in srgb, var(--siteBg) 86%, transparent); border: 1px solid var(--siteSubtle); padding: 0.4rem 0.8rem; border-radius: 0.8rem; }
+.site .ww-chip em { font-style: normal; font-weight: 700; color: var(--siteAccent); }
+.site .ww-chip span { color: var(--siteMuted); }
+@media (max-width: 1099px) { .site .ww-chip { display: none; } }

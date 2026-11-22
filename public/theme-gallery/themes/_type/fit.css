@@ -1,0 +1,24 @@
+/* generated: per-theme --tyFit (cqi) so the hero line "Hello. I’m Josh." fits on one line: 95 / its measured advance width in em */
+html[data-theme="ty-caslon"] .site { --tyFit: 17.53; }
+html[data-theme="ty-cormorant-jost"] .site { --tyFit: 16.81; }
+html[data-theme="ty-cormorant-plex"] .site { --tyFit: 16.69; }
+html[data-theme="ty-eb-garamond"] .site { --tyFit: 16.25; }
+html[data-theme="ty-extremes"] .site { --tyFit: 16.67; }
+html[data-theme="ty-fraunces-figtree"] .site { --tyFit: 16.39; }
+html[data-theme="ty-fraunces-spartan"] .site { --tyFit: 15.77; }
+html[data-theme="ty-funnel"] .site { --tyFit: 14.98; }
+html[data-theme="ty-gambetta"] .site { --tyFit: 15.69; }
+html[data-theme="ty-hedvig"] .site { --tyFit: 15.03; }
+html[data-theme="ty-instrument"] .site { --tyFit: 20.07; }
+html[data-theme="ty-literata"] .site { --tyFit: 13.82; }
+html[data-theme="ty-mincho"] .site { --tyFit: 13.48; }
+html[data-theme="ty-mona"] .site { --tyFit: 13.9; }
+html[data-theme="ty-newsreader"] .site { --tyFit: 15.28; }
+html[data-theme="ty-plex"] .site { --tyFit: 14.47; }
+html[data-theme="ty-redaction"] .site { --tyFit: 14.85; }
+html[data-theme="ty-schibsted"] .site { --tyFit: 13.67; }
+html[data-theme="ty-source-serif"] .site { --tyFit: 16.48; }
+html[data-theme="ty-special-gothic"] .site { --tyFit: 15.73; }
+html[data-theme="ty-specimen"] .site { --tyFit: 16.7; }
+html[data-theme="ty-spectral"] .site { --tyFit: 15.39; }
+html[data-theme="ty-ysabeau"] .site { --tyFit: 16.21; }

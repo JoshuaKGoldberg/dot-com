@@ -1,0 +1,51 @@
+/* Token plan
+ * Families: Spectral 300/400/600 + Cormorant Garamond 500-600 (section heads).
+ * Scale: hero wght 300 at 66px, -0.03em; tagline Spectral 300 1.4rem; ratio 2.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #56: screen-first serif in a light hero, with Cormorant section heads.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;600&family=Cormorant+Garamond:wght@500..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Spectral Fallback"; src: local("Georgia"); size-adjust: 99.6%; ascent-override: 106.5%; descent-override: 46.2%; line-gap-override: 0%; }
+@font-face { font-family: "Cormorant Garamond Fallback"; src: local("Georgia"); size-adjust: 88.0%; ascent-override: 104.6%; descent-override: 33.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #403 (from #56) Spectral hero in its light weight (a screen-first serif), Cormorant Garamond for section headings. */
+.site {
+	--tyDisplay: "Spectral", "Spectral Fallback", Georgia, serif;
+	--tyBody: var(--tyDisplay);
+	--tyHead: "Cormorant Garamond", "Cormorant Garamond Fallback", Garamond, Georgia, serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13.5cqi, 4.9rem);
+	--tyTitleW: 300;
+	--tyTitleLs: -0.03em;
+	--tyTitleLh: 0.95;
+	--tyTagSize: 1.4rem;
+	--tyTagW: 300;
+	--tyTagLs: 0;
+	--tyTagLh: 1.35;
+	--tyTagMax: 21em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1.05rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.1rem;
+	--tyLogoSize: 1.2rem;
+	--tyLogoW: 600;
+	--tySecFont: var(--tyHead);
+	--tySecSize: 2.4rem;
+	--tySecW: 500;
+	--tySecLs: -0.005em;
+	--tyItemW: 600;
+	--tyItemSize: 1.15rem;
+	--tyMetaSize: 0.9rem;
+	--tyMetaLs: 0.02em;
+	--tyMetaNums: oldstyle-nums;
+}

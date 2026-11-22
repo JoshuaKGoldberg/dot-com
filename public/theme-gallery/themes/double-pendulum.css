@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+
+.site {
+	--siteBg: #f6f4ec;
+	--siteFg: #28323f;
+	--siteFgStrong: #101823;
+	--siteMuted: #5d6a7a;
+	--siteAccent: #d13d1f;
+	--siteSquiggle: #1d8bc0;
+	--siteSubtle: #dfe6e8;
+	--siteFont: "IBM Plex Sans", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--pd-a: #e2461f;
+	--pd-b: #1a8cd8;
+	--pd-grid: rgb(30 90 150 / 0.09);
+	--pd-grid2: rgb(30 90 150 / 0.2);
+	--pd-ink: #1c2733;
+}
+
+html.dark .site {
+	--siteBg: #060b0d;
+	--siteFg: #bfe0d4;
+	--siteFgStrong: #eafff6;
+	--siteMuted: #78a392;
+	--siteAccent: #ffb454;
+	--siteSquiggle: #4de3a6;
+	--siteSubtle: #0f1d1b;
+	--pd-a: #ffb454;
+	--pd-b: #4de3e0;
+	--pd-grid: rgb(80 255 190 / 0.06);
+	--pd-grid2: rgb(80 255 190 / 0.14);
+	--pd-ink: #cdeee0;
+}
+
+.site .scenery-b {
+	background-image:
+		linear-gradient(var(--pd-grid2) 1px, transparent 1px),
+		linear-gradient(90deg, var(--pd-grid2) 1px, transparent 1px),
+		linear-gradient(var(--pd-grid) 1px, transparent 1px),
+		linear-gradient(90deg, var(--pd-grid) 1px, transparent 1px);
+	background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+}
+
+.site .scenery-a canvas {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+.site .site-item-meta,
+.site .site-footer {
+	font-family: "IBM Plex Mono", ui-monospace, monospace;
+	font-size: 0.85rem;
+}
+
+.site .site-portrait img {
+	border: 2px solid var(--pd-ink);
+	box-shadow: 8px 8px 0 -2px color-mix(in srgb, var(--pd-b) 35%, transparent);
+}
+
+/* Keep prose readable above the instruments. */
+.site .site-page {
+	text-shadow: 0 0 10px var(--siteBg), 0 0 4px var(--siteBg);
+}
+
+html.dark .site .site-portrait img {
+	box-shadow: 0 0 24px color-mix(in srgb, var(--pd-b) 40%, transparent);
+}

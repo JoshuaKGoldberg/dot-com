@@ -1,0 +1,27 @@
+.site {
+	--siteBg: #f6f8fb;
+	--siteFg: #27324a;
+	--siteFgStrong: #121b30;
+	--siteMuted: #5d6a85;
+	--siteAccent: #3b5bdb;
+	--siteSquiggle: #6b86f0;
+	--siteSubtle: #dfe6f3;
+	--dotColor: 59, 91, 219;
+	--dotBase: 90, 105, 140;
+}
+
+html.dark .site {
+	--siteBg: #0a0e1a;
+	--siteFg: #d6def0;
+	--siteFgStrong: #f1f4fb;
+	--siteMuted: #8f9bb8;
+	--siteAccent: #8fa8ff;
+	--siteSquiggle: #6e88f5;
+	--siteSubtle: #151c33;
+	--dotColor: 143, 168, 255;
+	--dotBase: 120, 140, 190;
+}
+
+.site .site-scenery .scenery-a {
+	background: radial-gradient(70% 60% at 72% 30%, rgba(var(--dotColor), 0.08), transparent 70%);
+}

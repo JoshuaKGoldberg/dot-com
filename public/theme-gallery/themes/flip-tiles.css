@@ -1,0 +1,19 @@
+.site {
+	--siteBg: #f8f7fb;
+	--siteFg: #2d2a45;
+	--siteFgStrong: #17142e;
+	--siteMuted: #625e82;
+	--siteAccent: #6a3fd1;
+	--siteSquiggle: #a07df0;
+	--siteSubtle: #e6e2f3;
+}
+
+html.dark .site {
+	--siteBg: #0e0c1a;
+	--siteFg: #e0dcf4;
+	--siteFgStrong: #f7f5ff;
+	--siteMuted: #9d98c0;
+	--siteAccent: #c2a8ff;
+	--siteSquiggle: #9a78f0;
+	--siteSubtle: #1a1633;
+}

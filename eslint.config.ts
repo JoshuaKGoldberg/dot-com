@@ -23,6 +23,7 @@ export default defineConfig(
 			"dist",
 			"node_modules",
 			"pnpm-lock.yaml",
+			"public/theme-gallery",
 			"src/*.d.ts",
 		],
 		"Global Ignores",

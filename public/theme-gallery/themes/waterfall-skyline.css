@@ -1,0 +1,120 @@
+.site {
+	--siteBg: #f6f4fb;
+	--siteFg: #2a2f4a;
+	--siteFgStrong: #181c36;
+	--siteMuted: #5b6086;
+	--siteAccent: #5a3fd0;
+	--siteSquiggle: #ff6fb5;
+	--siteSubtle: #e4def5;
+}
+
+html.dark .site {
+	--siteBg: #090d1c;
+	--siteFg: #d9e0f5;
+	--siteFgStrong: #f4f6ff;
+	--siteMuted: #98a3c7;
+	--siteAccent: #9d8cff;
+	--siteSquiggle: #ff6fb5;
+	--siteSubtle: #1b2145;
+}
+
+.site {
+	background: var(--siteBg);
+}
+
+/* Sky: a flat gradient (cheap), plus a baked star field in dark mode. */
+.site .scenery-b {
+	background: linear-gradient(180deg, transparent 20%, #ffd9d0 100%);
+	opacity: 0.55;
+}
+
+html.dark .site .scenery-b {
+	background: linear-gradient(180deg, transparent 15%, #2b2262 70%, #5b2a6e 100%);
+	opacity: 0.85;
+}
+
+html.dark .site .scenery-c {
+	background-image:
+		radial-gradient(1.2px 1.2px at 12% 14%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 27% 32%, #cfd8ff 50%, transparent 51%),
+		radial-gradient(1.4px 1.4px at 43% 9%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 58% 24%, #ffe8f4 50%, transparent 51%),
+		radial-gradient(1.3px 1.3px at 71% 12%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 86% 28%, #cfd8ff 50%, transparent 51%),
+		radial-gradient(1px 1px at 93% 8%, #fff 50%, transparent 51%),
+		radial-gradient(1px 1px at 6% 40%, #fff 50%, transparent 51%);
+	opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-c {
+		animation: sky-twinkle 6s ease-in-out infinite alternate;
+	}
+}
+
+@keyframes sky-twinkle {
+	to {
+		opacity: 0.45;
+	}
+}
+
+.site .site-title {
+	letter-spacing: -0.01em;
+}
+
+.site .site-item {
+	border-radius: 0.6rem;
+}
+
+/* Legend card, bottom-left over the skyline. */
+.site .sky-card {
+	background: color-mix(in srgb, var(--siteBg) 78%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 35%, transparent);
+	border-radius: 0.6rem;
+	bottom: 3rem;
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.72rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.3rem;
+	left: 0.9rem;
+	width: 13.5rem;
+	padding: 0.55rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .sky-title {
+	color: var(--siteFgStrong);
+	font-family: var(--siteFont);
+	font-size: 0.9rem;
+	font-weight: 800;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.site .sky-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.15rem 0.7rem;
+}
+
+.site .sky-key::before {
+	background: var(--key);
+	border-radius: 2px;
+	content: "";
+	display: inline-block;
+	height: 0.55rem;
+	margin-right: 0.3rem;
+	width: 0.55rem;
+}
+
+.site .sky-readout {
+	color: var(--siteMuted);
+	min-height: 5.4em;
+}
+
+@media (max-width: 1180px) {
+	.site .sky-card {
+		display: none;
+	}
+}

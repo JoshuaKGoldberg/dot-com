@@ -1,0 +1,102 @@
+/* 167. Earth Layers: scroll descends from sky through canopy, soil and rock to the warm core. */
+.site {
+	--siteBg: #fbf7ef;
+	--siteFg: #2b2a2a;
+	--siteFgStrong: #14110f;
+	--siteMuted: #5a5148;
+	--siteAccent: #a1450d;
+	--siteSquiggle: #e0782f;
+	--siteSubtle: #eadfcc;
+}
+html.dark .site {
+	--siteBg: #120e10;
+	--siteFg: #ecdfd2;
+	--siteFgStrong: #fff6ea;
+	--siteMuted: #bda99a;
+	--siteAccent: #ffb067;
+	--siteSquiggle: #ff9a4a;
+	--siteSubtle: #2a1d1c;
+}
+.site .site-page {
+	max-width: 50rem;
+}
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 70%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteFgStrong) 12%, transparent);
+	border-radius: 0.9rem;
+	box-shadow: 0 16px 36px -22px rgb(0 0 0 / 0.6);
+	padding: 1.6rem 1.8rem;
+}
+.site .site-hero { margin: 4vh 0 34vh; }
+.site .site-about { margin: 0 auto 34vh; }
+.site .site-section { margin: 0 auto 34vh; }
+.site .site-footer { margin: 0 auto; max-width: 28rem; }
+
+/* Strata marker: a drill-core tab on the left of each panel */
+.site .site-about::before,
+.site .site-section::before {
+	background: var(--siteAccent);
+	border-radius: 0.2rem;
+	color: var(--siteBg);
+	content: "Canopy";
+	font-size: 0.78rem;
+	font-weight: 700;
+	left: 1.8rem;
+	letter-spacing: 0.1em;
+	padding: 0.1rem 0.6rem;
+	position: absolute;
+	text-transform: uppercase;
+	top: -0.75rem;
+}
+.site .site-about,
+.site .site-section {
+	position: relative;
+}
+.site .site-posts::before { content: "Topsoil"; }
+.site .site-projects::before { content: "Bedrock"; }
+.site .site-talks::before { content: "Mantle"; }
+
+.site .el-hud {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border-radius: 2rem;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	font-size: 0.95rem;
+	font-weight: 700;
+	left: 2.2rem;
+	padding: 0.35rem 0.9rem;
+	position: absolute;
+}
+.site .el-gauge {
+	background: linear-gradient(#7fb0e8 0 17%, #2f6a43 17% 41%, #7a5236 41% 55%, #8e7d70 55% 77%, #c8401c 77% 92%, #ffd25a);
+	border-radius: 1rem;
+	bottom: 4rem;
+	left: 0.8rem;
+	position: absolute;
+	top: 4rem;
+	width: 0.5rem;
+}
+.site .el-gauge i {
+	background: var(--siteFgStrong);
+	border: 2px solid var(--siteBg);
+	border-radius: 50%;
+	height: 0.9rem;
+	left: -0.25rem;
+	margin-top: -0.45rem;
+	position: absolute;
+	top: var(--m, 0%);
+	width: 0.9rem;
+}
+@media (max-width: 900px) {
+	.site .el-gauge { display: none; }
+	.site .el-hud { left: 1rem; }
+}

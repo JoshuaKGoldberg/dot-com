@@ -1,0 +1,61 @@
+/* 102. Sled Run: a snowy Adirondack hillside, birds in the spruce, and a physics sled. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--sky-top: #b4c9dc;
+	--sky-mid: #d9e5ee;
+	--sky-hor: #f2eee8;
+	--sun: #fff6df;
+	--peak-far: #c4d3e1;
+	--peak-far-forest: #aebfd0;
+	--peak-mid-rock: #d8e2ec;
+	--peak-mid: #9fb3c4;
+	--shore: #7f97a7;
+	--bank: #5f7d8b;
+	--fore: #25423f;
+	--fore-b: #31524d;
+	--brush: #1f3836;
+	--lake-a: #e6eef4;
+	--lake-b: #c3d4e1;
+	--streak: #ffffff;
+	--snow-hi: #ffffff;
+	--siteBg: #dbe6ef;
+	--siteSquiggle: #3d8fd8;
+	--snow: #f6fbff;
+	--snow-d: #cfe0ee;
+	--snow-s: #a8c0d8;
+	--tree: #2c4d49;
+	--tree-d: #1f3a37;
+	--trunk: #5a3d2a;
+	--sled: #b5652c;
+	--sled-l: #d28a45;
+	--runner: #4a5560;
+}
+
+html.dark .site {
+	--sky-top: #070a22;
+	--sky-mid: #151a46;
+	--sky-hor: #38396a;
+	--peak-far: #3a4378;
+	--peak-far-forest: #2f3868;
+	--peak-mid-rock: #4a5390;
+	--peak-mid: #232a56;
+	--shore: #151c40;
+	--bank: #0e1436;
+	--lake-a: #2d3262;
+	--lake-b: #12163a;
+	--siteBg: #0d1030;
+	--snow: #cfd8ff;
+	--snow-d: #8e9ae0;
+	--snow-s: #5b66b4;
+	--tree: #101a3c;
+	--tree-d: #0a1230;
+	--trunk: #2c2540;
+	--sled: #c0703a;
+	--sled-l: #de9658;
+	--runner: #8a96c8;
+}
+
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 85%, transparent);
+}

@@ -1,0 +1,423 @@
+/*
+ * Zero JS: Sunset Scroll. There is no zj-sunset.js: everything here is CSS.
+ *   scroll-driven animation -> ONE scroll timeline walks the sun down and fades the sky stages in
+ *   stacked pre-colored layers -> each sky + water stage is a static gradient layer; scrolling only
+ *                              crossfades their `opacity` and moves the sun's `translate`, so the whole
+ *                              effect runs on the compositor (no style recalc, no repaint per frame)
+ *   color-mix()             -> stage water and tints are derived from each stage's sky at definition time
+ *   mask                    -> the sun's reflection fades into the lake
+ * Layers, bottom to top: .site bg (day) / 4 stage layers / sun, clouds, stars / reflection and ripples.
+ */
+
+.site {
+	--siteBg: #8cc6f0;
+	--siteFg: #1a2840;
+	--siteFgStrong: #0b1424;
+	--siteMuted: #4b5a74;
+	--siteAccent: #0f62b8;
+	--siteSquiggle: #0f62b8;
+	--siteSubtle: #eaf3fb;
+	--panel: #ffffff;
+	--ink: #1a2840;
+	--ink-s: #0b1424;
+	--ink-m: #4b5a74;
+	--sun-c: #ffb04a;
+	--horizon: 62vh;
+
+	/* day */
+	background:
+		linear-gradient(180deg, #aac9df, #3d7cba) 0 var(--horizon) / 100% 100% no-repeat,
+		linear-gradient(180deg, #4c9be8, #8cc6f0 40%, #f6efd8 var(--horizon), #4c9be8);
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #b24a74;
+	--siteFg: #f1e6ee;
+	--siteFgStrong: #fff8fb;
+	--siteMuted: #cdb4c8;
+	--siteAccent: #ffb98a;
+	--siteSquiggle: #ffb98a;
+	--siteSubtle: #2a1840;
+	--panel: #1a1030;
+	--ink: #f1e6ee;
+	--ink-s: #fff8fb;
+	--ink-m: #cdb4c8;
+	--sun-c: #ff6a30;
+
+	/* dusk already */
+	background:
+		linear-gradient(180deg, #a15f5e, #241d53) 0 var(--horizon) / 100% 100% no-repeat,
+		linear-gradient(180deg, #2d2468, #b24a74 40%, #ff8f55 var(--horizon), #2d2468);
+}
+
+/*
+ * Stage layers: a fixed full-viewport sky + water gradient each. Colors are the old keyframe stops;
+ * the water is derived from each stage's sky with color-mix(), exactly as before.
+ */
+.site::before,
+.site::after,
+.site .site-scenery::before,
+.site .site-scenery::after {
+	background:
+		linear-gradient(180deg, color-mix(in srgb, var(--h) 55%, var(--t)), color-mix(in srgb, var(--t) 80%, #000)) 0 var(--horizon) / 100% 100% no-repeat,
+		linear-gradient(180deg, var(--t), var(--m) 40%, var(--h) var(--horizon), var(--t));
+	contain: paint;
+	content: "";
+	inset: 0;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: var(--barHeight);
+	will-change: opacity;
+}
+
+.site::before { --t: #6a73b8; --m: #f0a27a; --h: #ffb06a; z-index: -4; }
+.site::after { --t: #3a3478; --m: #d9627a; --h: #ff8a56; z-index: -3; }
+.site .site-scenery::before { --t: #1b1d52; --m: #7a3b80; --h: #e8697a; z-index: -2; }
+.site .site-scenery::after { --t: #070b24; --m: #151b4a; --h: #3c2a58; z-index: -1; }
+
+html.dark .site::before { --t: #1a1b55; --m: #6a3478; --h: #e0626e; }
+html.dark .site::after { --t: #050818; --m: #0f1540; --h: #2e2250; }
+html.dark .site .site-scenery::before,
+html.dark .site .site-scenery::after {
+	display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site::before { animation: ss-fade-1 linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site::after { animation: ss-fade-2 linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .site-scenery::before { animation: ss-fade-3 linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .site-scenery::after { animation: ss-fade-4 linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .scenery-a::before { animation: ss-sun-y linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .scenery-b::before { animation: ss-sun-r linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .scenery-a::after { animation: ss-cloud-fade linear both, ss-clouds 180s linear infinite; animation-timeline: --pg, auto; }
+		html:not(.reduce-motion) .site .scenery-b::after { animation: ss-stars linear both; animation-timeline: --pg; }
+		html:not(.reduce-motion) .site .scenery-c::before { animation: ss-refl linear both; animation-timeline: --pg; }
+	}
+}
+
+/* light mode: day -> sunset (47%) -> deep sunset (55%) -> twilight (76%) -> night */
+@keyframes ss-fade-1 { 0% { opacity: 0; } 47%, 100% { opacity: 1; } }
+@keyframes ss-fade-2 { 0%, 47% { opacity: 0; } 55%, 100% { opacity: 1; } }
+@keyframes ss-fade-3 { 0%, 55% { opacity: 0; } 76%, 100% { opacity: 1; } }
+@keyframes ss-fade-4 { 0%, 76% { opacity: 0; } 100% { opacity: 1; } }
+
+html.dark .site::before { animation-name: ss-dfade-1; }
+html.dark .site::after { animation-name: ss-dfade-2; }
+@keyframes ss-dfade-1 { 0% { opacity: 0; } 45%, 100% { opacity: 1; } }
+@keyframes ss-dfade-2 { 0%, 45% { opacity: 0; } 100% { opacity: 1; } }
+
+/* ---- sky: sun (two pre-colored discs crossfaded), clouds, stars ---- */
+
+.site .scenery-a,
+.site .scenery-b {
+	bottom: calc(100% - var(--horizon));
+	contain: paint;
+	overflow: hidden;
+}
+
+.site .scenery-a::before,
+.site .scenery-b::before {
+	border-radius: 50%;
+	content: "";
+	height: 26rem;
+	left: 68%;
+	position: absolute;
+	top: -13rem;
+	translate: 0 6vh;
+	width: 26rem;
+	will-change: translate, opacity;
+}
+
+.site .scenery-a::before {
+	background: radial-gradient(circle, #ffe9a0 0 17%, rgb(255 226 140 / 0.5) 19%, rgb(255 226 140 / 0.16) 36%, transparent 64%);
+}
+
+.site .scenery-b::before {
+	background: radial-gradient(circle, #ff6a30 0 17%, rgb(255 106 48 / 0.5) 19%, rgb(255 106 48 / 0.16) 36%, transparent 64%);
+	opacity: 0;
+}
+
+html.dark .site .scenery-a::before {
+	display: none;
+}
+
+html.dark .site .scenery-b::before {
+	opacity: 1;
+	translate: 0 50vh;
+}
+
+@keyframes ss-sun-y {
+	0% { opacity: 1; translate: 0 6vh; }
+	20% { opacity: 1; }
+	30% { translate: 0 26vh; }
+	47% { translate: 0 40vh; }
+	50% { opacity: 0; }
+	55% { translate: 0 51vh; }
+	76% { translate: 0 68vh; }
+	100% { opacity: 0; translate: 0 70vh; }
+}
+
+@keyframes ss-sun-r {
+	0% { opacity: 0; translate: 0 6vh; }
+	20% { opacity: 0; }
+	30% { translate: 0 26vh; }
+	47% { translate: 0 40vh; }
+	50%, 100% { opacity: 1; }
+	55% { translate: 0 51vh; }
+	76% { translate: 0 68vh; }
+	100% { translate: 0 72vh; }
+}
+
+html.dark .site .scenery-b::before {
+	animation-name: ss-sun-dark;
+}
+
+@keyframes ss-sun-dark {
+	0% { opacity: 1; translate: 0 50vh; }
+	45% { translate: 0 69vh; }
+	100% { opacity: 1; translate: 0 72vh; }
+}
+
+.site .scenery-a::after {
+	--cloud: #ffeedd;
+	background:
+		radial-gradient(ellipse 12rem 1.6rem at 22% 34%, var(--cloud), transparent),
+		radial-gradient(ellipse 18rem 2.2rem at 62% 52%, var(--cloud), transparent),
+		radial-gradient(ellipse 9rem 1.2rem at 86% 22%, var(--cloud), transparent);
+	background-repeat: repeat-x;
+	background-size: 50% 100%;
+	content: "";
+	inset: 0 -100% 0 0;
+	opacity: 0.45;
+	position: absolute;
+	will-change: translate, opacity;
+}
+
+@keyframes ss-cloud-fade {
+	0% { opacity: 0.45; }
+	55% { opacity: 0.4; }
+	100% { opacity: 0.08; }
+}
+
+@keyframes ss-clouds {
+	to { translate: 50% 0; }
+}
+
+.site .scenery-b::after {
+	background:
+		radial-gradient(1.4px 1.4px at 8% 14%, #fff, transparent),
+		radial-gradient(1px 1px at 17% 38%, #fff, transparent),
+		radial-gradient(1.6px 1.6px at 26% 8%, #fff, transparent),
+		radial-gradient(1px 1px at 34% 26%, #fff, transparent),
+		radial-gradient(1.4px 1.4px at 44% 16%, #fff, transparent),
+		radial-gradient(1px 1px at 52% 42%, #fff, transparent),
+		radial-gradient(1.6px 1.6px at 61% 10%, #fff, transparent),
+		radial-gradient(1px 1px at 72% 34%, #fff, transparent),
+		radial-gradient(1.4px 1.4px at 80% 20%, #fff, transparent),
+		radial-gradient(1px 1px at 88% 44%, #fff, transparent),
+		radial-gradient(1.6px 1.6px at 94% 12%, #fff, transparent),
+		radial-gradient(1px 1px at 4% 46%, #fff, transparent),
+		radial-gradient(1.2px 1.2px at 39% 5%, #fff, transparent),
+		radial-gradient(1.2px 1.2px at 67% 48%, #fff, transparent);
+	content: "";
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	will-change: opacity;
+}
+
+html.dark .site .scenery-b::after {
+	opacity: 0.15;
+	animation-name: ss-stars-dark;
+}
+
+@keyframes ss-stars {
+	0%, 55% { opacity: 0; }
+	76% { opacity: 0.35; }
+	100% { opacity: 1; }
+}
+
+@keyframes ss-stars-dark {
+	0% { opacity: 0.15; }
+	45% { opacity: 0.5; }
+	100% { opacity: 1; }
+}
+
+/* ---- water: the lake body is in the stage layers; here is just the reflection and the ripple lines ---- */
+
+.site .scenery-c {
+	contain: paint;
+	inset: var(--horizon) 0 0 0;
+	overflow: hidden;
+}
+
+.site .scenery-c::before {
+	background: repeating-linear-gradient(180deg, var(--sun-c) 0 3px, transparent 3px 11px);
+	content: "";
+	height: 70%;
+	left: calc(68% + 8rem);
+	-webkit-mask: linear-gradient(180deg, #000, transparent), radial-gradient(closest-side, #000 40%, transparent);
+	mask: linear-gradient(180deg, #000, transparent) intersect, radial-gradient(closest-side, #000 40%, transparent);
+	mask-composite: intersect;
+	opacity: 0.5;
+	position: absolute;
+	top: 0;
+	width: 10rem;
+	will-change: opacity;
+}
+
+html.dark .site .scenery-c::before {
+	animation-name: ss-refl-dark;
+	opacity: 0.7;
+}
+
+@keyframes ss-refl {
+	0% { opacity: 0.5; }
+	76% { opacity: 0.3; }
+	100% { opacity: 0; }
+}
+
+@keyframes ss-refl-dark {
+	0% { opacity: 0.7; }
+	45% { opacity: 0.2; }
+	100% { opacity: 0; }
+}
+
+.site .scenery-c::after {
+	background: repeating-linear-gradient(180deg, rgb(255 255 255 / 0.1) 0 1px, transparent 1px 14px);
+	content: "";
+	inset: -14px 0 0 0;
+	-webkit-mask: linear-gradient(180deg, #000, transparent);
+	mask: linear-gradient(180deg, #000, transparent);
+	position: absolute;
+	will-change: translate;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation: ss-lap 4s linear infinite;
+	}
+}
+
+@keyframes ss-lap {
+	to {
+		translate: 0 14px;
+	}
+}
+
+/* ---- panels keep text legible against the changing sky ---- */
+
+.site-hero,
+.site-about,
+.site-section {
+	background: color-mix(in srgb, var(--panel) 80%, transparent);
+	border-radius: 1.3rem;
+	padding: 1.4rem 1.7rem;
+}
+
+.site-hero {
+	margin-top: 3rem;
+}
+
+.site-about {
+	margin-bottom: 2rem;
+	padding: 1.2rem 2rem;
+}
+
+.site-section {
+	margin-bottom: 1.6rem;
+}
+
+.site-header {
+	background: color-mix(in srgb, var(--panel) 80%, transparent);
+	border-radius: 999px;
+	padding: 0.6rem 1.4rem;
+}
+
+.site-footer {
+	background: color-mix(in srgb, var(--panel) 80%, transparent);
+	border-radius: 1.3rem;
+	margin-top: 2rem;
+	padding: 1rem;
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--sun-c) 70%, transparent), 0 0 2.4rem 0.3rem color-mix(in srgb, var(--sun-c) 45%, transparent);
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--panel);
+	border-radius: 999px;
+	color: var(--ink-s);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(#ffd27a, #ff6a3a, #7a3b80, #4c9be8, #ffd27a);
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: ss-spin 6s linear infinite;
+	}
+}
+
+@keyframes ss-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--panel) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--ink-m) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--ink-m);
+	content: "scroll-driven \00b7  opacity crossfade \00b7  color-mix() \00b7  mask";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

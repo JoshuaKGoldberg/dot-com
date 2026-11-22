@@ -1,0 +1,120 @@
+/* #276 Paper Bleed: grain and a watercolor wash in the top-right corner only. */
+
+.site .scenery-a,
+.site .scenery-b {
+	pointer-events: none;
+}
+
+.site .qpb-grain {
+	background-size: 96px 96px;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.8s;
+}
+
+.site .qpb-grain.is-ready {
+	opacity: 1;
+}
+
+.site .qpb-wash {
+	height: 460px;
+	opacity: 1;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 560px;
+	will-change: transform, opacity;
+}
+
+.site .qpb-wash i {
+	animation: qpb-drift 38s ease-in-out infinite alternate;
+	border-radius: 50%;
+	display: block;
+	position: absolute;
+	will-change: transform;
+}
+
+.site .qpb-b1 {
+	background: radial-gradient(closest-side, rgba(96, 200, 182, 0.2), rgba(96, 200, 182, 0.1) 55%, transparent);
+	height: 420px;
+	right: -140px;
+	top: -170px;
+	width: 520px;
+}
+
+.site .qpb-b2 {
+	animation-delay: -12s !important;
+	animation-duration: 46s !important;
+	background: radial-gradient(closest-side, rgba(166, 146, 232, 0.17), rgba(166, 146, 232, 0.08) 55%, transparent);
+	height: 340px;
+	right: -80px;
+	top: -120px;
+	width: 380px;
+}
+
+.site .qpb-b3 {
+	animation-delay: -22s !important;
+	background: radial-gradient(closest-side, rgba(132, 214, 160, 0.15), rgba(132, 214, 160, 0.07) 55%, transparent);
+	height: 260px;
+	right: 90px;
+	top: -140px;
+	width: 380px;
+}
+
+.site .qpb-b4 {
+	animation-duration: 52s !important;
+	background: radial-gradient(closest-side, rgba(240, 160, 196, 0.12), transparent);
+	height: 240px;
+	right: -90px;
+	top: -20px;
+	width: 240px;
+}
+
+html.dark .site .qpb-b1 {
+	background: radial-gradient(closest-side, rgba(70, 230, 170, 0.2), rgba(70, 230, 170, 0.09) 55%, transparent);
+}
+
+html.dark .site .qpb-b2 {
+	background: radial-gradient(closest-side, rgba(150, 120, 255, 0.2), rgba(150, 120, 255, 0.08) 55%, transparent);
+}
+
+html.dark .site .qpb-b3 {
+	background: radial-gradient(closest-side, rgba(80, 220, 220, 0.16), transparent);
+}
+
+@keyframes qpb-drift {
+	from {
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	to {
+		transform: translate3d(-34px, 22px, 0) scale(1.08);
+	}
+}
+
+@media (max-width: 1000px) {
+	.site .qpb-wash {
+		opacity: 0.6 !important;
+	}
+}
+
+@media (max-width: 700px) {
+	.site .qpb-wash {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .qpb-wash i,
+	.site .qpb-grain {
+		animation: none;
+		transition: none;
+	}
+}
+
+html.reduce-motion .site .qpb-wash i,
+html.reduce-motion .site .qpb-grain {
+	animation: none;
+	transition: none;
+}

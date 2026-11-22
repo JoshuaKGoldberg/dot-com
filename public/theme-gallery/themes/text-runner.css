@@ -1,0 +1,32 @@
+/* 100. Text Runner: the same lake, but the hiker runs on the real lines of prose. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--sq: #2f8fe0;
+	--sq-d: #1a5fa8;
+	--sky-top: #b6cfe6;
+	--peak-far: #a3b8c9;
+}
+
+html.dark .site {
+	--sq: #9aa8ff;
+	--sq-d: #6a78e0;
+}
+
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 80%, transparent);
+}
+
+/* A collected link loses its squiggle. */
+.site .site-link::after {
+	transition: opacity 0.35s, transform 0.35s;
+}
+
+.site .site-link.tr-got::after {
+	opacity: 0;
+	transform: translateY(-0.5em) scaleY(0.4);
+}
+
+html.reduce-motion .site .site-link::after {
+	transition: none;
+}

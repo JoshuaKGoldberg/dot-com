@@ -1,0 +1,3 @@
+@import url("./_dl-b/base.css");
+/* #345 Watercolor & Ink: pigment bleeds along hovered squiggles; droplets drip in the margins. */
+.site .site-link.dl-bleeding::after { background: var(--dl-bg); }

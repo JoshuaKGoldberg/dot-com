@@ -1,0 +1,18 @@
+@import url("_sensor/kit.css");
+
+/* 177 Mic Meadow: a quiet gradient sky; the grass canvas is drawn by JS. */
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 40% at 80% 8%, rgba(255, 238, 190, 0.7), transparent 70%),
+		linear-gradient(#e4f3f6 0%, var(--siteBg) 60%);
+}
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(ellipse 50% 35% at 82% 6%, rgba(120, 150, 210, 0.22), transparent 70%),
+		linear-gradient(#0a1830 0%, var(--siteBg) 60%);
+}
+.site .scenery-b { background: linear-gradient(to top, color-mix(in srgb, #7dbb86 22%, transparent), transparent 24%); }
+html.dark .site .scenery-b { background: linear-gradient(to top, color-mix(in srgb, #2f6b4b 38%, transparent), transparent 26%); }
+.site .mm-grass { bottom: 0; inset: auto 0 0 0; opacity: 0.55; position: absolute; width: 100%; }
+.site .mm-meter { background: color-mix(in srgb, var(--siteFg) 14%, transparent); border-radius: 99px; height: 0.45rem; overflow: hidden; }
+.site .mm-meter > i { background: var(--siteAccent); display: block; height: 100%; transform: scaleX(0); transform-origin: left; width: 100%; }

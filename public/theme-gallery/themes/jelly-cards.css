@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400..700&display=swap");
+
+.site {
+	--siteBg: #f8f3ff;
+	--siteFg: #3a2f55;
+	--siteFgStrong: #231a3d;
+	--siteMuted: #6f6490;
+	--siteAccent: #d6338a;
+	--siteSquiggle: #ff5fa8;
+	--siteSubtle: #eadcff;
+	--siteFont: "Fredoka", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--jc-text: #2a1f45;
+}
+
+html.dark .site {
+	--siteBg: #150f22;
+	--siteFg: #e6dcfa;
+	--siteFgStrong: #fbf7ff;
+	--siteMuted: #a899cf;
+	--siteAccent: #ff7fc0;
+	--siteSquiggle: #ff7fc0;
+	--siteSubtle: #271b40;
+	--jc-text: #f5eeff;
+}
+
+.site .scenery-a canvas {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .scenery-b {
+	background:
+		radial-gradient(ellipse 50% 40% at 12% 8%, color-mix(in srgb, #ff7eb6 22%, transparent), transparent 70%),
+		radial-gradient(ellipse 45% 40% at 92% 30%, color-mix(in srgb, #7cd7ff 20%, transparent), transparent 70%),
+		radial-gradient(ellipse 50% 45% at 30% 100%, color-mix(in srgb, #b69cff 22%, transparent), transparent 70%);
+}
+
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+.site .site-section-title {
+	font-weight: 600;
+}
+
+.site .site-portrait img {
+	border: 5px solid #fff;
+	box-shadow: 0 10px 0 -2px color-mix(in srgb, var(--siteAccent) 30%, transparent), 0 14px 28px -8px rgb(80 20 120 / 0.35);
+}
+
+html.dark .site .site-portrait img {
+	border-color: #3a2760;
+}
+
+/* Cards are transparent; the jelly is painted on the canvas behind them. */
+.site .site-list {
+	gap: 1.3rem;
+}
+
+.site .site-item {
+	padding: 1.05rem 1.5rem 1rem;
+	transform-origin: 50% 50%;
+	will-change: transform;
+}
+
+.site.jelly-on .site-item,
+.site.jelly-on .site-item-description,
+.site.jelly-on .site-item-title {
+	color: var(--jc-text);
+}
+
+.site.jelly-on .site-item-meta {
+	color: color-mix(in srgb, var(--jc-text) 70%, transparent);
+}
+
+.site.jelly-on .site-item.is-grabbed {
+	cursor: grabbing;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.site.jelly-on .site-item {
+	cursor: grab;
+}
+
+.site.jelly-on .site-item a {
+	cursor: pointer;
+}
+
+.site .jelly-hint {
+	color: var(--siteMuted);
+	font-size: 0.85rem;
+	margin: 0 0 1rem;
+}

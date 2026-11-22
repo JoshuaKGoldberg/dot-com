@@ -1,0 +1,100 @@
+/* 79 — Incense Smoke */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap");
+
+.site {
+	--siteBg: #f3eee6;
+	--siteFg: #34302f;
+	--siteFgStrong: #1c1918;
+	--siteMuted: #75695f;
+	--siteAccent: #a23b25;
+	--siteSquiggle: #c96a3d;
+	--siteSubtle: #e4dcce;
+	--siteFont: "Zen Kaku Gothic New", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Shippori Mincho", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #0f0c0b;
+	--siteFg: #e6dcd2;
+	--siteFgStrong: #fbf4ec;
+	--siteMuted: #a39688;
+	--siteAccent: #f2a15f;
+	--siteSquiggle: #e8864a;
+	--siteSubtle: #1d1714;
+}
+.site .site-title { font-weight: 800; letter-spacing: 0.01em; }
+.site .site-section-title { font-weight: 800; }
+.site .site-tagline, .site .site-about { font-weight: 400; }
+.site .site-footer { padding-bottom: 7rem; position: relative; }
+
+.site .incense {
+	bottom: 0.5rem;
+	height: 6.4rem;
+	left: calc(100% + 1.2rem);
+	pointer-events: none;
+	position: absolute;
+	width: 2.4rem;
+}
+.site .incense-stick {
+	background: linear-gradient(90deg, #5e3b27, #8a5a38 50%, #4a2e1e);
+	border-radius: 1px;
+	bottom: 0.5rem;
+	height: 5.9rem;
+	left: 50%;
+	position: absolute;
+	transform: rotate(-4deg);
+	transform-origin: 50% 100%;
+	width: 3px;
+}
+.site .incense-ash {
+	background: color-mix(in srgb, var(--siteFg) 38%, transparent);
+	border-radius: 2px;
+	bottom: 4.9rem;
+	height: 0.55rem;
+	left: 50%;
+	position: absolute;
+	transform: rotate(-4deg) translateX(-0.5px);
+	width: 3px;
+}
+.site .incense-ember {
+	animation: ember 2.4s ease-in-out infinite;
+	background: #ff7a2a;
+	border-radius: 50%;
+	box-shadow: 0 0 6px 2px rgba(255, 120, 40, 0.8), 0 0 18px 6px rgba(255, 110, 30, 0.35);
+	height: 5px;
+	left: calc(50% - 1px);
+	position: absolute;
+	top: -0.12rem;
+	width: 5px;
+}
+.site .incense-ember-wrap { height: 0; left: 0; position: absolute; top: 0; width: 0; }
+.site .incense-bowl {
+	background: radial-gradient(120% 90% at 50% 0%, #8b7867, #4c4038 70%);
+	border-radius: 0 0 1.2rem 1.2rem / 0 0 0.9rem 0.9rem;
+	bottom: 0;
+	height: 0.9rem;
+	left: 0;
+	position: absolute;
+	width: 2.4rem;
+}
+.site .incense-bowl::before {
+	background: color-mix(in srgb, var(--siteFg) 28%, transparent);
+	border-radius: 50%;
+	content: "";
+	height: 0.35rem;
+	left: 0.1rem;
+	position: absolute;
+	right: 0.1rem;
+	top: -0.18rem;
+}
+@keyframes ember {
+	0%, 100% { opacity: 1; transform: scale(1); }
+	45% { opacity: 0.75; transform: scale(0.85); }
+	70% { opacity: 1; transform: scale(1.12); }
+}
+html.reduce-motion .site .incense-ember { animation: none; }
+@media (prefers-reduced-motion: reduce) { .site .incense-ember { animation: none; } }
+@media (max-width: 1000px) {
+	.site .incense { left: calc(50% - 1.2rem); }
+	.site .site-footer { padding-bottom: 8rem; }
+}

@@ -1,0 +1,805 @@
+/*
+ * Sky to Lake VIII: Year in a Scroll. Zero JavaScript.
+ *   stacked pre-colored layers      -> sky, hills, leaves, ground, ice and particles are crossfaded by scroll-driven opacity (compositor-only)
+ *   mask-image silhouettes          -> one tree shape is recolored through the whole year by stacking copies
+ *   stepped translate               -> the month name is a stacked list of labels slid into a small window, no script
+ *   a looping particle tile         -> snow, petals and leaves (disabled for reduced motion)
+ *   Order: January sky, spring and summer trees, autumn shore, a freezing lake in December.
+ */
+
+.site {
+	--sun: #fff2c4;
+	--ray-k: 1;
+	--s1-sp: #7fc3ea;
+	--s2-sp: #f4f8e2;
+	--s1-su: #3f98e0;
+	--s2-su: #d4ecf8;
+	--s1-au: #86aed0;
+	--s2-au: #f6dbb4;
+	--s1-w0: #9db8d4;
+	--s2-w0: #eaeff3;
+	--s1-w2: #7d96b8;
+	--s2-w2: #e3e9f1;
+	--hill-g: color-mix(in srgb, #a9c9b3 50%, #6a9a7a);
+	--hill-au: #b08a58;
+	--hill-w: #dfe8f0;
+	--gr-au: #b9873a;
+	--gr-w: #f4f8fb;
+	--leaf-sp: #a8d77b;
+	--leaf2-sp: #8fcf6a;
+	--leaf-su: #3f8f3a;
+	--leaf2-su: #2f7a32;
+	--leaf-au: #e0742a;
+	--leaf2-au: #c8431f;
+	--leaf-g: color-mix(in srgb, var(--leaf-sp) 50%, var(--leaf-su));
+	--leaf2-g: color-mix(in srgb, var(--leaf2-sp) 50%, var(--leaf2-su));
+	--fir: #2a5a45;
+	--water: #3b6f86;
+	--acc: #b0401a;
+	--siteBg: #f7f8f6;
+	--siteFg: #28323a;
+	--siteFgStrong: #121c22;
+	--siteMuted: #56646c;
+	--siteAccent: var(--acc);
+	--siteSquiggle: var(--acc);
+	--siteSubtle: #e4e9e8;
+	--card: color-mix(in srgb, #fbfcfa 90%, transparent);
+	--spring: linear(0, 0.3 6%, 0.77 13%, 1.08 19%, 1.14 23%, 1.06 30%, 0.98 38%, 0.99 48%, 1);
+
+	background: var(--s1-au);
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--sun: #e9eefc;
+	--ray-k: 0.6;
+	--s1-sp: #0d1f46;
+	--s2-sp: #3b5b78;
+	--s1-su: #0c1b4a;
+	--s2-su: #27507c;
+	--s1-au: #1a2748;
+	--s2-au: #5a4a64;
+	--s1-w0: #0b1630;
+	--s2-w0: #2d3d63;
+	--s1-w2: #101c3c;
+	--s2-w2: #33476c;
+	--hill-g: color-mix(in srgb, #2f4f56 50%, #25454a);
+	--hill-au: #4d3f3b;
+	--hill-w: #4b5d80;
+	--gr-au: #6a4a28;
+	--gr-w: #a9b9d4;
+	--leaf-sp: #4f7a4a;
+	--leaf2-sp: #3e6a42;
+	--leaf-su: #2b5f2d;
+	--leaf2-su: #204c26;
+	--leaf-au: #a4502a;
+	--leaf2-au: #8a2e1a;
+	--leaf-g: color-mix(in srgb, var(--leaf-sp) 50%, var(--leaf-su));
+	--leaf2-g: color-mix(in srgb, var(--leaf2-sp) 50%, var(--leaf2-su));
+	--fir: #14302a;
+	--water: #1b3a52;
+	--acc: #ffa56b;
+	--siteBg: #0c1426;
+	--siteFg: #d6e0ee;
+	--siteFgStrong: #f4f8ff;
+	--siteMuted: #9fb0c8;
+	--siteSubtle: #17233b;
+	--card: color-mix(in srgb, #111b30 88%, transparent);
+}
+
+/* ================= scenery =================
+
+   Every scenery layer is its own fixed box with an explicit z-index (the scenery wrapper is flattened), so
+   the year can be told as stacked, pre-colored copies of each silhouette that scroll-driven opacity
+   crossfades. Nothing here animates anything but transform-ish properties and opacity. */
+
+.site .site-scenery {
+	position: static;
+}
+
+.site::before,
+.site::after,
+.site-page::before,
+.site-page::after,
+.site-header::before,
+.site-header::after,
+.site-main::before,
+.site-main::after,
+.site-hero::before,
+.site-hero::after,
+.site-posts::before,
+.site-posts::after,
+.site-projects::before,
+.site-projects::after,
+.site-talks::before,
+.site-talks::after,
+.site .scenery-a,
+.site .scenery-b,
+.site .scenery-c,
+.site .site-scenery::before,
+.site .site-scenery::after {
+	content: "";
+	contain: paint;
+	inset: 0;
+	pointer-events: none;
+	position: fixed;
+	top: var(--barHeight, 0px);
+	will-change: transform, opacity;
+}
+
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site .scenery-c::before,
+.site .scenery-c::after,
+.site .overlay-a::before,
+.site .overlay-a::after,
+.site-overlay::before,
+.site-overlay::after {
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	will-change: transform, opacity;
+}
+
+.site::before {
+	background: linear-gradient(180deg, var(--s1-sp), var(--s2-sp));
+	z-index: -40;
+}
+
+.site::after {
+	background: linear-gradient(180deg, var(--s1-su), var(--s2-su));
+	z-index: -39;
+}
+
+.site-page::before {
+	background: linear-gradient(180deg, var(--s1-au), var(--s2-au));
+	z-index: -38;
+}
+
+.site-page::after {
+	background: linear-gradient(180deg, var(--s1-w2), var(--s2-w2));
+	z-index: -37;
+	opacity: 0;
+}
+
+.site-header::before {
+	background: linear-gradient(180deg, var(--s1-w0), var(--s2-w0));
+	z-index: -36;
+	opacity: 0;
+}
+
+/* the stack is fully Autumn when motion is off (the layers above it start hidden) */
+
+.site .scenery-a {
+	background: radial-gradient(80% 50% at 50% 100%, rgb(255 255 255 / 0.35), transparent);
+	z-index: -30;
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(1.5px 1.5px at 12% 14%, #fff 98%, transparent) 0 0 / 230px 210px,
+		radial-gradient(2px 2px at 62% 40%, #fff 98%, transparent) 0 0 / 310px 260px,
+		radial-gradient(1.4px 1.4px at 82% 72%, #cfe0ff 98%, transparent) 0 0 / 190px 170px;
+}
+
+.site .scenery-a::before {
+	background: radial-gradient(circle, var(--sun) 0 38%, color-mix(in srgb, var(--sun) 35%, transparent) 40%, transparent 70%);
+	border-radius: 50%;
+	height: 30vmin;
+	inset: 8% auto auto 16%;
+	width: 30vmin;
+}
+
+.site .scenery-a::after {
+	background: var(--hill-g);
+	inset: 0 0 -40vh 0;
+	-webkit-mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+	mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+}
+
+.site-hero::before {
+	background: var(--hill-au);
+	bottom: -40vh;
+	z-index: -29;
+	-webkit-mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+	mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+}
+
+.site-hero::after {
+	background: var(--hill-w);
+	bottom: -40vh;
+	opacity: 0;
+	z-index: -28;
+	-webkit-mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+	mask:
+		url("zj-descent-seasons/hills.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#000, #000) 0 100% / 100% 40vh no-repeat;
+}
+
+.site .scenery-b {
+	z-index: -26;
+}
+
+.site .scenery-b::before {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--fir) 100%, #fff 8%), var(--fir));
+	-webkit-mask: url("zj-descent-seasons/firs.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/firs.svg") 50% 100% / 1600px auto repeat-x;
+}
+
+.site .scenery-b::after {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--water) 70%, var(--s2-au)), var(--water) 40%, color-mix(in srgb, var(--water) 75%, #000));
+	-webkit-mask: url("zj-descent-seasons/lake.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/lake.svg") 50% 100% / 1600px auto repeat-x;
+}
+
+.site-talks::before {
+	background:
+		linear-gradient(104deg, transparent 0 18%, rgb(255 255 255 / 0.55) 18.2% 18.5%, transparent 18.7% 61%, rgb(255 255 255 / 0.45) 61.2% 61.4%, transparent 61.6%),
+		radial-gradient(60% 40% at 30% 30%, rgb(255 255 255 / 0.5), transparent),
+		linear-gradient(180deg, rgb(238 247 252 / 0.92), rgb(205 228 242 / 0.85));
+	-webkit-mask: url("zj-descent-seasons/lake.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/lake.svg") 50% 100% / 1600px auto repeat-x;
+	opacity: 0;
+	z-index: -25;
+}
+
+.site .scenery-c {
+	background: url("zj-descent-seasons/trees.svg") 50% 100% / 1600px auto repeat-x;
+	z-index: -23;
+}
+
+.site .scenery-c::before {
+	background:
+		radial-gradient(70% 55% at 30% 30%, var(--leaf2-sp), transparent 70%),
+		var(--leaf-sp);
+	-webkit-mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	opacity: 0;
+}
+
+.site .scenery-c::after {
+	background:
+		radial-gradient(70% 55% at 30% 30%, var(--leaf2-su), transparent 70%),
+		var(--leaf-su);
+	-webkit-mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	opacity: 0;
+}
+
+.site-header::after {
+	background:
+		radial-gradient(70% 55% at 30% 30%, var(--leaf2-au), transparent 70%),
+		var(--leaf-au);
+	-webkit-mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/crowns.svg") 50% 100% / 1600px auto repeat-x;
+	z-index: -22;
+}
+
+.site-main::before {
+	background: conic-gradient(from 160deg at 78% -12%, transparent 0 8deg, rgb(255 244 190 / 0.7) 10deg 14deg, transparent 17deg 24deg, rgb(255 244 190 / 0.5) 27deg 30deg, transparent 33deg 44deg, rgb(255 244 190 / 0.6) 46deg 52deg, transparent 56deg);
+	opacity: 0;
+	z-index: -21;
+}
+
+.site .site-scenery::before {
+	background: url("zj-descent-seasons/trunks-near.svg") 50% 100% / 1600px auto repeat-x;
+	-webkit-mask: linear-gradient(180deg, transparent, #000 25%);
+	mask: linear-gradient(180deg, transparent, #000 25%);
+	z-index: -18;
+}
+
+.site .site-scenery::after {
+	background:
+		linear-gradient(180deg, rgb(0 0 0 / 0.35), transparent 70%),
+		linear-gradient(115deg, var(--leaf2-g), var(--leaf-g) 60%, var(--leaf2-g));
+	-webkit-mask: url("zj-descent-seasons/canopy.svg") 50% 0 / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/canopy.svg") 50% 0 / 1600px auto repeat-x;
+	opacity: 0;
+	z-index: -17;
+}
+
+.site-main::after {
+	background:
+		linear-gradient(180deg, rgb(0 0 0 / 0.35), transparent 70%),
+		linear-gradient(115deg, var(--leaf2-au), var(--leaf-au) 60%, var(--leaf2-au));
+	-webkit-mask: url("zj-descent-seasons/canopy.svg") 50% 0 / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/canopy.svg") 50% 0 / 1600px auto repeat-x;
+	z-index: -16;
+}
+
+.site-projects::before {
+	background:
+		linear-gradient(180deg, transparent 40%, rgb(0 0 0 / 0.28)),
+		var(--gr-au);
+	-webkit-mask: url("zj-descent-seasons/ground.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/ground.svg") 50% 100% / 1600px auto repeat-x;
+	height: 15vh;
+	inset: auto 0 0 0;
+	min-height: 110px;
+	top: auto;
+	z-index: -15;
+}
+
+.site-projects::after {
+	background:
+		linear-gradient(180deg, transparent 40%, rgb(0 0 0 / 0.28)),
+		var(--gr-w);
+	-webkit-mask: url("zj-descent-seasons/ground.svg") 50% 100% / 1600px auto repeat-x;
+	mask: url("zj-descent-seasons/ground.svg") 50% 100% / 1600px auto repeat-x;
+	height: 15vh;
+	inset: auto 0 0 0;
+	min-height: 110px;
+	top: auto;
+	opacity: 0;
+	z-index: -14;
+}
+
+html.dark .site .scenery-c,
+html.dark .site .site-scenery::before,
+html.dark .site .site-header::after,
+html.dark .site .site-main::before {
+	filter: brightness(0.5) saturate(0.8);
+}
+
+html.dark .site .scenery-b::after,
+html.dark .site .site-talks::before {
+	filter: brightness(0.62);
+}
+
+.site .overlay-a::after {
+	background:
+		radial-gradient(circle at 20px 30px, rgb(255 255 255 / 1) 0 2.5px, transparent 3.2px) 0 0 / 130px 170px,
+		radial-gradient(circle at 70px 80px, rgb(255 255 255 / 0.9) 0 1.8px, transparent 2.4px) 0 0 / 200px 200px;
+	bottom: auto;
+	height: calc(100% + 400px);
+	inset-block-start: -400px;
+	opacity: 0;
+}
+
+.site-overlay::before {
+	background:
+		radial-gradient(ellipse 5px 3px at 40px 40px, rgb(255 190 210) 0 90%, transparent 100%) 0 0 / 200px 200px,
+		radial-gradient(ellipse 5px 3px at 150px 120px, rgb(255 225 235) 0 90%, transparent 100%) 0 0 / 200px 200px;
+	bottom: auto;
+	height: calc(100% + 400px);
+	inset-block-start: -400px;
+	opacity: 0;
+}
+
+.site-overlay::after {
+	background:
+		radial-gradient(ellipse 8px 4px at 90px 20px, rgb(224 110 40) 0 90%, transparent 100%) 0 0 / 200px 200px,
+		radial-gradient(ellipse 7px 4px at 20px 150px, rgb(200 60 30) 0 90%, transparent 100%) 0 0 / 200px 200px;
+	bottom: auto;
+	height: calc(100% + 400px);
+	inset-block-start: -400px;
+	opacity: 0.8;
+}
+
+/* ================= choreography ================= */
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: zjy-sun linear both;
+			animation-range: 0% 70%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-page::before {
+			animation: zjy-sk-au linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site::after {
+			animation: zjy-sk-su linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-page::after {
+			animation: zjy-sk-w2 linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-header::before {
+			animation: zjy-sk-w0 linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: zjy-hills linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-hero::before {
+			animation: zjy-hills-au linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-hero::after {
+			animation: zjy-hills-w linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::before {
+			animation: zjy-far linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: zjy-lake linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-talks::before {
+			animation: zjy-ice linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c {
+			animation: zjy-mid linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::before {
+			animation: zjy-cr-sp linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::after {
+			animation: zjy-cr-su linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-header::after {
+			animation: zjy-cr-au linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-main::before {
+			animation: zjy-rays linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::before {
+			animation: zjy-near linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::after {
+			animation: zjy-cn-g linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-main::after {
+			animation: zjy-cn-au linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-projects::before {
+			animation: zjy-ground linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site-projects::after {
+			animation: zjy-ground-w linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .overlay-a::after {
+			animation: zjy-fall 22s linear infinite, zjy-snow linear both;
+			animation-range: normal, 0% 100%;
+			animation-timeline: auto, --pg;
+		}
+
+		html:not(.reduce-motion) .site-overlay::before {
+			animation: zjy-fall 22s linear infinite, zjy-petal linear both;
+			animation-range: normal, 0% 100%;
+			animation-timeline: auto, --pg;
+		}
+
+		html:not(.reduce-motion) .site-overlay::after {
+			animation: zjy-fall 22s linear infinite, zjy-leaf linear both;
+			animation-range: normal, 0% 100%;
+			animation-timeline: auto, --pg;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-c,
+	.site .site-scenery::before,
+	.site .site-scenery::after,
+	.site-main::before,
+	.site-main::after,
+	.site-header::after,
+	.site .overlay-a::after,
+	.site-overlay::before,
+	.site-overlay::after {
+		display: none;
+	}
+}
+
+html.reduce-motion .site .scenery-c,
+html.reduce-motion .site .site-scenery::before,
+html.reduce-motion .site .site-scenery::after,
+html.reduce-motion .site-main::before,
+html.reduce-motion .site-main::after,
+html.reduce-motion .site-header::after,
+html.reduce-motion .site .overlay-a::after,
+html.reduce-motion .site-overlay::before,
+html.reduce-motion .site-overlay::after {
+	display: none;
+}
+
+@keyframes zjy-sun {
+	from {
+		translate: 0 0;
+	}
+	to {
+		translate: 10vw -100vh;
+	}
+}
+
+@keyframes zjy-fall {
+	to {
+		translate: 12px 400px;
+	}
+}
+
+@keyframes zjy-hills { 0% { translate: 0 0vh; } 100% { translate: 0 -26vh; } }
+@keyframes zjy-hills-au { 0% { translate: 0 0vh; opacity: 0.000; } 50% { translate: 0 -13vh; opacity: 0.000; } 75% { translate: 0 -19.500vh; opacity: 1.000; } 100% { translate: 0 -26vh; opacity: 1.000; } }
+@keyframes zjy-hills-w { 0% { translate: 0 0vh; opacity: 1.000; } 25% { translate: 0 -6.500vh; opacity: 0.000; } 75% { translate: 0 -19.500vh; opacity: 0.000; } 100% { translate: 0 -26vh; opacity: 1.000; } }
+@keyframes zjy-far { 0% { translate: 0 8%; } 30% { translate: 0 0%; } 55% { translate: 0 0%; } 95% { translate: 0 105%; } 100% { translate: 0 105%; } }
+@keyframes zjy-lake { 0% { translate: 0 105%; } 32% { translate: 0 105%; } 100% { translate: 0 0%; } }
+@keyframes zjy-mid { 0% { translate: 0 105%; } 32% { translate: 0 0%; } 58% { translate: 0 0%; } 100% { translate: 0 105%; } }
+@keyframes zjy-near { 0% { translate: 0 105%; } 12% { translate: 0 105%; } 38% { translate: 0 0%; } 58% { translate: 0 0%; } 92% { translate: 0 105%; } 100% { translate: 0 105%; } }
+@keyframes zjy-ground { 0% { translate: 0 110%; } 70% { translate: 0 110%; } 100% { translate: 0 0%; } }
+@keyframes zjy-ground-w { 0% { translate: 0 110%; opacity: 0.000; } 70% { translate: 0 110%; opacity: 0.000; } 75% { translate: 0 91.667%; opacity: 0.000; } 100% { translate: 0 0%; opacity: 1.000; } }
+@keyframes zjy-cr-sp { 0% { opacity: 0.000; } 25% { opacity: 1.000; } 75% { opacity: 1.000; } 75.1% { opacity: 0.000; } 100% { opacity: 0.000; } }
+@keyframes zjy-cr-su { 0% { opacity: 0.000; } 25% { opacity: 0.000; } 50% { opacity: 1.000; } 75% { opacity: 1.000; } 75.1% { opacity: 0.000; } 100% { opacity: 0.000; } }
+@keyframes zjy-cr-au { 0% { translate: 0 105%; opacity: 0.000; } 32% { translate: 0 0%; opacity: 0.000; } 50% { translate: 0 0%; opacity: 0.000; } 58% { translate: 0 0%; opacity: 0.320; } 75% { translate: 0 42.500%; opacity: 1.000; } 90% { translate: 0 80%; opacity: 0.250; } 100% { translate: 0 105%; opacity: 0.000; } }
+@keyframes zjy-cn-g { 0% { translate: 0 -100%; opacity: 0.000; } 8% { translate: 0 -100%; opacity: 0.320; } 25% { translate: 0 -15%; opacity: 1.000; } 28% { translate: 0 0%; opacity: 1.000; } 60% { translate: 0 0%; opacity: 1.000; } 75% { translate: 0 -53.571%; opacity: 1.000; } 75.1% { translate: 0 -53.929%; opacity: 0.000; } 88% { translate: 0 -100%; opacity: 0.000; } 100% { translate: 0 -100%; opacity: 0.000; } }
+@keyframes zjy-cn-au { 0% { translate: 0 -100%; opacity: 0.000; } 8% { translate: 0 -100%; opacity: 0.000; } 28% { translate: 0 0%; opacity: 0.000; } 50% { translate: 0 0%; opacity: 0.000; } 60% { translate: 0 0%; opacity: 0.400; } 75% { translate: 0 -53.571%; opacity: 1.000; } 88% { translate: 0 -100%; opacity: 0.350; } 90% { translate: 0 -100%; opacity: 0.250; } 100% { translate: 0 -100%; opacity: 0.000; } }
+@keyframes zjy-ice { 0% { translate: 0 105%; opacity: 0.000; } 32% { translate: 0 105%; opacity: 0.000; } 75% { translate: 0 38.603%; opacity: 0.000; } 90% { translate: 0 15.441%; opacity: 0.500; } 100% { translate: 0 0%; opacity: 1.000; } }
+@keyframes zjy-rays {  0% { translate: 0 105.000%; opacity: calc(0.000 * var(--ray-k, 1)); } 25% { translate: 0 22.969%; opacity: calc(0.000 * var(--ray-k, 1)); } 32% { translate: 0 0.000%; opacity: calc(0.140 * var(--ray-k, 1)); } 50% { translate: 0 0.000%; opacity: calc(0.500 * var(--ray-k, 1)); } 58% { translate: 0 0.000%; opacity: calc(0.420 * var(--ray-k, 1)); } 75% { translate: 0 42.500%; opacity: calc(0.250 * var(--ray-k, 1)); } 90% { translate: 0 80.000%; opacity: calc(0.000 * var(--ray-k, 1)); } 100% { translate: 0 105.000%; opacity: calc(0.000 * var(--ray-k, 1)); } }
+@keyframes zjy-sk-su { 0% { opacity: 0.000; } 25% { opacity: 0.000; } 50% { opacity: 1.000; } 100% { opacity: 1.000; } }
+@keyframes zjy-sk-au { 0% { opacity: 0.000; } 50% { opacity: 0.000; } 75% { opacity: 1.000; } 100% { opacity: 1.000; } }
+@keyframes zjy-sk-w2 { 0% { opacity: 0.000; } 75% { opacity: 0.000; } 100% { opacity: 1.000; } }
+@keyframes zjy-sk-w0 { 0% { opacity: 1.000; } 25% { opacity: 0.000; } 100% { opacity: 0.000; } }
+@keyframes zjy-snow { 0% { opacity: 0.720; } 25% { opacity: 0.000; } 75% { opacity: 0.000; } 90% { opacity: 0.320; } 100% { opacity: 0.680; } }
+@keyframes zjy-petal { 0% { opacity: 0.000; } 25% { opacity: 0.800; } 50% { opacity: 0.000; } 100% { opacity: 0.000; } }
+@keyframes zjy-leaf { 0% { opacity: 0.000; } 50% { opacity: 0.000; } 75% { opacity: 0.800; } 90% { opacity: 0.320; } 100% { opacity: 0.000; } }
+
+/* ================= page ================= */
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+.site-hero,
+.site-about,
+.site-footer {
+	background: var(--card);
+	border-radius: 1.2rem;
+	box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.4), 0 0 0 1px color-mix(in srgb, var(--acc) 25%, transparent);
+	padding: 1.5rem 1.8rem;
+}
+
+.site-about {
+	padding: 1.2rem 1.8rem;
+}
+
+.site-portrait img {
+	border: 4px solid var(--acc);
+	box-shadow: 0 0 0 6px var(--card);
+}
+
+.site-item {
+	background: var(--card);
+	border-left: 5px solid var(--season, var(--acc));
+	border-radius: 0.3rem 1rem 1rem 0.3rem;
+	box-shadow: 0 8px 22px -14px rgb(0 0 0 / 0.45);
+	padding: 0.8rem 1.2rem 0.9rem;
+	transition: translate 0.5s var(--spring), border-left-width 0.2s;
+}
+
+.site-item:hover {
+	border-left-width: 12px;
+	translate: 4px 0;
+}
+
+.site-posts {
+	--season: #23805a;
+}
+
+.site-projects {
+	--season: #a4570a;
+}
+
+.site-talks {
+	--season: #b0401a;
+}
+
+.site-section-title {
+	align-items: center;
+	background: var(--card);
+	border-radius: 999px;
+	box-shadow: 0 6px 16px -10px rgb(0 0 0 / 0.5);
+	display: inline-flex;
+	gap: 0.55rem;
+	padding: 0.15rem 1.1rem 0.25rem 0.9rem;
+}
+
+.site-section-title::before {
+	color: var(--season, var(--acc));
+	font-size: 1.2rem;
+}
+
+.site-posts .site-section-title::before {
+	content: "\2740";
+}
+
+.site-projects .site-section-title::before {
+	content: "\2600";
+}
+
+.site-talks .site-section-title::before {
+	content: "\2766";
+}
+
+.site-footer {
+	margin-bottom: 15vh;
+	padding: 1rem;
+}
+
+.site-page {
+	padding-bottom: 8vh;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title, .site-about, .site-footer) {
+			animation: zjy-in linear both;
+			animation-range: entry 0% entry 85%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjy-in {
+	from {
+		opacity: 0;
+		translate: 0 1.4rem;
+	}
+}
+
+/* ================= badge + calendar ================= */
+
+.site .overlay-a::before {
+	background: var(--card);
+	border: 2px solid var(--acc);
+	border-radius: 999px;
+	bottom: 1.4rem;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A the year, in pure CSS";
+	font: 700 0.72rem/1.25 var(--siteFont);
+	inset: auto auto 1.4rem 1.4rem;
+	padding: 0.4rem 0.95rem;
+	position: absolute;
+	text-align: center;
+	white-space: pre;
+}
+
+.site .overlay-b {
+	--mh: 1.9rem;
+	background: var(--card);
+	border: 2px solid var(--acc);
+	border-radius: 999px;
+	box-sizing: border-box;
+	color: var(--siteFgStrong);
+	font: 700 0.78rem/var(--mh) var(--siteFont);
+	height: calc(var(--mh) + 4px);
+	inset: auto 1.4rem 1.4rem auto;
+	letter-spacing: 0.04em;
+	overflow: hidden;
+	text-align: center;
+	text-transform: uppercase;
+	width: 17.5em;
+}
+
+/* twelve stacked month labels; scroll slides the right one into the window in hard steps */
+.site .overlay-b::after {
+	content: "January \00b7 \2744  winter\A February \00b7 \2744  winter\A March \00b7 \2740  spring\A April \00b7 \2740  spring\A May \00b7 \2740  spring\A June \00b7 \2600  summer\A July \00b7 \2600  summer\A August \00b7 \2600  summer\A September \00b7 \2766  autumn\A October \00b7 \2766  autumn\A November \00b7 \2766  autumn\A December \00b7 \2744  winter";
+	inset: 0 0 auto 0;
+	line-height: var(--mh);
+	white-space: pre;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site .overlay-b::after {
+			animation: zjy-month linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+html.reduce-motion .site .overlay-b::after,
+.site .overlay-b::after {
+	will-change: transform;
+}
+
+@media (max-width: 700px) {
+	.site .overlay-b {
+		display: none;
+	}
+}
+
+@keyframes zjy-month {
+	0% {
+		animation-timing-function: steps(1, end);
+		translate: 0 0;
+	}
+	4.17% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -1);
+	}
+	12.5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -2);
+	}
+	20.83% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -3);
+	}
+	29.17% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -4);
+	}
+	37.5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -5);
+	}
+	45.83% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -6);
+	}
+	54.17% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -7);
+	}
+	62.5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -8);
+	}
+	70.83% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -9);
+	}
+	82.5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -10);
+	}
+	95% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--mh) * -11);
+	}
+	100% {
+		translate: 0 calc(var(--mh) * -11);
+	}
+}
+

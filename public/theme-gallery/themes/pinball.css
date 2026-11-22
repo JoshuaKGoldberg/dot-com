@@ -1,0 +1,27 @@
+@import url("_toy/toy.css");
+
+/* Page Pinball: brass-and-night table accents on the real page. */
+.site {
+	--toyAccent: #d9480f;
+	--toyAccent2: #f59f00;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #ffa94d;
+	--toyAccent2: #ff6b6b;
+	--toyOnAccent: #1a1208;
+}
+
+.site .site-logo,
+.site .site-section-title,
+.site .site-title {
+	letter-spacing: 0.01em;
+}
+
+.site .site-section-title::before {
+	color: var(--toyAccent);
+	content: "● ";
+	font-size: 0.6em;
+	vertical-align: 0.15em;
+}

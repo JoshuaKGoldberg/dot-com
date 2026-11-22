@@ -1,0 +1,67 @@
+/* #269 Horizon Line: the plain site plus one ridge line in the empty band under the hero. */
+
+.site .qa-horizon {
+	height: 84px;
+	margin: -1.5rem 0 1.5rem;
+	position: relative;
+}
+
+.site .qa-horizon-sky {
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .qa-horizon-svg {
+	height: 100%;
+	inset: 0;
+	overflow: visible;
+	position: absolute;
+	width: 100%;
+}
+
+.site .qa-horizon-line {
+	fill: none;
+	stroke: var(--siteAccent);
+	stroke-dasharray: 1;
+	stroke-dashoffset: 1;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-opacity: 0.55;
+	stroke-width: 1.1;
+	vector-effect: non-scaling-stroke;
+}
+
+.site .qa-horizon-echo {
+	stroke-opacity: 0.2;
+	stroke-width: 0.8;
+}
+
+.site .qa-horizon.is-drawn .qa-horizon-line {
+	stroke-dashoffset: 0;
+	transition: stroke-dashoffset 2.6s cubic-bezier(0.45, 0, 0.2, 1);
+}
+
+.site .qa-horizon.is-drawn .qa-horizon-echo {
+	transition-delay: 0.5s;
+	transition-duration: 3.2s;
+}
+
+html.reduce-motion .site .qa-horizon-line {
+	stroke-dashoffset: 0;
+	transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .qa-horizon-line {
+		stroke-dashoffset: 0;
+		transition: none !important;
+	}
+}
+
+@media (max-width: 700px) {
+	.site .qa-horizon {
+		height: 60px;
+	}
+}

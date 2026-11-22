@@ -1,0 +1,375 @@
+/*
+ * Zero JS: CSS as a Linter. No script, just CSS. Selectors are the lint rules.
+ *   a[href="#"]               -> jsx-a11y/anchor-is-valid: every dead link gets a squiggle and a hover diagnostic
+ *   time:not([datetime])      -> require-datetime, as a blue information squiggle
+ *   :has(img[alt=""])         -> img-alt: the portrait's empty alt, an error in dark mode, a hint in light
+ *   counter-increment         -> the status bar's error / warning / info totals are counted by the page itself
+ *   ::before / ::after        -> hover cards, line numbers, error-lens text on the active line
+ */
+
+.site {
+	--siteBg: #fcfcfd;
+	--siteFg: #24292f;
+	--siteFgStrong: #0e1116;
+	--siteMuted: #5d6672;
+	--siteAccent: #0969da;
+	--siteSquiggle: #bf8700;
+	--siteSubtle: #eaeef2;
+	--err: #cf222e;
+	--warn: #b07d00;
+	--info: #0969da;
+	--card: #ffffff;
+	--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	counter-reset: le 0 lw 0 li 0 ln 0;
+}
+
+html.dark .site {
+	--siteBg: #0d1117;
+	--siteFg: #c9d1d9;
+	--siteFgStrong: #f0f6fc;
+	--siteMuted: #8b949e;
+	--siteAccent: #58a6ff;
+	--siteSquiggle: #d29922;
+	--siteSubtle: #161b22;
+	--err: #ff7b72;
+	--warn: #e3b341;
+	--info: #58a6ff;
+	--card: #161b22;
+}
+
+.site-page {
+	padding-bottom: 5.5rem;
+}
+
+/* ---- the rules ---- */
+
+/* rule: anchor-is-valid. Item titles are errors, every other dead link is a warning. */
+.site a[href="#"] {
+	counter-increment: lw;
+	position: relative;
+}
+
+.site .site-item-title[href="#"] {
+	counter-increment: le;
+}
+
+.site .site-item-title[href="#"]:not(:hover)::after {
+	background: var(--err);
+}
+
+.site .site-link[href="#"]::after {
+	background: var(--warn);
+}
+
+.site .site-item-title[href="#"]::after {
+	background: var(--err);
+}
+
+.site .site-nav-link[href="#"],
+.site .site-logo[href="#"] {
+	text-decoration: underline wavy var(--warn) 1.5px;
+	text-underline-offset: 0.3em;
+}
+
+/* the diagnostic hover card */
+.site a[href="#"]::before {
+	background: var(--card);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-left: 3px solid var(--warn);
+	border-radius: 0.35rem;
+	box-shadow: 0 0.5rem 1.4rem rgb(0 0 0 / 0.18);
+	color: var(--siteFg);
+	content: "\26A0  Links must go somewhere: href=\"#\" does not navigate.\A jsx-a11y/anchor-is-valid  \00B7  warning  \00B7  \1F4A1  Quick fix: use a real URL";
+	font: 500 0.66rem/1.5 var(--mono);
+	left: 0;
+	opacity: 0;
+	padding: 0.5rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	top: calc(100% + 0.6rem);
+	transition: opacity 0.15s, translate 0.15s;
+	translate: 0 -4px;
+	white-space: pre;
+	z-index: 30;
+}
+
+.site .site-item-title[href="#"]::before {
+	border-left-color: var(--err);
+	content: "\2716  This post's link goes nowhere: href=\"#\".\A jsx-a11y/anchor-is-valid  \00B7  error  \00B7  \1F4A1  Quick fix: link the post";
+}
+
+.site .site-nav-link[href="#"]::before,
+.site .site-socials .site-link[href="#"]::before {
+	left: auto;
+	right: 0;
+}
+
+.site .site-socials .site-link[href="#"]::before {
+	left: 0;
+	right: auto;
+}
+
+.site a[href="#"]:is(:hover, :focus-visible)::before {
+	opacity: 1;
+	translate: 0 0;
+}
+
+/* rule: require-datetime. Info squiggle under every <time>. */
+.site time:not([datetime]) {
+	counter-increment: li;
+	position: relative;
+	text-decoration: underline wavy var(--info) 1px;
+	text-underline-offset: 0.3em;
+}
+
+.site-item:hover time:not([datetime])::after {
+	color: var(--info);
+	content: "  \24D8 require-datetime";
+	font: 600 0.62rem/1 var(--mono);
+}
+
+.site-item:hover .site-item-meta::after {
+	color: var(--err);
+	content: "   \2716 anchor-is-valid";
+	font: 600 0.62rem/1 var(--mono);
+}
+
+/* rule: img-alt. Empty alt in dark mode (error), descriptive-only alt in light mode (hint). */
+.site .site-portrait:has(img[alt$="face"]) {
+	counter-increment: li;
+	outline: 2px dotted var(--info);
+	outline-offset: 5px;
+	position: relative;
+	border-radius: 50%;
+}
+
+html.dark .site .site-portrait:has(img[alt=""]:not([alt$="face"])) {
+	counter-increment: le;
+}
+
+html.dark .site .site-portrait {
+	outline-color: var(--err);
+}
+
+.site .site-portrait::after {
+	background: var(--card);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-left: 3px solid var(--info);
+	border-radius: 0.35rem;
+	box-shadow: 0 0.5rem 1.4rem rgb(0 0 0 / 0.18);
+	color: var(--siteFg);
+	content: "\24D8  alt describes how it looks, not why it is here.\A jsx-a11y/img-redundant-alt  \00B7  info";
+	font: 500 0.66rem/1.5 var(--mono);
+	left: 50%;
+	opacity: 0;
+	padding: 0.5rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	top: 100%;
+	translate: -50% 0.4rem;
+	transition: opacity 0.15s;
+	white-space: pre;
+	z-index: 30;
+}
+
+html.dark .site .site-portrait::after {
+	border-left-color: var(--err);
+	content: "\2716  <img alt=\"\"> carries information but has no alt text.\A jsx-a11y/alt-text  \00B7  error";
+}
+
+.site .site-portrait:hover::after {
+	opacity: 1;
+}
+
+.site .site-portrait img {
+	pointer-events: auto;
+}
+
+/* rule: no-emoji */
+.site .site-heart {
+	counter-increment: lw;
+	position: relative;
+	text-decoration: underline wavy var(--warn) 1px;
+	text-underline-offset: 0.3em;
+}
+
+.site .site-heart::before {
+	background: var(--card);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-left: 3px solid var(--warn);
+	border-radius: 0.35rem;
+	bottom: calc(100% + 0.5rem);
+	box-shadow: 0 0.5rem 1.4rem rgb(0 0 0 / 0.18);
+	color: var(--siteFg);
+	content: "\26A0  Emoji is not an icon system.\A no-emoji  \00B7  warning  \00B7  \1F4A1  Quick fix: use an <svg>";
+	font: 500 0.66rem/1.5 var(--mono);
+	left: 50%;
+	opacity: 0;
+	padding: 0.5rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	translate: -50% 0;
+	transition: opacity 0.15s;
+	white-space: pre;
+	z-index: 30;
+}
+
+.site .site-heart:hover::before {
+	opacity: 1;
+}
+
+/* ---- the editor around it: line numbers and the active line ---- */
+
+.site :is(.site-header, .site-hero, .site-about p, .site-section-title, .site-item, .site-footer p) {
+	counter-increment: ln;
+	position: relative;
+}
+
+.site :is(.site-hero, .site-about p, .site-section-title, .site-item, .site-footer p)::before {
+	color: color-mix(in srgb, var(--siteMuted) 65%, transparent);
+	content: counter(ln);
+	font: 500 0.7rem/1.6 var(--mono);
+	left: -3.2rem;
+	position: absolute;
+	text-align: right;
+	top: 0;
+	width: 2rem;
+}
+
+.site-hero::before {
+	top: 0.25rem;
+}
+
+.site-item:hover::before,
+.site-section-title:hover::before,
+.site-hero:hover::before {
+	color: var(--siteFgStrong);
+}
+
+.site-item {
+	border-radius: 0.3rem;
+	margin-inline: -0.5rem;
+	padding: 0.35rem 0.5rem;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--info) 7%, transparent);
+	box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--info) 22%, transparent);
+}
+
+.site-about p {
+	border-radius: 0.3rem;
+}
+
+/* indent guides and a faint ruler at 80 columns */
+.site .scenery-a {
+	background:
+		linear-gradient(90deg, transparent calc(50% + 40ch + 3rem), color-mix(in srgb, var(--err) 18%, transparent) calc(50% + 40ch + 3rem), color-mix(in srgb, var(--err) 18%, transparent) calc(50% + 40ch + 3rem + 1px), transparent calc(50% + 40ch + 3rem + 1px)),
+		linear-gradient(90deg, color-mix(in srgb, var(--siteSubtle) 80%, transparent) calc(50% - 26rem), transparent calc(50% - 26rem));
+}
+
+/* ---- the status bar: problem totals counted by the page itself ---- */
+
+.site .overlay-a::before,
+.site .overlay-a::after {
+	bottom: 0;
+	color: #fff;
+	font: 600 0.7rem/1.7rem var(--mono);
+	height: 1.7rem;
+	position: absolute;
+}
+
+.site .overlay-a::before {
+	background: #0b5cad;
+	content: "  \2716 " counter(le) "   \26A0 " counter(lw) "   \24D8 " counter(li) "   \00B7  eslint-plugin-css";
+	left: 0;
+	right: 0;
+	white-space: pre;
+}
+
+html.dark .site .overlay-a::before {
+	background: #1f4f8a;
+}
+
+.site .overlay-a::after {
+	content: "Ln " counter(ln) "  \00B7  CSS  \00B7  0 KB JS  ";
+	right: 0;
+}
+
+@media (max-width: 1000px) {
+	.site :is(.site-hero, .site-about p, .site-section-title, .site-item, .site-footer p)::before {
+		display: none;
+	}
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(210 90% 55%), hsl(40 95% 55%), hsl(210 90% 55%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "[attr] · :not() · :has() · counters";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

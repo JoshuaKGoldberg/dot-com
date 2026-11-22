@@ -1,0 +1,6 @@
+@import url("./_adk/adk.css");
+/* #202 Control-Flow River: scene is drawn on canvas; text colours come from the shared tone variables. */
+
+.site .adk-veil {
+	opacity: 0.4;
+}

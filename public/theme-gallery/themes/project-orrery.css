@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:wght@400;500;600&display=swap");
+.site { --siteFont: "Lora", Georgia, serif; --siteFontDisplay: "Cinzel", Georgia, serif; --siteBg: #f7f1e3; --siteFg: #3a2f1e; --siteFgStrong: #241a0c; --siteMuted: #7a6644; --siteAccent: #8a5a12; --siteSquiggle: #c9923a; --siteSubtle: #e6d8b8; }
+html.dark .site { --siteBg: #0d0f1a; --siteFg: #e5dcc8; --siteFgStrong: #fff3d6; --siteMuted: #b9a77f; --siteAccent: #f0c070; --siteSquiggle: #e0a548; --siteSubtle: #1d2036; }
+.site-title { font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.2rem); letter-spacing: 0.02em; line-height: 1.05; }
+.site-section-title { letter-spacing: 0.06em; font-weight: 700; font-size: 1.5rem; text-transform: uppercase; }
+.site-tagline { font-size: 1.25rem; }
+.site-about { font-weight: 400; font-size: 1.15rem; }
+.site-item-description { font-weight: 400; }
+.site .site-scenery { background: radial-gradient(70% 60% at 50% 66%, color-mix(in srgb, var(--siteSubtle) 85%, transparent), transparent 75%); }
+.site .site-project { padding: 0.4rem 0.7rem; margin: 0 -0.7rem; border-radius: 0.5rem; transition: background 0.2s; }
+.site .site-project.po-hot { background: color-mix(in srgb, var(--siteSquiggle) 20%, transparent); }
+@media (prefers-reduced-motion: reduce) { .site .site-project { transition: none; } }
+.site .scenery-a { opacity: 0.82; }

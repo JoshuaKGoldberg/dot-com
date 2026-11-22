@@ -1,0 +1,14 @@
+/* #265 Portrait Halo: the plain site, with a soft aurora halo around the portrait only. */
+.site .site-portrait {
+	display: block;
+	position: relative;
+}
+
+.site .site-portrait img {
+	position: relative;
+	z-index: 1;
+}
+
+.site .qa-halo {
+	overflow: visible;
+}

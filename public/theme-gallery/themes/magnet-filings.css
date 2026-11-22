@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap");
+
+.site {
+	--siteBg: #f1ecdf;
+	--siteFg: #23283a;
+	--siteFgStrong: #0e1220;
+	--siteMuted: #5a5f70;
+	--siteAccent: #c92f3b;
+	--siteSquiggle: #2f66e8;
+	--siteSubtle: #ddd6c4;
+	--siteFont: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+	--halo: var(--siteBg);
+	--mfIron: 52 56 68;
+	--mfN: #e5484d;
+	--mfS: #3d78f7;
+}
+
+html.dark .site {
+	--siteBg: #0b0d13;
+	--siteFg: #d6dbe8;
+	--siteFgStrong: #f3f5fb;
+	--siteMuted: #939ab0;
+	--siteAccent: #ff7b82;
+	--siteSquiggle: #6e9cff;
+	--siteSubtle: #1a1e2b;
+	--mfIron: 205 213 230;
+}
+
+.site .scenery-a canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .scenery-b {
+	background-image: var(--mfGrain, none);
+	background-size: 160px 160px;
+	mix-blend-mode: multiply;
+	opacity: 0.5;
+}
+
+html.dark .site .scenery-b {
+	mix-blend-mode: screen;
+	opacity: 0.04;
+}
+
+.site .scenery-c {
+	background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 55%, rgb(0 0 0 / 0.1));
+}
+
+html.dark .site .scenery-c {
+	background: radial-gradient(ellipse 80% 70% at 50% 40%, transparent 50%, rgb(0 0 0 / 0.4));
+}
+
+/* halos keep glyphs crisp over the filings */
+.site .site-page :is(p, h1, h2, a, li, time, span, .site-item-meta) {
+	text-shadow:
+		0 0 2px var(--halo),
+		0 0 4px var(--halo),
+		0 0 8px var(--halo),
+		0 0 14px var(--halo);
+}
+
+.site .site-portrait img {
+	box-shadow:
+		0 0 0 5px var(--siteBg),
+		0 0 0 6px rgb(var(--mfIron) / 0.35),
+		0 10px 30px rgb(0 0 0 / 0.18);
+}
+
+.site-title {
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+.site-section-title {
+	font-family: var(--mono);
+	font-size: 1rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.site-section-title::before {
+	background: linear-gradient(90deg, var(--mfN) 50%, var(--mfS) 50%);
+	border-radius: 2px;
+	content: "";
+	display: inline-block;
+	height: 0.55em;
+	margin-right: 0.6rem;
+	vertical-align: baseline;
+	width: 1.1em;
+}
+
+.site-item-meta {
+	font-family: var(--mono);
+	font-size: 0.8rem;
+}
+
+/* ---------- controls ---------- */
+
+.site .mf-controls {
+	align-items: center;
+	bottom: 0.9rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	justify-content: flex-end;
+	max-width: calc(100% - 1.6rem);
+	pointer-events: none;
+	position: absolute;
+	right: 0.8rem;
+	z-index: 5;
+}
+
+.site .mf-btn {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid rgb(var(--mfIron) / 0.38);
+	border-radius: 999px;
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	font: 500 0.74rem/1 var(--mono);
+	padding: 0.5rem 0.8rem;
+	pointer-events: auto;
+	text-shadow: none;
+}
+
+.site .mf-btn kbd {
+	border: 1px solid rgb(var(--mfIron) / 0.4);
+	border-radius: 4px;
+	font: inherit;
+	margin-left: 0.3rem;
+	padding: 0 0.28rem;
+}
+
+.site .mf-btn:hover {
+	border-color: var(--siteAccent);
+}
+
+.site .mf-btn[aria-pressed="true"] {
+	background: var(--siteFgStrong);
+	color: var(--siteBg);
+}
+
+.site .mf-btn:focus-visible {
+	outline: 2px solid var(--siteSquiggle);
+	outline-offset: 2px;
+}
+
+.site .mf-hint {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border-radius: 999px;
+	color: var(--siteMuted);
+	font: 400 0.74rem/1 var(--mono);
+	padding: 0.5rem 0.8rem;
+	pointer-events: none;
+	text-shadow: none;
+	transition: opacity 0.6s;
+}
+
+.site .mf-hint.is-gone {
+	opacity: 0;
+}
+
+@media (max-width: 700px) {
+	.site .mf-hint {
+		display: none;
+	}
+}

@@ -1,0 +1,81 @@
+/* 13 — Riso Misregistration */
+.site {
+	--siteBg: #f6f0e3;
+	--siteFg: #2b2a33;
+	--siteFgStrong: #17161d;
+	--siteMuted: #5d5a63;
+	--siteAccent: #d6177a;
+	--siteSquiggle: #00a1cc;
+	--siteSubtle: #eadfcf;
+	--regX: 3.5px;
+	--regY: -3px;
+}
+html.dark .site {
+	--siteBg: #212124;
+	--siteFg: #e9e4da;
+	--siteFgStrong: #fbf7ee;
+	--siteMuted: #a9a5a0;
+	--siteAccent: #ff6db3;
+	--siteSquiggle: #3fc6e6;
+	--siteSubtle: #2f2f33;
+}
+
+.site .scenery-a,
+.site .scenery-b {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	opacity: 0.34;
+}
+.site .scenery-a {
+	background-image: url("riso/pink.svg");
+	mix-blend-mode: multiply;
+}
+.site .scenery-b {
+	background-image: url("riso/teal.svg");
+	mix-blend-mode: multiply;
+	inset: -10px;
+	transform: translate(var(--regX), var(--regY));
+}
+html.dark .site .scenery-a,
+html.dark .site .scenery-b {
+	mix-blend-mode: screen;
+	opacity: 0.2;
+}
+.site .scenery-c {
+	background: url("riso/grain.svg") 0 0 / 320px 320px repeat;
+	mix-blend-mode: multiply;
+	opacity: 0.3;
+}
+html.dark .site .scenery-c {
+	filter: invert(1);
+	mix-blend-mode: screen;
+	opacity: 0.16;
+}
+
+/* the type itself picks up a hint of ink */
+.site-title {
+	text-shadow: 1.5px 1px 0 rgba(255, 61, 154, 0.35);
+}
+html.dark .site-title {
+	text-shadow: 1.5px 1px 0 rgba(0, 169, 212, 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-b {
+		animation: riso-drift 90s ease-in-out infinite alternate;
+	}
+	@keyframes riso-drift {
+		from {
+			transform: translate(3px, -3px);
+		}
+		to {
+			transform: translate(4px, -3.7px);
+		}
+	}
+}
+
+/* Review pass: the light-mode inks read too heavy behind body text. */
+html:not(.dark) .site .site-scenery {
+	opacity: 0.6;
+}

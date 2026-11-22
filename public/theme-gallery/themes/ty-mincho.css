@@ -1,0 +1,56 @@
+/* Token plan
+ * Families: Shippori Mincho 400/600 + Zen Kaku Gothic New 300-500 (Latin subsets).
+ * Scale: hero wght 400 at 66px, -0.02em; tagline Zen Kaku 1.2rem +0.06em; ratio 3.4x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #79: ink-like mincho over a calm gothic; generous leading and a touch of tracking.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Shippori Mincho Fallback"; src: local("Georgia"); size-adjust: 107.6%; ascent-override: 107.8%; descent-override: 27.0%; line-gap-override: 0%; }
+@font-face { font-family: "Zen Kaku Gothic New Fallback"; src: local("Arial"); size-adjust: 98.0%; ascent-override: 118.3%; descent-override: 29.6%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #407 (from #79) Shippori Mincho hero with Zen Kaku Gothic New body: calm and ink-like. Only the Latin subset of each is downloaded. */
+.site {
+	--tyDisplay: "Shippori Mincho", "Shippori Mincho Fallback", "Hiragino Mincho ProN", Georgia, serif;
+	--tyBody: "Zen Kaku Gothic New", "Zen Kaku Gothic New Fallback", "Hiragino Sans", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13.5cqi, 4.8rem);
+	--tyTitleW: 400;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 1;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.2rem;
+	--tyTagW: 400;
+	--tyTagLs: 0.06em;
+	--tyTagLh: 1.5;
+	--tyTagMax: 26em;
+
+	--tyBodyW: 400;
+	--tyBodyLs: 0.02em;
+	--tyAboutSize: 1.15rem;
+	--tyAboutLh: 1.8;
+	--tyDescSize: 1rem;
+	--tyDescLh: 1.7;
+	--tyUiW: 500;
+	--tyUiLs: 0.06em;
+	--tyNavSize: 1rem;
+	--tyLogoSize: 1.15rem;
+	--tyLogoW: 500;
+	--tySocialSize: 0.95rem;
+	--tySecSize: 1.9rem;
+	--tySecW: 600;
+	--tySecLs: 0.02em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 600;
+	--tyItemSize: 1.2rem;
+	--tyItemLs: 0.01em;
+	--tyMetaSize: 0.85rem;
+	--tyMetaLs: 0.08em;
+	--tyMetaW: 400;
+}

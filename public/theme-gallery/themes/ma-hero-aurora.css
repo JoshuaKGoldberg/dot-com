@@ -1,0 +1,6 @@
+/* 300. Hero Aurora: halo behind the portrait only; scrolls away with the hero. */
+.site { --siteMuted: #4d5d7e; }
+html.dark .site { --siteBg: #0a1020; --siteMuted: #a3b4c8; --siteSubtle: #0f2237; }
+.site .site-hero { position: relative; }
+.site .ma-hero-halo { position: absolute; z-index: -1; pointer-events: none; overflow: hidden; contain: paint; }
+.site .ma-hero-halo.is-fallback { background: radial-gradient(50% 55% at 50% 60%, rgba(90, 220, 180, 0.3), transparent 70%); }

@@ -1,0 +1,40 @@
+/* 173. Text Tunnel: scroll flies you down a tunnel of rings made of the page's own words. */
+.site {
+	--siteBg: #f4f8fe;
+	--siteFg: #1f3358;
+	--siteFgStrong: #0b1a38;
+	--siteMuted: #4b5f82;
+	--siteAccent: #c4510f;
+	--siteSquiggle: #e0782f;
+	--siteSubtle: #dbe6f5;
+}
+html.dark .site {
+	--siteBg: #080e22;
+	--siteFg: #d6e3fa;
+	--siteFgStrong: #f4f8ff;
+	--siteMuted: #98acd0;
+	--siteAccent: #ffb860;
+	--siteSquiggle: #ffb860;
+	--siteSubtle: #14214a;
+}
+.site .site-page { max-width: 48rem; }
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 72%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteAccent) 35%, transparent);
+	border-radius: 1rem;
+	box-shadow: 0 0 40px -10px color-mix(in srgb, var(--siteAccent) 30%, transparent);
+	padding: 1.6rem 1.8rem;
+}
+.site .site-hero { margin: 5vh 0 34vh; }
+.site .site-about { margin: 0 auto 34vh; }
+.site .site-section { margin: 0 auto 34vh; }
+.site .site-footer { margin: 0 auto; max-width: 28rem; }

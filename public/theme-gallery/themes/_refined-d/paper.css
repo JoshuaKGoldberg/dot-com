@@ -1,0 +1,93 @@
+/* Shared paper-texture pieces for #311-313 / #317 (washes, grain, margin stars). */
+.site .scenery-a,
+.site .scenery-b,
+.site .scenery-c {
+	pointer-events: none;
+}
+
+.site .rp-field {
+	contain: paint;
+	inset: 0;
+	position: absolute;
+}
+
+.site .rp-w {
+	position: absolute;
+	will-change: transform, opacity;
+}
+
+.site .rp-w i {
+	animation: rp-breathe var(--per, 42s) ease-in-out var(--delay, 0s) infinite alternate;
+	background: radial-gradient(closest-side, rgba(var(--rgb), calc(var(--a1) * var(--k, 1))), rgba(var(--rgb), calc(var(--a2) * var(--k, 1))) 55%, transparent);
+	border-radius: 50%;
+	display: block;
+	height: 100%;
+	width: 100%;
+	will-change: transform;
+}
+
+.site .rp-teal { --rgb: 96, 200, 182; --a1: 0.22; --a2: 0.11; }
+.site .rp-lilac { --rgb: 166, 146, 232; --a1: 0.2; --a2: 0.09; }
+.site .rp-mint { --rgb: 132, 214, 160; --a1: 0.19; --a2: 0.09; }
+.site .rp-pink { --rgb: 240, 160, 196; --a1: 0.16; --a2: 0.07; }
+.site .rp-peach { --rgb: 246, 190, 150; --a1: 0.16; --a2: 0.07; }
+.site .rp-sky { --rgb: 130, 182, 240; --a1: 0.18; --a2: 0.08; }
+html.dark .site .rp-teal { --rgb: 70, 230, 170; --a1: 0.2; --a2: 0.09; }
+html.dark .site .rp-lilac { --rgb: 150, 120, 255; --a1: 0.2; --a2: 0.09; }
+html.dark .site .rp-mint { --rgb: 80, 220, 200; --a1: 0.16; --a2: 0.07; }
+html.dark .site .rp-pink { --rgb: 240, 110, 170; --a1: 0.13; --a2: 0.06; }
+html.dark .site .rp-peach { --rgb: 240, 150, 130; --a1: 0.11; --a2: 0.05; }
+html.dark .site .rp-sky { --rgb: 90, 150, 255; --a1: 0.17; --a2: 0.08; }
+
+@keyframes rp-breathe {
+	from { transform: translate3d(0, 0, 0) scale(0.94); }
+	to { transform: translate3d(var(--dx, -22px), var(--dy, 16px), 0) scale(1.1); }
+}
+
+.site .rp-grain {
+	background-size: 96px 96px;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.8s;
+}
+
+.site .rp-grain.is-ready { opacity: 1; }
+
+/* margin stars: three layers twinkle with opacity only */
+.site .rp-stars {
+	inset: 0;
+	position: absolute;
+}
+
+.site .rp-stars-l {
+	animation: rp-twinkle var(--per, 6s) ease-in-out var(--delay, 0s) infinite alternate;
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+	will-change: opacity;
+}
+
+.site .rp-stars-l0 { --per: 5.5s; }
+.site .rp-stars-l1 { --per: 8s; --delay: -3s; }
+.site .rp-stars-l2 { --per: 11s; --delay: -6s; }
+
+@keyframes rp-twinkle {
+	from { opacity: 0.45; }
+	to { opacity: 1; }
+}
+
+@media (max-width: 860px) {
+	.site .rp-stars { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .rp-w i,
+	.site .rp-stars-l { animation: none; }
+	.site .rp-grain { transition: none; }
+}
+
+html.reduce-motion .site .rp-w i,
+html.reduce-motion .site .rp-stars-l { animation: none; }
+html.reduce-motion .site .rp-grain { transition: none; }

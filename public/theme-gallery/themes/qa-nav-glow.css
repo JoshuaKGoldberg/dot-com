@@ -1,0 +1,24 @@
+.site .site-header { position: relative; }
+
+.site .qa-navglow {
+	height: 54px;
+	left: -6rem;
+	pointer-events: none;
+	position: absolute;
+	right: -6rem;
+	top: 100%;
+	margin-top: -0.25rem;
+	z-index: 0;
+}
+
+.site .qa-navglow canvas {
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .site-header > :not(.qa-navglow) { position: relative; z-index: 1; }
+
+.site .site-nav-link { transition: color 0.4s; }

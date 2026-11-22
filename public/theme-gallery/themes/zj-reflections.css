@@ -1,0 +1,292 @@
+/*
+ * Zero JS: Reflections. No script, just CSS.
+ *   -webkit-box-reflect      -> header, hero, headings and footer mirrored in water (Chromium)
+ *   @property + hover        -> typed --rip / --wob values animate the reflection into ripples
+ *   mask + squiggle.svg      -> the water line under each mirrored block
+ *   prime-size tiles         -> caustic light drifting across the pool
+ */
+
+@property --rip {
+	inherits: false;
+	initial-value: 0%;
+	syntax: "<percentage>";
+}
+
+@property --wob {
+	inherits: false;
+	initial-value: 0px;
+	syntax: "<length>";
+}
+
+.site {
+	--siteBg: #f2f8f8;
+	--siteFg: #20323f;
+	--siteFgStrong: #0b1a24;
+	--siteMuted: #4c6477;
+	--siteAccent: #0c7a96;
+	--siteSquiggle: #38bcd8;
+	--siteSubtle: #d4e9ee;
+	--water: 150 215 230;
+	--refl: 0.38;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #07151d;
+	--siteFg: #cfe3ea;
+	--siteFgStrong: #f0fbff;
+	--siteMuted: #86a4b2;
+	--siteAccent: #6fd4f0;
+	--siteSquiggle: #3fc2e6;
+	--siteSubtle: #0f2c3a;
+	--water: 20 80 105;
+	--refl: 0.45;
+}
+
+/* A pool of light: gradients and two drifting caustic tiles. */
+.site .scenery-a {
+	background:
+		radial-gradient(70vmax 40vmax at 50% 0%, rgb(var(--water) / 0.45), transparent 70%),
+		linear-gradient(rgb(var(--water) / 0.12), rgb(var(--water) / 0.38));
+}
+
+.site .scenery-b,
+.site .scenery-c {
+	overflow: hidden;
+}
+
+.site .scenery-b::before,
+.site .scenery-c::before {
+	content: "";
+	inset: -300px 0 0 -300px;
+	position: absolute;
+}
+
+.site .scenery-b::before {
+	background:
+		radial-gradient(ellipse 90px 14px at 25% 30%, rgb(255 255 255 / 0.5), transparent 70%),
+		radial-gradient(ellipse 60px 9px at 70% 75%, rgb(255 255 255 / 0.4), transparent 70%);
+	background-size: 197px 83px;
+	opacity: 0.35;
+}
+
+.site .scenery-c::before {
+	background:
+		radial-gradient(ellipse 120px 12px at 40% 40%, rgb(255 255 255 / 0.4), transparent 70%),
+		radial-gradient(ellipse 70px 8px at 85% 85%, rgb(255 255 255 / 0.35), transparent 70%);
+	background-size: 263px 107px;
+	opacity: 0.3;
+}
+
+html.dark .site .scenery-b::before,
+html.dark .site .scenery-c::before {
+	opacity: 0.12;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-b::before {
+		animation: zr-caustic-a 41s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation: zr-caustic-b 53s linear infinite;
+	}
+}
+
+@keyframes zr-caustic-a {
+	to {
+		transform: translate(197px, 83px);
+	}
+}
+
+@keyframes zr-caustic-b {
+	to {
+		transform: translate(-263px, 107px);
+	}
+}
+
+/* ---- the mirrored things ---- */
+
+.site-header,
+.site-hero,
+.site-section-title,
+.site-footer {
+	-webkit-box-reflect: below calc(0.15rem + var(--wob))
+		linear-gradient(to bottom, transparent calc(100% - 42% - var(--rip)), rgb(0 0 0 / var(--refl)));
+	position: relative;
+}
+
+.site-header {
+	margin-bottom: 1.6rem;
+}
+
+.site-section-title {
+	margin-bottom: 2.2rem;
+	width: fit-content;
+}
+
+.site-hero {
+	margin-bottom: 6.5rem;
+}
+
+.site-footer {
+	margin-bottom: 4rem;
+}
+
+/* The water line: the site's own squiggle, repeated, under each mirrored block. */
+.site-hero::after,
+.site-header::after,
+.site-section-title::after,
+.site-footer::after {
+	background: var(--siteSquiggle);
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: -0.5rem;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: 0.55;
+	position: absolute;
+	right: -0.5rem;
+}
+
+.site-section-title::after {
+	left: 0;
+	min-width: 12rem;
+	right: auto;
+	width: calc(100% + 6rem);
+}
+
+.site-header::after {
+	opacity: 0.35;
+}
+
+/* Hover: the reflection starts to ripple (typed custom properties in the reflect mask and offset). */
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site :is(.site-header, .site-hero, .site-section-title, .site-footer):hover {
+		animation: zr-ripple 1.7s ease-in-out infinite;
+	}
+
+	html:not(.reduce-motion) .site :is(.site-hero, .site-section-title):hover::after {
+		animation: zr-line 1.1s linear infinite;
+	}
+}
+
+@keyframes zr-ripple {
+	0%,
+	100% {
+		--rip: -6%;
+		--wob: -3px;
+	}
+
+	33% {
+		--rip: 10%;
+		--wob: 4px;
+	}
+
+	66% {
+		--rip: 2%;
+		--wob: -1px;
+	}
+}
+
+@keyframes zr-line {
+	to {
+		mask-position: 40px 0;
+	}
+}
+
+/* ---- the rest of the page floats on the water ---- */
+
+.site-item {
+	border-radius: 0.9rem;
+	margin-inline: -0.9rem;
+	padding: 0.55rem 0.9rem;
+	transition:
+		background-color 0.3s,
+		translate 0.3s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, rgb(var(--water)) 18%, transparent);
+	translate: 0 -2px;
+}
+
+.site-portrait img {
+	box-shadow: 0 0.4rem 1.6rem rgb(var(--water) / 0.7);
+}
+
+.site-title {
+	letter-spacing: -0.015em;
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(190 90% 55%), hsl(215 85% 60%), hsl(190 90% 55%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "box-reflect · @property · mask";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

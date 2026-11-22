@@ -1,0 +1,18 @@
+@import url("./_refined-e/base.css");
+
+/* 318: a valley lake that mirrors the aurora. One shader for sky + reflection + ripples, a sharp silhouette canvas, and a 2D overlay for birds and a loon. */
+.site .site-footer { min-height: 300px; }
+.site .ra-foot .ra-valley-hint {
+	bottom: 0.7rem;
+	color: var(--siteMuted);
+	font-size: 0.78rem;
+	letter-spacing: 0.05em;
+	opacity: 0.85;
+	pointer-events: none;
+	position: absolute;
+	right: 1.3rem;
+	transition: opacity 1.2s ease;
+	z-index: 4;
+}
+.site .ra-foot .ra-valley-hint.is-gone { opacity: 0; }
+@media (max-width: 700px) { .site .ra-foot .ra-valley-hint { display: none; } }

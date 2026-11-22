@@ -1,0 +1,57 @@
+/* Token plan
+ * Families: Cormorant Garamond 300-600 + Albert Sans 300-600 + IBM Plex Mono 400 (dates).
+ * Scale: hero wght 400 at 76px, -0.015em, lh .9; tagline Albert Sans 300 1.2rem; ratio 3.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #20: hairline Garamond hero for the star motif, quiet sans prose in place of Inter, mono only for data.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300..600&family=Albert+Sans:wght@300..600&family=IBM+Plex+Mono:wght@400&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Cormorant Garamond Fallback"; src: local("Georgia"); size-adjust: 87.5%; ascent-override: 105.1%; descent-override: 33.1%; line-gap-override: 0%; }
+@font-face { font-family: "Albert Sans Fallback"; src: local("Arial"); size-adjust: 102.9%; ascent-override: 92.3%; descent-override: 24.3%; line-gap-override: 0%; }
+@font-face { font-family: "IBM Plex Mono Fallback"; src: local("Courier New"); size-adjust: 100.0%; ascent-override: 102.0%; descent-override: 27.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #401 (from #20) Cormorant Garamond hero, IBM Plex Mono for labels and meta, Albert Sans as the quiet body (instead of Inter). */
+.site {
+	--tyDisplay: "Cormorant Garamond", "Cormorant Garamond Fallback", Garamond, Georgia, serif;
+	--tyBody: "Albert Sans", "Albert Sans Fallback", system-ui, sans-serif;
+	--tyMono: "IBM Plex Mono", "IBM Plex Mono Fallback", ui-monospace, Menlo, monospace;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 15.5cqi, 5.6rem);
+	--tyTitleW: 400;
+	--tyTitleWd: 380;
+	--tyTitleLs: -0.015em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.045em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.2rem;
+	--tyTagW: 300;
+	--tyTagLs: 0.02em;
+	--tyTagLh: 1.45;
+	--tyTagMax: 24em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 450;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.5rem;
+	--tyLogoW: 500;
+	--tyLogoFont: var(--tyDisplay);
+	--tySocialSize: 1rem;
+	--tySecSize: 2.3rem;
+	--tySecW: 500;
+	--tySecWd: 450;
+	--tyItemW: 550;
+	--tyItemSize: 1.2rem;
+	--tyMetaFont: var(--tyMono);
+	--tyMetaSize: 0.8rem;
+	--tyMetaLs: 0;
+}
+.site .site-logo { font-family: var(--tyDisplay); }

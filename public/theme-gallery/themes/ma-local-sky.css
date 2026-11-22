@@ -1,0 +1,17 @@
+/* #287 Local Sky: a time-of-day sky band across the top third of the window. */
+html.dark .site {
+	--siteBg: #0a1122;
+	--siteSubtle: #0f2238;
+}
+@keyframes mlsDrift {
+	from { translate: -260px 0; }
+	to { translate: var(--w) 0; }
+}
+html.reduce-motion .site .mls-cloud {
+	animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+	.site .mls-cloud {
+		animation: none !important;
+	}
+}

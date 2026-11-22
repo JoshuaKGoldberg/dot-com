@@ -1,0 +1,221 @@
+/* 122 — Portrait Card: looks like the plain site until you click the portrait. */
+/* shared hint chip */
+.site .dl-chip {
+	align-items: center;
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 999px;
+	bottom: 1rem;
+	box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	display: inline-flex;
+	font: 600 0.85rem/1 var(--siteFont);
+	gap: 0.5rem;
+	padding: 0.45rem 0.7rem 0.45rem 0.6rem;
+	position: fixed;
+	right: 1rem;
+	transition: transform 0.15s, background-color 0.15s, border-color 0.15s;
+	z-index: 40;
+}
+
+.site .dl-chip:hover {
+	border-color: var(--siteAccent);
+	transform: translateY(-1px);
+}
+
+.site .dl-chip:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+.site .dl-chip[aria-pressed="true"] {
+	background: var(--siteAccent);
+	border-color: var(--siteAccent);
+	color: var(--siteBg);
+}
+
+.site .dl-chip kbd {
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	font: 700 0.7rem/1 var(--siteFont);
+	opacity: 0.7;
+	padding: 0.15rem 0.3rem;
+}
+
+.site .dl-chip::after {
+	border-radius: inherit;
+	box-shadow: 0 0 0 0 var(--siteAccent);
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .dl-chip::after {
+		animation: dl-ping 1.8s 1.2s 2 ease-out;
+	}
+}
+
+@keyframes dl-ping {
+	0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--siteAccent) 55%, transparent); }
+	100% { box-shadow: 0 0 0 14px transparent; }
+}
+
+.dl-sr {
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+
+.site .site-portrait {
+	display: block;
+	perspective: 900px;
+}
+
+.site .pc-card {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	cursor: grab;
+	position: relative;
+	touch-action: pan-y;
+	transform-style: preserve-3d;
+	user-select: none;
+	-webkit-user-select: none;
+	will-change: auto;
+}
+
+.site .pc-card.is-grabbed {
+	cursor: grabbing;
+}
+
+.site .pc-card:focus-visible {
+	outline: 3px solid var(--siteAccent);
+	outline-offset: 5px;
+}
+
+.site .pc-front,
+.site .pc-back {
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	border-radius: 50%;
+	inset: 0;
+	position: absolute;
+	transition: border-radius 0.45s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+
+.site .pc-front img {
+	pointer-events: none;
+	-webkit-user-drag: none;
+	transition: border-radius 0.45s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+
+.site .pc-card.is-armed .pc-front,
+.site .pc-card.is-armed .pc-back,
+.site .pc-card.is-armed .pc-front img {
+	border-radius: 1.5rem;
+}
+
+.site .pc-card.is-armed {
+	border-radius: 1.5rem;
+	box-shadow: 0 14px 30px -10px rgb(10 30 70 / 0.45);
+}
+
+.site .pc-back {
+	background:
+		linear-gradient(160deg, color-mix(in srgb, var(--siteAccent) 22%, var(--siteBg)), var(--siteBg) 70%),
+		var(--siteBg);
+	border: 1px solid color-mix(in srgb, var(--siteAccent) 45%, transparent);
+	color: var(--siteFgStrong);
+	container-type: inline-size;
+	overflow: hidden;
+	transform: rotateY(180deg);
+}
+
+.site .pc-inner {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 9cqw;
+}
+
+.site .pc-kicker {
+	color: var(--siteAccent);
+	font-size: 6.5cqw;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.site .pc-name {
+	font-family: var(--siteFontDisplay);
+	font-size: 11cqw;
+	font-weight: 800;
+	line-height: 1.05;
+	margin: 1cqw 0 5cqw;
+}
+
+.site .pc-stats {
+	display: grid;
+	flex: 1;
+	gap: 2.6cqw;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.site .pc-stats li {
+	align-items: baseline;
+	border-bottom: 1px dashed color-mix(in srgb, var(--siteMuted) 50%, transparent);
+	display: flex;
+	font-size: 6.4cqw;
+	justify-content: space-between;
+	padding-bottom: 1.6cqw;
+}
+
+.site .pc-stats span {
+	color: var(--siteMuted);
+	font-size: 5.8cqw;
+}
+
+.site .pc-foot {
+	color: var(--siteMuted);
+	font-size: 5.6cqw;
+}
+
+.site .pc-foot i {
+	color: var(--siteAccent);
+	font-style: normal;
+	font-weight: 700;
+}
+
+/* a holographic sheen that slides as the card turns */
+.site .pc-foil {
+	background: linear-gradient(115deg, transparent 20%, rgb(255 255 255 / 0.5) 38%, rgb(120 220 255 / 0.28) 46%, rgb(255 160 230 / 0.28) 54%, transparent 70%);
+	background-position: calc(var(--shine, 0) * 400% - 100%) 0;
+	background-size: 300% 100%;
+	inset: 0;
+	mix-blend-mode: soft-light;
+	pointer-events: none;
+	position: absolute;
+}
+
+html.dark .site .pc-foil {
+	mix-blend-mode: screen;
+	opacity: 0.35;
+}
+
+html.reduce-motion .site .pc-front,
+html.reduce-motion .site .pc-back,
+html.reduce-motion .site .pc-front img {
+	transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .pc-front, .site .pc-back, .site .pc-front img { transition: none; }
+}

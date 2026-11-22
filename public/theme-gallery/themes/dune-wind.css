@@ -1,0 +1,27 @@
+/* 127 — Dune Wind */
+.site {
+	--siteBg: #f1e6d0;
+	--siteFg: #3b3022;
+	--siteFgStrong: #241b10;
+	--siteMuted: #6a5b45;
+	--siteAccent: #9c5a1f;
+	--siteSquiggle: #c27a2e;
+	--siteSubtle: #e5d5b6;
+}
+html.dark .site {
+	--siteBg: #0e1424;
+	--siteFg: #d9e0f0;
+	--siteFgStrong: #f3f6fc;
+	--siteMuted: #99a6c2;
+	--siteAccent: #9db8f0;
+	--siteSquiggle: #7e9ee0;
+	--siteSubtle: #182140;
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

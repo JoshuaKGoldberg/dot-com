@@ -1,0 +1,81 @@
+/* #267 Night Only: light mode is the plain site; dark adds a top whisper and margin stars. */
+.site .qa-stars {
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .qa-stars i {
+	animation: qa-twinkle var(--d, 7s) ease-in-out var(--dl, 0s) infinite;
+	height: var(--s, 1px);
+	opacity: var(--o, 0.5);
+	position: absolute;
+	width: var(--s, 1px);
+	will-change: opacity;
+}
+
+.site .qa-stars i b {
+	background: #dfeaff;
+	border-radius: 50%;
+	display: block;
+	height: 100%;
+	transform: scale(calc(1 + var(--b, 0) * 1.6));
+	transition: transform 0.6s ease;
+	width: 100%;
+	box-shadow: 0 0 calc(2px + var(--b, 0) * 6px) rgba(170, 200, 255, 0.55);
+}
+
+@keyframes qa-twinkle {
+	0%, 100% { opacity: var(--o, 0.5); }
+	50% { opacity: calc(var(--o, 0.5) * 0.45); }
+}
+
+.site .qa-constellation {
+	height: 50px;
+	overflow: visible;
+	position: absolute;
+	width: 96px;
+}
+
+.site .qa-constellation polyline {
+	fill: none;
+	stroke: rgba(160, 195, 255, 0.35);
+	stroke-dasharray: 1;
+	stroke-dashoffset: 1;
+	stroke-width: 0.7;
+	transition: stroke-dashoffset 1.6s ease;
+}
+
+.site .qa-constellation circle {
+	fill: #dfeaff;
+	opacity: 0.55;
+}
+
+.site .qa-constellation.is-near polyline {
+	stroke-dashoffset: 0;
+}
+
+.site .qa-shooter {
+	animation: qa-shoot 1.3s ease-out forwards;
+	background: linear-gradient(90deg, transparent, rgba(220, 235, 255, 0.7));
+	height: 1px;
+	opacity: 0;
+	position: absolute;
+	transform-origin: 100% 50%;
+	width: 70px;
+}
+
+@keyframes qa-shoot {
+	0% { opacity: 0; transform: translate(-30px, -14px) rotate(25deg); }
+	15% { opacity: 0.8; }
+	100% { opacity: 0; transform: translate(70px, 32px) rotate(25deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .qa-stars i { animation: none; }
+	.site .qa-stars i b, .site .qa-constellation polyline { transition: none; }
+}
+
+html.reduce-motion .site .qa-stars i { animation: none; }
+html.reduce-motion .site .qa-stars i b,
+html.reduce-motion .site .qa-constellation polyline { transition: none; }

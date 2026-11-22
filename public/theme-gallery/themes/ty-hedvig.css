@@ -1,0 +1,53 @@
+/* Token plan
+ * Families: Hedvig Letters Serif opsz 24 + Hedvig Letters Sans 400.
+ * Scale: hero 68px static 400, -0.03em; tagline Sans 1.4rem; ratio 3.0x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: A calligraphic contemporary serif with an unusual low-overuse sans sibling from the same foundry.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Hedvig+Letters+Sans&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Hedvig Letters Serif Fallback"; src: local("Georgia"); size-adjust: 101.9%; ascent-override: 100.1%; descent-override: 31.4%; line-gap-override: 0%; }
+@font-face { font-family: "Hedvig Letters Sans Fallback"; src: local("Arial"); size-adjust: 100.7%; ascent-override: 101.3%; descent-override: 31.8%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #396 Hedvig Letters Serif (display cut, opsz 24) with Hedvig Letters Sans for text. */
+.site {
+	--tyDisplay: "Hedvig Letters Serif", "Hedvig Letters Serif Fallback", Georgia, serif;
+	--tyBody: "Hedvig Letters Sans", "Hedvig Letters Sans Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 14cqi, 4.9rem);
+	--tyTitleW: 400;
+	--tyTitleVs: "opsz" 24;
+	--tyTitleLs: -0.03em;
+	--tyTitleLh: 0.96;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.4rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.6;
+	--tyDescSize: 1.05rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.08rem;
+	--tyLogoSize: 1.2rem;
+	--tySecSize: 2.1rem;
+	--tySecW: 400;
+	--tySecVs: "opsz" 24;
+	--tySecLs: -0.02em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 400;
+	--tyItemVs: "opsz" 20;
+	--tyItemSize: 1.35rem;
+	--tyItemLs: -0.01em;
+	--tyMetaSize: 0.9rem;
+	--tyMetaLs: 0.02em;
+}

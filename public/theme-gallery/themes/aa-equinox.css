@@ -1,0 +1,32 @@
+@import url("./_aurora-b/base.css");
+
+/* 247. Equinox Aurora: autumn hardwoods, a red-and-green aurora, a geese V, loosening leaves. */
+.site {
+	--siteBg: #f6efe6;
+	--siteFg: #3a2a24;
+	--siteFgStrong: #231510;
+	--siteMuted: #6a5348;
+	--siteAccent: #a8431d;
+	--siteSquiggle: #d9822b;
+	--siteSubtle: #ead9c5;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 58%, transparent);
+}
+
+html.dark .site {
+	--siteBg: #0b1020;
+	--siteFg: #e3e6f0;
+	--siteFgStrong: #f8f6f2;
+	--siteMuted: #b2b4c6;
+	--siteAccent: #ffb067;
+	--siteSquiggle: #e8643e;
+	--siteSubtle: #1a2040;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 52%, transparent);
+}
+
+.site .scenery-a {
+	background: linear-gradient(#9fb0c8, #d9d4cc 55%, #f2d7b0);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#050a1c, #0c1836 55%, #1b2d58);
+}

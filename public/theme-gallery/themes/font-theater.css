@@ -1,0 +1,211 @@
+.site {
+	--siteBg: #fbf5ea;
+	--siteFg: #3a2a2d;
+	--siteFgStrong: #2a1218;
+	--siteMuted: #7a6366;
+	--siteAccent: #8f1d34;
+	--siteSquiggle: #c9962f;
+	--siteSubtle: #eddfc6;
+}
+
+html.dark .site {
+	--siteBg: #170a0f;
+	--siteFg: #ecdadb;
+	--siteFgStrong: #fff3ea;
+	--siteMuted: #b79a9d;
+	--siteAccent: #ff8da1;
+	--siteSquiggle: #e6b455;
+	--siteSubtle: #2c141b;
+}
+
+.site .scenery-a {
+	background: radial-gradient(60vmax 40vmax at 50% -10%, color-mix(in srgb, #c9962f 20%, transparent), transparent 70%);
+}
+
+/* Faint theatre-curtain fold lines down both margins. */
+.site .scenery-b {
+	background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--siteAccent) 10%, transparent) 0 14px, transparent 14px 28px);
+	mask: linear-gradient(90deg, #000 0, transparent 14%, transparent 86%, #000 100%);
+	opacity: 0.8;
+}
+
+.site .site-title {
+	letter-spacing: -0.01em;
+}
+
+.site .ft-card {
+	background: color-mix(in srgb, var(--siteBg) 96%, transparent);
+	border: 1px solid color-mix(in srgb, #c9962f 55%, transparent);
+	border-radius: 0.8rem;
+	bottom: 1rem;
+	box-shadow: 0 12px 34px -14px rgb(40 0 10 / 0.55);
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.66rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.45rem;
+	padding: 0.65rem 0.75rem 0.75rem;
+	position: fixed;
+	right: 1rem;
+	width: 17.5rem;
+	z-index: 20;
+}
+
+.site .ft-title {
+	color: var(--siteAccent);
+	font: 800 0.72rem/1 var(--siteFont);
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+}
+
+.site .ft-stage {
+	background: radial-gradient(ellipse at 50% 100%, #3b1721, #1a0a10);
+	border-radius: 0.4rem 0.4rem 0.2rem 0.2rem;
+	border-top: 3px solid #c9962f;
+	display: grid;
+	height: 5.6rem;
+	overflow: hidden;
+	place-items: center;
+	position: relative;
+}
+
+.site .ft-word {
+	color: #fff1d6;
+	font-size: 1.7rem;
+	font-weight: 700;
+	position: relative;
+	transition: opacity 0.2s;
+	z-index: 1;
+}
+
+.site .ft-light {
+	background: radial-gradient(ellipse 60% 120% at 50% 0%, rgb(255 226 150 / 0.3), transparent 70%);
+	inset: 0;
+	opacity: 0.4;
+	position: absolute;
+	transition: opacity 0.5s;
+}
+
+.site .ft-card[data-phase="swapped"] .ft-light {
+	opacity: 1;
+}
+
+.site .ft-curtain {
+	background: repeating-linear-gradient(90deg, #8f1d34 0 9px, #6e1226 9px 18px);
+	bottom: 0;
+	box-shadow: inset 0 -16px 18px -10px rgb(0 0 0 / 0.5);
+	position: absolute;
+	top: 0;
+	transition: transform 0.7s cubic-bezier(0.6, 0, 0.2, 1);
+	width: 52%;
+	z-index: 2;
+}
+
+.site .ft-l {
+	left: 0;
+	transform-origin: left;
+}
+
+.site .ft-r {
+	right: 0;
+	transform-origin: right;
+}
+
+/* Curtain closed during the block period; open (gathered at the sides) otherwise. */
+.site .ft-card:not([data-phase="block"]) .ft-l {
+	transform: scaleX(0.14);
+}
+
+.site .ft-card:not([data-phase="block"]) .ft-r {
+	transform: scaleX(0.14);
+}
+
+.site .ft-card[data-phase="block"] .ft-word {
+	opacity: 0;
+}
+
+html.reduce-motion .site .ft-curtain,
+html.reduce-motion .site .ft-word,
+html.reduce-motion .site .ft-light {
+	transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .ft-curtain,
+	.site .ft-word,
+	.site .ft-light {
+		transition: none;
+	}
+}
+
+.site .ft-acts {
+	display: grid;
+	gap: 0.15rem;
+	list-style: none;
+	margin: 0;
+	min-height: 5.6em;
+	padding: 0;
+}
+
+.site .ft-acts li {
+	color: var(--siteMuted);
+}
+
+.site .ft-acts li.done {
+	color: var(--siteFg);
+}
+
+.site .ft-acts b {
+	color: var(--siteAccent);
+}
+
+.site .ft-cast {
+	border-top: 1px dashed color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	color: var(--siteMuted);
+	list-style: none;
+	margin: 0;
+	padding: 0.35rem 0 0;
+}
+
+.site .ft-cast em {
+	font-style: normal;
+	font-weight: 700;
+}
+
+.site .ft-cast .st-loaded {
+	color: #2f9a4a;
+}
+
+.site .ft-cast .st-loading {
+	color: #c68a12;
+}
+
+.site .ft-cast .st-unloaded {
+	color: var(--siteMuted);
+}
+
+html.dark .site .ft-cast .st-loaded {
+	color: #7ee08f;
+}
+
+.site .ft-replay {
+	background: var(--siteAccent);
+	border: 0;
+	border-radius: 999px;
+	color: var(--siteBg);
+	cursor: pointer;
+	font: 700 0.75rem/1 "League Spartan", system-ui, sans-serif;
+	justify-self: start;
+	letter-spacing: 0.04em;
+	padding: 0.5rem 1rem;
+}
+
+.site .ft-replay:hover,
+.site .ft-replay:focus-visible {
+	filter: brightness(1.12);
+}
+
+@media (max-width: 800px) {
+	.site .ft-card {
+		display: none;
+	}
+}

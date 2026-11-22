@@ -1,0 +1,37 @@
+@import url("_toy/toy.css");
+
+/* Word Breaker: a clean "printed page" feel; words are the bricks while playing. */
+.site {
+	--toyAccent: #0b7a75;
+	--toyAccent2: #e8590c;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #38d9a9;
+	--toyAccent2: #ffa94d;
+	--toyOnAccent: #04211a;
+}
+
+.site[data-wb] .wb-word {
+	transition: opacity 0.35s ease;
+}
+
+.site[data-wb] .wb-gone {
+	opacity: 0;
+	pointer-events: none;
+}
+
+html.reduce-motion .site[data-wb] .wb-word {
+	transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site[data-wb] .wb-word {
+		transition: none;
+	}
+}
+
+.site .site-about {
+	text-wrap: balance;
+}

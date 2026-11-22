@@ -1,0 +1,57 @@
+/* Token plan
+ * Families: Anybody wdth 50-150 x wght 100-900.
+ * Scale: hero wght 200 / wdth 112 at 63px vs tagline wght 800 / wdth 56 at 1.3rem; ratio 3.0x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: One variable family used at its extremes: thin and extended against heavy and compact gives hierarchy by width and weight together, with body at wdth 96.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Anybody Fallback"; src: local("Arial"); size-adjust: 107.9%; ascent-override: 73.2%; descent-override: 22.2%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #390 Anybody at the extremes: a whisper-thin 200 hero (wdth 112) against a heavy, compact second line (wght 800, wdth 56). */
+.site {
+	--tyDisplay: "Anybody", "Anybody Fallback", Arial, sans-serif;
+	--tyBody: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.5rem, 13cqi, 4.6rem);
+	--tyTitleW: 200;
+	--tyTitleWd: 230;
+	--tyTitleVs: "wdth" 112;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 1;
+	--tyTitleShift: -0.05em;
+	--tyTagSize: 1.3rem;
+	--tyTagW: 800;
+	--tyTagVs: "wdth" 56;
+	--tyTagLs: 0.01em;
+	--tyTagLh: 1.2;
+	--tyTagMax: 24em;
+
+	--tyBodyW: 360;
+	--tyBodyLs: 0.005em;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.6;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 600;
+	--tyUiLs: 0.01em;
+	--tyNavSize: 1.1rem;
+	--tyLogoSize: 1.2rem;
+	--tyLogoW: 700;
+	--tySecSize: 2.2rem;
+	--tySecW: 200;
+	--tySecWd: 230;
+	--tySecVs: "wdth" 112;
+	--tySecLs: -0.02em;
+	--tyItemW: 700;
+	--tyItemVs: "wdth" 80;
+	--tyItemSize: 1.25rem;
+	--tyMetaSize: 0.92rem;
+	--tyMetaW: 400;
+}
+.site .site-about, .site .site-item-description { font-variation-settings: "wdth" 96; }

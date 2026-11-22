@@ -1,0 +1,32 @@
+.site {
+	--siteBg: #e9edf3;
+	--siteFg: #2a3040;
+	--siteFgStrong: #121724;
+	--siteMuted: #5c6477;
+	--siteAccent: #b45309;
+	--siteSquiggle: #f0a040;
+	--siteSubtle: #dde3ec;
+}
+
+html.dark .site {
+	--siteBg: #0c0d14;
+	--siteFg: #d9dbe6;
+	--siteFgStrong: #f6f4ee;
+	--siteMuted: #9a9db0;
+	--siteAccent: #ffc477;
+	--siteSquiggle: #ffae4a;
+	--siteSubtle: #1a1b26;
+}
+
+.site .site-scenery .scenery-a {
+	background: linear-gradient(180deg, #dfe6f0 0%, #e9eaee 55%, #efe9e1 100%);
+}
+
+html.dark .site .site-scenery .scenery-a {
+	background: linear-gradient(180deg, #0a0b12 0%, #10111a 60%, #15131a 100%);
+}
+
+.site .site-item,
+.site .site-portrait img {
+	position: relative;
+}

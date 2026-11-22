@@ -1,0 +1,51 @@
+/* #270 Contour Corner: topographic linework, bottom-right, in the margin only. */
+
+.site .qa-contour {
+	bottom: 6px;
+	height: 230px;
+	opacity: 0;
+	position: absolute;
+	right: 6px;
+	transition: opacity 1.6s ease;
+	width: 230px;
+}
+
+.site .qa-contour.is-in {
+	opacity: 1;
+}
+
+.site .qa-contour svg {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+}
+
+.site .qa-contour-sky {
+	left: 0;
+	position: absolute;
+	top: 0;
+}
+
+.site .qa-contour-line {
+	fill: none;
+	stroke: var(--siteAccent);
+	stroke-linecap: round;
+	stroke-opacity: 0.3;
+	stroke-width: 0.6;
+}
+
+.site .qa-contour-index {
+	stroke-opacity: 0.5;
+	stroke-width: 0.9;
+}
+
+html.dark .site .qa-contour-line {
+	stroke-opacity: 0.38;
+}
+
+/* The corner lives in the gutter: gone before it could meet the text column. */
+@media (max-width: 1180px) {
+	.site .qa-contour {
+		display: none;
+	}
+}

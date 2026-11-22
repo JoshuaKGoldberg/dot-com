@@ -1,0 +1,11 @@
+/* 295. Watercolor Edges: wet washes along the top, painted ridges along the bottom, faint paper. */
+.site {
+	--siteBg: #fdfdfa; --siteFg: #2a3550; --siteFgStrong: #142842; --siteMuted: #4d5b76;
+	--siteAccent: #1f6aa8; --siteSquiggle: #d9798e; --siteSubtle: #ece8dc;
+}
+html.dark .site {
+	--siteBg: #0a1020; --siteFg: #d9e3f0; --siteFgStrong: #f4f8ff; --siteMuted: #a3b4c8;
+	--siteAccent: #8ac0ff; --siteSquiggle: #f08fb0; --siteSubtle: #131c36;
+}
+.site .scenery-a { background: var(--siteBg); }
+.site .scenery-b, .site .scenery-c { will-change: transform; contain: paint; }

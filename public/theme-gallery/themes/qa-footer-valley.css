@@ -1,0 +1,14 @@
+.site .qa-valley {
+	height: 190px;
+	margin: 1rem 0 0;
+	pointer-events: none;
+	position: relative;
+}
+
+.site .qa-valley canvas {
+	display: block;
+	height: 100%;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 78%, transparent 100%);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 22%, #000 78%, transparent 100%);
+	width: 100%;
+}

@@ -1,0 +1,77 @@
+.site {
+	--siteBg: #f7f6f2;
+	--siteFg: #24272f;
+	--siteFgStrong: #101218;
+	--siteMuted: #5c6270;
+	--siteAccent: #0b6fa8;
+	--siteSquiggle: #d7327d;
+	--siteSubtle: #e5e3da;
+}
+
+html.dark .site {
+	--siteBg: #0d1016;
+	--siteFg: #dde3f0;
+	--siteFgStrong: #f5f7fc;
+	--siteMuted: #98a2b8;
+	--siteAccent: #72c8ff;
+	--siteSquiggle: #ff69b0;
+	--siteSubtle: #1a202c;
+}
+
+/* A soft halo keeps prose readable wherever it crosses a tile. */
+.site .site-page :is(p, a, h1, h2, span, li) {
+	text-shadow: 0 0 6px var(--siteBg), 0 0 14px var(--siteBg);
+}
+
+.site .site-title {
+	letter-spacing: -0.02em;
+}
+
+.site .tm-card {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 35%, transparent);
+	border-radius: 0.6rem;
+	bottom: 1rem;
+	color: var(--siteFg);
+	display: grid;
+	font: 500 0.7rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.3rem;
+	padding: 0.55rem 0.7rem;
+	position: absolute;
+	right: 1rem;
+	width: 17rem;
+}
+
+.site .tm-title {
+	color: var(--siteFgStrong);
+	font: 800 0.85rem/1 var(--siteFont);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.site .tm-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.15rem 0.7rem;
+}
+
+.site .tm-key::before {
+	background: var(--key);
+	border-radius: 2px;
+	content: "";
+	display: inline-block;
+	height: 0.55rem;
+	margin-right: 0.3rem;
+	width: 0.55rem;
+}
+
+.site .tm-detail {
+	color: var(--siteMuted);
+	min-height: 4em;
+}
+
+@media (max-width: 800px) {
+	.site .tm-card {
+		display: none;
+	}
+}

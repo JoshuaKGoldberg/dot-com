@@ -1,0 +1,4 @@
+@import url("./_refined-e/base.css");
+
+/* 315: volumetric aurora fog over layered ridges. All the picture is one low-res shader canvas. */
+.site .ra-foot canvas { image-rendering: auto; }

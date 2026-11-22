@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;600&family=League+Spartan:wght@300..800&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..600&display=swap");
+
+@property --pBg { syntax: "<color>"; inherits: true; initial-value: #fdffff; }
+@property --pFg { syntax: "<color>"; inherits: true; initial-value: #283556; }
+@property --pStrong { syntax: "<color>"; inherits: true; initial-value: #142842; }
+@property --pAccent { syntax: "<color>"; inherits: true; initial-value: #1170d0; }
+@property --pTint { syntax: "<color>"; inherits: true; initial-value: #d7e9ef; }
+
+.site {
+	--siteMaxWidth: 54rem;
+	/* constant chrome */
+	--navInk: #142842;
+	--navPaper: #ffffff;
+	--navOn: #142842;
+	--navOnInk: #ffffff;
+	--focusRing: #1a56db;
+	--focusHalo: #ffffff;
+	/* page-level (follows active personality) */
+	--pBg: #fdffff; --pFg: #283556; --pStrong: #142842; --pAccent: #1170d0; --pTint: #d7e9ef;
+	--siteBg: var(--pBg); --siteFg: var(--pFg); --siteFgStrong: var(--pStrong);
+	--siteAccent: var(--pAccent); --siteSquiggle: var(--pAccent); --siteSubtle: var(--pTint);
+	--bodyFont: "League Spartan", system-ui, sans-serif;
+	view-transition-name: sp-site;
+}
+html.dark .site {
+	--navInk: #f1f6fb; --navPaper: #1c2a44; --navOn: #f1f6fb; --navOnInk: #0b1220;
+	--focusRing: #8ec1ff; --focusHalo: #000;
+	--pBg: #0b1220; --pFg: #dae7f3; --pStrong: #f1f6fb; --pAccent: #77bbff; --pTint: #102a40;
+}
+.site[data-personality="blog"] { --pBg: #f4ecdd; --pFg: #3a2f26; --pStrong: #221a13; --pAccent: #9a4a22; --pTint: #e6d8bf; }
+.site[data-personality="projects"] { --pBg: #e4edf5; --pFg: #1f3347; --pStrong: #0c2236; --pAccent: #00798c; --pTint: #c5d8e8; }
+.site[data-personality="speaking"] { --pBg: #ffe9a8; --pFg: #2a1d05; --pStrong: #140d00; --pAccent: #c20030; --pTint: #ffd45c; }
+html.dark .site[data-personality="blog"] { --pBg: #1b1612; --pFg: #e6d9c6; --pStrong: #fbf1e0; --pAccent: #e8a06a; --pTint: #2c241c; }
+html.dark .site[data-personality="projects"] { --pBg: #08141f; --pFg: #cfe1ee; --pStrong: #eaf6ff; --pAccent: #4fd8e8; --pTint: #0f2a3d; }
+html.dark .site[data-personality="speaking"] { --pBg: #2b0a1c; --pFg: #ffe3ef; --pStrong: #fff; --pAccent: #ffd23f; --pTint: #5a1038; }
+
+.site { transition: --pBg .6s, --pFg .6s, --pStrong .6s, --pAccent .6s, --pTint .6s; }
+.site[data-vt] { transition: none; }
+@media (prefers-reduced-motion: reduce) { .site { transition: none; } }
+html.reduce-motion .site { transition: none; }
+
+::view-transition-group(sp-site) { animation-duration: .55s; }
+
+/* ---- constant chrome: nav + focus ---- */
+.site-header { gap: 1rem 1.25rem; padding-bottom: 1rem; border-bottom: 2px solid var(--pStrong); }
+.site-logo { color: var(--pStrong); font-weight: 800; letter-spacing: -0.01em; }
+.site-nav { gap: .4rem; background: var(--navPaper); border: 2px solid var(--navInk); border-radius: 999px; padding: .25rem; }
+.site-nav-link { color: var(--navOn); font-size: 1.05rem; padding: .25rem .95rem; border-radius: 999px; font-weight: 600; }
+.site-nav-link:hover { background: color-mix(in srgb, var(--navInk) 14%, transparent); }
+.site-nav-link.is-active { background: var(--navInk); color: var(--navOnInk); }
+.site-theme-toggle { color: var(--pStrong); }
+.site :is(a, button):focus-visible { outline: 3px solid var(--focusRing); outline-offset: 3px; box-shadow: 0 0 0 6px var(--focusHalo); border-radius: 6px; }
+
+.site-title { font-weight: 800; }
+.site-hero-text::after { content: "Click a nav pill: each section has its own voice."; display: block; margin-top: 1rem; font-size: .95rem; color: var(--pFg); opacity: .75; }
+
+/* ---- section panels ---- */
+.site-section {
+	--sBg: var(--pBg); --sFg: var(--pFg); --sStrong: var(--pStrong); --sAccent: var(--pAccent); --sRule: var(--pTint);
+	max-width: none; padding: 2rem 2.25rem 2.25rem; border-radius: 6px;
+	background: var(--sBg); color: var(--sFg); position: relative;
+	margin-bottom: 2.5rem; scroll-margin-top: 1rem;
+	transition: transform .5s cubic-bezier(.2,.9,.3,1.2), filter .5s, box-shadow .5s;
+	filter: saturate(.7);
+}
+.site-section.is-emphasized { filter: none; transform: translateY(-4px); box-shadow: 0 0 0 3px var(--sAccent), 0 18px 36px -14px rgb(0 0 0 / .35); }
+.site-section .site-link::after { background: var(--sAccent); }
+.site-section-title { color: var(--sStrong); }
+.site-item-title { color: var(--sStrong); }
+.site-item-meta { color: var(--sFg); opacity: .85; }
+.site-section a { color: var(--sStrong); }
+
+/* blog: editorial and calm */
+.site-posts {
+	--sBg: #faf5ea; --sFg: #44382d; --sStrong: #221a13; --sAccent: #9a4a22; --sRule: #dccfb6;
+	font-family: "Newsreader", Georgia, serif; border: 1px solid #e0d3b8;
+}
+.site-posts .site-section-title { font-family: "Newsreader", serif; font-style: italic; font-weight: 400; font-size: 2.3rem; margin-bottom: 1.4rem; }
+.site-posts .site-list { gap: 0; counter-reset: p; }
+.site-posts .site-item { padding: 1.35rem 0; border-top: 1px solid var(--sRule); }
+.site-posts .site-item:first-child { border-top: 0; padding-top: 0; }
+.site-posts .site-item-title { font-size: 1.6rem; font-weight: 500; line-height: 1.15; }
+.site-posts .site-item-description { font-size: 1.15rem; font-weight: 400; line-height: 1.55; max-width: 36rem; }
+.site-posts .site-item-meta { font-style: italic; font-size: 1rem; }
+html.dark .site-posts { --sBg: #241d17; --sFg: #dccfba; --sStrong: #fbf1e0; --sAccent: #e8a06a; --sRule: #3d3228; border-color: #3d3228; }
+
+/* projects: technical */
+.site-projects {
+	--sBg: #f7fafc; --sFg: #26394d; --sStrong: #0c2236; --sAccent: #00798c; --sRule: #b9cbdb;
+	font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .95rem;
+	background-image: linear-gradient(var(--sRule) 1px, transparent 1px), linear-gradient(90deg, var(--sRule) 1px, transparent 1px);
+	background-size: 24px 24px; background-color: var(--sBg); border: 1.5px solid var(--sStrong); border-radius: 2px;
+	background-blend-mode: normal;
+}
+.site-projects .site-section-title { font-family: inherit; font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: .14em; }
+.site-projects .site-section-title::before { content: "// "; color: var(--sAccent); }
+.site-projects .site-list { grid-template-columns: 1fr 1fr; gap: 1rem; }
+.site-projects .site-item { background: var(--sBg); border: 1.5px solid var(--sStrong); padding: 1rem 1.1rem; border-radius: 2px; box-shadow: 4px 4px 0 var(--sRule); }
+.site-projects .site-item-title { font-size: 1.05rem; font-weight: 600; color: var(--sAccent); }
+.site-projects .site-item-description { font-size: .88rem; font-weight: 400; line-height: 1.5; }
+.site-projects .site-item-meta { font-size: .78rem; border-top: 1px dashed var(--sRule); display: block; padding-top: .5rem; }
+html.dark .site-projects { --sBg: #0b1b2b; --sFg: #b9d2e4; --sStrong: #eaf6ff; --sAccent: #4fd8e8; --sRule: #17364f; }
+
+/* speaking: bold */
+.site-talks {
+	--sBg: #ffcf2e; --sFg: #1e1500; --sStrong: #100a00; --sAccent: #c20030; --sRule: #100a00;
+	font-family: "League Spartan", sans-serif; border-radius: 28px 28px 28px 4px; overflow: hidden;
+}
+.site-talks .site-section-title { font-family: "Archivo Black", sans-serif; font-weight: 400; font-size: clamp(2.8rem, 9vw, 5rem); line-height: .85; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 1.25rem; }
+.site-talks .site-list { gap: 0; }
+.site-talks .site-item { display: grid; grid-template-columns: 1fr auto; align-items: baseline; padding: .9rem 0; border-top: 4px solid var(--sRule); column-gap: 1.5rem; }
+.site-talks .site-item-title { justify-self: start; font-family: "Archivo Black", sans-serif; font-weight: 400; font-size: 1.45rem; line-height: 1.05; }
+.site-talks .site-item-description { grid-column: 1; margin: .2rem 0 0; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: .85rem; }
+.site-talks .site-item-meta { grid-column: 2; grid-row: 1 / span 2; text-align: right; font-weight: 700; font-size: 1rem; }
+html.dark .site-talks { --sBg: #c4006a; --sFg: #fff; --sStrong: #fff; --sAccent: #ffd23f; --sRule: #ffd23f; }
+@media (max-width: 700px) { .site-projects .site-list { grid-template-columns: 1fr; } .site-talks .site-item { grid-template-columns: 1fr; } .site-talks .site-item-meta { grid-column: 1; grid-row: auto; text-align: left; } }
+
+.site-about { font-family: var(--bodyFont); }
+.site-footer { color: var(--pFg); }

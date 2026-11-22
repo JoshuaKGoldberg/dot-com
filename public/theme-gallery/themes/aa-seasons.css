@@ -1,0 +1,38 @@
+@import url("./_aurora-b/base.css");
+
+/* 245. Aurora Seasons: the season cycle (snow, spring green, summer fireflies, autumn leaves) under a soft aurora. */
+.site {
+	--siteBg: #eaf2f5;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d3e4ea;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 56%, transparent);
+}
+
+html.dark .site {
+	--siteBg: #0a1226;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cd8c0;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+	--fk-scrim: color-mix(in srgb, var(--siteBg) 52%, transparent);
+}
+
+.site .scenery-a {
+	background: linear-gradient(#9fc4e6, #d4e4ee 55%, #f1e8d6);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#050a1c, #0c1836 55%, #1b2d58);
+}
+
+.site .fk-ui output {
+	display: inline-block;
+	min-width: 6.4em;
+	text-align: left;
+}

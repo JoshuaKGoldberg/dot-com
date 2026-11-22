@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #f5f7fb;
+	--siteFg: #1f2a44;
+	--siteFgStrong: #0b1429;
+	--siteMuted: #56627f;
+	--siteAccent: #1659c9;
+	--siteSquiggle: #2d8cff;
+	--siteSubtle: #e1e8f4;
+	--siteFont: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #080c16;
+	--siteFg: #d3dcf0;
+	--siteFgStrong: #f2f6ff;
+	--siteMuted: #8d9bbb;
+	--siteAccent: #86bcff;
+	--siteSquiggle: #5aa6ff;
+	--siteSubtle: #111a30;
+}
+
+.site .scenery-a canvas {
+	display: block;
+}
+
+.site .scenery-b {
+	background:
+		radial-gradient(60rem 36rem at 12% 8%, rgb(45 140 255 / 0.07), transparent 70%),
+		radial-gradient(52rem 34rem at 92% 96%, rgb(255 120 60 / 0.06), transparent 70%);
+}
+
+html.dark .site .scenery-b {
+	background:
+		radial-gradient(60rem 36rem at 12% 8%, rgb(70 130 255 / 0.12), transparent 70%),
+		radial-gradient(52rem 34rem at 92% 96%, rgb(255 150 80 / 0.07), transparent 70%);
+}
+
+.site-title {
+	font-weight: 700;
+	letter-spacing: -0.035em;
+	line-height: 0.92;
+}
+
+.site-section-title {
+	font-weight: 600;
+	letter-spacing: -0.02em;
+}
+
+.site-item-meta {
+	font-family: "JetBrains Mono", ui-monospace, monospace;
+	font-size: 0.8rem;
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--siteAccent) 30%, transparent), 0 0 0 7px var(--siteBg), 0 0 0 8px color-mix(in srgb, var(--siteAccent) 30%, transparent);
+}
+
+.site .flock-hint {
+	bottom: 1.15rem;
+	color: var(--siteMuted);
+	font: 500 0.72rem/1 "JetBrains Mono", ui-monospace, monospace;
+	letter-spacing: 0.04em;
+	opacity: 0.8;
+	pointer-events: none;
+	position: fixed;
+	right: 9.6rem;
+	z-index: 20;
+}
+
+@media (max-width: 700px) {
+	.site .flock-hint {
+		display: none;
+	}
+}

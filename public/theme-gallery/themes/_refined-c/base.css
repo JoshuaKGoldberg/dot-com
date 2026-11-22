@@ -1,0 +1,7 @@
+/* Refined aurora margin-star themes: Josh's real site, night blue nudged a touch deeper. */
+html.dark .site { --siteBg: #0a111f; --siteSubtle: #10243a; }
+.site .scenery-b, .site .scenery-c { contain: paint; }
+@keyframes rac-tw-a { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes rac-tw-b { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .site .rac-tw { animation: none !important; } }
+html.reduce-motion .site .rac-tw { animation: none !important; }

@@ -1,0 +1,31 @@
+@import url("_sensor/kit.css");
+
+/* 183 Ambient Light: palette and weight adapt to the room's brightness (sensor, camera proxy, or slider). */
+.site { transition: background-color 0.5s, color 0.5s; }
+.site .scenery-a { background: radial-gradient(ellipse 70% 35% at 50% -5%, color-mix(in srgb, var(--siteAccent) 9%, transparent), transparent 70%); }
+
+/* light mode */
+.site[data-lux="dark"] { --siteBg: #e8e6e1; --siteFg: #3a4260; --siteFgStrong: #252d4a; --siteMuted: #565f7a; --siteSubtle: #d4d3d0; --siteAccent: #1b5fae; }
+.site[data-lux="dim"] { --siteBg: #f3f2ef; --siteFg: #2f3858; --siteFgStrong: #1c2540; --siteMuted: #525c78; --siteSubtle: #dedcd8; }
+.site[data-lux="bright"] { --siteBg: #ffffff; --siteFg: #121a30; --siteFgStrong: #05091a; --siteMuted: #36415c; --siteAccent: #0b52b0; --siteSquiggle: #0b6fe0; }
+.site[data-lux="sun"] { --siteBg: #ffffff; --siteFg: #000511; --siteFgStrong: #000000; --siteMuted: #232d48; --siteAccent: #0845a0; --siteSquiggle: #0758c8; }
+/* dark mode */
+html.dark .site[data-lux="dark"] { --siteBg: #05080e; --siteFg: #b2bfd0; --siteFgStrong: #d3deec; --siteMuted: #8493ab; --siteSubtle: #0a1522; --siteAccent: #6aa9e8; }
+html.dark .site[data-lux="dim"] { --siteBg: #080d18; --siteFg: #c4d1e0; --siteFgStrong: #e3ecf6; --siteMuted: #8c9db6; }
+html.dark .site[data-lux="bright"] { --siteBg: #000000; --siteFg: #f4f8fd; --siteFgStrong: #ffffff; --siteMuted: #c0cde0; --siteAccent: #8fc8ff; --siteSubtle: #0b1830; }
+html.dark .site[data-lux="sun"] { --siteBg: #000000; --siteFg: #ffffff; --siteFgStrong: #ffffff; --siteMuted: #d6e1f0; --siteAccent: #a6d4ff; --siteSubtle: #0b1830; }
+
+/* weight and underline thickness grow with brightness (thin type washes out in sunlight) */
+.site[data-lux="bright"] .site-about, .site[data-lux="bright"] .site-item-description { font-weight: 400; }
+.site[data-lux="sun"] .site-about, .site[data-lux="sun"] .site-item-description { font-weight: 500; }
+.site[data-lux="sun"] .site-tagline { font-weight: 600; }
+.site[data-lux="sun"] .site-link::after, .site[data-lux="bright"] .site-link::after { height: 0.36em; opacity: 1; }
+.site[data-lux="dark"] .site-portrait img, .site[data-lux="dim"] .site-portrait img { opacity: 0.88; }
+.site[data-lux="dark"] .scenery-a { opacity: 0.4; }
+
+/* meter */
+.site .al-meter { display: grid; gap: 0.3rem; }
+.site .al-bar { background: linear-gradient(90deg, #111827, #475569 30%, #fbbf24 60%, #fff7d6); border: 1px solid color-mix(in srgb, var(--siteFg) 30%, transparent); border-radius: 99px; height: 0.7rem; position: relative; }
+.site .al-pin { background: var(--siteFgStrong); border: 2px solid var(--siteBg); border-radius: 50%; height: 1rem; left: 0; margin: -0.2rem 0 0 -0.5rem; position: absolute; top: 0; transition: left 0.3s; width: 1rem; }
+.site .al-read { color: var(--siteFgStrong); font-size: 0.8rem; font-variant-numeric: tabular-nums; font-weight: 600; }
+.site .al-alt { margin-top: 0.1rem; }

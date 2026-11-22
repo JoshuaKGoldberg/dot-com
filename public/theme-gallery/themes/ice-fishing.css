@@ -1,0 +1,30 @@
+@import url("_toy/toy.css");
+
+/* Ice Fishing: frosted page chrome; the frozen lake opens when you hit Play. */
+.site {
+	--siteBg: #f6fbfd;
+	--siteSubtle: #d3e8f1;
+	--toyAccent: #1c7ed6;
+	--toyAccent2: #f59f00;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--siteBg: #0a1623;
+	--toyAccent: #74c0fc;
+	--toyAccent2: #ffd43b;
+	--toyOnAccent: #06182a;
+}
+
+.site .site-scenery .scenery-a {
+	background: linear-gradient(to bottom, transparent 70%, color-mix(in srgb, var(--siteSubtle) 80%, transparent));
+}
+
+.site .site-footer::before {
+	background: linear-gradient(90deg, transparent, var(--siteSubtle), transparent);
+	content: "";
+	display: block;
+	height: 2px;
+	margin: 0 auto 1.25rem;
+	width: 60%;
+}

@@ -1,0 +1,45 @@
+@import url("_sensor/kit.css");
+
+/* 179 Gamepad: a soft cursor and focus rings, driven by a controller or the virtual pad. */
+.site .scenery-a {
+	background:
+		radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--siteFg) 13%, transparent) 1px, transparent 1.5px) 0 0 / 22px 22px,
+		radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in srgb, var(--siteAccent) 11%, transparent), transparent 70%);
+	-webkit-mask-image: linear-gradient(#000 0%, rgba(0,0,0,0.25) 55%, transparent 100%);
+	mask-image: linear-gradient(#000 0%, rgba(0,0,0,0.25) 55%, transparent 100%);
+}
+.site .gp-cursor {
+	height: 2.4rem;
+	left: 0;
+	margin: -1.2rem 0 0 -1.2rem;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	transition: opacity 0.2s;
+	width: 2.4rem;
+	will-change: transform;
+	z-index: 40;
+}
+.site .gp-cursor.is-on { opacity: 1; }
+.site .gp-cursor::before {
+	background: radial-gradient(circle, color-mix(in srgb, var(--siteAccent) 38%, transparent), transparent 70%);
+	border: 2px solid var(--siteAccent);
+	border-radius: 50%;
+	content: "";
+	inset: 0;
+	position: absolute;
+	transition: transform 0.12s;
+}
+.site .gp-cursor::after { background: var(--siteAccent); border-radius: 50%; content: ""; height: 0.35rem; left: 50%; margin: -0.175rem; position: absolute; top: 50%; width: 0.35rem; }
+.site .gp-cursor.is-press::before { transform: scale(0.7); }
+.site .gp-hover {
+	border-radius: 0.3rem;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--siteAccent) 55%, transparent);
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 3px;
+}
+.site .gp-pad { background: color-mix(in srgb, var(--siteSubtle) 70%, transparent); border: 1px solid color-mix(in srgb, var(--siteFg) 25%, transparent); border-radius: 50%; height: 6rem; margin: 0.2rem auto; position: relative; touch-action: none; width: 6rem; }
+.site .gp-knob { background: var(--siteAccent); border-radius: 50%; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); cursor: grab; height: 2.4rem; left: 50%; margin: -1.2rem; position: absolute; top: 50%; width: 2.4rem; }
+.site .gp-rumble { background: color-mix(in srgb, var(--siteFg) 25%, transparent); border-radius: 50%; display: inline-block; height: 0.6rem; margin-right: 0.4rem; width: 0.6rem; }
+.site .gp-rumble.is-on { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }

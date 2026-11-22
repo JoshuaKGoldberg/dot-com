@@ -1,0 +1,40 @@
+/* _vs/base.css: Valley Stars shared styles: refined-e footer stage + multi-color squiggles. */
+@import url("../_refined-e/base.css");
+
+@property --vsx { syntax: "<number>"; inherits: false; initial-value: 50; }
+
+/* ---- squiggles: each link rests in its own color (--vsRest, set in JS); hover slides a hue-drift layer in slowly ---- */
+.site .site-link::after {
+	background: var(--vsRest, var(--siteSquiggle));
+	opacity: 0.92;
+	transition: opacity 0.9s ease;
+}
+.site .site-link::before {
+	background:
+		radial-gradient(circle at calc(var(--vsx) * 1%) 50%, rgba(255, 255, 255, 0.7) 0, rgba(255, 255, 255, 0) 14%),
+		linear-gradient(90deg, var(--vsHover, #4fa8ff, #9a86ff)) calc(var(--vsx) * 1%) 0 / 300% 100%;
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("/assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	/* 2-3x slower than #347's 0.5s: the hue drift only moves while the mouse moves */
+	transition: opacity 0.9s ease, --vsx 1.2s ease-out;
+}
+html:not(.dark) .site .site-link::before {
+	background:
+		radial-gradient(circle at calc(var(--vsx) * 1%) 50%, rgba(255, 255, 255, 0.45) 0, rgba(255, 255, 255, 0) 12%),
+		linear-gradient(90deg, var(--vsHover, #4fa8ff, #9a86ff)) calc(var(--vsx) * 1%) 0 / 300% 100%;
+}
+.site .site-link:is(:hover, :focus-visible)::before { opacity: 1; }
+.site .site-link:is(:hover, :focus-visible)::after { opacity: 0; }
+html.dark .site .site-link::before, html.dark .site .site-link::after { filter: drop-shadow(0 0 2px rgba(190, 200, 255, 0.35)); }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .site-link::before, .site .site-link::after { transition: none !important; }
+}
+html.reduce-motion .site .site-link::before, html.reduce-motion .site .site-link::after { transition: none !important; }

@@ -1,0 +1,16 @@
+.site .kit-button {
+	background: color-mix(in srgb, var(--siteBg) 78%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteFg) 28%, transparent);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	font: 600 0.8rem/1 var(--siteFont);
+	letter-spacing: 0.04em;
+	padding: 0.5rem 0.9rem;
+	position: fixed;
+	right: 1.1rem;
+	z-index: 20;
+}
+.site .kit-button:hover { border-color: var(--siteAccent); color: var(--siteAccent); }
+.site .kit-button:focus-visible { outline: 2px solid var(--siteAccent); outline-offset: 2px; }

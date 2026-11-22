@@ -1,0 +1,30 @@
+@import url("./forest-kit/base.css");
+
+/* 96. Fire Tower 360: first-person panorama from a fire tower cab. */
+.site {
+	--siteBg: #e8f0ee;
+	--siteFg: #1f3347;
+	--siteFgStrong: #0e2033;
+	--siteMuted: #41596f;
+	--siteAccent: #0d5fa8;
+	--siteSquiggle: #d9822e;
+	--siteSubtle: #d3e3e2;
+}
+
+html.dark .site {
+	--siteBg: #0a1122;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a3b4cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #15223f;
+}
+
+.site .scenery-a {
+	background: linear-gradient(#86b9df, #e9efe8 46%, #4b7a62 47%, #2f5a43);
+}
+
+html.dark .site .scenery-a {
+	background: linear-gradient(#050a1c, #27365f 46%, #0d1a2a 47%, #09131f);
+}

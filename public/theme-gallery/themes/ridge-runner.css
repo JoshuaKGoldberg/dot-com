@@ -1,0 +1,29 @@
+/* 99. Ridge Runner: High Peaks, a pine-ringed lake, birds, and an opt-in hiker platformer. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--log: #8a5d38;
+	--logl: #b58552;
+	--logd: #5a3a22;
+	--logr: #dcb98a;
+	--moss: #79b455;
+	--mossd: #4f8c3d;
+	--flag: #d8402c;
+	--grass: #4d8a3c;
+}
+
+html.dark .site {
+	--log: #5a4361;
+	--logl: #7d6385;
+	--logd: #352844;
+	--logr: #a690b0;
+	--moss: #4f7f7a;
+	--mossd: #38605f;
+	--flag: #ef6a4f;
+	--grass: #3a6d68;
+}
+
+/* Keep the prose calm: a soft veil so text never fights the peaks. */
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 80%, transparent);
+}

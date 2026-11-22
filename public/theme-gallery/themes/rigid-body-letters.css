@@ -1,0 +1,128 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&display=swap");
+
+.site {
+	--siteBg: #f3eee3;
+	--siteFg: #2a2623;
+	--siteFgStrong: #15110f;
+	--siteMuted: #6d655c;
+	--siteAccent: #d4411f;
+	--siteSquiggle: #d4411f;
+	--siteSubtle: #e1d8c6;
+	--siteFont: "Bricolage Grotesque", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Bricolage Grotesque", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--rbl-floor: #15110f;
+	--rbl-chalk: rgb(21 17 15 / 0.05);
+	scrollbar-gutter: stable;
+}
+
+html.dark .site {
+	--siteBg: #121216;
+	--siteFg: #d9d3c6;
+	--siteFgStrong: #f4efe3;
+	--siteMuted: #918a7d;
+	--siteAccent: #ff7a59;
+	--siteSquiggle: #ff7a59;
+	--siteSubtle: #23232b;
+	--rbl-floor: #f4efe3;
+	--rbl-chalk: rgb(255 255 255 / 0.04);
+}
+
+/* Ruled-notebook scenery so the pile has something to land on. */
+.site .scenery-a {
+	background:
+		linear-gradient(to bottom, transparent calc(100% - 3.5rem), var(--rbl-chalk)),
+		repeating-linear-gradient(to bottom, transparent 0 31px, var(--rbl-chalk) 31px 32px);
+}
+
+.site .scenery-a,
+.site .scenery-b,
+.site .overlay-a {
+	will-change: transform;
+}
+
+.site .scenery-b {
+	background: radial-gradient(ellipse 70% 40% at 50% 0, color-mix(in srgb, var(--siteAccent) 9%, transparent), transparent 70%);
+}
+
+/* The floor: a ruled baseline hugging the bottom of the viewport. */
+.site .overlay-a {
+	border-bottom: 3px solid var(--rbl-floor);
+	box-shadow: inset 0 -18px 18px -18px color-mix(in srgb, var(--rbl-floor) 30%, transparent);
+	opacity: 0.55;
+}
+
+.site .site-title {
+	color: var(--siteAccent);
+	font-variation-settings: "opsz" 96;
+	font-weight: 800;
+	letter-spacing: -0.035em;
+}
+
+.site .site-logo {
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.site .site-section-title {
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.site .site-section-title::after {
+	background: var(--siteAccent);
+	content: "";
+	display: block;
+	height: 3px;
+	margin-top: 0.35rem;
+	width: 2.2rem;
+}
+
+.site .site-about {
+	font-weight: 400;
+}
+
+.site .site-portrait img {
+	border: 3px solid var(--siteFgStrong);
+	box-shadow: 6px 6px 0 var(--siteAccent);
+}
+
+.ph-c {
+	/* Letters become inline-blocks only while gravity is on (JS sets display+width). */
+	transform-origin: 50% 50%;
+}
+
+.site.ph-on {
+	cursor: grab;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.site.ph-on.ph-drag {
+	cursor: grabbing;
+}
+
+.site.ph-on .site-link::after {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.site.ph-on .ph-c {
+	/* Each glyph is its own tiny compositor layer: moves are free of repaint. (No text-shadow: too costly.) */
+	will-change: transform;
+}
+
+.site.ph-on .ph-w:nth-child(4n + 1) .ph-c {
+	color: color-mix(in srgb, var(--siteFgStrong) 82%, var(--siteAccent));
+}
+
+.site.ph-on .site-title .ph-c {
+	color: var(--siteAccent);
+}
+
+.site.ph-on .site-portrait {
+	display: block;
+}
+
+.site.ph-on .site-portrait img {
+	box-shadow: 0 4px 10px rgb(0 0 0 / 0.3);
+}

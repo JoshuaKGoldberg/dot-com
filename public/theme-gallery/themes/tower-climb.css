@@ -1,0 +1,65 @@
+/* 103. Tower Climb: cliff ledges up to a fire tower; at the top the view opens up. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--rock: #8b95a1;
+	--rock-l: #aeb8c2;
+	--rock-d: #66707d;
+	--moss: #79b455;
+	--wood: #8a5d38;
+	--wood-d: #5a3a22;
+	--steel: #5d6672;
+	--roof: #b3412e;
+	--glass: #bfe0f2;
+}
+
+html.dark .site {
+	--rock: #3b4070;
+	--rock-l: #565c93;
+	--rock-d: #272b52;
+	--moss: #4f7f7a;
+	--wood: #5a4361;
+	--wood-d: #352844;
+	--steel: #4a5088;
+	--roof: #d95a45;
+	--glass: #f2d98c;
+}
+
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 80%, transparent);
+}
+
+/* The summit view: clouds clear, the sun swells, the peaks lean in. */
+.site .sc-peaks,
+.site .sc-sun,
+.site .sc-clouds,
+.site .sc-mist {
+	transition: transform 2.4s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 2.4s;
+}
+
+.site .sc-peaks {
+	transform-origin: 50% 100%;
+}
+
+.site.tc-summit .sc-peaks {
+	transform: scale(1.18);
+}
+
+.site.tc-summit .sc-sun {
+	transform: scale(1.5) translateY(-6%);
+}
+
+.site.tc-summit .sc-clouds {
+	opacity: 0.2;
+}
+
+.site.tc-summit .sc-mist {
+	opacity: 0.2;
+}
+
+html.reduce-motion .site .sc-peaks,
+html.reduce-motion .site .sc-sun,
+html.reduce-motion .site .sc-clouds,
+html.reduce-motion .site .sc-mist {
+	transition: none;
+}

@@ -1,0 +1,375 @@
+/*
+ * Zero JS: Generative. There is no zj-generative.js: everything here is CSS.
+ *   sin() cos() mod()        -> position, scale and hue of every rosette come from math on the item's index
+ *   sibling-index() + @property <integer> -> each item knows its own number, no :nth-child lists
+ *   repeating-conic/radial-gradient + mask -> spokes x rings = moire rosettes
+ *   scroll-driven animation  -> everything turns as you scroll (transform only), interference shifts
+ * No images, no SVG, no script: the art is gradients and arithmetic.
+ */
+
+@property --i {
+	inherits: true;
+	initial-value: 1;
+	syntax: "<integer>";
+}
+
+.site {
+	--siteBg: #fbfaf6;
+	--siteFg: #272540;
+	--siteFgStrong: #14122a;
+	--siteMuted: #666380;
+	--siteAccent: #5b3fd1;
+	--siteSquiggle: #7c5cff;
+	--siteSubtle: #ece9f7;
+	--L: 0.62;
+	--C: 0.17;
+	--a: 0.3;
+
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #0b0a14;
+	--siteFg: #dcd8f2;
+	--siteFgStrong: #f4f2ff;
+	--siteMuted: #9d99bf;
+	--siteAccent: #b9a8ff;
+	--siteSquiggle: #9a82ff;
+	--siteSubtle: #17142a;
+	--L: 0.75;
+	--C: 0.16;
+	--a: 0.4;
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+.site-item,
+.site-nav-link,
+.site-socials li {
+	--i: sibling-index();
+}
+
+/* ---- big rosette: two spoke fans seen through ring masks; their interference is the art ---- */
+
+.site .scenery-a::before,
+.site .scenery-a::after {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	content: "";
+	position: absolute;
+	right: -26vmin;
+	top: -30vmin;
+	width: 96vmin;
+	-webkit-mask: repeating-radial-gradient(circle, #000 0 0.9rem, transparent 0.9rem 1.8rem), radial-gradient(circle, #000 30%, transparent 68%);
+	mask: repeating-radial-gradient(circle, #000 0 0.9rem, transparent 0.9rem 1.8rem), radial-gradient(circle, #000 30%, transparent 68%);
+	mask-composite: intersect;
+	opacity: var(--a);
+}
+
+.site .scenery-a::before {
+	background: repeating-conic-gradient(oklch(var(--L) var(--C) 285), oklch(var(--L) var(--C) 285) 3.2deg, transparent 3.2deg 9deg);
+}
+
+.site .scenery-a::after {
+	background: repeating-conic-gradient(from 2deg, oklch(var(--L) var(--C) 25), oklch(var(--L) var(--C) 25) 3deg, transparent 3deg 8.2deg);
+	-webkit-mask-size: auto, auto;
+	scale: 0.92;
+}
+
+/* ---- moire corner: two line grids, one of which turns with the scroll ---- */
+
+.site .scenery-b::before,
+.site .scenery-b::after {
+	aspect-ratio: 1;
+	bottom: -34vmin;
+	content: "";
+	left: -34vmin;
+	position: absolute;
+	width: 84vmin;
+	-webkit-mask: radial-gradient(circle, #000 20%, transparent 68%);
+	mask: radial-gradient(circle, #000 20%, transparent 68%);
+	opacity: calc(var(--a) * 0.9);
+}
+
+.site .scenery-b::before {
+	background:
+		repeating-linear-gradient(0deg, oklch(var(--L) var(--C) 160) 0 1px, transparent 1px 7px),
+		repeating-linear-gradient(90deg, oklch(var(--L) var(--C) 160) 0 1px, transparent 1px 7px);
+}
+
+.site .scenery-b::after {
+	background:
+		repeating-linear-gradient(0deg, oklch(var(--L) var(--C) 220) 0 1px, transparent 1px 7px),
+		repeating-linear-gradient(90deg, oklch(var(--L) var(--C) 220) 0 1px, transparent 1px 7px);
+}
+
+/* ---- scalloped waves along the bottom: two rows, offset by half a period ---- */
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	background: radial-gradient(circle at 50% 100%, transparent 1.15rem, oklch(var(--L) var(--C) var(--wh, 285)) 1.2rem 1.5rem, transparent 1.55rem) 0 100% / 3rem 1.7rem repeat-x;
+	bottom: 0;
+	content: "";
+	height: 1.8rem;
+	inset-inline: -3rem;
+	opacity: calc(var(--a) * 0.7);
+	position: absolute;
+}
+
+.site .scenery-c::after {
+	background-position: 1.5rem 100%;
+	bottom: 0.9rem;
+	--wh: 160;
+	opacity: calc(var(--a) * 0.5);
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: gn-cw linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: gn-ccw linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: gn-tilt linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes gn-cw {
+	to {
+		rotate: 140deg;
+	}
+}
+
+@keyframes gn-ccw {
+	to {
+		rotate: -210deg;
+	}
+}
+
+@keyframes gn-tilt {
+	to {
+		rotate: 14deg;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation: gn-wave 9s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation: gn-wave 14s linear infinite reverse;
+	}
+}
+
+@keyframes gn-wave {
+	to {
+		translate: 3rem 0;
+	}
+}
+
+/* ---- per-item rosettes: all positions, sizes and hues derived from --i ---- */
+
+.site-item {
+	position: relative;
+}
+
+.site-item::before,
+.site-item::after {
+	--n: calc(5 + mod(var(--i), 7) * 2);
+	--hue: mod(calc(var(--i) * 137.5 + 40), 360);
+	aspect-ratio: 1;
+	border-radius: 50%;
+	content: "";
+	pointer-events: none;
+	position: absolute;
+	right: calc(-1rem + sin(var(--i) * 71deg) * 1.2rem);
+	top: calc(50% + cos(var(--i) * 71deg) * 0.5rem);
+	transform: translateY(-50%) rotate(calc(var(--i) * 23deg)) scale(calc(0.78 + mod(var(--i), 4) * 0.13));
+	width: 5.4rem;
+	z-index: -1;
+	-webkit-mask: repeating-radial-gradient(circle, #000 0 0.2rem, transparent 0.2rem calc(0.36rem + mod(var(--i), 3) * 0.12rem)), radial-gradient(circle, #000 55%, transparent 72%);
+	mask: repeating-radial-gradient(circle, #000 0 0.2rem, transparent 0.2rem calc(0.36rem + mod(var(--i), 3) * 0.12rem)), radial-gradient(circle, #000 55%, transparent 72%);
+	mask-composite: intersect;
+	opacity: 0.3;
+	transition:
+		opacity 0.3s,
+		scale 0.5s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+.site-item::before {
+	background: repeating-conic-gradient(oklch(var(--L) var(--C) var(--hue)) 0 calc(180deg / var(--n)), transparent 0 calc(360deg / var(--n)));
+}
+
+.site-item::after {
+	background: repeating-conic-gradient(from 7deg, oklch(var(--L) var(--C) calc(var(--hue) + 140)) 0 calc(150deg / var(--n)), transparent 0 calc(360deg / (var(--n) + 1)));
+	scale: 0.86;
+}
+
+.site-item:hover::before,
+.site-item:hover::after {
+	opacity: 0.6;
+	scale: 1.2;
+}
+
+.site-item {
+	z-index: 0;
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site-item::before {
+			animation: gn-item-cw linear both;
+			animation-timeline: view();
+		}
+
+		html:not(.reduce-motion) .site-item::after {
+			animation: gn-item-ccw linear both;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes gn-item-cw {
+	to {
+		rotate: 120deg;
+	}
+}
+
+@keyframes gn-item-ccw {
+	to {
+		rotate: -160deg;
+	}
+}
+
+/* hero portrait: a halo rosette */
+.site-portrait {
+	display: block;
+	position: relative;
+}
+
+.site-portrait::before {
+	aspect-ratio: 1;
+	background: repeating-conic-gradient(oklch(var(--L) var(--C) 285), oklch(var(--L) var(--C) 285) 4deg, transparent 4deg 12deg);
+	border-radius: 50%;
+	content: "";
+	inset: -1.1rem;
+	-webkit-mask: radial-gradient(circle, transparent 62%, #000 63% 71%, transparent 72%);
+	mask: radial-gradient(circle, transparent 62%, #000 63% 71%, transparent 72%);
+	opacity: 0.75;
+	position: absolute;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site-portrait::before {
+		animation: gn-halo 40s linear infinite;
+	}
+}
+
+@keyframes gn-halo {
+	to {
+		rotate: 360deg;
+	}
+}
+
+/* section titles: scalloped wave rule */
+.site-section-title {
+	display: inline-block;
+	position: relative;
+}
+
+.site-section-title::after {
+	background: radial-gradient(circle at 50% 100%, transparent 0.38rem, var(--siteAccent) 0.4rem 0.52rem, transparent 0.55rem) 0 0 / 1.1rem 0.6rem repeat-x;
+	content: "";
+	display: block;
+	height: 0.6rem;
+	margin-top: 0.2rem;
+	width: 6.6rem;
+}
+
+/* nav links get hues from their own index */
+.site-nav-link:not(.is-active) {
+	text-decoration: underline 3px oklch(var(--L) var(--C) calc(var(--i) * 55 + 200));
+	text-underline-offset: 0.3em;
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(oklch(0.7 0.17 285), oklch(0.75 0.17 25), oklch(0.78 0.15 160), oklch(0.7 0.17 285));
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: gn-spin 6s linear infinite;
+	}
+}
+
+@keyframes gn-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "sin() \00b7  cos() \00b7  mod() \00b7  sibling-index() \00b7  conic-gradient";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

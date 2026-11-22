@@ -1,0 +1,100 @@
+/* #115 Unzip the Source: plain site; "view source" is a little zip-tooth link. */
+.site .site-footer a.site-link { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.9em; }
+.site .site-footer a.site-link::before { content: "</> "; color: var(--siteAccent); }
+.site .site-footer a.site-link:hover::after {
+	background: repeating-linear-gradient(90deg, var(--siteSquiggle) 0 4px, transparent 4px 7px);
+	mask: none;
+	height: 3px;
+	bottom: -0.2em;
+}
+
+.site .dx-chip {
+	align-items: center;
+	background: var(--siteBg);
+	border: 1px solid var(--siteSubtle);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgb(20 40 66 / 0.12);
+	color: var(--siteMuted);
+	cursor: pointer;
+	display: inline-flex;
+	font: 600 0.8rem/1 var(--siteFont);
+	gap: 0.5rem;
+	padding: 0.5rem 0.8rem;
+	position: fixed;
+	right: 0.9rem;
+	z-index: 40;
+}
+
+.site .dx-chip:hover,
+.site .dx-chip:focus-visible { border-color: var(--siteAccent); color: var(--siteAccent); outline: none; }
+.site .dx-chip kbd { border: 1px solid currentColor; border-radius: 4px; font: 700 0.7rem/1 ui-monospace, monospace; padding: 0.18rem 0.35rem; }
+.site .dx-chip svg { height: 1.2em; width: 1.2em; }
+
+/* engine */
+.site .zp {
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+	position: fixed;
+	right: 0;
+	top: var(--barHeight);
+	z-index: 60;
+}
+
+.site .zp-src {
+	background: #0a1020;
+	color: #c9d6ea;
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: 1fr 1fr;
+	inset: 0;
+	padding: 1.2rem 14%;
+	position: absolute;
+}
+
+.site .zp-file { background: #0f182c; border: 1px solid #1e3050; border-radius: 10px; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.site .zp-file header { align-items: center; background: #14203a; color: #8fa6c4; display: flex; font: 600 0.72rem/1 ui-monospace, monospace; gap: 0.6rem; padding: 0.6rem 0.8rem; }
+.site .zp-file header i { background: #ff5d6c; border-radius: 50%; box-shadow: 14px 0 #ffb84d, 28px 0 #3ddc97; height: 8px; margin-right: 30px; width: 8px; }
+.site .zp-file header span:last-child { margin-left: auto; opacity: 0.7; }
+.site .zp-file pre { counter-reset: ln; flex: 1; font: 500 0.74rem/1.55 ui-monospace, "SF Mono", Menlo, monospace; margin: 0; overflow: auto; padding: 0.6rem 0; tab-size: 2; }
+.site .zp-file pre span.l { display: block; padding: 0 1rem 0 0; white-space: pre; }
+.site .zp-file pre span.l::before { color: #4a5f80; content: counter(ln); counter-increment: ln; display: inline-block; margin-right: 1rem; text-align: right; width: 2.6rem; }
+.site .zp-file pre span.l:hover { background: rgb(120 170 255 / 0.08); }
+.site .zp .tg { color: #7ee0ff; }
+.site .zp .at { color: #ffd24a; }
+.site .zp .st { color: #a8e69b; }
+.site .zp .pu { color: #6d7f9c; }
+.site .zp .cm { color: #5b6f8c; font-style: italic; }
+.site .zp .sl { color: #ff9ac8; }
+.site .zp .pr { color: #9ed0ff; }
+.site .zp .vl { color: #f4c58a; }
+
+.site .zp-close {
+	background: #14203a;
+	border: 1px solid #355a82;
+	border-radius: 999px;
+	bottom: 1rem;
+	color: #dae7f3;
+	cursor: pointer;
+	font: 700 0.8rem/1 var(--siteFont);
+	left: 50%;
+	padding: 0.6rem 1rem;
+	position: absolute;
+	transform: translateX(-50%);
+	z-index: 3;
+}
+
+.site .zp-close:hover,
+.site .zp-close:focus-visible { background: #1d3157; outline: 2px solid #77bbff; }
+
+.site .zp-pane { background: var(--siteBg); color: var(--siteFg); font-family: var(--siteFont); inset: 0; position: absolute; will-change: clip-path, transform; z-index: 1; }
+.site .zp-clone { pointer-events: none; position: absolute; user-select: none; }
+.site .zp-clone .site-page { margin: 0; }
+.site .zp-svg { inset: 0; overflow: visible; pointer-events: none; position: absolute; }
+.site .zp-pane.r .zp-svg { transform: scaleX(-1); }
+.site .zp-pull { cursor: grab; pointer-events: all; }
+.site .zp-pull:active { cursor: grabbing; }
+.site .zp-top { inset: 0; overflow: visible; pointer-events: none; position: absolute; z-index: 2; }
+
+@media (max-width: 800px) { .site .zp-src { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; padding: 0.8rem; } }

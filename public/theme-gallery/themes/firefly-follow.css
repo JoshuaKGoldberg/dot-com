@@ -1,0 +1,33 @@
+/* 135 — Firefly Follow */
+.site {
+	--siteBg: #f8f4e8;
+	--siteFg: #3a3526;
+	--siteFgStrong: #231f14;
+	--siteMuted: #6b6450;
+	--siteAccent: #a86b10;
+	--siteSquiggle: #d89a2a;
+	--siteSubtle: #ece5cf;
+}
+html.dark .site {
+	--siteBg: #070d14;
+	--siteFg: #d4dfe0;
+	--siteFgStrong: #f0f6f4;
+	--siteMuted: #8fa5a5;
+	--siteAccent: #d4f27a;
+	--siteSquiggle: #b7dc58;
+	--siteSubtle: #0f1c20;
+}
+.site .scenery-a {
+	background: radial-gradient(ellipse at 50% 112%, rgba(60, 120, 80, 0.3), transparent 55%);
+}
+html.dark .site .scenery-a {
+	background: radial-gradient(ellipse at 50% 115%, rgba(50, 110, 80, 0.4), transparent 55%), radial-gradient(ellipse at 15% 10%, rgba(50, 80, 140, 0.18), transparent 50%);
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

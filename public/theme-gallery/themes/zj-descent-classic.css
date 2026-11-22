@@ -1,0 +1,412 @@
+/* ---- shared plumbing: zero JavaScript, no themes/<id>.js ---- */
+
+@property --sway {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	scroll-timeline: --pg block;
+	transition: --sway 1.6s linear(0, 0.2 6%, 0.62 14%, 0.97 22%, 1.12 30%, 1.13 36%, 1.06 46%, 0.98 58%, 0.99 70%, 1.005 82%, 1);
+}
+
+.site:has(.site-link:hover, .site-nav-link:hover, .site-item:hover) {
+	--sway: 1;
+}
+
+/* soft scrims so prose stays readable over the scene; sections read as clearings */
+.site-header,
+.site-hero,
+.site-about,
+.site-section,
+.site-footer {
+	background: color-mix(in srgb, var(--siteBg) var(--scrim, 82%), transparent);
+	border-radius: 1.4rem;
+	box-shadow: 0 0 1.6rem 0.9rem color-mix(in srgb, var(--siteBg) calc(var(--scrim, 82%) * 0.9), transparent);
+	box-sizing: border-box;
+	padding: 0.9rem 1.4rem;
+}
+
+.site-hero {
+	margin-block: 5rem 3.2rem;
+	padding: 1.6rem 1.8rem;
+}
+
+.site-about,
+.site-section {
+	margin-bottom: 3.2rem;
+}
+
+.site-about {
+	padding-block: 1.4rem;
+}
+
+.site-footer {
+	margin-top: 4rem;
+	opacity: 1;
+	padding-block: 1.4rem;
+}
+
+.site-page {
+	padding-bottom: 46vh;
+}
+
+.site-portrait img {
+	box-shadow: 0 6px 22px 0 color-mix(in srgb, var(--siteFgStrong) 22%, transparent);
+}
+
+/* badge + tags, in the spirit of #158 */
+.site .overlay-b::before {
+	background: var(--badgeBg);
+	border: 1.5px solid var(--badgeLine);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: "0 KB JavaScript \A shipped by this theme";
+	font: 700 0.72rem/1.25 var(--siteFont);
+	left: 1rem;
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: absolute;
+	text-align: center;
+	white-space: pre;
+}
+
+.site .overlay-b::after {
+	background: var(--badgeBg);
+	border: 1px solid var(--badgeLine);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--badgeFg);
+	content: var(--tags);
+	font: 600 0.64rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+	max-width: 22rem;
+	opacity: 0.92;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 760px) {
+	.site .overlay-b::after {
+		display: none;
+	}
+}
+
+/* gentle scroll-driven reveals (only when motion is welcome) */
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title) {
+			animation: zjd-rise linear both;
+			animation-range: entry 0% entry 80%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjd-rise {
+	from {
+		opacity: 0;
+		translate: 0 1.2rem;
+	}
+}
+
+.site :is(.scenery-a, .scenery-b, .scenery-c)::before,
+.site :is(.scenery-a, .scenery-b, .scenery-c)::after {
+	content: "";
+	pointer-events: none;
+	position: absolute;
+}
+
+.site :is(.site-header, .site-main, .site-footer)::before,
+.site :is(.site-header, .site-main, .site-footer)::after {
+	content: "";
+	pointer-events: none;
+	position: fixed;
+	z-index: -1;
+}
+/*
+ * Sky to Lake I: Classic. Zero JS, there is no themes/zj-descent-classic.js.
+ * A baseline Adirondack descent, all CSS:
+ *   scroll-timeline + animation-range -> sky, ridges, pine banks and trunks slide at their own depths
+ *   @property colors                  -> the sky gradient quietly changes with scroll position
+ *   mask + SVG silhouettes            -> every ridge and tree is a mask tinted by a CSS gradient
+ *   scaleY mirror + striped mask      -> the far shore reflected in the lake
+ *   @property --sway + linear()       -> hover a link and the clouds drift, on a spring
+ */
+
+.site {
+	--siteBg: #f6fafb;
+	--siteFg: #243248;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #50627a;
+	--siteAccent: #0b66b8;
+	--siteSquiggle: #2f95e6;
+	--siteSubtle: #cfe3ea;
+	--scrim: 80%;
+	--ridge-a: #9bb9cf;
+	--ridge-b: #7fa3bc;
+	--ridge-c: #5f8aa0;
+	--pine-far: #46746a;
+	--pine-mid: #2c5646;
+	--trunk: #1c382f;
+	--lake0: #e3eff3;
+	--lake1: #6fa6c8;
+	--lake2: #2f6d96;
+	--haze: #e8f2f5;
+	--cloud-hi: #fff;
+	--cloud-lo: #cfdfeb;
+	--sun: 255 246 214;
+	--badgeBg: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	--badgeFg: var(--siteFgStrong);
+	--badgeLine: color-mix(in srgb, var(--siteAccent) 55%, transparent);
+	--tags: "scroll-timeline \00b7 @property \00b7 mask \00b7 linear() \00b7 :has()";
+}
+
+html.dark .site {
+	--siteBg: #0a1424;
+	--siteFg: #d3e1ef;
+	--siteFgStrong: #f1f7fc;
+	--siteMuted: #92a8c0;
+	--siteAccent: #7cc0ff;
+	--siteSquiggle: #5aaeff;
+	--siteSubtle: #12293f;
+	--scrim: 78%;
+	--ridge-a: #31506f;
+	--ridge-b: #243f5c;
+	--ridge-c: #182f48;
+	--pine-far: #14302f;
+	--pine-mid: #0c2022;
+	--trunk: #07151a;
+	--lake0: #35587b;
+	--lake1: #142c49;
+	--lake2: #09182b;
+	--haze: #35587b;
+	--cloud-hi: #7d94b8;
+	--cloud-lo: #3a5176;
+	--sun: 228 238 255;
+}
+
+/* ---- the sky: two pre-colored layers, crossfaded by scroll-driven opacity (compositor-only) ---- */
+
+.site {
+	--sk0: #5d9ad8;
+	--sk1: #a2cbec;
+	--sk2: #e8f2f5;
+	--sk0e: #86b6e0;
+	--sk1e: #c4dcee;
+	--sk2e: #e9f1f2;
+}
+
+html.dark .site {
+	--sk0: #060d1d;
+	--sk1: #142845;
+	--sk2: #35587b;
+	--sk0e: #0d1b36;
+	--sk1e: #1f3a5e;
+	--sk2e: #4d6c88;
+}
+
+.site .site-scenery::before,
+.site .site-scenery::after {
+	background: linear-gradient(180deg, var(--sk0) 0%, var(--sk1) 48%, var(--sk2) 78%, var(--haze) 100%);
+	content: "";
+	contain: paint;
+	inset: 0 0 -14vh 0;
+	pointer-events: none;
+	position: absolute;
+	will-change: transform, opacity;
+	z-index: -2;
+}
+
+.site .site-scenery::after {
+	background: linear-gradient(180deg, var(--sk0e) 0%, var(--sk1e) 48%, var(--sk2e) 78%, var(--haze) 100%);
+	opacity: 0;
+	z-index: -1;
+}
+
+.site .scenery-a {
+	inset: 0 0 -14vh 0;
+}
+
+/* sun (a quiet moon in dark mode) */
+.site .scenery-a::before {
+	background:
+		radial-gradient(circle at 50% 50%, rgb(var(--sun)) 0 2.2vmin, rgb(var(--sun) / 0.55) 3vmin, transparent 5vmin),
+		radial-gradient(circle at 50% 50%, rgb(var(--sun) / 0.5), transparent 70%);
+	height: 60vmin;
+	left: 62vw;
+	top: 8vh;
+	translate: 0 0;
+	width: 60vmin;
+}
+
+html.dark .site .scenery-a::before {
+	background:
+		radial-gradient(circle at 50% 50%, #f4f8ff 0 2.6vmin, rgb(var(--sun) / 0.35) 3.2vmin, transparent 5vmin),
+		radial-gradient(circle at 50% 50%, rgb(var(--sun) / 0.18), transparent 70%);
+}
+
+/* cumulus: an SVG alpha mask tinted lit-top to shaded-base */
+.site .scenery-a::after {
+	background: linear-gradient(180deg, var(--cloud-hi) 20%, var(--cloud-lo) 90%);
+	height: 62vh;
+	left: -10vw;
+	mask: url("zj-descent-classic/clouds.svg") 0 0 / auto 100% repeat-x;
+	opacity: 0.92;
+	top: 0;
+	transform: translateX(calc(var(--sway) * 5vw));
+	width: 240vw;
+}
+
+/* ---- far ridges and the lake ---- */
+
+/* scenery-b is an unmasked horizon box (waterline at its bottom edge); its pseudos carry the ridges,
+   so no host mask can clip them */
+.site .scenery-b {
+	height: 38vh;
+	inset: auto 0 38vh 0;
+}
+
+.site .scenery-b::before,
+.site .scenery-b::after {
+	inset: auto 0 0 0;
+}
+
+/* the ridges are tall: crest silhouette on top, solid ground continuing well below the waterline,
+   so a ridge (and the trees standing on its crest) never shows a floating bottom edge */
+.site .scenery-b::before,
+.site .scenery-b::after {
+	inset: auto 0 -70vh 0;
+}
+
+.site .scenery-b::before {
+	background: linear-gradient(180deg, var(--ridge-a) 0, color-mix(in srgb, var(--ridge-a) 60%, var(--haze)) 38vh, color-mix(in srgb, var(--ridge-a) 60%, var(--haze)) 100%);
+	height: calc(38vh + 70vh);
+	mask:
+		url("zj-descent-classic/ridge-far.svg") left 0 / auto 38vh repeat-x,
+		linear-gradient(#000, #000) 0 38vh / 100% 70vh no-repeat;
+}
+
+.site .scenery-b::after {
+	background: linear-gradient(180deg, var(--ridge-c) 6%, color-mix(in srgb, var(--ridge-c) 70%, var(--haze)) 30vh, color-mix(in srgb, var(--ridge-c) 70%, var(--haze)) 100%);
+	height: calc(30vh + 70vh);
+	mask:
+		url("zj-descent-classic/ridge-mid.svg") 340px 0 / auto 30vh repeat-x,
+		linear-gradient(#000, #000) 0 30vh / 100% 70vh no-repeat;
+	top: auto;
+}
+
+.site .scenery-c {
+	background:
+		repeating-linear-gradient(180deg, transparent 0 9px, rgb(255 255 255 / 0.1) 9px 10px),
+		linear-gradient(180deg, var(--lake0), var(--lake1) 55%, var(--lake2));
+	inset: auto 0 0 0;
+	height: 38vh;
+	translate: 0 0;
+}
+
+/* the far shore, mirrored into the water */
+.site .scenery-c::before {
+	background: linear-gradient(180deg, var(--ridge-c), transparent 85%);
+	height: 30vh;
+	inset: 0 0 auto 0;
+	mask:
+		url("zj-descent-classic/ridge-mid.svg") 340px bottom / auto 100% repeat-x,
+		repeating-linear-gradient(180deg, #000 0 3px, transparent 3px 6px);
+	mask-composite: intersect;
+	opacity: 0.55;
+	transform: scaleY(-1);
+}
+
+/* the start-of-descent forest edge, anchored to the bottom of the screen; it fades once the lake arrives */
+.site-footer::before {
+	background: linear-gradient(180deg, var(--pine-far), color-mix(in srgb, var(--pine-far) 80%, #000));
+	bottom: 0;
+	height: 26vh;
+	left: 0;
+	mask: url("zj-descent-classic/pines-far.svg") left bottom / auto 100% repeat-x;
+	opacity: 0;
+	right: 0;
+}
+
+/* ---- tree layers pass overhead as you descend ---- */
+
+.site-header::before,
+.site-main::before,
+.site-main::after,
+.site-footer::before {
+	left: 0;
+	right: 0;
+}
+
+.site-header::before {
+	background: linear-gradient(180deg, var(--pine-mid), color-mix(in srgb, var(--pine-mid) 70%, var(--haze)));
+	bottom: 0;
+	height: 62vh;
+	mask: url("zj-descent-classic/pines-mid.svg") left bottom / auto 100% repeat-x;
+	translate: 0 0;
+	opacity: 0;
+}
+
+.site-main::before {
+	background: linear-gradient(180deg, color-mix(in srgb, var(--pine-far) 55%, var(--haze)), var(--pine-far));
+	height: 170vh;
+	mask: url("zj-descent-classic/trunks-far.svg") 0 0 / auto 100% repeat-x;
+	top: 0;
+	translate: 0 0;
+	opacity: 0;
+}
+
+.site-main::after {
+	background: linear-gradient(90deg, var(--trunk), color-mix(in srgb, var(--trunk) 80%, var(--pine-far)) 60%, var(--trunk));
+	height: 170vh;
+	mask: url("zj-descent-classic/trunks.svg") 0 0 / auto 100% repeat-x;
+	top: 0;
+	translate: 0 0;
+	opacity: 0;
+}
+
+/* ---- scroll maps the journey onto the page ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site .site-scenery::before,
+		html:not(.reduce-motion) .site .site-scenery::after,
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer),
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::before,
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b, .scenery-c, .site-header, .site-main, .site-footer)::after {
+			animation-fill-mode: both;
+			animation-timing-function: linear;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::before { animation-name: zjc-sky-pan; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .site-scenery::after { animation-name: zjc-sky-fade; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a { animation-name: zjc-sky-pan; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .scenery-a::before { animation-name: zjc-sun; animation-range: 0% 60%; }
+		html:not(.reduce-motion) .site .scenery-a::after { animation-name: zjc-clouds; animation-range: 0% 80%; }
+		html:not(.reduce-motion) .site .scenery-b::before { animation-name: zjc-ridge-far; animation-range: 0% 85%; }
+		html:not(.reduce-motion) .site .scenery-b::after { animation-name: zjc-ridge-mid; animation-range: 0% 85%; }
+		html:not(.reduce-motion) .site .scenery-c { animation-name: zjc-lake; animation-range: 45% 95%; }
+		html:not(.reduce-motion) .site .scenery-c::before { animation-name: zjc-lake; animation-range: 45% 95%; }
+		html:not(.reduce-motion) .site .site-footer::before { animation-name: zjc-floor; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .site-header::before { animation-name: zjc-pines; animation-range: 0% 100%; }
+		html:not(.reduce-motion) .site .site-main::before { animation-name: zjc-trunks-far; animation-range: 14% 70%; }
+		html:not(.reduce-motion) .site .site-main::after { animation-name: zjc-trunks; animation-range: 22% 78%; }
+	}
+}
+
+@keyframes zjc-sky-pan { to { translate: 0 -14vh; } }
+@keyframes zjc-sky-fade { to { opacity: 1; translate: 0 -14vh; } }
+@keyframes zjc-sun { to { translate: 0 -62vh; opacity: 0; } }
+@keyframes zjc-clouds { to { translate: -14vw -52vh; } }
+@keyframes zjc-ridge-far { from { translate: 0 30vh; } }
+@keyframes zjc-ridge-mid { from { translate: 0 40vh; } }
+@keyframes zjc-shore { from { translate: 0 30vh; } }
+@keyframes zjc-lake { from { translate: 0 42vh; } }
+@keyframes zjc-floor { 0%, 30% { opacity: 1; translate: 0 0; } 60%, 100% { opacity: 0; translate: 0 0; } }
+@keyframes zjc-pines { 0% { opacity: 1; translate: 0 100vh; } 30%, 60% { opacity: 1; translate: 0 0; } 90%, 100% { opacity: 0; translate: 0 0; } }
+@keyframes zjc-trunks-far { 0% { opacity: 0; translate: 0 0; } 25%, 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -70vh; } }
+@keyframes zjc-trunks { 0% { opacity: 0; translate: 0 -10vh; } 25%, 75% { opacity: 1; } 100% { opacity: 0; translate: 0 -70vh; } }

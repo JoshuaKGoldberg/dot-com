@@ -1,0 +1,235 @@
+/*
+ * Base homepage frame, roughly matching today's joshuakgoldberg.com.
+ * Themes override the custom properties below and/or restyle any .site selector.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@300..800&display=swap");
+
+.site {
+	--siteBg: #fdffff;
+	--siteFg: #283556;
+	--siteFgStrong: #142842;
+	--siteMuted: #5b6b8c;
+	--siteAccent: #1170d0;
+	--siteSquiggle: #00a3ff;
+	--siteSubtle: #d7e9ef;
+	--siteFont: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 52rem;
+
+	background: var(--siteBg);
+	color: var(--siteFg);
+	font-family: var(--siteFont);
+	isolation: isolate;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+html.dark .site {
+	--siteBg: #0b1220;
+	--siteFg: #dae7f3;
+	--siteFgStrong: #f1f6fb;
+	--siteMuted: #93a5bf;
+	--siteAccent: #77bbff;
+	--siteSubtle: #102a40;
+}
+
+.site-scenery,
+.site-overlay {
+	inset: 0;
+	pointer-events: none;
+	position: fixed;
+	top: var(--barHeight);
+}
+
+.site-scenery {
+	z-index: -1;
+}
+
+.site-overlay {
+	z-index: 10;
+}
+
+.site-scenery > *,
+.site-overlay > * {
+	inset: 0;
+	position: absolute;
+}
+
+.site-page {
+	margin: 0 auto;
+	max-width: var(--siteMaxWidth);
+	padding: 1.75rem 1.5rem 3rem;
+	position: relative;
+}
+
+.site-header {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	font-weight: 700;
+	gap: 1rem 1.5rem;
+}
+
+.site-logo {
+	color: var(--siteAccent);
+	font-size: 1.35rem;
+	text-decoration: none;
+}
+
+.site-theme-toggle {
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font-size: 1.3rem;
+}
+
+.site-nav {
+	display: flex;
+	gap: 1.4rem;
+	margin-left: auto;
+}
+
+.site-nav-link {
+	color: var(--siteFgStrong);
+	font-size: 1.3rem;
+	text-decoration: none;
+}
+
+.site-nav-link.is-active {
+	color: var(--siteAccent);
+}
+
+.site a {
+	color: inherit;
+}
+
+.site-link {
+	position: relative;
+	text-decoration: none;
+}
+
+.site-link::after {
+	background: var(--siteSquiggle);
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: 0.9;
+	position: absolute;
+	right: 0;
+}
+
+.site-hero {
+	align-items: center;
+	display: grid;
+	gap: 2.5rem;
+	grid-template-columns: minmax(9rem, 16rem) 1fr;
+	margin: 4.5rem 0 3.5rem;
+}
+
+.site-portrait img {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	box-shadow: 0 3px 14px 0 var(--siteSubtle);
+	display: block;
+	object-fit: cover;
+	width: 100%;
+}
+
+.site-portrait-dark,
+html.dark .site-portrait-light {
+	display: none !important;
+}
+
+html.dark .site-portrait-dark {
+	display: block !important;
+}
+
+.site-title {
+	color: var(--siteFgStrong);
+	font-family: var(--siteFontDisplay);
+	font-size: clamp(2.5rem, 6vw, 3.75rem);
+	font-weight: 800;
+	line-height: 0.9;
+	margin: 0 0 0.75rem;
+}
+
+.site-tagline {
+	font-size: 1.5rem;
+	font-weight: 400;
+	line-height: 1.2;
+	margin: 0 0 1rem;
+}
+
+.site-socials {
+	display: flex;
+	gap: 1.25rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.site-about {
+	font-size: 1.3rem;
+	font-weight: 300;
+	line-height: 1.45;
+	margin: 0 auto 3rem;
+	max-width: 40rem;
+	text-align: center;
+}
+
+.site-section {
+	margin: 0 auto 3rem;
+	max-width: 44rem;
+}
+
+.site-section-title {
+	color: var(--siteFgStrong);
+	font-family: var(--siteFontDisplay);
+	font-size: 1.75rem;
+	margin: 0 0 1rem;
+}
+
+.site-list {
+	display: grid;
+	gap: 1.4rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.site-item-title {
+	color: var(--siteFgStrong);
+	font-size: 1.35rem;
+	font-weight: 600;
+}
+
+.site-item-description {
+	font-weight: 300;
+	line-height: 1.4;
+	margin: 0.45rem 0 0.25rem;
+}
+
+.site-item-meta {
+	color: var(--siteMuted);
+	font-size: 0.95rem;
+}
+
+.site-footer {
+	font-weight: 300;
+	opacity: 0.8;
+	text-align: center;
+}
+
+@media (max-width: 700px) {
+	.site-hero {
+		grid-template-columns: 1fr;
+	}
+
+	.site-nav {
+		margin-left: 0;
+	}
+}

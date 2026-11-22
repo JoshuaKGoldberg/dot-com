@@ -1,0 +1,13 @@
+@import url("./_aurora-e/base.css");
+
+/* 258. Bokeh Aurora: defocused aurora discs seen past out-of-focus spruce boughs. */
+.site {
+	--siteBg: #f2f5f4; --siteFg: #23383a; --siteFgStrong: #0f2224; --siteMuted: #4f686a;
+	--siteAccent: #0d7568; --siteSquiggle: #4cc0a0; --siteSubtle: #dde9e7;
+}
+html.dark .site {
+	--siteBg: #050b16; --siteFg: #d5e6e8; --siteFgStrong: #f1fafb; --siteMuted: #93b0b6;
+	--siteAccent: #72f0c4; --siteSquiggle: #3fd9a8; --siteSubtle: #0d1c26;
+}
+.site .scenery-a { background: linear-gradient(#b9d7dc 0%, #e6eeee 52%, #f4eee4 100%); }
+html.dark .site .scenery-a { background: radial-gradient(80% 40% at 50% 100%, rgba(30, 80, 90, 0.4), transparent 70%), linear-gradient(#02060d 0%, #07121f 55%, #0c1d2b 100%); }

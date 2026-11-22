@@ -1,0 +1,85 @@
+.site {
+	--siteBg: #f7efe0;
+	--siteFg: #34302c;
+	--siteFgStrong: #1d1a17;
+	--siteMuted: #6a6258;
+	--siteAccent: #b0601e;
+	--siteSquiggle: #e3a24c;
+	--siteSubtle: #eddfc4;
+	--sky: linear-gradient(180deg, #9ec4e0 0%, #bdd4e0 28%, #efdcb8 62%, #f6d9a4 100%);
+	--sunGlow: radial-gradient(70% 55% at 12% 0%, rgba(255, 232, 170, 0.75), transparent 100%);
+}
+
+html.dark .site {
+	--siteBg: #14163a;
+	--siteFg: #dcdcf0;
+	--siteFgStrong: #f4f1fb;
+	--siteMuted: #a3a3c8;
+	--siteAccent: #c9a6f0;
+	--siteSquiggle: #9a82d8;
+	--siteSubtle: #232754;
+	--sky: linear-gradient(180deg, #131845 0%, #28285e 40%, #4a3d78 72%, #7c5588 100%);
+	--sunGlow: radial-gradient(70% 55% at 12% 0%, rgba(200, 150, 230, 0.28), transparent 100%);
+}
+
+.site .site-scenery .scenery-a {
+	background: var(--sunGlow), var(--sky);
+}
+
+.site .site-scenery .scenery-b,
+.site .site-scenery .scenery-c {
+	overflow: hidden;
+}
+
+.site .cs-layer {
+	background-repeat: repeat;
+	height: calc(100% + var(--tileH));
+	left: 0;
+	position: absolute;
+	top: calc(var(--tileH) * -1);
+	width: calc(100% + var(--tileW));
+	left: calc(var(--tileW) * -1);
+	will-change: transform;
+}
+
+.site .cs-clouds {
+	--tileW: 1600px;
+	--tileH: 800px;
+	background-size: 1600px 800px;
+	opacity: 0.78;
+}
+
+.site .cs-clouds {
+}
+html.dark .site .cs-clouds {
+	opacity: 0.6;
+}
+
+.site .cs-shadows {
+	--tileW: 1024px;
+	--tileH: 1024px;
+	background-size: 1024px 1024px;
+	-webkit-mask-image: linear-gradient(180deg, transparent 15%, #000 70%);
+	mask-image: linear-gradient(180deg, transparent 15%, #000 70%);
+}
+
+@keyframes cs-clouds {
+	to {
+		transform: translate3d(1600px, 0, 0);
+	}
+}
+
+@keyframes cs-shadows {
+	to {
+		transform: translate3d(-1024px, 1024px, 0);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .cs-clouds {
+		animation: cs-clouds 900s linear infinite;
+	}
+	html:not(.reduce-motion) .site .cs-shadows {
+		animation: cs-shadows 200s linear infinite;
+	}
+}

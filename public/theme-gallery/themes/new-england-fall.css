@@ -1,0 +1,123 @@
+/* 9. New England Fall: out-of-focus maple bokeh over a hazy hillside, a few faint leaves at the page edges. */
+.site {
+	--haze-top: #fbf3e4;
+	--haze-bot: #f4e3c8;
+	--hill-a: rgba(226, 162, 59, 0.2);
+	--hill-b: rgba(181, 82, 44, 0.12);
+	--hill-c: rgba(201, 153, 58, 0.18);
+	--leaf-o: 0.26;
+	--siteBg: #f8ecd8;
+	--siteFg: #3a2d28;
+	--siteFgStrong: #231812;
+	--siteMuted: #6d5a4d;
+	--siteAccent: #a8481f;
+	--siteSquiggle: #e08a2e;
+	--siteSubtle: #efdcc0;
+}
+
+html.dark .site {
+	--haze-top: #1b1520;
+	--haze-bot: #2b1c27;
+	--hill-a: rgba(214, 98, 44, 0.16);
+	--hill-b: rgba(120, 46, 56, 0.2);
+	--hill-c: rgba(190, 110, 50, 0.1);
+	--leaf-o: 0.2;
+	--siteBg: #1b1520;
+	--siteFg: #ecdfd6;
+	--siteFgStrong: #fbf1ea;
+	--siteMuted: #bfa99d;
+	--siteAccent: #ffb067;
+	--siteSquiggle: #f08a45;
+	--siteSubtle: #2f2030;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 80% 38% at 18% 104%, var(--hill-a), transparent 72%),
+		radial-gradient(ellipse 75% 32% at 86% 106%, var(--hill-b), transparent 72%),
+		radial-gradient(ellipse 90% 26% at 52% 112%, var(--hill-c), transparent 72%),
+		radial-gradient(ellipse 60% 20% at 70% 78%, color-mix(in srgb, var(--hill-c) 60%, transparent), transparent 80%),
+		linear-gradient(to bottom, var(--haze-top), var(--haze-bot));
+}
+
+.site .scenery-b {
+	overflow: hidden;
+}
+
+.site .bokeh {
+	background: radial-gradient(circle, rgb(var(--bk) / 0.5) 0, rgb(var(--bk) / 0.3) 58%, rgb(var(--bk) / 0.62) 70%, rgb(var(--bk) / 0) 74%);
+	border-radius: 50%;
+	filter: blur(2.5px);
+	height: var(--s);
+	left: var(--x);
+	opacity: var(--o);
+	position: absolute;
+	top: var(--y);
+	width: var(--s);
+}
+
+html.dark .site .bokeh {
+	mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .bokeh {
+		animation: bokeh-float var(--dur, 60s) ease-in-out var(--dl, 0s) infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .leaf {
+		animation: leaf-fall var(--fall, 50s) linear var(--fdl, 0s) infinite;
+	}
+
+	html:not(.reduce-motion) .site .leaf svg {
+		animation: leaf-sway var(--sway-d, 6s) ease-in-out var(--fdl, 0s) infinite alternate;
+	}
+}
+
+@keyframes bokeh-float {
+	0% {
+		transform: translate3d(0, 0, 0) scale(1);
+		opacity: var(--o);
+	}
+	50% {
+		opacity: calc(var(--o) * 0.65);
+	}
+	100% {
+		transform: translate3d(var(--dx, 14px), var(--dy, -18px), 0) scale(1.06);
+		opacity: var(--o);
+	}
+}
+
+.site .leaf {
+	left: var(--lx);
+	opacity: var(--leaf-o);
+	position: absolute;
+	top: var(--ly, -8vh);
+}
+
+.site .leaf svg {
+	display: block;
+	fill: var(--lc);
+	stroke: var(--lc);
+	height: var(--ls);
+	transform: rotate(var(--lr, 0deg));
+	width: var(--ls);
+}
+
+@keyframes leaf-fall {
+	from {
+		transform: translate3d(0, -12vh, 0);
+	}
+	to {
+		transform: translate3d(var(--drift, 30px), 112vh, 0);
+	}
+}
+
+@keyframes leaf-sway {
+	from {
+		transform: rotate(calc(var(--lr, 0deg) - 28deg));
+	}
+	to {
+		transform: rotate(calc(var(--lr, 0deg) + 34deg));
+	}
+}

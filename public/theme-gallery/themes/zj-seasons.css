@@ -1,0 +1,672 @@
+/*
+ * Zero JS: Seasons. No script, just CSS. Scroll the page and a year goes by.
+ *   stacked season scenes      -> four pre-colored scenes (sky, hills, tree) crossfaded by scroll-driven opacity (compositor only)
+ *   scroll-driven animation    -> the opacity track (spring, summer, autumn, winter) is bound to the scroll position
+ *   @counter-style + integer   -> the season's name is a stepped integer (on that one pill) rendered through a custom counter style
+ *   prime-sized tiles          -> petals, leaves and snow are tiled gradients, falling forever on translateY
+ */
+
+@counter-style zs-seasons {
+	symbols: "\1F331  Spring" "\2600\FE0F  Summer" "\1F342  Autumn" "\2744\FE0F  Winter";
+	system: fixed;
+}
+
+.site {
+	--siteBg: #f7faf3;
+	--siteFg: #25322a;
+	--siteFgStrong: #101c14;
+	--siteMuted: #51635a;
+	--siteAccent: #1c7a47;
+	--siteSquiggle: #4fae4a;
+	--siteSubtle: #e5eee0;
+	--acc: var(--siteAccent);
+	--trunk: #7b5a3c;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #0d1522;
+	--siteFg: #dbe5f0;
+	--siteFgStrong: #f5f9ff;
+	--siteMuted: #93a6bb;
+	--siteAccent: #7fe0a0;
+	--siteSquiggle: #6fbf86;
+	--siteSubtle: #17233a;
+	--trunk: #3a2a22;
+}
+
+/* ---- four season scenes, stacked: spring is the base, each later one fades in over the one below ----
+ * Each scene is one opaque layer (sky, sun or moon, hills, trees). Only its opacity animates on scroll,
+ * so scrolling never restyles or repaints anything: the compositor just blends four textures. */
+
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before {
+	content: "";
+	contain: paint;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	will-change: opacity;
+}
+
+/* spring: the base scene (scenery-a itself) */
+.site .scenery-a {
+	--sky1: #cfe9f7;
+	--sky2: #f6f4e2;
+	--hill: #a6d78f;
+	--hill2: #8cc87a;
+	--lf: #86cf70;
+}
+
+/* summer */
+.site .scenery-a::before {
+	--sky1: #8fd0f2;
+	--sky2: #fff4c6;
+	--hill: #62b24b;
+	--hill2: #4ea23f;
+	--lf: #3f9c3b;
+}
+
+/* autumn */
+.site .scenery-a::after {
+	--sky1: #f3c79a;
+	--sky2: #fdeacb;
+	--hill: #d9a24a;
+	--hill2: #c4863a;
+	--lf: #e0662a;
+}
+
+/* winter */
+.site .scenery-b::before {
+	--sky1: #c5d4e8;
+	--sky2: #f4f7fb;
+	--hill: #f1f5fa;
+	--hill2: #dbe5ef;
+	--lf: #dce6ef;
+}
+
+html.dark .site .scenery-a {
+	--sky1: #12264a;
+	--sky2: #34496e;
+	--hill: #1d4a3a;
+	--hill2: #153b30;
+	--lf: #6fbf86;
+}
+
+html.dark .site .scenery-a::before {
+	--sky1: #081a38;
+	--sky2: #1d4468;
+	--hill: #1a4f2c;
+	--hill2: #123d22;
+	--lf: #3f9c4b;
+}
+
+html.dark .site .scenery-a::after {
+	--sky1: #2a1730;
+	--sky2: #6a3a42;
+	--hill: #5a3a22;
+	--hill2: #46301d;
+	--lf: #d8702e;
+}
+
+html.dark .site .scenery-b::before {
+	--sky1: #0e1a30;
+	--sky2: #2c405f;
+	--hill: #7d90ad;
+	--hill2: #5f7392;
+	--lf: #6c819e;
+}
+
+.site .scenery-a,
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before {
+	background-image:
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		linear-gradient(90deg, transparent 43%, var(--trunk) 43% 57%, transparent 57%),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		linear-gradient(90deg, transparent 43%, var(--trunk) 43% 57%, transparent 57%),
+		radial-gradient(ellipse 75% 100% at 45% 100%, var(--hill) 98%, transparent 100%),
+		radial-gradient(ellipse 70% 82% at 88% 100%, var(--hill) 98%, transparent 100%),
+		radial-gradient(ellipse 62% 100% at 12% 100%, var(--hill2) 98%, transparent 100%),
+		radial-gradient(circle at 80% 15%, rgb(255 244 200 / 0.95) 0 2rem, rgb(255 236 170 / 0.4) 2.1rem 4.5rem, transparent 12rem),
+		linear-gradient(var(--sky1), var(--sky2));
+	background-position:
+		left 4.73vw bottom 27.6vh,
+		left 2.785vw bottom 24.058vh,
+		left 9.395vw bottom 24.058vh,
+		left 5.24vw bottom 21.206vh,
+		left 1.5vw bottom 6vh,
+		right 4.28vw bottom 21.6vh,
+		right 7.573vw bottom 19.042vh,
+		right 2.907vw bottom 19.042vh,
+		right 4.64vw bottom 16.982vh,
+		right 2vw bottom 6vh,
+		50% 100%,
+		0 100%,
+		0 100%,
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	background-size:
+		10.54vw 14.4vh,
+		7.82vw 12.24vh,
+		7.82vw 12.24vh,
+		9.52vw 12.96vh,
+		17vw 16.56vh,
+		7.44vw 10.4vh,
+		5.52vw 8.84vh,
+		5.52vw 8.84vh,
+		6.72vw 9.36vh,
+		12vw 11.96vh,
+		120% 20vh,
+		100% 34vh,
+		100% 34vh,
+		100% 100%,
+		100% 100%;
+}
+
+html.dark .site .scenery-a,
+html.dark .site .scenery-a::before,
+html.dark .site .scenery-a::after,
+html.dark .site .scenery-b::before {
+	background-image:
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		linear-gradient(90deg, transparent 43%, var(--trunk) 43% 57%, transparent 57%),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		radial-gradient(closest-side, var(--lf) 94%, transparent),
+		linear-gradient(90deg, transparent 43%, var(--trunk) 43% 57%, transparent 57%),
+		radial-gradient(ellipse 75% 100% at 45% 100%, var(--hill) 98%, transparent 100%),
+		radial-gradient(ellipse 70% 82% at 88% 100%, var(--hill) 98%, transparent 100%),
+		radial-gradient(ellipse 62% 100% at 12% 100%, var(--hill2) 98%, transparent 100%),
+		radial-gradient(circle at 80% 15%, #f4f7ff 0 1.5rem, rgb(190 215 255 / 0.25) 1.6rem 3.6rem, transparent 11rem),
+		radial-gradient(1px 1px at 23px 29px, #fff, transparent),
+		radial-gradient(1.2px 1.2px at 89px 77px, #dfe9ff, transparent),
+		linear-gradient(var(--sky1), var(--sky2));
+	background-position:
+		left 4.73vw bottom 27.6vh,
+		left 2.785vw bottom 24.058vh,
+		left 9.395vw bottom 24.058vh,
+		left 5.24vw bottom 21.206vh,
+		left 1.5vw bottom 6vh,
+		right 4.28vw bottom 21.6vh,
+		right 7.573vw bottom 19.042vh,
+		right 2.907vw bottom 19.042vh,
+		right 4.64vw bottom 16.982vh,
+		right 2vw bottom 6vh,
+		50% 100%,
+		0 100%,
+		0 100%,
+		0 0,
+		0 0,
+		0 0,
+		0 0;
+	background-repeat: no-repeat;
+	background-size:
+		10.54vw 14.4vh,
+		7.82vw 12.24vh,
+		7.82vw 12.24vh,
+		9.52vw 12.96vh,
+		17vw 16.56vh,
+		7.44vw 10.4vh,
+		5.52vw 8.84vh,
+		5.52vw 8.84vh,
+		6.72vw 9.36vh,
+		12vw 11.96vh,
+		120% 20vh,
+		100% 34vh,
+		100% 34vh,
+		100% 100%,
+		137px 127px,
+		191px 167px,
+		100% 100%;
+}
+
+@media (max-width: 1000px) {
+	.site .scenery-a,
+	.site .scenery-a::before,
+	.site .scenery-a::after,
+	.site .scenery-b::before {
+		background-image:
+			radial-gradient(ellipse 75% 100% at 45% 100%, var(--hill) 98%, transparent 100%),
+			radial-gradient(ellipse 70% 82% at 88% 100%, var(--hill) 98%, transparent 100%),
+			radial-gradient(ellipse 62% 100% at 12% 100%, var(--hill2) 98%, transparent 100%),
+			radial-gradient(circle at 80% 15%, rgb(255 244 200 / 0.95) 0 2rem, rgb(255 236 170 / 0.4) 2.1rem 4.5rem, transparent 12rem),
+			linear-gradient(var(--sky1), var(--sky2));
+		background-position:
+			50% 100%,
+			0 100%,
+			0 100%,
+			0 0,
+			0 0;
+		background-repeat: no-repeat;
+		background-size:
+			120% 20vh,
+			100% 34vh,
+			100% 34vh,
+			100% 100%,
+			100% 100%;
+	}
+
+	html.dark .site .scenery-a,
+	html.dark .site .scenery-a::before,
+	html.dark .site .scenery-a::after,
+	html.dark .site .scenery-b::before {
+		background-image:
+			radial-gradient(ellipse 75% 100% at 45% 100%, var(--hill) 98%, transparent 100%),
+			radial-gradient(ellipse 70% 82% at 88% 100%, var(--hill) 98%, transparent 100%),
+			radial-gradient(ellipse 62% 100% at 12% 100%, var(--hill2) 98%, transparent 100%),
+			radial-gradient(circle at 80% 15%, #f4f7ff 0 1.5rem, rgb(190 215 255 / 0.25) 1.6rem 3.6rem, transparent 11rem),
+			radial-gradient(1px 1px at 23px 29px, #fff, transparent),
+			radial-gradient(1.2px 1.2px at 89px 77px, #dfe9ff, transparent),
+			linear-gradient(var(--sky1), var(--sky2));
+		background-position:
+			50% 100%,
+			0 100%,
+			0 100%,
+			0 0,
+			0 0,
+			0 0,
+			0 0;
+		background-repeat: no-repeat;
+		background-size:
+			120% 20vh,
+			100% 34vh,
+			100% 34vh,
+			100% 100%,
+			137px 127px,
+			191px 167px,
+			100% 100%;
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	.site .scenery-a::before {
+		animation: zs-in-summer linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-a::after {
+		animation: zs-in-autumn linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-b::before {
+		animation: zs-in-winter linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-c::before {
+		animation: zs-out-petals linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-c::after {
+		animation: zs-leaves linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-b::after {
+		animation: zs-in-snow linear both;
+		animation-timeline: --pg;
+	}
+}
+
+@keyframes zs-in-summer {
+	0% {
+		opacity: 0;
+	}
+
+	33%,
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes zs-in-autumn {
+	0%,
+	33% {
+		opacity: 0;
+	}
+
+	66%,
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes zs-in-winter {
+	0%,
+	66% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes zs-in-snow {
+	0%,
+	60% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 0.9;
+	}
+}
+
+@keyframes zs-out-petals {
+	0% {
+		opacity: 1;
+	}
+
+	30%,
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes zs-leaves {
+	0%,
+	40% {
+		opacity: 0;
+	}
+
+	66% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+
+/* ---- falling things: petals (c::before), autumn leaves (c::after) and snow (b::after) ---- */
+
+.site .scenery-b,
+.site .scenery-c {
+	overflow: hidden;
+}
+
+.site .scenery-c::before,
+.site .scenery-c::after,
+.site .scenery-b::after {
+	content: "";
+	contain: paint;
+	height: calc(100% + 211px);
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: -211px;
+	will-change: transform, opacity;
+}
+
+.site .scenery-c::before,
+.site .scenery-c::after {
+	background:
+		radial-gradient(ellipse 5px 3px at 40px 30px, var(--fall), transparent 75%),
+		radial-gradient(ellipse 3px 5px at 90px 120px, var(--fall), transparent 75%),
+		radial-gradient(ellipse 5px 3px at 20px 180px, var(--fall), transparent 75%),
+		radial-gradient(ellipse 6px 3.5px at 110px 70px, var(--fall), transparent 75%),
+		radial-gradient(ellipse 3.5px 6px at 60px 150px, var(--fall), transparent 75%);
+	background-size: 131px 211px, 173px 211px, 227px 211px, 263px 211px, 311px 211px;
+}
+
+.site .scenery-c::before {
+	--fall: #f7a8c4;
+}
+
+.site .scenery-c::after {
+	--fall: #e2702b;
+	opacity: 0;
+}
+
+html.dark .site .scenery-c::before {
+	--fall: #f4a9c8;
+}
+
+html.dark .site .scenery-c::after {
+	--fall: #e9803a;
+}
+
+.site .scenery-b::after {
+	background:
+		radial-gradient(circle 2.5px at 30px 40px, #fff 60%, transparent),
+		radial-gradient(circle 2px at 100px 110px, #fff 60%, transparent),
+		radial-gradient(circle 3px at 60px 170px, #fff 60%, transparent),
+		radial-gradient(circle 2px at 140px 60px, #fff 60%, transparent);
+	background-size: 149px 211px, 191px 211px, 241px 211px, 281px 211px;
+	opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-c::before {
+		animation:
+			zs-fall 17s linear infinite,
+			zs-sway 5s ease-in-out infinite alternate,
+			zs-out-petals linear both;
+		animation-timeline: auto, auto, --pg;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation:
+			zs-fall 21s linear -5s infinite,
+			zs-sway 6s ease-in-out -3s infinite alternate,
+			zs-leaves linear both;
+		animation-timeline: auto, auto, --pg;
+	}
+
+	html:not(.reduce-motion) .site .scenery-b::after {
+		animation:
+			zs-fall 23s linear -7s infinite,
+			zs-sway 7s ease-in-out -2s infinite alternate,
+			zs-in-snow linear both;
+		animation-timeline: auto, auto, --pg;
+	}
+}
+
+@keyframes zs-fall {
+	to {
+		transform: translateY(211px);
+	}
+}
+
+@keyframes zs-sway {
+	from {
+		translate: -22px 0;
+	}
+
+	to {
+		translate: 22px 0;
+	}
+}
+
+/* ---- season name (stepped integer on this one leaf pill, through a custom counter style) and a year bar ---- */
+
+@property --s {
+	inherits: false;
+	initial-value: 1;
+	syntax: "<integer>";
+}
+
+.site .overlay-a::before {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--acc) 45%, transparent);
+	border-radius: 999px;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	content: counter(season, zs-seasons);
+	counter-reset: season var(--s);
+	font: 700 0.9rem/1 var(--siteFont);
+	left: 50%;
+	padding: 0.5rem 1.1rem;
+	position: absolute;
+	translate: -50% 0;
+}
+
+.site .overlay-a::after {
+	background: linear-gradient(90deg, #86cf70, #ffd24a 33%, #e0662a 66%, #8fb4e8);
+	content: "";
+	contain: paint;
+	height: 4px;
+	inset: 0 0 auto 0;
+	position: absolute;
+	transform: scaleX(0);
+	transform-origin: left;
+	will-change: transform;
+}
+
+@supports (animation-timeline: scroll()) {
+	.site .overlay-a::after {
+		animation: zs-bar linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .overlay-a::before {
+		animation: zs-season linear both;
+		animation-timeline: --pg;
+	}
+}
+
+@keyframes zs-season {
+	0% {
+		--s: 1;
+		animation-timing-function: steps(1, end);
+	}
+
+	25% {
+		--s: 2;
+		animation-timing-function: steps(1, end);
+	}
+
+	50% {
+		--s: 3;
+		animation-timing-function: steps(1, end);
+	}
+
+	75% {
+		--s: 4;
+		animation-timing-function: steps(1, end);
+	}
+
+	100% {
+		--s: 4;
+	}
+}
+
+@keyframes zs-bar {
+	to {
+		transform: scaleX(1);
+	}
+}
+
+/* ---- content ---- */
+
+.site-link:hover {
+	color: var(--acc);
+}
+
+.site-item {
+	border-radius: 0.9rem;
+	margin-inline: -0.9rem;
+	padding: 0.55rem 0.9rem;
+	transition: background-color 0.25s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--siteBg) 70%, transparent);
+}
+
+.site :is(.site-hero, .site-about, .site-section-title, .site-footer) {
+	text-shadow: 0 0 0.5em color-mix(in srgb, var(--siteBg) 85%, transparent);
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--siteSquiggle) 55%, transparent);
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(130 65% 55%), hsl(20 85% 58%), hsl(130 65% 55%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "stacked scenes \00b7 scroll-driven opacity \00b7 @counter-style";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

@@ -1,0 +1,9 @@
+.site { --siteMuted: #4d5d7e; }
+/* 298. Horizon Scroll: low, soft ridges and lake along the bottom; aurora above. No scrim anywhere. */
+html.dark .site {
+	--siteBg: #0a1020; --siteMuted: #a3b4c8; --siteSubtle: #0f2237;
+}
+.site .ma-hz-sky { background: linear-gradient(#f1fafb, transparent 85%); position: absolute; inset: 0 0 auto 0; height: 34%; overflow: hidden; contain: paint; }
+.site .ma-hz-sky.is-fallback { background: radial-gradient(55% 70% at 35% 40%, rgba(90, 220, 180, 0.26), transparent 75%); }
+.site .ma-hz-strip { position: absolute; inset: auto 0 0 0; height: clamp(120px, 19vh, 180px); overflow: hidden; contain: strict; }
+html.dark .site .ma-hz-sky { background: linear-gradient(#060b17, transparent 85%); }

@@ -1,0 +1,4 @@
+@import url("./_vs/base.css");
+
+/* footer height: 2.5x #347's 300px */
+.site .site-footer { min-height: 750px; }

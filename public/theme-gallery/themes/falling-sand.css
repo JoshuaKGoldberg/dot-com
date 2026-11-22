@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@300..800&family=Young+Serif&display=swap");
+
+.site {
+	--siteBg: #faf5ea;
+	--siteFg: #3a2f26;
+	--siteFgStrong: #1f1812;
+	--siteMuted: #7d6c5b;
+	--siteAccent: #c4501f;
+	--siteSquiggle: #d98a3a;
+	--siteSubtle: #eadfc9;
+	--siteFont: "Karla", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Young Serif", Georgia, serif;
+	--fs-rake: rgb(120 90 50 / 0.06);
+}
+
+html.dark .site {
+	--siteBg: #14110f;
+	--siteFg: #e7dccb;
+	--siteFgStrong: #fff6e6;
+	--siteMuted: #a39481;
+	--siteAccent: #ff9b5a;
+	--siteSquiggle: #ffbe6b;
+	--siteSubtle: #261f19;
+	--fs-rake: rgb(255 220 170 / 0.05);
+}
+
+/* Raked-gravel margins: faint concentric arcs, only outside the text column. */
+.site .scenery-a {
+	-webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 27rem), transparent calc(50% - 24rem), transparent calc(50% + 24rem), #000 calc(50% + 27rem));
+	mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 27rem), transparent calc(50% - 24rem), transparent calc(50% + 24rem), #000 calc(50% + 27rem));
+	background: repeating-linear-gradient(90deg, transparent 0 22px, var(--fs-rake) 22px 24px);
+}
+
+.site .site-title {
+	font-weight: 400;
+	letter-spacing: -0.01em;
+}
+
+.site .site-section-title,
+.site .site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-weight: 400;
+}
+
+.site .site-portrait img {
+	border: 3px solid var(--siteFgStrong);
+}
+
+.site .sand-canvas {
+	height: 100%;
+	image-rendering: pixelated;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site.sand-pouring {
+	cursor: crosshair;
+}
+
+.site .phys-btn[data-tool]::before {
+	background: var(--swatch);
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+	content: "";
+	display: inline-block;
+	height: 0.7rem;
+	width: 0.7rem;
+}

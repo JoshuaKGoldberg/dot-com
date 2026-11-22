@@ -1,0 +1,320 @@
+/* 118 — Time Machine. Plain page until the slider moves. */
+/* shared hint chip */
+.site .dl-chip {
+	align-items: center;
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 999px;
+	bottom: 1rem;
+	box-shadow: 0 2px 10px rgb(0 0 0 / 0.1);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	display: inline-flex;
+	font: 600 0.85rem/1 var(--siteFont);
+	gap: 0.5rem;
+	padding: 0.45rem 0.7rem 0.45rem 0.6rem;
+	position: fixed;
+	right: 1rem;
+	transition: transform 0.15s, background-color 0.15s, border-color 0.15s;
+	z-index: 40;
+}
+
+.site .dl-chip:hover {
+	border-color: var(--siteAccent);
+	transform: translateY(-1px);
+}
+
+.site .dl-chip:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+.site .dl-chip[aria-pressed="true"] {
+	background: var(--siteAccent);
+	border-color: var(--siteAccent);
+	color: var(--siteBg);
+}
+
+.site .dl-chip kbd {
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	font: 700 0.7rem/1 var(--siteFont);
+	opacity: 0.7;
+	padding: 0.15rem 0.3rem;
+}
+
+.site .dl-chip::after {
+	border-radius: inherit;
+	box-shadow: 0 0 0 0 var(--siteAccent);
+	content: "";
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .dl-chip::after {
+		animation: dl-ping 1.8s 1.2s 2 ease-out;
+	}
+}
+
+@keyframes dl-ping {
+	0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--siteAccent) 55%, transparent); }
+	100% { box-shadow: 0 0 0 14px transparent; }
+}
+
+.dl-sr {
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+
+.site .tm-panel {
+	background: var(--siteBg);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 45%, transparent);
+	border-radius: 14px;
+	bottom: 4rem;
+	box-shadow: 0 8px 30px rgb(0 0 0 / 0.2);
+	color: #283556;
+	font: 600 0.9rem/1.2 "League Spartan", system-ui, sans-serif;
+	left: 50%;
+	max-width: calc(100vw - 2rem);
+	padding: 0.8rem 1rem 0.7rem;
+	position: fixed;
+	transform: translateX(-50%);
+	width: 26rem;
+	z-index: 45;
+}
+
+html.dark .site .tm-panel {
+	background: #131c2d;
+	color: #dae7f3;
+}
+
+.site .tm-panel[hidden] {
+	display: none;
+}
+
+.site .tm-head {
+	align-items: baseline;
+	display: flex;
+	gap: 0.6rem;
+}
+
+.site .tm-note {
+	flex: 1;
+	font-weight: 400;
+	opacity: 0.75;
+}
+
+.site .tm-close {
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font-size: 1.3rem;
+	line-height: 1;
+}
+
+.site .tm-range {
+	accent-color: #1170d0;
+	cursor: grab;
+	margin: 0.6rem 0 0;
+	width: 100%;
+}
+
+.site .tm-ticks {
+	display: flex;
+	justify-content: space-between;
+}
+
+.site .tm-ticks button {
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font: inherit;
+	font-size: 0.8rem;
+	opacity: 0.8;
+	padding: 0.2rem 0;
+}
+
+.site .tm-ticks button:hover {
+	opacity: 1;
+	text-decoration: underline;
+}
+
+.site .tm-panel :focus-visible {
+	outline: 2px solid #1170d0;
+	outline-offset: 2px;
+}
+
+/* ---- the morph: everything below keys off variables the slider sets ---- */
+
+.site[data-era] {
+	background: var(--tm-outer);
+}
+
+.site[data-era] .site-page {
+	background: var(--tm-page);
+	border: calc(var(--tm-frame) * 2px) solid color-mix(in srgb, var(--siteMuted) 55%, transparent);
+	border-bottom-width: 0;
+	border-top-width: 0;
+	box-shadow: 0 0 calc(var(--tm-gloss) * 24px) rgb(0 0 0 / calc(var(--tm-gloss) * 0.18));
+	min-height: 100%;
+	padding-inline: var(--tm-pad);
+}
+
+.site[data-era] .site-portrait img {
+	border-radius: var(--tm-radius);
+	box-shadow: 0 3px 14px 0 rgb(0 0 0 / calc(0.08 + var(--tm-card) * 0.18));
+}
+
+.site[data-era] .site-title {
+	font-size: var(--tm-title);
+	text-shadow: 0 calc(var(--tm-gloss) * 1px) 0 rgb(255 255 255 / calc(var(--tm-gloss) * 0.9));
+}
+
+.site[data-era] .site-link {
+	text-decoration: underline;
+	text-decoration-color: color-mix(in srgb, currentcolor calc(var(--tm-ul) * 100%), transparent);
+	text-underline-offset: 0.15em;
+}
+
+.site[data-era] .site-link::after {
+	opacity: var(--tm-squig);
+}
+
+.site[data-era] .site-item {
+	background: var(--tm-page);
+	border-radius: calc(var(--tm-card) * 4px + 2px);
+	box-shadow: 0 calc(var(--tm-card) * 2px) calc(var(--tm-card) * 8px) rgb(0 0 0 / calc(var(--tm-card) * 0.2));
+	padding: calc(var(--tm-card) * 1rem);
+}
+
+.site[data-era] .site-section-title {
+	border-bottom: calc(var(--tm-era0) * 3px) double var(--siteFg);
+	padding-bottom: calc(var(--tm-era0) * 0.2rem);
+}
+
+.site[data-era] .site-nav-link {
+	background: linear-gradient(#fff, color-mix(in srgb, var(--siteAccent) 18%, #fff));
+	border: 1px solid color-mix(in srgb, var(--siteAccent) calc(var(--tm-gloss) * 60%), transparent);
+	border-radius: 5px;
+	color: var(--siteFgStrong);
+	font-size: 1.1rem;
+	padding: 0.15rem calc(var(--tm-gloss) * 0.7rem);
+	background-color: transparent;
+	background-image: linear-gradient(rgb(255 255 255 / calc(var(--tm-gloss) * 1)), rgb(255 255 255 / 0));
+}
+
+html.dark .site[data-era] .site-nav-link {
+	background-image: linear-gradient(rgb(255 255 255 / calc(var(--tm-gloss) * 0.12)), transparent);
+}
+
+/* fonts can't tween, so they switch at the halfway points */
+.site[data-era="0"] {
+	--siteFont: "Times New Roman", Times, serif;
+}
+
+.site[data-era="1"] {
+	--siteFont: Georgia, "Times New Roman", serif;
+}
+
+.site[data-era="2"] {
+	--siteFont: Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+}
+
+.site[data-era="0"] .site-title,
+.site[data-era="1"] .site-title {
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.site[data-era="2"] .site-title {
+	font-weight: 300;
+	line-height: 1;
+}
+
+.site[data-era="0"] .site-tagline,
+.site[data-era="0"] .site-about {
+	font-size: 1.1rem;
+	font-weight: 400;
+}
+
+.site[data-era="0"] .site-about {
+	text-align: left;
+}
+
+.site[data-era="0"] .site-hero {
+	gap: 1.2rem;
+	margin-block: 2rem;
+}
+
+/* 1999 flourishes */
+.site-page::before,
+.site-footer::after {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.site[data-era="0"] .site-page::before {
+	background: repeating-linear-gradient(-45deg, #ffd800 0 12px, #111 12px 24px);
+	color: #111;
+	content: "";
+	display: block;
+	height: 0.5rem;
+	margin: -0.5rem 0 1rem;
+	opacity: 1;
+}
+
+.site[data-era="0"] .site-header::after {
+	color: #f00;
+	content: "★ UNDER CONSTRUCTION ★";
+	font: 700 0.8rem/1 "Courier New", monospace;
+	width: 100%;
+}
+
+.site[data-era="0"] .site-footer::after {
+	background: #000;
+	border: 2px inset #888;
+	color: #0f0;
+	content: "You are visitor #004,217 · Best viewed at 800×600";
+	display: block;
+	font: 0.75rem/1.4 "Courier New", monospace;
+	margin: 1rem auto 0;
+	max-width: 22rem;
+	opacity: 1;
+	padding: 0.35rem 0.5rem;
+}
+
+.site[data-era="0"] .site-theme-toggle {
+	display: none;
+}
+
+.site[data-era="0"] .site-nav-link {
+	text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site[data-era]:not(.tm-live) .site-link,
+	html:not(.reduce-motion) .site[data-era]:not(.tm-live) .site-title {
+		transition: color 0.2s;
+	}
+}
+
+@media (max-width: 700px) {
+	.site .tm-panel {
+		bottom: 3.6rem;
+	}
+}
+
+.site .dl-chip[aria-pressed="true"] {
+	background: #1170d0;
+	border-color: #1170d0;
+	color: #fff;
+}

@@ -1,0 +1,161 @@
+/* _vs2/base.css: Lake Stars shared styles: footer-stage layout, base-blue squiggles that bloom into stationary rainbow hues on hover, portrait. */
+@import url("../_refined-e/base.css");
+
+@property --vsr { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --vsx { syntax: "<number>"; inherits: true; initial-value: 50; }
+@property --vsg { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+/* ---- squiggles ----
+   At rest: the site's own blue (site.css). On hover: --vsRb (a fixed hue map along the link, set in JS) is revealed through a
+   hole that opens from the entry point (--vsx) over ~1s; the stroke thickens with an overshoot, a soft glow blooms below,
+   and (some themes) a few glints cross the crests. Nothing animates after that, so the colors hold still. */
+.site .site-link {
+	--vsr: 0;
+	--vsThick: 1.35;
+	--vsGlow: 0.5;
+	--vsDur: 1s;
+	transition: --vsr var(--vsDur) cubic-bezier(0.25, 0.7, 0.25, 1);
+}
+.site .site-link::after {
+	background:
+		radial-gradient(circle at 16% 38%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(circle at 51% 62%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(circle at 84% 40%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(ellipse calc(var(--vsr) * 1%) 600% at calc(var(--vsx) * 1%) 50%, transparent 76%, var(--siteSquiggle) 100%),
+		var(--vsRb, var(--siteSquiggle));
+	opacity: 0.92;
+	transform: scaleY(1);
+	transition: transform 0.9s ease;
+}
+.site .site-link::before {
+	background: var(--vsRb, transparent);
+	bottom: -0.78em;
+	content: "";
+	filter: blur(3.5px);
+	height: 0.8em;
+	left: 0;
+	mask: radial-gradient(ellipse calc(var(--vsr) * 0.85%) 50% at calc(var(--vsx) * 1%) 62%, #000 10%, transparent 100%);
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	transition: opacity 0.9s ease;
+}
+.site .site-link:is(:hover, :focus-visible) { --vsr: 175; }
+.site .site-link:is(:hover, :focus-visible)::after {
+	animation: vs-glint 1.8s ease-out 0.35s 1 both;
+	transform: scaleY(var(--vsThick));
+	transition: transform 1.05s cubic-bezier(0.3, 1.75, 0.45, 1);
+}
+.site .site-link:is(:hover, :focus-visible)::before { opacity: var(--vsGlow); transition-duration: var(--vsDur); }
+html:not(.dark) .site .site-link:is(:hover, :focus-visible)::before { opacity: calc(var(--vsGlow) * 0.7); }
+@keyframes vs-glint { 0% { --vsg: 0; } 35% { --vsg: 1; } 100% { --vsg: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .site-link, .site .site-link::before, .site .site-link::after { animation: none !important; transition: none !important; }
+}
+html.reduce-motion .site .site-link, html.reduce-motion .site .site-link::before, html.reduce-motion .site .site-link::after { animation: none !important; transition: none !important; }
+
+/* ---- hero portrait: composed once on a canvas (see portrait.js); the pictures stay in place for layout + alt text ---- */
+.site .site-portrait { display: block; position: relative; }
+.site .site-portrait.vs-fx img { opacity: 0; box-shadow: none; }
+.site .site-portrait canvas.vs-portrait {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	box-shadow: 0 0 16px 1px rgba(90, 225, 190, 0.2), 0 0 38px 4px rgba(150, 120, 255, 0.14), 0 3px 14px 0 var(--siteSubtle);
+	display: block;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+html:not(.dark) .site .site-portrait canvas.vs-portrait {
+	box-shadow: 0 0 18px 2px rgba(80, 190, 190, 0.2), 0 0 40px 4px rgba(160, 130, 230, 0.13), 0 3px 14px 0 var(--siteSubtle);
+}
+
+/* footer: lots of scenery below the text, so the caption sits well up */
+.site .site-footer { padding-bottom: 11.5rem; }
+
+/* ================= vs3: footer credit treatments (credit.js) ================= */
+.site .site-footer .vs-credit p { margin: 0; }
+/* the gap around the dot before "view source" is twice its old width: ~0.82em a side (a space is ~0.27em) */
+.site .vs-credit .vs-dot-link { padding-inline: 0.55em; }
+.site .vs-credit-legend p, .site .vs-credit-horizon p, .site .vs-credit-refl p, .site .vs-credit-fog p { display: inline; }
+.site .site-footer > .vs-credit { color: var(--siteMuted); font-weight: 400; position: absolute; }
+.site .site-footer .vs-credit .site-link { color: inherit; }
+.site .site-footer .vs-sr { border: 0; clip: rect(0 0 0 0); height: 1px; margin: 0; overflow: hidden; padding: 0; position: absolute !important; white-space: nowrap; width: 1px; }
+.site .site-footer .vs-dot { opacity: 0.6; }
+
+/* #376 horizon caption: small, letter-spaced, sitting on the horizon (60% down the footer); the lake carries a faint flipped copy */
+.site .vs-credit-horizon, .site .vs-credit-refl {
+	bottom: calc(40% + 13px); font-size: 0.66rem; left: 0; letter-spacing: 0.17em; line-height: 1.6; white-space: nowrap; padding: 0 1.5rem; right: 0; text-align: center; text-transform: uppercase;
+}
+.site .site-footer > .vs-credit-refl {
+	color: var(--siteFg); opacity: 0.4; pointer-events: none; user-select: none;
+	-webkit-mask-image: linear-gradient(to bottom, #000, transparent 90%); mask-image: linear-gradient(to bottom, #000, transparent 90%);
+	transform: translateY(26px) scaleY(-0.62); transform-origin: 50% 100%;
+	animation: vs-waver 11s ease-in-out infinite alternate; will-change: transform;
+}
+@keyframes vs-waver {
+	0% { transform: translate3d(-1.5px, 26px, 0) scaleY(-0.62) skewX(0.6deg); }
+	50% { transform: translate3d(1px, 27px, 0) scaleY(-0.58) skewX(-0.4deg); }
+	100% { transform: translate3d(2px, 26px, 0) scaleY(-0.65) skewX(0.5deg); }
+}
+
+@media (max-width: 800px) { .site .vs-credit-horizon, .site .vs-credit-refl { white-space: normal; letter-spacing: 0.12em; } }
+
+/* #377 column sign-off: top of the footer, on the content column's left edge, hairline above, scenery below as a pure end-cap */
+.site .site-footer.vs-cr-column { justify-content: flex-start; }
+.site .site-footer > .vs-credit-column {
+	border-top: 1px solid var(--siteSubtle); font-size: 0.85rem; letter-spacing: 0.01em; margin: 0 auto; padding: 1rem 0 0; position: relative; text-align: left; width: min(44rem, 100%);
+}
+.site .vs-credit-column p { display: inline; }
+.site .vs-credit-column .site-link { margin-left: 0.6em; }
+
+/* #378 star-chart label: small caps in the sky above the aurora, a star glyph and a faint leader line down to a pin */
+.site .site-footer > .vs-credit-chart {
+	font-size: 0.74rem; font-variant-caps: all-small-caps; left: calc(50% + 6.5rem); letter-spacing: 0.22em; line-height: 1.7; padding-left: 1.1rem; text-align: left; top: 2.2rem; white-space: nowrap;
+}
+.site .vs-credit-chart .vs-mark { color: var(--siteAccent); font-size: 0.8rem; left: 0; opacity: 0.75; position: absolute; top: 0.05em; }
+.site .vs-credit-chart::before { background: linear-gradient(to bottom, currentColor, transparent); opacity: 0.5; content: ""; height: 5.2rem; left: 0.42rem; position: absolute; top: 1.4rem; width: 1px; }
+.site .vs-credit-chart::after { border: 1px solid currentColor; opacity: 0.55; border-radius: 50%; content: ""; height: 5px; left: calc(0.42rem - 2px); position: absolute; top: 6.6rem; width: 5px; }
+.site .vs-credit-chart p { text-transform: lowercase; }
+.site .vs-credit-chart .site-link { display: inline-block; margin-top: 0.1rem; }
+@media (max-width: 760px) { .site .site-footer > .vs-credit-chart { left: 2rem; } }
+
+/* #379 emerging from fog: sits in the fog band below the horizon; opacity + translate only, driven by scroll position */
+.site .site-footer > .vs-credit-fog {
+	bottom: 7.5rem; color: var(--siteFg); font-size: 0.82rem; left: 0; letter-spacing: 0.06em; padding: 0 1.5rem; right: 0; text-align: center; white-space: nowrap;
+}
+@supports (animation-timeline: view()) {
+	.site .site-footer > .vs-credit-fog { animation: vs-emerge linear both; animation-range: entry 0% cover 22%; animation-timeline: view(); }
+	html.reduce-motion .site .site-footer > .vs-credit-fog { animation: none; }
+	@media (prefers-reduced-motion: reduce) { .site .site-footer > .vs-credit-fog { animation: none; } }
+}
+@keyframes vs-emerge { from { opacity: 0; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
+
+/* #380 map legend: credits in the two bottom corners of the near shore, on the content column's edges */
+.site .site-footer > .vs-credit-legend { bottom: 4.6rem; color: var(--siteFg); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; white-space: nowrap; }
+.site .site-footer > .vs-credit-legend.vs-l { left: max(1.5rem, calc(50% - 22rem)); }
+.site .site-footer > .vs-credit-legend.vs-r { right: max(1.5rem, calc(50% - 22rem)); text-align: right; }
+@media (max-width: 640px) { .site .site-footer > .vs-credit-legend { bottom: 3.5rem; font-size: 0.62rem; } }
+
+/* ================= vs4: calmer link hover: no thickness pop, no glow; the star canvas (squiggle.js) does the rest ================= */
+.site .site-link::after { opacity: calc(0.92 * var(--vsDim, 1)); }
+.site .site-link:is(:hover, :focus-visible)::after { animation: none; transform: scaleY(1); transition: none; }
+.site .site-link::before, .site .site-link:is(:hover, :focus-visible)::before { display: none; }
+
+/* narrow screens: the credit wraps instead of overflowing, and the page never scrolls sideways (the star canvases live in a fixed layer and are clipped) */
+@media (max-width: 700px) {
+	.site .site-footer > .vs-credit-fog { left: 0; right: 0; max-width: 100%; padding: 0 1.25rem; white-space: normal; text-wrap: balance; box-sizing: border-box; }
+	.site .site-footer > .vs-credit-fog p, .site .site-footer > .vs-credit-fog .site-link { white-space: normal; }
+	.site .site-footer > .vs-credit-fog .vs-dot { white-space: normal; }
+}
+/* no horizontal clip on the footer itself: its aurora stage is full-bleed (wider than the footer box), and clipping it cropped the light */
+.site-scenery, .site-overlay { overflow: clip; }
+@media (max-width: 380px) {
+	.site .site-header { flex-wrap: wrap; }
+	.site .site-nav { flex-wrap: wrap; max-width: 100%; min-width: 0; row-gap: 0.25rem; }
+}

@@ -1,0 +1,22 @@
+@import url("_toy/toy.css");
+
+/* Layout Golf: a faintly fairway-green page; the course appears when you play. */
+.site {
+	--toyAccent: #2f9e44;
+	--toyAccent2: #f08c00;
+	--toyOnAccent: #fff;
+}
+
+html.dark .site {
+	--toyAccent: #69db7c;
+	--toyAccent2: #ffd43b;
+	--toyOnAccent: #06210d;
+}
+
+.site .site-footer::before {
+	color: var(--toyAccent);
+	content: "⚑";
+	display: block;
+	font-size: 1.6rem;
+	margin-bottom: 0.25rem;
+}

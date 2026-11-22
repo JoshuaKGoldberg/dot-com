@@ -1,0 +1,303 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Mono:wght@400;500&display=swap");
+
+.site {
+	--siteBg: #f7f1e6;
+	--siteFg: #3a2f26;
+	--siteFgStrong: #20170f;
+	--siteMuted: #7a6a58;
+	--siteAccent: #b5471f;
+	--siteSquiggle: #e0803a;
+	--siteSubtle: #e8dcc6;
+	--siteFont: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+	--mono: "DM Mono", ui-monospace, monospace;
+	--wood-a: #e2b777;
+	--wood-b: #d5a15c;
+	--wood-c: #c98f4b;
+	--wood-edge: #8a5a2b;
+	--card: #fffaf0;
+	--card-edge: #d9c7a5;
+	--tableTop: #9a6a3a;
+	--tableDark: #6d4623;
+}
+
+html.dark .site {
+	--siteBg: #17120e;
+	--siteFg: #e6d9c6;
+	--siteFgStrong: #fff4e2;
+	--siteMuted: #ac9a84;
+	--siteAccent: #ff9a62;
+	--siteSquiggle: #f0a35c;
+	--siteSubtle: #2a2118;
+	--wood-a: #a8743c;
+	--wood-b: #96652f;
+	--wood-c: #835627;
+	--wood-edge: #4d2f14;
+	--card: #2a2118;
+	--card-edge: #4a3a29;
+	--tableTop: #5b3d21;
+	--tableDark: #3a2512;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 50% at 50% 0%, rgb(255 236 200 / 0.8), transparent 70%),
+		var(--siteBg);
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 45% at 50% 0%, rgb(255 170 90 / 0.12), transparent 70%),
+		var(--siteBg);
+}
+
+.site-title {
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.site-section-title {
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+
+/* ---------- the tower ---------- */
+
+.site .jt-wrap {
+	margin-top: 0.5rem;
+}
+
+.site .jt-stage {
+	position: relative;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.site .jt-table {
+	background:
+		repeating-linear-gradient(90deg, rgb(0 0 0 / 0.05) 0 2px, transparent 2px 38px),
+		linear-gradient(180deg, var(--tableTop), var(--tableDark));
+	border-radius: 4px 4px 0 0;
+	bottom: 0;
+	box-shadow: 0 -2px 0 rgb(255 255 255 / 0.18) inset;
+	height: 18px;
+	left: 0;
+	position: absolute;
+	right: 0;
+}
+
+.site .jt-tower {
+	inset: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .jt-block {
+	cursor: grab;
+	left: 0;
+	margin: 0;
+	pointer-events: auto;
+	position: absolute;
+	top: 0;
+	touch-action: none;
+	will-change: transform;
+}
+
+.site .jt-block.is-dragging {
+	cursor: grabbing;
+	z-index: 5;
+}
+
+.site .jt-beam {
+	align-items: center;
+	background:
+		repeating-linear-gradient(0deg, rgb(0 0 0 / 0.045) 0 1px, transparent 1px 5px),
+		linear-gradient(180deg, rgb(255 255 255 / 0.22), transparent 30%, rgb(0 0 0 / 0.14)),
+		var(--wood);
+	border-radius: 4px;
+	box-shadow:
+		inset 0 0 0 1px var(--wood-edge),
+		0 1px 0 rgb(0 0 0 / 0.12);
+	color: rgb(40 22 6 / 0.72);
+	display: flex;
+	font: 500 0.7rem/1 var(--mono);
+	justify-content: center;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+html.dark .site .jt-beam {
+	color: rgb(255 226 190 / 0.7);
+}
+
+.site .jt-beam::before,
+.site .jt-beam::after {
+	background: rgb(0 0 0 / 0.12);
+	content: "";
+	height: 60%;
+	position: absolute;
+	width: 1px;
+}
+
+.site .jt-beam::before {
+	left: 9px;
+}
+
+.site .jt-beam::after {
+	right: 9px;
+}
+
+.site .jt-w0 { --wood: var(--wood-a); }
+.site .jt-w1 { --wood: var(--wood-b); }
+.site .jt-w2 { --wood: var(--wood-c); }
+
+.site .jt-plank {
+	background: var(--card);
+	border-radius: 6px;
+	box-shadow:
+		inset 0 0 0 1px var(--card-edge),
+		inset 5px 0 0 var(--siteAccent),
+		0 1px 0 rgb(0 0 0 / 0.14);
+	display: grid;
+	gap: 0.1rem 0.8rem;
+	grid-template-columns: 1fr auto;
+	grid-template-rows: auto auto;
+	padding: 0.55rem 0.9rem 0.55rem 1.2rem;
+}
+
+.site .jt-plank .site-item-title {
+	font-size: 1.1rem;
+	font-weight: 700;
+	line-height: 1.15;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.site .jt-plank .site-link::after {
+	display: none;
+}
+
+.site .jt-plank .site-item-title:hover {
+	color: var(--siteAccent);
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+}
+
+.site .jt-plank .site-item-title:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 3px;
+}
+
+.site .jt-plank .site-item-meta {
+	color: var(--siteMuted);
+	font: 400 0.72rem/1.6 var(--mono);
+	grid-column: 2;
+	grid-row: 1;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.site .jt-plank .site-item-description {
+	font-size: 0.86rem;
+	font-weight: 400;
+	grid-column: 1 / -1;
+	grid-row: 2;
+	line-height: 1.25;
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.site .jt-bar {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	justify-content: space-between;
+	margin-top: 0.8rem;
+}
+
+.site .jt-status {
+	background: var(--siteSubtle);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	font: 500 0.78rem/1 var(--mono);
+	padding: 0.5rem 0.85rem;
+}
+
+.site .jt-status[data-state="wobble"] {
+	background: #ffd98a;
+	color: #4a2f00;
+}
+
+.site .jt-status[data-state="down"] {
+	background: var(--siteAccent);
+	color: #fff;
+}
+
+html.dark .site .jt-status[data-state="down"] {
+	color: #1a0e05;
+}
+
+.site .jt-hint {
+	color: var(--siteMuted);
+	font-size: 0.92rem;
+	margin: 0;
+}
+
+.site .jt-reset {
+	background: var(--siteFgStrong);
+	border: 0;
+	border-radius: 999px;
+	color: var(--siteBg);
+	cursor: pointer;
+	font: 600 0.82rem/1 var(--siteFont);
+	padding: 0.6rem 1.05rem;
+}
+
+.site .jt-reset:hover {
+	background: var(--siteAccent);
+}
+
+.site .jt-reset:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+.site .jt-callout {
+	color: var(--siteAccent);
+	font: 500 0.78rem/1 var(--mono);
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	white-space: nowrap;
+}
+
+.site .jt-callout::before {
+	content: "← ";
+}
+
+.site .jt-callout.is-gone {
+	opacity: 0;
+	transition: opacity 0.4s;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .jt-callout:not(.is-gone) {
+		animation: jt-nudge 1.6s ease-in-out infinite;
+	}
+}
+
+@keyframes jt-nudge {
+	50% {
+		translate: 6px 0;
+	}
+}

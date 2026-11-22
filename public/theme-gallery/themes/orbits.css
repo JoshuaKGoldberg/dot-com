@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap");
+
+.site {
+	--siteBg: #f6f3ea;
+	--siteFg: #25283a;
+	--siteFgStrong: #0f1124;
+	--siteMuted: #5f6279;
+	--siteAccent: #4a3fd0;
+	--siteSquiggle: #ff7a45;
+	--siteSubtle: #e6e1d2;
+	--siteFont: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+	--mono: "Space Mono", ui-monospace, monospace;
+	--orbitInk: 40 42 80;
+	--moon0: #ff7a45;
+	--moon1: #4a3fd0;
+	--moon2: #17a8a0;
+	--moon3: #e8b21c;
+	--moon4: #d0408f;
+	--moon5: #2f7be0;
+}
+
+html.dark .site {
+	--siteBg: #05070f;
+	--siteFg: #d3d9ee;
+	--siteFgStrong: #f3f6ff;
+	--siteMuted: #8f98b8;
+	--siteAccent: #9d94ff;
+	--siteSquiggle: #ffa070;
+	--siteSubtle: #0f1428;
+	--orbitInk: 170 180 255;
+	--moon0: #ff9266;
+	--moon1: #8f86ff;
+	--moon2: #3fe0d0;
+	--moon3: #ffd24a;
+	--moon4: #ff6cb6;
+	--moon5: #5fb0ff;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 50% 40% at 28% 30%, rgb(255 246 220 / 0.9), transparent 70%),
+		var(--siteBg);
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(ellipse 45% 40% at 28% 32%, rgb(90 70 200 / 0.22), transparent 70%),
+		radial-gradient(ellipse 40% 30% at 85% 75%, rgb(30 120 200 / 0.12), transparent 70%),
+		var(--siteBg);
+}
+
+/* baked star tile: a handful of gradient dots, static */
+html.dark .site .scenery-b {
+	background-image:
+		radial-gradient(1.2px 1.2px at 12% 18%, rgb(255 255 255 / 0.8), transparent 60%),
+		radial-gradient(1px 1px at 34% 72%, rgb(255 255 255 / 0.6), transparent 60%),
+		radial-gradient(1.4px 1.4px at 58% 36%, rgb(255 255 255 / 0.7), transparent 60%),
+		radial-gradient(1px 1px at 81% 14%, rgb(255 255 255 / 0.6), transparent 60%),
+		radial-gradient(1.2px 1.2px at 90% 62%, rgb(255 255 255 / 0.65), transparent 60%),
+		radial-gradient(1px 1px at 70% 88%, rgb(255 255 255 / 0.5), transparent 60%),
+		radial-gradient(1px 1px at 22% 48%, rgb(255 255 255 / 0.45), transparent 60%);
+	background-size: 520px 460px;
+}
+
+.site .overlay-a canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site-title {
+	font-weight: 700;
+	letter-spacing: -0.04em;
+}
+
+.site-section-title {
+	font-family: var(--mono);
+	font-size: 0.9rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.site-item-meta {
+	font-family: var(--mono);
+	font-size: 0.78rem;
+}
+
+.site .site-portrait {
+	cursor: grab;
+	display: block;
+}
+
+.site .site-portrait img {
+	box-shadow:
+		0 0 0 6px var(--siteBg),
+		0 0 0 7px rgb(var(--orbitInk) / 0.4),
+		0 0 60px rgb(var(--orbitInk) / 0.3);
+	will-change: transform;
+}
+
+.site .orb-controls {
+	align-items: center;
+	bottom: 0.9rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	justify-content: flex-end;
+	max-width: calc(100% - 1.6rem);
+	pointer-events: none;
+	position: absolute;
+	right: 0.8rem;
+	z-index: 5;
+}
+
+.site .orb-hint,
+.site .orb-btn {
+	background: color-mix(in srgb, var(--siteBg) 94%, transparent);
+	border: 1px solid rgb(var(--orbitInk) / 0.3);
+	border-radius: 999px;
+	color: var(--siteMuted);
+	font: 400 0.74rem/1 var(--mono);
+	padding: 0.5rem 0.8rem;
+}
+
+.site .orb-hint {
+	transition: opacity 0.6s;
+}
+
+.site .orb-hint.is-gone {
+	opacity: 0;
+}
+
+.site .orb-btn {
+	box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	pointer-events: auto;
+}
+
+.site .orb-btn:hover {
+	border-color: var(--siteAccent);
+}
+
+.site .orb-btn[aria-pressed="true"] {
+	background: var(--siteFgStrong);
+	color: var(--siteBg);
+}
+
+.site .orb-btn:focus-visible {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 2px;
+}
+
+html.orb-aiming,
+html.orb-aiming body {
+	cursor: crosshair;
+}
+
+@media (max-width: 700px) {
+	.site .orb-hint {
+		display: none;
+	}
+}

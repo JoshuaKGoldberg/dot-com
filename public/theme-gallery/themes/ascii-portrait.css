@@ -1,0 +1,59 @@
+/* 82 — ASCII Portrait */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap");
+
+.site {
+	--siteBg: #f2f0ea;
+	--siteFg: #2b2a27;
+	--siteFgStrong: #12110f;
+	--siteMuted: #6b675e;
+	--siteAccent: #b4400f;
+	--siteSquiggle: #d9622b;
+	--siteSubtle: #e1ded4;
+	--siteFont: "JetBrains Mono", ui-monospace, Menlo, monospace;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 60rem;
+}
+html.dark .site {
+	--siteBg: #0a0c0a;
+	--siteFg: #bfd3c0;
+	--siteFgStrong: #e8f7e8;
+	--siteMuted: #7d9582;
+	--siteAccent: #7dff9a;
+	--siteSquiggle: #56d878;
+	--siteSubtle: #121a14;
+}
+.site .site-title { font-weight: 700; letter-spacing: -0.05em; font-size: clamp(2.2rem, 5vw, 3.3rem); line-height: 1; }
+.site .site-tagline { font-size: 1.15rem; font-weight: 400; line-height: 1.35; }
+.site .site-about { font-size: 1rem; font-weight: 300; line-height: 1.6; }
+.site .site-section-title { font-size: 1.4rem; font-weight: 700; }
+.site .site-section-title::before { color: var(--siteAccent); content: "## "; }
+.site .site-item-title { font-size: 1.1rem; font-weight: 500; }
+.site .site-item-description { font-size: 0.95rem; }
+.site .site-item-meta, .site .site-footer { font-size: 0.82rem; }
+.site .site-nav-link, .site .site-logo { font-size: 1.05rem; }
+
+.site .site-hero { grid-template-columns: minmax(10rem, 23rem) 1fr; }
+.site .site-portrait { aspect-ratio: 1; display: block; position: relative; }
+.site .site-portrait img { box-shadow: none; opacity: 0; }
+.site.ascii-ready .site-portrait img { opacity: 0; }
+.site .site-portrait canvas {
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}
+.site .ascii-hint {
+	bottom: -1.7rem;
+	color: var(--siteMuted);
+	font-size: 0.72rem;
+	left: 0;
+	letter-spacing: 0.05em;
+	position: absolute;
+	right: 0;
+	text-align: center;
+	text-transform: uppercase;
+}
+.site .site-hero { margin-bottom: 4.5rem; }
+@media (max-width: 700px) { .site .site-hero { grid-template-columns: 1fr; } .site .site-portrait { max-width: 22rem; } }

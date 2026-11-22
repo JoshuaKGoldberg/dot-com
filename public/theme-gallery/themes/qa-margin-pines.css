@@ -1,0 +1,58 @@
+.site .qa-pines {
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	z-index: 0;
+}
+
+.site .qa-pines[hidden] { display: none; }
+
+.site .qa-col {
+	bottom: 0;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+}
+
+.site .qa-col canvas {
+	display: block;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 54%;
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 28%, #000 72%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 28%, #000 72%, transparent);
+}
+
+.site .qa-col svg {
+	bottom: 0;
+	display: block;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	width: 100%;
+}
+
+.site .qa-layer { will-change: transform; }
+
+.site .qa-pine-back { fill: #e0eaee; }
+.site .qa-pine-front { fill: #cddde3; }
+html.dark .site .qa-pine-back { fill: #13243a; }
+html.dark .site .qa-pine-front { fill: #0c1a2c; }
+
+.site .qa-sway {
+	animation: qa-sway 9s ease-in-out infinite alternate;
+	transform-box: fill-box;
+	transform-origin: 50% 100%;
+}
+
+@keyframes qa-sway {
+	from { transform: rotate(-0.5deg); }
+	to { transform: rotate(0.5deg); }
+}
+
+html.reduce-motion .site .qa-sway { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+	.site .qa-sway { animation: none; }
+}

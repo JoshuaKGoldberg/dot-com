@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap");
+
+.site {
+	--siteBg: #fdfdfb;
+	--siteFg: #1c1c1a;
+	--siteFgStrong: #000;
+	--siteMuted: #55554e;
+	--siteAccent: #0a4fa3;
+	--siteSquiggle: #0a4fa3;
+	--siteSubtle: #d9d9d2;
+	--siteFont: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 88ch;
+	font-size: 15px;
+	line-height: 1.6;
+}
+html.dark .site {
+	--siteBg: #0e0d0a;
+	--siteFg: #efe4c4;
+	--siteFgStrong: #fff6da;
+	--siteMuted: #a79f86;
+	--siteAccent: #ffd27d;
+	--siteSquiggle: #c9a34f;
+	--siteSubtle: #2a271e;
+}
+html.dark .site .scenery-a {
+	background: radial-gradient(ellipse at 50% 30%, rgb(255 220 140 / 0.05), transparent 70%);
+}
+.site-page { padding: 1.5rem 1.5rem 3rem; }
+
+.site-header {
+	border-bottom: 1px dashed var(--siteSubtle);
+	font-size: 0.85rem;
+	font-weight: 400;
+	gap: 0.3rem 1.5rem;
+	padding-bottom: 0.8rem;
+	margin-bottom: 1.2rem;
+}
+.site-logo { color: var(--siteMuted); font-size: 0.85rem; font-weight: 500; }
+.site-logo::before { content: "$ "; color: var(--siteAccent); }
+.site-nav { gap: 1.2rem; }
+.site-nav-link { font-size: 0.85rem; color: var(--siteFg); }
+.site-nav-link::before { content: "["; color: var(--siteMuted); }
+.site-nav-link::after { content: "]"; color: var(--siteMuted); }
+.site-nav-link.is-active { color: var(--siteAccent); font-weight: 700; }
+.site-theme-toggle { font-size: 0.9rem; }
+
+.site-link::after {
+	background: none;
+	border-bottom: 1px solid var(--siteSquiggle);
+	bottom: 0.05em;
+	height: 0;
+	mask: none;
+	opacity: 0.8;
+}
+.site-link:hover { color: var(--siteAccent); }
+
+.mp-run {
+	color: var(--siteFgStrong);
+	display: flex;
+	justify-content: space-between;
+	font-weight: 500;
+	white-space: pre;
+	letter-spacing: 0;
+}
+.mp-run span:nth-child(2) { text-align: center; flex: 1; }
+.mp-run-foot { margin-top: 3rem; border-top: 1px dashed var(--siteSubtle); padding-top: 0.6rem; color: var(--siteMuted); }
+
+.site-main > * { margin: 0 0 1.6rem; max-width: none; padding: 0; }
+.mp-sec > h2,
+.site-section-title {
+	color: var(--siteFgStrong);
+	font-family: var(--siteFont);
+	font-size: 1em;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 1.6;
+	margin: 0 0 0.2rem;
+	text-transform: uppercase;
+}
+.mp-sec > :not(h2),
+.site-about,
+.site-about > p,
+.site-section > .site-list { margin-left: 7ch; }
+.site-about > p { margin-left: 0; margin-top: 0; margin-bottom: 1em; }
+.site-about {
+	font-size: 1em;
+	font-weight: 400;
+	line-height: 1.6;
+	text-align: left;
+	max-width: 76ch;
+}
+.mp-sec p { margin-bottom: 1em; margin-top: 0; }
+.mp-flag { font-weight: 700; color: var(--siteFgStrong); }
+.mp-arg { font-style: italic; text-decoration: underline; text-decoration-color: var(--siteMuted); text-underline-offset: 3px; }
+.mp-synopsis { white-space: pre-wrap; }
+
+.site-list { display: block; margin-bottom: 0; }
+.site-item { margin: 0 0 1em; }
+.site-item-title {
+	color: var(--siteFgStrong);
+	display: inline-block;
+	font-size: 1em;
+	font-weight: 700;
+}
+.site-item-description,
+.site-item-meta {
+	color: var(--siteFg);
+	display: block;
+	font-size: 1em;
+	font-weight: 400;
+	line-height: 1.6;
+	margin: 0 0 0 7ch;
+	max-width: 62ch;
+}
+.site-item-meta { color: var(--siteMuted); }
+.site-item-meta::before { content: "[ "; }
+.site-item-meta::after { content: " ]"; }
+
+.mp-see { display: flex; flex-wrap: wrap; gap: 0 1.4ch; }
+.mp-see a { font-weight: 700; }
+.mp-see > span { color: var(--siteMuted); }
+.mp-author { align-items: center; display: flex; gap: 2ch; }
+.mp-author img { border-radius: 2px; filter: grayscale(1); height: 5.5rem; width: 5.5rem; object-fit: cover; box-shadow: none; }
+html.dark .mp-author img { filter: grayscale(1) sepia(0.4) brightness(0.9); }
+.mp-author .site-portrait-dark { display: none !important; }
+html.dark .mp-author .site-portrait-light { display: none !important; }
+html.dark .mp-author .site-portrait-dark { display: block !important; }
+
+.site-footer {
+	color: var(--siteMuted);
+	font-size: 0.95em;
+	font-weight: 400;
+	opacity: 1;
+	padding: 0;
+	text-align: left;
+}
+.site-footer p { margin: 0 0 0.4rem; }
+
+@media (max-width: 640px) {
+	.site { font-size: 13.5px; }
+	.mp-sec > :not(h2), .site-about, .site-section > .site-list { margin-left: 3ch; }
+	.site-item-description, .site-item-meta { margin-left: 3ch; }
+	.mp-run span:nth-child(2) { display: none; }
+	.mp-run { justify-content: space-between; }
+	.site-page { padding: 1rem; }
+}

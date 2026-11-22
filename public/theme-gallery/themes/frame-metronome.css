@@ -1,0 +1,194 @@
+.site {
+	--siteBg: #fbf8f1;
+	--siteFg: #33302a;
+	--siteFgStrong: #1d1a14;
+	--siteMuted: #6c655a;
+	--siteAccent: #b4531a;
+	--siteSquiggle: #e07a2f;
+	--siteSubtle: #eadfcb;
+	--siteFontDisplay: "League Spartan", system-ui, sans-serif;
+}
+
+html.dark .site {
+	--siteBg: #16130f;
+	--siteFg: #e6dccb;
+	--siteFgStrong: #fbf3e4;
+	--siteMuted: #a99d89;
+	--siteAccent: #f0a05a;
+	--siteSquiggle: #f0a05a;
+	--siteSubtle: #2a241b;
+}
+
+.site .site-title {
+	letter-spacing: -0.02em;
+}
+
+/* Faint ruled "music paper" backdrop: static, cheap. */
+.site .scenery-a {
+	background: repeating-linear-gradient(180deg, transparent 0 46px, color-mix(in srgb, var(--siteMuted) 9%, transparent) 46px 47px);
+	mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+}
+
+.site .mm-card {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.9rem;
+	bottom: 1rem;
+	box-shadow: 0 8px 28px -12px rgb(0 0 0 / 0.35);
+	color: var(--siteFg);
+	display: grid;
+	gap: 0.3rem;
+	justify-items: center;
+	padding: 0.6rem 0.8rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	right: 1rem;
+	width: 13rem;
+}
+
+.site .mm-card button {
+	pointer-events: auto;
+}
+
+.site .mm-label {
+	align-items: center;
+	color: var(--siteMuted);
+	display: flex;
+	font: 700 0.68rem/1 var(--siteFont);
+	gap: 0.4rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.site .mm-tick {
+	background: var(--siteMuted);
+	border-radius: 50%;
+	height: 0.5rem;
+	opacity: 0.4;
+	width: 0.5rem;
+}
+
+.site .mm-tick.on {
+	animation: mm-tick 0.45s ease-out;
+}
+
+@keyframes mm-tick {
+	0% {
+		background: var(--siteAccent);
+		box-shadow: 0 0 0 0 var(--siteAccent);
+		opacity: 1;
+	}
+	100% {
+		box-shadow: 0 0 0 8px transparent;
+		opacity: 0.4;
+	}
+}
+
+.site .mm-dial {
+	height: 7.6rem;
+	overflow: visible;
+}
+
+.site .mm-body {
+	fill: color-mix(in srgb, var(--siteAccent) 16%, var(--siteBg));
+	stroke: var(--siteAccent);
+	stroke-linejoin: round;
+	stroke-width: 2;
+}
+
+.site .mm-sheen {
+	fill: none;
+	stroke: color-mix(in srgb, var(--siteAccent) 35%, transparent);
+	stroke-dasharray: 2 6;
+	transform: scale(0.8);
+	transform-origin: 60px 100px;
+}
+
+.site .mm-base {
+	fill: var(--siteAccent);
+}
+
+.site .mm-pivot {
+	fill: var(--siteFgStrong);
+}
+
+.site .mm-arm {
+	transform-box: view-box;
+	transform-origin: 60px 112px;
+	will-change: transform;
+}
+
+.site .mm-rod {
+	stroke: var(--siteFgStrong);
+	stroke-linecap: round;
+	stroke-width: 2.4;
+}
+
+.site .mm-weight {
+	fill: var(--siteAccent);
+}
+
+.site .mm-bars {
+	align-items: end;
+	display: flex;
+	gap: 1px;
+	height: 1.5rem;
+	width: 100%;
+}
+
+.site .mm-bars i {
+	background: color-mix(in srgb, var(--siteAccent) 55%, transparent);
+	flex: 1;
+	height: 100%;
+	transform: scaleY(0.04);
+	transform-origin: bottom;
+}
+
+.site .mm-bars i.warn {
+	background: #e0a21f;
+}
+
+.site .mm-bars i.bad {
+	background: #d93a3a;
+}
+
+.site .mm-readout {
+	display: flex;
+	font: 500 0.66rem/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+	gap: 0.6rem;
+	justify-content: space-between;
+	white-space: nowrap;
+	width: 100%;
+}
+
+.site .mm-readout b {
+	color: var(--siteFgStrong);
+}
+
+.site .mm-jank {
+	background: transparent;
+	border: 1px solid var(--siteAccent);
+	border-radius: 999px;
+	color: var(--siteAccent);
+	cursor: pointer;
+	font: 700 0.68rem/1 var(--siteFont);
+	letter-spacing: 0.04em;
+	margin-top: 0.15rem;
+	padding: 0.35rem 0.7rem;
+}
+
+.site .mm-jank:hover,
+.site .mm-jank:focus-visible {
+	background: var(--siteAccent);
+	color: var(--siteBg);
+}
+
+html.reduce-motion .site .mm-tick.on {
+	animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .mm-tick.on {
+		animation: none;
+	}
+}

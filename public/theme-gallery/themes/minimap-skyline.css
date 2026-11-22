@@ -1,0 +1,99 @@
+.site {
+	--siteBg: #fbf8f4;
+	--siteFg: #2e3448;
+	--siteFgStrong: #181c30;
+	--siteMuted: #666b80;
+	--siteAccent: #3b6cb0;
+	--siteSquiggle: #8aa6d4;
+	--siteSubtle: #ece6e0;
+	--skyTop: #fbf8f4;
+	--skyBottom: #fbe9e0;
+	--bld: #e7dde0;
+	--bld2: #dcd3dc;
+	--t0: #e8a0a8;
+	--t1: #9cc3e0;
+	--t2: #a9d4b4;
+	--t3: #f0cf8a;
+	--t4: #c4aee0;
+	--t5: #b9c3cf;
+	--barOpacity: 0.6;
+	--win: #fffdf4;
+	--winOpacity: 0.95;
+}
+
+html.dark .site {
+	--siteBg: #090c17;
+	--siteFg: #d6deee;
+	--siteFgStrong: #f0f4fc;
+	--siteMuted: #94a0ba;
+	--siteAccent: #85b4f2;
+	--siteSquiggle: #5f8ed0;
+	--siteSubtle: #151d34;
+	--skyTop: #090c17;
+	--skyBottom: #1a1530;
+	--bld: #0f1424;
+	--bld2: #121830;
+	--t0: #b9606e;
+	--t1: #5f8fc4;
+	--t2: #5fa07a;
+	--t3: #c49a4c;
+	--t4: #8a70c0;
+	--t5: #6f7a90;
+	--barOpacity: 0.38;
+	--win: #ffd98a;
+	--winOpacity: 1;
+}
+
+.site .site-scenery .scenery-a {
+	background: linear-gradient(180deg, var(--skyTop), var(--skyBottom));
+}
+
+.site .site-scenery .scenery-b {
+	inset: auto 0 0 0;
+	height: min(20vh, 190px);
+	-webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+	mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+}
+
+.site .skyline {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .skyline .b0 {
+	fill: var(--bld);
+}
+
+.site .skyline .b1 {
+	fill: var(--bld2);
+}
+
+.site .skyline .bars rect {
+	opacity: var(--barOpacity);
+}
+
+.site .skyline .t0 { fill: var(--t0); }
+.site .skyline .t1 { fill: var(--t1); }
+.site .skyline .t2 { fill: var(--t2); }
+.site .skyline .t3 { fill: var(--t3); }
+.site .skyline .t4 { fill: var(--t4); }
+.site .skyline .t5 { fill: var(--t5); }
+
+.site .skyline .win {
+	fill: var(--win);
+	opacity: 0;
+	transition: opacity 0.35s steps(2, end);
+}
+
+.site .skyline .win.is-lit {
+	opacity: var(--winOpacity);
+}
+
+html:not(.dark) .site .skyline .win.is-lit {
+	opacity: 0.8;
+}
+
+html.dark .site .skyline .win.is-lit {
+	filter: drop-shadow(0 0 2px rgba(255, 200, 110, 0.7));
+}

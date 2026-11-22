@@ -1,0 +1,393 @@
+/*
+ * Zero JS. There is no themes/zero-js.js: everything here is CSS.
+ *   scroll-driven animations  -> progress bar, hue journey (crossfaded glow layers), reveals, portrait, % counter
+ *   @property                 -> typed --spin / --pct that actually animate (both on tiny leaf elements)
+ *   :has()                    -> dim siblings of the hovered item, tilt the hero on nav hover
+ *   container queries         -> hero + project grid respond to .site-page's width, not the viewport
+ *   anchor positioning        -> a tag that follows the hovered item; a note glued to the title
+ */
+
+@property --spin {
+	inherits: false;
+	initial-value: 0deg;
+	syntax: "<angle>";
+}
+
+@property --pct {
+	inherits: false;
+	initial-value: 0;
+	syntax: "<integer>";
+}
+
+.site {
+	--hue: 262deg;
+	--siteBg: #fbfbf8;
+	--siteFg: #25252b;
+	--siteFgStrong: #0e0e12;
+	--siteMuted: #62626e;
+	--siteAccent: hsl(var(--hue) 70% 42%);
+	--siteSquiggle: hsl(var(--hue) 90% 60%);
+	--siteSubtle: #ebebe4;
+	--siteFontDisplay: "League Spartan", system-ui, sans-serif;
+
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #0c0c10;
+	--siteFg: #d8d8e2;
+	--siteFgStrong: #f6f6fb;
+	--siteMuted: #9a9aab;
+	--siteAccent: hsl(var(--hue) 90% 74%);
+	--siteSquiggle: hsl(var(--hue) 95% 66%);
+	--siteSubtle: #1a1a22;
+}
+
+.site-title {
+	anchor-name: --title;
+	letter-spacing: -0.02em;
+}
+
+/* ---- scenery: soft hue-journey glow, as three pre-tinted layers crossfaded by scroll-driven opacity ---- */
+
+.site :is(.scenery-a, .scenery-c)::before,
+.site .scenery-a::after {
+	content: "";
+	contain: paint;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	will-change: opacity;
+}
+
+.site .scenery-a::before {
+	--h: 262deg;
+	opacity: 1;
+}
+
+.site .scenery-a::after {
+	--h: 22deg;
+}
+
+.site .scenery-c::before {
+	--h: 142deg;
+}
+
+.site :is(.scenery-a, .scenery-c)::before,
+.site .scenery-a::after {
+	background:
+		radial-gradient(60vmax 40vmax at 85% -10%, hsl(var(--h) 90% 70% / 0.22), transparent 70%),
+		radial-gradient(50vmax 40vmax at -10% 105%, hsl(calc(var(--h) + 60deg) 90% 65% / 0.18), transparent 70%);
+}
+
+html.dark .site :is(.scenery-a, .scenery-c)::before,
+html.dark .site .scenery-a::after {
+	background:
+		radial-gradient(60vmax 40vmax at 85% -10%, hsl(var(--h) 90% 55% / 0.3), transparent 70%),
+		radial-gradient(50vmax 40vmax at -10% 105%, hsl(calc(var(--h) + 60deg) 90% 50% / 0.22), transparent 70%);
+}
+
+@supports (animation-timeline: scroll()) {
+	.site .scenery-a::before {
+		animation: zj-glow-a linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-a::after {
+		animation: zj-glow-b linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .scenery-c::before {
+		animation: zj-glow-c linear both;
+		animation-timeline: --pg;
+	}
+}
+
+@keyframes zj-glow-a {
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	33%,
+	67% {
+		opacity: 0;
+	}
+}
+
+@keyframes zj-glow-b {
+	0%,
+	67%,
+	100% {
+		opacity: 0;
+	}
+
+	33% {
+		opacity: 1;
+	}
+}
+
+@keyframes zj-glow-c {
+	0%,
+	33%,
+	100% {
+		opacity: 0;
+	}
+
+	67% {
+		opacity: 1;
+	}
+}
+
+.site .scenery-b {
+	background-image: radial-gradient(color-mix(in srgb, var(--siteMuted) 40%, transparent) 1px, transparent 1.4px);
+	background-size: 22px 22px;
+	mask: linear-gradient(180deg, #000, transparent 60%);
+	opacity: 0.55;
+}
+
+/* ---- scroll progress bar (scroll-driven) ---- */
+
+.site .overlay-a::before {
+	background: linear-gradient(90deg, hsl(var(--hue) 95% 60%), hsl(calc(var(--hue) + 70deg) 95% 62%));
+	content: "";
+	contain: paint;
+	height: 3px;
+	inset: 0 0 auto 0;
+	position: absolute;
+	transform: scaleX(0);
+	will-change: transform;
+	transform-origin: left;
+}
+
+/* ---- anchored note, glued to the title as it scrolls ---- */
+
+.site-hero::before {
+	background: var(--siteFgStrong);
+	border-radius: 0.3rem;
+	color: var(--siteBg);
+	content: "scroll-driven \00b7 :has() \00b7 @container \00b7 anchor()";
+	font: 600 0.68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	bottom: calc(anchor(--title top) + 0.6rem);
+	left: anchor(--title left);
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	position-anchor: --title;
+	white-space: nowrap;
+}
+
+/* ---- the badge: a conic ring spun by compositor-only `rotate`, clipped to a pill by .overlay-b ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	bottom: 1rem;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(var(--hue) 95% 62%), hsl(calc(var(--hue) + 90deg) 95% 62%), hsl(var(--hue) 95% 62%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+/* ---- scroll percentage: an integer @property on this one leaf element ---- */
+
+.site .overlay-a::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "scrolled " counter(pct) "%";
+	counter-reset: pct var(--pct);
+	font: 600 0.68rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	inset: auto 1rem 1rem auto;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+}
+
+@supports (animation-timeline: scroll()) {
+	.site .overlay-a::before {
+		animation: zj-bar linear both;
+		animation-timeline: --pg;
+	}
+
+	.site .overlay-a::after {
+		animation: zj-pct linear both;
+		animation-timeline: --pg;
+	}
+}
+
+@keyframes zj-bar {
+	to {
+		transform: scaleX(1);
+	}
+}
+
+@keyframes zj-pct {
+	to {
+		--pct: 100;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+/* ---- scroll-driven reveals ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title, .site-about p, .site-footer) {
+			animation: zj-rise linear both;
+			animation-range: entry 0% cover 30%;
+			animation-timeline: view();
+		}
+
+		html:not(.reduce-motion) .site .site-portrait {
+			animation: zj-portrait linear both;
+			animation-range: 0 30%;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zj-rise {
+	from {
+		opacity: 0;
+		translate: 0 1.6rem;
+	}
+}
+
+@keyframes zj-portrait {
+	to {
+		opacity: 0.4;
+		rotate: -6deg;
+		scale: 0.82;
+	}
+}
+
+/* ---- :has() ---- */
+
+.site-list:has(.site-item:hover) .site-item:not(:hover) {
+	opacity: 0.55;
+}
+
+.site-item {
+	transition: opacity 0.2s;
+}
+
+.site:has(.site-nav-link:hover) .site-hero {
+	opacity: 0.55;
+}
+
+.site-hero {
+	transition: opacity 0.25s;
+}
+
+.site-item:hover {
+	anchor-name: --hot;
+}
+
+/* ---- container queries ---- */
+
+.site-page {
+	container: zpage / inline-size;
+}
+
+.site-projects {
+	container: zproj / inline-size;
+}
+
+@container zpage (max-width: 38rem) {
+	.site-hero {
+		gap: 1.2rem;
+		grid-template-columns: 1fr;
+		text-align: center;
+	}
+
+	.site-portrait {
+		margin-inline: auto;
+		max-width: 11rem;
+	}
+
+	.site-socials {
+		justify-content: center;
+	}
+}
+
+@container zproj (min-width: 36rem) {
+	.site-projects .site-list {
+		gap: 1.2rem 1.6rem;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.site-projects .site-item {
+		border: 1px solid color-mix(in srgb, var(--siteMuted) 30%, transparent);
+		border-radius: 0.8rem;
+		padding: 0.9rem 1rem;
+	}
+}
+
+/* Tag that follows the hovered item (anchor positioning). */
+.site-page::after {
+	background: var(--siteAccent);
+	border-radius: 0.3rem;
+	color: var(--siteBg);
+	content: "\2693 anchor()";
+	font: 700 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	bottom: calc(anchor(--hot top) - 0.6rem);
+	opacity: 0;
+	padding: 0.35rem 0.5rem;
+	pointer-events: none;
+	position: absolute;
+	position-anchor: --hot;
+	right: calc(anchor(--hot right) + 0.9rem);
+	transition: opacity 0.15s;
+	white-space: nowrap;
+}
+
+.site:has(.site-item:hover) .site-page::after {
+	opacity: 1;
+}
+
+@media (max-width: 700px) {
+	.site-hero::before,
+	.site-page::after {
+		display: none;
+	}
+}

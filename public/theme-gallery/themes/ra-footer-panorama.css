@@ -1,0 +1,12 @@
+@import url("./_refined-e/base.css");
+
+/* 314: a fire-tower cab window compressed into the footer. Thin posts at the edges, a sill at the very bottom. */
+.site .ra-pano-post, .site .ra-pano-sill { position: absolute; pointer-events: none; z-index: 5; }
+.site .ra-pano-post { top: 0; bottom: 0; width: 9px; -webkit-mask-image: linear-gradient(transparent, #000 38%); mask-image: linear-gradient(transparent, #000 38%); }
+.site .ra-pano-post.l { left: 0; background: linear-gradient(90deg, #2a1f14, #5b4630 45%, #7a5f40); box-shadow: 3px 0 10px rgb(0 0 0 / 0.22); }
+.site .ra-pano-post.r { right: 0; background: linear-gradient(270deg, #2a1f14, #5b4630 45%, #7a5f40); box-shadow: -3px 0 10px rgb(0 0 0 / 0.22); }
+.site .ra-pano-sill { left: 0; right: 0; bottom: 0; height: 12px; background: linear-gradient(#7a5f40, #5b4630 35%, #2a1f14); box-shadow: 0 -3px 12px rgb(0 0 0 / 0.25); }
+html.dark .site .ra-pano-post.l { background: linear-gradient(90deg, #0c0906, #1d1710 45%, #33291d); }
+html.dark .site .ra-pano-post.r { background: linear-gradient(270deg, #0c0906, #1d1710 45%, #33291d); }
+html.dark .site .ra-pano-sill { background: linear-gradient(#33291d, #1d1710 35%, #0c0906); }
+.site .ra-pano-layer { will-change: transform; }

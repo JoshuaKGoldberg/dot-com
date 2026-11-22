@@ -1,0 +1,9 @@
+/* 283 Side Curtains: Josh's real site, night blue nudged deeper; the aurora is a JS canvas in .scenery-b. */
+html.dark .site {
+	--siteBg: #0a111f;
+	--siteSubtle: #10243a;
+}
+
+.site .scenery-b {
+	contain: paint;
+}

@@ -1,0 +1,110 @@
+.site {
+	--siteBg: #f7f5ec;
+	--siteFg: #2f3a33;
+	--siteFgStrong: #18231d;
+	--siteMuted: #627066;
+	--siteAccent: #3f7a5a;
+	--siteSquiggle: #8fb39a;
+	--siteSubtle: #e6e8d9;
+	--vine: #8fae93;
+	--leaf: #a9c4a4;
+	--wash1: rgba(176, 202, 170, 0.35);
+	--wash2: rgba(232, 214, 176, 0.35);
+	--bud: #fbf3e4;
+	--budStroke: #c9a96a;
+	--glow: transparent;
+}
+
+html.dark .site {
+	--siteBg: #07151a;
+	--siteFg: #cfe0dc;
+	--siteFgStrong: #eaf5f2;
+	--siteMuted: #8fa9a6;
+	--siteAccent: #7fcfb4;
+	--siteSquiggle: #4fa08f;
+	--siteSubtle: #0f2a2f;
+	--vine: #4f7a56;
+	--leaf: #5e8d5a;
+	--wash1: rgba(30, 90, 80, 0.3);
+	--wash2: rgba(60, 90, 40, 0.18);
+	--bud: #dff0d8;
+	--budStroke: #9fcf9a;
+	--glow: #9fe8b0;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(40% 60% at 0% 100%, var(--wash1), transparent 100%),
+		radial-gradient(40% 60% at 100% 20%, var(--wash2), transparent 100%),
+		linear-gradient(180deg, var(--siteBg), var(--siteBg));
+}
+
+html:not(.dark) .site .site-scenery .scenery-a {
+	background:
+		radial-gradient(38% 55% at 0% 95%, var(--wash1), transparent 100%),
+		radial-gradient(34% 50% at 100% 15%, var(--wash2), transparent 100%),
+		radial-gradient(30% 40% at 100% 90%, var(--wash1), transparent 100%),
+		var(--siteBg);
+}
+
+html.dark .site .site-scenery .scenery-a {
+	background:
+		radial-gradient(40% 60% at 0% 100%, var(--wash1), transparent 100%),
+		radial-gradient(40% 60% at 100% 20%, var(--wash2), transparent 100%),
+		linear-gradient(180deg, #08171c, #061116);
+}
+
+.site .garden {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .garden .stem {
+	fill: none;
+	stroke: var(--vine);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+}
+
+.site .garden .leaf {
+	fill: var(--leaf);
+	opacity: 0;
+	transition: opacity 1.5s ease;
+}
+
+.site .garden .leaf.is-on {
+	opacity: 0.65;
+}
+
+html:not(.dark) .site .garden .leaf {
+	mix-blend-mode: multiply;
+}
+
+.site .garden .bud {
+	fill: var(--bud);
+	opacity: 0;
+	stroke: var(--budStroke);
+	stroke-width: 0.8;
+	transition: opacity 1.2s ease;
+}
+
+.site .garden .bud.is-on {
+	opacity: 0.95;
+}
+
+html.dark .site .garden .stem,
+html.dark .site .garden .bud.is-on {
+	filter: drop-shadow(0 0 3px var(--glow));
+}
+
+html.dark .site .garden .stem {
+	filter: drop-shadow(0 0 2px rgba(159, 232, 176, 0.25));
+}
+
+.site .garden .vine.is-pruning .stem {
+	transition: opacity 0.2s ease;
+}

@@ -1,0 +1,241 @@
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap");
+
+.site {
+	--siteBg: #fbfbf9;
+	--siteFg: #26262a;
+	--siteFgStrong: #0f0f12;
+	--siteMuted: #5f5f66;
+	--siteAccent: #b2361a;
+	--siteSquiggle: #b2361a;
+	--siteSubtle: #e4e3df;
+	--siteFont: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--siteMaxWidth: 70rem;
+	--card: #fff;
+	--cardEdge: #dcdbd6;
+	--cardGlow: transparent;
+	--mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+html.dark .site {
+	--siteBg: #0a0a0d;
+	--siteFg: #d8d6d0;
+	--siteFgStrong: #f6f3ea;
+	--siteMuted: #a3a09a;
+	--siteAccent: #ff9d7a;
+	--siteSquiggle: #ff9d7a;
+	--siteSubtle: #222228;
+	--card: #15151a;
+	--cardEdge: #2b2b33;
+	--cardGlow: rgb(255 236 190 / 0.27);
+}
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 40% at 15% 0%, rgb(255 236 190 / 0.07), transparent 70%),
+		radial-gradient(ellipse 50% 40% at 90% 55%, rgb(255 236 190 / 0.05), transparent 70%);
+}
+.site .scenery-a {
+	background: linear-gradient(180deg, #fff, transparent 40%);
+}
+
+.site-page { padding: 2.2rem 2rem 5rem; }
+.site-header { font-weight: 400; }
+.site-logo {
+	color: var(--siteFgStrong);
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.28em;
+	text-transform: uppercase;
+}
+.site-nav { gap: 2rem; }
+.site-nav-link {
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	color: var(--siteMuted);
+}
+.site-nav-link.is-active { color: var(--siteFgStrong); border-bottom: 1px solid var(--siteAccent); padding-bottom: 0.2rem; }
+.site-theme-toggle { font-size: 0.95rem; }
+.site-link::after { height: 0.18em; bottom: -0.15em; opacity: 0.7; }
+
+.site-hero {
+	align-items: end;
+	gap: 4rem;
+	grid-template-columns: minmax(10rem, 17rem) 1fr;
+	margin: 6rem 0 8rem;
+}
+.site-portrait {
+	background: var(--card);
+	border: 1px solid var(--cardEdge);
+	padding: 1.2rem;
+	position: relative;
+	box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.25);
+}
+html.dark .site-portrait { box-shadow: 0 -30px 80px -20px var(--cardGlow), 0 0 0 1px var(--cardEdge); }
+.site-portrait img { border-radius: 0; box-shadow: none; aspect-ratio: 4/5; transform: scale(1.4); transform-origin: 50% 35%; }
+.site-portrait { overflow: hidden; }
+.wl-frame-label { display: none; }
+.site-title {
+	font-size: clamp(3.4rem, 9vw, 7.5rem);
+	font-weight: 200;
+	letter-spacing: -0.045em;
+	line-height: 0.9;
+	margin-bottom: 1.6rem;
+}
+.site-tagline {
+	font-size: 0.8rem;
+	font-weight: 500;
+	letter-spacing: 0.26em;
+	line-height: 1.9;
+	max-width: 24rem;
+	text-transform: uppercase;
+	color: var(--siteMuted);
+}
+.site-socials {
+	font-size: 0.72rem;
+	font-weight: 500;
+	gap: 1.6rem;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+}
+.site-about {
+	font-size: 1.35rem;
+	font-weight: 300;
+	line-height: 1.6;
+	margin: 0 0 10rem;
+	max-width: 34rem;
+	text-align: left;
+}
+
+.site-main { counter-reset: gal; }
+.site-section { max-width: none; margin: 0 0 11rem; }
+.site-section-title {
+	counter-increment: gal;
+	font-size: clamp(3rem, 8vw, 6.4rem);
+	font-weight: 200;
+	letter-spacing: -0.04em;
+	line-height: 0.95;
+	margin: 0 0 4rem;
+}
+.site-section-title::before {
+	color: var(--siteAccent);
+	content: "Gallery " counter(gal, decimal-leading-zero);
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.3em;
+	margin-bottom: 1.4rem;
+	text-transform: uppercase;
+}
+.site-list {
+	display: grid;
+	gap: 3.2rem 2.6rem;
+	grid-template-columns: repeat(2, minmax(0, 22rem));
+	justify-content: space-between;
+	align-items: start;
+}
+.site-item:nth-child(odd) { margin-top: 0; }
+.site-item:nth-child(even) { margin-top: 3.5rem; }
+
+.wl-card {
+	background: var(--card);
+	border: 1px solid var(--cardEdge);
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	padding: 1.3rem 1.3rem 1rem;
+	position: relative;
+}
+.site-item { position: relative; }
+.site-item {
+	background:
+		radial-gradient(ellipse 90% 70% at 50% -10%, var(--cardGlow), transparent 75%),
+		var(--card);
+	border: 1px solid var(--cardEdge);
+	padding: 1.4rem 1.3rem 1.1rem;
+}
+html.dark .site-item {
+	box-shadow: 0 -26px 60px -34px var(--cardGlow), 0 14px 30px -18px #000;
+}
+.site:not(:where(html.dark *)) .site-item { box-shadow: 0 18px 30px -24px rgb(0 0 0 / 0.28); }
+.wl-tag {
+	color: var(--siteAccent);
+	font-size: 0.64rem;
+	font-weight: 600;
+	letter-spacing: 0.24em;
+	margin-bottom: 0.9rem;
+	text-transform: uppercase;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+.wl-tag::before { background: currentColor; border-radius: 50%; content: ""; height: 0.4rem; width: 0.4rem; }
+.site-item-title {
+	display: inline;
+	font-size: 1.15rem;
+	font-weight: 500;
+	letter-spacing: -0.005em;
+	line-height: 1.25;
+}
+.wl-title { display: block; margin-bottom: 0.45rem; }
+.wl-medium {
+	color: var(--siteFg);
+	display: block;
+	font-size: 0.84rem;
+	font-style: italic;
+	font-weight: 400;
+}
+.wl-dim {
+	color: var(--siteMuted);
+	display: block;
+	font-size: 0.78rem;
+}
+.site-item-description {
+	border-top: 1px solid var(--cardEdge);
+	color: var(--siteMuted);
+	font-size: 0.8rem;
+	font-weight: 400;
+	line-height: 1.5;
+	margin: 0.9rem 0 0.8rem;
+	padding-top: 0.7rem;
+}
+.wl-acc {
+	color: var(--siteMuted);
+	font-family: var(--mono);
+	font-size: 0.7rem;
+	letter-spacing: 0.08em;
+	text-align: right;
+}
+.site-item-meta { display: none; }
+
+.site-footer {
+	border-top: 1px solid var(--siteSubtle);
+	color: var(--siteMuted);
+	font-size: 0.72rem;
+	letter-spacing: 0.2em;
+	opacity: 1;
+	padding-top: 1.4rem;
+	text-align: left;
+	text-transform: uppercase;
+	line-height: 2;
+}
+
+@media (max-width: 700px) {
+	.site-page { padding: 1.5rem 1.2rem 4rem; }
+	.site-hero { margin: 3rem 0 5rem; gap: 2rem; }
+	.site-list { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
+	.site-item:nth-child(even) { margin-top: 0; }
+	.site-section { margin-bottom: 6rem; }
+	.site-about { margin-bottom: 6rem; }
+}
+.wl-portrait-label {
+	border-left: 1px solid var(--siteAccent);
+	color: var(--siteMuted);
+	font-size: 0.78rem;
+	line-height: 1.5;
+	margin-top: 2.4rem;
+	padding-left: 0.9rem;
+	display: grid;
+	max-width: 17rem;
+}
+.wl-portrait-label b { color: var(--siteFgStrong); font-weight: 500; font-size: 0.9rem; }

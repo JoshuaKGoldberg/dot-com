@@ -1,0 +1,50 @@
+/* Token plan
+ * Families: Newsreader opsz 6-72 x wght 300-600 (one variable file) for everything.
+ * Scale: hero 68px at opsz 72, wght 420 (dark 380), -0.03em, lh .94; tagline 1.6rem; ratio 2.7x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Production Type's screen serif is editorial and warm; its display optical size makes the hairlines crisp on navy while the text opsz stays sturdy for 20px body.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Newsreader Fallback"; src: local("Georgia"); size-adjust: 99.6%; ascent-override: 74.3%; descent-override: 26.1%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #386 Newsreader: editorial and warm. Display optical size (opsz 72) for the hero; text opsz is automatic below. */
+.site {
+	--tyDisplay: "Newsreader", "Newsreader Fallback", Georgia, serif;
+	--tyBody: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 14cqi, 5rem);
+	--tyTitleW: 420;
+	--tyTitleWd: 380;
+	--tyTitleVs: "opsz" 72;
+	--tyTitleLs: -0.03em;
+	--tyTitleLh: 0.94;
+	--tyTitleShift: -0.05em;
+	--tyTagSize: 1.6rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.005em;
+	--tyTagLh: 1.28;
+	--tyTagMax: 20em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.35rem;
+	--tyDescSize: 1.125rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.2rem;
+	--tyLogoSize: 1.3rem;
+	--tySocialSize: 1.15rem;
+	--tySecW: 450;
+	--tySecWd: 400;
+	--tySecVs: "opsz" 48;
+	--tySecSize: 2.1rem;
+	--tyItemW: 560;
+	--tyItemSize: 1.35rem;
+	--tyMetaSize: 0.95rem;
+	--tyMetaNums: oldstyle-nums;
+}

@@ -1,0 +1,84 @@
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import "./_type2/post.css";
+
+/* token plan
+   #420 Hedvig + Newsreader. A characterful Hedvig Letters Serif hero (88px) over a Newsreader reading column; Newsreader also runs UI so there are exactly two voices.
+   Scale 1.25 off 19px; hero 88px vs 24px Newsreader tagline (3.7x); body 19px/1.7 at 64ch. Hedvig is spent on headline, section and post titles only.
+   Why: Hedvig's wide, slightly quirky letters give the name personality; Newsreader's text cut keeps paragraphs plain and warm. About 70 KB.
+   One line always: the size is min(88px cap, fit to the hero column via --tyFit = 95 / measured advance width), so it never wraps or scrolls. */
+
+/* fonts: pinned static instances (single weight/opsz), latin subset only, so each face is ~15-25 KB and a mode only downloads the weights it uses */
+@font-face { font-family: "Hedvig Letters Serif"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/hedviglettersserif/v7/OD5puN2I2mekHmyoU1Kj2AXOd5_7v7gIDlX8quj7viQ_N1HixEApeL3dnyS5Z-uV.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text"; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9qfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBCzBDXXD9JVF438weI_wC-ZFHDWwgUii.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9kfjOCX1hbuyalUrK439vogqC9yFZCYg7oRZaLP4obnf7fTXglsMwoT9ZHFjSShVCjzSY.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Code"; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/l/font?kit=-F63fjptAgt5VM-kVkqdyU8n5i0g0F9lte44crAY&skey=b40c83751ce1954d&v=v23) format("woff2"); }
+@font-face { font-family: "NR Text Dk"; font-style: normal; font-weight: 400 500; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9VfjOCX1hbuyalUrK49dLac06G1ZGsZBtoBAbNJYQ5ayZC.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "NR Text Dk"; font-style: italic; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/newsreader/v26/cY9kfjOCX1hbuyalUrK439vogqC9yFZCYg7oRZaLP4obnf7fTXglsMwoT9ZHFjSShVCjzSY.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Hedvig Letters Serif Fallback"; src: local("Georgia"); size-adjust: 103.3%; ascent-override: 98.7%; descent-override: 31.0%; line-gap-override: 0%; }
+@font-face { font-family: "NR Text Fallback"; src: local("Georgia"); size-adjust: 95.3%; ascent-override: 77.6%; descent-override: 27.3%; line-gap-override: 0%; }
+/* fb:end */
+
+.site {
+	--tyDisplay: "Hedvig Letters Serif", "Hedvig Letters Serif Fallback", Georgia, serif;
+	--tyBody: "NR Text", "NR Text Fallback", Georgia, serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+	--t2Font: "NR Text", "NR Text Fallback", Georgia, serif;
+	--t2CodeFont: "Code", ui-monospace, Menlo, monospace;
+	--tyTitleSize: 5.5rem;
+	--tyFit: 14.84;
+	--tyTitleW: 400;
+	--tyTitleWd: 400;
+	--tyTitleLs: -0.025em;
+	--tyTitleLh: 0.96;
+	--tyTitleShift: -0.04em;
+	--tyTitleGap: 1.1rem;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.5rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 20em;
+	--tyBodyW: 400;
+	--tyAboutSize: 1.25rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyNavSize: 1.15rem;
+	--tyLogoSize: 1.25rem;
+	--tySecFont: var(--tyDisplay);
+	--tySecSize: 2.319rem;
+	--tySecW: 400;
+	--tySecWd: 400;
+	--tySecLs: -0.012em;
+	--tyItemFont: var(--tyBody);
+	--tyItemW: 400;
+	--tyItemSize: 1.4rem;
+	--tyMetaSize: 0.95rem;
+	--tyMetaNums: oldstyle-nums;
+	--tyCreditFont: var(--tyBody);
+	--t2Size: 1.1875rem;
+	--t2Lh: 1.7;
+	--t2W: 400;
+	--t2Measure: 64ch;
+	--t2TitleFont: var(--tyDisplay);
+	--t2TitleSize: 2.319rem;
+	--t2TitleW: 400;
+	--t2TitleWd: 400;
+	--t2TitleLs: -0.015em;
+	--t2TitleLh: 1.1;
+	--t2MetaFont: var(--tyBody);
+	--t2MetaSize: 0.92rem;
+	--t2MetaW: 400;
+	--t2MetaStyle: italic;
+	--t2CodeSize: 0.82em;
+}
+
+/* dark-surface compensation for the text face: a small variable-weight instance (400-500) only downloads in dark mode */
+html.dark .site {
+	--tyBody: "NR Text Dk", "NR Text Fallback", Georgia, serif;
+	--t2Font: "NR Text Dk", "NR Text Fallback", Georgia, serif;
+}

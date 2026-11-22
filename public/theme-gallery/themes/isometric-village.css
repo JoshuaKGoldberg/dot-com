@@ -1,0 +1,54 @@
+/* 169. Isometric Village: each section is a building along the road; lights come on at dusk. */
+.site {
+	--siteBg: #fbfcf4;
+	--siteFg: #2a3a45;
+	--siteFgStrong: #12232f;
+	--siteMuted: #51636f;
+	--siteAccent: #0f6aa8;
+	--siteSquiggle: #e0782f;
+	--siteSubtle: #dde9d6;
+}
+html.dark .site {
+	--siteBg: #0e1730;
+	--siteFg: #d9e6f5;
+	--siteFgStrong: #f2f7fd;
+	--siteMuted: #9db0cb;
+	--siteAccent: #82c2ff;
+	--siteSquiggle: #ffb35c;
+	--siteSubtle: #17284c;
+}
+.site .site-page {
+	margin-left: auto;
+	margin-right: clamp(1rem, 4vw, 3.5rem);
+	max-width: 38rem;
+}
+.site .site-hero {
+	gap: 1.4rem;
+	grid-template-columns: 8rem 1fr;
+	margin: 3vh 0 28vh;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border-radius: 1rem;
+	box-shadow: 0 12px 30px -18px rgb(10 30 20 / 0.55);
+	padding: 1.4rem 1.6rem;
+}
+.site .site-about { margin: 0 0 28vh; text-align: left; }
+.site .site-section { margin: 0 0 28vh; }
+.site .site-footer { margin: 0; }
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 78%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+@media (max-width: 900px) {
+	.site .site-page { margin-inline: auto; max-width: 34rem; }
+	.site .site-hero,
+	.site .site-about,
+	.site .site-section,
+	.site .site-footer { background: color-mix(in srgb, var(--siteBg) 94%, transparent); }
+}

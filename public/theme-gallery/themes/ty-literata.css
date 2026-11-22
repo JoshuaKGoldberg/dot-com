@@ -1,0 +1,53 @@
+/* Token plan
+ * Families: Literata opsz 7-72 x wght 300-600, plus the true italic (400).
+ * Scale: hero opsz 72 wght 400 (dark 370), -0.03em; tagline italic 1.55rem; ratio 2.7x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: A single family across its axes: display opsz for the hero, automatic text opsz for prose, and real italics for the second line and meta.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,300..600&family=Literata:ital,opsz,wght@1,7..72,400&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Literata Fallback"; src: local("Georgia"); size-adjust: 104.8%; ascent-override: 112.6%; descent-override: 29.6%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #391 Literata alone: display optical size (opsz 72) for the hero, automatic text opsz below, and the real italic for the second line. */
+.site {
+	--tyDisplay: "Literata", "Literata Fallback", Georgia, serif;
+	--tyBody: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13.5cqi, 4.8rem);
+	--tyTitleW: 400;
+	--tyTitleWd: 370;
+	--tyTitleVs: "opsz" 72;
+	--tyTitleLs: -0.03em;
+	--tyTitleLh: 0.96;
+	--tyTagSize: 1.55rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.005em;
+	--tyTagLh: 1.3;
+	--tyTagMax: 20em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.15rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1.05rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.15rem;
+	--tyLogoW: 600;
+	--tySecSize: 2rem;
+	--tySecW: 450;
+	--tySecWd: 400;
+	--tySecVs: "opsz" 48;
+	--tySecLs: -0.02em;
+	--tyItemW: 600;
+	--tyItemSize: 1.15rem;
+	--tyMetaSize: 0.9rem;
+	--tyMetaNums: oldstyle-nums;
+}
+.site .site-tagline { font-style: italic; }
+.site .site-item-meta { font-style: italic; }

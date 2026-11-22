@@ -1,0 +1,27 @@
+/* 131 — Silk Sheen */
+.site {
+	--siteBg: #f2eee9;
+	--siteFg: #2f3340;
+	--siteFgStrong: #1b1e2a;
+	--siteMuted: #5d6272;
+	--siteAccent: #5a4fa8;
+	--siteSquiggle: #8a7fd4;
+	--siteSubtle: #e4dfe6;
+}
+html.dark .site {
+	--siteBg: #0a1020;
+	--siteFg: #dbe3f2;
+	--siteFgStrong: #f4f7fd;
+	--siteMuted: #98a6c4;
+	--siteAccent: #a9b8f5;
+	--siteSquiggle: #8e9ff0;
+	--siteSubtle: #162038;
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

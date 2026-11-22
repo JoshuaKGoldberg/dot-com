@@ -1,0 +1,335 @@
+/*
+ * Zero JS: Squiggle Vines. There is no zj-squiggle-vines.js: everything here is CSS.
+ *   scroll-driven view() -> each link squiggle (and heading underline) grows as it enters the viewport
+ *   clip-path + mask     -> the vine and its leaves are tiny inline-SVG masks, revealed left to right
+ *   @property <color>    -> leaves are typed colors, so on :hover they ease into blossoms
+ *   linear()             -> a spring-eased flower pops open beside a hovered item
+ *   scroll-driven (root) -> two tall vines climb the page edges as you scroll
+ */
+
+@property --leafA { inherits: true; initial-value: #6cc070; syntax: "<color>"; }
+.site {
+	--vstem: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 14'%3E%3Cpath d='M-1 7Q5.5 -0.5 12 7T25 7' fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+	--vleaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 14'%3E%3Cellipse cx='7.5' cy='2' rx='3.3' ry='1.5' transform='rotate(-35 7.5 2)'/%3E%3Cellipse cx='19.8' cy='12' rx='3.3' ry='1.5' transform='rotate(35 19.8 12)'/%3E%3C/svg%3E");
+	--siteBg: #f8fbf0;
+	--siteFg: #25382c;
+	--siteFgStrong: #0f2417;
+	--siteMuted: #56705e;
+	--siteAccent: #1d7a46;
+	--siteSquiggle: #2f9e5b;
+	--siteSubtle: #e3efd8;
+	--stem: #2f9e5b;
+	--bloom: #ec6f9f;
+
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #07120c;
+	--siteFg: #d3e6d8;
+	--siteFgStrong: #f1fbf3;
+	--siteMuted: #92b09b;
+	--siteAccent: #7ee0a4;
+	--siteSquiggle: #4ad28a;
+	--siteSubtle: #0f2418;
+	--stem: #4ad28a;
+	--bloom: #ff8fb8;
+	--leafA: #5fd07a;
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+/* ---- backdrop: a soft green wash and a strip of grass with flowers ---- */
+
+.site .scenery-a {
+	background: radial-gradient(60vmax 40vmax at 100% -10%, rgb(160 220 140 / 0.3), transparent 70%);
+}
+
+html.dark .site .scenery-a {
+	background: radial-gradient(60vmax 40vmax at 100% -10%, rgb(40 150 90 / 0.22), transparent 70%);
+}
+
+.site .scenery-c {
+	background: linear-gradient(0deg, color-mix(in srgb, var(--stem) 16%, transparent), transparent);
+	height: 16vh;
+	inset: auto 0 0 0;
+}
+
+/* ---- tall edge vines (scroll-driven growth) ---- */
+
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after {
+	content: "";
+	height: 1.6rem;
+	position: absolute;
+	top: 0;
+	transform-origin: 0 0;
+	will-change: transform;
+	width: 100vh;
+}
+
+.site .scenery-a::before,
+.site .scenery-b::before {
+	background: var(--stem);
+	-webkit-mask: var(--vstem) repeat-x 0 50% / auto 100%;
+	mask: var(--vstem) repeat-x 0 50% / auto 100%;
+}
+
+.site .scenery-a::after,
+.site .scenery-b::after {
+	background: var(--leafA);
+	-webkit-mask: var(--vleaf) repeat-x 0 50% / auto 100%;
+	mask: var(--vleaf) repeat-x 0 50% / auto 100%;
+}
+
+/* left vine climbs down from the top; right vine climbs up from the bottom */
+.site .scenery-a::before,
+.site .scenery-a::after {
+	left: 0;
+	rotate: 90deg;
+	translate: 1.9rem 0;
+}
+
+.site .scenery-b::before,
+.site .scenery-b::after {
+	left: calc(100% - 1.9rem);
+	rotate: -90deg;
+	top: 100%;
+}
+
+.site .scenery-b {
+	inset: 0;
+	scale: 1;
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b)::before,
+		html:not(.reduce-motion) .site :is(.scenery-a, .scenery-b)::after {
+			animation: sv-edge ease-out both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+/* growth is a compositor-only scaleX from the vine's root (the old clip-path reveal repainted every frame) */
+@keyframes sv-edge {
+	from {
+		scale: 0.08 1;
+	}
+	to {
+		scale: 1 1;
+	}
+}
+
+/* ---- link vines: the squiggle plus leaves, grown by view() ---- */
+
+.site-link::after,
+.site-section-title::after {
+	background: var(--stem);
+	bottom: -0.82em;
+	height: 0.8em;
+	mask: var(--vstem) repeat-x 0 50% / auto 100%;
+	opacity: 1;
+	transform-origin: 0 50%;
+}
+
+.site-link::before,
+.site-section-title::before {
+	background: var(--leafA);
+	bottom: -0.82em;
+	content: "";
+	height: 0.8em;
+	left: 0;
+	mask: var(--vleaf) repeat-x 0 50% / auto 100%;
+	position: absolute;
+	right: 0;
+	transform-origin: 0 50%;
+	transition:
+		--leafA 0.45s,
+		scale 0.5s linear(0, 0.4 14%, 0.95 30%, 1.12 46%, 0.98 66%, 1);
+}
+
+.site-link:hover::before,
+.site-link:focus-visible::before {
+	--leafA: var(--bloom);
+	scale: 1 1.45;
+}
+
+.site-section-title {
+	display: inline-block;
+	position: relative;
+}
+
+.site-section-title::before,
+.site-section-title::after {
+	bottom: -0.82em;
+	left: 0;
+	position: absolute;
+	right: -5rem;
+}
+
+.site-section-title::after {
+	content: "";
+}
+
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site :is(.site-link, .site-section-title)::before,
+		html:not(.reduce-motion) .site :is(.site-link, .site-section-title)::after {
+			animation: sv-grow linear both;
+			animation-range: entry 5% cover 28%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes sv-grow {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}
+
+/* ---- hover bloom beside items: a spring-eased flower ---- */
+
+.site-item {
+	position: relative;
+}
+
+.site-item-description {
+	margin-top: 0.85rem;
+}
+
+.site-section-title {
+	margin-bottom: 1.5rem;
+}
+
+.site-item::after {
+	color: var(--bloom);
+	content: "\273F";
+	font-size: 1.5rem;
+	line-height: 1;
+	pointer-events: none;
+	position: absolute;
+	right: -2.1rem;
+	rotate: -120deg;
+	scale: 0;
+	top: 0.2rem;
+	transition:
+		rotate 0.7s cubic-bezier(0.2, 1.3, 0.4, 1),
+		scale 0.6s linear(0, 0.3 12%, 0.85 28%, 1.2 44%, 0.95 64%, 1.03 80%, 1);
+}
+
+.site-item:hover::after,
+.site-item:focus-within::after {
+	rotate: 0deg;
+	scale: 1;
+}
+
+.site-item::before {
+	background: linear-gradient(180deg, var(--stem), transparent);
+	bottom: 0.2rem;
+	content: "";
+	left: -1.1rem;
+	opacity: 0;
+	position: absolute;
+	top: 0.4rem;
+	transform-origin: 0 0;
+	transition: opacity 0.3s;
+	width: 2px;
+}
+
+.site-item:hover::before,
+.site-item:focus-within::before {
+	opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+	.site .scenery-a::before,
+	.site .scenery-a::after,
+	.site .scenery-b::before,
+	.site .scenery-b::after {
+		display: none;
+	}
+
+	.site-item::after {
+		display: none;
+	}
+}
+
+/* ---- badge + feature tags ---- */
+
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	isolation: isolate;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	text-align: center;
+	white-space: pre;
+}
+
+/* the ring: a conic square spun with the compositor-only `rotate`, clipped to the pill */
+.site .overlay-b::after {
+	background: conic-gradient(#2f9e5b, #98d468, #ec6f9f, #2f9e5b);
+	content: "";
+	height: 14rem;
+	inset: 50% auto auto 50%;
+	position: absolute;
+	translate: -50% -50%;
+	width: 14rem;
+	will-change: rotate;
+	z-index: -1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: sv-spin 6s linear infinite;
+	}
+}
+
+@keyframes sv-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 88%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "view() \00b7  scaleX growth \00b7  mask \00b7  @property <color> \00b7  linear()";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

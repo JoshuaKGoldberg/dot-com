@@ -1,0 +1,202 @@
+/* 104. Birdwatch: spruce and birch at the lake edge; click a bird to log it in a field guide. */
+@import url("./ridge-runner/common.css");
+
+.site .bird.pickable svg {
+	cursor: zoom-in;
+	transition: transform 0.2s;
+}
+
+.site .bird.pickable:hover svg {
+	transform: translate(-50%, -52%) scale(1.08);
+}
+
+.site .bw-ring {
+	border: 2px solid var(--siteAccent);
+	border-radius: 50%;
+	height: 20px;
+	left: 0;
+	margin: -10px 0 0 -10px;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 20px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .bw-ring.go {
+		animation: bw-ring 0.9s ease-out;
+	}
+}
+
+html.reduce-motion .site .bw-ring.go {
+	opacity: 0.8;
+}
+
+@keyframes bw-ring {
+	from {
+		opacity: 0.9;
+		transform: scale(0.4);
+	}
+	to {
+		opacity: 0;
+		transform: scale(4.5);
+	}
+}
+
+.site .bw-btn,
+.site .bw-panel,
+.site .bw-toast {
+	font-family: var(--siteFont);
+}
+
+.site .bw-btn {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgba(10, 20, 40, 0.18);
+	color: var(--tag-fg);
+	cursor: pointer;
+	font-size: 0.95rem;
+	font-weight: 700;
+	padding: 0.5rem 0.95rem;
+	pointer-events: auto;
+	position: absolute;
+	right: 0.9rem;
+	z-index: 3;
+}
+
+.site .bw-btn:hover,
+.site .bw-btn:focus-visible {
+	background: var(--siteAccent);
+	color: #fff;
+	outline: none;
+}
+
+html.dark .site .bw-btn:hover,
+html.dark .site .bw-btn:focus-visible {
+	color: #0b1020;
+}
+
+.site .bw-btn kbd {
+	background: rgba(127, 127, 127, 0.18);
+	border-radius: 4px;
+	font: inherit;
+	font-size: 0.72rem;
+	margin-left: 0.35rem;
+	padding: 0.05rem 0.35rem;
+}
+
+.site .bw-panel {
+	background: color-mix(in srgb, var(--siteBg) 97%, #fff);
+	border: 1px solid var(--tag-line);
+	border-radius: 16px;
+	bottom: 4rem;
+	box-shadow: 0 8px 30px rgba(10, 20, 40, 0.25);
+	color: var(--tag-fg);
+	max-height: min(70vh, 560px);
+	overflow: auto;
+	padding: 0.9rem;
+	pointer-events: auto;
+	position: absolute;
+	right: 0.9rem;
+	width: min(360px, calc(100% - 1.8rem));
+	z-index: 4;
+}
+
+.site .bw-panel[hidden] {
+	display: none;
+}
+
+.site .bw-panel h2 {
+	font-size: 1.1rem;
+	margin: 0 0 0.15rem;
+}
+
+.site .bw-panel p {
+	font-size: 0.82rem;
+	margin: 0 0 0.7rem;
+	opacity: 0.8;
+}
+
+.site .bw-grid {
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: 1fr 1fr;
+}
+
+.site .bw-card {
+	background: rgba(127, 127, 127, 0.1);
+	border-radius: 10px;
+	min-height: 9.4rem;
+	padding: 0.5rem 0.55rem;
+}
+
+.site .bw-card .bw-pic {
+	align-items: center;
+	display: flex;
+	height: 74px;
+	justify-content: center;
+}
+
+.site .bw-card .bw-pic svg {
+	height: auto;
+	max-height: 72px;
+	max-width: 110px;
+	width: auto;
+}
+
+.site .bw-card.locked .bw-pic svg {
+	filter: brightness(0);
+	opacity: 0.25;
+}
+
+.site .bw-card b {
+	display: block;
+	font-size: 0.8rem;
+	line-height: 1.15;
+	margin-top: 0.25rem;
+}
+
+.site .bw-card i {
+	display: block;
+	font-size: 0.68rem;
+	opacity: 0.7;
+}
+
+.site .bw-card small {
+	display: block;
+	font-size: 0.7rem;
+	line-height: 1.25;
+	margin-top: 0.2rem;
+	opacity: 0.85;
+}
+
+.site .bw-toast {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 12px;
+	bottom: 4rem;
+	color: var(--tag-fg);
+	font-size: 0.92rem;
+	font-weight: 700;
+	left: 50%;
+	opacity: 0;
+	padding: 0.5rem 0.9rem;
+	pointer-events: none;
+	position: absolute;
+	transform: translate(-50%, 6px);
+	transition: opacity 0.3s, transform 0.3s;
+	z-index: 4;
+}
+
+.site .bw-toast.show {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+html.reduce-motion .site .bw-toast,
+html.reduce-motion .site .bird.pickable svg {
+	transition: none;
+}

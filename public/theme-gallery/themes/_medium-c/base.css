@@ -1,0 +1,148 @@
+/* Shared chrome for the medium-aurora "c" themes (#289-292). No scrims: text sits on the plain page background. */
+.site {
+	--siteBg: #fbfdfe;
+	--siteFg: #283556;
+	--siteFgStrong: #142842;
+	--siteMuted: #3e4d6e;
+	--siteAccent: #1170d0;
+	--siteSquiggle: #00a3ff;
+	--siteSubtle: #dbe9f1;
+}
+html.dark .site {
+	--siteBg: #080f1e;
+	--siteFg: #dae7f3;
+	--siteFgStrong: #f1f6fb;
+	--siteMuted: #a3b4cc;
+	--siteAccent: #7cc0ff;
+	--siteSquiggle: #5fd3ee;
+	--siteSubtle: #0f2238;
+}
+.site .site-scenery {
+	overflow: hidden;
+}
+.site .mc-cv {
+	display: block;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+}
+.site .mc-shore {
+	bottom: 0;
+	contain: layout paint;
+	inset: auto 0 0 0;
+	overflow: hidden;
+	pointer-events: none;
+	position: absolute;
+}
+.site .mc-shore > * {
+	pointer-events: none;
+	position: absolute;
+}
+.site .mc-shore > canvas {
+	left: 0;
+	top: 0;
+}
+.site .mc-mist {
+	border-radius: 50%;
+	will-change: transform;
+}
+.site .mc-anim {
+	animation: mc-drift 120s ease-in-out infinite alternate;
+}
+@keyframes mc-drift {
+	from {
+		transform: translate3d(calc(var(--dx, 200px) * -0.5), 0, 0);
+	}
+	to {
+		transform: translate3d(calc(var(--dx, 200px) * 0.5), 0, 0);
+	}
+}
+.site .mc-loon {
+	left: 0;
+	will-change: transform;
+}
+.site .mc-loon-in {
+	height: 100%;
+	width: 100%;
+}
+.site .mc-loon-in canvas {
+	display: block;
+}
+.site .mc-breathe {
+	animation: mc-breathe 11s ease-in-out infinite alternate;
+}
+@keyframes mc-breathe {
+	from {
+		opacity: 0.6;
+	}
+	to {
+		opacity: 1;
+	}
+}
+.site .mc-spin {
+	animation: mc-spin 900s linear infinite;
+	will-change: transform;
+}
+@keyframes mc-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+.site .mc-tw {
+	animation: mc-twinkle 6s ease-in-out infinite alternate;
+	will-change: opacity;
+}
+@keyframes mc-twinkle {
+	from {
+		opacity: 0.35;
+	}
+	to {
+		opacity: 1;
+	}
+}
+.site .mc-hint {
+	bottom: 0.5rem;
+	color: var(--siteMuted);
+	font-size: 0.8rem;
+	font-weight: 600;
+	left: 1rem;
+	letter-spacing: 0.02em;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 1.4s ease;
+}
+.site .mc-hint.is-gone {
+	opacity: 0;
+}
+.site .site-header {
+	position: relative;
+}
+@media (prefers-reduced-motion: reduce) {
+	.site .mc-anim,
+	.site .mc-breathe,
+	.site .mc-spin,
+	.site .mc-tw {
+		animation: none;
+	}
+}
+html.reduce-motion .site .mc-anim,
+html.reduce-motion .site .mc-breathe,
+html.reduce-motion .site .mc-spin,
+html.reduce-motion .site .mc-tw {
+	animation: none;
+}
+@media (max-width: 700px) {
+	.site .mc-hint {
+		display: none;
+	}
+}
+
+.site .mc-top {
+	contain: layout paint;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	will-change: opacity;
+	z-index: 15;
+}

@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap");
+
+.site {
+	--siteBg: #eef5f2;
+	--siteFg: #1d3a47;
+	--siteFgStrong: #0d2431;
+	--siteMuted: #56707c;
+	--siteAccent: #d9482a;
+	--siteSquiggle: #d9482a;
+	--siteSubtle: #d3e4df;
+	--siteFont: "Outfit", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+	--rn-tag: #ecdcb8;
+	--rn-tag-edge: #b99c62;
+	--rn-tag-ink: #3a2c14;
+	--rn-rope: #b58d52;
+	--rn-rope-hi: #e2c791;
+	--rn-rail-a: #f1d58a;
+	--rn-rail-b: #a57a2c;
+}
+
+html.dark .site {
+	--siteBg: #0a1a20;
+	--siteFg: #cfe3e6;
+	--siteFgStrong: #f1fafb;
+	--siteMuted: #86a3ab;
+	--siteAccent: #ff8a65;
+	--siteSquiggle: #ff8a65;
+	--siteSubtle: #12303a;
+	--rn-tag: #24424b;
+	--rn-tag-edge: #4f7b86;
+	--rn-tag-ink: #eaf5f6;
+	--rn-rope: #a8834d;
+	--rn-rope-hi: #d9bd85;
+	--rn-rail-a: #cfa45a;
+	--rn-rail-b: #6b4c1b;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 80% 30% at 50% -5%, color-mix(in srgb, var(--siteAccent) 12%, transparent), transparent 70%),
+		repeating-linear-gradient(0deg, transparent 0 47px, color-mix(in srgb, var(--siteFg) 4%, transparent) 47px 48px);
+}
+
+.site .site-header {
+	align-items: flex-start;
+	min-height: 8.2rem;
+	padding-top: 1.1rem;
+}
+
+.site .site-logo,
+.site .site-theme-toggle {
+	margin-top: 2.1rem;
+}
+
+.site .site-nav {
+	align-items: flex-end;
+	align-self: stretch;
+	gap: 1.1rem;
+}
+
+.site .site-nav-link {
+	background: var(--rn-tag);
+	border: 2px solid var(--rn-tag-edge);
+	border-radius: 7px;
+	box-shadow: 0 5px 8px -3px rgb(0 0 0 / 0.35), inset 0 0 0 3px color-mix(in srgb, var(--rn-tag) 70%, #fff);
+	color: var(--rn-tag-ink);
+	display: inline-block;
+	font-size: 1.1rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	padding: 0.55rem 1rem;
+	transform-origin: 50% 50%;
+	will-change: transform;
+}
+
+.site .site-nav-link.is-active {
+	background: var(--siteAccent);
+	border-color: color-mix(in srgb, var(--siteAccent) 65%, #000);
+	box-shadow: 0 5px 8px -3px rgb(0 0 0 / 0.4), inset 0 0 0 3px color-mix(in srgb, var(--siteAccent) 70%, #fff);
+	color: #fff;
+}
+
+html.dark .site .site-nav-link.is-active {
+	color: #1b0b05;
+}
+
+.site .site-nav-link:focus-visible {
+	outline: 3px solid var(--siteAccent);
+	outline-offset: 3px;
+}
+
+.site.rope-on .site-nav-link {
+	cursor: grab;
+}
+
+.site.rope-on .site-nav-link.is-dragging {
+	cursor: grabbing;
+}
+
+.site .rope-canvas {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .site-title {
+	font-weight: 800;
+	letter-spacing: -0.02em;
+}
+
+.site .site-portrait img {
+	border: 4px solid var(--rn-tag-edge);
+}

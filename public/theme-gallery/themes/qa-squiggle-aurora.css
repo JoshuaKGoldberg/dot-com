@@ -1,0 +1,38 @@
+/* #266 Aurora Squiggles: plain site; link squiggles shimmer in aurora colors near the cursor. */
+.site .site-link::before {
+	animation: qa-flow 7s ease-in-out calc(var(--qa-x, 0) * -7s) infinite alternate;
+	background: linear-gradient(90deg, #22c8a0, #00a3ff, #8a7cf0, #d878c8, #22c8a0, #00a3ff, #8a7cf0) 0 0 / 300% 100%;
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+
+html.dark .site .site-link::before {
+	background-image: linear-gradient(90deg, #5affaa, #3cdcd7, #6e96ff, #be6eff, #5affaa, #3cdcd7, #6e96ff);
+}
+
+.site .site-link[style*="--qa-p"]::before {
+	opacity: var(--qa-p);
+}
+
+.site .site-link[style*="--qa-p"]::after {
+	opacity: calc(0.9 - var(--qa-p) * 0.9);
+}
+
+@keyframes qa-flow {
+	from { background-position: 0% 0; }
+	to { background-position: 100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .site-link::before { animation: none; }
+}
+
+html.reduce-motion .site .site-link::before { animation: none; }

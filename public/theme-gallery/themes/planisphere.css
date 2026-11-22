@@ -1,0 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&display=swap");
+
+.site {
+	--siteBg: #efe2c2;
+	--siteFg: #3a2c1c;
+	--siteFgStrong: #231a0f;
+	--siteMuted: #6b5a42;
+	--siteAccent: #8a4a1f;
+	--siteSquiggle: #b0793a;
+	--siteSubtle: #e0cfa6;
+	--siteFontDisplay: "IM Fell English", Georgia, serif;
+	--ink: #6a4527;
+	--inkSoft: rgba(106, 69, 39, 0.55);
+	--paperA: #f5ead0;
+	--paperB: #e6d3a6;
+	--starOp: 0.85;
+}
+
+html.dark .site {
+	--siteBg: #0a1030;
+	--siteFg: #d9dbe8;
+	--siteFgStrong: #f4f0dc;
+	--siteMuted: #9ea6c4;
+	--siteAccent: #e4c981;
+	--siteSquiggle: #c7a85a;
+	--siteSubtle: #151d46;
+	--ink: #dcc88c;
+	--inkSoft: rgba(220, 200, 140, 0.5);
+	--paperA: #0d1538;
+	--paperB: #070b22;
+	--starOp: 0.9;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(90% 80% at 40% 40%, var(--paperA), var(--paperB) 130%);
+}
+
+html:not(.dark) .site .site-scenery .scenery-a::after {
+	background: radial-gradient(120% 100% at 50% 50%, transparent 60%, rgba(120, 80, 30, 0.22) 100%);
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+.site .site-scenery .scenery-b {
+	-webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 56%, rgba(0, 0, 0, 0.5) 74%, #000 90%);
+	mask-image: linear-gradient(90deg, transparent 0%, transparent 56%, rgba(0, 0, 0, 0.5) 74%, #000 90%);
+}
+
+.site .chart {
+	height: 100%;
+	overflow: visible;
+	position: absolute;
+	width: 100%;
+}
+
+.site .chart * {
+	fill: none;
+	stroke: var(--ink);
+	vector-effect: non-scaling-stroke;
+}
+
+.site .chart .ring {
+	opacity: 0.55;
+	stroke-width: 0.7;
+}
+
+.site .chart .ring.strong {
+	opacity: 0.9;
+	stroke-width: 1.2;
+}
+
+.site .chart .merid {
+	opacity: 0.3;
+	stroke-width: 0.6;
+}
+
+.site .chart .ecliptic {
+	opacity: 0.85;
+	stroke-dasharray: 7 3;
+	stroke-width: 1;
+}
+
+.site .chart .tick {
+	opacity: 0.7;
+	stroke-width: 0.6;
+}
+
+.site .chart .lines {
+	opacity: 0.75;
+	stroke-width: 0.8;
+}
+
+.site .chart .star {
+	fill: var(--ink);
+	opacity: var(--starOp);
+	stroke: none;
+}
+
+.site .chart .star.faint {
+	opacity: 0.45;
+}
+
+.site .chart text {
+	fill: var(--ink);
+	font-family: "IM Fell English", Georgia, serif;
+	font-style: italic;
+	opacity: 0.85;
+	stroke: none;
+	vector-effect: none;
+}
+
+.site .chart .hour {
+	font-size: 12px;
+	font-style: normal;
+	opacity: 0.8;
+}
+
+.site .chart .cname {
+	font-size: 13px;
+	letter-spacing: 0.08em;
+	opacity: 0.7;
+}
+
+.site .chart-note {
+	bottom: 0.7rem;
+	color: var(--siteMuted);
+	font-family: "IM Fell English", Georgia, serif;
+	font-size: 0.8rem;
+	font-style: italic;
+	opacity: 0.85;
+	position: absolute;
+	right: 1.1rem;
+	text-align: right;
+}

@@ -1,0 +1,616 @@
+/*
+ * Sky to Lake X: Cross-Section. Zero JavaScript.
+ * One continuous geological diagram: sky, canopy, trunks cut open to show their grain,
+ * soil horizons with roots threading through, cracked rock, an underground lake, bedrock.
+ *   scroll-timeline            -> the whole earth block descends past you (one SVG, so roots always meet trunks)
+ *   scale + counter-scale      -> a tree-ring disc is revealed from its pith outward (a growing circular window over fixed rings)
+ *   stepped translate          -> the depth readout and horizon name are a stack of labels slid into a window
+ *   mix-blend-mode: multiply   -> dark mode is the same cutaway under a night gel
+ */
+
+.site {
+	--siteBg: #f4ecd8;
+	--siteFg: #2b2218;
+	--siteFgStrong: #130d07;
+	--siteMuted: #6a5a46;
+	--siteAccent: #9a4a1c;
+	--siteSquiggle: #c0762c;
+	--siteSubtle: #e7dcc1;
+	--bw: max(100vw, 130vh);
+	--label: #f6efdc;
+	--labelEdge: #5a4630;
+	--spring: linear(0, 0.3 6%, 0.77 13%, 1.08 19%, 1.14 23%, 1.06 30%, 0.98 38%, 0.99 48%, 1);
+
+	background: #bfe0ec;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #14100c;
+	--siteFg: #e8dcc4;
+	--siteFgStrong: #fff8e6;
+	--siteMuted: #b2a284;
+	--siteAccent: #ffb26b;
+	--siteSquiggle: #ffb26b;
+	--siteSubtle: #261d14;
+	--label: #1c1610;
+	--labelEdge: #d9c79f;
+	background: #0b1220;
+}
+
+.site-scenery {
+	overflow: hidden;
+}
+
+/* ================= scenery ================= */
+
+.site .scenery-a,
+.site .scenery-b,
+.site .scenery-c,
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site .site-scenery::before,
+.site .site-scenery::after,
+.site .overlay-a::before,
+.site .overlay-a::after {
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+/* sky paper */
+.site .scenery-a {
+	background: linear-gradient(180deg, #8ec5e4, #d6ecf2 55%, #f4e6cc);
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(1.5px 1.5px at 12% 14%, #fff 98%, transparent) 0 0 / 230px 210px,
+		radial-gradient(2px 2px at 62% 40%, #fff 98%, transparent) 0 0 / 310px 260px,
+		radial-gradient(1.4px 1.4px at 82% 72%, #cfe0ff 98%, transparent) 0 0 / 190px 170px,
+		linear-gradient(180deg, #0c1636, #1f2f5c 60%, #3c4670);
+}
+
+.site .scenery-a::before {
+	background:
+		radial-gradient(circle, #fff6d6 0 30%, transparent 31%),
+		radial-gradient(circle, #f8d77a 0 52%, transparent 53%),
+		radial-gradient(circle, #f3b95a 0 74%, transparent 75%);
+	border-radius: 50%;
+	height: 24vmin;
+	inset: 8% 12% auto auto;
+	width: 24vmin;
+	will-change: transform;
+}
+
+html.dark .site .scenery-a::before {
+	background:
+		radial-gradient(circle at 36% 40%, #fdfdf6 0 30%, transparent 31%),
+		radial-gradient(circle, #dfe6fa 0 62%, transparent 63%),
+		radial-gradient(circle, rgb(160 180 255 / 0.35) 0 100%, transparent 101%);
+	height: 16vmin;
+	width: 16vmin;
+}
+
+.site .scenery-a::after {
+	background: url("zj-descent-cross-section/peaks.svg") 50% 62% / 1600px auto repeat-x;
+	inset: 0 0 -30vh 0;
+	will-change: transform;
+}
+
+/* THE EARTH: one tall SVG block. Everything that must connect (crowns, trunks, soil line,
+   roots, strata, cave, bedrock) lives in it, so nothing can drift apart. */
+.site .scenery-b::before {
+	aspect-ratio: 1600 / 4400;
+	background: url("zj-descent-cross-section/earth.webp") 0 0 / 100% 100% no-repeat;
+	bottom: auto;
+	height: auto;
+	inset-inline: 50% auto;
+	margin-left: calc(var(--bw) / -2);
+	width: var(--bw);
+	will-change: transform;
+}
+
+/* foreground roots: the same earth, but near. Their top 25% is empty, so they only appear underground */
+.site .scenery-b::after {
+	aspect-ratio: 1600 / 3000;
+	background: url("zj-descent-cross-section/roots-fg.webp") 0 0 / 100% 100% no-repeat;
+	bottom: auto;
+	height: auto;
+	inset-inline: 50% auto;
+	margin-left: calc(var(--bw) / -2);
+	width: var(--bw);
+	opacity: 0.8;
+	will-change: transform;
+	z-index: 2;
+}
+
+/* tree-ring disc, revealed outward from the pith: .scenery-c is a circular window (the full-reveal circle,
+   centred on the pith) that scales up from nothing; its ::before holds the rings and counter-scales, so the
+   rings stay put while the window grows. Both are transform-only. */
+.site .scenery-c {
+	border-radius: 50%;
+	contain: paint;
+	height: 89.8vmin;
+	inset: auto;
+	left: calc(100% - 52.01vmin);
+	overflow: hidden;
+	top: calc(12vh - 11.82vmin);
+	translate: 0 105vh;
+	width: 89.8vmin;
+	will-change: transform;
+	z-index: 1;
+}
+
+.site .scenery-c::before {
+	aspect-ratio: 1300 / 1000;
+	background: url("zj-descent-cross-section/rings.svg") 0 0 / 100% 100% no-repeat;
+	content: "";
+	height: auto;
+	inset: auto;
+	position: absolute;
+	left: -7.99vmin;
+	top: 11.82vmin;
+	transform-origin: 61.5% 50%;
+	width: 86vmin;
+	will-change: transform;
+}
+
+/* night gel, dark mode only */
+.site .site-scenery::before {
+	background: linear-gradient(180deg, #5a68a6, #8a8fb8 40%, #aab0d4);
+	display: none;
+	mix-blend-mode: multiply;
+	z-index: 7;
+}
+
+html.dark .site .site-scenery::before {
+	display: block;
+}
+
+/* depth grade: it gets darker as you descend (light mode too) */
+.site .site-scenery::after {
+	background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(5 3 2 / 0.45));
+	opacity: 0;
+	z-index: 8;
+}
+
+/* depth ruler along the left edge */
+.site .overlay-a::before {
+	background:
+		repeating-linear-gradient(180deg, var(--labelEdge) 0 2px, transparent 2px 40px) 0 0 / 14px 100% no-repeat,
+		repeating-linear-gradient(180deg, var(--labelEdge) 0 1px, transparent 1px 8px) 0 0 / 7px 100% no-repeat;
+	inset: 0 auto 0 0;
+	opacity: 0.55;
+	width: 14px;
+}
+
+/* cutaway crop marks */
+.site .overlay-a::after {
+	background:
+		linear-gradient(var(--labelEdge), var(--labelEdge)) 0.7rem 0.7rem / 1.2rem 2px no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) 0.7rem 0.7rem / 2px 1.2rem no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) calc(100% - 0.7rem) 0.7rem / 1.2rem 2px no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) calc(100% - 0.7rem) 0.7rem / 2px 1.2rem no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) 0.7rem calc(100% - 0.7rem) / 1.2rem 2px no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) 0.7rem calc(100% - 0.7rem) / 2px 1.2rem no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) calc(100% - 0.7rem) calc(100% - 0.7rem) / 1.2rem 2px no-repeat,
+		linear-gradient(var(--labelEdge), var(--labelEdge)) calc(100% - 0.7rem) calc(100% - 0.7rem) / 2px 1.2rem no-repeat;
+	opacity: 0.6;
+}
+
+/* static (reduced motion): the soil profile with trunk bases, horizons and roots, no ring disc */
+.site .scenery-b::before {
+	translate: 0 calc(25vh - 0.9375 * var(--bw));
+}
+
+html.reduce-motion .site .scenery-b::after,
+html.reduce-motion .site .scenery-c {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-b::after,
+	.site .scenery-c {
+		display: none;
+	}
+}
+
+/* ================= scroll choreography ================= */
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: zjx-sun linear both;
+			animation-range: 0% 45%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: zjx-peaks linear both;
+			animation-range: 0% 50%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::before {
+			animation: zjx-earth linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: zjx-fg linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c {
+			animation: zjx-disc linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::before {
+			animation: zjx-disc-in linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::after {
+			animation: zjx-grade linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .overlay-b::after {
+			animation: zjx-readout linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zjx-sun {
+	to {
+		translate: 0 -150%;
+	}
+}
+
+@keyframes zjx-peaks {
+	to {
+		translate: 0 -30vh;
+	}
+}
+
+/* ground line enters from below, bottom of the block ends flush with the bottom of the viewport */
+@keyframes zjx-earth {
+	from {
+		translate: 0 20vh;
+	}
+	to {
+		translate: 0 calc(100vh - 100% + 0.25 * var(--bw));
+	}
+}
+
+@keyframes zjx-fg {
+	from {
+		translate: 0 100vh;
+	}
+	to {
+		translate: 0 calc(100vh - 100% + 0.25 * var(--bw));
+	}
+}
+
+@keyframes zjx-disc {
+	0% { translate: 0 105vh; scale: 0; }
+	16% { translate: 0 42.33vh; scale: 0; }
+	16.320% { translate: 0 41.08vh; scale: 0.0200; }
+	16.358% { translate: 0 40.93vh; scale: 0.0224; }
+	16.401% { translate: 0 40.76vh; scale: 0.0251; }
+	16.450% { translate: 0 40.57vh; scale: 0.0281; }
+	16.504% { translate: 0 40.36vh; scale: 0.0315; }
+	16.564% { translate: 0 40.12vh; scale: 0.0352; }
+	16.632% { translate: 0 39.86vh; scale: 0.0395; }
+	16.707% { translate: 0 39.56vh; scale: 0.0442; }
+	16.792% { translate: 0 39.23vh; scale: 0.0495; }
+	16.887% { translate: 0 38.86vh; scale: 0.0555; }
+	16.994% { translate: 0 38.44vh; scale: 0.0621; }
+	17.113% { translate: 0 37.97vh; scale: 0.0696; }
+	17.247% { translate: 0 37.45vh; scale: 0.0779; }
+	17.396% { translate: 0 36.86vh; scale: 0.0873; }
+	17.564% { translate: 0 36.21vh; scale: 0.0977; }
+	17.752% { translate: 0 35.47vh; scale: 0.1095; }
+	17.962% { translate: 0 34.65vh; scale: 0.1226; }
+	18.197% { translate: 0 33.73vh; scale: 0.1373; }
+	18.461% { translate: 0 32.70vh; scale: 0.1538; }
+	18.756% { translate: 0 31.54vh; scale: 0.1723; }
+	19.087% { translate: 0 30.24vh; scale: 0.1929; }
+	19.457% { translate: 0 28.79vh; scale: 0.2161; }
+	19.872% { translate: 0 27.17vh; scale: 0.2420; }
+	20.337% { translate: 0 25.35vh; scale: 0.2710; }
+	20.857% { translate: 0 23.31vh; scale: 0.3036; }
+	21.440% { translate: 0 21.03vh; scale: 0.3400; }
+	22.093% { translate: 0 18.47vh; scale: 0.3808; }
+	22.824% { translate: 0 15.61vh; scale: 0.4265; }
+	23.643% { translate: 0 12.40vh; scale: 0.4777; }
+	24.560% { translate: 0 8.81vh; scale: 0.5350; }
+	25.587% { translate: 0 4.78vh; scale: 0.5992; }
+	26.738% { translate: 0 0.28vh; scale: 0.6711; }
+	28.026% { translate: 0 -4.77vh; scale: 0.7516; }
+	29.469% { translate: 0 -10.42vh; scale: 0.8418; }
+	31.086% { translate: 0 -16.75vh; scale: 0.9429; }
+	32.000% { translate: 0 -20.33vh; scale: 1.0000; }
+	60%, 100% { translate: 0 -130vh; scale: 1; }
+}
+
+@keyframes zjx-disc-in {
+	0%, 16% { scale: 1; }
+	16.320% { scale: 50.0000; }
+	16.358% { scale: 44.6429; }
+	16.401% { scale: 39.8597; }
+	16.450% { scale: 35.5890; }
+	16.504% { scale: 31.7759; }
+	16.564% { scale: 28.3713; }
+	16.632% { scale: 25.3316; }
+	16.707% { scale: 22.6175; }
+	16.792% { scale: 20.1942; }
+	16.887% { scale: 18.0305; }
+	16.994% { scale: 16.0987; }
+	17.113% { scale: 14.3738; }
+	17.247% { scale: 12.8338; }
+	17.396% { scale: 11.4587; }
+	17.564% { scale: 10.2310; }
+	17.752% { scale: 9.1348; }
+	17.962% { scale: 8.1561; }
+	18.197% { scale: 7.2822; }
+	18.461% { scale: 6.5020; }
+	18.756% { scale: 5.8053; }
+	19.087% { scale: 5.1833; }
+	19.457% { scale: 4.6280; }
+	19.872% { scale: 4.1321; }
+	20.337% { scale: 3.6894; }
+	20.857% { scale: 3.2941; }
+	21.440% { scale: 2.9412; }
+	22.093% { scale: 2.6260; }
+	22.824% { scale: 2.3447; }
+	23.643% { scale: 2.0935; }
+	24.560% { scale: 1.8692; }
+	25.587% { scale: 1.6689; }
+	26.738% { scale: 1.4901; }
+	28.026% { scale: 1.3304; }
+	29.469% { scale: 1.1879; }
+	31.086% { scale: 1.0606; }
+	32.000% { scale: 1.0000; }
+	100% { scale: 1; }
+}
+
+@keyframes zjx-grade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* depth and horizon name: a stack of labels, slid into a window in hard steps at the horizon boundaries */
+@keyframes zjx-readout {
+	0% {
+		animation-timing-function: steps(1, end);
+		translate: 0 0;
+	}
+	6.1% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -1);
+	}
+	23.25% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -2);
+	}
+	37.35% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -3);
+	}
+	42.05% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -4);
+	}
+	52.95% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -5);
+	}
+	68.6% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -6);
+	}
+	84.25% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -7);
+	}
+	100% {
+		translate: 0 calc(var(--rh) * -7);
+	}
+}
+
+/* ================= page: museum specimen labels ================= */
+
+.site {
+	counter-reset: fig;
+}
+
+.site-title {
+	letter-spacing: -0.02em;
+}
+
+.site-hero,
+.site-about,
+.site-footer,
+.site-item {
+	background: color-mix(in srgb, var(--label) 93%, transparent);
+	border: 1px solid var(--labelEdge);
+	border-radius: 0.15rem;
+	box-shadow:
+		inset 0 0 0 4px color-mix(in srgb, var(--label) 93%, transparent),
+		inset 0 0 0 5px color-mix(in srgb, var(--labelEdge) 45%, transparent),
+		3px 4px 0 color-mix(in srgb, #000 22%, transparent);
+}
+
+.site-hero {
+	padding: 1.7rem 2rem;
+}
+
+.site-about {
+	padding: 1.3rem 2rem;
+}
+
+.site-item {
+	counter-increment: fig;
+	padding: 0.95rem 1.4rem 1rem;
+	position: relative;
+	transition: translate 0.5s var(--spring);
+}
+
+.site-item::before {
+	background: var(--labelEdge);
+	color: var(--label);
+	content: "FIG. " counter(fig);
+	font: 700 0.6rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	letter-spacing: 0.08em;
+	padding: 0.25rem 0.5rem;
+	position: absolute;
+	right: 0.6rem;
+	top: -0.55rem;
+	transition: background 0.3s;
+}
+
+.site-item:hover {
+	translate: 4px -3px;
+}
+
+.site-item:hover::before {
+	background: var(--siteAccent);
+}
+
+.site-portrait img {
+	border-radius: 0.2rem;
+	box-shadow: 0 0 0 4px var(--label), 0 0 0 5px var(--labelEdge);
+}
+
+.site-section-title {
+	background: color-mix(in srgb, var(--label) 93%, transparent);
+	border: 1px solid var(--labelEdge);
+	padding: 0.3rem 0.6rem;
+	align-items: baseline;
+	display: flex;
+	gap: 0.7rem;
+}
+
+.site-section-title::after {
+	border-top: 2px dotted var(--labelEdge);
+	content: "";
+	flex: 1;
+	opacity: 0.7;
+}
+
+.site-section-title::before {
+	background: var(--labelEdge);
+	color: var(--label);
+	font: 700 0.65rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	letter-spacing: 0.08em;
+	padding: 0.3rem 0.5rem;
+	text-transform: uppercase;
+}
+
+.site-posts .site-section-title::before {
+	content: "Stratum I \00b7 O horizon";
+}
+
+.site-projects .site-section-title::before {
+	content: "Stratum II \00b7 B horizon";
+}
+
+.site-talks .site-section-title::before {
+	content: "Stratum III \00b7 C horizon";
+}
+
+.site-section-title {
+	order: 0;
+}
+
+.site-footer {
+	margin-bottom: 12vh;
+	padding: 1rem;
+}
+
+.site-page {
+	padding-bottom: 8vh;
+	padding-left: 2.4rem;
+}
+
+@media (max-width: 700px) {
+	.site-page {
+		padding-left: 1.5rem;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-about, .site-footer) {
+			animation: zjx-slice linear both;
+			animation-range: entry 0% entry 85%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjx-slice {
+	from {
+		opacity: 0;
+		translate: 0 1.2rem;
+	}
+}
+
+/* ================= badge + readout ================= */
+
+.site-overlay::before {
+	background: var(--label);
+	border: 1px solid var(--labelEdge);
+	bottom: 1.4rem;
+	box-shadow: 3px 3px 0 color-mix(in srgb, #000 25%, transparent);
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A a cross-section in pure CSS";
+	font: 700 0.68rem/1.3 var(--siteFont);
+	inset: auto auto 1.4rem 2.2rem;
+	padding: 0.45rem 0.8rem;
+	position: absolute;
+	white-space: pre;
+}
+
+.site .overlay-b {
+	--rh: 1.9rem;
+	background: var(--label);
+	border: 1px solid var(--labelEdge);
+	box-shadow: 3px 3px 0 color-mix(in srgb, #000 25%, transparent);
+	box-sizing: border-box;
+	color: var(--siteFgStrong);
+	font: 700 0.66rem/var(--rh) ui-monospace, SFMono-Regular, Menlo, monospace;
+	height: calc(var(--rh) + 2px);
+	inset: auto 1.4rem 1.4rem auto;
+	letter-spacing: 0.04em;
+	overflow: hidden;
+	text-align: center;
+	width: 24rem;
+}
+
+.site .overlay-b::after {
+	content: "z = +48 \2026 +39 m  \00b7  SKY\A z = +39 \2026 +15 m  \00b7  CANOPY\A z = +15 \2026 \2212 6 m  \00b7  TRUNKWOOD \00b7 annual rings\A z = \2212 6 \2026 \2212 13 m  \00b7  O \00b7 leaf litter\A z = \2212 13 \2026 \2212 28 m  \00b7  A \00b7 topsoil\A z = \2212 28 \2026 \2212 51 m  \00b7  B \00b7 subsoil\A z = \2212 51 \2026 \2212 73 m  \00b7  C \00b7 weathered rock\A z = \2212 73 \2026 \2212 96 m  \00b7  WATER TABLE \00b7 cave lake";
+	display: block;
+	inset: 0 0 auto 0;
+	line-height: var(--rh);
+	position: absolute;
+	translate: 0 calc(var(--rh) * -4);
+	white-space: pre;
+	will-change: transform;
+}
+
+@media (max-width: 700px) {
+	.site .overlay-b {
+		display: none;
+	}
+}

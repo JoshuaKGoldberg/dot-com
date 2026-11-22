@@ -1,0 +1,51 @@
+/* Token plan
+ * Families: Libre Caslon Display (hero) + Libre Caslon Text 400/700.
+ * Scale: hero 63px static 400, -0.015em; tagline Text 1.35rem; ratio 2.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Caslon is the English workhorse: Display cut for the headline, Text cut (bold for item titles) for gravitas with real optical separation.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:wght@400;700&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Libre Caslon Display Fallback"; src: local("Georgia"); size-adjust: 83.4%; ascent-override: 116.3%; descent-override: 32.4%; line-gap-override: 0%; }
+@font-face { font-family: "Libre Caslon Text Fallback"; src: local("Georgia"); size-adjust: 106.5%; ascent-override: 91.1%; descent-override: 24.4%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #389 Libre Caslon: Display for the headline, Text for everything else. Old-world gravitas. */
+.site {
+	--tyDisplay: "Libre Caslon Display", "Libre Caslon Display Fallback", "Libre Caslon Text", Georgia, serif;
+	--tyBody: "Libre Caslon Text", "Libre Caslon Text Fallback", Georgia, serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13cqi, 4.6rem);
+	--tyTitleW: 400;
+	--tyTitleLs: -0.015em;
+	--tyTitleLh: 1;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.35rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.003em;
+	--tyTagLh: 1.35;
+	--tyTagMax: 21em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.18rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1rem;
+	--tyDescLh: 1.6;
+	--tyUiW: 400;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.15rem;
+	--tyLogoW: 700;
+	--tySocialSize: 1rem;
+	--tySecSize: 2.1rem;
+	--tySecW: 400;
+	--tySecLs: -0.01em;
+	--tyItemW: 700;
+	--tyItemSize: 1.15rem;
+	--tyMetaSize: 0.88rem;
+	--tyMetaLs: 0.02em;
+}

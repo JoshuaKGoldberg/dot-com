@@ -1,0 +1,57 @@
+/* 168. Scroll Timelapse: scrolling advances a day over an Adirondack lake. */
+.site {
+	--siteBg: #fdffff;
+	--siteFg: #283556;
+	--siteFgStrong: #142842;
+	--siteMuted: #5b6b8c;
+	--siteAccent: #0f66bf;
+	--siteSquiggle: #ff8a3d;
+	--siteSubtle: #d7e9ef;
+}
+.site .site-page { max-width: 50rem; }
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 66%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 84%, transparent);
+	border-radius: 1.2rem;
+	box-shadow: 0 14px 34px -20px rgb(0 0 0 / 0.55);
+	padding: 1.6rem 1.8rem;
+}
+.site .site-hero { margin: 5vh 0 30vh; }
+.site .site-about { margin: 0 auto 30vh; }
+.site .site-section { margin: 0 auto 30vh; }
+.site .site-footer { margin: 0 auto; max-width: 28rem; }
+
+.site .tl-hud {
+	background: color-mix(in srgb, var(--siteBg) 82%, transparent);
+	border-radius: 2rem;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	font-size: 1.5rem;
+	font-variant-numeric: tabular-nums;
+	font-weight: 800;
+	left: 1rem;
+	padding: 0.15rem 1.1rem 0.15rem 2.3rem;
+	position: absolute;
+}
+.site .tl-hud::before {
+	background: radial-gradient(circle at 35% 35%, #fff6c8, #ffb23a);
+	border-radius: 50%;
+	content: "";
+	height: 1rem;
+	left: 0.85rem;
+	margin-top: -0.5rem;
+	position: absolute;
+	top: 50%;
+	width: 1rem;
+}
+.site .tl-hud[data-phase="night"]::before { background: radial-gradient(circle at 35% 35%, #fff, #b9c6ee); }
+.site .tl-hud[data-phase="dusk"]::before,
+.site .tl-hud[data-phase="dawn"]::before { background: radial-gradient(circle at 35% 35%, #ffe0a0, #ff6a3a); }

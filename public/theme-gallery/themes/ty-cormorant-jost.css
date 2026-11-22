@@ -1,0 +1,56 @@
+/* Token plan
+ * Families: Cormorant Garamond 300-600 + Jost 300-500.
+ * Scale: hero wght 500 at 76px, -0.02em; tagline Jost 350 1.3rem; ratio 3.6x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #77/#86: the classic Garamond-over-geometric pairing.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300..600&family=Jost:wght@300..500&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Cormorant Garamond Fallback"; src: local("Georgia"); size-adjust: 87.5%; ascent-override: 105.1%; descent-override: 33.1%; line-gap-override: 0%; }
+@font-face { font-family: "Jost Fallback"; src: local("Arial"); size-adjust: 94.7%; ascent-override: 113.0%; descent-override: 40.1%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #406 (from #77, #86) Cormorant Garamond hero with Jost's clean geometric body. */
+.site {
+	--tyDisplay: "Cormorant Garamond", "Cormorant Garamond Fallback", Garamond, Georgia, serif;
+	--tyBody: "Jost", "Jost Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(3rem, 15.5cqi, 5.6rem);
+	--tyTitleW: 500;
+	--tyTitleWd: 460;
+	--tyTitleLs: -0.02em;
+	--tyTitleLh: 0.9;
+	--tyTitleShift: -0.045em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.3rem;
+	--tyTagW: 350;
+	--tyTagLs: 0.035em;
+	--tyTagLh: 1.4;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.65;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 400;
+	--tyUiLs: 0.03em;
+	--tyNavSize: 1rem;
+	--tyLogoSize: 1.6rem;
+	--tyLogoW: 500;
+	--tySocialSize: 0.95rem;
+	--tySecSize: 2.4rem;
+	--tySecW: 500;
+	--tySecWd: 460;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 600;
+	--tyItemSize: 1.5rem;
+	--tyMetaSize: 0.85rem;
+	--tyMetaLs: 0.02em;
+	--tyMetaW: 400;
+}
+.site .site-logo { font-family: var(--tyDisplay); }

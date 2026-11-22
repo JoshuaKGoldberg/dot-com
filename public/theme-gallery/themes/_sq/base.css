@@ -1,0 +1,26 @@
+/* _sq/base.css: shared by the squiggle themes (#454-478). The resting squiggle is a per-link SVG background set by _sq/sq.js
+   (custom properties --sq-d / --sq-l for dark / light, --sq-pb padding, --sq-h tile height, --sq-by vertical position).
+   box-decoration-break: clone gives every wrapped line its own full-width tile. */
+.site .sq-link {
+	text-decoration: none;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	padding-bottom: var(--sq-pb, 0px);
+	background-color: transparent;
+	background-image: var(--sq-l, none);
+	background-repeat: no-repeat;
+	background-size: var(--sq-bw, 100%) var(--sq-h, 0px);
+	background-position: 0 var(--sq-by, 100%);
+	border-radius: 2px;
+}
+html.dark .site .sq-link { background-image: var(--sq-d, none); }
+.site .sq-link[data-sq-live] { background-image: none !important; }
+.site .sq-link:focus-visible { outline: 1.5px solid color-mix(in srgb, var(--siteAccent, currentColor) 70%, transparent); outline-offset: 3px; }
+/* mirror the rules vs4/rn put on .site-link */
+.site .site-about .sq-link { white-space: nowrap; }
+.site .vs-credit-column .sq-link { margin-left: 0.6em; }
+.site .vs-credit-chart .sq-link { display: inline-block; margin-top: 0.1rem; }
+.site .site-footer .vs-credit-fog .sq-link { white-space: normal; }
+@media (prefers-reduced-motion: reduce) { .site .sq-link { transition: none !important; } }
+html.reduce-motion .site .sq-link { transition: none !important; }
+.site .sq-static { margin-bottom: calc(-1 * var(--sq-pb, 0px)); }

@@ -1,0 +1,72 @@
+@import url("../forest-kit/base.css");
+
+/* Focus & Ribbon: scenery only at the edges (top band, side stands, footer). */
+.site {
+	--siteBg: #eaf2f5;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d3e4ea;
+}
+
+html.dark .site {
+	--siteBg: #0b1329;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+}
+
+.site .site-page::before {
+	display: none;
+}
+
+.site .fr-edge {
+	display: block;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .fr-edge-sky,
+.site .fr-edge-live {
+	left: 0;
+	top: 0;
+}
+
+html.dark .site .fr-edge-sky,
+html.dark .site .fr-edge-live {
+	mix-blend-mode: screen;
+}
+
+.site .fr-edge-stand {
+	bottom: 0;
+}
+
+.site .fr-edge-l {
+	left: 0;
+}
+
+.site .fr-edge-r {
+	right: 0;
+}
+
+.site .fr-footer {
+	position: relative;
+}
+
+.site .fr-footer > *:not(.fr-footer-cv) {
+	position: relative;
+	z-index: 1;
+}
+
+.site .fr-footer-cv {
+	bottom: -3rem;
+	display: block;
+	pointer-events: none;
+	position: absolute;
+	z-index: 0;
+}

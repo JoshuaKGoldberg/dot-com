@@ -1,0 +1,166 @@
+/* 10. Plane-Window City Lights: night is a lit city grid from altitude; day is a cloud deck over fields. */
+.site {
+	--sky-a: #bcd6ee;
+	--sky-b: #e6f0f8;
+	--frame: 214, 224, 236;
+	--siteBg: #dbe8f3;
+	--siteFg: #22304d;
+	--siteFgStrong: #101f3a;
+	--siteMuted: #46587a;
+	--siteAccent: #0f5fb8;
+	--siteSquiggle: #3d9be0;
+	--siteSubtle: #d3e2ee;
+}
+
+html.dark .site {
+	--sky-a: #03050b;
+	--sky-b: #080c18;
+	--frame: 4, 5, 9;
+	--siteBg: #05070e;
+	--siteFg: #e0e4ee;
+	--siteFgStrong: #f6f1e6;
+	--siteMuted: #a4aabe;
+	--siteAccent: #ffcc88;
+	--siteSquiggle: #ffb347;
+	--siteSubtle: #10141f;
+}
+
+.site .scenery-a {
+	background: linear-gradient(to bottom, var(--sky-a), var(--sky-b));
+}
+
+.site .scenery-b,
+.site .scenery-c {
+	overflow: hidden;
+}
+
+.site .pl-layer {
+	inset: -6%;
+	position: absolute;
+}
+
+.site .pl-layer canvas,
+.site .pl-layer > svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .pl-far canvas {
+	opacity: 0.55;
+}
+
+.site .pl-near canvas {
+	filter: blur(0.35px);
+	opacity: 0.85;
+}
+
+.site .pulse {
+	background: radial-gradient(circle, rgba(255, 236, 200, 0.95) 0 1.2px, rgba(255, 190, 110, 0.35) 3px, transparent 7px);
+	border-radius: 50%;
+	height: 14px;
+	margin: -7px 0 0 -7px;
+	opacity: 0.3;
+	position: absolute;
+	width: 14px;
+}
+
+/* Day: clouds from above. */
+.site .field-svg {
+	filter: blur(2px);
+	opacity: 0.5;
+}
+
+.site .cloud-layer {
+	filter: blur(16px);
+}
+
+.site .cloud-layer.c2 {
+	filter: blur(26px);
+	opacity: 0.8;
+}
+
+.site .cloud-layer ellipse {
+	fill: #fff;
+}
+
+/* The window: rounded opening, shaded rim. */
+.site .overlay-a {
+	border-radius: clamp(28px, 7vmin, 90px);
+	bottom: 6px;
+	box-shadow: inset 0 0 46px 6px rgba(0, 0, 0, 0.38);
+	left: 6px;
+	right: 6px;
+	top: 6px;
+}
+
+html:not(.dark) .site .overlay-a {
+	box-shadow: inset 0 0 50px 4px rgba(120, 140, 170, 0.28);
+}
+
+.site .overlay-b {
+	border-radius: clamp(28px, 7vmin, 90px);
+	bottom: 6px;
+	box-shadow: 0 0 0 120vmax rgba(var(--frame), 0.62), inset 0 0 0 1.5px rgba(255, 255, 255, 0.08);
+	left: 6px;
+	right: 6px;
+	top: 6px;
+}
+
+html:not(.dark) .site .overlay-b {
+	box-shadow: 0 0 0 120vmax rgba(var(--frame), 0.7), inset 0 0 0 1.5px rgba(255, 255, 255, 0.5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .pl-near {
+		animation: pl-drift 140s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .pl-far {
+		animation: pl-drift 200s ease-in-out infinite alternate;
+		--dxs: 0.5;
+	}
+
+	html:not(.reduce-motion) .site .pulse {
+		animation: pulse var(--pd, 4s) ease-in-out var(--pdl, 0s) infinite;
+	}
+
+	html:not(.reduce-motion) .site .cloud-wrap {
+		animation: cloud-drift 120s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .cloud-wrap.w2 {
+		animation-duration: 180s;
+		animation-direction: alternate-reverse;
+	}
+}
+
+@keyframes pl-drift {
+	from {
+		transform: translate3d(1.5%, 1%, 0);
+	}
+	to {
+		transform: translate3d(-1.8%, -1.4%, 0);
+	}
+}
+
+@keyframes cloud-drift {
+	from {
+		transform: translate3d(-3%, 0, 0);
+	}
+	to {
+		transform: translate3d(3%, 1.5%, 0);
+	}
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 0.15;
+		transform: scale(0.7);
+	}
+	50% {
+		opacity: 0.95;
+		transform: scale(1.15);
+	}
+}

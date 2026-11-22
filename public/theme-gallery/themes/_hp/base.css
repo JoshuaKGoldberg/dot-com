@@ -1,0 +1,6 @@
+/* _hp/base.css: hero-photo explorations. The original portrait (imgs + _vs4 canvas) is hidden once the new stage has drawn its first frame. */
+.site .site-portrait { position: relative; }
+.site .site-portrait.hp-on img { opacity: 0 !important; box-shadow: none !important; }
+.site .site-portrait canvas.vs-portrait { display: none !important; }
+.site .site-portrait .hp-stage { inset: 0; pointer-events: none; position: absolute; z-index: 1; }
+.site .site-portrait .hp-canvas { display: block; pointer-events: none; position: absolute; }

@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #eef2ec;
+	--siteFg: #1d2b27;
+	--siteFgStrong: #0b1613;
+	--siteMuted: #546760;
+	--siteAccent: #0f7a66;
+	--siteSquiggle: #e0733a;
+	--siteSubtle: #d8e2d9;
+	--siteFont: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "IBM Plex Mono", ui-monospace, monospace;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #050c0b;
+	--siteFg: #cfe3dc;
+	--siteFgStrong: #effaf6;
+	--siteMuted: #86a39a;
+	--siteAccent: #4ee6c2;
+	--siteSquiggle: #ffb347;
+	--siteSubtle: #0d1f1c;
+}
+
+.site .scenery-a canvas {
+	display: block;
+}
+
+.site-title {
+	font-size: clamp(2.4rem, 5vw, 3.4rem);
+	font-weight: 600;
+	letter-spacing: -0.06em;
+	line-height: 0.95;
+}
+
+.site-section-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: -0.04em;
+}
+
+.site-section-title::before {
+	color: var(--siteSquiggle);
+	content: "▸ ";
+}
+
+.site-item-title {
+	font-family: var(--siteFont);
+	font-weight: 600;
+}
+
+.site-item-meta {
+	font-family: var(--siteFontDisplay);
+	font-size: 0.8rem;
+}
+
+.site-about,
+.site-item-description,
+.site-tagline {
+	font-weight: 300;
+}

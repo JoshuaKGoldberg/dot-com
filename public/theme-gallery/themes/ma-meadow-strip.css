@@ -1,0 +1,20 @@
+/* #288 Meadow Strip: a low meadow with fireflies along the bottom of the window. */
+html.dark .site {
+	--siteBg: #0a1122;
+	--siteSubtle: #0f2238;
+}
+@keyframes mmsSway {
+	from { transform: skewX(-1.1deg); }
+	to { transform: skewX(1.1deg); }
+}
+.site .mms-sway {
+	animation: mmsSway 8s ease-in-out infinite alternate;
+}
+html.reduce-motion .site .mms-sway {
+	animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+	.site .mms-sway {
+		animation: none;
+	}
+}

@@ -1,0 +1,94 @@
+/* 6. Low-Poly Water: plain sky over a faceted lake whose triangles slowly trade light. */
+.site {
+	--sky-top: #cfe0ef;
+	--sky-hor: #eaf1f5;
+	--silhouette: #54677a;
+	--siteBg: #e6eef3;
+	--siteFg: #22304d;
+	--siteFgStrong: #101f3a;
+	--siteMuted: #46587a;
+	--siteAccent: #0f5fb8;
+	--siteSquiggle: #3d9be0;
+	--siteSubtle: #d3e1ea;
+}
+
+html.dark .site {
+	--sky-top: #0b1230;
+	--sky-hor: #1c2850;
+	--silhouette: #04071a;
+	--siteBg: #0f1738;
+	--siteFg: #d9e2f4;
+	--siteFgStrong: #f2f5fc;
+	--siteMuted: #a2aed0;
+	--siteAccent: #8fc2ff;
+	--siteSquiggle: #8f9cff;
+	--siteSubtle: #1a2350;
+}
+
+.site .scenery-a {
+	background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-hor) 33.4%);
+}
+
+
+.site .scenery-b {
+	height: 67%;
+	top: auto;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 9%);
+}
+
+.site .mesh {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .facet {
+	fill: var(--c1);
+	stroke: var(--c1);
+	stroke-linejoin: round;
+	stroke-width: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .facet {
+		animation: facet-shift var(--dur, 40s) ease-in-out var(--del, 0s) infinite alternate;
+	}
+}
+
+@keyframes facet-shift {
+	to {
+		fill: var(--c2);
+		stroke: var(--c2);
+	}
+}
+
+.site .scenery-c {
+	bottom: 3.5%;
+	height: 150px;
+	inset: auto 0 3.5% auto;
+	opacity: 0.55;
+	top: auto;
+	width: 300px;
+}
+
+html.dark .site .scenery-c {
+	opacity: 0.8;
+}
+
+.site .dock-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .dock-svg .sil {
+	fill: var(--silhouette);
+	stroke: var(--silhouette);
+}
+
+.site .dock-svg .sil-line {
+	fill: none;
+	stroke: var(--silhouette);
+	stroke-linecap: round;
+}

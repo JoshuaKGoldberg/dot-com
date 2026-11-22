@@ -1,0 +1,115 @@
+/* Shared blog-post typesetting for t2-* (#409-428). Each theme sets the --t2* custom properties on .site.
+   No card, no box: a post as it would sit on a real blog. Every selector is scoped under .site. */
+
+.site .t2-post {
+	font-family: var(--t2Font, var(--tyBody));
+	font-size: var(--t2Size, 1.125rem);
+	font-weight: var(--t2W, 400);
+	font-variation-settings: var(--t2Vs, normal);
+	font-feature-settings: var(--t2Feat, normal);
+	line-height: var(--t2Lh, 1.65);
+	letter-spacing: var(--t2Ls, 0);
+	color: var(--siteFg);
+	max-width: min(44rem, 100%); /* same column as the sections; the measure is applied to the children so left edges line up */
+	margin: 4.5rem auto 4rem;
+	text-align: left;
+	hanging-punctuation: first last;
+	-webkit-font-smoothing: antialiased;
+	font-synthesis: none;
+}
+.site .t2-post > * { max-width: var(--t2Measure, 66ch); }
+.site .t2-post p { margin: 0 0 var(--t2ParaGap, 1.1em); text-wrap: pretty; text-indent: var(--t2Indent, 0); }
+.site .t2-post p + p.t2-post-meta, .site .t2-post .t2-post-meta + p { text-indent: 0; }
+.site .t2-post-title {
+	color: var(--siteFgStrong);
+	font-family: var(--t2TitleFont, var(--tyDisplay));
+	font-size: var(--t2TitleSize, 2.4rem);
+	font-weight: var(--t2TitleW, 500);
+	font-variation-settings: var(--t2TitleVs, normal);
+	font-feature-settings: var(--t2TitleFeat, normal);
+	letter-spacing: var(--t2TitleLs, -0.015em);
+	line-height: var(--t2TitleLh, 1.12);
+	margin: 0 0 0.45rem;
+	text-wrap: balance;
+	text-align: left;
+}
+.site .t2-post .t2-post-meta {
+	color: var(--siteMuted);
+	font-family: var(--t2MetaFont, var(--tyUi, var(--tyBody)));
+	font-size: var(--t2MetaSize, 0.9rem);
+	font-weight: var(--t2MetaW, 400);
+	font-variation-settings: var(--t2MetaVs, normal);
+	font-style: var(--t2MetaStyle, normal);
+	font-variant-numeric: var(--t2MetaNums, normal);
+	letter-spacing: var(--t2MetaLs, 0.01em);
+	line-height: 1.4;
+	margin: 0 0 1.9rem;
+}
+.site .t2-post em { font-style: italic; font-family: var(--t2EmFont, inherit); font-variation-settings: var(--t2EmVs, var(--t2Vs, normal)); }
+.site .t2-post code {
+	font-family: var(--t2CodeFont, ui-monospace, Menlo, monospace);
+	font-size: var(--t2CodeSize, 0.88em);
+	font-weight: var(--t2CodeW, 400);
+	font-variation-settings: normal;
+	letter-spacing: 0;
+	color: var(--siteFgStrong);
+	background: var(--t2CodeBg, color-mix(in srgb, var(--siteFg) 9%, transparent));
+	border-radius: 0.28em;
+	padding: 0.08em 0.34em;
+	hyphens: none;
+	white-space: nowrap;
+}
+.site .t2-post .site-link { color: inherit; }
+
+/* dark-surface compensation: light-on-navy reads thinner, so one step more weight, a touch more leading and tracking */
+html.dark .site .t2-post {
+	font-weight: calc(var(--t2W, 400) + var(--t2DarkW, 40));
+	line-height: calc(var(--t2Lh, 1.65) + 0.05);
+	letter-spacing: calc(var(--t2Ls, 0em) + 0.004em);
+	color: #d9e3ee;
+}
+html.dark .site .t2-post-title { font-weight: var(--t2TitleWd, var(--t2TitleW, 500)); color: #eef3f9; }
+html.dark .site .t2-post .t2-post-meta { font-weight: calc(var(--t2MetaW, 400) + var(--t2DarkW, 40)); }
+
+@media (max-width: 700px) {
+	.site .t2-post { margin-top: 3.25rem; margin-bottom: 2.5rem; font-size: var(--t2SizeSm, var(--t2Size, 1.0625rem)); }
+	.site .t2-post-title { font-size: var(--t2TitleSizeSm, calc(var(--t2TitleSize, 2.4rem) * 0.82)); }
+}
+
+/* site-level pause (the header play/pause button, #449-453): every CSS animation and transition stops; Redaction resolve copies stay hidden */
+.site[data-motion="pause"] *, .site[data-motion="pause"] *::before, .site[data-motion="pause"] *::after { animation: none !important; transition: none !important; }
+.site[data-motion="pause"] .t2-stack .t2-c { display: none; }
+
+/* explicit "play" beats the OS preference: the base theme's own @media (prefers-reduced-motion) rules (_vs4/base.css, not editable here) are re-stated for data-motion="play" with higher specificity */
+.site[data-motion="play"] .site-link { transition: --vsr var(--vsDur) cubic-bezier(0.25, 0.7, 0.25, 1) !important; }
+.site[data-motion="play"] .site-link::after { transition: transform 0.9s ease !important; }
+.site[data-motion="play"] .site-link:is(:hover, :focus-visible)::after { transition: none !important; }
+@supports (animation-timeline: view()) {
+	.site[data-motion="play"] .site-footer > .vs-credit-fog { animation: vs-emerge linear both; animation-range: entry 0% cover 22%; animation-timeline: view(); }
+}
+
+.site .t2-motion-toggle {
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	font-size: 1.3rem;
+	line-height: 1;
+	padding: 1px 6px;
+	margin-left: -1.28rem; /* glyph-to-glyph gap from the sun halved: about 46px -> 23px; both hit areas stay >= 30px and do not overlap */
+	border-radius: 0.3rem;
+	opacity: 0.9;
+}
+.site .t2-motion-toggle:hover { opacity: 1; }
+.site .t2-motion-toggle:focus-visible { outline: 2px solid var(--siteAccent, currentColor); outline-offset: 2px; }
+.site .t2-motion-icon { display: block; width: 1em; height: 1em; overflow: visible; }
+.site .t2-motion-icon g { transition: opacity 0.2s ease; }
+.site .t2-motion-toggle[data-state="playing"] .t2-g-play, .site .t2-motion-toggle[data-state="paused"] .t2-g-pause { opacity: 0; }
+.site .t2-heart { display: inline-block; width: 0.82em; height: 0.82em; vertical-align: -0.1em; overflow: visible; }
+.site .site-heart { display: inline-block; }
+
+/* Josh: the two header overrides (theme + motion) 25% smaller: 1.3rem -> 1rem (16px), only where the motion toggle exists */
+.site:has(.t2-motion-toggle) .site-theme-toggle,
+.site .t2-motion-toggle { font-size: 1rem; }
+/* keep a comfortable hit area for the smaller motion glyph */
+.site .t2-motion-toggle { min-height: 1.5rem; display: inline-flex; align-items: center; justify-content: center; }

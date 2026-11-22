@@ -1,0 +1,150 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..900;1,9..144,500..800&display=swap");
+
+.site {
+	--siteBg: #f3f0e8;
+	--siteFg: #2a2a35;
+	--siteFgStrong: #15152a;
+	--siteMuted: #626478;
+	--siteAccent: #1f4fcf;
+	--siteSquiggle: #e5a823;
+	--siteSubtle: #e2ddd0;
+	--siteFont: "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Fraunces", Georgia, serif;
+	--cb-wall-line: rgb(60 50 30 / 0.05);
+	--cb-rod-a: #b98a52;
+	--cb-rod-b: #7a5428;
+	--cb-brass: #e3b657;
+}
+
+html.dark .site {
+	--siteBg: #0d1120;
+	--siteFg: #d6dbee;
+	--siteFgStrong: #f1f3fb;
+	--siteMuted: #8d96b6;
+	--siteAccent: #86a8ff;
+	--siteSquiggle: #f0c04f;
+	--siteSubtle: #1a2140;
+	--cb-wall-line: rgb(255 255 255 / 0.03);
+	--cb-rod-a: #6d4a2a;
+	--cb-rod-b: #35210f;
+	--cb-brass: #d3a64a;
+}
+
+/* Plaster wall with faint vertical panelling and a hall light from above. */
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 60% 45% at 50% 0%, color-mix(in srgb, var(--cb-brass) 16%, transparent), transparent 75%),
+		repeating-linear-gradient(90deg, transparent 0 119px, var(--cb-wall-line) 119px 120px);
+}
+
+.site .scenery-b {
+	background: linear-gradient(to bottom, transparent 70%, color-mix(in srgb, var(--siteAccent) 6%, transparent));
+}
+
+.site .site-section-title,
+.site .site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-variation-settings: "opsz" 72;
+}
+
+.site .site-section-title {
+	font-weight: 800;
+}
+
+.site .site-item-title {
+	font-weight: 700;
+}
+
+.site .site-portrait img {
+	border: 4px solid var(--cb-brass);
+	box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.5);
+}
+
+/* The banner assembly (built by JS). */
+.site .cloth-banner {
+	margin: 0 0 1.1rem;
+	padding: 2.3rem 2rem 3.1rem;
+	position: relative;
+}
+
+.site .cloth-banner > .site-title,
+.site .cloth-banner > .site-tagline {
+	position: relative;
+}
+
+.site .site-title {
+	font-family: var(--siteFontDisplay);
+	font-variation-settings: "opsz" 144;
+	font-weight: 800;
+}
+
+/* While the cloth canvas is live, the real text stays (selectable, readable by assistive tech) but is not painted. */
+.site.cloth-on .cloth-banner > .site-title,
+.site.cloth-on .cloth-banner > .site-tagline {
+	color: transparent;
+}
+
+.site.cloth-on .cloth-banner > .site-title::selection,
+.site.cloth-on .cloth-banner > .site-tagline::selection {
+	background: rgb(255 255 255 / 0.25);
+}
+
+.site .cloth-canvas {
+	--m: 72px;
+	height: calc(100% + var(--m) * 2);
+	left: calc(var(--m) * -1);
+	pointer-events: none;
+	position: absolute;
+	top: calc(var(--m) * -1);
+	width: calc(100% + var(--m) * 2);
+	z-index: 2;
+}
+
+.site .cloth-rod {
+	background:
+		linear-gradient(to bottom, rgb(255 255 255 / 0.45), transparent 35%, rgb(0 0 0 / 0.35)),
+		linear-gradient(to bottom, var(--cb-rod-a), var(--cb-rod-b));
+	border-radius: 999px;
+	box-shadow: 0 6px 10px -4px rgb(0 0 0 / 0.45);
+	height: 14px;
+	left: -18px;
+	pointer-events: none;
+	position: absolute;
+	right: -18px;
+	top: 6px;
+	z-index: 3;
+}
+
+.site .cloth-rod::before,
+.site .cloth-rod::after {
+	background: radial-gradient(circle at 35% 30%, #fff6d0, var(--cb-brass) 45%, #8a6420);
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 0.4);
+	content: "";
+	height: 22px;
+	position: absolute;
+	top: -4px;
+	width: 22px;
+}
+
+.site .cloth-rod::before {
+	left: -10px;
+}
+
+.site .cloth-rod::after {
+	right: -10px;
+}
+
+.site .cloth-hint {
+	color: var(--siteMuted);
+	font-size: 0.8rem;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+	margin: -0.2rem 0 0.9rem;
+	text-transform: uppercase;
+}
+
+.site .cloth-hint b {
+	color: var(--siteAccent);
+	font-weight: 700;
+}

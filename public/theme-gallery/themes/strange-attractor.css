@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #f7f5f1;
+	--siteFg: #251f3a;
+	--siteFgStrong: #120d26;
+	--siteMuted: #635b7a;
+	--siteAccent: #3a2fc4;
+	--siteSquiggle: #d1346e;
+	--siteSubtle: #e7e2dc;
+	--siteFont: "Sora", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Sora", ui-sans-serif, system-ui, sans-serif;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #05040b;
+	--siteFg: #d9d6ec;
+	--siteFgStrong: #f7f5ff;
+	--siteMuted: #9a96b8;
+	--siteAccent: #8fd8ff;
+	--siteSquiggle: #ff6fb5;
+	--siteSubtle: #120d26;
+}
+
+.site .scenery-a canvas {
+	display: block;
+	/* dust fades back behind the text column; the margins stay lively */
+	-webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 30rem), rgb(0 0 0 / 0.38) calc(50% - 21rem), rgb(0 0 0 / 0.38) calc(50% + 21rem), #000 calc(50% + 30rem), #000 100%);
+	mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 30rem), rgb(0 0 0 / 0.38) calc(50% - 21rem), rgb(0 0 0 / 0.38) calc(50% + 21rem), #000 calc(50% + 30rem), #000 100%);
+}
+
+.site-title {
+	font-size: clamp(2.7rem, 6.4vw, 4.4rem);
+	font-weight: 700;
+	letter-spacing: -0.045em;
+	line-height: 0.95;
+}
+
+.site-section-title {
+	font-weight: 600;
+	letter-spacing: -0.03em;
+}
+
+.site-item-title {
+	font-weight: 600;
+	letter-spacing: -0.015em;
+}
+
+.site-item-meta {
+	font-family: "IBM Plex Mono", ui-monospace, monospace;
+	font-size: 0.8rem;
+}
+
+.site-about,
+.site-tagline,
+.site-item-description {
+	font-weight: 300;
+}

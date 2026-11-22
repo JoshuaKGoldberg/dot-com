@@ -1,0 +1,38 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>dock preview</title>
+<style>
+  body { margin: 0; font: 11px system-ui; color: #8aa; }
+  .row { display: flex; gap: 0; padding: 0; }
+  .cell { position: relative; width: 420px; height: 300px; display: flex; align-items: flex-end; justify-content: center; }
+  .night { background: linear-gradient(#070b18 0%, #0c1530 45%, #0f1c38 62%, #0a1426 100%); }
+  .day { background: linear-gradient(#dfe8ee 0%, #cfdde6 45%, #c6d6df 62%, #d4e0e6 100%); color: #567; }
+  .cell span { position: absolute; top: 4px; left: 6px; }
+  canvas { display: block; }
+  body.zoom canvas { transform: scale(var(--z, 1)); transform-origin: bottom center; image-rendering: auto; }
+</style>
+<div id="root"></div>
+<script type="module">
+  import { createDock } from "./dock.js";
+  const q = new URLSearchParams(location.search);
+  const scale = Number(q.get("scale") || 1);
+  const root = document.getElementById("root");
+  for (const dark of [true, false]) {
+    const row = document.createElement("div");
+    row.className = "row";
+    for (const side of ["left", "center", "right"]) {
+      const cell = document.createElement("div");
+      cell.className = "cell " + (dark ? "night" : "day");
+      const d = createDock({ dark, scale, side, seed: Number(q.get("seed") || 7), reflection: !q.get("sep") });
+      if (d.reflectionCanvas) { d.reflectionCanvas.style.position = "absolute"; d.reflectionCanvas.style.bottom = "0"; cell.append(d.reflectionCanvas); }
+      cell.append(d.canvas);
+      if (q.get("sep")) console.log(JSON.stringify(d.pilings));
+      const label = document.createElement("span");
+      label.textContent = `${dark ? "dark" : "light"} ${side} ${d.width}x${d.height} wl=${d.waterlineY.toFixed(0)} ax=${d.anchorX.toFixed(0)}`;
+      cell.append(label);
+      row.append(cell);
+    }
+    root.append(row);
+  }
+  window.__ready = true;
+</script>

@@ -1,0 +1,18 @@
+@import url("_sensor/kit.css");
+
+/* 184 Haptic Squiggles: each link type has a vibration pattern, shown as a waveform and (where supported) felt. */
+@property --hs-p { syntax: "<length>"; inherits: false; initial-value: 0px; }
+.site .scenery-a { background: radial-gradient(ellipse 60% 35% at 15% 0%, color-mix(in srgb, var(--siteSquiggle) 12%, transparent), transparent 70%); }
+.site .site-link::after, .site .site-nav-link::after { translate: 0 var(--hs-p); }
+.site .site-nav-link { position: relative; }
+.site .site-nav-link::after {
+	background: var(--siteSquiggle); bottom: -0.35em; content: ""; height: 0.3em; left: 0; mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%; opacity: 0; position: absolute; right: 0; transition: opacity 0.15s;
+}
+.site .site-nav-link:hover::after, .site .site-nav-link:focus-visible::after { opacity: 0.9; }
+.site .hs-scope { background: color-mix(in srgb, var(--siteSubtle) 70%, transparent); border-radius: 0.6rem; display: grid; gap: 0.25rem; padding: 0.5rem 0.6rem; }
+.site .hs-svg { display: block; height: 3.2rem; overflow: visible; width: 100%; }
+.site .hs-wave { fill: none; stroke: var(--siteAccent); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+.site .hs-base { stroke: color-mix(in srgb, var(--siteFg) 28%, transparent); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.site .hs-head { stroke: var(--siteFgStrong); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.site .hs-name { color: var(--siteFgStrong); font-size: 0.8rem; font-weight: 600; }
+.site .hs-name small { color: var(--siteMuted); font-weight: 400; }

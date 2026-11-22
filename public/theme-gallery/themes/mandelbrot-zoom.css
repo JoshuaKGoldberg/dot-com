@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Geist+Mono:wght@400;500&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #f8f7fb;
+	--siteFg: #272540;
+	--siteFgStrong: #13112b;
+	--siteMuted: #625f80;
+	--siteAccent: #5b3fd0;
+	--siteSquiggle: #8a6bff;
+	--siteSubtle: #e8e5f2;
+	--siteFont: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #04050d;
+	--siteFg: #d7d8ee;
+	--siteFgStrong: #f5f5ff;
+	--siteMuted: #9496b8;
+	--siteAccent: #b9a8ff;
+	--siteSquiggle: #8f7bff;
+	--siteSubtle: #0d0f26;
+}
+
+.site .scenery-a canvas {
+	display: block;
+}
+
+.site-title {
+	font-size: clamp(3rem, 7vw, 4.8rem);
+	font-variation-settings: "opsz" 96;
+	font-weight: 700;
+	letter-spacing: -0.04em;
+	line-height: 0.92;
+}
+
+.site-section-title {
+	font-weight: 700;
+	letter-spacing: -0.03em;
+}
+
+.site-item-meta {
+	font-family: "Geist Mono", ui-monospace, monospace;
+	font-size: 0.8rem;
+}

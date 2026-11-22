@@ -1,0 +1,66 @@
+/* Shared chrome for the aurora x adirondacks "c" themes (#249-252). */
+.site .site-scenery {
+	overflow: hidden;
+}
+.site .aa-cv {
+	display: block;
+	pointer-events: none;
+	position: absolute;
+	will-change: transform;
+}
+.site .aa-lake,
+.site .aa-mist,
+.site .aa-grass,
+.site .aa-loon,
+.site .aa-aurora,
+.site .aa-flies {
+	left: 0;
+	top: 0;
+}
+.site .aa-aurora {
+	will-change: auto;
+}
+.site .aa-lake,
+.site .aa-mist,
+.site .aa-aurora,
+.site .aa-flies {
+	will-change: auto;
+}
+.site .overlay-b {
+	pointer-events: none;
+}
+/* calm reading column: soft veil behind the text, strongest at centre */
+.site .site-page::before {
+	background: linear-gradient(90deg, transparent, var(--aa-scrim, color-mix(in srgb, var(--siteBg) 28%, transparent)) 14rem, var(--aa-scrim, color-mix(in srgb, var(--siteBg) 28%, transparent)) calc(100% - 14rem), transparent);
+	content: "";
+	inset: 0 -1rem;
+	pointer-events: none;
+	position: absolute;
+	z-index: -1;
+}
+.site .site-header {
+	position: relative;
+}
+.site .aa-hint {
+	background: color-mix(in srgb, var(--siteBg) 78%, transparent);
+	border-radius: 14px;
+	bottom: 0.14rem;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 0.14);
+	color: var(--siteFgStrong);
+	font-size: 0.8rem;
+	font-weight: 600;
+	inset: auto auto 0.14rem 1rem;
+	max-width: min(16rem, calc(100% - 2rem));
+	padding: 0.35rem 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	transition: opacity 1.2s ease 0.2s;
+}
+.site .aa-hint.is-gone {
+	opacity: 0;
+}
+@media (max-width: 700px) {
+	.site .aa-hint {
+		display: none;
+	}
+}

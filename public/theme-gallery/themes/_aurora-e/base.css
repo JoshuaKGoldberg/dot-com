@@ -1,0 +1,12 @@
+/* _aurora-e shared chrome: calm reading scrim. */
+.site { --ae-scrim: color-mix(in srgb, var(--siteBg) 58%, transparent); }
+.site .site-page::before {
+	background: linear-gradient(90deg, transparent, var(--ae-scrim) 10rem, var(--ae-scrim) calc(100% - 10rem), transparent);
+	content: ""; inset: 0 -1rem; pointer-events: none; position: absolute; z-index: -1;
+}
+.site .site-header { position: relative; }
+.site .site-scenery > *, .site .site-overlay > * { overflow: hidden; }
+.site .ae-fade { transition: opacity 0.6s; }
+@keyframes ae-drift { from { transform: translate3d(-8%,0,0); } to { transform: translate3d(8%,0,0); } }
+@media (prefers-reduced-motion: reduce) { .site .ae-drift { animation: none !important; } }
+html.reduce-motion .site .ae-drift { animation: none !important; }

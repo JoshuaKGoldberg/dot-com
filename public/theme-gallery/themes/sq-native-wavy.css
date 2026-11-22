@@ -1,0 +1,16 @@
+@import "./rn-dark-tuned.css";
+@import "./_sq/base.css";
+
+/* #455: pure CSS. text-decoration: wavy at 1px, muted, tuned offset, skip-ink so it hugs the type; wraps natively. */
+.site .sq-link {
+	text-decoration-line: underline;
+	text-decoration-style: wavy;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+	text-decoration-skip-ink: auto;
+	text-decoration-color: color-mix(in srgb, #86aee8 62%, transparent);
+	transition: text-decoration-color 0.3s ease;
+}
+html:not(.dark) .site .sq-link { text-decoration-color: color-mix(in srgb, #223f8c 62%, transparent); }
+.site .sq-link:is(:hover, :focus-visible) { text-decoration-color: #c6deff; }
+html:not(.dark) .site .sq-link:is(:hover, :focus-visible) { text-decoration-color: #0e246c; }

@@ -1,0 +1,49 @@
+/* Token plan
+ * Families: Fraunces pinned opsz 144, wght 300-700 + Figtree 400-600.
+ * Scale: hero wght 450 (dark 420) at 66px, 0 tracking (opsz 144 is already tight); tagline Figtree 1.35rem; ratio 3.1x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #85: high-contrast Fraunces display with a friendly sans.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@144,300..700&family=Figtree:wght@400..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Fraunces Fallback"; src: local("Georgia"); size-adjust: 83.8%; ascent-override: 116.9%; descent-override: 31.0%; line-gap-override: 0%; }
+@font-face { font-family: "Figtree Fallback"; src: local("Arial"); size-adjust: 99.8%; ascent-override: 95.2%; descent-override: 25.1%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #408 (from #85) Fraunces at its highest optical size (144, pinned: one 34 KB instance) with Figtree's friendly body. */
+.site {
+	--tyDisplay: "Fraunces", "Fraunces Fallback", Georgia, serif;
+	--tyBody: "Figtree", "Figtree Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13.5cqi, 4.8rem);
+	--tyTitleW: 450;
+	--tyTitleWd: 420;
+	--tyTitleLs: 0;
+	--tyTitleLh: 0.95;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.35rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.35;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.08rem;
+	--tyLogoSize: 1.2rem;
+	--tyLogoW: 600;
+	--tySecSize: 2rem;
+	--tySecW: 450;
+	--tySecWd: 400;
+	--tySecLs: -0.025em;
+	--tyItemW: 600;
+	--tyItemSize: 1.2rem;
+	--tyMetaSize: 0.9rem;
+}

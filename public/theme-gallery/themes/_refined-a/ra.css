@@ -1,0 +1,199 @@
+/* Refined-aurora kit styles (#301-303, #320). Josh's real site, night blue nudged a touch deeper. */
+html.dark .site {
+	--siteBg: #0a111f;
+	--siteSubtle: #10243a;
+}
+
+.site .ra-layer {
+	contain: layout paint;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .ra-sky canvas {
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .ra-twinkles i {
+	animation: ra-twinkle 5s ease-in-out infinite;
+	border-radius: 50%;
+	height: 4px;
+	opacity: 0.25;
+	position: absolute;
+	width: 4px;
+	will-change: opacity;
+}
+
+@keyframes ra-twinkle {
+	0%,
+	100% {
+		opacity: 0.12;
+	}
+
+	50% {
+		opacity: 0.9;
+	}
+}
+
+/* #276 texture: grain tile + big soft pastel washes, moved with transform only. */
+.site .ra-paper {
+	-webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(50% - 30rem), transparent calc(50% - 25.5rem), transparent calc(50% + 25.5rem), #000 calc(50% + 30rem), #000 100%);
+	mask-image: linear-gradient(to right, #000 0, #000 calc(50% - 30rem), transparent calc(50% - 25.5rem), transparent calc(50% + 25.5rem), #000 calc(50% + 30rem), #000 100%);
+	opacity: 0;
+	transition: opacity 1s;
+}
+
+.site .ra-paper.is-ready,
+.site .ra-footpaper.is-ready {
+	opacity: 1;
+}
+
+.site .ra-paper .ra-grain,
+.site .ra-paper .ra-wash,
+.site .ra-footpaper .ra-grain,
+.site .ra-footpaper .ra-wash {
+	bottom: 0;
+	height: 58%;
+	left: 0;
+	position: absolute;
+	right: 0;
+}
+
+.site .ra-paper .ra-grain {
+	background-size: 96px 96px;
+	-webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+	mask-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+	opacity: calc(var(--ra-paper, 1) * 0.9);
+}
+
+.site .ra-footpaper {
+	bottom: -3rem;
+	height: 220px;
+	left: 50%;
+	opacity: 0;
+	overflow: hidden;
+	pointer-events: none;
+	position: absolute;
+	transform: translateX(-50%);
+	transition: opacity 1s;
+	width: 100vw;
+	z-index: 0;
+	-webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%);
+	mask-image: linear-gradient(to bottom, transparent, #000 45%);
+}
+
+.site .ra-footpaper .ra-grain,
+.site .ra-footpaper .ra-wash {
+	height: 100%;
+}
+
+.site .ra-footpaper .ra-grain {
+	background-size: 96px 96px;
+	opacity: calc(var(--ra-paper, 1) * 0.9);
+}
+
+.site .ra-wash i {
+	animation: ra-drift 44s ease-in-out infinite alternate;
+	border-radius: 50%;
+	display: block;
+	opacity: var(--ra-paper, 1);
+	position: absolute;
+	will-change: transform;
+}
+
+.site .ra-wash .w1 {
+	background: radial-gradient(closest-side, rgba(120, 190, 230, 0.16), rgba(120, 190, 230, 0.07) 55%, transparent);
+	bottom: -190px;
+	height: 380px;
+	left: -8%;
+	width: 52%;
+}
+
+.site .ra-wash .w2 {
+	animation-delay: -15s;
+	animation-duration: 54s;
+	background: radial-gradient(closest-side, rgba(176, 150, 232, 0.14), rgba(176, 150, 232, 0.06) 55%, transparent);
+	bottom: -210px;
+	height: 360px;
+	right: -6%;
+	width: 50%;
+}
+
+.site .ra-wash .w3 {
+	animation-delay: -28s;
+	background: radial-gradient(closest-side, rgba(130, 214, 176, 0.13), transparent);
+	bottom: -220px;
+	height: 320px;
+	left: 30%;
+	width: 42%;
+}
+
+html.dark .site .ra-wash .w1 {
+	background: radial-gradient(closest-side, rgba(70, 150, 230, 0.15), rgba(70, 150, 230, 0.06) 55%, transparent);
+}
+
+html.dark .site .ra-wash .w2 {
+	background: radial-gradient(closest-side, rgba(150, 110, 255, 0.14), rgba(150, 110, 255, 0.05) 55%, transparent);
+}
+
+html.dark .site .ra-wash .w3 {
+	background: radial-gradient(closest-side, rgba(70, 220, 190, 0.12), transparent);
+}
+
+@keyframes ra-drift {
+	from {
+		transform: translate3d(0, 0, 0) scale(1);
+	}
+
+	to {
+		transform: translate3d(-40px, -18px, 0) scale(1.08);
+	}
+}
+
+/* Footer pieces: behind the footer text, extending past the column to the page edges. */
+.site .ra-footer {
+	position: relative;
+}
+
+.site .ra-footer > :not(.ra-foot):not(.ra-footpaper) {
+	position: relative;
+	z-index: 1;
+}
+
+.site .ra-foot {
+	bottom: -3rem;
+	contain: layout paint;
+	pointer-events: none;
+	position: absolute;
+	z-index: 0;
+}
+
+.site .ra-foot canvas {
+	display: block;
+	height: 100%;
+	-webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 42%, #000 100%);
+	mask-image: linear-gradient(to bottom, transparent 0, #000 42%, #000 100%);
+	width: 100%;
+}
+
+@media (max-width: 800px) {
+	.site .ra-sky,
+	.site .ra-curtains {
+		display: none !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .ra-twinkles i,
+	.site .ra-wash i {
+		animation: none;
+	}
+}
+
+html.reduce-motion .site .ra-twinkles i,
+html.reduce-motion .site .ra-wash i {
+	animation: none;
+}

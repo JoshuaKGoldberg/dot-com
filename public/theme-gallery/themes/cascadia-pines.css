@@ -1,0 +1,66 @@
+/* 12 — Cascadia Misty Pines */
+@property --fx1 { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --fx2 { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --fx3 { syntax: "<length>"; inherits: false; initial-value: 0px; }
+
+.site {
+	--siteBg: #eef3f0;
+	--siteFg: #2a3a3a;
+	--siteFgStrong: #14262a;
+	--siteMuted: #52665f;
+	--siteAccent: #2f7d68;
+	--siteSquiggle: #5fae96;
+	--siteSubtle: #d3e0d9;
+}
+html.dark .site {
+	--siteBg: #061116;
+	--siteFg: #cfe0de;
+	--siteFgStrong: #eef8f6;
+	--siteMuted: #8fb0ae;
+	--siteAccent: #6fd3c0;
+	--siteSquiggle: #4fc4b0;
+	--siteSubtle: #0f2a31;
+}
+
+.site .scenery-a {
+	background:
+		url("cascadia-pines/fog3-light.svg") left var(--fx3) bottom 10px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge4-light.svg") 0 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/fog2-light.svg") left var(--fx2) bottom 130px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge3-light.svg") 400px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/fog1-light.svg") left var(--fx1) bottom 230px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge2-light.svg") 900px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/ridge1-light.svg") 200px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/volcano-light.svg") right 12% bottom 340px / 900px 288px no-repeat,
+		linear-gradient(180deg, #e7efeb 0%, #dce8e2 55%, #d2e0d8 100%);
+}
+html.dark .site .scenery-a {
+	background:
+		url("cascadia-pines/fog3-dark.svg") left var(--fx3) bottom 10px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge4-dark.svg") 0 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/fog2-dark.svg") left var(--fx2) bottom 130px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge3-dark.svg") 400px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/fog1-dark.svg") left var(--fx1) bottom 230px / 1400px 260px repeat-x,
+		url("cascadia-pines/ridge2-dark.svg") 900px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/ridge1-dark.svg") 200px 100% / 1600px 460px repeat-x,
+		url("cascadia-pines/volcano-dark.svg") right 12% bottom 340px / 900px 288px no-repeat,
+		radial-gradient(circle at 84% 16%, rgba(190, 240, 235, 0.16) 0, rgba(120, 200, 200, 0.07) 90px, rgba(60, 130, 140, 0.05) 260px, transparent 520px),
+		linear-gradient(180deg, #050d12 0%, #08181e 55%, #0b2229 100%);
+}
+/* moon disc, tucked behind the fog */
+html.dark .site .scenery-b {
+	background: radial-gradient(circle at 84% 16%, rgba(230, 250, 246, 0.5) 0 9px, rgba(230, 250, 246, 0.18) 13px, transparent 20px);
+	opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-a {
+		animation:
+			fog-a 60s linear infinite,
+			fog-b 90s linear infinite reverse,
+			fog-c 120s linear infinite;
+	}
+	@keyframes fog-a { to { --fx1: 1400px; } }
+	@keyframes fog-b { to { --fx2: 1400px; } }
+	@keyframes fog-c { to { --fx3: 1400px; } }
+}

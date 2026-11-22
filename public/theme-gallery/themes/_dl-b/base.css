@@ -1,0 +1,67 @@
+@import url("../_refined-d/paper.css");
+/* #317 Footer Watercolor: painted ridges and a pigment aurora on paper, echoed at the top. */
+
+.site .scenery-b { contain: paint; }
+
+.site .site-footer {
+	padding-bottom: 3.25rem;
+	padding-top: 9rem;
+	position: relative;
+}
+
+.site .site-footer > p,
+.site .site-footer > a {
+	position: relative;
+	z-index: 1;
+}
+
+.site .rfw {
+	bottom: 0;
+	contain: paint;
+	top: 0;
+	pointer-events: none;
+	position: absolute;
+}
+
+.site .rfw canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transition: opacity 0.9s;
+	width: 100%;
+}
+
+.site .rfw canvas.is-ready { opacity: 1; }
+
+.site .rfw-sky { will-change: opacity; }
+
+/* paper tooth over the whole painting, fading in toward the bottom */
+.site .rfw-grain {
+	-webkit-mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6) 40%, #000);
+	mask-image: linear-gradient(transparent, rgba(0, 0, 0, 0.6) 40%, #000);
+}
+
+.site .rw-top {
+	left: 0;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	transition: opacity 0.9s;
+	will-change: transform;
+}
+.site .rw-top.is-ready { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .rfw canvas, .site .rw-top { transition: none; }
+}
+html.reduce-motion .site .rfw canvas,
+html.reduce-motion .site .rw-top { transition: none; }
+
+/* the footer painting runs to the very end of the scroll area */
+.site .site-page { padding-bottom: 0; }
+
+/* margin canvases (droplets, petals, filings) */
+.site .dl-cv { pointer-events: none; position: absolute; }
+.site .dl-petals, .site .dl-filings { height: 100%; inset: 0; width: 100%; }

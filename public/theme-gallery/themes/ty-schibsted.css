@@ -1,0 +1,57 @@
+/* Token plan
+ * Families: Schibsted Grotesk 400-800 + Source Serif 4 opsz auto, 400.
+ * Scale: hero wght 700 (dark 650) at 63px, -0.035em; tagline Source Serif 1.45rem; ratio 2.7x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Newspaper-born grotesk headings over a serif reading face: the technical-editorial register of docs and long-form.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&family=Source+Serif+4:opsz,wght@8..60,400&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Schibsted Grotesk Fallback"; src: local("Arial"); size-adjust: 104.4%; ascent-override: 93.9%; descent-override: 24.9%; line-gap-override: 0%; }
+@font-face { font-family: "Source Serif 4 Fallback"; src: local("Georgia"); size-adjust: 90.4%; ascent-override: 115.1%; descent-override: 37.6%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #400 Schibsted Grotesk, a newspaper grotesk, for hero and headings; Source Serif 4 for reading text: the technical-editorial world. */
+.site {
+	--tyDisplay: "Schibsted Grotesk", "Schibsted Grotesk Fallback", Arial, sans-serif;
+	--tyBody: "Source Serif 4", "Source Serif 4 Fallback", Georgia, serif;
+	--tyUi: var(--tyDisplay);
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.5rem, 13cqi, 4.5rem);
+	--tyTitleW: 700;
+	--tyTitleWd: 650;
+	--tyTitleLs: -0.035em;
+	--tyTitleLh: 0.95;
+	--tyTitleShift: -0.045em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.45rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.3;
+	--tyTagMax: 20em;
+
+	--tyBodyW: 400;
+	--tyAboutSize: 1.2rem;
+	--tyAboutLh: 1.6;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 550;
+	--tyNavSize: 1.05rem;
+	--tyLogoSize: 1.15rem;
+	--tyLogoW: 700;
+	--tySocialSize: 1rem;
+	--tySecSize: 1.9rem;
+	--tySecW: 700;
+	--tySecWd: 650;
+	--tySecLs: -0.03em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 650;
+	--tyItemSize: 1.15rem;
+	--tyItemLs: -0.015em;
+	--tyMetaFont: var(--tyDisplay);
+	--tyMetaSize: 0.88rem;
+	--tyMetaW: 450;
+}

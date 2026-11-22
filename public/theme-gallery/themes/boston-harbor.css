@@ -1,0 +1,103 @@
+/* 8. Boston Harbor at Dusk: flat layered skyline, harbor line, faint reflection. */
+.site {
+	--sky-top: #f8ddcb;
+	--sky-hor: #fcf3e6;
+	--sk-far: #d2d6df;
+	--sk-mid: #b8c0cf;
+	--sk-near: #9ca8bb;
+	--water-top: #e4e1dd;
+	--water-bot: #c9d0da;
+	--line: rgba(255, 255, 255, 0.75);
+	--siteBg: #fbeee0;
+	--siteFg: #2a3350;
+	--siteFgStrong: #151d38;
+	--siteMuted: #525c7a;
+	--siteAccent: #254f9a;
+	--siteSquiggle: #d9804f;
+	--siteSubtle: #f2e1d2;
+}
+
+html.dark .site {
+	--sky-top: #080f26;
+	--sky-hor: #1d2a52;
+	--sk-far: #1a2547;
+	--sk-mid: #131c3a;
+	--sk-near: #0c1330;
+	--water-top: #16213f;
+	--water-bot: #080d22;
+	--line: rgba(255, 190, 130, 0.28);
+	--siteBg: #0a1128;
+	--siteFg: #dbe3f2;
+	--siteFgStrong: #f2f5fb;
+	--siteMuted: #9eaac8;
+	--siteAccent: #8fc2ff;
+	--siteSquiggle: #f0a665;
+	--siteSubtle: #15204a;
+}
+
+.site .scenery-a {
+	background:
+		radial-gradient(ellipse 80% 25% at 70% 100%, rgba(255, 170, 120, 0.14), transparent 70%),
+		linear-gradient(to bottom, var(--sky-top), var(--sky-hor) 100%);
+}
+
+html:not(.dark) .site .scenery-a {
+	background:
+		radial-gradient(ellipse 80% 25% at 70% 100%, rgba(255, 200, 150, 0.35), transparent 70%),
+		linear-gradient(to bottom, var(--sky-top), var(--sky-hor) 100%);
+}
+
+.site .scenery-b {
+	bottom: 0;
+	height: clamp(170px, 34vh, 340px);
+	top: auto;
+}
+
+.site .harbor-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .harbor-svg .far { fill: var(--sk-far); }
+.site .harbor-svg .mid { fill: var(--sk-mid); }
+.site .harbor-svg .near { fill: var(--sk-near); }
+.site .harbor-svg .seam { stroke: var(--sky-hor); stroke-width: 0.8; opacity: 0.5; fill: none; }
+.site .harbor-svg .water { fill: url(#bh-water); }
+.site .harbor-svg .hline { stroke: var(--line); stroke-width: 1; }
+.site .harbor-svg .refl { filter: blur(2.5px); opacity: 0.3; }
+.site .harbor-svg .refl path,
+.site .harbor-svg .refl rect { fill: var(--sk-mid); }
+.site .harbor-svg .glint { stroke: var(--line); stroke-linecap: round; opacity: 0.7; }
+
+.site .harbor-svg .win {
+	fill: #ffd9a0;
+	opacity: 0;
+}
+
+html:not(.dark) .site .harbor-svg .win,
+html:not(.dark) .site .harbor-svg .glint-dark {
+	display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .harbor-svg .win {
+		animation: win-blink var(--d, 12s) ease-in-out var(--dl, 0s) infinite;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .harbor-svg .win {
+		opacity: calc(var(--wo, 0.3) * 0.8);
+	}
+}
+
+html.reduce-motion .site .harbor-svg .win {
+	opacity: calc(var(--wo, 0.3) * 0.8);
+}
+
+@keyframes win-blink {
+	0%, 38% { opacity: 0; }
+	46%, 70% { opacity: var(--wo, 0.4); }
+	78%, 100% { opacity: 0; }
+}

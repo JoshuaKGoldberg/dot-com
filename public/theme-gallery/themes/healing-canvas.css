@@ -1,0 +1,72 @@
+/* 19 — Healing Canvas */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600;8..60,700&display=swap");
+
+.site {
+	--siteBg: #f8f3ea;
+	--siteFg: #38322d;
+	--siteFgStrong: #231e1a;
+	--siteMuted: #6f665d;
+	--siteAccent: #a8432a;
+	--siteSquiggle: #c4543a;
+	--siteSubtle: #ebe3d4;
+	--hc-bar: 128, 118, 106;
+	--hc-bar-alpha: 0.13;
+	--hc-num: 128, 118, 106;
+	--hc-squiggle: #b8472f;
+	--siteFont: "Source Serif 4", Georgia, serif;
+	--siteFontDisplay: "Source Serif 4", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #0d1629;
+	--siteFg: #d7dfee;
+	--siteFgStrong: #f0f4fb;
+	--siteMuted: #93a1ba;
+	--siteAccent: #ff8f7e;
+	--siteSquiggle: #ff7a69;
+	--siteSubtle: #17233d;
+	--hc-bar: 100, 120, 156;
+	--hc-bar-alpha: 0.2;
+	--hc-num: 120, 140, 176;
+	--hc-squiggle: #ff7664;
+}
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.015em;
+}
+.site .site-tagline,
+.site .site-about,
+.site .site-item-description {
+	font-weight: 400;
+}
+
+.site .hc-svg {
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+}
+.site .hc-num {
+	fill: rgba(var(--hc-num), 0.34);
+	font: 400 11px "IBM Plex Mono", ui-monospace, monospace;
+}
+.site .hc-gutter-rule {
+	stroke: rgba(var(--hc-num), 0.18);
+	stroke-width: 1;
+}
+.site .hc-bar {
+	fill: rgba(var(--hc-bar), var(--hc-bar-alpha));
+}
+.site .hc-squiggle {
+	opacity: 0.5;
+	stroke: var(--hc-squiggle);
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.3;
+	transition: opacity 1.6s ease;
+}
+.site .hc-squiggle.is-healed {
+	opacity: 0.16;
+}
+.site .hc-squiggle.is-healing {
+	opacity: 0.6;
+}

@@ -1,0 +1,52 @@
+/* Token plan
+ * Families: Fraunces pinned opsz 144/SOFT 100/WONK 0, wght 300-700 + League Spartan (already loaded by the base).
+ * Scale: hero wght 420 (dark 390) at 66px, 0.005em; tagline Spartan 1.4rem; ratio 2.9x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: From #76: a soft Fraunces with the original League Spartan kept for body and UI at zero extra bytes.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@144,300..700,100,0&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Fraunces Fallback"; src: local("Georgia"); size-adjust: 86.6%; ascent-override: 113.1%; descent-override: 30.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #405 (from #76) Fraunces pinned at opsz 144, SOFT 100, WONK 0 (a single 35 KB instance, weight still variable), with League Spartan
+   (already loaded by the base site) kept for body, nav and labels. */
+.site {
+	--tyDisplay: "Fraunces", "Fraunces Fallback", Georgia, serif;
+	--tyBody: "League Spartan", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 13.5cqi, 4.8rem);
+	--tyTitleW: 420;
+	--tyTitleWd: 390;
+	--tyTitleLs: 0.005em;
+	--tyTitleLh: 0.95;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.4rem;
+	--tyTagW: 400;
+	--tyTagLs: 0.005em;
+	--tyTagLh: 1.25;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.3rem;
+	--tyAboutLh: 1.5;
+	--tyDescSize: 1.1rem;
+	--tyUiW: 600;
+	--tyUiLs: 0.01em;
+	--tyNavSize: 1.15rem;
+	--tyLogoSize: 1.25rem;
+	--tySecSize: 2.1rem;
+	--tySecW: 420;
+	--tySecWd: 380;
+	--tySecLs: -0.02em;
+	--tyItemW: 600;
+	--tyItemSize: 1.3rem;
+	--tyMetaSize: 0.95rem;
+	--tyMetaW: 400;
+	--tyMetaLs: 0.02em;
+}

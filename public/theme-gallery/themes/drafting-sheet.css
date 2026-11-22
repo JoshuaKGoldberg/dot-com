@@ -1,0 +1,173 @@
+/* 14 — Drafting Sheet */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap");
+
+.site {
+	--siteBg: #fbfcfd;
+	--siteFg: #2a3547;
+	--siteFgStrong: #14202f;
+	--siteMuted: #5b6a80;
+	--siteAccent: #2a5fa8;
+	--siteSquiggle: #5a8fd0;
+	--siteSubtle: #dfe6ee;
+	--line: 120, 145, 175;
+	--lineA: 0.09;
+	--lineB: 0.2;
+	--mark: 90, 115, 150;
+	--siteFont: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "IBM Plex Sans Condensed", "IBM Plex Sans", sans-serif;
+}
+html.dark .site {
+	--siteBg: #0a1d3a;
+	--siteFg: #d6ecf7;
+	--siteFgStrong: #f0fbff;
+	--siteMuted: #8fb4cb;
+	--siteAccent: #7fe0ff;
+	--siteSquiggle: #5ccfee;
+	--siteSubtle: #12305a;
+	--line: 190, 240, 255;
+	--lineA: 0.045;
+	--lineB: 0.09;
+	--mark: 190, 240, 255;
+}
+
+/* 8px / 64px hairline grid */
+.site .scenery-a {
+	background:
+		linear-gradient(90deg, rgba(var(--line), var(--lineB)) 1px, transparent 1px) 0 0 / 64px 64px,
+		linear-gradient(0deg, rgba(var(--line), var(--lineB)) 1px, transparent 1px) 0 0 / 64px 64px,
+		linear-gradient(90deg, rgba(var(--line), var(--lineA)) 1px, transparent 1px) 0 0 / 8px 8px,
+		linear-gradient(0deg, rgba(var(--line), var(--lineA)) 1px, transparent 1px) 0 0 / 8px 8px;
+}
+
+/* corner crop marks + registration crosses */
+.site .scenery-b {
+	--m: rgba(var(--mark), 0.55);
+	--len: 28px;
+	--gap: 14px;
+	inset: 12px;
+	background:
+		/* top-left */
+		linear-gradient(var(--m), var(--m)) var(--gap) 0 / 1px var(--len) no-repeat,
+		linear-gradient(var(--m), var(--m)) 0 var(--gap) / var(--len) 1px no-repeat,
+		/* top-right */
+		linear-gradient(var(--m), var(--m)) calc(100% - var(--gap)) 0 / 1px var(--len) no-repeat,
+		linear-gradient(var(--m), var(--m)) 100% var(--gap) / var(--len) 1px no-repeat,
+		/* bottom-left */
+		linear-gradient(var(--m), var(--m)) var(--gap) 100% / 1px var(--len) no-repeat,
+		linear-gradient(var(--m), var(--m)) 0 calc(100% - var(--gap)) / var(--len) 1px no-repeat,
+		/* bottom-right */
+		linear-gradient(var(--m), var(--m)) calc(100% - var(--gap)) 100% / 1px var(--len) no-repeat,
+		linear-gradient(var(--m), var(--m)) 100% calc(100% - var(--gap)) / var(--len) 1px no-repeat;
+	opacity: 0.8;
+}
+/* registration crosses with ring: top-centre & bottom-centre */
+.site .scenery-b::before,
+.site .scenery-b::after {
+	--m: rgba(var(--mark), 0.6);
+	background:
+		linear-gradient(var(--m), var(--m)) 50% 50% / 1px 26px no-repeat,
+		linear-gradient(var(--m), var(--m)) 50% 50% / 26px 1px no-repeat,
+		radial-gradient(circle, transparent 7px, var(--m) 7.5px, var(--m) 8.5px, transparent 9px) 50% 50% / 26px 26px no-repeat;
+	content: "";
+	height: 26px;
+	left: calc(50% - 13px);
+	position: absolute;
+	width: 26px;
+}
+.site .scenery-b::before {
+	top: 2px;
+}
+.site .scenery-b::after {
+	bottom: 2px;
+}
+
+/* edge tick scales: top and left here, bottom and right on ::before/::after of the scenery wrapper */
+.site .scenery-c {
+	--t: rgba(var(--mark), 0.5);
+	background:
+		/* top: minor 8px, major 64px */
+		repeating-linear-gradient(90deg, var(--t) 0 1px, transparent 1px 8px) 0 0 / 100% 5px no-repeat,
+		repeating-linear-gradient(90deg, var(--t) 0 1px, transparent 1px 64px) 0 0 / 100% 11px no-repeat,
+		/* left */
+		repeating-linear-gradient(0deg, var(--t) 0 1px, transparent 1px 8px) 0 0 / 5px 100% no-repeat,
+		repeating-linear-gradient(0deg, var(--t) 0 1px, transparent 1px 64px) 0 0 / 11px 100% no-repeat,
+		/* bottom */
+		repeating-linear-gradient(90deg, var(--t) 0 1px, transparent 1px 8px) 0 100% / 100% 5px no-repeat,
+		repeating-linear-gradient(90deg, var(--t) 0 1px, transparent 1px 64px) 0 100% / 100% 11px no-repeat,
+		/* right */
+		repeating-linear-gradient(0deg, var(--t) 0 1px, transparent 1px 8px) 100% 0 / 5px 100% no-repeat,
+		repeating-linear-gradient(0deg, var(--t) 0 1px, transparent 1px 64px) 100% 0 / 11px 100% no-repeat;
+	opacity: 0.55;
+}
+
+/* faint dimension annotations near the hero */
+.site-hero {
+	position: relative;
+}
+.site-title {
+	--d: rgba(var(--mark), 0.42);
+	position: relative;
+	width: fit-content;
+}
+/* horizontal dimension line measuring the title */
+.site-title::before {
+	background:
+		linear-gradient(var(--d), var(--d)) 0 50% / 100% 1px no-repeat,
+		linear-gradient(var(--d), var(--d)) 0 0 / 1px 100% no-repeat,
+		linear-gradient(var(--d), var(--d)) 100% 0 / 1px 100% no-repeat;
+	bottom: calc(100% + 0.3rem);
+	content: "";
+	height: 9px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+}
+.site-title::after {
+	background: var(--siteBg);
+	bottom: calc(100% + 0.3rem - 3px);
+	color: rgba(var(--mark), 0.8);
+	content: "412.00";
+	font: 400 9px/1 "IBM Plex Mono", ui-monospace, monospace;
+	left: 50%;
+	letter-spacing: 0.08em;
+	padding: 0 6px;
+	position: absolute;
+	transform: translateX(-50%);
+}
+/* portrait diameter */
+.site-portrait {
+	--d: rgba(var(--mark), 0.4);
+	position: relative;
+}
+.site-portrait::before {
+	background:
+		linear-gradient(var(--d), var(--d)) 50% 0 / 1px 100% no-repeat,
+		linear-gradient(var(--d), var(--d)) 0 0 / 9px 1px no-repeat,
+		linear-gradient(var(--d), var(--d)) 0 100% / 9px 1px no-repeat;
+	bottom: 0;
+	content: "";
+	left: -1.6rem;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 9px;
+}
+.site-portrait::after {
+	background: var(--siteBg);
+	color: rgba(var(--mark), 0.8);
+	content: "Ø 256";
+	font: 400 9px/1 "IBM Plex Mono", ui-monospace, monospace;
+	left: calc(-1.6rem + 4px);
+	letter-spacing: 0.08em;
+	padding: 4px 0;
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(-90deg);
+	white-space: nowrap;
+}
+/* section titles get a title-block rule */
+.site-section-title {
+	border-bottom: 1px solid rgba(var(--mark), 0.3);
+	padding-bottom: 0.3rem;
+}

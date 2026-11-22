@@ -1,0 +1,33 @@
+/* 130 — Dandelions */
+.site {
+	--siteBg: #fbfbf4;
+	--siteFg: #353a2c;
+	--siteFgStrong: #1f2418;
+	--siteMuted: #666b58;
+	--siteAccent: #7a8a1f;
+	--siteSquiggle: #c9b02e;
+	--siteSubtle: #eeeed8;
+}
+html.dark .site {
+	--siteBg: #0d1420;
+	--siteFg: #dbe3ee;
+	--siteFgStrong: #f4f7fb;
+	--siteMuted: #9aa8bb;
+	--siteAccent: #e8d77a;
+	--siteSquiggle: #e0c95a;
+	--siteSubtle: #152033;
+}
+.site .scenery-a {
+	background: radial-gradient(ellipse at 10% 80%, rgba(230, 220, 120, 0.16), transparent 45%), radial-gradient(ellipse at 90% 75%, rgba(230, 220, 120, 0.14), transparent 45%);
+}
+html.dark .site .scenery-a {
+	background: radial-gradient(ellipse at 10% 80%, rgba(120, 150, 220, 0.14), transparent 45%), radial-gradient(ellipse at 90% 75%, rgba(120, 150, 220, 0.12), transparent 45%);
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

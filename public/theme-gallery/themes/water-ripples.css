@@ -1,0 +1,27 @@
+/* 128 — Water Ripples */
+.site {
+	--siteBg: #eefafb;
+	--siteFg: #1e3a46;
+	--siteFgStrong: #0f2a36;
+	--siteMuted: #4a6a78;
+	--siteAccent: #0f7c94;
+	--siteSquiggle: #19a8c4;
+	--siteSubtle: #cfeaef;
+}
+html.dark .site {
+	--siteBg: #07141c;
+	--siteFg: #d3e6ee;
+	--siteFgStrong: #f0f8fb;
+	--siteMuted: #8fb0bf;
+	--siteAccent: #6fd3e8;
+	--siteSquiggle: #4cc0da;
+	--siteSubtle: #0d2430;
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

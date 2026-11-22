@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap");
+
+.site {
+	--siteFontDisplay: "Bricolage Grotesque", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteBg: #fbfaf6;
+	--siteFg: #2b2f3a;
+	--siteFgStrong: #15181f;
+	--siteMuted: #666b78;
+	--siteAccent: #c2410c;
+	--siteSquiggle: #f08a4b;
+	--siteSubtle: #efe8da;
+}
+
+html.dark .site {
+	--siteBg: #12141a;
+	--siteFg: #d9dbe2;
+	--siteFgStrong: #f5f3ee;
+	--siteMuted: #9a9fad;
+	--siteAccent: #ffb27a;
+	--siteSquiggle: #ff8a4c;
+	--siteSubtle: #22252e;
+}
+
+.site .site-scenery .scenery-a {
+	background:
+		radial-gradient(60% 50% at 80% 20%, color-mix(in srgb, var(--siteSquiggle) 14%, transparent), transparent 70%),
+		radial-gradient(50% 40% at 10% 90%, color-mix(in srgb, var(--siteAccent) 8%, transparent), transparent 70%);
+}
+
+.site .site-title,
+.site .site-section-title {
+	font-family: var(--siteFontDisplay);
+	font-optical-sizing: auto;
+	font-variation-settings: "wght" 300, "wdth" 75;
+	letter-spacing: -0.01em;
+}
+
+.site .site-title {
+	font-size: clamp(2.6rem, 6.4vw, 4rem);
+	line-height: 1;
+}
+
+.site .site-section-title {
+	font-size: 2rem;
+	line-height: 1.1;
+}
+
+.site .kt-word {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.site .kt-ch {
+	color: color-mix(in oklab, var(--siteFgStrong), var(--siteAccent) calc(var(--p, 0) * 70%));
+	font-variation-settings: "wght" calc(300 + var(--p, 0) * 500), "wdth" calc(75 + var(--p, 0) * 25);
+}
+
+@media (hover: none) {
+	.site .site-title,
+	.site .site-section-title {
+		font-variation-settings: "wght" 560, "wdth" 90;
+	}
+}

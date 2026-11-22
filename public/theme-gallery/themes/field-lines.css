@@ -1,0 +1,43 @@
+/* 80 — Field Lines */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+.site {
+	--siteBg: #f4f6f4;
+	--siteFg: #1f2a2e;
+	--siteFgStrong: #0c1517;
+	--siteMuted: #54656b;
+	--siteAccent: #0a6e78;
+	--siteSquiggle: #e0592a;
+	--siteSubtle: #dfe7e6;
+	--siteFont: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+}
+html.dark .site {
+	--siteBg: #070d12;
+	--siteFg: #d3e2e6;
+	--siteFgStrong: #f1fafc;
+	--siteMuted: #86a0a8;
+	--siteAccent: #62d6e0;
+	--siteSquiggle: #ff8a55;
+	--siteSubtle: #0f1e27;
+}
+.site .site-title { font-weight: 600; letter-spacing: -0.03em; }
+.site .site-section-title { font-weight: 600; }
+.site .site-item-meta, .site .site-footer { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.85rem; }
+.site .site-about p, .site .site-item, .site .site-hero-text {
+	text-shadow: 0 0 6px var(--siteBg), 0 0 14px var(--siteBg);
+}
+.site .fl-hint {
+	bottom: 1.15rem;
+	color: var(--siteMuted);
+	font: 500 0.72rem/1 "IBM Plex Mono", ui-monospace, monospace;
+	left: 1.2rem;
+	letter-spacing: 0.04em;
+	pointer-events: none;
+	position: fixed;
+	text-transform: uppercase;
+	z-index: 20;
+}
+.site .fl-dock { bottom: 1rem; display: flex; gap: 0.5rem; position: fixed; right: 1.1rem; z-index: 20; }
+.site .fl-dock .kit-button { bottom: auto; position: static; right: auto; }

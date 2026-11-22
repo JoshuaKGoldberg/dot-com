@@ -1,0 +1,99 @@
+.site {
+	--siteBg: #f4f7fa;
+	--siteFg: #2c3a4d;
+	--siteFgStrong: #172336;
+	--siteMuted: #5d6c80;
+	--siteAccent: #2f6fb0;
+	--siteSquiggle: #6aa5d6;
+	--siteSubtle: #dbe5ee;
+	--branch: #aebccb;
+	--tip: #8fa3b8;
+	--glow: #4a90d9;
+	--snow: radial-gradient(120% 70% at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+		linear-gradient(#f3f6fa, #e9eff5);
+}
+
+html.dark .site {
+	--siteBg: #0a101c;
+	--siteFg: #d3dded;
+	--siteFgStrong: #eef3fb;
+	--siteMuted: #93a3bd;
+	--siteAccent: #86b6f0;
+	--siteSquiggle: #5d8fcc;
+	--siteSubtle: #14213a;
+	--branch: #4a5d7c;
+	--tip: #6f86ab;
+	--glow: #bcd8ff;
+	--snow: radial-gradient(90% 60% at 80% 0%, #17243d 0%, rgba(23, 36, 61, 0) 70%),
+		linear-gradient(#0b1322, #090e19);
+}
+
+.site .site-scenery .scenery-a {
+	background: var(--snow);
+}
+
+.site .site-scenery .scenery-b {
+	overflow: hidden;
+}
+
+.site .ast-tree {
+	bottom: 0;
+	height: 100%;
+	max-width: 100%;
+	position: absolute;
+	width: 300px;
+	overflow: visible;
+}
+
+.site .ast-tree.is-left {
+	left: 0;
+}
+
+.site .ast-tree.is-right {
+	right: 0;
+}
+
+.site .ast-tree path {
+	fill: none;
+	stroke: var(--branch);
+	stroke-linecap: round;
+}
+
+.site .ast-tree circle {
+	fill: var(--tip);
+	opacity: 0.8;
+	transition: fill 2.5s ease, opacity 2.5s ease, r 2.5s ease;
+}
+
+.site .ast-tree circle.is-lit {
+	fill: var(--glow);
+	filter: drop-shadow(0 0 3px var(--glow));
+	opacity: 1;
+	transition-duration: 0.6s;
+}
+
+@media (max-width: 1000px) {
+	.site .ast-tree {
+		opacity: 0.45;
+	}
+}
+
+@keyframes ast-sway {
+	0%,
+	100% {
+		transform: rotate(-0.15deg);
+	}
+	50% {
+		transform: rotate(0.15deg);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .ast-tree g.ast-sway {
+		animation: ast-sway 40s ease-in-out infinite;
+		transform-box: view-box;
+	}
+	html:not(.reduce-motion) .site .ast-tree.is-right g.ast-sway {
+		animation-delay: -17s;
+	}
+}

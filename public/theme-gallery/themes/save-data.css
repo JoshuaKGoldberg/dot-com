@@ -1,0 +1,39 @@
+@import url("_sensor/kit.css");
+
+/* 181 Save-Data: rich -> lite -> text-only, chosen from the connection (or the simulator). */
+.site .scenery-a { background: none; }
+.site[data-tier="rich"] .scenery-a {
+	background:
+		radial-gradient(ellipse 50% 45% at 12% 8%, color-mix(in srgb, var(--siteSquiggle) 22%, transparent), transparent 70%),
+		radial-gradient(ellipse 45% 40% at 90% 18%, color-mix(in srgb, #a78bfa 20%, transparent), transparent 70%),
+		radial-gradient(ellipse 55% 40% at 70% 92%, color-mix(in srgb, #34d399 17%, transparent), transparent 70%),
+		radial-gradient(ellipse 40% 35% at 6% 78%, color-mix(in srgb, #fbbf24 14%, transparent), transparent 70%);
+}
+.site[data-tier="lite"] .scenery-a { background: linear-gradient(var(--siteSubtle), var(--siteBg) 35%); opacity: 0.55; }
+.site[data-tier="lite"] .site-portrait img { box-shadow: none; }
+
+.site[data-tier="text"] { --siteFont: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; --siteFontDisplay: var(--siteFont); }
+.site[data-tier="text"] .site-link::after { display: none; }
+.site[data-tier="text"] .site-link { text-decoration: underline; text-underline-offset: 0.18em; }
+.site[data-tier="text"] .site-title { letter-spacing: -0.02em; line-height: 1; }
+.site[data-tier="text"] .site-about, .site[data-tier="text"] .site-item-description { font-weight: 400; }
+.site[data-tier="text"] .site-hero { grid-template-columns: 1fr; margin: 2rem 0; }
+.site[data-tier="text"] .site-portrait { display: none; }
+.site[data-tier="text"][data-img="1"] .site-portrait { display: block; max-width: 11rem; }
+.site[data-tier="text"][data-img="1"] .sd-load { display: none; }
+.site .sd-load { display: none; }
+.site[data-tier="text"] .sd-load {
+	background: transparent;
+	border: 1px dashed var(--siteMuted);
+	border-radius: 0.3rem;
+	color: var(--siteFgStrong);
+	cursor: pointer;
+	display: block;
+	font: 500 0.95rem/1.3 var(--siteFont);
+	padding: 0.8rem 1rem;
+	text-align: left;
+}
+.site[data-tier="text"] .sd-load:hover { border-style: solid; }
+.site[data-tier="text"] .site-hero-text { max-width: 36rem; }
+.site .sd-readout { color: var(--siteMuted); font-size: 0.78rem; font-variant-numeric: tabular-nums; margin: 0; }
+.site .sd-tier { color: var(--siteFgStrong); font-weight: 700; }

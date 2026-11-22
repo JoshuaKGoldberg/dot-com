@@ -1,0 +1,32 @@
+@import url("./_refined-e/base.css");
+
+/* 352: #315's fog footer + calmer top aurora; smoke wisps curl around the cursor; squiggles take an aurora tint on hover. */
+.site .ra-foot canvas { image-rendering: auto; }
+
+.site .site-link::before {
+	bottom: -0.3em;
+	content: "";
+	height: 0.3em;
+	left: 0;
+	mask: url("../assets/squiggle.svg") repeat-x 0 0 / auto 100%;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+}
+.site .site-link::before {
+	animation: dl-aurora 12s linear calc(var(--dl-x, 0) * -12s) infinite, dl-breathe 5s ease-in-out infinite alternate;
+	background: repeating-linear-gradient(100deg, #12b886, #1aa6d8, #6a7be8, #a566e0, #1aa6d8, #12b886 12em) 0 0 / 12em 100%;
+	opacity: 0;
+	transition: opacity 0.5s ease;
+}
+html.dark .site .site-link::before {
+	background-image: repeating-linear-gradient(100deg, #4dffb0, #3ad8e8, #7f9bff, #c48aff, #3ad8e8, #4dffb0 12em);
+}
+.site .site-link::after { transition: opacity 0.5s ease; }
+.site .site-link:hover::before { opacity: 1; }
+.site .site-link:hover::after { opacity: 0.12; }
+@keyframes dl-aurora { to { background-position: 12em 0; } }
+@keyframes dl-breathe { from { filter: brightness(0.92); } to { filter: brightness(1.12); } }
+@media (prefers-reduced-motion: reduce) { .site .site-link::before { animation: none; background-position: calc(var(--dl-x, 0) * -12em) 0; } }
+html.reduce-motion .site .site-link::before { animation: none; background-position: calc(var(--dl-x, 0) * -12em) 0; }

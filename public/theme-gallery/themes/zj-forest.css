@@ -1,0 +1,356 @@
+/*
+ * Zero JS: Forest. No script, just CSS.
+ *   conic-gradient pines       -> every tree is three stacked wedges, tiled at awkward widths so rows look planted, not printed
+ *   clip-path                  -> two mountain ranges with different ridgelines
+ *   scroll-driven animation    -> each layer drifts at its own rate: parallax from the page's scroll timeline
+ *   prime-period animation     -> mist and fireflies that never sync
+ */
+
+@property --glow {
+	inherits: false;
+	initial-value: 0.5;
+	syntax: "<number>";
+}
+
+.site {
+	--siteBg: #f3f7f1;
+	--siteFg: #1f2e27;
+	--siteFgStrong: #0b1a13;
+	--siteMuted: #4d6459;
+	--siteAccent: #1f7a52;
+	--siteSquiggle: #3bbf86;
+	--siteSubtle: #dfeadf;
+	--sky-a: #bfdcf0;
+	--sky-b: #f6f1df;
+	--mtn-far: #c3d3e2;
+	--mtn-far-top: #eef3f8;
+	--mtn-near: #a5bdc9;
+	--mtn-near-top: #d4e0e6;
+	--pine-far: #9cc3ae;
+	--pine-mid: #8dbaa2;
+	--pine-near: #5e9a80;
+	--ground: #5e9a80;
+	--mist: 255 255 255;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #07110d;
+	--siteFg: #cfe3d8;
+	--siteFgStrong: #f0fbf5;
+	--siteMuted: #8fb0a0;
+	--siteAccent: #7ae0ad;
+	--siteSquiggle: #4fdc9c;
+	--siteSubtle: #10231b;
+	--sky-a: #040a14;
+	--sky-b: #123329;
+	--mtn-far: #14293a;
+	--mtn-far-top: #2c4a62;
+	--mtn-near: #0d2030;
+	--mtn-near-top: #1b3a4a;
+	--pine-far: #0f2c26;
+	--pine-mid: #0a211c;
+	--pine-near: #061611;
+	--ground: #061611;
+	--mist: 90 160 140;
+}
+
+/* ---- sky, sun / moon, stars ---- */
+
+.site .scenery-a {
+	background:
+		radial-gradient(circle at 78% 14%, rgb(255 235 170 / 0.9) 0 2.2rem, rgb(255 225 150 / 0.35) 2.3rem 5rem, transparent 14rem),
+		linear-gradient(var(--sky-a), var(--sky-b));
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(circle at 78% 14%, #f2f6ff 0 1.6rem, rgb(190 215 255 / 0.25) 1.7rem 4rem, transparent 12rem),
+		radial-gradient(1px 1px at 19px 31px, #fff, transparent),
+		radial-gradient(1.2px 1.2px at 83px 73px, #dfe9ff, transparent),
+		radial-gradient(1px 1px at 131px 17px, #fff, transparent),
+		linear-gradient(var(--sky-a), var(--sky-b));
+	background-size: 100% 100%, 127px 113px, 181px 157px, 223px 211px, 100% 100%;
+}
+
+/* two mountain ranges, each its own clip-path */
+.site .scenery-a::before,
+.site .scenery-a::after {
+	bottom: 0;
+	content: "";
+	height: 62vh;
+	left: 0;
+	position: absolute;
+	right: 0;
+}
+
+.site .scenery-a::before {
+	background: linear-gradient(180deg, var(--mtn-far-top) 0, var(--mtn-far) 55%);
+	clip-path: polygon(0 100%, 0.0% 50%, 1.7% 39%, 3.3% 32%, 5.0% 30%, 6.7% 31%, 8.3% 33%, 10.0% 28%, 11.7% 19%, 13.3% 13%, 15.0% 11%, 16.7% 16%, 18.3% 25%, 20.0% 39%, 21.7% 54%, 23.3% 63%, 25.0% 64%, 26.7% 64%, 28.3% 64%, 30.0% 57%, 31.7% 53%, 33.3% 52%, 35.0% 51%, 36.7% 47%, 38.3% 34%, 40.0% 21%, 41.7% 12%, 43.3% 8%, 45.0% 11%, 46.7% 18%, 48.3% 29%, 50.0% 41%, 51.7% 41%, 53.3% 41%, 55.0% 43%, 56.7% 49%, 58.3% 58%, 60.0% 69%, 61.7% 74%, 63.3% 74%, 65.0% 62%, 66.7% 46%, 68.3% 32%, 70.0% 22%, 71.7% 17%, 73.3% 17%, 75.0% 21%, 76.7% 28%, 78.3% 28%, 80.0% 24%, 81.7% 21%, 83.3% 23%, 85.0% 30%, 86.7% 42%, 88.3% 57%, 90.0% 72%, 91.7% 81%, 93.3% 75%, 95.0% 61%, 96.7% 49%, 98.3% 39%, 100.0% 34%, 100% 100%);
+}
+
+.site .scenery-a::after {
+	background: linear-gradient(180deg, var(--mtn-near-top) 0, var(--mtn-near) 50%);
+	clip-path: polygon(0 100%, 0.0% 41%, 1.7% 37%, 3.3% 34%, 5.0% 33%, 6.7% 34%, 8.3% 37%, 10.0% 43%, 11.7% 51%, 13.3% 61%, 15.0% 70%, 16.7% 75%, 18.3% 75%, 20.0% 74%, 21.7% 71%, 23.3% 64%, 25.0% 60%, 26.7% 57%, 28.3% 55%, 30.0% 55%, 31.7% 56%, 33.3% 54%, 35.0% 46%, 36.7% 38%, 38.3% 31%, 40.0% 27%, 41.7% 26%, 43.3% 26%, 45.0% 30%, 46.7% 35%, 48.3% 42%, 50.0% 47%, 51.7% 45%, 53.3% 44%, 55.0% 43%, 56.7% 45%, 58.3% 49%, 60.0% 54%, 61.7% 62%, 63.3% 71%, 65.0% 80%, 66.7% 87%, 68.3% 79%, 70.0% 69%, 71.7% 60%, 73.3% 52%, 75.0% 47%, 76.7% 43%, 78.3% 42%, 80.0% 42%, 81.7% 44%, 83.3% 46%, 85.0% 41%, 86.7% 35%, 88.3% 30%, 90.0% 27%, 91.7% 26%, 93.3% 28%, 95.0% 32%, 96.7% 39%, 98.3% 47%, 100.0% 55%, 100% 100%);
+	height: 50vh;
+}
+
+/* ---- pines: wedges ---- */
+
+.site .scenery-b {
+	background:
+		conic-gradient(from 126.3deg at 50% 0, var(--pine-far) 107.4deg, transparent 0) left 13px top 26px / 49px 17px repeat-x,
+		conic-gradient(from 129.4deg at 50% 0, var(--pine-far) 101.3deg, transparent 0) left 13px top 19px / 49px 15px repeat-x,
+		conic-gradient(from 139.0deg at 50% 0, var(--pine-far) 82.1deg, transparent 0) left 13px top 9px / 49px 14px repeat-x,
+		conic-gradient(from 129.3deg at 50% 0, var(--pine-far) 101.4deg, transparent 0) left 0px top 21px / 54px 21px repeat-x,
+		conic-gradient(from 131.6deg at 50% 0, var(--pine-far) 96.8deg, transparent 0) left 0px top 13px / 54px 18px repeat-x,
+		conic-gradient(from 141.5deg at 50% 0, var(--pine-far) 77.0deg, transparent 0) left 0px top 0px / 54px 17px repeat-x,
+		linear-gradient(var(--pine-far), var(--pine-far)) left 0 top 39px / 100% 100% no-repeat;
+	height: 60vh;
+	opacity: 0.9;
+	top: 72vh;
+}
+
+.site .scenery-c {
+	background:
+		conic-gradient(from 119.2deg at 50% 0, var(--pine-near) 121.6deg, transparent 0) left 13px top 62px / 139px 37px repeat-x,
+		conic-gradient(from 122.3deg at 50% 0, var(--pine-near) 115.5deg, transparent 0) left 13px top 45px / 139px 33px repeat-x,
+		conic-gradient(from 131.7deg at 50% 0, var(--pine-near) 96.7deg, transparent 0) left 13px top 22px / 139px 31px repeat-x,
+		conic-gradient(from 122.0deg at 50% 0, var(--pine-near) 116.1deg, transparent 0) left 0px top 50px / 159px 47px repeat-x,
+		conic-gradient(from 125.2deg at 50% 0, var(--pine-near) 109.5deg, transparent 0) left 0px top 29px / 159px 42px repeat-x,
+		conic-gradient(from 134.5deg at 50% 0, var(--pine-near) 90.9deg, transparent 0) left 0px top 0px / 159px 39px repeat-x,
+		linear-gradient(var(--pine-near), var(--pine-near)) left 0 top 99px / 100% 100% no-repeat;
+	height: 40vh;
+	opacity: 0.55;
+	top: 87vh;
+}
+
+html.dark .site .scenery-c {
+	opacity: 0.95;
+}
+
+/* mid row sits in b::before, between far and near */
+.site .scenery-b::before {
+	background:
+		conic-gradient(from 122.8deg at 50% 0, var(--pine-mid) 114.4deg, transparent 0) left 13px top 42px / 85px 26px repeat-x,
+		conic-gradient(from 125.8deg at 50% 0, var(--pine-mid) 108.3deg, transparent 0) left 13px top 31px / 85px 23px repeat-x,
+		conic-gradient(from 136.0deg at 50% 0, var(--pine-mid) 88.0deg, transparent 0) left 13px top 15px / 85px 22px repeat-x,
+		conic-gradient(from 125.2deg at 50% 0, var(--pine-mid) 109.5deg, transparent 0) left 0px top 35px / 95px 32px repeat-x,
+		conic-gradient(from 129.0deg at 50% 0, var(--pine-mid) 101.9deg, transparent 0) left 0px top 20px / 95px 29px repeat-x,
+		conic-gradient(from 138.5deg at 50% 0, var(--pine-mid) 82.9deg, transparent 0) left 0px top 0px / 95px 27px repeat-x,
+		linear-gradient(var(--pine-mid), var(--pine-mid)) left 0 top 66px / 100% 100% no-repeat;
+	bottom: 0;
+	content: "";
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: -9vh;
+}
+
+/* mist drifts between the rows */
+.site .scenery-b::after {
+	background: radial-gradient(ellipse 40% 50% at 30% 50%, rgb(var(--mist) / 0.55), transparent), radial-gradient(ellipse 35% 45% at 75% 60%, rgb(var(--mist) / 0.45), transparent);
+	content: "";
+	height: 40%;
+	left: -20%;
+	position: absolute;
+	right: -20%;
+	top: 8%;
+}
+
+/* fireflies (dark only): tiny dots at prime sizes, each pseudo twinkling on its own period */
+.site .scenery-c::before,
+.site .scenery-c::after {
+	content: "";
+	display: none;
+	inset: -10vh 0 18vh 0;
+	position: absolute;
+}
+
+html.dark .site .scenery-c::before,
+html.dark .site .scenery-c::after {
+	display: block;
+}
+
+html.dark .site .scenery-c::before {
+	background:
+		radial-gradient(2px 2px at 40px 60px, #d9ff7a, transparent),
+		radial-gradient(2px 2px at 160px 120px, #ffe98a, transparent);
+	background-size: 199px 167px;
+	opacity: 0.8;
+}
+
+html.dark .site .scenery-c::after {
+	background:
+		radial-gradient(2.5px 2.5px at 90px 30px, #ffe98a, transparent),
+		radial-gradient(2px 2px at 20px 140px, #d9ff7a, transparent);
+	background-size: 241px 229px;
+	opacity: 0.8;
+}
+
+/* ---- motion: parallax from the scroll timeline, ambient from prime periods ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .scenery-b::after {
+		animation: zf-mist 59s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site.site .scenery-c::before {
+		animation: zf-twinkle 5s ease-in-out infinite alternate;
+	}
+
+	html:not(.reduce-motion) .site .scenery-c::after {
+		animation: zf-twinkle 7s ease-in-out -3s infinite alternate;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: zf-par-1 linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: zf-par-2 linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b {
+			animation: zf-par-3 linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c {
+			animation: zf-par-4 linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zf-par-1 {
+	to {
+		translate: 0 -3vh;
+	}
+}
+
+@keyframes zf-par-2 {
+	to {
+		translate: 0 -7vh;
+	}
+}
+
+@keyframes zf-par-3 {
+	to {
+		translate: 0 -13vh;
+	}
+}
+
+@keyframes zf-par-4 {
+	to {
+		translate: 0 -22vh;
+	}
+}
+
+@keyframes zf-mist {
+	to {
+		translate: 14% 0;
+	}
+}
+
+@keyframes zf-twinkle {
+	to {
+		opacity: 0.15;
+	}
+}
+
+/* ---- content ---- */
+
+.site-item {
+	border-radius: 0.8rem;
+	margin-inline: -0.8rem;
+	padding: 0.5rem 0.8rem;
+	transition: background-color 0.25s;
+}
+
+.site-item:hover {
+	background: color-mix(in srgb, var(--siteBg) 72%, transparent);
+}
+
+.site :is(.site-hero, .site-about, .site-section-title, .site-footer) {
+	text-shadow: 0 0 0.5em color-mix(in srgb, var(--siteBg) 85%, transparent);
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--siteBg) 80%, transparent), 0 6px 22px rgb(0 0 0 / 0.18);
+}
+
+/* ZJ-BADGE: the 0 KB badge and feature tags.
+ * The ring is a conic gradient spun by compositor-only `rotate` inside .overlay-b (the pill clip);
+ * the old animated @property --spin repainted the badge on the main thread every frame. */
+.site .overlay-b {
+	border-radius: 999px;
+	contain: paint;
+	inset: auto auto 1rem 1rem;
+	overflow: hidden;
+	padding: 2px;
+	width: max-content;
+	z-index: 3;
+}
+
+.site .overlay-b::after {
+	background: conic-gradient(hsl(150 70% 50%), hsl(190 70% 55%), hsl(150 70% 50%));
+	content: "";
+	height: 320px;
+	left: 50%;
+	position: absolute;
+	top: 50%;
+	translate: -50% -50%;
+	width: 320px;
+	will-change: transform;
+}
+
+.site .overlay-b::before {
+	background: var(--siteBg);
+	border-radius: 999px;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A shipped by this theme";
+	display: block;
+	font: 700 0.72rem/1.25 var(--siteFont);
+	letter-spacing: 0.02em;
+	padding: 0.4rem 0.95rem;
+	position: relative;
+	text-align: center;
+	white-space: pre;
+	z-index: 1;
+}
+
+.site .site-overlay::after {
+	background: color-mix(in srgb, var(--siteBg) 85%, transparent);
+	border: 1px solid color-mix(in srgb, var(--siteMuted) 40%, transparent);
+	border-radius: 0.4rem;
+	bottom: 1rem;
+	color: var(--siteMuted);
+	content: "conic-gradient · clip-path · scroll-driven";
+	font: 600 0.66rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+	padding: 0.4rem 0.55rem;
+	position: absolute;
+	right: 1rem;
+	z-index: 3;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .overlay-b::after {
+		animation: zj-spin 6s linear infinite;
+	}
+}
+
+@keyframes zj-spin {
+	to {
+		rotate: 360deg;
+	}
+}
+
+@media (max-width: 800px) {
+	.site .site-overlay::after {
+		display: none;
+	}
+}

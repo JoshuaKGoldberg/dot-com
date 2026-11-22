@@ -1,0 +1,66 @@
+/* #107 Selection Garden: plain site, with a softly tinted selection. */
+.site ::selection {
+	background: color-mix(in srgb, #ff7aa8 26%, transparent);
+	color: inherit;
+}
+
+html.dark .site ::selection { background: color-mix(in srgb, #ff7aa8 34%, transparent); }
+
+.site .dx-chip {
+	align-items: center;
+	background: var(--siteBg);
+	border: 1px solid var(--siteSubtle);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgb(20 40 66 / 0.12);
+	color: var(--siteMuted);
+	display: inline-flex;
+	font: 600 0.8rem/1 var(--siteFont);
+	gap: 0.45rem;
+	padding: 0.5rem 0.8rem;
+	position: fixed;
+	right: 0.9rem;
+	transition: opacity 0.4s;
+	user-select: none;
+	z-index: 12;
+}
+
+.site .dx-chip svg { height: 1.1em; width: 1.1em; }
+.site .dx-chip.is-quiet { opacity: 0.45; }
+
+.site .sg-layer { inset: 0; pointer-events: none; position: absolute; z-index: -1; }
+
+.site .sg-f {
+	animation: sg-grow 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) var(--d, 0ms) both;
+	left: 0;
+	position: absolute;
+	top: 0;
+	transform-origin: 50% 100%;
+}
+
+.site .sg-f svg { display: block; overflow: visible; }
+.site .sg-f .sg-sway { animation: sg-sway 3.4s ease-in-out var(--d, 0ms) infinite alternate; transform-origin: 50% 100%; }
+.site .sg-f.is-wilting { animation: sg-wilt 0.9s ease-in forwards; transform-origin: 50% 100%; }
+
+@keyframes sg-grow {
+	from { opacity: 0; transform: translate(var(--x), var(--y)) scale(0.05); }
+	to { opacity: 1; transform: translate(var(--x), var(--y)) scale(1); }
+}
+
+@keyframes sg-sway { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
+
+@keyframes sg-wilt {
+	0% { opacity: 1; transform: translate(var(--x), var(--y)) rotate(0); }
+	35% { opacity: 1; transform: translate(var(--x), var(--y)) rotate(26deg) scaleY(0.9); }
+	100% { opacity: 0; transform: translate(var(--x), calc(var(--y) + 8px)) rotate(70deg) scale(0.6, 0.35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .sg-f, .site .sg-f .sg-sway, .site .sg-f.is-wilting { animation: none; transform: translate(var(--x), var(--y)); }
+	.site .sg-f.is-wilting { opacity: 0; }
+}
+
+html.reduce-motion .site .sg-f,
+html.reduce-motion .site .sg-f .sg-sway,
+html.reduce-motion .site .sg-f.is-wilting { animation: none; transform: translate(var(--x), var(--y)); }
+html.reduce-motion .site .sg-f.is-wilting { opacity: 0; }

@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap");
+
+.site {
+	--siteBg: #f0ece1;
+	--siteFg: #2a2a27;
+	--siteFgStrong: #151513;
+	--siteMuted: #5f6159;
+	--siteAccent: #3b6a5c;
+	--siteSquiggle: #5b9a86;
+	--siteSubtle: #e0dccf;
+	--siteFont: "Spectral", Georgia, serif;
+	--siteFontDisplay: "Cormorant Garamond", Georgia, serif;
+	--siteMaxWidth: 52rem;
+	--hair: rgb(40 50 40 / 0.2);
+}
+
+html.dark .site {
+	--siteBg: #121618;
+	--siteFg: #dde2dd;
+	--siteFgStrong: #f2f5f1;
+	--siteMuted: #9aa59f;
+	--siteAccent: #9fd0bd;
+	--siteSquiggle: #6fb59d;
+	--siteSubtle: #1c2326;
+	--hair: rgb(220 235 225 / 0.18);
+}
+
+/* Linen weave */
+.site .scenery-a {
+	background:
+		repeating-linear-gradient(0deg, rgb(120 110 80 / 0.06) 0 1px, transparent 1px 3px),
+		repeating-linear-gradient(90deg, rgb(120 110 80 / 0.05) 0 1px, transparent 1px 3px);
+}
+
+html.dark .site .scenery-a {
+	background:
+		repeating-linear-gradient(0deg, rgb(255 255 255 / 0.018) 0 1px, transparent 1px 3px),
+		repeating-linear-gradient(90deg, rgb(255 255 255 / 0.014) 0 1px, transparent 1px 3px);
+}
+
+.site .scenery-b {
+	--clear: 24rem;
+	--full: 30rem;
+	-webkit-mask-image: linear-gradient(90deg, #000 calc(50% - var(--full)), transparent calc(50% - var(--clear)), transparent calc(50% + var(--clear)), #000 calc(50% + var(--full)));
+	mask-image: linear-gradient(90deg, #000 calc(50% - var(--full)), transparent calc(50% - var(--clear)), transparent calc(50% + var(--clear)), #000 calc(50% + var(--full)));
+}
+
+.site .scenery-b canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+/* ---- Typography ---- */
+.site-header {
+	border-bottom: 1px solid var(--hair);
+	padding-bottom: 1rem;
+}
+
+.site .site-logo {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.7rem;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+}
+
+.site .site-nav-link {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.3rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+}
+
+.site-hero {
+	margin: 4rem 0 3.5rem;
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 6px var(--siteBg), 0 0 0 7px var(--hair);
+}
+
+.site-title {
+	font-size: clamp(3rem, 7vw, 5rem);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 0.92;
+}
+
+.site-tagline {
+	font-size: 1.4rem;
+	font-style: italic;
+	font-weight: 300;
+}
+
+.site-about {
+	font-size: 1.25rem;
+	font-weight: 300;
+	line-height: 1.6;
+}
+
+.site-section-title {
+	font-size: 2.1rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	text-align: center;
+}
+
+.site-section-title::before,
+.site-section-title::after {
+	color: var(--siteSquiggle);
+	content: "~";
+	font-weight: 400;
+	margin: 0 0.6em;
+}
+
+.site-item {
+	border-bottom: 1px solid var(--hair);
+	padding-bottom: 1.3rem;
+}
+
+.site-list {
+	gap: 1.3rem;
+}
+
+.site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.15;
+}
+
+.site-item-description {
+	font-weight: 300;
+}
+
+.site-item-meta {
+	font-size: 0.88rem;
+	font-style: italic;
+}
+
+.site-projects .site-list {
+	gap: 1.6rem 2.2rem;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.site-footer {
+	font-style: italic;
+	padding-top: 1rem;
+}
+
+@media (max-width: 700px) {
+	.site-projects .site-list {
+		grid-template-columns: 1fr;
+	}
+}

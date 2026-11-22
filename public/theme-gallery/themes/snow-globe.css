@@ -1,0 +1,77 @@
+/* #112 Snow Globe: plain site + a tiny globe in the footer. Snow only falls once you shake it. */
+.site .site-footer { align-items: center; display: flex; flex-direction: column; gap: 0.35rem; }
+.site .site-footer p { margin: 0.4rem 0 0.1rem; }
+
+.site .sw-globe {
+	background: none;
+	border: 0;
+	cursor: pointer;
+	height: 98px;
+	padding: 0;
+	transform-origin: 50% 90%;
+	width: 78px;
+}
+
+.site .sw-globe svg { display: block; height: 100%; overflow: visible; width: 100%; }
+.site .sw-globe:focus-visible { outline: 2px solid var(--siteAccent); outline-offset: 4px; border-radius: 12px; }
+.site .sw-globe:hover { transform: rotate(-4deg); transition: transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.site .sw-globe.is-shaking { animation: sw-shake 0.7s cubic-bezier(0.3, 0.1, 0.4, 1); }
+.site .sw-globe .sw-dots circle { animation: sw-swirl 3.6s ease-out both paused; fill: #fff; }
+.site .sw-globe.is-shaking .sw-dots circle,
+.site .sw-globe.is-snowing .sw-dots circle { animation-play-state: running; }
+.site .sw-globe .sw-dots circle:nth-child(2n) { animation-delay: -0.5s; animation-duration: 3.1s; }
+.site .sw-globe .sw-dots circle:nth-child(3n) { animation-delay: -1s; animation-duration: 4.2s; }
+
+@keyframes sw-shake {
+	0% { transform: rotate(0); }
+	12% { transform: translate(-6px, -3px) rotate(-14deg); }
+	26% { transform: translate(7px, -4px) rotate(14deg); }
+	40% { transform: translate(-5px, -2px) rotate(-10deg); }
+	55% { transform: translate(5px, -2px) rotate(9deg); }
+	75% { transform: translate(-2px, 0) rotate(-4deg); }
+	100% { transform: rotate(0); }
+}
+
+@keyframes sw-swirl {
+	0% { opacity: 1; transform: translate(0, 0); }
+	30% { transform: translate(var(--sx, 5px), -9px); }
+	100% { opacity: 0.9; transform: translate(0, 14px); }
+}
+
+.site .dx-chip {
+	align-items: center;
+	background: var(--siteBg);
+	border: 1px solid var(--siteSubtle);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgb(20 40 66 / 0.12);
+	color: var(--siteMuted);
+	cursor: pointer;
+	display: inline-flex;
+	font: 600 0.8rem/1 var(--siteFont);
+	gap: 0.5rem;
+	padding: 0.5rem 0.8rem;
+	position: fixed;
+	right: 0.9rem;
+	z-index: 12;
+}
+
+.site .dx-chip:hover,
+.site .dx-chip:focus-visible { border-color: var(--siteAccent); color: var(--siteAccent); outline: none; }
+.site .dx-chip svg { height: 1.2em; width: 1.2em; }
+
+.site .sw-canvas {
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	position: fixed;
+	right: 0;
+	top: var(--barHeight);
+	z-index: 11;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .sw-globe.is-shaking, .site .sw-globe .sw-dots circle { animation: none; }
+}
+html.reduce-motion .site .sw-globe.is-shaking,
+html.reduce-motion .site .sw-globe .sw-dots circle { animation: none; }

@@ -1,0 +1,27 @@
+/* 134 — Frost Window */
+.site {
+	--siteBg: #e8f0f8;
+	--siteFg: #243447;
+	--siteFgStrong: #101e2e;
+	--siteMuted: #51647a;
+	--siteAccent: #1f6fb5;
+	--siteSquiggle: #4a9bdc;
+	--siteSubtle: #d6e4f1;
+}
+html.dark .site {
+	--siteBg: #080e1a;
+	--siteFg: #dbe6f3;
+	--siteFgStrong: #f4f8fd;
+	--siteMuted: #9fb2c8;
+	--siteAccent: #8cc8ff;
+	--siteSquiggle: #6bb4f5;
+	--siteSubtle: #101c30;
+}
+.site .ck-canvas {
+	display: block;
+	height: 100%;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}

@@ -1,0 +1,65 @@
+/* 175. Trail Hike: scroll hikes switchbacks up Mt. Marcy with a live elevation profile; summit view at the footer. */
+.site {
+	--siteBg: #fbf8ef;
+	--siteFg: #33291d;
+	--siteFgStrong: #1c150c;
+	--siteMuted: #65594a;
+	--siteAccent: #a8460f;
+	--siteSquiggle: #d6580f;
+	--siteSubtle: #e9e0c9;
+}
+html.dark .site {
+	--siteBg: #131a33;
+	--siteFg: #e6e8f6;
+	--siteFgStrong: #fff;
+	--siteMuted: #a9b1d4;
+	--siteAccent: #ffb06a;
+	--siteSquiggle: #ffb06a;
+	--siteSubtle: #232d58;
+}
+.site .site-page {
+	margin-left: auto;
+	margin-right: clamp(1rem, 4vw, 3.5rem);
+	max-width: 36rem;
+}
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 80%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 92%, transparent);
+	border-radius: 0.9rem;
+	box-shadow: 0 12px 28px -18px rgb(30 20 5 / 0.6), 0 0 0 1px rgb(120 90 40 / 0.18);
+	padding: 1.4rem 1.6rem;
+}
+.site .site-hero { gap: 1.4rem; grid-template-columns: 8rem 1fr; margin: 3vh 0 30vh; }
+.site .site-about { margin: 0 0 30vh; text-align: left; }
+.site .site-section { margin: 0 0 30vh; }
+.site .site-footer { margin: 0; }
+@media (max-width: 900px) {
+	.site .site-page { margin-inline: auto; max-width: 34rem; }
+	.site .site-hero, .site .site-about, .site .site-section, .site .site-footer { background: color-mix(in srgb, var(--siteBg) 95%, transparent); }
+}
+/* elevation profile */
+.site .th-hud {
+	background: color-mix(in srgb, var(--siteBg) 90%, transparent);
+	border-radius: 0.8rem;
+	bottom: 1rem;
+	box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.5);
+	color: var(--siteFgStrong);
+	left: 1rem;
+	padding: 0.5rem 0.8rem 0.6rem;
+	position: absolute;
+}
+.site .th-ft { font-size: 0.95rem; font-weight: 600; }
+.site .th-ft b { font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.site .th-hud svg { display: block; margin: 0.1rem 0; overflow: visible; }
+.site .th-prof { fill: none; opacity: 0.35; stroke: var(--siteFgStrong); stroke-width: 2; }
+.site .th-done { fill: none; stroke: var(--siteAccent); stroke-linecap: round; stroke-width: 3; }
+.site .th-dot { fill: var(--siteAccent); stroke: var(--siteBg); stroke-width: 2; }
+.site .th-sub { color: var(--siteMuted); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; }

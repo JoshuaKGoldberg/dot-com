@@ -1,0 +1,30 @@
+/* 81 — Chrome Metaballs */
+@import url("./_kit/kit.css");
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300..800&display=swap");
+
+.site {
+	--siteBg: #eceef2;
+	--siteFg: #272c3a;
+	--siteFgStrong: #0e1119;
+	--siteMuted: #5d6578;
+	--siteAccent: #3a46d6;
+	--siteSquiggle: #6b5cff;
+	--siteSubtle: #dde0e8;
+	--siteFont: "Sora", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+}
+html.dark .site {
+	--siteBg: #07080d;
+	--siteFg: #d9dbe8;
+	--siteFgStrong: #f6f7fd;
+	--siteMuted: #8b90a8;
+	--siteAccent: #9ab0ff;
+	--siteSquiggle: #c08bff;
+	--siteSubtle: #12141f;
+}
+.site .site-title { font-weight: 700; letter-spacing: -0.04em; font-size: clamp(2.3rem, 5.4vw, 3.4rem); }
+.site .site-tagline { font-weight: 300; font-size: 1.35rem; }
+.site .site-about { font-weight: 300; font-size: 1.15rem; }
+.site .site-section-title { font-weight: 700; letter-spacing: -0.03em; }
+.site .site-portrait img { box-shadow: 0 0 0 2px color-mix(in srgb, var(--siteBg) 70%, transparent), 0 18px 40px -12px rgba(0, 0, 0, 0.45); }
+.site .site-hero-text { text-shadow: 0 0 8px var(--siteBg), 0 0 20px var(--siteBg); }

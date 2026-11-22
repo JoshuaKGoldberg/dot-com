@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Figtree:wght@300..700&display=swap");
+.site { --siteFont: "Figtree", ui-sans-serif, system-ui, sans-serif; --siteFontDisplay: "Cormorant Garamond", Georgia, serif; --siteBg: #fbfcf8; --siteFg: #2b3a4a; --siteAccent: #0f6aa8; --siteSquiggle: #3fa9dd; --siteSubtle: #dcebe6; }
+html.dark .site { --siteBg: #07111c; --siteSubtle: #12283a; --siteFg: #dbe7f1; }
+.site-title { font-weight: 700; font-size: clamp(3rem, 7vw, 4.5rem); }
+.site-section-title { font-weight: 700; font-size: 2.1rem; }
+.site .site-scenery .scenery-a { left: auto; width: clamp(90px, 20vw, 250px); opacity: 1; }
+@media (max-width: 1050px) { .site .site-scenery .scenery-a { opacity: 0.4; } }
+.site .site-scenery { background: linear-gradient(90deg, transparent 70%, color-mix(in srgb, var(--siteSubtle) 70%, transparent)); }
+.site .tv-legend { position: absolute; right: 0.6rem; bottom: 0.8rem; width: min(13.5rem, 19vw); display: flex; flex-direction: column; gap: 0.12rem; font-size: 0.78rem; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 85%, transparent); padding: 0.5rem 0.7rem; border-radius: 0.7rem; }
+.site .tv-legend b { color: var(--siteFgStrong); font-size: 0.85rem; }
+.site .tv-legend small { margin-bottom: 0.2rem; }
+.site .tv-legend i { display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; margin-right: 0.4rem; }
+@media (max-width: 1050px) { .site .tv-legend { display: none; } }

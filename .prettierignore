@@ -2,3 +2,4 @@
 /.husky
 /dist
 /pnpm-lock.yaml
+/public/theme-gallery

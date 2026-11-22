@@ -1,0 +1,20 @@
+/* #355: valley footer layout (from #318) + wave squiggle canvas. */
+.site .site-footer { min-height: 300px; }
+.site .ra-foot .ra-valley-hint {
+	bottom: 0.7rem;
+	color: var(--siteMuted);
+	font-size: 0.78rem;
+	letter-spacing: 0.05em;
+	opacity: 0.85;
+	pointer-events: none;
+	position: absolute;
+	right: 1.3rem;
+	transition: opacity 1.2s ease;
+	z-index: 4;
+}
+.site .ra-foot .ra-valley-hint.is-gone { opacity: 0; }
+@media (max-width: 700px) { .site .ra-foot .ra-valley-hint { display: none; } }
+@media (max-width: 860px) { .site .dl-stars { display: none; } }
+.site .scenery-b, .site .scenery-c { contain: paint; }
+.site .site-link.dl-live::after { opacity: 0; }
+.site .site-link .dl-wave { display: block; left: -0.2em; pointer-events: none; position: absolute; }

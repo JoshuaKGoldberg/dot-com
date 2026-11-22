@@ -1,0 +1,32 @@
+@import url("./_aurora-e/base.css");
+
+/* 260. Fire Tower Panorama: the view from an Adirondack fire-tower cab. */
+.site {
+	--siteBg: #eef2f1; --siteFg: #25383a; --siteFgStrong: #101f21; --siteMuted: #50686a;
+	--siteAccent: #0b6e66; --siteSquiggle: #d98c4a; --siteSubtle: #dbe7e4;
+	--ft-wood: #5b4630; --ft-wood-hi: #8a6c49; --ft-wood-lo: #33261a;
+}
+html.dark .site {
+	--siteBg: #050a15; --siteFg: #d6e5ea; --siteFgStrong: #f1fafb; --siteMuted: #98b2bb;
+	--siteAccent: #76f0c8; --siteSquiggle: #f0b070; --siteSubtle: #0e1c28;
+	--ft-wood: #1d1710; --ft-wood-hi: #3a2f22; --ft-wood-lo: #0c0906;
+}
+.site .scenery-a { background: linear-gradient(#9cc4e0 0%, #cfe3ec 40%, #f3e9d6 72%, #dfe5df 100%); }
+html.dark .site .scenery-a { background: linear-gradient(#02050d 0%, #071229 40%, #14274c 74%, #2a3e66 100%); }
+
+/* the cab window: posts, header beam and sill, kept thin and at the very edges */
+.site .overlay-a .ft-frame {
+	position: absolute; inset: 0; pointer-events: none;
+	box-shadow: inset 0 0 90px rgb(20 12 4 / 0.28);
+}
+html.dark .site .overlay-a .ft-frame { box-shadow: inset 0 0 110px rgb(0 0 0 / 0.55); }
+.site .ft-frame i { position: absolute; display: block; }
+.site .ft-frame .top { left: 0; right: 0; top: 0; height: 10px; background: linear-gradient(var(--ft-wood-hi), var(--ft-wood) 40%, var(--ft-wood-lo)); box-shadow: 0 3px 10px rgb(0 0 0 / 0.3); }
+.site .ft-frame .l { left: 0; top: 0; bottom: 0; width: 11px; background: linear-gradient(90deg, var(--ft-wood-lo), var(--ft-wood) 45%, var(--ft-wood-hi)); box-shadow: 3px 0 10px rgb(0 0 0 / 0.28); }
+.site .ft-frame .r { right: 0; top: 0; bottom: 0; width: 11px; background: linear-gradient(270deg, var(--ft-wood-lo), var(--ft-wood) 45%, var(--ft-wood-hi)); box-shadow: -3px 0 10px rgb(0 0 0 / 0.28); }
+.site .ft-frame .sill { left: 0; right: 0; bottom: 0; height: 16px; background: linear-gradient(var(--ft-wood-hi), var(--ft-wood) 30%, var(--ft-wood-lo)); box-shadow: 0 -3px 12px rgb(0 0 0 / 0.3); }
+.site .ft-frame .b { width: 26px; height: 26px; background: var(--ft-wood-lo); opacity: 0.8; }
+.site .ft-frame .b1 { left: 0; top: 0; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.site .ft-frame .b2 { right: 0; top: 0; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.site .ft-frame .b3 { left: 0; bottom: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); }
+.site .ft-frame .b4 { right: 0; bottom: 0; clip-path: polygon(100% 0, 0 100%, 100% 100%); }

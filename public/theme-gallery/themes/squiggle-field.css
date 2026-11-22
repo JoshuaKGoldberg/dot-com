@@ -1,0 +1,51 @@
+/* 15 — Squiggle Field */
+.site {
+	--siteBg: #fcfdfe;
+	--siteFg: #283556;
+	--siteFgStrong: #142842;
+	--siteMuted: #56668a;
+	--siteAccent: #1170d0;
+	--siteSquiggle: #00a3ff;
+	--siteSubtle: #e1ecf4;
+}
+html.dark .site {
+	--siteBg: #0a101c;
+	--siteFg: #dae7f3;
+	--siteFgStrong: #f1f6fb;
+	--siteMuted: #93a5bf;
+	--siteAccent: #77bbff;
+	--siteSquiggle: #00a3ff;
+	--siteSubtle: #12243a;
+}
+
+.site .sqf-field {
+	inset: 0;
+	overflow: hidden;
+	position: absolute;
+}
+.site .sqf-row {
+	background-position: var(--phase) 0;
+	background-repeat: repeat-x;
+	background-size: var(--w, 36px) 14px;
+	height: 14px;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: var(--y);
+}
+/* a soft pool of calm behind the text column keeps prose crisp */
+.site .scenery-b {
+	background: radial-gradient(ellipse 34rem 60% at 50% 45%, var(--siteBg) 0%, color-mix(in srgb, var(--siteBg) 55%, transparent) 55%, transparent 100%);
+	opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .sqf-row {
+		animation: sqf-drift var(--dur, 120s) linear infinite;
+	}
+	@keyframes sqf-drift {
+		to {
+			background-position: calc(var(--phase) + var(--w)) 0;
+		}
+	}
+}

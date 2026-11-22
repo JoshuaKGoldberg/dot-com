@@ -1,0 +1,32 @@
+@import url("./_dl-b/base.css");
+/* #356 Squiggle Ribbon: each squiggle becomes two interwoven aurora strands near the pointer. */
+.site .site-link .dl-rb {
+	--dl-glow: rgba(60, 130, 230, 0.55);
+	bottom: -0.3em;
+	height: 0.3em;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+}
+html.dark .site .site-link .dl-rb { --dl-glow: rgba(110, 220, 255, 0.5); }
+.site .site-link .dl-rb.is-lit { filter: drop-shadow(0 0 3px var(--dl-glow)); }
+.site .site-link .dl-rb::before,
+.site .site-link .dl-rb::after {
+	background: linear-gradient(90deg, #14b894, #1a8fe8, #7a62e0, #d05ab4, #14b894, #1a8fe8, #7a62e0, #d05ab4, #14b894) var(--dl-h, 0%) 0 / 420% 100%;
+	content: "";
+	inset: 0;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='14' viewBox='0 0 16 14' fill='none'%3E%3Cpath d='M-0.8 6.1L0.8 7.9C2.8 10 5.2 10 7.2 7.9L8.8 6.1C10.8 4 13.2 4 15.2 6.1L16.8 7.9' stroke='%23000' stroke-width='5.4'/%3E%3C/svg%3E") repeat-x 0 0 / auto 100%;
+	opacity: var(--dl-p, 0);
+	position: absolute;
+}
+.site .site-link .dl-rb::after {
+	background-position: var(--dl-h2, 38%) 0;
+	mask-position: 0.1714em 0;
+	opacity: calc(var(--dl-p, 0) * 0.9);
+}
+html.dark .site .site-link .dl-rb::before,
+html.dark .site .site-link .dl-rb::after {
+	background-image: linear-gradient(90deg, #5affaa, #3cdcd7, #6e96ff, #be6eff, #5affaa, #3cdcd7, #6e96ff, #be6eff, #5affaa);
+}
+.site .site-link::after { opacity: calc(0.9 - var(--dl-p, 0) * 0.9); }

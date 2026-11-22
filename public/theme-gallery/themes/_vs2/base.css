@@ -1,0 +1,79 @@
+/* _vs2/base.css: Lake Stars shared styles: footer-stage layout, base-blue squiggles that bloom into stationary rainbow hues on hover, portrait. */
+@import url("../_refined-e/base.css");
+
+@property --vsr { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --vsx { syntax: "<number>"; inherits: true; initial-value: 50; }
+@property --vsg { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+/* ---- squiggles ----
+   At rest: the site's own blue (site.css). On hover: --vsRb (a fixed hue map along the link, set in JS) is revealed through a
+   hole that opens from the entry point (--vsx) over ~1s; the stroke thickens with an overshoot, a soft glow blooms below,
+   and (some themes) a few glints cross the crests. Nothing animates after that, so the colors hold still. */
+.site .site-link {
+	--vsr: 0;
+	--vsThick: 1.35;
+	--vsGlow: 0.5;
+	--vsDur: 1s;
+	transition: --vsr var(--vsDur) cubic-bezier(0.25, 0.7, 0.25, 1);
+}
+.site .site-link::after {
+	background:
+		radial-gradient(circle at 16% 38%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(circle at 51% 62%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(circle at 84% 40%, rgba(255, 255, 255, calc(var(--vsg) * var(--vsGlints, 0))) 0, rgba(255, 255, 255, 0) 2.4px),
+		radial-gradient(ellipse calc(var(--vsr) * 1%) 600% at calc(var(--vsx) * 1%) 50%, transparent 76%, var(--siteSquiggle) 100%),
+		var(--vsRb, var(--siteSquiggle));
+	opacity: 0.92;
+	transform: scaleY(1);
+	transition: transform 0.9s ease;
+}
+.site .site-link::before {
+	background: var(--vsRb, transparent);
+	bottom: -0.78em;
+	content: "";
+	filter: blur(3.5px);
+	height: 0.8em;
+	left: 0;
+	mask: radial-gradient(ellipse calc(var(--vsr) * 0.85%) 50% at calc(var(--vsx) * 1%) 62%, #000 10%, transparent 100%);
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	transition: opacity 0.9s ease;
+}
+.site .site-link:is(:hover, :focus-visible) { --vsr: 175; }
+.site .site-link:is(:hover, :focus-visible)::after {
+	animation: vs-glint 1.8s ease-out 0.35s 1 both;
+	transform: scaleY(var(--vsThick));
+	transition: transform 1.05s cubic-bezier(0.3, 1.75, 0.45, 1);
+}
+.site .site-link:is(:hover, :focus-visible)::before { opacity: var(--vsGlow); transition-duration: var(--vsDur); }
+html:not(.dark) .site .site-link:is(:hover, :focus-visible)::before { opacity: calc(var(--vsGlow) * 0.7); }
+@keyframes vs-glint { 0% { --vsg: 0; } 35% { --vsg: 1; } 100% { --vsg: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+	.site .site-link, .site .site-link::before, .site .site-link::after { animation: none !important; transition: none !important; }
+}
+html.reduce-motion .site .site-link, html.reduce-motion .site .site-link::before, html.reduce-motion .site .site-link::after { animation: none !important; transition: none !important; }
+
+/* ---- hero portrait: composed once on a canvas (see portrait.js); the pictures stay in place for layout + alt text ---- */
+.site .site-portrait { display: block; position: relative; }
+.site .site-portrait.vs-fx img { opacity: 0; box-shadow: none; }
+.site .site-portrait canvas.vs-portrait {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	box-shadow: 0 0 16px 1px rgba(90, 225, 190, 0.2), 0 0 38px 4px rgba(150, 120, 255, 0.14), 0 3px 14px 0 var(--siteSubtle);
+	display: block;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+html:not(.dark) .site .site-portrait canvas.vs-portrait {
+	box-shadow: 0 0 18px 2px rgba(80, 190, 190, 0.2), 0 0 40px 4px rgba(160, 130, 230, 0.13), 0 3px 14px 0 var(--siteSubtle);
+}
+
+/* footer: lots of scenery below the text, so the caption sits well up */
+.site .site-footer { padding-bottom: 11.5rem; }

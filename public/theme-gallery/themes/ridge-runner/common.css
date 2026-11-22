@@ -1,0 +1,669 @@
+/* Shared Adirondack scenery + bird styles for the forest platformer themes (#99-105). */
+
+.site {
+	--sky-top: #a9c9e8;
+	--sky-mid: #cfe2ef;
+	--sky-hor: #f6e6d2;
+	--sun: #fff1cf;
+	--sun-glow: rgba(255, 226, 170, 0.55);
+	--peak-far: #9db6cb;
+	--peak-far-forest: #86a2b6;
+	--peak-mid-rock: #8ea8b5;
+	--peak-mid: #6f8f93;
+	--shore: #56777a;
+	--bank: #3f6061;
+	--fore: #2a4a47;
+	--fore-b: #36605a;
+	--brush: #23403f;
+	--birch: #f3efe4;
+	--birch-mark: #34332f;
+	--leaf: #8bb36a;
+	--lake-a: #b9d2e0;
+	--lake-b: #7fa4bd;
+	--streak: #ffffff;
+	--snow-hi: #f6fbff;
+	--siteBg: #cfe2ef;
+	--siteFg: #1f2f49;
+	--siteFgStrong: #0f1d35;
+	--siteMuted: #3f5273;
+	--siteAccent: #0f5fb8;
+	--siteSquiggle: #2f8fe0;
+	--siteSubtle: #c4d8e8;
+	--tag-bg: rgba(255, 255, 255, 0.82);
+	--tag-fg: #14243f;
+	--tag-line: rgba(20, 36, 63, 0.18);
+}
+
+html.dark .site {
+	--sky-top: #0b0e2c;
+	--sky-mid: #1a1f4d;
+	--sky-hor: #43406f;
+	--sun: #f1efe0;
+	--sun-glow: rgba(190, 190, 255, 0.28);
+	--peak-far: #2f3868;
+	--peak-far-forest: #262e58;
+	--peak-mid-rock: #2a3260;
+	--peak-mid: #1c2349;
+	--shore: #131a3a;
+	--bank: #0d1330;
+	--fore: #0a1030;
+	--fore-b: #131a42;
+	--brush: #080d26;
+	--birch: #aeb3d6;
+	--birch-mark: #0a1030;
+	--leaf: #27325e;
+	--lake-a: #2b2d5a;
+	--lake-b: #0b0f2d;
+	--streak: #b9b8f0;
+	--snow-hi: #aeb7e6;
+	--siteBg: #0d1030;
+	--siteFg: #d9e2f4;
+	--siteFgStrong: #f2f5fc;
+	--siteMuted: #a2aed0;
+	--siteAccent: #8fc2ff;
+	--siteSquiggle: #8f9cff;
+	--siteSubtle: #1a1e4a;
+	--tag-bg: rgba(16, 20, 54, 0.82);
+	--tag-fg: #eaf0ff;
+	--tag-line: rgba(200, 210, 255, 0.22);
+}
+
+/* ---------- sky ---------- */
+.site .scenery-a {
+	background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 52%, var(--sky-hor) 100%);
+	overflow: hidden;
+}
+
+.site .sc-sun {
+	background: radial-gradient(circle, var(--sun) 0 7%, var(--sun-glow) 8%, transparent 62%);
+	height: 40vmin;
+	left: 74%;
+	position: absolute;
+	top: 6%;
+	width: 40vmin;
+}
+
+.site .sc-clouds {
+	inset: 0 auto auto 0;
+	height: 55%;
+	position: absolute;
+	width: 200%;
+}
+
+.site .sc-wisp {
+	background:
+		radial-gradient(ellipse 9% 9% at 14% 40%, rgba(255, 255, 255, 0.6), transparent 70%),
+		radial-gradient(ellipse 13% 6% at 33% 62%, rgba(255, 255, 255, 0.45), transparent 70%),
+		radial-gradient(ellipse 8% 7% at 55% 30%, rgba(255, 255, 255, 0.55), transparent 70%),
+		radial-gradient(ellipse 14% 7% at 78% 55%, rgba(255, 244, 232, 0.5), transparent 70%);
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 50%;
+}
+
+.site .sc-wisp-b {
+	left: 50%;
+}
+
+html.dark .site .sc-wisp {
+	opacity: 0.12;
+}
+
+.site .sc-stars {
+	fill: #eef0ff;
+	height: 100%;
+	inset: 0;
+	position: absolute;
+	width: 100%;
+}
+
+html:not(.dark) .site .sc-stars {
+	display: none;
+}
+
+/* ---------- mountains + lake ---------- */
+.site .scenery-b {
+	overflow: hidden;
+}
+
+.site .sc-peaks {
+	bottom: calc(100% - var(--lake-top) - 0.5px);
+	display: block;
+	height: 42%;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+.site .pk-far {
+	fill: var(--peak-far);
+}
+
+.site .pk-far-forest {
+	fill: var(--peak-far-forest);
+}
+
+.site .pk-mid-rock {
+	fill: var(--peak-mid-rock);
+}
+
+.site .pk-mid {
+	fill: var(--peak-mid);
+}
+
+.site .sc-mist {
+	background: linear-gradient(to top, rgba(255, 255, 255, 0.4), transparent);
+	bottom: calc(100% - var(--lake-top));
+	height: 12%;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+html.dark .site .sc-mist {
+	background: linear-gradient(to top, rgba(120, 120, 200, 0.18), transparent);
+}
+
+.site .sc-lake {
+	background: linear-gradient(to bottom, var(--lake-a), var(--lake-b));
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: var(--lake-top);
+}
+
+.site .sc-reflect {
+	display: block;
+	height: 42vh;
+	left: 0;
+	opacity: 0.3;
+	position: absolute;
+	top: 0;
+	transform: scaleY(-1);
+	transform-origin: center top;
+	width: 100%;
+}
+
+.site .sc-lake-glow {
+	background: radial-gradient(ellipse 60% 100% at 78% 0%, var(--sun-glow), transparent 70%);
+	inset: 0;
+	opacity: 0.8;
+	position: absolute;
+}
+
+.site .sc-shimmer {
+	height: 100%;
+	left: 0;
+	opacity: 0.42;
+	position: absolute;
+	top: 0;
+	width: 200%;
+}
+
+html.dark .site .sc-shimmer {
+	opacity: 0.2;
+}
+
+.site .shimmer-svg {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site .sc-shimmer .streak {
+	stroke: var(--streak);
+}
+
+/* ---------- shore, bank, trees ---------- */
+.site .sc-shore,
+.site .sc-bank {
+	display: block;
+	left: 0;
+	position: absolute;
+	width: 100%;
+}
+
+.site .sc-shore {
+	bottom: calc(100% - var(--lake-top) - 3px);
+	height: clamp(60px, 14vh, 150px);
+}
+
+.site .sc-bank {
+	bottom: 0;
+	height: clamp(70px, 16vh, 160px);
+	opacity: 0.96;
+}
+
+.site .pk-shore {
+	fill: var(--shore);
+}
+
+.site .pk-bank {
+	fill: var(--bank);
+}
+
+.site .sc-trees {
+	bottom: 0;
+	display: block;
+	height: 100%;
+	position: absolute;
+	width: min(32vw, 420px);
+}
+
+.site .sc-trees-l {
+	left: 0;
+}
+
+.site .sc-trees-r {
+	right: 0;
+	transform: scaleX(-1);
+}
+
+.site .spruce {
+	fill: var(--fore);
+	stroke: var(--fore);
+	stroke-linejoin: round;
+	stroke-width: 1.2;
+}
+
+.site .spruce-b {
+	fill: var(--fore-b);
+	stroke: var(--fore-b);
+}
+
+.site .tree-back {
+	opacity: 0.78;
+}
+
+.site .snow-hi {
+	stroke: var(--snow-hi);
+	stroke-linecap: round;
+	stroke-width: 3;
+}
+
+.site .birch {
+	fill: var(--birch);
+}
+
+.site .birch-mark {
+	fill: var(--birch-mark);
+}
+
+.site .birch-branch {
+	stroke: var(--birch);
+	stroke-width: 1.4;
+}
+
+.site .leaf {
+	fill: var(--leaf);
+	opacity: 0.8;
+}
+
+.site .brush {
+	fill: var(--brush);
+}
+
+.site .sc-birds {
+	inset: 0;
+	position: absolute;
+}
+
+/* Hide the heavier foreground trees behind narrow viewports so text stays calm. */
+@media (max-width: 760px) {
+	.site .sc-trees {
+		opacity: 0.45;
+	}
+}
+
+/* ---------- islands ---------- */
+.site .island {
+	position: absolute;
+	transform: translate(-50%, -100%);
+}
+
+.site .island-svg {
+	display: block;
+	overflow: visible;
+}
+
+.site .island-shadow {
+	fill: rgba(10, 30, 60, 0.18);
+}
+
+.site .island-rock {
+	fill: var(--bank);
+}
+
+.site .island-tree {
+	fill: var(--fore);
+}
+
+/* ---------- ambient motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .sc-shimmer {
+		animation: sc-drift 70s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .sc-clouds {
+		animation: sc-drift 220s linear infinite;
+	}
+
+	html:not(.reduce-motion) .site .sc-stars .twinkle {
+		animation: sc-twinkle var(--tw-d, 10s) ease-in-out var(--tw-delay, 0s) infinite;
+	}
+}
+
+@keyframes sc-drift {
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@keyframes sc-twinkle {
+	50% {
+		opacity: 0.15;
+	}
+}
+
+/* ---------- birds ---------- */
+.site .bird {
+	height: 0;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 0;
+	will-change: transform;
+}
+
+.site .bird svg {
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	top: 0;
+	transform: translate(-50%, -52%);
+}
+
+.site .bird .wflap {
+	display: none;
+	transform-box: view-box;
+	transform-origin: 0 0;
+}
+
+.site .bird.flying .wflap {
+	animation: bird-flap var(--flap, 0.16s) ease-in-out infinite alternate;
+	display: block;
+}
+
+.site .bird.flying .wflap.far {
+	animation-delay: calc(var(--flap, 0.16s) * -0.3);
+	opacity: 0.7;
+}
+
+.site .bird.flying .wing-fold,
+.site .bird.flying .legs {
+	display: none;
+}
+
+.site .bird.flying .b-core {
+	animation: bird-bob calc(var(--flap, 0.16s) * 2) ease-in-out infinite;
+}
+
+.site .bird[data-pose="upright"] .b-all {
+	transform: rotate(-22deg);
+	transform-box: view-box;
+	transform-origin: 0 6px;
+}
+
+.site .bird[data-pose="cling"] .b-all {
+	transform: rotate(-78deg);
+	transform-box: view-box;
+	transform-origin: 0 0;
+}
+
+.site .bird[data-pose="down"] .b-all {
+	transform: rotate(72deg);
+	transform-box: view-box;
+	transform-origin: 0 0;
+}
+
+.site .bird.perched .b-head {
+	transform-box: view-box;
+	transform-origin: 0 0;
+}
+
+.site .bird.pickable {
+	cursor: pointer;
+}
+
+.site .bird.pickable svg {
+	pointer-events: auto;
+}
+
+.site .bird.pickable:focus-visible svg {
+	outline: 2px solid var(--siteAccent);
+	outline-offset: 4px;
+}
+
+@keyframes bird-flap {
+	from {
+		transform: rotate(14deg);
+	}
+	to {
+		transform: rotate(-108deg) scaleY(0.82);
+	}
+}
+
+@keyframes bird-bob {
+	50% {
+		transform: translateY(1.6px);
+	}
+}
+
+@keyframes bird-tilt {
+	0%, 62%, 100% {
+		transform: rotate(0deg);
+	}
+	68%, 80% {
+		transform: rotate(-9deg) translateY(0.5px);
+	}
+	86% {
+		transform: rotate(5deg);
+	}
+}
+
+@keyframes bird-tail {
+	0%, 85%, 100% {
+		transform: rotate(0deg);
+	}
+	91% {
+		transform: rotate(-9deg);
+	}
+}
+
+@keyframes bird-bob-water {
+	50% {
+		transform: translateY(1.6px);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .bird.perched .b-head {
+		animation: bird-tilt var(--blink, 6s) ease-in-out var(--blink-d, 0s) infinite;
+	}
+
+	html:not(.reduce-motion) .site .bird.perched .b-tail {
+		animation: bird-tail calc(var(--blink, 6s) * 0.7) ease-in-out var(--blink-d, 0s) infinite;
+		transform-box: view-box;
+		transform-origin: -6px -2px;
+	}
+
+	html:not(.reduce-motion) .site .bird[data-species="loon"].perched .b-core {
+		animation: bird-bob-water 4.2s ease-in-out var(--blink-d, 0s) infinite;
+	}
+}
+
+/* ---------- play shell (button, hud, touch pad) ---------- */
+.site .play-btn,
+.site .play-hud,
+.site .play-touch,
+.site .play-toast {
+	font-family: var(--siteFont);
+}
+
+.site .play-btn {
+	align-items: center;
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 999px;
+	bottom: 0.9rem;
+	box-shadow: 0 2px 10px rgba(10, 20, 40, 0.18);
+	color: var(--tag-fg);
+	cursor: pointer;
+	display: inline-flex;
+	font-size: 0.95rem;
+	font-weight: 700;
+	gap: 0.55rem;
+	letter-spacing: 0.01em;
+	padding: 0.5rem 0.95rem 0.5rem 0.8rem;
+	pointer-events: auto;
+	position: absolute;
+	right: 0.9rem;
+	z-index: 3;
+}
+
+.site .play-btn:hover,
+.site .play-btn:focus-visible {
+	background: var(--siteAccent);
+	border-color: transparent;
+	color: #fff;
+	outline: none;
+}
+
+html.dark .site .play-btn:hover,
+html.dark .site .play-btn:focus-visible {
+	color: #0b1020;
+}
+
+.site .play-btn kbd {
+	background: rgba(127, 127, 127, 0.18);
+	border-radius: 4px;
+	font: inherit;
+	font-size: 0.72rem;
+	padding: 0.05rem 0.35rem;
+}
+
+.site .play-hud {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 10px;
+	color: var(--tag-fg);
+	display: none;
+	font-size: 0.9rem;
+	font-weight: 700;
+	bottom: 0.9rem;
+	left: 0.9rem;
+	max-width: calc(100% - 9.5rem);
+	padding: 0.4rem 0.7rem;
+	pointer-events: none;
+	position: absolute;
+	white-space: pre;
+	z-index: 3;
+}
+
+.site.is-playing .play-hud {
+	display: block;
+}
+
+.site .play-hint {
+	color: var(--tag-fg);
+	font-size: 0.8rem;
+	font-weight: 500;
+	opacity: 0.9;
+}
+
+.site .play-toast {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 12px;
+	color: var(--tag-fg);
+	font-size: 1rem;
+	font-weight: 700;
+	left: 50%;
+	opacity: 0;
+	padding: 0.55rem 1rem;
+	pointer-events: none;
+	position: absolute;
+	top: 18%;
+	transform: translate(-50%, -6px);
+	transition: opacity 0.3s, transform 0.3s;
+	z-index: 4;
+}
+
+.site .play-toast.show {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+.site .play-canvas {
+	height: 100%;
+	image-rendering: pixelated;
+	inset: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+}
+
+.site .play-touch {
+	bottom: 4.2rem;
+	display: none;
+	justify-content: space-between;
+	left: 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	right: 0.8rem;
+	z-index: 3;
+}
+
+.site.is-playing.has-touch .play-touch {
+	display: flex;
+}
+
+.site .play-touch-group {
+	display: flex;
+	gap: 0.6rem;
+}
+
+.site .play-touch button {
+	background: var(--tag-bg);
+	border: 1px solid var(--tag-line);
+	border-radius: 16px;
+	color: var(--tag-fg);
+	font-size: 1.4rem;
+	font-weight: 800;
+	height: 3.6rem;
+	min-width: 3.6rem;
+	pointer-events: auto;
+	touch-action: none;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.site .play-touch button.down {
+	background: var(--siteAccent);
+	color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .play-toast {
+		transition: none;
+	}
+}
+
+html.reduce-motion .site .play-toast {
+	transition: none;
+}

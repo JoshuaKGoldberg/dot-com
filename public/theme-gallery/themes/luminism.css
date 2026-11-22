@@ -1,0 +1,113 @@
+/* Luminism: painted sky with grain, haze bands and a far ridgeline. */
+.site {
+	--siteBg: #efe9df;
+	--siteFg: #2f3433;
+	--siteFgStrong: #181c1c;
+	--siteMuted: #5f6663;
+	--siteAccent: #9a5a2c;
+	--siteSquiggle: #d49a5e;
+	--siteSubtle: #ddd4c4;
+	--sky: linear-gradient(180deg, #e4e2dc 0%, #ece6da 30%, #f3e1c6 55%, #f6d5ae 62%, #f1ddc0 70%, #d3d6c2 73%, #c2cab9 100%);
+	--glow: rgba(255, 226, 178, 0.95);
+	--sun: rgba(255, 238, 200, 0.95);
+	--haze: rgba(246, 222, 190, 0.5);
+	--haze2: rgba(224, 226, 212, 0.55);
+	--grainOpacity: 0.35;
+	--vignette: rgba(120, 100, 70, 0.28);
+}
+
+html.dark .site {
+	--siteBg: #151e24;
+	--siteFg: #dbe0de;
+	--siteFgStrong: #f4f2ec;
+	--siteMuted: #a4b0b0;
+	--siteAccent: #e8b070;
+	--siteSquiggle: #c08a50;
+	--siteSubtle: #23323a;
+	--sky: linear-gradient(180deg, #172830 0%, #1e3138 28%, #2c3a42 50%, #5a4a48 64%, #98652f 70%, #6a4a3a 73%, #2a3036 82%, #1d2b2f 100%);
+	--glow: rgba(240, 160, 80, 0.5);
+	--sun: rgba(255, 196, 120, 0.8);
+	--haze: rgba(180, 120, 80, 0.28);
+	--haze2: rgba(70, 110, 118, 0.3);
+	--grainOpacity: 0.4;
+	--vignette: rgba(0, 6, 10, 0.55);
+}
+
+.site .site-scenery .scenery-a {
+	background: var(--sky);
+}
+
+/* haze bands + sun glow + ridgeline */
+.site .site-scenery .scenery-b {
+	background:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V62C80 52 150 44 240 50C330 56 380 38 470 32C560 26 610 46 700 52C790 58 840 36 930 30C1020 24 1090 48 1190 54C1290 60 1360 40 1450 36C1520 33 1570 44 1600 48V100Z' fill='rgba(150,150,138,0.32)'/%3E%3Cpath d='M0 100V80C120 74 220 70 330 74C450 78 520 66 640 66C780 66 860 78 1000 76C1140 74 1230 64 1360 66C1470 68 1550 76 1600 78V100Z' fill='rgba(170,176,160,0.5)'/%3E%3C/svg%3E") left 0 bottom 27.5% / 100% 9.5% no-repeat,
+		radial-gradient(60% 12% at 50% 68%, var(--glow), transparent 100%),
+		linear-gradient(180deg, transparent 52%, var(--haze) 60%, transparent 66%),
+		linear-gradient(180deg, transparent 62%, var(--haze2) 69%, transparent 72%),
+		linear-gradient(180deg, transparent 72%, var(--haze) 80%, transparent 90%);
+}
+
+html.dark .site .site-scenery .scenery-b {
+	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V62C80 52 150 44 240 50C330 56 380 38 470 32C560 26 610 46 700 52C790 58 840 36 930 30C1020 24 1090 48 1190 54C1290 60 1360 40 1450 36C1520 33 1570 44 1600 48V100Z' fill='rgba(18,28,32,0.8)'/%3E%3Cpath d='M0 100V80C120 74 220 70 330 74C450 78 520 66 640 66C780 66 860 78 1000 76C1140 74 1230 64 1360 66C1470 68 1550 76 1600 78V100Z' fill='rgba(20,32,36,0.95)'/%3E%3C/svg%3E"),
+		radial-gradient(60% 12% at 50% 68%, var(--glow), transparent 100%),
+		linear-gradient(180deg, transparent 52%, var(--haze) 60%, transparent 66%),
+		linear-gradient(180deg, transparent 62%, var(--haze2) 69%, transparent 72%),
+		linear-gradient(180deg, transparent 72%, var(--haze) 80%, transparent 90%);
+}
+
+.site .site-scenery .scenery-b::before {
+	background: radial-gradient(circle, var(--sun) 0%, var(--glow) 30%, transparent 100%);
+	border-radius: 50%;
+	content: "";
+	height: 150px;
+	left: calc(60% - 75px);
+	opacity: 0.55;
+	position: absolute;
+	top: calc(64.5% - 75px);
+	width: 150px;
+	filter: blur(4px);
+}
+
+/* grain, brush mottling, vignette */
+.site .site-scenery .scenery-c {
+	background:
+		radial-gradient(120% 100% at 50% 55%, transparent 55%, var(--vignette) 100%);
+}
+
+.site .site-scenery .scenery-c::before,
+.site .site-scenery .scenery-c::after {
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+.site .site-scenery .scenery-c::before {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	mix-blend-mode: soft-light;
+	opacity: var(--grainOpacity);
+}
+
+.site .site-scenery .scenery-c::after {
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.05' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	mix-blend-mode: soft-light;
+	opacity: 0.12;
+}
+
+@keyframes lum-breathe {
+	0%,
+	100% {
+		opacity: 0.4;
+		transform: translate(-14px, 6px) scale(0.94);
+	}
+	50% {
+		opacity: 0.7;
+		transform: translate(14px, -6px) scale(1.08);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .site-scenery .scenery-b::before {
+		animation: lum-breathe 240s ease-in-out infinite;
+	}
+}

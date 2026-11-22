@@ -1,0 +1,58 @@
+/* 171. Sky Flight: scrolling climbs through cloud decks into space (fragment shader). */
+.site {
+	--siteBg: #f7fbff;
+	--siteFg: #1f3350;
+	--siteFgStrong: #0b1d36;
+	--siteMuted: #4a5f7c;
+	--siteAccent: #1565c0;
+	--siteSquiggle: #0aa5e8;
+	--siteSubtle: #d9e8f5;
+}
+html.dark .site {
+	--siteBg: #0a1226;
+	--siteFg: #d7e4f5;
+	--siteFgStrong: #f3f8ff;
+	--siteMuted: #9bb0cc;
+	--siteAccent: #86c4ff;
+	--siteSquiggle: #7fd1ff;
+	--siteSubtle: #14274a;
+}
+.site .scenery-a { background: linear-gradient(#5d93d2, #dbe9f4); }
+html.dark .site .scenery-a { background: linear-gradient(#030712, #14234a); }
+.site .site-page { max-width: 50rem; }
+.site .site-header {
+	background: color-mix(in srgb, var(--siteBg) 70%, transparent);
+	border-radius: 0 0 1rem 1rem;
+	margin: -1.75rem -1.5rem 0;
+	padding: 1rem 1.5rem;
+}
+.site .site-hero,
+.site .site-about,
+.site .site-section,
+.site .site-footer {
+	background: color-mix(in srgb, var(--siteBg) 86%, transparent);
+	border-radius: 1.4rem;
+	box-shadow: 0 18px 40px -22px rgb(10 40 90 / 0.6), inset 0 0 0 1px rgb(255 255 255 / 0.4);
+	padding: 1.6rem 1.8rem;
+}
+html.dark .site .site-hero,
+html.dark .site .site-about,
+html.dark .site .site-section,
+html.dark .site .site-footer { box-shadow: 0 18px 40px -22px rgb(0 0 0 / 0.8), inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+.site .site-hero { margin: 4vh 0 32vh; }
+.site .site-about { margin: 0 auto 32vh; }
+.site .site-section { margin: 0 auto 32vh; }
+.site .site-footer { margin: 0 auto; max-width: 28rem; }
+
+.site .sf-hud {
+	background: color-mix(in srgb, var(--siteBg) 82%, transparent);
+	border-radius: 2rem;
+	bottom: 1rem;
+	color: var(--siteFgStrong);
+	font-size: 1.05rem;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
+	left: 1rem;
+	padding: 0.35rem 1rem;
+	position: absolute;
+}

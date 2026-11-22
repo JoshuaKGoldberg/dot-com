@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap");
+.site { --siteFontDisplay: "Fraunces", Georgia, serif; }
+.site-title, .site-section-title { font-weight: 700; letter-spacing: -0.01em; }
+.site-scenery .scenery-a { background: radial-gradient(70% 80% at 80% 45%, color-mix(in srgb, var(--siteSubtle) 70%, transparent), transparent 70%); }
+@media (min-width: 1100px) {
+	.site .site-page { margin-left: 2rem; margin-right: auto; }
+}
+.site .tg-legend { position: absolute; right: 1.5rem; bottom: 1.1rem; display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; align-items: center; justify-content: flex-end; max-width: 26rem; font-size: 0.85rem; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 80%, transparent); padding: 0.45rem 0.8rem; border-radius: 2rem; }
+.site .tg-legend b { color: var(--siteFgStrong); }
+.site .tg-legend i { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-right: 0.35rem; }
+.site .tg-legend .c1 { background: #d4501a; }
+.site .tg-legend .c2 { background: #7046c8; }
+.site .tg-legend .c3 { background: #00998a; }
+.site .tg-legend em { font-style: normal; opacity: 0.8; }
+html.dark .site .tg-legend .c1 { background: #ffd27a; }
+html.dark .site .tg-legend .c2 { background: #b496ff; }
+html.dark .site .tg-legend .c3 { background: #78e6c8; }
+@media (max-width: 1099px) { .site .tg-legend { left: 1rem; right: auto; justify-content: flex-start; } .site .site-page { background: color-mix(in srgb, var(--siteBg) 70%, transparent); } }

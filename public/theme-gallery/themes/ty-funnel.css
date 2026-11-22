@@ -1,0 +1,54 @@
+/* Token plan
+ * Families: Funnel Display 300-800 + Funnel Sans 300-600.
+ * Scale: hero wght 680 (dark 620) at 70px, -0.04em; tagline Funnel Sans 1.4rem; ratio 3.2x. Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: The closest, more characterful successor to League Spartan: same geometric confidence, tighter and Nordic.
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:wght@300..600&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Funnel Display Fallback"; src: local("Arial"); size-adjust: 104.4%; ascent-override: 95.8%; descent-override: 23.9%; line-gap-override: 0%; }
+@font-face { font-family: "Funnel Sans Fallback"; src: local("Arial"); size-adjust: 99.7%; ascent-override: 100.3%; descent-override: 25.1%; line-gap-override: 0%; }
+/* fb:end */
+
+/* #395 Funnel Display + Funnel Sans: a modern, more characterful upgrade from League Spartan. */
+.site {
+	--tyDisplay: "Funnel Display", "Funnel Display Fallback", Arial, sans-serif;
+	--tyBody: "Funnel Sans", "Funnel Sans Fallback", system-ui, sans-serif;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 14.5cqi, 5rem);
+	--tyTitleW: 680;
+	--tyTitleWd: 620;
+	--tyTitleLs: -0.04em;
+	--tyTitleLh: 0.92;
+	--tyTitleShift: -0.05em;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.4rem;
+	--tyTagW: 400;
+	--tyTagLs: -0.005em;
+	--tyTagLh: 1.3;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.25rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.1rem;
+	--tyLogoSize: 1.2rem;
+	--tyLogoW: 600;
+	--tySecSize: 2rem;
+	--tySecW: 650;
+	--tySecWd: 600;
+	--tySecLs: -0.03em;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 600;
+	--tyItemSize: 1.25rem;
+	--tyItemLs: -0.02em;
+	--tyMetaSize: 0.92rem;
+	--tyMetaW: 400;
+	--tyMetaLs: 0.01em;
+}

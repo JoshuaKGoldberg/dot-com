@@ -1,0 +1,70 @@
+@import url("_sensor/kit.css");
+
+/* 182 Say Hi: a waving hand and speech bubble answer a spoken (or typed) greeting. */
+.site .scenery-a { background: radial-gradient(ellipse 60% 40% at 80% 0%, color-mix(in srgb, #fbbf24 16%, transparent), transparent 70%); }
+html.dark .site .scenery-a { background: radial-gradient(ellipse 60% 40% at 80% 0%, color-mix(in srgb, #6366f1 20%, transparent), transparent 70%); }
+.site .site-hero-text { position: relative; }
+.site .sh-wave {
+	font-size: 3rem;
+	left: -0.2rem;
+	line-height: 1;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: -3.4rem;
+	transform: scale(0.4) rotate(0);
+	transform-origin: 70% 80%;
+	transition: opacity 0.25s, transform 0.3s;
+}
+.site .sh-wave.is-on { opacity: 1; transform: scale(1) rotate(0); }
+.site .sh-wave.is-on .sh-hand { animation: sh-wave 1.6s ease-in-out 1; display: inline-block; transform-origin: 70% 80%; }
+.site .sh-bubble {
+	background: var(--siteFgStrong);
+	border-radius: 1rem 1rem 1rem 0.2rem;
+	color: var(--siteBg);
+	font: 700 1.05rem/1 var(--siteFont);
+	left: 3.8rem;
+	opacity: 0;
+	padding: 0.5rem 0.8rem;
+	pointer-events: none;
+	position: absolute;
+	top: -3.3rem;
+	transform: translateY(6px);
+	transition: opacity 0.25s, transform 0.25s;
+	white-space: nowrap;
+}
+.site .sh-bubble.is-on { opacity: 1; transform: none; }
+.site .site-portrait img { transition: transform 0.4s; }
+.site .site-portrait.is-nod img { transform: rotate(-4deg) scale(1.03); }
+@keyframes sh-wave {
+	0%, 100% { transform: rotate(0); }
+	15% { transform: rotate(16deg); }
+	30% { transform: rotate(-12deg); }
+	45% { transform: rotate(16deg); }
+	60% { transform: rotate(-10deg); }
+	75% { transform: rotate(12deg); }
+}
+html.reduce-motion .site .sh-wave.is-on .sh-hand, html.reduce-motion .site .site-portrait img, html.reduce-motion .site .sh-wave { animation: none; transition: none; }
+@media (prefers-reduced-motion: reduce) { .site .sh-wave.is-on .sh-hand, .site .site-portrait img, .site .sh-wave { animation: none; transition: none; } }
+.site .sh-caption {
+	background: color-mix(in srgb, var(--siteFgStrong) 92%, transparent);
+	border-radius: 999px;
+	bottom: 1.2rem;
+	color: var(--siteBg);
+	font: 600 0.95rem/1 var(--siteFont);
+	left: 50%;
+	max-width: 70vw;
+	opacity: 0;
+	overflow: hidden;
+	padding: 0.6rem 1rem;
+	pointer-events: none;
+	position: fixed;
+	text-overflow: ellipsis;
+	transform: translateX(-50%);
+	transition: opacity 0.2s;
+	white-space: nowrap;
+	z-index: 25;
+}
+.site .sh-caption.is-on { opacity: 1; }
+.site .sh-dot { background: #e11d48; border-radius: 50%; display: inline-block; height: 0.5rem; margin-right: 0.5rem; width: 0.5rem; }
+@media (max-width: 700px) { .site .sh-wave { top: -3rem; } }

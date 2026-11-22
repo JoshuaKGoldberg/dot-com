@@ -1,0 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+.site { --siteFont: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; --siteFontDisplay: var(--siteFont); --siteBg: #f6f8fc; --siteFg: #26324d; --siteSubtle: #dbe4f3; }
+html.dark .site { --siteBg: #0a0f1c; --siteSubtle: #162038; --siteFg: #d9e3f3; }
+.site-title { font-weight: 700; letter-spacing: -0.03em; }
+.site .scenery-a { background-image: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--siteMuted) 30%, transparent) 1px, transparent 1.5px); background-size: 28px 28px; }
+.site .site-link.lg-lit { color: var(--siteAccent); }
+.site .site-link.lg-lit::after { height: 0.4em; }
+.site .lg-hint { position: absolute; right: 1rem; bottom: 0.9rem; font: 500 0.78rem "IBM Plex Mono", ui-monospace, monospace; color: var(--siteMuted); background: color-mix(in srgb, var(--siteBg) 88%, transparent); padding: 0.3rem 0.6rem; border-radius: 0.4rem; border: 1px solid var(--siteSubtle); }
+@media (max-width: 900px) { .site .lg-hint { display: none; } }

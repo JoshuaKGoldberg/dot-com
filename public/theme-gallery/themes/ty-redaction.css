@@ -1,0 +1,59 @@
+/* Token plan
+ * Families: Redaction (hero) + Hanken Grotesk 300-600 + Commit Mono 400 (dates only).
+ * Scale: hero 68px, -0.025em; tagline Hanken 1.3rem; ratio 3.3x; hovering the hero swaps in Redaction 35 (lazy). Dark mode: body +40 weight, +.05 leading, +.005em tracking.
+ * Why: Redaction's pixel-erosion nods at code without monospace costume; mono is reserved for real data (dates, locations).
+ * Fallbacks are metric-matched (size-adjust / ascent / descent). Hero sized by container query to fill the text column. */
+@import "./gd-bloom.css";
+@import "./_type/common.css";
+@import url("https://fonts.googleapis.com/css2?family=Redaction&family=Hanken+Grotesk:wght@300..600&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/commit-mono@5.2.5/400.css");
+
+/* the eroded cut: this tiny stylesheet is cheap; its font file is only fetched once the headline is hovered */
+@import url("https://fonts.googleapis.com/css2?family=Redaction+35&display=swap");
+
+/* fb:start */
+/* metric-matched fallbacks (size-adjust measured against the loaded fonts) to keep layout shift down while the web fonts swap in */
+@font-face { font-family: "Redaction Fallback"; src: local("Georgia"); size-adjust: 98.4%; ascent-override: 91.5%; descent-override: 30.5%; line-gap-override: 0%; }
+@font-face { font-family: "Hanken Grotesk Fallback"; src: local("Arial"); size-adjust: 100.1%; ascent-override: 99.9%; descent-override: 30.0%; line-gap-override: 0%; }
+@font-face { font-family: "Commit Mono Fallback"; src: local("Courier New"); size-adjust: 100.0%; ascent-override: 90.0%; descent-override: 20.0%; line-gap-override: 0%; }
+/* fb:end */
+
+/* the decayed cut: the stylesheet is tiny and its font file is only fetched if "serious" is hovered or focused */
+
+/* #392 Redaction hero (a serif that erodes into pixels) with Commit Mono only for dates and graph captions (real data) and Hanken Grotesk text. */
+.site {
+	--tyDisplay: "Redaction", "Redaction Fallback", Georgia, serif;
+	--tyBody: "Hanken Grotesk", "Hanken Grotesk Fallback", system-ui, sans-serif;
+	--tyMono: "Commit Mono", "Commit Mono Fallback", ui-monospace, Menlo, monospace;
+	--siteFont: var(--tyBody);
+	--siteFontDisplay: var(--tyDisplay);
+
+	--tyTitleSize: clamp(2.75rem, 14cqi, 4.9rem);
+	--tyTitleW: 400;
+	--tyTitleLs: -0.025em;
+	--tyTitleLh: 0.95;
+	--tyTagFont: var(--tyBody);
+	--tyTagSize: 1.3rem;
+	--tyTagW: 400;
+	--tyTagLs: 0;
+	--tyTagLh: 1.35;
+	--tyTagMax: 22em;
+
+	--tyBodyW: 350;
+	--tyAboutSize: 1.2rem;
+	--tyDescSize: 1.0625rem;
+	--tyUiW: 500;
+	--tyNavSize: 1.1rem;
+	--tyLogoSize: 1.2rem;
+	--tySecSize: 2.1rem;
+	--tySecW: 400;
+	--tyItemFont: var(--tyDisplay);
+	--tyItemW: 400;
+	--tyItemSize: 1.45rem;
+	--tyItemLs: -0.01em;
+	--tyMetaFont: var(--tyMono);
+	--tyMetaSize: 0.8rem;
+	--tyMetaLs: -0.01em;
+}
+.site .site-title { transition: none; }
+.site .site-title:hover { font-family: "Redaction 35", var(--tyDisplay); }

@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap");
+
+.site {
+	--siteBg: #f6f4ee;
+	--siteFg: #222633;
+	--siteFgStrong: #0f1220;
+	--siteMuted: #5d6275;
+	--siteAccent: #2c4bb8;
+	--siteSquiggle: #5878e8;
+	--siteSubtle: #e3e1d8;
+	--siteFont: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Instrument Serif", Georgia, serif;
+	--siteMaxWidth: 50rem;
+	--hair: rgb(34 38 51 / 0.2);
+}
+
+html.dark .site {
+	--siteBg: #0a0c16;
+	--siteFg: #d8ddef;
+	--siteFgStrong: #f4f6ff;
+	--siteMuted: #98a0bd;
+	--siteAccent: #9fb4ff;
+	--siteSquiggle: #7f98ff;
+	--siteSubtle: #151933;
+	--hair: rgb(200 210 255 / 0.2);
+}
+
+.site .scenery-a canvas {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.site-header {
+	padding-bottom: 0.4rem;
+}
+
+.site .site-logo {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.7rem;
+	font-weight: 400;
+}
+
+.site .site-nav-link {
+	font-size: 1.05rem;
+	font-weight: 500;
+}
+
+.site-hero {
+	margin: 4.5rem 0 4rem;
+}
+
+.site-portrait img {
+	box-shadow: 0 0 0 1px var(--hair), 0 0 0 8px var(--siteBg), 0 0 0 9px var(--hair);
+}
+
+.site-title {
+	font-size: clamp(3.4rem, 8vw, 6rem);
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	line-height: 0.88;
+}
+
+.site-tagline {
+	font-size: 1.4rem;
+	font-weight: 400;
+}
+
+.site-socials {
+	font-weight: 500;
+}
+
+.site-about {
+	font-size: 1.28rem;
+	font-weight: 400;
+	line-height: 1.55;
+}
+
+.site-section-title {
+	font-size: 2.6rem;
+	font-weight: 400;
+	letter-spacing: -0.01em;
+	margin-bottom: 1.3rem;
+}
+
+.site-section {
+	margin-bottom: 4rem;
+}
+
+.site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-size: 1.7rem;
+	font-weight: 400;
+	line-height: 1.1;
+}
+
+.site-item-description {
+	font-weight: 400;
+}
+
+.site-item-meta {
+	font-size: 0.85rem;
+	letter-spacing: 0.02em;
+}
+
+.site-list {
+	gap: 1.8rem;
+}
+
+.site-projects .site-list {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.8rem 2.4rem;
+}
+
+@media (max-width: 700px) {
+	.site-projects .site-list {
+		grid-template-columns: 1fr;
+	}
+}

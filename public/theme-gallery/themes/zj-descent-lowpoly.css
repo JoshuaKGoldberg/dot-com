@@ -1,0 +1,552 @@
+/*
+ * Sky to Lake VII: Low-Poly. Zero JavaScript.
+ *   scroll-timeline            -> each faceted layer drifts at its own depth; the sky mesh cross-fades dawn -> noon
+ *   clip-path + conic-gradient -> the sun is a faceted polygon with no image at all
+ *   stepped translate          -> live scroll readout (a stack of labels in a window)
+ *   mix-blend-mode             -> a light band sweeps across the lake shards
+ *   clip-path chamfers         -> every card is cut like a gem
+ */
+
+.site {
+	--siteBg: #f4f8fb;
+	--siteFg: #223049;
+	--siteFgStrong: #0e1c33;
+	--siteMuted: #53637f;
+	--siteAccent: #0f6f9b;
+	--siteSquiggle: #ec7a4a;
+	--siteSubtle: #dbe7f0;
+	--facetA: #fbfdff;
+	--facetB: #eaf2f8;
+	--cardEdge: #b9cde0;
+	--u-skyA: url("zj-descent-lowpoly/skyA-l.svg");
+	--u-skyB: url("zj-descent-lowpoly/skyB-l.svg");
+	--u-peaks: url("zj-descent-lowpoly/peaks-l.svg");
+	--u-pm: url("zj-descent-lowpoly/pines-mid-l.svg");
+	--u-trunks: url("zj-descent-lowpoly/trunks-l.svg");
+	--u-lake: url("zj-descent-lowpoly/lake-l.svg");
+	--skirt: #5a7a9c;
+	--spring: linear(0, 0.3 6%, 0.77 13%, 1.08 19%, 1.14 23%, 1.06 30%, 0.98 38%, 0.99 48%, 1);
+
+	background: #6f9fd2;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #0c1430;
+	--siteFg: #d5e1f5;
+	--siteFgStrong: #f3f7ff;
+	--siteMuted: #9db0d0;
+	--siteAccent: #7fd0ff;
+	--siteSquiggle: #ffb36b;
+	--siteSubtle: #17234a;
+	--facetA: #18254f;
+	--facetB: #101b3d;
+	--cardEdge: #3a4f8a;
+	--skirt: #1b2549;
+	--u-skyA: url("zj-descent-lowpoly/skyA-d.svg");
+	--u-skyB: url("zj-descent-lowpoly/skyB-d.svg");
+	--u-peaks: url("zj-descent-lowpoly/peaks-d.svg");
+	--u-pm: url("zj-descent-lowpoly/pines-mid-d.svg");
+	--u-trunks: url("zj-descent-lowpoly/trunks-d.svg");
+	--u-lake: url("zj-descent-lowpoly/lake-d.svg");
+	background: #0b1230;
+}
+
+/* ================= scenery ================= */
+
+.site .scenery-a,
+.site .scenery-b,
+.site .scenery-c,
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site .scenery-c::before,
+.site .scenery-c::after,
+.site .overlay-a::before,
+.site .overlay-a::after {
+	content: "";
+	inset: 0;
+	position: absolute;
+	will-change: transform;
+}
+
+.site .scenery-a {
+	background: var(--u-skyA) 50% 0 / cover;
+	will-change: auto;
+}
+
+.site .scenery-a::before {
+	background: var(--u-skyB) 50% 0 / cover;
+	opacity: 0;
+}
+
+/* faceted sun / moon: conic facets inside an octagon */
+.site .scenery-a::after {
+	background: conic-gradient(from 20deg, #fff3c4, #ffd37a, #ffe9a6, #ffbf5c, #fff0b8, #ffcf70, #ffe29a, #ffb852, #fff3c4);
+	clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+	height: 24vmin;
+	inset: 8% 15% auto auto;
+	width: 24vmin;
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(1.5px 1.5px at 12% 14%, #fff 98%, transparent) 0 0 / 230px 210px,
+		radial-gradient(2px 2px at 62% 40%, #fff 98%, transparent) 0 0 / 310px 260px,
+		radial-gradient(1.4px 1.4px at 82% 72%, #cfe0ff 98%, transparent) 0 0 / 190px 170px,
+		var(--u-skyA) 50% 0 / cover;
+}
+
+html.dark .site .scenery-a::after {
+	background: conic-gradient(from 20deg, #fdfdf6, #d8e0f4, #eef2fb, #c4cfe8, #f8f9fe, #cfd9ef, #e6ecf8, #b9c6e2, #fdfdf6);
+	height: 15vmin;
+	width: 15vmin;
+}
+
+/* peaks with the treeline standing ON the near ridge, one element; a skirt below
+   keeps the ridge from lifting off the bottom edge while it drifts up */
+.site .scenery-b::before {
+	background:
+		var(--u-peaks) center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(var(--skirt), var(--skirt)) 0 100% / 100% 40vh no-repeat;
+	inset: 0 0 -40vh 0;
+}
+
+.site .scenery-b::after {
+	background: var(--u-lake) 50% 100% / 1600px auto repeat-x;
+	z-index: 3;
+}
+
+.site .scenery-c::before {
+	background: var(--u-pm) 50% 100% / 1600px auto repeat-x;
+	z-index: 1;
+}
+
+.site .scenery-c::after {
+	background: var(--u-trunks) 50% 0 / 1600px 100% repeat-x;
+	-webkit-mask: linear-gradient(180deg, transparent, #000 28%);
+	mask: linear-gradient(180deg, transparent, #000 28%);
+	z-index: 2;
+}
+
+/* light glinting across the lake shards: same Y travel as the lake, only X differs */
+.site .site-scenery::after {
+	background: url("zj-descent-lowpoly/shimmer.svg") 50% 100% / 1700px auto repeat-x;
+	content: "";
+	inset: 55% -6% 0 -6%;
+	opacity: 0;
+	position: absolute;
+	z-index: 4;
+}
+
+html.dark .site .site-scenery::after {
+	filter: hue-rotate(160deg);
+}
+
+.site .overlay-a::before {
+	background: url("zj-descent-lowpoly/rocks.svg") 50% 100% / 1600px auto repeat-x;
+	height: 15vh;
+	inset: auto 0 0 0;
+	min-height: 100px;
+}
+
+/* corner facets frame the view */
+.site .overlay-a::after {
+	background:
+		linear-gradient(135deg, rgb(10 20 40 / 0.5) 0 50%, transparent 50%) top left / 9vmin 9vmin no-repeat,
+		linear-gradient(225deg, rgb(10 20 40 / 0.5) 0 50%, transparent 50%) top right / 9vmin 9vmin no-repeat,
+		linear-gradient(45deg, rgb(10 20 40 / 0.5) 0 50%, transparent 50%) bottom left / 9vmin 9vmin no-repeat,
+		linear-gradient(315deg, rgb(10 20 40 / 0.5) 0 50%, transparent 50%) bottom right / 9vmin 9vmin no-repeat;
+	will-change: auto;
+}
+
+/* ================= scroll choreography ================= */
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: zjl-fade linear both;
+			animation-range: 0% 55%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: zjl-sun linear both;
+			animation-range: 0% 65%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::before {
+			animation: zjl-ridge linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::before {
+			animation: zjl-forest linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::after {
+			animation: zjl-forest-near linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: zjl-lake linear both;
+			animation-range: 30% 100%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::after {
+			animation: zjl-glint linear both;
+			animation-range: 30% 100%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .overlay-a::before {
+			animation: zjl-rocks linear both;
+			animation-range: 72% 100%;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+/* static composition for reduced motion: sun high, ridges, lake */
+html.reduce-motion .site .scenery-c::before,
+html.reduce-motion .site .scenery-c::after {
+	display: none;
+}
+
+html.reduce-motion .site .scenery-a::before {
+	opacity: 0.5;
+}
+
+html.reduce-motion .site .site-scenery::after {
+	opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-c::before,
+	.site .scenery-c::after {
+		display: none;
+	}
+
+	.site .scenery-a::before {
+		opacity: 0.5;
+	}
+
+	.site .site-scenery::after {
+		opacity: 0.8;
+	}
+}
+
+@keyframes zjl-fade {
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes zjl-sun {
+	to {
+		translate: -4% -150%;
+	}
+}
+
+@keyframes zjl-ridge {
+	to {
+		translate: 0 -30vh;
+	}
+}
+
+@keyframes zjl-forest {
+	0% {
+		translate: 0 105%;
+	}
+	35%,
+	58% {
+		translate: 0 0;
+	}
+	100% {
+		translate: 0 105%;
+	}
+}
+
+@keyframes zjl-forest-near {
+	0%,
+	12% {
+		translate: 0 105%;
+	}
+	40%,
+	58% {
+		translate: 0 0;
+	}
+	92%,
+	100% {
+		translate: 0 105%;
+	}
+}
+
+@keyframes zjl-lake {
+	from {
+		translate: 0 105%;
+	}
+	to {
+		translate: 0 0;
+	}
+}
+
+@keyframes zjl-glint {
+	0% {
+		opacity: 0;
+		translate: 3% 105%;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+		translate: -4% 0;
+	}
+}
+
+@keyframes zjl-rocks {
+	from {
+		translate: 0 110%;
+	}
+	to {
+		translate: 0 0;
+	}
+}
+
+/* ================= page: gem-cut cards ================= */
+
+.site-title {
+	background: linear-gradient(100deg, var(--siteFgStrong) 0 48%, var(--siteAccent) 48% 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	letter-spacing: -0.02em;
+}
+
+.site-hero,
+.site-about,
+.site-item,
+.site-footer {
+	--cut: 0.9rem;
+
+	background:
+		linear-gradient(135deg, color-mix(in srgb, var(--facetA) 94%, transparent) 0 62%, color-mix(in srgb, var(--facetB) 94%, transparent) 62%);
+	clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+	position: relative;
+}
+
+.site-hero {
+	--cut: 1.6rem;
+
+	padding: 1.5rem 1.8rem;
+}
+
+.site-about {
+	padding: 1.2rem 1.8rem;
+}
+
+.site-item {
+	padding: 0.85rem 1.3rem 0.95rem;
+	transition: translate 0.5s var(--spring), background-position 0.3s;
+}
+
+/* facet corner accent */
+.site-item::before,
+.site-hero::before,
+.site-about::before {
+	background: linear-gradient(225deg, var(--siteAccent) 0 50%, transparent 50%);
+	content: "";
+	height: 1.5rem;
+	opacity: 0.9;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 1.5rem;
+}
+
+.site-hero::before {
+	display: none;
+}
+
+.site-item::after {
+	background: linear-gradient(45deg, var(--siteSquiggle) 0 50%, transparent 50%);
+	bottom: 0;
+	content: "";
+	height: 0.9rem;
+	left: 0;
+	opacity: 0.85;
+	position: absolute;
+	width: 0.9rem;
+}
+
+.site-item:hover {
+	translate: 6px -3px;
+}
+
+.site-portrait img {
+	border-radius: 0;
+	box-shadow: none;
+	clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.site-portrait {
+	background: conic-gradient(from 10deg, var(--siteAccent), #6fc1e0, var(--siteSquiggle), var(--siteAccent));
+	clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+	display: block;
+	padding: 0.4rem;
+}
+
+.site-portrait img {
+	clip-path: polygon(50% 0.4%, 99.5% 25.2%, 99.5% 74.8%, 50% 99.6%, 0.5% 74.8%, 0.5% 25.2%);
+}
+
+.site-section-title {
+	background: linear-gradient(110deg, var(--siteAccent) 0 70%, color-mix(in srgb, var(--siteAccent) 70%, #000) 70%);
+	clip-path: polygon(0 0, 100% 0, calc(100% - 0.8rem) 50%, 100% 100%, 0 100%);
+	color: #fff;
+	display: inline-block;
+	padding: 0.2rem 2rem 0.3rem 1rem;
+}
+
+html.dark .site-section-title {
+	color: #08122c;
+}
+
+.site-footer {
+	margin-bottom: 14vh;
+	padding: 1rem;
+}
+
+.site-page {
+	padding-bottom: 8vh;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title, .site-about, .site-footer) {
+			animation: zjl-in linear both;
+			animation-range: entry 0% entry 80%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjl-in {
+	from {
+		opacity: 0;
+		scale: 0.94;
+		translate: -2rem 0;
+	}
+}
+
+/* ================= badge + readout ================= */
+
+.site-overlay::before {
+	background: linear-gradient(135deg, var(--facetA) 0 60%, var(--facetB) 60%);
+	bottom: 1.4rem;
+	clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A low-poly in pure CSS";
+	font: 700 0.7rem/1.25 var(--siteFont);
+	inset: auto auto 1.4rem 1.4rem;
+	letter-spacing: 0.02em;
+	padding: 0.5rem 1rem;
+	position: absolute;
+	white-space: pre;
+}
+
+.site .overlay-b {
+	--rh: 1.7rem;
+	background: linear-gradient(135deg, var(--facetA) 0 60%, var(--facetB) 60%);
+	box-sizing: border-box;
+	clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+	color: var(--siteMuted);
+	font: 600 0.65rem/var(--rh) ui-monospace, SFMono-Regular, Menlo, monospace;
+	height: var(--rh);
+	inset: auto 1.4rem 1.4rem auto;
+	overflow: hidden;
+	text-align: center;
+	width: 18rem;
+}
+
+/* eleven stacked percent labels, slid into the window in hard steps as you scroll */
+.site .overlay-b::after {
+	content: "clip-path \00b7 conic-gradient \00b7 0%\A clip-path \00b7 conic-gradient \00b7 10%\A clip-path \00b7 conic-gradient \00b7 20%\A clip-path \00b7 conic-gradient \00b7 30%\A clip-path \00b7 conic-gradient \00b7 40%\A clip-path \00b7 conic-gradient \00b7 50%\A clip-path \00b7 conic-gradient \00b7 60%\A clip-path \00b7 conic-gradient \00b7 70%\A clip-path \00b7 conic-gradient \00b7 80%\A clip-path \00b7 conic-gradient \00b7 90%\A clip-path \00b7 conic-gradient \00b7 100%";
+	display: block;
+	inset: 0 0 auto 0;
+	line-height: var(--rh);
+	position: absolute;
+	white-space: pre;
+	will-change: transform;
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .overlay-b::after {
+			animation: zjl-pct linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zjl-pct {
+	0% {
+		animation-timing-function: steps(1, end);
+		translate: 0 0;
+	}
+	5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -1);
+	}
+	15% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -2);
+	}
+	25% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -3);
+	}
+	35% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -4);
+	}
+	45% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -5);
+	}
+	55% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -6);
+	}
+	65% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -7);
+	}
+	75% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -8);
+	}
+	85% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -9);
+	}
+	95% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -10);
+	}
+	100% {
+		translate: 0 calc(var(--rh) * -10);
+	}
+}
+
+@media (max-width: 700px) {
+	.site .overlay-b {
+		display: none;
+	}
+}

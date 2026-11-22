@@ -1,0 +1,46 @@
+/* 101. Paddle Quest: a big lake of pine islands, birds overhead, and a canoe to steer. */
+@import url("./ridge-runner/common.css");
+
+.site {
+	--lily: #fbfaf2;
+	--lily-c: #f2c94c;
+	--pad: #4f8c4a;
+	--wake: #ffffff;
+	--hull: #b5652c;
+	--hull-l: #d28a45;
+	--hull-d: #7a3f1c;
+	--stripe: #f0e2bd;
+	--lake-a: #c4dcea;
+	--lake-b: #6f9bb8;
+}
+
+html.dark .site {
+	--lily: #e9e6ff;
+	--lily-c: #ffd86b;
+	--pad: #2f6a63;
+	--wake: #b9b8f0;
+	--hull: #9a5a3a;
+	--hull-l: #c58058;
+	--hull-d: #5a3022;
+	--stripe: #d8caa8;
+}
+
+.site .site-page {
+	text-shadow: 0 0 10px color-mix(in srgb, var(--siteBg) 85%, transparent);
+}
+
+.site .island {
+	transform-origin: 50% 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .island-svg {
+		animation: island-bob 7s ease-in-out infinite alternate;
+	}
+}
+
+@keyframes island-bob {
+	to {
+		transform: translateY(1.5px);
+	}
+}

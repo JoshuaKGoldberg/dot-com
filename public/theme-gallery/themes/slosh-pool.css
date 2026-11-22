@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap");
+
+.site {
+	--siteBg: #f4fafc;
+	--siteFg: #17394a;
+	--siteFgStrong: #0a2433;
+	--siteMuted: #517382;
+	--siteAccent: #0a7fb4;
+	--siteSquiggle: #19b3d6;
+	--siteSubtle: #d5eaf0;
+	--siteFont: "Manrope", "League Spartan", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: var(--siteFont);
+}
+
+html.dark .site {
+	--siteBg: #06121a;
+	--siteFg: #c4e3ee;
+	--siteFgStrong: #f0fbff;
+	--siteMuted: #7fa7b8;
+	--siteAccent: #5fd0ff;
+	--siteSquiggle: #3be0d0;
+	--siteSubtle: #0d2230;
+}
+
+.site .scenery-b {
+	background:
+		radial-gradient(ellipse 90% 40% at 50% 100%, color-mix(in srgb, var(--siteSquiggle) 14%, transparent), transparent 70%),
+		linear-gradient(to bottom, transparent 55%, color-mix(in srgb, var(--siteAccent) 8%, transparent));
+}
+
+.site .scenery-a canvas.slosh-water {
+	bottom: 0;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	width: 100%;
+}
+
+.site .slosh-stones {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.site .site-title {
+	font-weight: 800;
+	letter-spacing: -0.03em;
+}
+
+.site .site-section-title {
+	font-weight: 800;
+}
+
+.site .site-portrait img {
+	box-shadow: 0 0 0 6px color-mix(in srgb, var(--siteSquiggle) 22%, transparent), 0 14px 30px -10px rgb(0 60 90 / 0.4);
+}
+
+.site .site-footer {
+	padding-bottom: 7rem;
+}

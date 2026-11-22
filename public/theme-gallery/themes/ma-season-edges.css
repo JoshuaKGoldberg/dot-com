@@ -1,0 +1,11 @@
+/* #285 Season Edges: the plain site with seasonal trees in the margins. */
+.site {
+	--siteBg: #fdffff;
+}
+html.dark .site {
+	--siteBg: #0a1122;
+	--siteSubtle: #0f2238;
+}
+.site .site-overlay canvas.mse {
+	contain: paint;
+}

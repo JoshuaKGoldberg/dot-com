@@ -1,0 +1,52 @@
+/* Passing Flock: the plain site plus an aurora glint along the header's bottom edge. */
+.site .site-header {
+	position: relative;
+}
+
+.site .qa-glint {
+	contain: paint;
+	height: 1px;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	right: 0;
+	bottom: -0.75rem;
+}
+
+.site .qa-glint::before {
+	background: linear-gradient(90deg, transparent, var(--siteSubtle) 15%, var(--siteSubtle) 85%, transparent);
+	content: "";
+	inset: 0;
+	position: absolute;
+}
+
+html.dark .site .qa-glint::before {
+	background: linear-gradient(90deg, transparent, rgba(147, 165, 191, 0.22) 15%, rgba(147, 165, 191, 0.22) 85%, transparent);
+}
+
+.site .qa-glint-spot {
+	background: linear-gradient(90deg, transparent, rgba(92, 160, 170, 0.8), rgba(110, 150, 210, 0.8), transparent);
+	height: 2px;
+	left: 0;
+	margin-top: -0.5px;
+	opacity: 0.45;
+	position: absolute;
+	top: 0;
+	width: 180px;
+	will-change: transform, opacity;
+}
+
+html.dark .site .qa-glint-spot {
+	background: linear-gradient(90deg, transparent, rgba(110, 230, 190, 0.9), rgba(130, 170, 255, 0.9), transparent);
+	opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:not(.reduce-motion) .site .qa-glint-spot {
+		animation: qa-glint-breathe 9s ease-in-out infinite;
+	}
+}
+
+@keyframes qa-glint-breathe {
+	50% { opacity: 0.2; }
+}

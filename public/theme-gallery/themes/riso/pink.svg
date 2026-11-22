@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice"><defs>
+<filter id="f" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+<feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="2" seed="3" result="warp"/>
+<feDisplacementMap in="SourceGraphic" in2="warp" scale="110" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+<feGaussianBlur in="shape" stdDeviation="7" result="soft"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="grain"/>
+<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  2.6 0 0 0 -0.55" result="gm"/>
+<feComposite in="soft" in2="gm" operator="in"/>
+</filter></defs><g filter="url(#f)" fill="#ff3d9a"><ellipse cx="170" cy="850" rx="260" ry="200"/><ellipse cx="640" cy="1030" rx="230" ry="120"/><ellipse cx="1520" cy="930" rx="170" ry="150"/><circle cx="1440" cy="330" r="95"/><circle cx="1440" cy="330" r="150" fill="none" stroke="#ff3d9a" stroke-width="8"/><circle cx="330" cy="620" r="40"/></g></svg>

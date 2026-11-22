@@ -1,0 +1,10 @@
+/* 304 Field Lines: Josh's real site; night blue nudged deeper. Canvases live in .scenery-b (aurora) and .scenery-c (field lines). */
+html.dark .site {
+	--siteBg: #0a111f;
+	--siteSubtle: #10243a;
+}
+
+.site .scenery-b,
+.site .scenery-c {
+	contain: paint;
+}

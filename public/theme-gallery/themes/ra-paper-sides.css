@@ -1,0 +1,22 @@
+@import url("./_refined-d/paper.css");
+/* #312 Paper Sides: grain and washes in the side margins only. */
+
+.site .scenery-b { contain: paint; }
+
+/* grain only outside the 52rem column, thinning toward the text */
+.site .rp-side-grain {
+	-webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 36rem), transparent calc(50% - 26rem), transparent calc(50% + 26rem), #000 calc(50% + 36rem), #000 100%);
+	mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - 36rem), transparent calc(50% - 26rem), transparent calc(50% + 26rem), #000 calc(50% + 36rem), #000 100%);
+}
+
+.site .rp-s1 { height: 52vh; left: -11vw; top: -4vh; width: 25vw; }
+.site .rp-s2 { --per: 36s; --delay: -9s; height: 50vh; left: -13vw; top: 34vh; width: 25vw; }
+.site .rp-s3 { --per: 48s; --delay: -20s; height: 48vh; left: -11vw; top: 66vh; width: 25vw; }
+.site .rp-s4 { --per: 40s; --delay: -14s; height: 50vh; right: -11vw; top: -2vh; width: 25vw; }
+.site .rp-s5 { --per: 34s; --delay: -26s; height: 50vh; right: -13vw; top: 32vh; width: 25vw; }
+.site .rp-s6 { --per: 52s; --delay: -5s; height: 48vh; right: -11vw; top: 68vh; width: 25vw; }
+
+@media (max-width: 860px) {
+	.site .rp-field,
+	.site .rp-side-grain { display: none; }
+}

@@ -1,0 +1,40 @@
+/* 16 — Contour Survey */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&display=swap");
+
+.site {
+	--siteBg: #f3f1e6;
+	--siteFg: #2f3a2c;
+	--siteFgStrong: #1b2619;
+	--siteMuted: #5d6a56;
+	--siteAccent: #4f6b3a;
+	--siteSquiggle: #8aa36a;
+	--siteSubtle: #e1dfce;
+	--siteFont: "Newsreader", Georgia, serif;
+	--siteFontDisplay: "Newsreader", Georgia, serif;
+}
+html.dark .site {
+	--siteBg: #10150f;
+	--siteFg: #d9e1d4;
+	--siteFgStrong: #f2f6ee;
+	--siteMuted: #93a28c;
+	--siteAccent: #a9cf86;
+	--siteSquiggle: #8fb86c;
+	--siteSubtle: #1b2418;
+}
+.site .site-tagline,
+.site .site-about,
+.site .site-item-description {
+	font-weight: 400;
+}
+.site .site-title {
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 0.95;
+}
+/* paper vignette */
+.site .scenery-b {
+	background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(120, 110, 70, 0.07) 100%);
+}
+html.dark .site .scenery-b {
+	background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(0, 0, 0, 0.3) 100%);
+}

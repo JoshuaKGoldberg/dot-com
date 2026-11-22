@@ -1,0 +1,63 @@
+@import url("./forest-kit/base.css");
+
+/* 98. Low-Poly Diorama: a three.js island you orbit by dragging; static SVG/CSS fallback first. */
+.site {
+	--siteBg: #eaf2f2;
+	--siteFg: #213650;
+	--siteFgStrong: #0f2036;
+	--siteMuted: #3f5775;
+	--siteAccent: #0e63b3;
+	--siteSquiggle: #e58a3a;
+	--siteSubtle: #d3e4ea;
+}
+
+html.dark .site {
+	--siteBg: #0b1329;
+	--siteFg: #dbe6f4;
+	--siteFgStrong: #f3f7fc;
+	--siteMuted: #a2b3cf;
+	--siteAccent: #8cc3ff;
+	--siteSquiggle: #f2b36b;
+	--siteSubtle: #17264a;
+}
+
+.site .scenery-a {
+	background: linear-gradient(#a9d0ea, #f3ead6 70%, #d7e6e8);
+}
+
+html.dark .site .scenery-a {
+	background:
+		radial-gradient(1.5px 1.5px at 12% 14%, #fff9, transparent),
+		radial-gradient(1px 1px at 28% 32%, #fff8, transparent),
+		radial-gradient(1.5px 1.5px at 44% 9%, #fffa, transparent),
+		radial-gradient(1px 1px at 63% 22%, #fff8, transparent),
+		radial-gradient(1.5px 1.5px at 78% 12%, #fff9, transparent),
+		radial-gradient(1px 1px at 91% 30%, #fff8, transparent),
+		radial-gradient(1px 1px at 6% 44%, #fff7, transparent),
+		radial-gradient(1px 1px at 52% 40%, #fff6, transparent),
+		linear-gradient(#050a1e, #1b2b55 75%, #2a3a68);
+}
+
+.site .lpd-fallback {
+	height: 100%;
+	inset: 0;
+	opacity: 1;
+	position: absolute;
+	transition: opacity 0.9s ease;
+	width: 100%;
+}
+
+.site .lpd-fallback.is-gone {
+	opacity: 0;
+}
+
+.site .lpd-fallback .a { fill: #7fa38a; }
+.site .lpd-fallback .b { fill: #5c8670; }
+.site .lpd-fallback .c { fill: #a6b7c4; }
+.site .lpd-fallback .d { fill: #8d9fae; }
+.site .lpd-fallback .w { fill: #7db4c8; }
+html.dark .site .lpd-fallback .a { fill: #1c2d4a; }
+html.dark .site .lpd-fallback .b { fill: #14223c; }
+html.dark .site .lpd-fallback .c { fill: #34476f; }
+html.dark .site .lpd-fallback .d { fill: #283a60; }
+html.dark .site .lpd-fallback .w { fill: #243a66; }

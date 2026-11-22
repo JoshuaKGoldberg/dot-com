@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Figtree:wght@400;500;600&display=swap");
+@import url("_wild/kit.css");
+
+.site {
+	--siteBg: #f4f6ee;
+	--siteFg: #25301f;
+	--siteFgStrong: #121a0f;
+	--siteMuted: #5a6652;
+	--siteAccent: #2f7a3a;
+	--siteSquiggle: #6bb36a;
+	--siteSubtle: #e0e8d2;
+	--siteFont: "Figtree", ui-sans-serif, system-ui, sans-serif;
+	--siteFontDisplay: "Fraunces", Georgia, serif;
+	--siteMaxWidth: 50rem;
+}
+
+html.dark .site {
+	--siteBg: #0a110c;
+	--siteFg: #d4e3d3;
+	--siteFgStrong: #f0f8ef;
+	--siteMuted: #93a893;
+	--siteAccent: #7fe08a;
+	--siteSquiggle: #4fc27c;
+	--siteSubtle: #12231a;
+}
+
+.site .scenery-a canvas {
+	display: block;
+}
+
+.site .scenery-b {
+	background: linear-gradient(to top, rgb(107 179 106 / 0.12), transparent 38%);
+}
+
+html.dark .site .scenery-b {
+	background: linear-gradient(to top, rgb(50 190 120 / 0.1), transparent 42%);
+}
+
+.site-title {
+	font-style: italic;
+	font-variation-settings: "opsz" 144;
+	font-weight: 500;
+	letter-spacing: -0.02em;
+}
+
+.site-section-title,
+.site-item-title {
+	font-family: var(--siteFontDisplay);
+	font-weight: 500;
+}
+
+.site-section-title {
+	font-size: 2rem;
+}
+
+.site-item-title {
+	font-size: 1.4rem;
+}

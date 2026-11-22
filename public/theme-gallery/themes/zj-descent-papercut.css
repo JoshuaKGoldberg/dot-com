@@ -1,0 +1,572 @@
+/*
+ * Sky to Lake VI: Paper Diorama. Zero JavaScript.
+ *   scroll-timeline + animation-timeline  -> every paper layer travels at its own depth speed
+ *   stepped translate                     -> the scroll percent readout is a stack of labels slid into a window
+ *   view() timelines                      -> cards slide in like paper tabs
+ *   linear() spring easing + :has()       -> cards lift off the page on hover
+ *   mix-blend-mode: multiply              -> dark mode is the same diorama under a night gel
+ */
+
+@property --sk1 {
+	inherits: false;
+	initial-value: #bfe2f0;
+	syntax: "<color>";
+}
+
+@property --sk2 {
+	inherits: false;
+	initial-value: #fbf0dc;
+	syntax: "<color>";
+}
+
+@property --lift {
+	inherits: false;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+.site {
+	--siteBg: #f6f0e3;
+	--siteFg: #2d3a36;
+	--siteFgStrong: #14231f;
+	--siteMuted: #55655f;
+	--siteAccent: #1d6f66;
+	--siteSquiggle: #d9822b;
+	--siteSubtle: #e5dcc8;
+	--siteFontDisplay: "League Spartan", system-ui, sans-serif;
+	--paper: #fbf6ea;
+	--paperEdge: #d8cdb5;
+	--ink: #14231f;
+	--spring: linear(0, 0.3 6%, 0.77 13%, 1.08 19%, 1.14 23%, 1.06 30%, 0.98 38%, 0.99 48%, 1);
+
+	background: #cfe6ee;
+	scroll-timeline: --pg block;
+}
+
+html.dark .site {
+	--siteBg: #121a2b;
+	--siteFg: #d6dff0;
+	--siteFgStrong: #f4f7ff;
+	--siteMuted: #9eacc8;
+	--siteAccent: #8fd3c8;
+	--siteSquiggle: #f2b35e;
+	--siteSubtle: #1b2640;
+	--paper: #1b2540;
+	--paperEdge: #0c1222;
+	--ink: #f4f7ff;
+	background: #101a30;
+}
+
+/* ================= scenery: stacked paper sheets ================= */
+
+.site .scenery-a,
+.site .scenery-b,
+.site .scenery-c,
+.site .scenery-a::before,
+.site .scenery-a::after,
+.site .scenery-b::before,
+.site .scenery-b::after,
+.site .scenery-c::before,
+.site .scenery-c::after,
+.site .site-scenery::after,
+.site .overlay-a::before,
+.site .overlay-a::after {
+	content: "";
+	inset: 0;
+	position: absolute;
+	will-change: transform;
+}
+
+/* sky paper */
+.site .scenery-a {
+	background:
+		url("zj-descent-papercut/paper.png") 0 0 / 160px,
+		linear-gradient(180deg, var(--sk1), var(--sk2) 78%);
+	will-change: auto;
+}
+
+/* sun: concentric paper discs, each with its own shadow */
+.site .scenery-a::before {
+	background:
+		radial-gradient(circle, #fff6d6 0 28%, transparent 28.5%),
+		radial-gradient(circle, #f8d77a 0 41%, transparent 41.5%),
+		radial-gradient(circle, #f3b95a 0 55%, transparent 55.5%),
+		radial-gradient(circle, #eea34b 0 70%, transparent 70.5%);
+	border-radius: 50%;
+	filter: drop-shadow(-3px 5px 0 rgb(80 50 20 / 0.18));
+	height: 30vmin;
+	inset: 9% 14% auto auto;
+	width: 30vmin;
+}
+
+html.dark .site .scenery-a::before {
+	display: none;
+}
+
+.site .scenery-a::after {
+	background: url("zj-descent-papercut/clouds.svg") 50% 0 / 1600px 900px repeat-x;
+}
+
+/* ridges + the treeline that stands ON the front ridge, one element; a skirt of
+   ridge-colored paper extends below so the ridge never lifts off the page bottom */
+.site .scenery-b::before {
+	background:
+		url("zj-descent-papercut/ridges.svg") center bottom 40vh / 1600px auto repeat-x,
+		linear-gradient(#779fb6, #779fb6) 0 100% / 100% 40vh no-repeat;
+	inset: 0 0 -40vh 0;
+}
+
+/* far + near lake waves, one element, bottom anchored */
+.site .scenery-b::after {
+	background: url("zj-descent-papercut/lake.svg") 50% 100% / 1600px auto repeat-x;
+	z-index: 3;
+}
+
+/* forest: firs rise from below the page, stand, then sink back below the shore */
+.site .scenery-c::before {
+	background: url("zj-descent-papercut/firs-mid.svg") 50% 100% / 1600px auto repeat-x;
+	z-index: 1;
+}
+
+.site .scenery-c::after {
+	background: url("zj-descent-papercut/trunks.svg") 50% 0 / 1600px 100% repeat-x;
+	-webkit-mask: linear-gradient(180deg, transparent, #000 28%);
+	mask: linear-gradient(180deg, transparent, #000 28%);
+	z-index: 2;
+}
+
+/* night gel, only dark mode */
+.site .site-scenery::after {
+	background: linear-gradient(180deg, #4a5a96, #6f7fb0 50%, #51669c);
+	display: none;
+	mix-blend-mode: multiply;
+	will-change: auto;
+}
+
+html.dark .site .site-scenery::after {
+	display: block;
+	z-index: 8;
+}
+
+/* moon + stars sit above the night gel so they stay luminous */
+.site .site-scenery::before {
+	background:
+		radial-gradient(circle 8.4vmin at 82% 19%, #fffdf0 0 96%, transparent 100%),
+		radial-gradient(circle 11vmin at 82% 19%, #dfe6fa 0 96%, transparent 100%),
+		radial-gradient(circle 14vmin at 82% 19%, #aab9e6 0 96%, transparent 100%),
+		radial-gradient(circle 34vmin at 82% 19%, rgb(160 180 255 / 0.28), transparent),
+		radial-gradient(1.4px 1.4px at 12% 14%, #fff 98%, transparent) 0 0 / 230px 210px,
+		radial-gradient(2px 2px at 62% 40%, #fff 98%, transparent) 0 0 / 310px 260px,
+		radial-gradient(1.4px 1.4px at 82% 72%, #ffe9b0 98%, transparent) 0 0 / 190px 170px,
+		radial-gradient(1.2px 1.2px at 40% 88%, #fff 98%, transparent) 0 0 / 150px 140px;
+	content: "";
+	display: none;
+	inset: 0;
+	position: absolute;
+	z-index: 9;
+}
+
+html.dark .site .site-scenery::before {
+	display: block;
+}
+
+/* foreground: reeds + the shadowbox frame with paper grain */
+.site .overlay-a::before {
+	background: url("zj-descent-papercut/shore.svg") 50% 100% / 1600px auto repeat-x;
+	top: auto;
+	height: 14vh;
+	min-height: 90px;
+}
+
+.site .overlay-a::after {
+	background:
+		url("zj-descent-papercut/paper.png") 0 0 / 160px,
+		radial-gradient(120% 100% at 50% 40%, transparent 60%, rgb(12 20 22 / 0.28));
+	box-shadow: inset 0 0 0 0.55rem var(--paper), inset 0 0 0 0.62rem var(--paperEdge), inset 0 0.7rem 1rem -0.4rem rgb(0 0 0 / 0.22);
+	opacity: 0.85;
+	will-change: auto;
+}
+
+/* ================= scroll choreography ================= */
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .scenery-a::before {
+			animation: zjp-sun linear both;
+			animation-timeline: --pg;
+			animation-range: 0% 70%;
+		}
+
+		html:not(.reduce-motion) .site .site-scenery::before {
+			animation: zjp-moon linear both;
+			animation-timeline: --pg;
+			animation-range: 0% 60%;
+		}
+
+		html:not(.reduce-motion) .site .scenery-a::after {
+			animation: zjp-clouds linear both;
+			animation-timeline: --pg;
+			animation-range: 0% 75%;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::before {
+			animation: zjp-ridge linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::before {
+			animation: zjp-forest linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-c::after {
+			animation: zjp-forest-near linear both;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .scenery-b::after {
+			animation: zjp-lake linear both;
+			animation-range: 30% 100%;
+			animation-timeline: --pg;
+		}
+
+		html:not(.reduce-motion) .site .overlay-a::before {
+			animation: zjp-shore linear both;
+			animation-timeline: --pg;
+			animation-range: 72% 100%;
+		}
+	}
+}
+
+/* reduced motion / no support: a static composition, sky -> lake in one frame */
+html.reduce-motion .site .scenery-c::before,
+html.reduce-motion .site .scenery-c::after {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-c::before,
+	.site .scenery-c::after {
+		display: none;
+	}
+}
+
+html.reduce-motion .site .scenery-a::before {
+	translate: 0 0;
+}
+
+@keyframes zjp-moon {
+	to {
+		opacity: 0;
+		translate: -4% -90%;
+	}
+}
+
+html.dark .site {
+	--sk1: #3c4f96;
+	--sk2: #9a8fc0;
+}
+
+@keyframes zjp-sun {
+	to {
+		translate: -6% -170%;
+	}
+}
+
+@keyframes zjp-clouds {
+	to {
+		translate: -7% -125%;
+	}
+}
+
+@keyframes zjp-ridge {
+	to {
+		translate: 0 -30vh;
+	}
+}
+
+@keyframes zjp-forest {
+	0% {
+		translate: 0 105%;
+	}
+	35%,
+	58% {
+		translate: 0 0;
+	}
+	100% {
+		translate: 0 105%;
+	}
+}
+
+@keyframes zjp-forest-near {
+	0%,
+	12% {
+		translate: 0 105%;
+	}
+	40%,
+	58% {
+		translate: 0 0;
+	}
+	92%,
+	100% {
+		translate: 0 105%;
+	}
+}
+
+@keyframes zjp-lake {
+	from {
+		translate: 0 105%;
+	}
+	to {
+		translate: 0 0;
+	}
+}
+
+@keyframes zjp-shore {
+	from {
+		translate: 0 110%;
+	}
+	to {
+		translate: 0 0;
+	}
+}
+
+/* static composition when motion is reduced: lake + horizon visible */
+html.reduce-motion .site .scenery-b::after {
+	translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site .scenery-b::after {
+		translate: 0 0;
+	}
+}
+
+/* ================= page: paper cards ================= */
+
+.site-title {
+	color: var(--siteFgStrong);
+	letter-spacing: -0.02em;
+	text-shadow:
+		1px 1px 0 var(--paper),
+		2px 2px 0 var(--paper),
+		3px 3px 0 rgb(0 0 0 / 0.28),
+		5px 6px 8px rgb(0 0 0 / 0.18);
+}
+
+.site-hero {
+	background: color-mix(in srgb, var(--paper) 92%, transparent);
+	border-radius: 0.3rem;
+	box-shadow:
+		1px 2px 0 var(--paperEdge),
+		3px 5px 0 -1px color-mix(in srgb, var(--paper) 80%, #000),
+		6px 10px 18px -4px rgb(0 0 0 / 0.35);
+	padding: 1.5rem 1.75rem;
+	rotate: -0.4deg;
+}
+
+.site-portrait img {
+	border: 0.5rem solid var(--paper);
+	box-shadow:
+		0 0 0 1px var(--paperEdge),
+		3px 5px 0 rgb(0 0 0 / 0.18),
+		6px 10px 16px rgb(0 0 0 / 0.28);
+}
+
+.site-about {
+	background: color-mix(in srgb, var(--paper) 90%, transparent);
+	border-radius: 0.3rem;
+	box-shadow: 2px 3px 0 var(--paperEdge), 6px 10px 18px -6px rgb(0 0 0 / 0.35);
+	padding: 1.2rem 1.75rem;
+	rotate: 0.3deg;
+}
+
+.site-section-title {
+	background: var(--accentTab, var(--siteAccent));
+	border-radius: 0.2rem;
+	box-shadow: 2px 3px 0 rgb(0 0 0 / 0.22);
+	color: var(--paper);
+	display: inline-block;
+	padding: 0.2rem 0.9rem 0.3rem;
+	rotate: -1.2deg;
+}
+
+.site-posts {
+	--accentTab: #1d6f66;
+}
+
+.site-projects {
+	--accentTab: #a8571a;
+}
+
+.site-talks {
+	--accentTab: #4b5f9c;
+}
+
+html.dark .site-section-title {
+	color: #101a30;
+}
+
+.site-item {
+	background: color-mix(in srgb, var(--paper) 93%, transparent);
+	border-radius: 0.2rem;
+	box-shadow:
+		1px 2px 0 var(--paperEdge),
+		0 calc(4px + var(--lift) * 10px) calc(10px + var(--lift) * 16px) calc(-3px - var(--lift) * 2px) rgb(0 0 0 / calc(0.32 + var(--lift) * 0.1));
+	padding: 0.85rem 1.15rem 0.95rem;
+	rotate: calc(var(--tilt, 0.25) * 1deg);
+	transition: --lift 0.55s var(--spring), translate 0.55s var(--spring);
+}
+
+.site-item:nth-child(even) {
+	--tilt: -0.35;
+}
+
+.site-item:nth-child(3n) {
+	--tilt: 0.5;
+}
+
+.site-item:hover {
+	--lift: 1;
+	translate: 0 -5px;
+}
+
+.site-footer {
+	background: color-mix(in srgb, var(--paper) 88%, transparent);
+	border-radius: 0.3rem;
+	box-shadow: 2px 3px 0 var(--paperEdge), 6px 10px 18px -6px rgb(0 0 0 / 0.35);
+	margin-bottom: 14vh;
+	padding: 1rem;
+}
+
+.site-page {
+	padding-bottom: 8vh;
+}
+
+/* cards slide in like tabs being pulled out of the box */
+@media (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view()) {
+		html:not(.reduce-motion) .site :is(.site-item, .site-section-title, .site-about, .site-footer) {
+			animation: zjp-slide linear both;
+			animation-range: entry 0% entry 90%;
+			animation-timeline: view();
+		}
+	}
+}
+
+@keyframes zjp-slide {
+	from {
+		opacity: 0;
+		translate: 2.5rem 1rem;
+	}
+}
+
+/* ================= badge + readout ================= */
+
+.site-overlay::before {
+	background: var(--paper);
+	border-radius: 0.25rem;
+	box-shadow: 1px 2px 0 var(--paperEdge), 3px 5px 10px rgb(0 0 0 / 0.3);
+	bottom: 1.4rem;
+	color: var(--siteFgStrong);
+	content: "0 KB JavaScript \A paper-cut in pure CSS";
+	font: 700 0.7rem/1.25 var(--siteFont);
+	inset: auto auto 1.4rem 1.4rem;
+	letter-spacing: 0.02em;
+	padding: 0.45rem 0.8rem;
+	position: absolute;
+	rotate: -1.5deg;
+	white-space: pre;
+}
+
+.site .overlay-b {
+	--rh: 1.5rem;
+	background: var(--paper);
+	border-radius: 0.25rem;
+	box-shadow: 1px 2px 0 var(--paperEdge), 3px 5px 10px rgb(0 0 0 / 0.3);
+	box-sizing: border-box;
+	color: var(--siteMuted);
+	font: 600 0.65rem/var(--rh) ui-monospace, SFMono-Regular, Menlo, monospace;
+	height: var(--rh);
+	inset: auto 1.4rem 1.4rem auto;
+	overflow: hidden;
+	rotate: 1deg;
+	text-align: center;
+	width: 17rem;
+}
+
+/* eleven stacked percent labels, slid into the window in hard steps as you scroll */
+.site .overlay-b::after {
+	content: "scroll-timeline \00b7 view() \00b7 0%\A scroll-timeline \00b7 view() \00b7 10%\A scroll-timeline \00b7 view() \00b7 20%\A scroll-timeline \00b7 view() \00b7 30%\A scroll-timeline \00b7 view() \00b7 40%\A scroll-timeline \00b7 view() \00b7 50%\A scroll-timeline \00b7 view() \00b7 60%\A scroll-timeline \00b7 view() \00b7 70%\A scroll-timeline \00b7 view() \00b7 80%\A scroll-timeline \00b7 view() \00b7 90%\A scroll-timeline \00b7 view() \00b7 100%";
+	display: block;
+	inset: 0 0 auto 0;
+	line-height: var(--rh);
+	position: absolute;
+	white-space: pre;
+	will-change: transform;
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		html:not(.reduce-motion) .site .overlay-b::after {
+			animation: zjp-pct linear both;
+			animation-timeline: --pg;
+		}
+	}
+}
+
+@keyframes zjp-pct {
+	0% {
+		animation-timing-function: steps(1, end);
+		translate: 0 0;
+	}
+	5% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -1);
+	}
+	15% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -2);
+	}
+	25% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -3);
+	}
+	35% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -4);
+	}
+	45% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -5);
+	}
+	55% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -6);
+	}
+	65% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -7);
+	}
+	75% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -8);
+	}
+	85% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -9);
+	}
+	95% {
+		animation-timing-function: steps(1, end);
+		translate: 0 calc(var(--rh) * -10);
+	}
+	100% {
+		translate: 0 calc(var(--rh) * -10);
+	}
+}
+
+@media (max-width: 700px) {
+	.site .overlay-b {
+		display: none;
+	}
+}
