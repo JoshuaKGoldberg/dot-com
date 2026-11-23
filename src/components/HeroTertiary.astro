@@ -8,9 +8,10 @@ import { Text } from "~/components/Text";
 
 <style>
 	.tertiary {
+		font-size: calc(var(--fontSizeSmall) * var(--heroScale, 1));
 		line-height: 1.35;
 		margin-top: 1rem;
-		max-width: 25rem;
+		max-width: calc(25rem * var(--heroScale, 1));
 	}
 
 	@media (min-width: 700px) {

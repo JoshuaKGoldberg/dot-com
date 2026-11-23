@@ -9,10 +9,13 @@ interface Props {
 	class?: string | undefined;
 	portrait: HeroPortraitImages;
 	primary: string;
+	size?: "large" | "medium";
 }
+
+const { size = "medium" } = Astro.props;
 ---
 
-<div class:list={["hero", Astro.props.class]}>
+<div class:list={["hero", size, Astro.props.class]}>
 	<div class="half first">
 		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait}>
 			<slot name="portrait" />
@@ -34,6 +37,18 @@ interface Props {
 		max-width: 100%;
 	}
 
+	/* Scales the portrait and the text alongside it, and the space around them */
+	.medium {
+		--heroScale: 0.75;
+		--spaceAboveScale: 0.567;
+		--spaceBelowScale: 0.667;
+		--space: clamp(2rem, 8vmin, 8rem);
+
+		margin-block: calc(var(--space) * var(--spaceAboveScale))
+			calc(var(--space) * var(--spaceBelowScale));
+		padding-bottom: calc(1rem * var(--spaceBelowScale));
+	}
+
 	:global([data-fits-screen]) .hero {
 		grid-row: 2;
 		margin-block: clamp(0rem, 16dvh - 6.4rem, 2rem) 0;
@@ -53,6 +68,23 @@ interface Props {
 			flex-direction: row;
 			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(5rem, 10vh, 14rem);
 			padding: 0;
+		}
+
+		.medium {
+			--headerHeight: 6rem;
+			--portraitHeight: calc(var(--heroSizeLarge) * var(--heroScale));
+			--extra: max(0px, (35vh - var(--portraitHeight)) / 2);
+			--above: calc(
+				clamp(8.5rem, 10vh, 10rem) - var(--headerHeight) + var(--extra)
+			);
+			--below: calc(clamp(5rem, 10vh, 14rem) + var(--extra));
+
+			height: auto;
+			margin-block: calc(
+					var(--headerHeight) + var(--above) * var(--spaceAboveScale)
+				)
+				calc(var(--below) * var(--spaceBelowScale));
+			padding-bottom: 0;
 		}
 
 		/* Starts beneath the header, which is fixed */

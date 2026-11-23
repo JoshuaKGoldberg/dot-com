@@ -73,12 +73,14 @@ const { alt, halo, image, scene } = Astro.props;
 
 <style>
 	.portrait {
+		--size: calc(var(--heroSizeLarge) * var(--heroScale, 1));
+
 		view-transition-name: portrait;
 		display: block;
-		height: var(--heroSizeLarge);
+		height: var(--size);
 		position: relative;
 		user-select: none;
-		width: var(--heroSizeLarge);
+		width: var(--size);
 	}
 
 	.backdrop,
