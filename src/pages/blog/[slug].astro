@@ -45,7 +45,7 @@ const title = createBlogTitle(entry);
 			minutes={getReadingMinutes(entry.body)}
 			title={title}
 		/>
-		<TableOfContents client:only="solid-js" headings={rendered.headings} />
+		<TableOfContents client:idle headings={rendered.headings} />
 	</BodyContents>
 	<BlogContent
 		rendered={rendered}

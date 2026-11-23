@@ -42,7 +42,16 @@ export function PieChart(props: PieChartProps) {
 				margin: 0,
 			}}
 		>
-			<h4 style={{ "text-align": "center" }}>{props.title}</h4>
+			<p
+				style={{
+					"font-family": "var(--fontDisplay)",
+					"font-size": "1.5rem",
+					"margin-top": "0.75rem",
+					"text-align": "center",
+				}}
+			>
+				{props.title}
+			</p>
 			<figcaption
 				style={{
 					display: "flex",

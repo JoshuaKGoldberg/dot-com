@@ -7,6 +7,8 @@ pubDate: 2019-09-13
 title: "I'm Moving Blogs!"
 ---
 
+import { Image } from "astro:assets";
+
 import mediumCapture from "~/assets/blog/medium-capture.png";
 
 > Note: this was written in 2019.
@@ -22,7 +24,11 @@ Nothing in the slightest!
 Ugh.
 This is what code highlighting with Medium's code blocks looked like then and looks like today:
 
-<img alt="Medium code highlighting screenshot" src={mediumCapture} />
+<Image
+	alt="Medium code highlighting screenshot"
+	src={mediumCapture}
+	style="height: auto; max-width: 100%"
+/>
 
 This is code highlighting with Gatsby's [official PrismJS plugin](https://www.gatsbyjs.org/packages/gatsby-remark-prismjs):
 
@@ -35,7 +41,7 @@ const greet = (name: string) => {
 Wow!
 _So much better._
 
-### But What's Gatsby?
+## But What's Gatsby?
 
 Gatsby is a site generator for React.
 Meaning: you write your website template and content with React, and it handles all sorts of infrastructure work for you.

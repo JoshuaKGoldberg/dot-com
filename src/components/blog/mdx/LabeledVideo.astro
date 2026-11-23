@@ -1,6 +1,7 @@
 ---
 import LabeledMedia from "./LabeledMedia.astro";
 import { LoopedVideo } from "./LoopedVideo";
+import { readVideoSize } from "./readVideoSize";
 
 interface Props {
 	description?: string;
@@ -14,5 +15,10 @@ interface Props {
 	description={Astro.props.description}
 	original={Astro.props.original}
 >
-	<LoopedVideo client:visible src={Astro.props.src} title={Astro.props.title} />
+	<LoopedVideo
+		client:visible
+		size={await readVideoSize(Astro.props.src)}
+		src={Astro.props.src}
+		title={Astro.props.title}
+	/>
 </LabeledMedia>
