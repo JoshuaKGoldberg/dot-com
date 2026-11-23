@@ -90,14 +90,14 @@ export class SquiggleOverlay {
 				squiggle.target = 0;
 			}
 
-			squiggle.step(seconds);
+			squiggle.step(seconds, pointer.x);
 
 			// Links that leave the page fade out, but ones scrolled away are just gone
 			if (squiggle.isSettled || (link.isConnected && !lines)) {
 				squiggle.remove();
 				this.#squiggles.delete(link);
 			} else {
-				squiggle.paint(pointer.x, lines);
+				squiggle.paint(lines);
 			}
 		}
 

@@ -1,7 +1,7 @@
 import type { Rectangle } from "../geometry";
 
 import { px } from "../css";
-import { damp, interpolate, smoothstep } from "../math";
+import { damp, interpolate, moveToward, smoothstep } from "../math";
 import { drawWave } from "./drawWave";
 
 const namespace = "http://www.w3.org/2000/svg";
@@ -18,6 +18,9 @@ const restingHeight = 0.25;
 const center = 6;
 
 const settled = 0.004;
+
+/** Fastest that highlights follow the pointer, in pixels per second. */
+const maximumHighlightSpeed = 240;
 
 /** A line of a link's text, in the page's coordinates. */
 export type LinkLine = Rectangle;
@@ -48,6 +51,10 @@ export class Squiggle {
 
 	#drawn: DrawnLine[] = [];
 	readonly #fontSize: number;
+
+	/** Where the highlight is, as it catches up to the pointer. */
+	#highlightX: number | undefined;
+
 	readonly #layer: HTMLElement;
 	#lines: readonly LinkLine[] = [];
 	#near = 0;
@@ -75,7 +82,7 @@ export class Squiggle {
 	}
 
 	/** Paints over the link's lines, or where they last were if it's since left the page. */
-	paint(pointerX: number, lines = this.#lines) {
+	paint(lines = this.#lines) {
 		this.#lines = lines;
 
 		while (this.#drawn.length > lines.length) {
@@ -85,11 +92,18 @@ export class Squiggle {
 		for (const [index, { bottom, left, right }] of lines.entries()) {
 			const line = (this.#drawn[index] ??= createLine(this.#layer));
 
-			this.#paintLine(line, left, bottom, right - left, pointerX - left);
+			this.#paintLine(line, left, bottom, right - left);
 		}
 	}
 
-	step(seconds: number) {
+	step(seconds: number, pointerX: number) {
+		const highlightX = this.#highlightX ?? pointerX;
+
+		this.#highlightX = moveToward(
+			highlightX,
+			damp(highlightX, pointerX, 8, seconds),
+			maximumHighlightSpeed * seconds,
+		);
 		this.#near = damp(this.#near, this.target, 10, seconds);
 		this.#phase -= seconds * this.#near * this.#near * Math.PI * 1.8;
 	}
@@ -99,7 +113,6 @@ export class Squiggle {
 		left: number,
 		bottom: number,
 		width: number,
-		pointerX: number,
 	) {
 		const near = smoothstep(0, 1, this.#near);
 		const path = drawWave({
@@ -126,9 +139,10 @@ export class Squiggle {
 		gradient.firstElementChild?.setAttribute("stop-opacity", faded);
 		gradient.lastElementChild?.setAttribute("stop-opacity", faded);
 
+		const highlightX = (this.#highlightX ?? left) - left;
 		const reach = interpolate(40, 94, near);
-		highlightMask.setAttribute("x1", String(pointerX - reach));
-		highlightMask.setAttribute("x2", String(pointerX + reach));
+		highlightMask.setAttribute("x1", String(highlightX - reach));
+		highlightMask.setAttribute("x2", String(highlightX + reach));
 		highlight.style.opacity = String(near * 0.8);
 	}
 }
