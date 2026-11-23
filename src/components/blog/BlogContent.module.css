@@ -144,7 +144,7 @@
 }
 
 .article strong {
-	font-weight: var(--fontWeightBold);
+	font-weight: calc((var(--fontWeightLight) + var(--fontWeightBold)) / 2);
 }
 
 .article sup a {
