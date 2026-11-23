@@ -20,7 +20,7 @@ const center = 6;
 const settled = 0.004;
 
 /** Fastest that highlights follow the pointer, in pixels per second. */
-const maximumHighlightSpeed = 240;
+const maximumHighlightSpeed = 120;
 
 /** A line of a link's text, in the page's coordinates. */
 export type LinkLine = Rectangle;
