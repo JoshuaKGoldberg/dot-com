@@ -2,6 +2,7 @@ import type { Point } from "../geometry";
 
 import { resizeCanvas } from "../canvas";
 import { angleToHue, depthColor, hueDriftRate } from "../color";
+import { fadeAway } from "../fadeAway";
 import { interpolate, smoothstep } from "../math";
 import { theme } from "../theme";
 import {
@@ -80,6 +81,6 @@ export class ConstellationCanvas {
 	}
 
 	remove() {
-		this.#canvas.remove();
+		fadeAway(this.#canvas);
 	}
 }

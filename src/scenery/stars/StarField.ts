@@ -2,6 +2,7 @@ import { cacheLayout } from "../cacheLayout";
 import { resizeCanvas } from "../canvas";
 import { type Column, measureColumn, minimumMargin } from "../column";
 import { Dwell } from "../Dwell";
+import { fadeAwayPainting } from "../fadeAway";
 import { footerDwell } from "../footerDwell";
 import { createFrameTask, type FrameTask } from "../frameLoop";
 import {
@@ -83,6 +84,10 @@ export class StarField {
 			this.#scrolling.wake();
 		}, signal);
 		onPause(() => {
+			if (this.#graphs.graphs.length || this.#lights.lit.length) {
+				fadeAwayPainting(this.#canvas);
+			}
+
 			this.#rest();
 		}, signal);
 		onPointer(() => {

@@ -271,6 +271,15 @@ const overhang = image.height / image.width - usualHeight;
 		width: 100%;
 	}
 
+	/* Holding a finger on it wakes it up, instead of opening the image's menu */
+	@media (hover: none) {
+		.cutout,
+		.scene-image {
+			-webkit-touch-callout: none;
+			pointer-events: none;
+		}
+	}
+
 	.portrait[data-awake] .awake::before {
 		animation: drift 40s ease-in-out infinite alternate;
 	}
@@ -281,6 +290,12 @@ const overhang = image.height / image.width - usualHeight;
 
 	.portrait[data-awake] .halo-colors {
 		animation: turn 48s linear calc(var(--side) * 16s - 16s) infinite;
+	}
+
+	:global(html[data-motion="paused"]) :is(.awake, .figure, .glow) {
+		transition:
+			var(--transitionMedium) opacity,
+			var(--transitionMedium) transform;
 	}
 
 	@keyframes drift {

@@ -1,6 +1,7 @@
 import type { Rectangle } from "../geometry";
 
 import { px } from "../css";
+import { fadeAway } from "../fadeAway";
 import { followLight } from "../followLight";
 import { damp, interpolate, smoothstep } from "../math";
 import { drawWave } from "./drawWave";
@@ -75,7 +76,11 @@ export class Squiggle {
 		delete this.link.dataset.squiggleLive;
 
 		for (const { svg } of this.#drawn) {
-			svg.remove();
+			if (this.isSettled) {
+				svg.remove();
+			} else {
+				fadeAway(svg);
+			}
 		}
 	}
 

@@ -225,6 +225,18 @@
 	}
 }
 
+@property --nearness {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+[data-motion="paused"] [data-lit] {
+	transition:
+		var(--transitionMedium) color,
+		var(--transitionMedium) --nearness;
+}
+
 /*
  * Links are lit in shifting hues where the pointer is, per LitLinks.ts.
  * Their contrast rises too, to make up for harder to read hues and brighter auroras.

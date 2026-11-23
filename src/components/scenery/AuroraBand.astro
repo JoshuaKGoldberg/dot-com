@@ -74,6 +74,10 @@ const { edge } = Astro.props;
 		width: 100%;
 	}
 
+	:global(html[data-motion="paused"]) .band :global(canvas) {
+		transition: var(--transitionMedium) opacity;
+	}
+
 	@supports (animation-timeline: scroll()) {
 		.top {
 			--fadeDistance: 25rem;

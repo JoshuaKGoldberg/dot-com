@@ -41,6 +41,9 @@ const maximumShift = 110;
 /** Fastest that links' hues shift, in degrees per second. */
 const maximumShiftSpeed = 140;
 
+/** As long as --transitionMedium, which links transition for when paused. */
+const fadeMilliseconds = 280;
+
 /** Changes too small to be visible. */
 const settled = { nearness: 0.005, shift: 0.2 };
 
@@ -61,7 +64,12 @@ export class LitLinks {
 
 		const clear = () => {
 			for (const link of this.#colorings.keys()) {
-				resetColor(link);
+				link.style.setProperty("--nearness", "0");
+				setTimeout(() => {
+					if (!this.#colorings.has(link)) {
+						resetColor(link);
+					}
+				}, fadeMilliseconds);
 			}
 
 			this.#colorings.clear();
