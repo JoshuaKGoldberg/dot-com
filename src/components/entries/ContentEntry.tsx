@@ -19,6 +19,7 @@ export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
 	description?: string | undefined;
+	descriptionSize?: "medium" | "small";
 	image?: ContentEntryImageProps | undefined;
 	links?: [string, string][] | undefined;
 	subtitle: JSX.Element;
@@ -53,7 +54,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						<Text
 							as="div"
 							class={styles.description}
-							fontSize="medium"
+							fontSize={props.descriptionSize ?? "medium"}
 							fontWeight="light"
 						>
 							{props.description}

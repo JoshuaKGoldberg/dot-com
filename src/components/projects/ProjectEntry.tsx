@@ -14,6 +14,7 @@ export function ProjectEntry(props: ProjectEntryProps) {
 	return (
 		<ContentEntry
 			description={props.project.description}
+			descriptionSize="small"
 			image={
 				props.project.image
 					? {
