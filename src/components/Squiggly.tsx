@@ -13,10 +13,10 @@ export type SquigglyProps<As extends keyof JSX.HTMLElementTags> =
 
 /**
  * - active: always has a squiggle
- * - nav: has one while it's current, hovered, or focused
+ * - current: has one while it's current, hovered, or focused
  * - onHover: has one while it's hovered or focused
  */
-export type SquigglyVariant = "active" | "nav" | "onHover";
+export type SquigglyVariant = "active" | "current" | "onHover";
 
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 	props: SquigglyProps<As>,

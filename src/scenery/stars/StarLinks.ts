@@ -1,10 +1,10 @@
 import type { Star } from "./createStars";
-import type { Sky } from "./paintStars";
+import type { LitStar } from "./StarLights";
 
 import { depthColor } from "../color";
 import { type Column, columnAlpha } from "../column";
 import { damp, interpolate, smoothstep } from "../math";
-import { getScreenY } from "./paintStars";
+import { getScreenY, type Sky } from "./sky";
 
 interface Link {
 	from: Star;
@@ -82,10 +82,7 @@ export class StarLinks {
 	}
 
 	/** Links each lit star to its nearest one that's closer to the pointer. */
-	relink(
-		lit: readonly { distance: number; hue: number; star: Star }[],
-		sky: Sky,
-	) {
+	relink(lit: readonly LitStar[], sky: Sky) {
 		for (const link of this.#links.values()) {
 			link.wanted = false;
 		}

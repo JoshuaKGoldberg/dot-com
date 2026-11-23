@@ -1,3 +1,4 @@
+import type { Point, Rectangle } from "../geometry";
 import type { Graph } from "./createGraph";
 
 import { clamp, interpolate, smoothstep } from "../math";
@@ -17,10 +18,20 @@ export interface LivingGraph {
 	/** How dissolved the graph is, from 0 to 1. */
 	fade: number;
 
+	fadeSeconds: number;
+
 	/** How grown the graph is, from 0 to 1. */
+	growSeconds: number;
+
 	growth: number;
 
+	/** How much longer the graph stays once it's grown. */
+	holdSeconds: number;
+
 	isSnark: boolean;
+
+	/** How much dwell its region needs for the graph not to dissolve. */
+	minimumDwell: number;
 
 	/** Where the pointer was when the graph started growing. */
 	origin: Point;
@@ -30,11 +41,6 @@ export interface LivingGraph {
 	vertices: LivingVertex[];
 
 	/** Center of the graph, with y relative to the region's scrolling layer. */
-	x: number;
-	y: number;
-}
-
-export interface Point {
 	x: number;
 	y: number;
 }
@@ -79,13 +85,6 @@ interface Placement extends Point {
 	radius: number;
 }
 
-interface Rectangle {
-	bottom: number;
-	left: number;
-	right: number;
-	top: number;
-}
-
 interface RegionState {
 	dwelled: number;
 	nextSnarkAt: number;
@@ -103,19 +102,11 @@ const secondsBetweenSnarks = 100;
 
 const snarkBlocks = [5, 7, 9];
 
-interface GraphTimings {
-	fadeSeconds: number;
-	growSeconds: number;
-	holdSeconds: number;
-	minimumDwell: number;
-}
-
 export class GraphSimulation {
 	graphs: LivingGraph[] = [];
 
 	readonly #random: Random;
 	readonly #states = new Map<RegionName, RegionState>();
-	readonly #timings = new WeakMap<LivingGraph, GraphTimings>();
 
 	constructor(random: Random) {
 		this.#random = random;
@@ -139,35 +130,13 @@ export class GraphSimulation {
 			return (
 				region &&
 				isOnScreen(graph, region, viewport) &&
-				this.#age(graph, seconds, region.dwell)
+				ageGraph(graph, seconds, region.dwell)
 			);
 		});
 
 		for (const region of regions) {
 			this.#spawn(seconds, region, pointer);
 		}
-	}
-
-	/** Ages a graph, returning whether there's still any of it left. */
-	#age(graph: LivingGraph, seconds: number, dwell: number) {
-		const timings = this.#timings.get(graph);
-		if (!timings) {
-			return false;
-		}
-
-		if (dwell < timings.minimumDwell || timings.holdSeconds <= 0) {
-			graph.fade += seconds / timings.fadeSeconds;
-		} else if (graph.growth < 1) {
-			graph.growth = Math.min(
-				1,
-				graph.growth +
-					(seconds / timings.growSeconds) * interpolate(0.4, 1, dwell),
-			);
-		} else {
-			timings.holdSeconds -= seconds;
-		}
-
-		return graph.fade < 1;
 	}
 
 	#create(
@@ -188,32 +157,29 @@ export class GraphSimulation {
 				tilt *
 				placement.radius,
 		}));
-		const living: LivingGraph = {
+
+		this.graphs.push({
 			edges: orderEdges(graph, vertices, {
 				x: origin.x - placement.x,
 				y: origin.y - placement.y,
 			}),
 			fade: 0,
+			fadeSeconds: isSnark ? 5.5 : 3.2,
+			growSeconds: isSnark
+				? interpolate(16, 22, random())
+				: interpolate(5, 11, random()),
 			growth: 0,
+			holdSeconds: isSnark
+				? interpolate(8, 20, random())
+				: interpolate(3, 10, random()),
 			isSnark,
+			minimumDwell: interpolate(0.03, 0.4, random()),
 			origin: { x: origin.x, y: origin.y + region.offset },
 			radius: placement.radius,
 			region: region.name,
 			vertices,
 			x: placement.x,
 			y: placement.y + region.offset,
-		};
-
-		this.graphs.push(living);
-		this.#timings.set(living, {
-			fadeSeconds: isSnark ? 5.5 : 3.2,
-			growSeconds: isSnark
-				? interpolate(16, 22, random())
-				: interpolate(5, 11, random()),
-			holdSeconds: isSnark
-				? interpolate(8, 20, random())
-				: interpolate(3, 10, random()),
-			minimumDwell: interpolate(0.03, 0.4, random()),
 		});
 	}
 
@@ -347,6 +313,22 @@ export function getEdgeReveal({ fade, growth }: LivingGraph, order: number) {
 	);
 
 	return grown * (1 - faded);
+}
+
+/** Ages a graph, returning whether there's still any of it left. */
+function ageGraph(graph: LivingGraph, seconds: number, dwell: number) {
+	if (dwell < graph.minimumDwell || graph.holdSeconds <= 0) {
+		graph.fade += seconds / graph.fadeSeconds;
+	} else if (graph.growth < 1) {
+		graph.growth = Math.min(
+			1,
+			graph.growth + (seconds / graph.growSeconds) * interpolate(0.4, 1, dwell),
+		);
+	} else {
+		graph.holdSeconds -= seconds;
+	}
+
+	return graph.fade < 1;
 }
 
 function getOrCreateState(

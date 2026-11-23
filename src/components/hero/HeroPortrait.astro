@@ -21,18 +21,23 @@ const { alt, halo, image } = Astro.props;
 ---
 
 <hero-portrait class="portrait">
-	<div aria-hidden="true" class="halo" style={`--halo: url("${halo.src}")`}>
+	<div
+		aria-hidden="true"
+		class="halo"
+		data-portrait="light"
+		style={`--halo: url("${halo.src}")`}
+	>
 		<div class="halo-colors"></div>
 	</div>
 	<div aria-hidden="true" class="backdrop">
 		<div class="aurora resting"></div>
-		<div class="aurora awake"></div>
+		<div class="aurora awake" data-portrait="light"></div>
 	</div>
-	<div aria-hidden="true" class="constellation"></div>
+	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
 	<GlassRing />
-	<GlassRing awake />
+	<GlassRing awake data-portrait="light" />
 	<div class="clip">
-		<div class="figure" data-reveal>
+		<div class="figure" data-portrait="figure" data-reveal>
 			<Image
 				alt={alt}
 				class="cutout"
@@ -124,11 +129,10 @@ const { alt, halo, image } = Astro.props;
 
 	:global(html.dark) .resting {
 		filter: saturate(0.4);
-		opacity: 0.4;
 	}
 
 	.awake {
-		opacity: 0;
+		opacity: var(--light, 0);
 	}
 
 	/* Kept on their own layers, so that they're never repainted as they change */
@@ -141,7 +145,7 @@ const { alt, halo, image } = Astro.props;
 	.halo {
 		inset: -21.875%;
 		mask: var(--halo) center / 100% 100% no-repeat;
-		opacity: 0.06;
+		opacity: calc(0.06 + 0.79 * var(--light, 0));
 	}
 
 	.halo-colors {

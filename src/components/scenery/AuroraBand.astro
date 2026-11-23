@@ -19,7 +19,6 @@ const { edge } = Astro.props;
 	 */
 	.band {
 		--column: calc(var(--widthFull) / 2);
-		--columnFade: 10rem;
 
 		background: linear-gradient(
 			to var(--direction),
@@ -43,7 +42,8 @@ const { edge } = Astro.props;
 		mask-image: linear-gradient(
 			to right,
 			black calc(50% - var(--column) - var(--columnFade)),
-			rgb(0 0 0 / 50%) calc(50% - var(--column)) calc(50% + var(--column)),
+			rgb(0 0 0 / var(--columnStrength)) calc(50% - var(--column))
+				calc(50% + var(--column)),
 			black calc(50% + var(--column) + var(--columnFade))
 		);
 		position: absolute;
@@ -67,10 +67,6 @@ const { edge } = Astro.props;
 		height: var(--bandHeight);
 	}
 
-	:global(html.dark) .top {
-		--strength: 6%;
-	}
-
 	.band :global(canvas) {
 		display: block;
 		height: 100%;
@@ -88,11 +84,28 @@ const { edge } = Astro.props;
 			animation-timeline: --page;
 		}
 
+		:global(html[data-motion="paused"]) .top {
+			animation-name: fade-away;
+		}
+
 		/* Moves as though it were at the end of the page, without adding to its height */
 		.bottom {
 			animation: scroll-in linear both;
 			animation-range: calc(100% - var(--bandHeight)) 100%;
 			animation-timeline: --page;
+		}
+	}
+
+	/* Otherwise it'd always be behind whatever's at the bottom of the screen */
+	@supports not (animation-timeline: scroll()) {
+		.bottom {
+			display: none;
+		}
+	}
+
+	@keyframes fade-away {
+		to {
+			opacity: 0;
 		}
 	}
 

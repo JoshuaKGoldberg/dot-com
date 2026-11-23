@@ -40,9 +40,11 @@ import { Text } from "./Text";
 	/* Rises into view as it's scrolled to */
 	@supports (animation-timeline: view()) {
 		.credit {
+			--fadeEnd: 6%;
+
 			animation: emerge linear both;
 			/* Without a var(), minifying merges the timeline into the shorthand */
-			animation-range: entry 0% cover var(--coverage, 12%);
+			animation-range: entry 0% cover var(--fadeEnd);
 			animation-timeline: view();
 		}
 

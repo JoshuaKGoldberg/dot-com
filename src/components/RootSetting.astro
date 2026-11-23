@@ -1,0 +1,74 @@
+<script is:inline>
+	/**
+	 * Keeps a root attribute and its toggle's icons in sync with a setting that's
+	 * whatever was last chosen, or if nothing was, the system's preference.
+	 *
+	 * Inline so that it runs before first paint. The header it's in is kept between
+	 * pages, but the root's attributes aren't, so they're reapplied after each swap.
+	 */
+	function createRootSetting({ apply, key, options, query, toggle }) {
+		const [off, on] = options;
+		const preference = matchMedia(query);
+		let chosen = read();
+
+		// Storage throws when the browser is set to block site data
+		function read() {
+			try {
+				const stored = localStorage.getItem(key);
+
+				return options.includes(stored) ? stored : undefined;
+			} catch {
+				return undefined;
+			}
+		}
+
+		function write() {
+			try {
+				if (chosen) {
+					localStorage.setItem(key, chosen);
+				} else {
+					localStorage.removeItem(key);
+				}
+			} catch {
+				// The choice still applies until the next full page load
+			}
+		}
+
+		function getCurrent() {
+			return chosen ?? (preference.matches ? on : off);
+		}
+
+		function update() {
+			const current = getCurrent();
+
+			apply(current, chosen);
+
+			for (const icon of toggle.querySelectorAll("[data-state]")) {
+				icon.toggleAttribute("data-out", icon.dataset.state !== current);
+			}
+		}
+
+		function choose(choice) {
+			chosen = choice;
+			write();
+			toggle.dataset.used = "";
+			update();
+		}
+
+		toggle.addEventListener("click", () => {
+			choose(getCurrent() === on ? off : on);
+		});
+
+		preference.addEventListener("change", update);
+
+		document.addEventListener("astro:after-swap", () => {
+			// Moving the toggle into the new page would otherwise replay its animation
+			delete toggle.dataset.used;
+			update();
+		});
+
+		update();
+
+		return { choose };
+	}
+</script>

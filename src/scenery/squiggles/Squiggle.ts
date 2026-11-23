@@ -1,3 +1,5 @@
+import type { Rectangle } from "../geometry";
+
 import { px } from "../css";
 import { damp, interpolate, smoothstep } from "../math";
 import { drawWave } from "./drawWave";
@@ -17,7 +19,10 @@ const center = 6;
 
 const settled = 0.004;
 
-interface Line {
+/** A line of a link's text, in the page's coordinates. */
+export type LinkLine = Rectangle;
+
+interface DrawnLine {
 	base: SVGPathElement;
 	gradient: SVGLinearGradientElement;
 	highlight: SVGPathElement;
@@ -41,10 +46,10 @@ export class Squiggle {
 		return this.target === 0 && this.#near < settled;
 	}
 
-	#bounds: readonly DOMRect[] = [];
+	#drawn: DrawnLine[] = [];
 	readonly #fontSize: number;
 	readonly #layer: HTMLElement;
-	#lines: Line[] = [];
+	#lines: readonly LinkLine[] = [];
 	#near = 0;
 	readonly #offset: number;
 	#phase = 0;
@@ -61,26 +66,26 @@ export class Squiggle {
 		link.dataset.squiggleLive = "";
 	}
 
-	destroy() {
+	remove() {
 		delete this.link.dataset.squiggleLive;
 
-		for (const { svg } of this.#lines) {
+		for (const { svg } of this.#drawn) {
 			svg.remove();
 		}
 	}
 
 	/** Paints over the link's lines, or where they last were if it's since left the page. */
-	paint(pointerX: number, bounds = this.#bounds) {
-		this.#bounds = bounds;
+	paint(pointerX: number, lines = this.#lines) {
+		this.#lines = lines;
 
-		while (this.#lines.length > bounds.length) {
-			this.#lines.pop()?.svg.remove();
+		while (this.#drawn.length > lines.length) {
+			this.#drawn.pop()?.svg.remove();
 		}
 
-		for (const [index, { bottom, left, width }] of bounds.entries()) {
-			const line = (this.#lines[index] ??= createLine(this.#layer));
+		for (const [index, { bottom, left, right }] of lines.entries()) {
+			const line = (this.#drawn[index] ??= createLine(this.#layer));
 
-			this.#paintLine(line, left, bottom, width, pointerX - left);
+			this.#paintLine(line, left, bottom, right - left, pointerX - left);
 		}
 	}
 
@@ -90,7 +95,7 @@ export class Squiggle {
 	}
 
 	#paintLine(
-		{ base, gradient, highlight, highlightMask, svg }: Line,
+		{ base, gradient, highlight, highlightMask, svg }: DrawnLine,
 		left: number,
 		bottom: number,
 		width: number,
@@ -157,7 +162,7 @@ function createGradient(id: string, stops: [offset: string, color: string][]) {
 	);
 }
 
-function createLine(layer: HTMLElement): Line {
+function createLine(layer: HTMLElement): DrawnLine {
 	nextId += 1;
 
 	const id = `squiggle-${nextId.toString()}`;

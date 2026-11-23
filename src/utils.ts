@@ -14,7 +14,13 @@ export function groupBy<T, K extends number | string>(
 	) as typeof grouped;
 }
 
-/** Whether a link is to the current page or, other than for the homepage, its section. */
-export function isCurrentPath(href: string, pathname: string) {
-	return href === "/" ? pathname === "/" : pathname.startsWith(href);
+/** The aria-current of a link: whether it's to the current page, or to its section. */
+export function getCurrent(href: string, pathname: string) {
+	const path = pathname.replace(/(?<=.)\/$/, "");
+
+	if (path === href) {
+		return "page";
+	}
+
+	return href !== "/" && path.startsWith(`${href}/`) ? "true" : undefined;
 }

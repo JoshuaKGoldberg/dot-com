@@ -12,6 +12,10 @@ export class Dwell {
 
 	#amount = 0;
 
+	reset() {
+		this.#amount = 0;
+	}
+
 	/**
 	 * Advances toward how near the pointer is, from 0 to 1.
 	 * @returns Whether there's any dwelling left to show or fade out.
@@ -24,9 +28,5 @@ export class Dwell {
 		);
 
 		return this.#amount > 0 || nearness > 0;
-	}
-
-	stop() {
-		this.#amount = 0;
 	}
 }

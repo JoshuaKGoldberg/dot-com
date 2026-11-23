@@ -30,7 +30,7 @@ const { class: className, description, image, title } = Astro.props;
 		<SkipLink />
 		<Header />
 
-		<div class="content">
+		<div class="content" data-content>
 			<main id="main-content">
 				<slot />
 			</main>
@@ -52,10 +52,8 @@ const { class: className, description, image, title } = Astro.props;
 </html>
 
 <script>
-	import { px } from "~/scenery/css";
-
 	const getContentTop = () =>
-		document.querySelector(".content")?.getBoundingClientRect().top ?? 0;
+		document.querySelector("[data-content]")?.getBoundingClientRect().top ?? 0;
 
 	let previousTop = 0;
 
@@ -64,9 +62,17 @@ const { class: className, description, image, title } = Astro.props;
 		previousTop = getContentTop();
 	});
 	document.addEventListener("astro:after-swap", () => {
+		const shift = previousTop - getContentTop();
+
 		document.documentElement.style.setProperty(
 			"--contentShift",
-			px(previousTop - getContentTop()),
+			`${shift.toString()}px`,
 		);
 	});
 </script>
+
+<style>
+	.content {
+		view-transition-name: content;
+	}
+</style>

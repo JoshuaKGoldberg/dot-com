@@ -1,7 +1,11 @@
+import { Emitter, type Listener } from "./Emitter";
+
 /** Pointers that haven't moved in this long are treated as though they left. */
 const parkedAfterMs = 30_000;
 
-let inside = false;
+const changes = new Emitter();
+
+let isInside = false;
 let movedAt = 0;
 
 /** The last known mouse or pen position, in viewport pixels. */
@@ -13,28 +17,16 @@ export const pointer = {
 
 	/** Whether the pointer is over the page, and has moved recently. */
 	get isPresent() {
-		return inside && performance.now() - movedAt < parkedAfterMs;
+		return isInside && performance.now() - movedAt < parkedAfterMs;
 	},
 
 	x: 0,
 	y: 0,
 };
 
-const listeners = new Set<() => void>();
-
-function notify() {
-	for (const listener of listeners) {
-		listener();
-	}
-}
-
 /** Calls back each time the pointer moves, or leaves the page. */
-export function watchPointer(listener: () => void) {
-	listeners.add(listener);
-
-	return () => {
-		listeners.delete(listener);
-	};
+export function onPointer(listener: Listener, signal: AbortSignal) {
+	changes.listen(listener, signal);
 }
 
 addEventListener(
@@ -45,16 +37,18 @@ addEventListener(
 			return;
 		}
 
-		inside = true;
+		isInside = true;
 		movedAt = performance.now();
 		pointer.x = event.clientX;
 		pointer.y = event.clientY;
-		notify();
+		changes.emit();
 	},
 	{ passive: true },
 );
 
-document.documentElement.addEventListener("pointerleave", () => {
-	inside = false;
-	notify();
+document.documentElement.addEventListener("pointerleave", (event) => {
+	if (event.pointerType !== "touch") {
+		isInside = false;
+		changes.emit();
+	}
 });

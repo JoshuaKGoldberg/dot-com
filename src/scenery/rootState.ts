@@ -1,20 +1,27 @@
+import { Emitter, type Listener } from "./Emitter";
+
 export interface RootState {
 	isDark: boolean;
 	isPlaying: boolean;
 }
 
+const changes = new Emitter();
+
 /** The page's color theme and motion preference, as set on the root element. */
 export let rootState = readRootState();
 
-const listeners = new Set<() => void>();
+/** Calls back each time motion is paused. */
+export function onPause(listener: Listener, signal?: AbortSignal) {
+	onRootState(() => {
+		if (!rootState.isPlaying) {
+			listener();
+		}
+	}, signal);
+}
 
 /** Calls back each time the root state changes. */
-export function watchRootState(listener: () => void) {
-	listeners.add(listener);
-
-	return () => {
-		listeners.delete(listener);
-	};
+export function onRootState(listener: Listener, signal?: AbortSignal) {
+	changes.listen(listener, signal);
 }
 
 function readRootState(): RootState {
@@ -36,16 +43,11 @@ new MutationObserver(() => {
 	const next = readRootState();
 
 	if (
-		next.isDark === rootState.isDark &&
-		next.isPlaying === rootState.isPlaying
+		next.isDark !== rootState.isDark ||
+		next.isPlaying !== rootState.isPlaying
 	) {
-		return;
-	}
-
-	rootState = next;
-
-	for (const listener of listeners) {
-		listener();
+		rootState = next;
+		changes.emit();
 	}
 }).observe(document.documentElement, {
 	attributeFilter: ["class", "data-motion"],

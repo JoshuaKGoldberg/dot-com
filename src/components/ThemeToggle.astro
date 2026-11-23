@@ -7,18 +7,11 @@ import HeaderToggle from "./HeaderToggle.astro";
 ---
 
 <div class="theme-buttons">
-	<HeaderToggle
-		id="themeToggle"
-		label="Theme toggle (enable JavaScript to use)"
-	>
+	<HeaderToggle id="themeToggle" label="Theme toggle">
 		<Moon data-state="dark" />
 		<Sun data-out data-state="light" />
 	</HeaderToggle>
-	<button
-		aria-label="Clear theme preference (enable JavaScript to use)"
-		id="themeClear"
-		type="button"
-	>
+	<button aria-label="Clear theme preference" id="themeClear" type="button">
 		<XMark height={16} width={16} />
 	</button>
 </div>
@@ -28,66 +21,20 @@ import HeaderToggle from "./HeaderToggle.astro";
 		const clear = document.getElementById("themeClear");
 		const toggle = document.getElementById("themeToggle");
 
-		// Storage throws when the browser is set to block site data
-		const readStoredTheme = () => {
-			try {
-				return localStorage.getItem("theme");
-			} catch {
-				return null;
-			}
-		};
-
-		/**
-		 * @param {string | null} theme
-		 */
-		const storeTheme = (theme) => {
-			try {
-				if (theme) {
-					localStorage.setItem("theme", theme);
-				} else {
-					localStorage.removeItem("theme");
-				}
-			} catch {
-				// The choice still applies until the next page load
-			}
-		};
-
-		const getPreferredTheme = () =>
-			matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-
-		const update = (storedTheme = readStoredTheme()) => {
-			const theme = storedTheme ?? getPreferredTheme();
-
-			document.documentElement.classList.toggle("dark", theme === "dark");
-			clear.classList.toggle("clear-active", !!storedTheme);
-			toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
-
-			for (const icon of toggle.children) {
-				icon.toggleAttribute("data-out", icon.dataset.state !== theme);
-			}
-		};
+		const setting = createRootSetting({
+			apply(theme, chosen) {
+				document.documentElement.classList.toggle("dark", theme === "dark");
+				clear.classList.toggle("clear-active", !!chosen);
+				toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
+			},
+			key: "theme",
+			options: ["light", "dark"],
+			query: "(prefers-color-scheme: dark)",
+			toggle,
+		});
 
 		clear.addEventListener("click", () => {
-			storeTheme(null);
-			toggle.dataset.used = "";
-			update(null);
-		});
-
-		toggle.addEventListener("click", () => {
-			const theme = document.documentElement.classList.contains("dark")
-				? "light"
-				: "dark";
-
-			storeTheme(theme);
-			toggle.dataset.used = "";
-			update(theme);
-		});
-
-		update();
-
-		// The header is kept between pages, but the root's attributes aren't
-		document.addEventListener("astro:after-swap", () => {
-			update();
+			setting.choose(undefined);
 		});
 	}
 </script>
@@ -96,7 +43,6 @@ import HeaderToggle from "./HeaderToggle.astro";
 	.theme-buttons {
 		display: flex;
 		justify-content: center;
-		padding: 0 1rem;
 		position: relative;
 		width: 4.25rem;
 	}

@@ -1,5 +1,6 @@
 import type { Column } from "../column";
-import type { LivingGraph, Point } from "./GraphSimulation";
+import type { Point } from "../geometry";
+import type { LivingGraph } from "./GraphSimulation";
 
 import { angleToHue, depthColor, hueDriftRate } from "../color";
 import { columnAlpha } from "../column";

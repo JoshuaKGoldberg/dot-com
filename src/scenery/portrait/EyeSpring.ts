@@ -1,4 +1,4 @@
-import type { Point } from "../graphs/GraphSimulation";
+import type { Point } from "../geometry";
 
 import { damp } from "../math";
 

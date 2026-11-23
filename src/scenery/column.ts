@@ -1,32 +1,44 @@
-import { smoothstep } from "./math";
+import { interpolate, smoothstep } from "./math";
 
-/** Horizontal bounds of the page's center column, in viewport pixels. */
+/**
+ * The page's center column, in viewport pixels.
+ * Background effects are weaker behind it, where there's text in front of them.
+ */
 export interface Column {
+	/** How far outside the column effects take to reach full strength. */
+	fade: number;
+
 	left: number;
 	right: number;
+
+	/** How strong effects are inside the column. */
+	strength: number;
 }
-
-/** How strong background effects are behind the center column's text. */
-const columnStrength = 0.5;
-
-/** How far outside the column effects take to reach full strength. */
-const columnFade = 160;
 
 /** Margins narrower than this don't have any effects of their own. */
 export const minimumMargin = 72;
 
-export function columnAlpha(x: number, column: Column) {
-	const distance = Math.max(column.left - x, x - column.right);
-
-	return (
-		columnStrength + (1 - columnStrength) * smoothstep(0, columnFade, distance)
+export function columnAlpha(
+	x: number,
+	{ fade, left, right, strength }: Column,
+) {
+	return interpolate(
+		strength,
+		1,
+		smoothstep(0, fade, Math.max(left - x, x - right)),
 	);
 }
 
 export function measureColumn(): Column {
-	const main = document.querySelector("main")?.getBoundingClientRect();
+	const { left, right } = (
+		document.querySelector("main") ?? document.body
+	).getBoundingClientRect();
+	const styles = getComputedStyle(document.documentElement);
 
-	return main
-		? { left: main.left, right: main.right }
-		: { left: 0, right: innerWidth };
+	return {
+		fade: parseFloat(styles.getPropertyValue("--columnFade")),
+		left,
+		right,
+		strength: parseFloat(styles.getPropertyValue("--columnStrength")) / 100,
+	};
 }

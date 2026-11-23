@@ -1,6 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import MotionToggle from "./MotionToggle.astro";
+import RootSetting from "./RootSetting.astro";
 import { Text } from "./Text";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -14,10 +15,11 @@ const links = [
 
 <div class="persisted" transition:persist="header">
 	<div class="fader" role="presentation"></div>
-	<Text as="header" class="header" fontWeight="bold">
+	<Text as="header" fontWeight="bold">
 		<div class="first">
 			<HeaderLink href="/">Josh Goldberg</HeaderLink>
 			<div class="toggles">
+				<RootSetting />
 				<MotionToggle />
 				<ThemeToggle />
 			</div>
@@ -31,15 +33,18 @@ const links = [
 </div>
 
 <script>
-	import { isCurrentPath } from "~/utils";
+	import { getCurrent } from "~/utils";
 
 	// The header is kept between pages, so that changes to its links are animated
 	document.addEventListener("astro:after-swap", () => {
-		for (const link of document.querySelectorAll<HTMLAnchorElement>(
-			"header a",
-		)) {
-			if (isCurrentPath(link.getAttribute("href") ?? "", location.pathname)) {
-				link.setAttribute("aria-current", "true");
+		for (const link of document.querySelectorAll("[data-header-link]")) {
+			const current = getCurrent(
+				link.getAttribute("href") ?? "",
+				location.pathname,
+			);
+
+			if (current) {
+				link.setAttribute("aria-current", current);
 			} else {
 				link.removeAttribute("aria-current");
 			}
@@ -53,6 +58,7 @@ const links = [
 	}
 
 	header {
+		view-transition-name: header;
 		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
@@ -120,6 +126,7 @@ const links = [
 			position: fixed;
 			right: 0;
 			top: 0;
+			view-transition-name: fader;
 			z-index: 1;
 		}
 

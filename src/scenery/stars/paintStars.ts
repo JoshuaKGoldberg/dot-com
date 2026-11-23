@@ -1,20 +1,7 @@
 import type { Star } from "./createStars";
 
-import { modulo, smoothstep } from "../math";
-import { parallaxRates } from "./createStars";
-
-export interface Sky {
-	/** How much the pointer has lingered by each margin, from 0 to 1. */
-	dwell: { left: number; right: number };
-
-	isDark: boolean;
-
-	/** Height of the repeating area stars are placed in. */
-	period: number;
-
-	scroll: number;
-	width: number;
-}
+import { smoothstep } from "../math";
+import { getScreenY, type Sky } from "./sky";
 
 const temperatures = {
 	dark: ["#fff", "#d6e2ff", "#fff5e6", "#ffe9c8", "#ffd6b6"],
@@ -32,14 +19,6 @@ const minimumAlpha = 0.015;
 
 /** Rectangles are much cheaper than arcs, and look the same when this small. */
 const maximumSquareRadius = 0.9;
-
-/** How far above the screen the repeating area starts, so wraps are never seen. */
-export const overscan = 160;
-
-/** Vertical position, in viewport pixels, of a star or anything moving with it. */
-export function getScreenY(y: number, depth: number, sky: Sky) {
-	return modulo(y - sky.scroll * parallaxRates[depth], sky.period) - overscan;
-}
 
 /** Paints stars, which are expected to be sorted by temperature. */
 export function paintStars(

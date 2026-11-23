@@ -16,11 +16,12 @@ export interface AuroraUniforms {
 /** A fraction of a pixel per pixel: upscaling is what softens the light. */
 const resolution = 0.2;
 
-/** Draws auroras with WebGL, or if it's unavailable, doesn't do anything. */
+/** Draws auroras with WebGL, if it's available. */
 export class AuroraRenderer {
 	readonly canvas = document.createElement("canvas");
 
-	#context: undefined | WebGLRenderingContext;
+	/** Null once it's known to be unavailable. */
+	#context: null | undefined | WebGLRenderingContext;
 	readonly #locations = new Map<string, null | WebGLUniformLocation>();
 	#program: undefined | WebGLProgram;
 
@@ -34,14 +35,15 @@ export class AuroraRenderer {
 		});
 	}
 
+	/** @returns Whether anything could be drawn. */
 	draw(uniforms: AuroraUniforms) {
-		if (!this.#context) {
+		if (this.#context === undefined) {
 			this.#initialize();
 		}
 
 		const gl = this.#context;
 		if (!gl || !this.#program) {
-			return;
+			return false;
 		}
 
 		const { canvas } = this;
@@ -72,18 +74,20 @@ export class AuroraRenderer {
 		}
 
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+		return true;
 	}
 
 	#initialize() {
-		const gl = (this.#context ??=
-			this.canvas.getContext("webgl", {
-				antialias: false,
-				depth: false,
-				powerPreference: "low-power",
-				premultipliedAlpha: true,
-				stencil: false,
-			}) ?? undefined);
+		this.#context ??= this.canvas.getContext("webgl", {
+			antialias: false,
+			depth: false,
+			powerPreference: "low-power",
+			premultipliedAlpha: true,
+			stencil: false,
+		});
 
+		const gl = this.#context;
 		if (!gl) {
 			return;
 		}

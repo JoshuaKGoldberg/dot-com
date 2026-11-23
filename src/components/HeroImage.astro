@@ -7,7 +7,6 @@ import GlassRing from "./hero/GlassRing.astro";
 
 interface Props {
 	alt: string;
-	class?: string | undefined;
 	src: ImageMetadata;
 }
 
@@ -15,7 +14,7 @@ interface Props {
 const size = 144;
 ---
 
-<div class:list={["hero-image", Astro.props.class]}>
+<div class="hero-image">
 	<div data-reveal>
 		<Image
 			alt={Astro.props.alt}
@@ -48,8 +47,6 @@ const size = 144;
 		border-radius: 100%;
 		display: block;
 		height: 100%;
-		max-height: 100%;
-		max-width: 100%;
 		object-fit: cover;
 		user-select: none;
 		width: 100%;

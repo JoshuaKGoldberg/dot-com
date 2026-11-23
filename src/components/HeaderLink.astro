@@ -1,5 +1,5 @@
 ---
-import { isCurrentPath } from "~/utils";
+import { getCurrent } from "~/utils";
 
 import { Squiggly } from "./Squiggly";
 
@@ -11,13 +11,14 @@ const { href } = Astro.props;
 ---
 
 <Squiggly
-	aria-current={isCurrentPath(href, Astro.url.pathname) ? "true" : undefined}
+	aria-current={getCurrent(href, Astro.url.pathname)}
 	as="a"
 	class="link"
+	data-header-link
 	fontWeight="bold"
 	href={href}
 	{...(href.startsWith("http") && { target: "_blank" })}
-	variant="nav"
+	variant="current"
 >
 	<slot />
 </Squiggly>

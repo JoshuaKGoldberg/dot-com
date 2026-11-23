@@ -2,12 +2,16 @@
 interface Props {
 	/** Whether this is the ring's brighter version, for when it's lit up. */
 	awake?: boolean;
+	"data-portrait"?: string;
 }
+
+const { awake, ...rest } = Astro.props;
 ---
 
 <div
 	aria-hidden="true"
-	class:list={["glass-ring", Astro.props.awake && "ring-awake"]}
+	class:list={["glass-ring", awake && "awake"]}
+	{...rest}
 ></div>
 
 <style>
@@ -55,11 +59,11 @@ interface Props {
 		position: absolute;
 	}
 
-	.ring-awake {
+	.awake {
 		filter: drop-shadow(
 			0 0 5px color-mix(in srgb, var(--ringWisteria) 45%, transparent)
 		);
-		opacity: 0;
+		opacity: var(--light, 0);
 		will-change: opacity;
 	}
 

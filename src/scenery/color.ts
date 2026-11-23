@@ -1,6 +1,6 @@
 import { interpolate, modulo } from "./math";
 
-/** Degrees per second that hues drift, matching the auroras' own drift. */
+/** Degrees per second that hues drift. */
 export const hueDriftRate = 24;
 
 const distantHue = 225;

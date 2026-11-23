@@ -18,15 +18,15 @@
 	width: 100%;
 }
 
-.squiggly[data-squiggle="nav"]::after {
+.squiggly[data-squiggle="current"]::after {
 	background: var(--colorEmphasized);
 }
 
-.squiggly:is([data-squiggle="nav"], :focus-visible, :hover)::after {
+.squiggly:is([data-squiggle="current"], :focus-visible, :hover)::after {
 	--squiggleMask: url("~/assets/squiggles/wave.svg");
 }
 
-.squiggly:is([data-squiggle="nav"], [data-squiggle="onHover"]):not(
+.squiggly:is([data-squiggle="current"], [data-squiggle="onHover"]):not(
 		[aria-current],
 		[aria-selected="true"] > *,
 		:focus-visible,
@@ -42,7 +42,7 @@
 }
 
 @media (forced-colors: active) {
-	.squiggly::after {
+	.squiggly[data-squiggle]::after {
 		background: LinkText;
 	}
 }

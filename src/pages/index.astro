@@ -1,6 +1,7 @@
 ---
 import halo from "~/assets/heroes/home-halo.webp";
 import image from "~/assets/heroes/home.webp";
+import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroEyes from "~/components/hero/HeroEyes.astro";
 import Socials from "~/components/Socials.astro";
@@ -22,11 +23,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	<BodyContents class="about">
 		<!-- prettier-ignore -->
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I work to make web development better, most notably on <a
-				data-squiggle="active"
-				href="https://typescript-eslint.io"
-				target="_blank">typescript-eslint</a
-			>:
+			I work to make web development better, most notably on <Anchor href="https://typescript-eslint.io" target="_blank">typescript-eslint</Anchor>:
 			<br class="tabletUp" />a powerful static analysis toolset for JavaScript
 			and TypeScript code.
 		</Text>
@@ -34,15 +31,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		<Text as="p" fontSize="medium" fontWeight="light">
 			I’m the author of Learning TypeScript (O’Reilly), a Microsoft MVP,
 			<br class="tabletUp" />
-			a speaker, a <a
-				data-squiggle="active"
-				href="https://squiggleconf.com"
-				target="_blank">SquiggleConf</a
-			> co-founder, and a dev at <a
-				data-squiggle="active"
-				href="https://sentry.io"
-				target="_blank">Sentry</a
-			>.
+			a speaker, a <Anchor href="https://squiggleconf.com" target="_blank">SquiggleConf</Anchor> co-founder, and a dev at <Anchor href="https://sentry.io" target="_blank">Sentry</Anchor>.
 		</Text>
 	</BodyContents>
 </HeroLayout>
@@ -58,15 +47,6 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		flex-direction: column;
 		line-height: 1.35;
 		margin: 2rem 0 1rem;
-	}
-
-	.about a {
-		background: var(--squiggleLine) 0 100% / 100% 2px no-repeat;
-		padding-bottom: 0.1em;
-	}
-
-	.about a[data-squiggle-live] {
-		background: none;
 	}
 
 	@media (min-width: 700px) {

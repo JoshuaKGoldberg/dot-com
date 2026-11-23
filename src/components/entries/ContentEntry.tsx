@@ -35,18 +35,17 @@ export function ContentEntry(props: ContentEntryProps) {
 			<li class={clsx(styles.contentEntry, widths[props.widths], props.class)}>
 				{props.image && <ContentEntryImage {...props.image} />}
 				<div class={styles.contents}>
-					<Text
-						as="a"
+					<Anchor
 						class={styles.title}
-						data-squiggle="onHover"
 						font="display"
 						fontSize="medium"
 						href={props.url}
 						tone="strong"
+						variant="onHover"
 						{...(props.url.startsWith("/") ? {} : { target: "_blank" })}
 					>
 						{props.title}
-					</Text>
+					</Anchor>
 					<Text as="p" fontSize="smaller" tone="muted">
 						{props.subtitle}
 					</Text>

@@ -1,3 +1,5 @@
+import { onPause, rootState } from "./rootState";
+
 /**
  * Advances something by a frame.
  * @returns Whether there's anything left to do next frame.
@@ -12,10 +14,16 @@ export interface FrameTask {
 	wake: () => void;
 }
 
-interface RunningTask {
+export interface FrameTaskOptions {
 	/** Whether to run as often as the screen refreshes, rather than at the usual rate. */
-	isSmooth: boolean;
+	isSmooth?: boolean;
 
+	/** Stops the task for good once aborted. */
+	signal: AbortSignal;
+}
+
+interface RunningTask {
+	isSmooth: boolean;
 	ranAt: number | undefined;
 	step: FrameStep;
 }
@@ -41,19 +49,23 @@ let timer: ReturnType<typeof setTimeout> | undefined;
 /**
  * Creates a task on the single loop shared by all scenery.
  * The loop only runs while any task is awake, with all tasks' steps in unison.
+ * Nothing wakes while motion is paused.
  */
 export function createFrameTask(
 	step: FrameStep,
-	{ isSmooth = false } = {},
+	{ isSmooth = false, signal }: FrameTaskOptions,
 ): FrameTask {
 	const task: RunningTask = { isSmooth, ranAt: undefined, step };
+	const sleep = () => {
+		running.delete(task);
+	};
+
+	signal.addEventListener("abort", sleep);
 
 	return {
-		sleep() {
-			running.delete(task);
-		},
+		sleep,
 		wake() {
-			if (!running.has(task)) {
+			if (rootState.isPlaying && !signal.aborted && !running.has(task)) {
 				task.ranAt = undefined;
 				running.add(task);
 				schedule();
@@ -63,6 +75,7 @@ export function createFrameTask(
 }
 
 function requestFrame() {
+	clearTimeout(timer);
 	timer = undefined;
 	frame ??= requestAnimationFrame(runFrame);
 }
@@ -77,21 +90,28 @@ function runFrame(now: number) {
 	}
 
 	for (const task of running) {
-		if (!isStep && !task.isSmooth) {
-			continue;
-		}
-
-		const elapsed =
-			task.ranAt === undefined ? defaultElapsed : now - task.ranAt;
-
-		task.ranAt = now;
-
-		if (!task.step(Math.min(elapsed, maximumElapsed) / 1000)) {
-			running.delete(task);
+		if (isStep || task.isSmooth) {
+			runTask(task, now);
 		}
 	}
 
 	schedule();
+}
+
+function runTask(task: RunningTask, now: number) {
+	const elapsed = task.ranAt === undefined ? defaultElapsed : now - task.ranAt;
+
+	task.ranAt = now;
+
+	try {
+		if (!task.step(Math.min(elapsed, maximumElapsed) / 1000)) {
+			running.delete(task);
+		}
+	} catch (error) {
+		// One task failing shouldn't keep the rest from running
+		running.delete(task);
+		reportError(error);
+	}
 }
 
 /** Animation frames use power even if nothing happens in them, so most are skipped. */
@@ -108,3 +128,7 @@ function schedule() {
 		timer ??= setTimeout(requestFrame, wait);
 	}
 }
+
+onPause(() => {
+	running.clear();
+});

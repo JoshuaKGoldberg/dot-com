@@ -1,3 +1,4 @@
+import { Anchor } from "../Anchor";
 import { Text } from "../Text";
 
 export interface ProjectSubEntryProps {
@@ -9,9 +10,9 @@ export interface ProjectSubEntryProps {
 export function ProjectSubEntry(props: ProjectSubEntryProps) {
 	return (
 		<Text as="li" fontSize="small">
-			<Text as="a" data-squiggle="onHover" font="display" href={props.href}>
+			<Anchor font="display" href={props.href} variant="onHover">
 				{props.title}
-			</Text>
+			</Anchor>
 			<Text as="span" fontWeight="light">
 				: {props.description}
 			</Text>

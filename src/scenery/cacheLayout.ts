@@ -1,7 +1,7 @@
+import { onPageScroll } from "./pageScroll";
+
 /** Covers rarer layout changes, such as fonts loading or tabs being switched. */
 const lifetimeMs = 500;
-
-let scrolledAt = 0;
 
 /**
  * Creates a reader for something measured from the page's layout.
@@ -9,18 +9,24 @@ let scrolledAt = 0;
  * Measuring right after changing styles makes the browser recalculate them early,
  * so measurements are reused until the page scrolls, resizes, or a moment passes.
  */
-export function cacheLayout<T extends object>(measure: () => T) {
+export function cacheLayout<T extends object>(
+	measure: () => T,
+	signal: AbortSignal,
+) {
 	let measured: T | undefined;
 	let measuredAt = 0;
+
+	const invalidate = () => {
+		measured = undefined;
+	};
+
+	onPageScroll(invalidate, signal);
+	addEventListener("resize", invalidate, { signal });
 
 	return () => {
 		const now = performance.now();
 
-		if (
-			!measured ||
-			measuredAt <= scrolledAt ||
-			now - measuredAt > lifetimeMs
-		) {
+		if (!measured || now - measuredAt > lifetimeMs) {
 			measured = measure();
 			measuredAt = now;
 		}
@@ -28,14 +34,3 @@ export function cacheLayout<T extends object>(measure: () => T) {
 		return measured;
 	};
 }
-
-function invalidate() {
-	scrolledAt = performance.now();
-}
-
-// Scroll events don't bubble, and the page's body is what scrolls
-document.addEventListener("scroll", invalidate, {
-	capture: true,
-	passive: true,
-});
-addEventListener("resize", invalidate);

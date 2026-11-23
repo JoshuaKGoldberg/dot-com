@@ -2,23 +2,23 @@
 import AuroraBand from "./AuroraBand.astro";
 ---
 
-<div aria-hidden="true" class="scenery" transition:persist="scenery">
-	<AuroraBand edge="top" />
-	<AuroraBand edge="bottom" />
-	<star-field class="stars"></star-field>
-</div>
 <squiggle-overlay
 	aria-hidden="true"
 	class="squiggles"
 	transition:persist="squiggles"
 ></squiggle-overlay>
+<div aria-hidden="true" class="scenery" transition:persist="scenery">
+	<AuroraBand edge="top" />
+	<AuroraBand edge="bottom" />
+	<star-field class="stars"></star-field>
+</div>
 
 <script>
 	// Everything looks complete without this: it only adds what happens on approach
 	const whenIdle = globalThis.requestIdleCallback ?? setTimeout;
 
 	whenIdle(() => {
-		void import("~/scenery/elements");
+		void import("~/scenery");
 	});
 </script>
 
@@ -36,13 +36,18 @@ import AuroraBand from "./AuroraBand.astro";
 		position: absolute;
 	}
 
-	/* Has no size of its own, so that it's never considered to be in front of text */
+	.stars :global(canvas) {
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	/* Scrolls along with the page, and has no size of its own to get in its way */
 	.squiggles {
 		left: 0;
 		pointer-events: none;
-		position: fixed;
+		position: absolute;
 		top: 0;
-		z-index: 2;
 	}
 
 	.squiggles :global(svg) {
@@ -50,6 +55,12 @@ import AuroraBand from "./AuroraBand.astro";
 		overflow: visible;
 		position: absolute;
 		top: 0;
+	}
+
+	@media (forced-colors: active) {
+		.squiggles {
+			display: none;
+		}
 	}
 
 	@media print {

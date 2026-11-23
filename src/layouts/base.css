@@ -55,6 +55,10 @@
 		--heroSizeSmall: clamp(6rem, 12vmin, 9rem);
 		--heroSizeLarge: clamp(6rem, 20vmin, 12rem);
 
+		/* Background effects are weaker behind the center column, easing in beside it */
+		--columnFade: 160px;
+		--columnStrength: 50%;
+
 		--widthFull: 63rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
@@ -184,18 +188,6 @@
  */
 :root {
 	view-transition-name: none;
-}
-
-.content {
-	view-transition-name: content;
-}
-
-.fader {
-	view-transition-name: fader;
-}
-
-header {
-	view-transition-name: header;
 }
 
 ::view-transition-group(content),
