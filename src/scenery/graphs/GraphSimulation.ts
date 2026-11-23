@@ -97,8 +97,13 @@ const edgeGrowth = 0.22;
 /** Portion of a graph's dissolve that each individual edge takes. */
 const edgeFade = 0.3;
 
+/** Along with how long dwelling takes to start, so that there's one within 10 seconds. */
 const secondsBeforeSnark = 8;
-const secondsBetweenSnarks = 33;
+
+const secondsBetweenSnarks = 16.5;
+
+/** Distance between places considered for snarks, in pixels. */
+const snarkSearchStep = 24;
 
 const snarkBlocks = [5, 7, 9];
 
@@ -166,7 +171,7 @@ export class GraphSimulation {
 			fade: 0,
 			fadeSeconds: isSnark ? 5.5 : 3.2,
 			growSeconds: isSnark
-				? interpolate(16, 22, random())
+				? interpolate(5.3, 7.3, random())
 				: interpolate(5, 11, random()),
 			growth: 0,
 			holdSeconds: isSnark
@@ -228,15 +233,57 @@ export class GraphSimulation {
 	#isFree(placement: Placement, region: Region) {
 		return (
 			!(region.avoid && overlaps(placement, region.avoid)) &&
-			this.graphs.every(
-				(graph) =>
-					Math.hypot(
-						graph.x - placement.x,
-						graph.y - region.offset - placement.y,
-					) >
-					graph.radius + placement.radius,
-			)
+			!this.graphs.some((graph) => isTouching(graph, placement, region))
 		);
+	}
+
+	/**
+	 * Finds the nearest place that only small graphs are in the way of, if any,
+	 * and has those start to dissolve.
+	 */
+	#makeRoom(
+		region: Region,
+		radius: number,
+		pointer: Point,
+	): Placement | undefined {
+		const { avoid, bounds } = region;
+		const snarks = this.graphs.filter(({ isSnark }) => isSnark);
+		let nearest: Placement | undefined;
+		let nearestDistance = Infinity;
+
+		for (
+			let x = bounds.left + radius;
+			x <= bounds.right - radius;
+			x += snarkSearchStep
+		) {
+			for (
+				let y = bounds.top + radius;
+				y <= bounds.bottom - radius;
+				y += snarkSearchStep
+			) {
+				const placement = { radius, x, y };
+				const distance = Math.hypot(x - pointer.x, y - pointer.y);
+
+				if (
+					distance < nearestDistance &&
+					!(avoid && overlaps(placement, avoid)) &&
+					!snarks.some((snark) => isTouching(snark, placement, region))
+				) {
+					nearest = placement;
+					nearestDistance = distance;
+				}
+			}
+		}
+
+		if (nearest) {
+			for (const graph of this.graphs) {
+				if (isTouching(graph, nearest, region)) {
+					graph.holdSeconds = 0;
+				}
+			}
+		}
+
+		return nearest;
 	}
 
 	#spawn(seconds: number, region: Region, pointer: Point | undefined) {
@@ -258,7 +305,9 @@ export class GraphSimulation {
 				88,
 				(region.bounds.right - region.bounds.left) * 0.42,
 			);
-			const placement = this.#findPlacement(region, radius, pointer);
+			const placement =
+				this.#findPlacement(region, radius, pointer) ??
+				this.#makeRoom(region, radius, pointer);
 
 			state.nextSnarkAt =
 				state.dwelled + (placement ? secondsBetweenSnarks : 2);
@@ -356,6 +405,14 @@ function isOnScreen(
 	{ height }: { height: number },
 ) {
 	return y - offset > -radius && y - offset < height + radius;
+}
+
+function isTouching(
+	graph: LivingGraph,
+	{ radius, x, y }: Placement,
+	{ offset }: Region,
+) {
+	return Math.hypot(graph.x - x, graph.y - offset - y) <= graph.radius + radius;
 }
 
 /** Orders edges to grow outward from the vertex nearest to a point. */
