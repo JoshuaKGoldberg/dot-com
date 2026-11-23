@@ -1,7 +1,7 @@
 .heart {
 	background: none;
 	border: none;
-	color: inherit;
+	color: var(--colorForegroundExtra);
 	cursor: pointer;
 	font: inherit;
 	line-height: inherit;

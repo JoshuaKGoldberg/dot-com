@@ -5,13 +5,17 @@ import { Text } from "./Text";
 ---
 
 <footer>
-	<Text as="p" class="credit" font="label" fontSize="smallest">
+	<Text as="p" class="credit" font="label" fontSize="smallest" tone="muted">
 		Made with <EmojiBlastHeart client:visible /> in Boston using Astro, Solid,
 		and TypeScript.
 		<span aria-hidden="true" class="dot">
 			·
 		</span>
-		<Anchor href="https://github.com/JoshuaKGoldberg/dot-com" target="_blank">
+		<Anchor
+			href="https://github.com/JoshuaKGoldberg/dot-com"
+			target="_blank"
+			tone="muted"
+		>
 			view source
 		</Anchor>
 	</Text>
@@ -34,6 +38,8 @@ import { Text } from "./Text";
 	.credit {
 		--squiggleOffset: -0.55em;
 
+		/* Its font only has the one weight, which macOS would otherwise thicken */
+		-webkit-font-smoothing: antialiased;
 		letter-spacing: 0.06em;
 		line-height: 1.8;
 		text-wrap: balance;
