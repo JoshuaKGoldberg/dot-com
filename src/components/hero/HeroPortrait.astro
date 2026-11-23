@@ -33,6 +33,7 @@ const { alt, halo, image, scene } = Astro.props;
 		<div class="halo-colors"></div>
 	</div>
 	<div aria-hidden="true" class="backdrop">
+		<div class="aurora resting"></div>
 		{scene && (
 			<div class="scene" data-reveal>
 				<Image
@@ -45,7 +46,6 @@ const { alt, halo, image, scene } = Astro.props;
 				/>
 			</div>
 		)}
-		<div class="aurora resting"></div>
 		<div class="aurora awake" data-portrait="light"></div>
 	</div>
 	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
@@ -99,10 +99,20 @@ const { alt, halo, image, scene } = Astro.props;
 	}
 
 	/* What was really behind them, with them removed from it */
+	.scene {
+		inset: 0;
+		position: absolute;
+	}
+
 	.scene-image {
 		display: block;
 		height: auto;
-		opacity: 0.5;
+		mask: linear-gradient(
+			to right,
+			rgb(0 0 0 / 70%),
+			rgb(0 0 0 / 90%),
+			rgb(0 0 0 / 70%)
+		);
 		width: 100%;
 	}
 
