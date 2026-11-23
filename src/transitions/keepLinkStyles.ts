@@ -14,17 +14,16 @@ export function keepLinkStyles() {
 		document.querySelectorAll<HTMLElement>("[data-header-link]"),
 		(link) => {
 			const { color } = getComputedStyle(link);
-			const { filter, maskPosition, opacity } = getComputedStyle(
-				link,
-				"::after",
-			);
+			const squiggle = getComputedStyle(link, "::after");
+			const { filter, opacity } = squiggle;
+			const rise = squiggle.getPropertyValue("--rise");
 
-			return { color, filter, link, maskPosition, opacity };
+			return { color, filter, link, opacity, rise };
 		},
 	);
 
 	return () => {
-		for (const { color, filter, link, maskPosition, opacity } of links) {
+		for (const { color, filter, link, opacity, rise } of links) {
 			const current = getCurrent(
 				link.getAttribute("href") ?? "",
 				location.pathname,
@@ -39,11 +38,7 @@ export function keepLinkStyles() {
 			const squiggle = { duration, pseudoElement: "::after" };
 
 			link.animate([{ color, offset: 0 }], duration);
-			link.animate([{ filter, offset: 0, opacity }], squiggle);
-			link.animate([{ maskPosition, offset: 0 }], {
-				...squiggle,
-				easing: "steps(12)",
-			});
+			link.animate([{ "--rise": rise, filter, offset: 0, opacity }], squiggle);
 		}
 	};
 }

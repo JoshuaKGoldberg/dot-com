@@ -3,21 +3,26 @@
 	position: relative;
 }
 
+/* Which of the squiggle image's steps to show: whole, even when reversed partway */
+@property --rise {
+	inherits: false;
+	initial-value: 0;
+	syntax: "<integer>";
+}
+
 /* Its image is of the same wave at each step of its rise, from top to bottom */
 .squiggly::after {
-	--rise: 0px;
-
 	background: var(--squiggleLine);
 	content: "";
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	mask: url("~/assets/squiggles/rising.svg") repeat-x 0 calc(-1 * var(--rise));
+	mask: url("~/assets/squiggles/rising.svg") repeat-x 0 calc(-8px * var(--rise));
 	pointer-events: none;
 	position: absolute;
 	transition:
 		var(--transitionMedium) opacity,
-		var(--transitionMedium) steps(12) mask-position,
+		var(--transitionMedium) linear --rise,
 		var(--transitionSlow) filter;
 	width: 100%;
 }
@@ -29,14 +34,14 @@
 .squiggly:is([aria-selected] > *, :focus-visible, :hover):not(
 		[aria-current]
 	)::after {
-	--rise: 96px;
+	--rise: 12;
 }
 
 .squiggly[data-squiggle="current"]:not([aria-current]):hover::after {
 	filter: var(--squiggleVivid);
 	transition:
 		var(--transitionMedium) opacity,
-		var(--transitionMedium) steps(12) mask-position,
+		var(--transitionMedium) linear --rise,
 		var(--transitionVivid);
 }
 

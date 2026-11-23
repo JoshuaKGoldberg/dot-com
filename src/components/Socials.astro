@@ -2,7 +2,6 @@
 import bluesky from "~/assets/icons/bluesky.svg";
 import github from "~/assets/icons/github.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
-import { Squiggly } from "~/components/Squiggly";
 
 import SocialImage from "./SocialImage.astro";
 
@@ -15,15 +14,9 @@ const socials = [
 
 <p class="socials">
 	{socials.map(([alt, href, image]) => (
-		<Squiggly
-			as="a"
-			class="social"
-			href={href}
-			target="_blank"
-			variant="onHover"
-		>
+		<a class="social" href={href} target="_blank">
 			<SocialImage alt={alt} image={image} />
-		</Squiggly>
+		</a>
 	))}
 </p>
 
@@ -35,7 +28,11 @@ const socials = [
 	}
 
 	.social {
-		--squiggleOffset: 0.2rem;
+		transition: var(--transitionMedium) scale;
+	}
+
+	.social:hover {
+		scale: 1.15;
 	}
 
 	.social :global(img) {
