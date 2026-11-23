@@ -13,6 +13,9 @@ export interface HeroPortraitImages {
 	/** Person cut out from their photo, with extra pixels below the circle, and maybe above it */
 	image: ImageMetadata;
 
+	/** Whether the scene mostly blends into the page's background, if it's a busy one */
+	isSceneFaint?: boolean;
+
 	/** What's behind them in their photo, for the same area as the circle */
 	scene?: ImageMetadata;
 }
@@ -21,7 +24,7 @@ interface Props extends HeroPortraitImages {
 	alt: string;
 }
 
-const { alt, halo, image, scene } = Astro.props;
+const { alt, halo, image, isSceneFaint, scene } = Astro.props;
 
 /** Height, relative to its width, of a cutout that starts at the top of the circle. */
 const usualHeight = 544 / 512;
@@ -37,11 +40,12 @@ const overhang = image.height / image.width - usualHeight;
 		aria-hidden="true"
 		class="backdrop"
 		data-layer="backdrop"
+		data-scene-faint={isSceneFaint}
 		data-tone={scene && (await getTone(scene))}
 	>
 		<div class="aurora resting"></div>
 		{scene && (
-			<div class="scene">
+			<div class:list={["scene", isSceneFaint && "faint"]}>
 				<Image
 					alt=""
 					class="scene-image"
@@ -53,7 +57,7 @@ const overhang = image.height / image.width - usualHeight;
 			</div>
 		)}
 		<div
-			class:list={["aurora awake", scene && "vivid"]}
+			class:list={["aurora awake", scene && !isSceneFaint && "vivid"]}
 			data-portrait="light"
 		></div>
 	</div>
@@ -133,6 +137,18 @@ const overhang = image.height / image.width - usualHeight;
 			rgb(0 0 0 / 70%)
 		);
 		width: 100%;
+	}
+
+	.faint {
+		background: var(--colorBackground);
+	}
+
+	/* Larger than the circle, so that its blurred edges are outside of it */
+	.faint .scene-image {
+		filter: blur(calc(var(--size) * 0.012)) saturate(0.83);
+		mask: none;
+		opacity: 0.62;
+		scale: 1.2;
 	}
 
 	/* Curtains of light hanging from the top of the circle */

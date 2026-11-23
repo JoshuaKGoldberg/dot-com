@@ -7,6 +7,7 @@ const maximumGain = 2.2;
 
 /** Roughly how opaque scenes are over portraits' backdrops. */
 const sceneOpacity = 0.8;
+const faintSceneOpacity = 0.62;
 
 /** Parts of portraits that transition separately, and how to find their average color. */
 const layers = { backdrop: getBackdropColor, figure: getTone };
@@ -135,12 +136,14 @@ function getBackdropColor(element: HTMLElement | null, shownPage: Document) {
 
 	const color = getComputedStyle(backdrop).backgroundColor.match(/[\d.]+/g);
 	const scene = getTone(element);
+	const opacity =
+		element.dataset.sceneFaint === undefined ? sceneOpacity : faintSceneOpacity;
 
 	return color
 		?.slice(0, 3)
 		.map((channel, index) =>
 			scene
-				? Number(channel) * (1 - sceneOpacity) + scene[index] * sceneOpacity
+				? Number(channel) * (1 - opacity) + scene[index] * opacity
 				: Number(channel),
 		);
 }
