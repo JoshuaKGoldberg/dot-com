@@ -3,7 +3,6 @@ import bluesky from "~/assets/icons/bluesky.svg";
 import github from "~/assets/icons/github.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
 import { Squiggly } from "~/components/Squiggly";
-import { Text } from "~/components/Text";
 
 import SocialImage from "./SocialImage.astro";
 
@@ -14,38 +13,34 @@ const socials = [
 ] as const;
 ---
 
-<Text as="p" class="socials" font="label" fontSize="smaller">
+<p class="socials">
 	{socials.map(([alt, href, image]) => (
-		<a class="social" href={href} target="_blank">
-			<SocialImage alt="" image={image} />
-			<Squiggly as="span" fontSize="smaller" variant="onHover">
-				{alt}
-			</Squiggly>
-		</a>
+		<Squiggly
+			as="a"
+			class="social"
+			href={href}
+			target="_blank"
+			variant="onHover"
+		>
+			<SocialImage alt={alt} image={image} />
+		</Squiggly>
 	))}
-</Text>
+</p>
 
 <style>
 	.socials {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 1rem;
-		max-width: 20rem;
+		gap: 1.25rem;
 		margin: clamp(0.75rem, 3vh, 1.5rem) 0 0;
 	}
 
 	.social {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
+		--squiggleOffset: 0.2rem;
 	}
 
-	@media (min-width: 700px) {
-		.socials {
-			display: grid;
-			grid-template-columns: auto auto auto;
-			grid-template-rows: auto auto;
-			margin-left: 0;
-		}
+	.social :global(img) {
+		display: block;
+		height: 1.5rem;
+		width: 1.5rem;
 	}
 </style>
