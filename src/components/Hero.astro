@@ -36,8 +36,8 @@ interface Props {
 
 	:global([data-fits-screen]) .hero {
 		grid-row: 2;
-		margin-block: 0;
-		padding-bottom: 0.5rem;
+		margin-block: clamp(0rem, 20dvh - 8rem, 2.5rem) 0;
+		padding-bottom: 0;
 	}
 
 	.first {
@@ -60,6 +60,7 @@ interface Props {
 			--heroSizeLarge: clamp(10rem, 36dvh, 16rem);
 
 			height: auto;
+			margin-block: 0;
 			padding: 6rem 0 1.5rem;
 		}
 

@@ -50,7 +50,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		flex-direction: column;
 		grid-row: 4;
 		line-height: 1.35;
-		margin-top: 1rem;
+		margin-top: clamp(1rem, 20dvh - 7.5rem, 3rem);
 	}
 
 	@media (max-height: 700px) and (max-width: 699px) {
