@@ -6,7 +6,14 @@
 	 * Inline so that it runs before first paint. The header it's in is kept between
 	 * pages, but the root's attributes aren't, so they're reapplied after each swap.
 	 */
-	function createRootSetting({ apply, key, options, query, toggle }) {
+	function createRootSetting({
+		apply,
+		beforeChange,
+		key,
+		options,
+		query,
+		toggle,
+	}) {
 		const [off, on] = options;
 		const preference = matchMedia(query);
 		let chosen = read();
@@ -49,6 +56,7 @@
 		}
 
 		function choose(choice) {
+			beforeChange?.();
 			chosen = choice;
 			write();
 			toggle.dataset.used = "";
@@ -59,7 +67,10 @@
 			choose(getCurrent() === on ? off : on);
 		});
 
-		preference.addEventListener("change", update);
+		preference.addEventListener("change", () => {
+			beforeChange?.();
+			update();
+		});
 
 		document.addEventListener("astro:after-swap", () => {
 			// Moving the toggle into the new page would otherwise replay its animation

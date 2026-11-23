@@ -56,6 +56,17 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 </html>
 
 <script>
+	import { decodeReveals } from "~/transitions/decodeReveals";
+
+	document.addEventListener("astro:before-preparation", (event) => {
+		const load = event.loader;
+
+		event.loader = async () => {
+			await load();
+			await decodeReveals(event.newDocument);
+		};
+	});
+
 	const getContentTop = () =>
 		document.querySelector("[data-content]")?.getBoundingClientRect().top ?? 0;
 
@@ -91,9 +102,11 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 	}
 
 	/* Whatever height is left is shared with the footer, then mostly above the hero */
-	[data-fits-screen] main {
-		display: grid;
-		flex: 1.5 0 auto;
-		grid-template: 2fr auto 1fr auto / minmax(0, 1fr);
+	@media (min-width: 700px) {
+		[data-fits-screen] main {
+			display: grid;
+			flex: 1.5 0 auto;
+			grid-template: 2fr auto 1fr auto / minmax(0, 1fr);
+		}
 	}
 </style>

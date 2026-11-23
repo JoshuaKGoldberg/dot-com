@@ -16,6 +16,12 @@ import HeaderToggle from "./HeaderToggle.astro";
 	</button>
 </div>
 
+<script>
+	import { fadeTheme } from "~/theme/fadeTheme";
+
+	document.addEventListener("theme:before-change", fadeTheme);
+</script>
+
 <script is:inline>
 	{
 		const clear = document.getElementById("themeClear");
@@ -26,6 +32,9 @@ import HeaderToggle from "./HeaderToggle.astro";
 				document.documentElement.classList.toggle("dark", theme === "dark");
 				clear.classList.toggle("clear-active", !!chosen);
 				toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
+			},
+			beforeChange() {
+				document.dispatchEvent(new Event("theme:before-change"));
 			},
 			key: "theme",
 			options: ["light", "dark"],
@@ -61,7 +70,6 @@ import HeaderToggle from "./HeaderToggle.astro";
 		right: -0.375rem;
 		top: 0;
 		transition:
-			var(--transitionMedium) color,
 			var(--transitionFast) opacity,
 			var(--transitionFast) translate,
 			var(--transitionFast) visibility;

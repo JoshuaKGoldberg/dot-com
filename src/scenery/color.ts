@@ -5,6 +5,7 @@ export const hueDriftRate = 24;
 
 const distantHue = 225;
 
+const darknessSteps = 8;
 const depthSteps = 8;
 const hueSteps = 60;
 
@@ -19,17 +20,20 @@ export function angleToHue(x: number, y: number) {
  * Color of something at a depth from 0 (far away) to 1 (near).
  * Distant colors are bluer and duller, as if seen through more air.
  */
-export function depthColor(hue: number, depth: number, isDark: boolean) {
+export function depthColor(hue: number, depth: number, darkness: number) {
 	const hueStep = Math.round(modulo(hue, 360) / (360 / hueSteps));
 	const depthStep = Math.round(depth * depthSteps);
-	const key = (hueStep * (depthSteps + 1) + depthStep) * 2 + Number(isDark);
+	const darknessStep = Math.round(darkness * darknessSteps);
+	const key =
+		(hueStep * (depthSteps + 1) + depthStep) * (darknessSteps + 1) +
+		darknessStep;
 	let color = colors.get(key);
 
 	if (!color) {
 		color = createDepthColor(
 			hueStep * (360 / hueSteps),
 			depthStep / depthSteps,
-			isDark,
+			darknessStep / darknessSteps,
 		);
 		colors.set(key, color);
 	}
@@ -37,12 +41,18 @@ export function depthColor(hue: number, depth: number, isDark: boolean) {
 	return color;
 }
 
-function createDepthColor(hue: number, depth: number, isDark: boolean) {
+function createDepthColor(hue: number, depth: number, darkness: number) {
 	const shifted = hue + hueBetween(hue, distantHue) * (1 - depth) * 0.35;
-	const saturation = interpolate(isDark ? 60 : 45, isDark ? 100 : 90, depth);
-	const lightness = isDark
-		? interpolate(66, 78, depth)
-		: interpolate(64, 38, depth);
+	const saturation = interpolate(
+		interpolate(45, 90, depth),
+		interpolate(60, 100, depth),
+		darkness,
+	);
+	const lightness = interpolate(
+		interpolate(64, 38, depth),
+		interpolate(66, 78, depth),
+		darkness,
+	);
 
 	return `hsl(${shifted.toFixed(0)} ${saturation.toFixed(0)}% ${lightness.toFixed(0)}%)`;
 }

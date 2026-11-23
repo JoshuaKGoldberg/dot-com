@@ -11,13 +11,16 @@ export interface HeroPortraitImages {
 
 	/** Person cut out from their photo, with extra pixels below the circle */
 	image: ImageMetadata;
+
+	/** What's behind them in their photo, for the same area as the circle */
+	scene?: ImageMetadata;
 }
 
 interface Props extends HeroPortraitImages {
 	alt: string;
 }
 
-const { alt, halo, image } = Astro.props;
+const { alt, halo, image, scene } = Astro.props;
 ---
 
 <hero-portrait class="portrait">
@@ -30,6 +33,18 @@ const { alt, halo, image } = Astro.props;
 		<div class="halo-colors"></div>
 	</div>
 	<div aria-hidden="true" class="backdrop">
+		{scene && (
+			<div class="scene" data-reveal>
+				<Image
+					alt=""
+					class="scene-image"
+					densities={[1, 2]}
+					loading="eager"
+					src={scene}
+					width={256}
+				/>
+			</div>
+		)}
 		<div class="aurora resting"></div>
 		<div class="aurora awake" data-portrait="light"></div>
 	</div>
@@ -55,6 +70,7 @@ const { alt, halo, image } = Astro.props;
 
 <style>
 	.portrait {
+		view-transition-name: portrait;
 		display: block;
 		height: var(--heroSizeLarge);
 		position: relative;
@@ -71,24 +87,23 @@ const { alt, halo, image } = Astro.props;
 	}
 
 	.backdrop {
+		background: linear-gradient(
+			var(--discTop),
+			var(--discMiddle) 60%,
+			var(--discBottom)
+		);
 		border-radius: 50%;
+		box-shadow: 0 0 2rem 0.5rem var(--discGlow);
 		contain: paint;
 		overflow: hidden;
 	}
 
-	/* A bright light: none of its colors are darker than the page behind it */
-	:global(html:not(.dark)) .backdrop {
-		--auroraJade: #d2fff4;
-		--auroraCornflower: #defeff;
-		--auroraWisteria: #faf7ff;
-		--auroraRose: #fff5fa;
-
-		background: white;
-		box-shadow: 0 0 2rem 0.5rem rgb(255 255 255 / 40%);
-	}
-
-	:global(html.dark) .backdrop {
-		background: linear-gradient(#0a0e17, #141a26 60%, #1a232d);
+	/* What was really behind them, with them removed from it */
+	.scene-image {
+		display: block;
+		height: auto;
+		opacity: 0.5;
+		width: 100%;
 	}
 
 	/* Curtains of light hanging from the top of the circle */
@@ -104,26 +119,26 @@ const { alt, halo, image } = Astro.props;
 		background:
 			radial-gradient(
 				ellipse 24% 46% at 16% 40%,
-				var(--auroraJade),
+				var(--curtainJade),
 				transparent
 			),
 			radial-gradient(
 				ellipse 26% 52% at 42% 32%,
-				var(--auroraCornflower),
+				var(--curtainCornflower),
 				transparent
 			),
 			radial-gradient(
 				ellipse 24% 48% at 68% 42%,
-				var(--auroraWisteria),
+				var(--curtainWisteria),
 				transparent
 			),
 			radial-gradient(
 				ellipse 22% 44% at 92% 36%,
-				var(--auroraRose),
+				var(--curtainRose),
 				transparent
 			);
 		content: "";
-		inset: -8% -40%;
+		inset: -20% -40%;
 		opacity: 0.6;
 	}
 
@@ -132,9 +147,9 @@ const { alt, halo, image } = Astro.props;
 		transform: scaleX(-1) translateY(12%);
 	}
 
-	:global(html.dark) .resting {
-		filter: saturate(0.4);
-		opacity: 0.4;
+	.resting {
+		filter: saturate(var(--curtainSaturation));
+		opacity: var(--curtainStrength);
 	}
 
 	.awake {

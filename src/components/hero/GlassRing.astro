@@ -17,11 +17,6 @@ const { awake, ...rest } = Astro.props;
 <style>
 	/* A polished rim: bright where light catches it, tinted everywhere else */
 	.glass-ring {
-		--ringCornflower: #3f9df0;
-		--ringJade: #2cc79a;
-		--ringRose: #f573a4;
-		--ringShine: #c5ecff;
-		--ringWisteria: #a56cf0;
 		--thickness: 2px;
 
 		background: conic-gradient(
@@ -65,13 +60,5 @@ const { awake, ...rest } = Astro.props;
 		);
 		opacity: var(--light, 0);
 		will-change: opacity;
-	}
-
-	:global(html.dark) .glass-ring {
-		--ringCornflower: #4fc3ff;
-		--ringJade: #4dffb0;
-		--ringRose: #ff7fb0;
-		--ringShine: white;
-		--ringWisteria: #b98aff;
 	}
 </style>

@@ -3,7 +3,7 @@ import type { Point } from "../geometry";
 import { resizeCanvas } from "../canvas";
 import { angleToHue, depthColor, hueDriftRate } from "../color";
 import { interpolate, smoothstep } from "../math";
-import { rootState } from "../rootState";
+import { theme } from "../theme";
 import {
 	type ConstellationStar,
 	createConstellation,
@@ -44,7 +44,7 @@ export class ConstellationCanvas {
 			depthColor(
 				angleToHue(x - from.x, y - from.y) + seconds * hueDriftRate,
 				0.3 + depth * 0.6,
-				rootState.isDark,
+				theme.darkness,
 			);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);

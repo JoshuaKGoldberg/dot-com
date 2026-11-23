@@ -4,7 +4,8 @@ import { footerDwell } from "../footerDwell";
 import { createFrameTask, type FrameTask } from "../frameLoop";
 import { clamp, damp, smoothstep } from "../math";
 import { onPointer, pointer } from "../pointer";
-import { onPause, onRootState, rootState } from "../rootState";
+import { onPause } from "../rootState";
+import { onTheme, theme } from "../theme";
 import { AuroraRenderer } from "./AuroraRenderer";
 import { readPalette } from "./readPalette";
 
@@ -54,7 +55,7 @@ export class AuroraBand {
 				this.#task.wake();
 			}
 		}, signal);
-		onRootState(() => {
+		onTheme(() => {
 			this.#palette = readPalette();
 		}, signal);
 		signal.addEventListener("abort", () => {
@@ -121,7 +122,7 @@ export class AuroraBand {
 		const { height, width } = this.#measure().bounds;
 		const wasDrawn = this.#renderer.draw({
 			uCursor: this.#cursor,
-			uDark: rootState.isDark,
+			uDark: theme.darkness,
 			uDwell: this.#dwell.level,
 			uFlip: this.#edge === "bottom",
 			uFlow: this.#flow,

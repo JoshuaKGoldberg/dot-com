@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 
 import halo from "~/assets/heroes/speaking-halo.webp";
+import scene from "~/assets/heroes/speaking-scene.webp";
 import image from "~/assets/heroes/speaking.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
@@ -16,7 +17,7 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 	alt="Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt"
 	description="I talk about static analysis, accessibility, and team culture."
 	preview="images/speaking-preview.png"
-	portrait={{ halo, image }}
+	portrait={{ halo, image, scene }}
 	primary="Speaking"
 	title="Speaking"
 >

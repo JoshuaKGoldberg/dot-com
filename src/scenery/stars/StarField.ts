@@ -15,6 +15,7 @@ import { clamp, interpolate } from "../math";
 import { onPageScroll, pageScroll } from "../pageScroll";
 import { onPointer, pointer } from "../pointer";
 import { onPause, onRootState, rootState } from "../rootState";
+import { onTheme, theme } from "../theme";
 import {
 	createStars,
 	linkedDepth,
@@ -92,6 +93,9 @@ export class StarField {
 		onRootState(() => {
 			this.#paint();
 		}, signal);
+		onTheme(() => {
+			this.#paint();
+		}, signal);
 		signal.addEventListener("abort", () => {
 			resizes.disconnect();
 			this.#canvas.remove();
@@ -100,8 +104,8 @@ export class StarField {
 
 	#createSky(): Sky {
 		return {
+			darkness: theme.darkness,
 			dwell: { left: this.#leftDwell.level, right: this.#rightDwell.level },
-			isDark: rootState.isDark,
 			period: this.#height + overscan * 2,
 			scroll: rootState.isPlaying ? pageScroll.top : 0,
 			width: this.#width,
@@ -201,7 +205,7 @@ export class StarField {
 		const regions = this.#getRegions(sky);
 		const scene = {
 			column: this.#column,
-			isDark: sky.isDark,
+			darkness: sky.darkness,
 			pointer: pointer.isPresent ? pointer : undefined,
 			seconds: this.#seconds,
 		};

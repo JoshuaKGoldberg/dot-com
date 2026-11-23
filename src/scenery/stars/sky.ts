@@ -5,7 +5,8 @@ export interface Sky {
 	/** How much the pointer has lingered by each margin, from 0 to 1. */
 	dwell: { left: number; right: number };
 
-	isDark: boolean;
+	/** How far the theme is from light to dark, from 0 to 1. */
+	darkness: number;
 
 	/** Height of the repeating area stars are placed in. */
 	period: number;

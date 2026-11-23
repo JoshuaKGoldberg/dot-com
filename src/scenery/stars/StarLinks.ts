@@ -64,7 +64,7 @@ export class StarLinks {
 			const [elbowX, elbowY] = getElbow(from.x, fromY, to.x, toY);
 
 			context.lineWidth = 0.9;
-			context.strokeStyle = depthColor(hue, 0.5, sky.isDark);
+			context.strokeStyle = depthColor(hue, 0.5, sky.darkness);
 			context.globalAlpha = alpha * 0.45;
 			context.beginPath();
 			context.moveTo(from.x, fromY);

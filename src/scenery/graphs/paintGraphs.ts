@@ -9,7 +9,8 @@ import { getEdgeReveal } from "./GraphSimulation";
 
 export interface GraphScene {
 	column: Column;
-	isDark: boolean;
+	/** How far the theme is from light to dark, from 0 to 1. */
+	darkness: number;
 
 	/** Current pointer, which graphs are brightest near. */
 	pointer: Point | undefined;
@@ -89,7 +90,7 @@ function getColor(
 		: angleToHue(graph.x + x - graph.origin.x, graph.y + y - graph.origin.y) +
 			scene.seconds * hueDriftRate;
 
-	return depthColor(hue, depth, scene.isDark);
+	return depthColor(hue, depth, scene.darkness);
 }
 
 function getPointerBoost(x: number, y: number, pointer: Point | undefined) {

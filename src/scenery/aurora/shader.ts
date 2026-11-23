@@ -8,7 +8,7 @@ export const fragmentShader = `
 precision highp float;
 
 uniform float uCursor;
-uniform bool uDark;
+uniform float uDark;
 uniform float uDwell;
 uniform bool uFlip;
 uniform float uFlow;
@@ -30,7 +30,7 @@ float hash(vec2 p) {
 vec3 palette(float t) {
 	vec3 color = mix(uPalette[0], uPalette[1], smoothstep(0., .35, t));
 	color = mix(color, uPalette[2], smoothstep(.3, .7, t));
-	return mix(color, uPalette[3], smoothstep(.65, 1.1, t) * (uDark ? .5 : 1.));
+	return mix(color, uPalette[3], smoothstep(.65, 1.1, t) * mix(1., .5, uDark));
 }
 
 void main() {
@@ -73,11 +73,11 @@ void main() {
 	float hue = clamp(y / (length0 * 2.4), 0., 1.) + .24 * near + uFlow * .15 * sin(x / 190. + uTime * .42);
 	vec3 color = palette(hue);
 	float luminance = dot(color, vec3(.2126, .7152, .0722));
-	color = max(vec3(0.), mix(vec3(luminance), color, 1. + near * (uDark ? 1.1 : .1)));
+	color = max(vec3(0.), mix(vec3(luminance), color, 1. + near * mix(.1, 1.1, uDark)));
 
-	float amount = light * (uDark ? .4 : .7);
-	float alpha = (1. - exp(-amount * (uDark ? 1. : 1.7))) * (uDark ? .62 : .78);
-	vec4 result = vec4(clamp(color, 0., 1.) * (uDark ? alpha * 1.48 : alpha), alpha);
+	float amount = light * mix(.7, .4, uDark);
+	float alpha = (1. - exp(-amount * mix(1.7, 1., uDark))) * mix(.78, .62, uDark);
+	vec4 result = vec4(clamp(color, 0., 1.) * alpha * mix(1., 1.48, uDark), alpha);
 
 	// Dithered, as gradients this faint would otherwise be visibly banded
 	result += (hash(gl_FragCoord.xy + fract(uTime)) - .5) / 255. * step(.002, alpha);

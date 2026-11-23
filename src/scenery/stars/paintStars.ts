@@ -1,11 +1,23 @@
 import type { Star } from "./createStars";
 
-import { smoothstep } from "../math";
+import { interpolate, smoothstep } from "../math";
 import { getScreenY, type Sky } from "./sky";
 
 const temperatures = {
-	dark: ["#fff", "#d6e2ff", "#fff5e6", "#ffe9c8", "#ffd6b6"],
-	light: ["#1c2c70", "#42389c", "#086874", "#702668", "#ba6c10"],
+	dark: [
+		[255, 255, 255],
+		[214, 226, 255],
+		[255, 245, 230],
+		[255, 233, 200],
+		[255, 214, 182],
+	],
+	light: [
+		[28, 44, 112],
+		[66, 56, 156],
+		[8, 104, 116],
+		[112, 38, 104],
+		[186, 108, 16],
+	],
 };
 
 /** Opacity of all stars when the pointer isn't near. */
@@ -26,8 +38,8 @@ export function paintStars(
 	stars: readonly Star[],
 	sky: Sky,
 ) {
-	const theme = sky.isDark ? "dark" : "light";
-	const brightness = restingBrightness[theme];
+	const { dark, light } = restingBrightness;
+	const brightness = interpolate(light, dark, sky.darkness);
 	let temperature: number | undefined;
 
 	for (const star of stars) {
@@ -39,8 +51,9 @@ export function paintStars(
 
 		if (star.temperature !== temperature) {
 			temperature = star.temperature;
-			context.fillStyle = temperatures[theme][temperature];
-			context.strokeStyle = temperatures[theme][temperature];
+			const color = getColor(temperature, sky.darkness);
+			context.fillStyle = color;
+			context.strokeStyle = color;
 		}
 
 		context.globalAlpha = alpha;
@@ -67,6 +80,16 @@ function getAlpha(
 		(brightness + (1 - brightness) * glow) *
 		(restingAlpha + (1 - restingAlpha) * dwell)
 	);
+}
+
+function getColor(temperature: number, darkness: number) {
+	const dark = temperatures.dark[temperature];
+	const light = temperatures.light[temperature];
+	const channels = light.map((channel, index) =>
+		interpolate(channel, dark[index], darkness).toFixed(0),
+	);
+
+	return `rgb(${channels.join(" ")})`;
 }
 
 function paintOrnament(

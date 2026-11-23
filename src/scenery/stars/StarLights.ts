@@ -33,7 +33,7 @@ export class StarLights {
 			context.fillStyle = depthColor(
 				hue + seconds * hueDriftRate,
 				0.7,
-				sky.isDark,
+				sky.darkness,
 			);
 			context.globalAlpha = star.glow * star.alpha * 0.7;
 			context.beginPath();

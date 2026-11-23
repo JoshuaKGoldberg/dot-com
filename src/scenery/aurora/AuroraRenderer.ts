@@ -2,7 +2,7 @@ import { fragmentShader, vertexShader } from "./shader";
 
 export interface AuroraUniforms {
 	uCursor: number;
-	uDark: boolean;
+	uDark: number;
 	uDwell: number;
 	uFlip: boolean;
 	uFlow: number;
@@ -59,11 +59,11 @@ export class AuroraRenderer {
 		gl.uniform2f(this.#locate("uResolution"), width, height);
 		gl.uniform3fv(this.#locate("uPalette"), uniforms.uPalette);
 		gl.uniform2fv(this.#locate("uSize"), uniforms.uSize);
-		gl.uniform1i(this.#locate("uDark"), Number(uniforms.uDark));
 		gl.uniform1i(this.#locate("uFlip"), Number(uniforms.uFlip));
 
 		for (const name of [
 			"uCursor",
+			"uDark",
 			"uDwell",
 			"uFlow",
 			"uPresence",
