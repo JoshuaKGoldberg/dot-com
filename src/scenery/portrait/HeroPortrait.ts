@@ -16,6 +16,10 @@ const enterRadius = radius * 1.04;
 const leaveRadius = radius * 1.14;
 
 const secondsBeforeLight = 1;
+
+/** How many times sooner than the rest of its light that the portrait's glow peaks. */
+const glowSpeed = 2.5;
+
 const secondsOfLight = 10;
 const secondsToFullTilt = 8;
 
@@ -24,6 +28,9 @@ const darkness = 0.002;
 
 /** How much further than at the edge the figure may lean, such as just outside it. */
 const maximumLean = 1.3;
+
+/** Distance the hues of the portrait's light come apart by, in portrait units. */
+const split = 7;
 
 /**
  * A portrait that tilts toward the pointer, and slowly lights up as it's hovered.
@@ -34,6 +41,8 @@ const maximumLean = 1.3;
 export class HeroPortrait {
 	#constellation: ConstellationCanvas | undefined;
 	readonly #figure: HTMLElement;
+	readonly #glow: HTMLElement;
+	readonly #halos: readonly HTMLElement[];
 	readonly #host: HTMLElement;
 
 	/** Smoothed amount the portrait is hovered, so that tilting is never abrupt. */
@@ -62,6 +71,8 @@ export class HeroPortrait {
 			Array.from(host.querySelectorAll<HTMLElement>(`[data-portrait=${part}]`));
 
 		[this.#figure] = find("figure");
+		[this.#glow] = find("glow");
+		this.#halos = find("halo");
 		this.#host = host;
 		this.#lights = find("light");
 		this.#measure = cacheLayout(() => host.getBoundingClientRect(), signal);
@@ -83,8 +94,10 @@ export class HeroPortrait {
 		const isLit = this.#light > darkness;
 
 		for (const light of this.#lights) {
-			light.style.setProperty("--light", level.toFixed(4));
+			light.style.opacity = level.toFixed(4);
 		}
+
+		this.#glow.style.opacity = clamp(level * glowSpeed).toFixed(4);
 
 		this.#host.toggleAttribute("data-awake", isLit);
 
@@ -168,6 +181,12 @@ export class HeroPortrait {
 			clamp(this.#lean.x / radius, -maximumLean, maximumLean) * this.#hover;
 		const y =
 			clamp(this.#lean.y / radius, -maximumLean, maximumLean) * this.#hover;
+
+		for (const halo of this.#halos) {
+			const distance = Number(halo.dataset.side) * split * unit;
+
+			halo.style.transform = `translate(${px(x * distance)}, ${px(y * distance)})`;
+		}
 
 		this.#figure.style.transform = [
 			`translate(${px(x * 4.8 * strength * unit)}, ${px((y * 3.2 - this.#hover * 4) * strength * unit)})`,

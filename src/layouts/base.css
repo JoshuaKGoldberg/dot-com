@@ -28,6 +28,8 @@
 		--discMiddle: white;
 		--discTop: white;
 
+		--haloStrength: 0.6;
+
 		--ringCornflower: #3f9df0;
 		--ringJade: #2cc79a;
 		--ringRose: #f573a4;
@@ -179,6 +181,8 @@
 		--discGlow: transparent;
 		--discMiddle: #141a26;
 		--discTop: #0a0e17;
+
+		--haloStrength: 0.75;
 
 		--ringCornflower: #4fc3ff;
 		--ringJade: #4dffb0;

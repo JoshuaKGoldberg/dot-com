@@ -57,7 +57,7 @@ const otherProperties = {
 		"--squiggleMiddle",
 		"--squiggleStart",
 	],
-	"<number>": ["--curtainSaturation", "--curtainStrength"],
+	"<number>": ["--curtainSaturation", "--curtainStrength", "--haloStrength"],
 };
 
 const initialValues: Record<string, string> = {

@@ -25,18 +25,13 @@ const { alt, halo, image, scene } = Astro.props;
 /** Height, relative to its width, of a cutout that starts at the top of the circle. */
 const usualHeight = 544 / 512;
 
+/** Which way each of the hues of light from behind the person moves as they split apart. */
+const haloSides = [-1, 0, 1];
+
 const overhang = image.height / image.width - usualHeight;
 ---
 
 <hero-portrait class="portrait">
-	<div
-		aria-hidden="true"
-		class="halo"
-		data-portrait="light"
-		style={`--halo: url("${halo.src}")`}
-	>
-		<div class="halo-colors"></div>
-	</div>
 	<div aria-hidden="true" class="backdrop">
 		<div class="aurora resting"></div>
 		{scene && (
@@ -61,6 +56,18 @@ const overhang = image.height / image.width - usualHeight;
 	<GlassRing awake data-portrait="light" />
 	<div class="clip">
 		<div class="figure" data-portrait="figure" data-reveal>
+			<div aria-hidden="true" class="glow" data-portrait="glow">
+				{haloSides.map((side) => (
+					<div
+						class="halo"
+						data-portrait="halo"
+						data-side={side}
+						style={{ "--halo": `url("${halo.src}")`, "--side": side }}
+					>
+						<div class="halo-colors" />
+					</div>
+				))}
+			</div>
 			<Image
 				alt={alt}
 				class="cutout"
@@ -90,8 +97,7 @@ const overhang = image.height / image.width - usualHeight;
 
 	.backdrop,
 	.clip,
-	.constellation,
-	.halo {
+	.constellation {
 		inset: 0;
 		position: absolute;
 	}
@@ -172,8 +178,9 @@ const overhang = image.height / image.width - usualHeight;
 		opacity: var(--curtainStrength);
 	}
 
-	.awake {
-		opacity: var(--light, 0);
+	.awake,
+	.glow {
+		opacity: 0;
 	}
 
 	/* Photos can be dark in either theme, so light over them is always strong */
@@ -191,25 +198,36 @@ const overhang = image.height / image.width - usualHeight;
 	/* Kept on their own layers, so that they're never repainted as they change */
 	.awake,
 	.figure,
+	.glow,
 	.halo {
 		will-change: opacity, transform;
 	}
 
+	/* Light from behind the person, whose hues come apart in the pointer's direction */
+	.glow {
+		inset: 0;
+		position: absolute;
+	}
+
 	.halo {
-		inset: -21.875%;
+		aspect-ratio: 1;
+		left: -21.875%;
 		mask: var(--halo) center / 100% 100% no-repeat;
-		opacity: calc(0.06 + 0.79 * var(--light, 0));
+		opacity: var(--haloStrength);
+		position: absolute;
+		top: calc(-0.21875 * var(--size));
+		width: 143.75%;
 	}
 
 	.halo-colors {
 		background: conic-gradient(
-			var(--auroraJade),
-			var(--auroraCornflower),
-			var(--auroraWisteria),
-			var(--auroraRose),
-			var(--auroraWisteria),
-			var(--auroraCornflower),
-			var(--auroraJade)
+			var(--ringJade),
+			var(--ringCornflower),
+			var(--ringWisteria),
+			var(--ringRose),
+			var(--ringWisteria),
+			var(--ringCornflower),
+			var(--ringJade)
 		);
 		border-radius: 50%;
 		inset: -25%;
@@ -245,6 +263,7 @@ const overhang = image.height / image.width - usualHeight;
 		display: block;
 		height: auto;
 		margin-top: calc(-1 * var(--overhang));
+		position: relative;
 		width: 100%;
 	}
 
@@ -257,7 +276,7 @@ const overhang = image.height / image.width - usualHeight;
 	}
 
 	.portrait[data-awake] .halo-colors {
-		animation: turn 60s linear infinite;
+		animation: turn 48s linear calc(var(--side) * 16s - 16s) infinite;
 	}
 
 	@keyframes drift {
