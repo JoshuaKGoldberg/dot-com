@@ -3,7 +3,6 @@ import halo from "~/assets/heroes/home-halo.webp";
 import image from "~/assets/heroes/home.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
-import HeroEyes from "~/components/hero/HeroEyes.astro";
 import Socials from "~/components/Socials.astro";
 import { Text } from "~/components/Text";
 
@@ -19,7 +18,6 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	size="large"
 	slug="josh"
 >
-	<HeroEyes slot="portrait" />
 	<Fragment slot="secondary">I’m good at TypeScript.</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">

@@ -7,7 +7,6 @@ import { clamp, damp, interpolate, moveToward, smoothstep } from "../math";
 import { onPointer, pointer } from "../pointer";
 import { onPause, rootState } from "../rootState";
 import { ConstellationCanvas } from "./ConstellationCanvas";
-import { HeroEyes } from "./HeroEyes";
 import { getPortraitPointer, portraitSize } from "./units";
 
 const radius = portraitSize / 2;
@@ -16,7 +15,6 @@ const radius = portraitSize / 2;
 const enterRadius = radius * 1.04;
 const leaveRadius = radius * 1.14;
 
-const secondsBeforeEyes = 3.5;
 const secondsBeforeLight = 1;
 const secondsOfLight = 10;
 const secondsToFullTilt = 8;
@@ -35,7 +33,6 @@ const maximumLean = 1.3;
  */
 export class HeroPortrait {
 	#constellation: ConstellationCanvas | undefined;
-	readonly #eyes: HeroEyes | undefined;
 	readonly #figure: HTMLElement;
 	readonly #host: HTMLElement;
 
@@ -61,7 +58,6 @@ export class HeroPortrait {
 	#willingness = 0;
 
 	constructor(host: HTMLElement, signal: AbortSignal) {
-		const eyes = host.querySelector<SVGSVGElement>("[data-portrait=eyes]");
 		const find = (part: string) =>
 			Array.from(host.querySelectorAll<HTMLElement>(`[data-portrait=${part}]`));
 
@@ -71,7 +67,6 @@ export class HeroPortrait {
 		this.#measure = cacheLayout(() => host.getBoundingClientRect(), signal);
 		[this.#sky] = find("sky");
 		this.#task = createFrameTask((seconds) => this.#step(seconds), { signal });
-		this.#eyes = eyes ? new HeroEyes(eyes, this.#measure, signal) : undefined;
 
 		onPause(() => {
 			this.#rest();
@@ -140,10 +135,6 @@ export class HeroPortrait {
 				Number(this.#isHovered),
 				seconds / secondsOfLight,
 			);
-		}
-
-		if (this.#hoveredSeconds > secondsBeforeEyes) {
-			this.#eyes?.follow();
 		}
 
 		if (

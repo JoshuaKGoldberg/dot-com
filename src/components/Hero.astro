@@ -17,9 +17,7 @@ const { size = "medium" } = Astro.props;
 
 <div class:list={["hero", size, Astro.props.class]}>
 	<div class="half first">
-		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait}>
-			<slot name="portrait" />
-		</HeroPortrait>
+		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait} />
 	</div>
 	<div class="half second">
 		<HeroTitle>{Astro.props.primary}</HeroTitle>

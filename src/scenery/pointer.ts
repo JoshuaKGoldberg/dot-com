@@ -10,11 +10,6 @@ let movedAt = 0;
 
 /** The last known mouse or pen position, in viewport pixels. */
 export const pointer = {
-	/** Whether the pointer has ever been seen on this page. */
-	get isKnown() {
-		return movedAt > 0;
-	},
-
 	/** Whether the pointer is over the page, and has moved recently. */
 	get isPresent() {
 		return isInside && performance.now() - movedAt < parkedAfterMs;
