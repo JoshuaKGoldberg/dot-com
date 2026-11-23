@@ -58,12 +58,14 @@
 			transparent
 		);
 
-		--fontSizeSmallest: 0.85rem;
-		--fontSizeSmaller: 1rem;
-		--fontSizeSmall: 1.125rem;
-		--fontSizeMedium: 1.3rem;
+		--fontSizeSmaller: 0.875rem;
+		--fontSizeSmall: 1rem;
+		--fontSizeMedium: clamp(1.1rem, 0.85rem + 1.4vw, 1.2rem);
 		--fontSizeSubtitle: clamp(1.4rem, 1.2rem + 1.2vw, 1.625rem);
 		--fontSizeTitle: clamp(2.5rem, 1.9rem + 2.4vw, 3.25rem);
+
+		/* Only for the text of blog posts */
+		--fontSizeBody: 1.125rem;
 
 		--fontWeightLight: 300;
 		--fontWeightBold: 600;

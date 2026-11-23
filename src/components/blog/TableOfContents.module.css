@@ -48,7 +48,7 @@
 
 .tableRoot .ol {
 	padding-left: 0;
-	font-size: 90%;
+	font-size: var(--fontSizeSmaller);
 }
 
 li:has(.back) {

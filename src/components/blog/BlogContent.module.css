@@ -1,7 +1,7 @@
 .article {
 	display: flex;
 	flex-direction: column;
-	font-size: var(--fontSizeSmall);
+	font-size: var(--fontSizeBody);
 	gap: 1rem;
 	line-height: var(--lineHeightParagraph);
 	text-wrap: pretty;
@@ -160,7 +160,7 @@
 
 .article summary {
 	cursor: pointer;
-	font-size: var(--fontSizeSmall);
+	font-size: var(--fontSizeBody);
 	font-style: italic;
 	text-align: right;
 }
@@ -179,7 +179,7 @@
 }
 
 .article :is([data-footnotes]) {
-	font-size: var(--fontSizeSmaller);
+	font-size: var(--fontSizeSmall);
 }
 
 .article small {

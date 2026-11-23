@@ -38,6 +38,8 @@ const { size = "medium" } = Astro.props;
 	/* Scales the portrait and the text alongside it, and the space around them */
 	.medium {
 		--heroScale: 0.75;
+		--heroSecondarySize: var(--fontSizeMedium);
+		--heroTertiarySize: var(--fontSizeSmaller);
 		--spaceAboveScale: 0.567;
 		--spaceBelowScale: 0.667;
 		--space: clamp(2rem, 8vmin, 8rem);

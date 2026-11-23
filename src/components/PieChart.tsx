@@ -65,7 +65,7 @@ export function PieChart(props: PieChartProps) {
 					{([value, i]) => (
 						<Text
 							as="div"
-							fontSize="smaller"
+							fontSize="small"
 							style={{
 								"align-items": "baseline",
 								display: "inline-flex",

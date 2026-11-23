@@ -117,7 +117,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 		<>
 			<label class={styles.toggle}>
 				<input type="checkbox" value="Expand table of contents" />
-				<Squiggly as="span" fontSize="smaller">
+				<Squiggly as="span" fontSize="small">
 					Table of Contents
 				</Squiggly>
 			</label>
@@ -171,7 +171,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 													>
 														{h3.text}
 													</Text>
-													{h4s.length && (
+													{h4s.length ? (
 														<ol class={styles.ol}>
 															<For each={h4s}>
 																{(h4) => (
@@ -192,7 +192,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 																)}
 															</For>
 														</ol>
-													)}
+													) : null}
 												</li>
 											)}
 										</For>

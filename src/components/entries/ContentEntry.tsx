@@ -46,14 +46,14 @@ export function ContentEntry(props: ContentEntryProps) {
 					>
 						{props.title}
 					</Anchor>
-					<Text as="p" fontSize="smaller" tone="muted">
+					<Text as="p" fontSize="small" tone="muted">
 						{props.subtitle}
 					</Text>
 					{props.description && (
 						<Text
 							as="div"
 							class={styles.description}
-							fontSize="small"
+							fontSize="medium"
 							fontWeight="light"
 						>
 							{props.description}
@@ -65,8 +65,8 @@ export function ContentEntry(props: ContentEntryProps) {
 								{([text, href]) => (
 									<Anchor
 										{...(props.description
-											? { fontSize: "smaller" }
-											: { class: styles.anchorLarger, fontSize: "small" })}
+											? { fontSize: "small" }
+											: { class: styles.anchorLarger, fontSize: "medium" })}
 										href={href}
 									>
 										{text}
