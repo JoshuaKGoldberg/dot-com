@@ -2,7 +2,7 @@
 	:root {
 		color-scheme: light;
 
-		--activeDimming: 0.06;
+		--activeDimming: 0.055;
 		--activeLift: -0.04;
 
 		--colorBackground: #ecf4f9;
@@ -162,7 +162,6 @@
 	html.dark {
 		color-scheme: dark;
 
-		--activeDimming: -0.03;
 		--activeLift: 0.12;
 
 		--colorBackground: #0b1220;
@@ -232,31 +231,50 @@
 }
 
 /*
- * Active links' hues shift as the pointer moves around them, per ActiveLinks.ts.
+ * Active links are lit in shifting hues where the pointer is, per ActiveLinks.ts.
  * Their contrast rises too, to make up for harder to read hues and brighter auroras.
  */
 @supports (color: oklch(from red l c h)) {
 	:is(
 		[data-header-link][aria-current],
 		[role="tab"][aria-selected="true"] > *
-	) {
-		--hueSpread: max(var(--hueShift, 0) * 0.45, var(--hueShift, 0) * -0.45);
-		--lightness: calc(
-			l + var(--activeLift) * var(--nearness, 0) - var(--activeDimming) *
-				var(--hueSpread) / 50
+	)[data-lit] {
+		--activeReach: 56px;
+		--chroma: calc(c * (1 + 0.6 * var(--nearness)));
+		--lightness: calc(l + var(--activeLift) * var(--nearness));
+		--litLightness: calc(
+			l + (var(--activeLift) - var(--activeDimming)) * var(--nearness)
 		);
-		--colorActive: oklch(
-			from var(--colorEmphasized) var(--lightness) c
-				calc(h + var(--hueShift, 0))
+		--colorActive: oklch(from var(--colorEmphasized) var(--lightness) c h);
+		--colorActiveStart: oklch(
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift) - 50 * var(--nearness))
+		);
+		--colorActiveMiddle: oklch(
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift))
 		);
 		--colorActiveEnd: oklch(
-			from var(--colorEmphasized) var(--lightness) c
-				calc(h + var(--hueShift, 0) + var(--hueSpread))
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift) + 50 * var(--nearness))
 		);
-		--colorActiveStart: oklch(
-			from var(--colorEmphasized) var(--lightness) c
-				calc(h + var(--hueShift, 0) - var(--hueSpread))
+		--activeLight: linear-gradient(
+			to right,
+			var(--colorActive) calc(var(--lightX) - var(--activeReach)),
+			var(--colorActiveStart) calc(var(--lightX) - var(--activeReach) * 0.5),
+			var(--colorActiveMiddle) var(--lightX),
+			var(--colorActiveEnd) calc(var(--lightX) + var(--activeReach) * 0.5),
+			var(--colorActive) calc(var(--lightX) + var(--activeReach))
 		);
+
+		@media (forced-colors: none) {
+			-webkit-text-fill-color: transparent;
+			background: var(--activeLight) text;
+
+			&::selection {
+				-webkit-text-fill-color: currentcolor;
+			}
+		}
 	}
 }
 

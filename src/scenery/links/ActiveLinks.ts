@@ -1,4 +1,6 @@
 import { cacheLayout } from "../cacheLayout";
+import { px } from "../css";
+import { followLight } from "../followLight";
 import { createFrameTask, type FrameTask } from "../frameLoop";
 import { clamp, damp, moveToward } from "../math";
 import { onPointer, pointer } from "../pointer";
@@ -10,6 +12,9 @@ interface Coloring {
 
 	/** Degrees from the link's usual hue. */
 	shift: number;
+
+	/** Where the light is, as it catches up to the pointer. */
+	x: number;
 }
 
 interface MeasuredLink {
@@ -20,11 +25,14 @@ interface MeasuredLink {
 /** Distance from the pointer, in pixels, within which links' colors react to it. */
 const reach = 72;
 
-/** Farthest that links' hues shift, in degrees, with the pointer at one of their ends. */
+/** How far links' hues shift, in degrees, with the pointer at one of their ends. */
+const shiftAtEnds = 220;
+
+/** Farthest that links' hues shift, in degrees. */
 const maximumShift = 110;
 
 /** Fastest that links' hues shift, in degrees per second. */
-const maximumSpeed = 70;
+const maximumShiftSpeed = 140;
 
 /** Changes too small to be visible. */
 const settled = { nearness: 0.005, shift: 0.2 };
@@ -33,7 +41,7 @@ const settled = { nearness: 0.005, shift: 0.2 };
 const selector =
 	"[data-header-link][aria-current], [role=tab][aria-selected=true] > *";
 
-/** Slowly shifts the colors of active links as the pointer moves around them. */
+/** Lights up active links in shifting colors where the pointer is near them. */
 export class ActiveLinks {
 	readonly #colorings = new Map<HTMLElement, Coloring>();
 	readonly #measureLinks: () => MeasuredLink[];
@@ -63,9 +71,13 @@ export class ActiveLinks {
 	#step(seconds: number) {
 		const measured = this.#measureLinks();
 
-		for (const { link } of measured) {
+		for (const { bounds, link } of measured) {
 			if (!this.#colorings.has(link)) {
-				this.#colorings.set(link, { nearness: 0, shift: 0 });
+				this.#colorings.set(link, {
+					nearness: 0,
+					shift: 0,
+					x: getLightTarget(bounds),
+				});
 			}
 		}
 
@@ -74,12 +86,16 @@ export class ActiveLinks {
 			const nearness = bounds ? getNearness(bounds) : 0;
 			const shift = bounds ? getShift(bounds) * nearness : 0;
 
-			coloring.nearness = damp(coloring.nearness, nearness, 3, seconds);
+			coloring.nearness = damp(coloring.nearness, nearness, 6, seconds);
 			coloring.shift = moveToward(
 				coloring.shift,
-				damp(coloring.shift, shift, 2.5, seconds),
-				maximumSpeed * seconds,
+				damp(coloring.shift, shift, 5, seconds),
+				maximumShiftSpeed * seconds,
 			);
+
+			if (bounds && nearness) {
+				coloring.x = followLight(coloring.x, getLightTarget(bounds), seconds);
+			}
 
 			if (
 				!nearness &&
@@ -89,6 +105,11 @@ export class ActiveLinks {
 				resetColor(link);
 				this.#colorings.delete(link);
 			} else {
+				if (bounds) {
+					link.style.setProperty("--lightX", px(coloring.x - bounds.left));
+				}
+
+				link.dataset.lit = "";
 				link.style.setProperty("--hueShift", coloring.shift.toFixed(1));
 				link.style.setProperty("--nearness", coloring.nearness.toFixed(3));
 			}
@@ -96,6 +117,11 @@ export class ActiveLinks {
 
 		return this.#colorings.size > 0;
 	}
+}
+
+/** Closest to the pointer that the link can be lit. */
+function getLightTarget({ left, right }: DOMRect) {
+	return clamp(pointer.x, left, right);
 }
 
 /** How close the pointer is, from 0 to 1. */
@@ -116,7 +142,7 @@ function getNearness({ bottom, left, right, top }: DOMRect) {
 function getShift({ left, right, width }: DOMRect) {
 	const offset = (pointer.x - (left + right) / 2) / (width / 2);
 
-	return clamp(offset, -1, 1) * maximumShift;
+	return clamp(offset * shiftAtEnds, -maximumShift, maximumShift);
 }
 
 function measureLinks(): MeasuredLink[] {
@@ -127,6 +153,8 @@ function measureLinks(): MeasuredLink[] {
 }
 
 function resetColor(link: HTMLElement) {
+	delete link.dataset.lit;
 	link.style.removeProperty("--hueShift");
+	link.style.removeProperty("--lightX");
 	link.style.removeProperty("--nearness");
 }

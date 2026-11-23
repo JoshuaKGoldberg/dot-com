@@ -19,12 +19,7 @@
 }
 
 .squiggly[data-squiggle="current"]::after {
-	background: linear-gradient(
-		to right,
-		var(--colorActiveStart, var(--colorEmphasized)),
-		var(--colorActive, var(--colorEmphasized)),
-		var(--colorActiveEnd, var(--colorEmphasized))
-	);
+	background: var(--activeLight, var(--colorEmphasized));
 }
 
 .squiggly:is([data-squiggle="current"], :focus-visible, :hover)::after {

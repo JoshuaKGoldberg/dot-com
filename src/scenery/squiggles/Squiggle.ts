@@ -1,7 +1,8 @@
 import type { Rectangle } from "../geometry";
 
 import { px } from "../css";
-import { damp, interpolate, moveToward, smoothstep } from "../math";
+import { followLight } from "../followLight";
+import { damp, interpolate, smoothstep } from "../math";
 import { drawWave } from "./drawWave";
 
 const namespace = "http://www.w3.org/2000/svg";
@@ -18,9 +19,6 @@ const restingHeight = 0.25;
 const center = 6;
 
 const settled = 0.004;
-
-/** Fastest that highlights follow the pointer, in pixels per second. */
-const maximumHighlightSpeed = 120;
 
 /** A line of a link's text, in the page's coordinates. */
 export type LinkLine = Rectangle;
@@ -99,11 +97,7 @@ export class Squiggle {
 	step(seconds: number, pointerX: number) {
 		const highlightX = this.#highlightX ?? pointerX;
 
-		this.#highlightX = moveToward(
-			highlightX,
-			damp(highlightX, pointerX, 8, seconds),
-			maximumHighlightSpeed * seconds,
-		);
+		this.#highlightX = followLight(highlightX, pointerX, seconds);
 		this.#near = damp(this.#near, this.target, 10, seconds);
 		this.#phase -= seconds * this.#near * this.#near * Math.PI * 1.8;
 	}
