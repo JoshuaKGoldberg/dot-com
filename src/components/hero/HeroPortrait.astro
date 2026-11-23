@@ -9,7 +9,7 @@ export interface HeroPortraitImages {
 	/** Blurred silhouette of the cutout, used only for its alpha */
 	halo: ImageMetadata;
 
-	/** Person cut out from their photo, with extra pixels below the circle */
+	/** Person cut out from their photo, with extra pixels below the circle, and maybe above it */
 	image: ImageMetadata;
 
 	/** What's behind them in their photo, for the same area as the circle */
@@ -21,6 +21,11 @@ interface Props extends HeroPortraitImages {
 }
 
 const { alt, halo, image, scene } = Astro.props;
+
+/** Height, relative to its width, of a cutout that starts at the top of the circle. */
+const usualHeight = 544 / 512;
+
+const overhang = image.height / image.width - usualHeight;
 ---
 
 <hero-portrait class="portrait">
@@ -64,6 +69,7 @@ const { alt, halo, image, scene } = Astro.props;
 				loading="eager"
 				quality="high"
 				src={image}
+				style={{ "--overhang": `${(overhang * 100).toFixed(3)}%` }}
 				width={256}
 			/>
 			<slot />
@@ -232,12 +238,14 @@ const { alt, halo, image, scene } = Astro.props;
 	}
 
 	.figure {
+		display: flow-root;
 		position: relative;
 	}
 
 	.cutout {
 		display: block;
 		height: auto;
+		margin-top: calc(-1 * var(--overhang));
 		width: 100%;
 	}
 
