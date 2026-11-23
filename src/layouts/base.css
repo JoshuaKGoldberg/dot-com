@@ -2,6 +2,9 @@
 	:root {
 		color-scheme: light;
 
+		--activeDimming: 0.06;
+		--activeLift: -0.04;
+
 		--colorBackground: #ecf4f9;
 		--colorEmphasized: #0a58aa;
 		--colorForeground: #283556;
@@ -159,6 +162,9 @@
 	html.dark {
 		color-scheme: dark;
 
+		--activeDimming: -0.03;
+		--activeLift: 0.12;
+
 		--colorBackground: #0b1220;
 		--colorEmphasized: #77bbff;
 		--colorForeground: #dae7f3;
@@ -222,6 +228,35 @@
 		body {
 			scroll-behavior: smooth;
 		}
+	}
+}
+
+/*
+ * Active links' hues shift as the pointer moves around them, per ActiveLinks.ts.
+ * Their contrast rises too, to make up for harder to read hues and brighter auroras.
+ */
+@supports (color: oklch(from red l c h)) {
+	:is(
+		[data-header-link][aria-current],
+		[role="tab"][aria-selected="true"] > *
+	) {
+		--hueSpread: max(var(--hueShift, 0) * 0.45, var(--hueShift, 0) * -0.45);
+		--lightness: calc(
+			l + var(--activeLift) * var(--nearness, 0) - var(--activeDimming) *
+				var(--hueSpread) / 50
+		);
+		--colorActive: oklch(
+			from var(--colorEmphasized) var(--lightness) c
+				calc(h + var(--hueShift, 0))
+		);
+		--colorActiveEnd: oklch(
+			from var(--colorEmphasized) var(--lightness) c
+				calc(h + var(--hueShift, 0) + var(--hueSpread))
+		);
+		--colorActiveStart: oklch(
+			from var(--colorEmphasized) var(--lightness) c
+				calc(h + var(--hueShift, 0) - var(--hueSpread))
+		);
 	}
 }
 

@@ -31,6 +31,6 @@ const { href } = Astro.props;
 	}
 
 	.link[aria-current] {
-		color: var(--colorEmphasized);
+		color: var(--colorActive, var(--colorEmphasized));
 	}
 </style>

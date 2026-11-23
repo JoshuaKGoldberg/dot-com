@@ -8,5 +8,5 @@
 }
 
 .squiggly.active {
-	color: var(--colorEmphasized);
+	color: var(--colorActive, var(--colorEmphasized));
 }
