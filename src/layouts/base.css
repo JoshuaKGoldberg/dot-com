@@ -342,7 +342,7 @@
 
 @keyframes portrait-blur {
 	50% {
-		filter: blur(8px);
+		filter: blur(4px);
 	}
 }
 
