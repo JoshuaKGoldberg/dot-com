@@ -68,7 +68,7 @@ export function paintGraph(
 		}
 
 		const radius =
-			(0.8 + vertex.depth * 1.6) * (graph.isSnark ? 1.15 : 1) * reveals[index];
+			(0.8 + vertex.depth * 1.6) * (graph.snark ? 1.15 : 1) * reveals[index];
 
 		context.fillStyle = getColor(graph, vertex, vertex.depth, scene);
 		context.globalAlpha =
@@ -85,7 +85,7 @@ function getColor(
 	depth: number,
 	scene: GraphScene,
 ) {
-	const hue = graph.isSnark
+	const hue = graph.snark
 		? x * 1.2 + depth * 70 + scene.seconds * snarkHueDriftRate
 		: angleToHue(graph.x + x - graph.origin.x, graph.y + y - graph.origin.y) +
 			scene.seconds * hueDriftRate;

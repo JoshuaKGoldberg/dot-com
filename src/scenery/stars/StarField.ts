@@ -12,6 +12,7 @@ import {
 } from "../graphs/createRegions";
 import { GraphSimulation } from "../graphs/GraphSimulation";
 import { paintGraph } from "../graphs/paintGraphs";
+import { SnarkLabels } from "../graphs/SnarkLabels";
 import { clamp, interpolate } from "../math";
 import { onPageScroll, pageScroll } from "../pageScroll";
 import { onPointer, pointer } from "../pointer";
@@ -43,6 +44,7 @@ export class StarField {
 	readonly #growing: FrameTask;
 	#height = 0;
 	readonly #host: HTMLElement;
+	readonly #labels: SnarkLabels;
 	readonly #leftDwell = new Dwell();
 	readonly #lights = new StarLights();
 	readonly #links = new StarLinks();
@@ -61,6 +63,9 @@ export class StarField {
 			signal,
 		});
 		this.#host = host;
+		this.#labels = new SnarkLabels(() => {
+			this.#growing.wake();
+		}, signal);
 		this.#measureFooter = cacheLayout(measureFooter, signal);
 		this.#scrolling = createFrameTask(() => this.#scroll(), {
 			isSmooth: true,
@@ -91,7 +96,11 @@ export class StarField {
 			this.#rest();
 		}, signal);
 		onPointer(() => {
-			if (this.#isNearMargin() || this.#isNearFooter()) {
+			if (
+				this.#isNearMargin() ||
+				this.#isNearFooter() ||
+				this.#graphs.graphs.length
+			) {
 				this.#growing.wake();
 			}
 		}, signal);
@@ -159,7 +168,7 @@ export class StarField {
 			seconds,
 			this.#getRegions(sky),
 			{ height: this.#height },
-			pointer.isPresent ? pointer : undefined,
+			pointer,
 		);
 		this.#paint();
 
@@ -167,7 +176,7 @@ export class StarField {
 			isDwelling ||
 			this.#lights.lit.length > 0 ||
 			!this.#links.isEmpty ||
-			this.#graphs.graphs.length > 0
+			this.#graphs.isActive(pointer)
 		);
 	}
 
@@ -212,31 +221,31 @@ export class StarField {
 	}
 
 	#paintGraphs(context: CanvasRenderingContext2D, sky: Sky) {
-		if (!this.#graphs.graphs.length) {
-			return;
-		}
-
-		const regions = this.#getRegions(sky);
+		const regions = this.#graphs.graphs.length ? this.#getRegions(sky) : [];
 		const scene = {
 			column: this.#column,
 			darkness: sky.darkness,
-			pointer: pointer.isPresent ? pointer : undefined,
+			pointer: pointer.isInside ? pointer : undefined,
 			seconds: this.#seconds,
 		};
 
-		for (const graph of this.#graphs.graphs) {
+		const placed = this.#graphs.graphs.flatMap((graph) => {
 			const region = regions.find(({ name }) => name === graph.region);
 
-			if (region) {
-				paintGraph(
-					context,
-					graph,
-					region.offset,
-					interpolate(0.45, 1, region.dwell),
-					scene,
-				);
-			}
+			return region ? [{ graph, region }] : [];
+		});
+
+		for (const { graph, region } of placed) {
+			paintGraph(
+				context,
+				graph,
+				region.offset,
+				graph.snark ? 1 : interpolate(0.45, 1, region.dwell),
+				scene,
+			);
 		}
+
+		this.#labels.update(placed, this.#height);
 	}
 
 	#resize() {

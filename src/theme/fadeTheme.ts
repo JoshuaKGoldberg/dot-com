@@ -23,6 +23,7 @@ const textProperties = {
 		"--astro-code-token-string",
 		"--astro-code-token-string-expression",
 		"--colorEmphasized",
+		"--colorFaint",
 		"--colorForeground",
 		"--colorForegroundExtra",
 		"--colorMuted",

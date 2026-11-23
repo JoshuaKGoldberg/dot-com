@@ -8,6 +8,7 @@
 
 		--colorBackground: #ecf4f9;
 		--colorEmphasized: #0a58aa;
+		--colorFaint: #5d6b8a;
 		--colorForeground: #283556;
 		--colorForegroundExtra: #142842;
 		--colorMedium: #789dc7;
@@ -162,6 +163,7 @@
 
 		--colorBackground: #0b1220;
 		--colorEmphasized: #77bbff;
+		--colorFaint: #70819c;
 		--colorForeground: #dae7f3;
 		--colorForegroundExtra: #f1f6fb;
 		--colorMuted: #93a5bf;

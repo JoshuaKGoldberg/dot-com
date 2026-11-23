@@ -13,6 +13,11 @@ let parkedAt = 0;
 
 /** The last known mouse, pen, or finger position, in viewport pixels. */
 export const pointer = {
+	/** Whether the pointer is over the page, no matter how long it's been still for. */
+	get isInside() {
+		return isInside;
+	},
+
 	/** Whether the pointer is over the page, and has moved recently. */
 	get isPresent() {
 		return isInside && performance.now() < parkedAt;

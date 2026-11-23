@@ -12,6 +12,12 @@ import AuroraBand from "./AuroraBand.astro";
 	<AuroraBand edge="bottom" />
 	<star-field class="stars"></star-field>
 </div>
+<aside
+	aria-label="Goldberg snarks"
+	class="labels"
+	data-snark-labels
+	transition:persist="snark-labels"
+></aside>
 
 <script>
 	// Everything looks complete without this: it only adds what happens on approach
@@ -40,6 +46,52 @@ import AuroraBand from "./AuroraBand.astro";
 		display: block;
 		height: 100%;
 		width: 100%;
+	}
+
+	.labels {
+		inset: 0;
+		overflow: clip;
+		pointer-events: none;
+		position: fixed;
+	}
+
+	.labels:empty {
+		display: none;
+	}
+
+	.labels :global(a) {
+		/* The smallest that links' areas can be is 24px, however small their text is */
+		--padding: 7px;
+
+		-webkit-font-smoothing: antialiased;
+		box-sizing: border-box;
+		color: var(--colorFaint);
+		font-family: var(--fontLabel);
+		font-size: 0.5625rem;
+		font-weight: 400;
+		left: 0;
+		letter-spacing: 0.11em;
+		line-height: 10px;
+		padding: var(--padding) 8px;
+		pointer-events: auto;
+		position: absolute;
+		text-align: center;
+		/* Keeps whatever's painted behind it from making it less readable */
+		text-shadow:
+			0 0 2px var(--colorBackground),
+			0 0 2px var(--colorBackground),
+			0 0 3px var(--colorBackground),
+			0 0 3px var(--colorBackground),
+			0 0 4px var(--colorBackground),
+			0 0 4px var(--colorBackground);
+		text-transform: uppercase;
+		text-wrap: balance;
+		top: calc(-1 * var(--padding));
+		width: max-content;
+	}
+
+	.labels :global(a:is(:hover, :focus-visible)) {
+		color: var(--colorForeground);
 	}
 
 	/* Scrolls along with the page, and has no size of its own to get in its way */
@@ -75,6 +127,7 @@ import AuroraBand from "./AuroraBand.astro";
 	}
 
 	@media print {
+		.labels,
 		.scenery,
 		.squiggles {
 			display: none;

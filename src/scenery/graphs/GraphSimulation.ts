@@ -6,6 +6,14 @@ import { pick, type Random } from "../random";
 import { createGoldbergSnark } from "./createGoldbergSnark";
 import { createGraph } from "./createGraph";
 
+export interface GraphPointer extends Point {
+	/** Whether it's over the page, no matter how long it's been still for. */
+	isInside: boolean;
+
+	/** Whether it's over the page, and has moved recently. */
+	isPresent: boolean;
+}
+
 /**
  * A graph that grows out from near the pointer, stays a while, then dissolves.
  *
@@ -13,6 +21,9 @@ import { createGraph } from "./createGraph";
  * scrolls, none of its edges can ever stretch.
  */
 export interface LivingGraph {
+	/** Distance from its center that other graphs, and text, aren't within. */
+	clearance: number;
+
 	edges: LivingEdge[];
 
 	/** How dissolved the graph is, from 0 to 1. */
@@ -28,8 +39,6 @@ export interface LivingGraph {
 	/** How much longer the graph stays once it's grown. */
 	holdSeconds: number;
 
-	isSnark: boolean;
-
 	/** How much dwell its region needs for the graph not to dissolve. */
 	minimumDwell: number;
 
@@ -38,11 +47,25 @@ export interface LivingGraph {
 
 	radius: number;
 	region: RegionName;
+	snark?: SnarkState | undefined;
 	vertices: LivingVertex[];
 
 	/** Center of the graph, with y relative to the region's scrolling layer. */
 	x: number;
 	y: number;
+}
+
+export interface SnarkState {
+	/** Seconds since it started growing. */
+	age: number;
+
+	/** Seconds that the pointer's now been far away from it for. */
+	awaySeconds: number;
+
+	blocks: number;
+
+	/** Whether its label is focused, which it stays for. */
+	isFocused: boolean;
 }
 
 /** Somewhere on screen that graphs may grow. */
@@ -82,6 +105,7 @@ interface LivingVertex extends Point {
 }
 
 interface Placement extends Point {
+	clearance: number;
 	radius: number;
 }
 
@@ -107,6 +131,19 @@ const snarkSearchStep = 24;
 
 const snarkBlocks = [5, 7, 9];
 
+/** Most snarks to have at once in a region. */
+const snarkLimit = 3;
+
+/** Space around snarks that's left for the labels beneath them. */
+const snarkLabelSpace = 28;
+
+/** Snarks stay at least this long, then until the pointer's been far away for a while. */
+const snarkMinimumSeconds = 30;
+const snarkAwaySeconds = 10;
+
+/** Distance from a snark's edge, in pixels, that counts as far away. */
+const snarkAwayDistance = 250;
+
 export class GraphSimulation {
 	graphs: LivingGraph[] = [];
 
@@ -122,31 +159,46 @@ export class GraphSimulation {
 		this.#states.clear();
 	}
 
+	/** Whether there's anything that changes while the pointer is as it is. */
+	isActive(pointer: GraphPointer) {
+		return this.graphs.some(
+			({ fade, growth, snark }) =>
+				!snark ||
+				pointer.isPresent ||
+				fade > 0 ||
+				growth < 1 ||
+				snark.age < snarkMinimumSeconds ||
+				snark.awaySeconds > 0,
+		);
+	}
+
 	/** Advances all graphs, and grows new ones wherever the pointer is lingering. */
 	step(
 		seconds: number,
 		regions: readonly Region[],
 		viewport: { height: number },
-		pointer: Point | undefined,
+		pointer: GraphPointer,
 	) {
 		this.graphs = this.graphs.filter((graph) => {
 			const region = regions.find(({ name }) => name === graph.region);
 
 			return (
 				region &&
-				isOnScreen(graph, region, viewport) &&
-				ageGraph(graph, seconds, region.dwell)
+				(graph.snark
+					? ageSnark(graph, graph.snark, seconds, region, pointer)
+					: isOnScreen(graph, region, viewport) &&
+						ageGraph(graph, seconds, region.dwell))
 			);
 		});
 
 		for (const region of regions) {
-			this.#spawn(seconds, region, pointer);
+			this.#spawn(seconds, region, pointer.isPresent ? pointer : undefined);
 		}
 	}
 
 	#create(
 		graph: Graph,
-		isSnark: boolean,
+		snark: SnarkState | undefined,
 		placement: Placement,
 		origin: Point,
 		region: Region,
@@ -164,24 +216,23 @@ export class GraphSimulation {
 		}));
 
 		this.graphs.push({
+			clearance: placement.clearance,
 			edges: orderEdges(graph, vertices, {
 				x: origin.x - placement.x,
 				y: origin.y - placement.y,
 			}),
 			fade: 0,
-			fadeSeconds: isSnark ? 5.5 : 3.2,
-			growSeconds: isSnark
+			fadeSeconds: snark ? 5.5 : 3.2,
+			growSeconds: snark
 				? interpolate(5.3, 7.3, random())
 				: interpolate(5, 11, random()),
 			growth: 0,
-			holdSeconds: isSnark
-				? interpolate(8, 20, random())
-				: interpolate(3, 10, random()),
-			isSnark,
+			holdSeconds: interpolate(3, 10, random()),
 			minimumDwell: interpolate(0.03, 0.4, random()),
 			origin: { x: origin.x, y: origin.y + region.offset },
 			radius: placement.radius,
 			region: region.name,
+			snark,
 			vertices,
 			x: placement.x,
 			y: placement.y + region.offset,
@@ -192,12 +243,13 @@ export class GraphSimulation {
 		region: Region,
 		radius: number,
 		pointer: Point,
+		clearance = radius,
 	): Placement | undefined {
 		const { bounds } = region;
 
 		if (
 			bounds.right - bounds.left < radius * 2 ||
-			bounds.bottom - bounds.top < radius * 2
+			bounds.bottom - bounds.top < clearance * 2
 		) {
 			return undefined;
 		}
@@ -209,6 +261,7 @@ export class GraphSimulation {
 					? interpolate(30, 120, this.#random())
 					: interpolate(120, 320, this.#random());
 			const placement = {
+				clearance,
 				radius,
 				x: clamp(
 					pointer.x + Math.cos(angle) * distance,
@@ -217,8 +270,8 @@ export class GraphSimulation {
 				),
 				y: clamp(
 					pointer.y + Math.sin(angle) * distance,
-					bounds.top + radius,
-					bounds.bottom - radius,
+					bounds.top + clearance,
+					bounds.bottom - clearance,
 				),
 			};
 
@@ -245,9 +298,10 @@ export class GraphSimulation {
 		region: Region,
 		radius: number,
 		pointer: Point,
+		clearance: number,
 	): Placement | undefined {
 		const { avoid, bounds } = region;
-		const snarks = this.graphs.filter(({ isSnark }) => isSnark);
+		const snarks = this.graphs.filter(({ snark }) => snark);
 		let nearest: Placement | undefined;
 		let nearestDistance = Infinity;
 
@@ -257,11 +311,11 @@ export class GraphSimulation {
 			x += snarkSearchStep
 		) {
 			for (
-				let y = bounds.top + radius;
-				y <= bounds.bottom - radius;
+				let y = bounds.top + clearance;
+				y <= bounds.bottom - clearance;
 				y += snarkSearchStep
 			) {
-				const placement = { radius, x, y };
+				const placement = { clearance, radius, x, y };
 				const distance = Math.hypot(x - pointer.x, y - pointer.y);
 
 				if (
@@ -305,17 +359,25 @@ export class GraphSimulation {
 				88,
 				(region.bounds.right - region.bounds.left) * 0.42,
 			);
+			const clearance = radius + snarkLabelSpace;
+			const snarks = this.graphs.filter(
+				(graph) => graph.region === region.name && graph.snark,
+			);
 			const placement =
-				this.#findPlacement(region, radius, pointer) ??
-				this.#makeRoom(region, radius, pointer);
+				snarks.length < snarkLimit
+					? (this.#findPlacement(region, radius, pointer, clearance) ??
+						this.#makeRoom(region, radius, pointer, clearance))
+					: undefined;
 
 			state.nextSnarkAt =
 				state.dwelled + (placement ? secondsBetweenSnarks : 2);
 
 			if (placement) {
+				const blocks = pick(this.#random, snarkBlocks);
+
 				this.#create(
-					createGoldbergSnark(pick(this.#random, snarkBlocks)),
-					true,
+					createGoldbergSnark(blocks),
+					{ age: 0, awaySeconds: 0, blocks, isFocused: false },
 					placement,
 					pointer,
 					region,
@@ -330,7 +392,7 @@ export class GraphSimulation {
 		state.pending = 0;
 
 		const siblings = this.graphs.filter(
-			(graph) => graph.region === region.name && !graph.isSnark,
+			(graph) => graph.region === region.name && !graph.snark,
 		);
 		const placement =
 			siblings.length < region.limit &&
@@ -339,7 +401,7 @@ export class GraphSimulation {
 		if (placement) {
 			this.#create(
 				createGraph(this.#random),
-				false,
+				undefined,
 				placement,
 				pointer,
 				region,
@@ -380,6 +442,35 @@ function ageGraph(graph: LivingGraph, seconds: number, dwell: number) {
 	return graph.fade < 1;
 }
 
+/** Ages a snark, returning whether there's still any of it left. */
+function ageSnark(
+	graph: LivingGraph,
+	snark: SnarkState,
+	seconds: number,
+	{ offset }: Region,
+	pointer: GraphPointer,
+) {
+	const isAway =
+		!snark.isFocused &&
+		(!pointer.isInside ||
+			Math.hypot(graph.x - pointer.x, graph.y - offset - pointer.y) >
+				graph.radius + snarkAwayDistance);
+
+	snark.age += seconds;
+	snark.awaySeconds = isAway ? snark.awaySeconds + seconds : 0;
+
+	if (
+		graph.fade > 0 ||
+		(snark.age > snarkMinimumSeconds && snark.awaySeconds > snarkAwaySeconds)
+	) {
+		graph.fade += seconds / graph.fadeSeconds;
+	} else {
+		graph.growth = Math.min(1, graph.growth + seconds / graph.growSeconds);
+	}
+
+	return graph.fade < 1;
+}
+
 function getOrCreateState(
 	states: Map<RegionName, RegionState>,
 	name: RegionName,
@@ -409,10 +500,12 @@ function isOnScreen(
 
 function isTouching(
 	graph: LivingGraph,
-	{ radius, x, y }: Placement,
+	{ clearance, x, y }: Placement,
 	{ offset }: Region,
 ) {
-	return Math.hypot(graph.x - x, graph.y - offset - y) <= graph.radius + radius;
+	return (
+		Math.hypot(graph.x - x, graph.y - offset - y) <= graph.clearance + clearance
+	);
 }
 
 /** Orders edges to grow outward from the vertex nearest to a point. */
@@ -453,11 +546,11 @@ function orderEdges(
 	});
 }
 
-function overlaps({ radius, x, y }: Placement, rectangle: Rectangle) {
+function overlaps({ clearance, x, y }: Placement, rectangle: Rectangle) {
 	return (
 		Math.hypot(
 			x - clamp(x, rectangle.left, rectangle.right),
 			y - clamp(y, rectangle.top, rectangle.bottom),
-		) < radius
+		) < clearance
 	);
 }
