@@ -78,6 +78,6 @@ export function measureFooter(): FooterBounds {
 
 	return {
 		band: getBounds("aurora-band[edge=bottom]"),
-		text: getBounds("footer"),
+		text: getBounds("footer p"),
 	};
 }

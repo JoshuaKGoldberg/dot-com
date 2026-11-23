@@ -91,7 +91,7 @@ export class StarField {
 			this.#rest();
 		}, signal);
 		onPointer(() => {
-			if (this.#isNearMargin() || footerDwell.level > 0) {
+			if (this.#isNearMargin() || this.#isNearFooter()) {
 				this.#growing.wake();
 			}
 		}, signal);
@@ -144,7 +144,7 @@ export class StarField {
 				seconds,
 				this.#getNearness(this.#width - right, right - pointer.x),
 			),
-			footerDwell.level > 0,
+			this.#isNearFooter(),
 		].some(Boolean);
 		const sky = this.#createSky();
 
@@ -168,6 +168,15 @@ export class StarField {
 			this.#lights.lit.length > 0 ||
 			!this.#links.isEmpty ||
 			this.#graphs.graphs.length > 0
+		);
+	}
+
+	#isNearFooter() {
+		const { band } = this.#measureFooter();
+
+		return (
+			footerDwell.level > 0 ||
+			(pointer.isPresent && !!band && pointer.y > band.top)
 		);
 	}
 

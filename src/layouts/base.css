@@ -249,7 +249,7 @@
 		--chroma: calc(c * (1 + 0.6 * (1 - var(--softening)) * var(--nearness)));
 		--lightness: calc(l + var(--litLift) * var(--nearness));
 		--litLightness: calc(
-			l + (var(--litLift) - var(--litDimming) + 0.085 * var(--softening)) *
+			l + (var(--litLift) - var(--litDimming) + 0.11 * var(--softening)) *
 				var(--nearness)
 		);
 		--colorLit: oklch(from var(--colorEmphasized) var(--lightness) c h);
