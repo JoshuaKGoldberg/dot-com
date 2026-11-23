@@ -22,7 +22,9 @@
 	background: var(--activeLight, var(--colorEmphasized));
 }
 
-.squiggly:is([data-squiggle="current"], :focus-visible, :hover)::after {
+.squiggly:is([aria-selected] > *, :focus-visible, :hover):not(
+		[aria-current]
+	)::after {
 	--squiggleMask: url("~/assets/squiggles/wave.svg");
 }
 
@@ -33,6 +35,10 @@
 		:hover
 	)::after {
 	opacity: 0;
+	/* Keeps its shape until it's done fading out */
+	transition:
+		var(--transitionMedium) opacity,
+		mask-image 0s var(--transitionMedium) allow-discrete;
 }
 
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
