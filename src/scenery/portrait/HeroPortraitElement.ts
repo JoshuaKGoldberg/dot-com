@@ -42,8 +42,9 @@ export class HeroPortraitElement extends SceneryElement {
 
 	/** How lit up the portrait is, and how far it's willing to tilt, from 0 to 1. */
 	#light = 0;
-	#seconds = 0;
+	readonly #ring = query(this, ".ring-awake");
 
+	#seconds = 0;
 	readonly #sky = query(this, ".constellation");
 	readonly #task = createFrameTask((seconds) => this.#step(seconds));
 	#willingness = 0;
@@ -84,6 +85,7 @@ export class HeroPortraitElement extends SceneryElement {
 		const level = smoothstep(0, 1, this.#light);
 
 		this.#awake.style.opacity = level.toFixed(4);
+		this.#ring.style.opacity = level.toFixed(4);
 		this.#halo.style.opacity = interpolate(0.06, 0.85, level).toFixed(4);
 		this.toggleAttribute("data-awake", this.#light > darkness);
 

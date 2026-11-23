@@ -1,8 +1,25 @@
 .heart {
 	background: none;
 	border: none;
+	color: inherit;
 	cursor: pointer;
-	font-size: 1rem;
+	font: inherit;
 	line-height: inherit;
 	padding: 0;
+	position: relative;
+}
+
+/* Easier to press than it looks */
+.heart::after {
+	content: "";
+	inset: -0.5rem;
+	position: absolute;
+}
+
+.outline {
+	display: inline-block;
+	height: 1.1em;
+	overflow: visible;
+	vertical-align: -0.18em;
+	width: 1.1em;
 }

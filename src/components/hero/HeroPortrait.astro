@@ -3,6 +3,8 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import GlassRing from "./GlassRing.astro";
+
 export interface HeroPortraitImages {
 	/** Blurred silhouette of the cutout, used only for its alpha */
 	halo: ImageMetadata;
@@ -27,8 +29,10 @@ const { alt, halo, image } = Astro.props;
 		<div class="aurora awake"></div>
 	</div>
 	<div aria-hidden="true" class="constellation"></div>
+	<GlassRing />
+	<GlassRing awake />
 	<div class="clip">
-		<div class="figure">
+		<div class="figure" data-reveal>
 			<Image
 				alt={alt}
 				class="cutout"
@@ -62,10 +66,8 @@ const { alt, halo, image } = Astro.props;
 	}
 
 	.backdrop {
-		background: linear-gradient(#e9eff0, #efedf5 60%, #f7eeee);
+		background: radial-gradient(white 35%, #eefbff);
 		border-radius: 50%;
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--auroraWisteria) 22%, transparent);
 		contain: paint;
 		overflow: hidden;
 	}
@@ -116,6 +118,11 @@ const { alt, halo, image } = Astro.props;
 	}
 
 	.resting {
+		filter: saturate(1.5) brightness(1.12);
+		opacity: 0.4;
+	}
+
+	:global(html.dark) .resting {
 		filter: saturate(0.4);
 		opacity: 0.4;
 	}
@@ -164,9 +171,12 @@ const { alt, halo, image } = Astro.props;
 		width: 100%;
 	}
 
-	/* Open at the top for anything taller than the circle, round at the bottom */
+	/*
+	 * Open at the top for anything taller than the circle, and round at the bottom,
+	 * where 50% is of the circle itself: so that nothing ever covers the ring.
+	 */
 	.clip {
-		clip-path: inset(-25% 0 0 0 round 0 0 50% 50% / 0 0 40% 40%);
+		clip-path: inset(-25% 0 0 0 round 0 0 50% 50%);
 	}
 
 	.figure {

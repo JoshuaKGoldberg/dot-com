@@ -1,0 +1,73 @@
+---
+interface Props {
+	/** Whether this is the ring's brighter version, for when it's lit up. */
+	awake?: boolean;
+}
+---
+
+<div
+	aria-hidden="true"
+	class:list={["glass-ring", Astro.props.awake && "ring-awake"]}
+></div>
+
+<style>
+	/* A polished rim: bright where light catches it, tinted everywhere else */
+	.glass-ring {
+		--ringCornflower: #3f9df0;
+		--ringJade: #2cc79a;
+		--ringRose: #f573a4;
+		--ringShine: #c5ecff;
+		--ringWisteria: #a56cf0;
+		--thickness: 2px;
+
+		background: conic-gradient(
+			from 300deg,
+			var(--ringShine),
+			var(--ringCornflower) 12%,
+			var(--ringWisteria) 28%,
+			var(--ringShine) 42%,
+			var(--ringRose) 52%,
+			var(--ringWisteria) 64%,
+			var(--ringJade) 80%,
+			var(--ringShine)
+		);
+		border-radius: 50%;
+		filter: saturate(0.6);
+		inset: calc(-1 * var(--thickness));
+		mask: radial-gradient(
+			closest-side,
+			transparent calc(100% - var(--thickness) - 0.5px),
+			black calc(100% - var(--thickness))
+		);
+		opacity: 0.5;
+		pointer-events: none;
+		position: absolute;
+	}
+
+	/* Shine inside of the rim, as from glass curving away */
+	.glass-ring::after {
+		border-radius: 50%;
+		box-shadow:
+			inset 0 2px 3px rgb(255 255 255 / 70%),
+			inset 0 -10px 18px -12px rgb(255 255 255 / 60%);
+		content: "";
+		inset: var(--thickness);
+		position: absolute;
+	}
+
+	.ring-awake {
+		filter: drop-shadow(
+			0 0 5px color-mix(in srgb, var(--ringWisteria) 45%, transparent)
+		);
+		opacity: 0;
+		will-change: opacity;
+	}
+
+	:global(html.dark) .glass-ring {
+		--ringCornflower: #4fc3ff;
+		--ringJade: #4dffb0;
+		--ringRose: #ff7fb0;
+		--ringShine: white;
+		--ringWisteria: #b98aff;
+	}
+</style>

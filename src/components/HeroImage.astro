@@ -3,6 +3,8 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import GlassRing from "./hero/GlassRing.astro";
+
 interface Props {
 	alt: string;
 	class?: string | undefined;
@@ -14,16 +16,19 @@ const size = 144;
 ---
 
 <div class:list={["hero-image", Astro.props.class]}>
-	<Image
-		alt={Astro.props.alt}
-		densities={[1, 2]}
-		fetchpriority="high"
-		fit="cover"
-		height={size}
-		loading="eager"
-		src={Astro.props.src}
-		width={size}
-	/>
+	<div data-reveal>
+		<Image
+			alt={Astro.props.alt}
+			densities={[1, 2]}
+			fetchpriority="high"
+			fit="cover"
+			height={size}
+			loading="eager"
+			src={Astro.props.src}
+			width={size}
+		/>
+	</div>
+	<GlassRing />
 </div>
 
 <style>
@@ -31,13 +36,16 @@ const size = 144;
 		--imageSize: var(--heroSizeSmall);
 
 		height: var(--imageSize);
+		position: relative;
 		width: var(--imageSize);
+	}
+
+	[data-reveal] {
+		height: 100%;
 	}
 
 	.hero-image img {
 		border-radius: 100%;
-		box-shadow: 0 0 0 1px
-			color-mix(in srgb, var(--auroraWisteria) 30%, transparent);
 		display: block;
 		height: 100%;
 		max-height: 100%;

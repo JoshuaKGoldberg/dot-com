@@ -15,6 +15,7 @@ const fontSizes = {
 	medium: styles.fontSizeMedium,
 	small: styles.fontSizeSmall,
 	smaller: styles.fontSizeSmaller,
+	smallest: styles.fontSizeSmallest,
 	subtitle: styles.fontSizeSubtitle,
 	title: styles.fontSizeTitle,
 };

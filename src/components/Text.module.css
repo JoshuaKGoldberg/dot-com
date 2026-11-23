@@ -24,6 +24,10 @@
 	letter-spacing: normal;
 }
 
+.fontSizeSmallest {
+	font-size: var(--fontSizeSmallest);
+}
+
 .fontSizeSmaller {
 	font-size: var(--fontSizeSmaller);
 }

@@ -20,8 +20,13 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	<Fragment slot="secondary">I’m pretty good at TypeScript.</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">
+		<!-- prettier-ignore -->
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I work to make web development better, most notably on typescript-eslint:
+			I work to make web development better, most notably on <a
+				data-squiggle="active"
+				href="https://typescript-eslint.io"
+				target="_blank">typescript-eslint</a
+			>:
 			<br class="tabletUp" />a powerful static analysis toolset for JavaScript
 			and TypeScript code.
 		</Text>
@@ -55,9 +60,13 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		margin: 2rem 0 1rem;
 	}
 
-	.about a:not([data-squiggle-live]) {
+	.about a {
 		background: var(--squiggleLine) 0 100% / 100% 2px no-repeat;
 		padding-bottom: 0.1em;
+	}
+
+	.about a[data-squiggle-live] {
+		background: none;
 	}
 
 	@media (min-width: 700px) {

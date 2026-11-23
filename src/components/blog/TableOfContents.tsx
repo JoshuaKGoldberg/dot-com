@@ -117,7 +117,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 		<>
 			<label class={styles.toggle}>
 				<input type="checkbox" value="Expand table of contents" />
-				<Squiggly as="span" font="label" fontSize="smaller">
+				<Squiggly as="span" fontSize="smaller">
 					Table of Contents
 				</Squiggly>
 			</label>
@@ -127,7 +127,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 						<Text
 							as="a"
 							class={clsx(styles.back, !getActiveSlug() && styles.active)}
-							font="label"
+							fontWeight="light"
 							href="#"
 							onClick={(event) => {
 								document.body.scroll({
@@ -150,7 +150,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 										styles.a,
 										h2.slug === getActiveSlug() && styles.active,
 									)}
-									font="label"
+									fontWeight="light"
 									href={`#${h2.slug}`}
 								>
 									{h2.text}
@@ -166,7 +166,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 															styles.a,
 															h3.slug === getActiveSlug() && styles.active,
 														)}
-														font="label"
+														fontWeight="light"
 														href={`#${h3.slug}`}
 													>
 														{h3.text}
@@ -183,7 +183,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 																				h4.slug === getActiveSlug() &&
 																					styles.active,
 																			)}
-																			font="label"
+																			fontWeight="light"
 																			href={`#${h4.slug}`}
 																		>
 																			{h4.text}

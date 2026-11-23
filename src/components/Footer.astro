@@ -4,43 +4,58 @@ import { EmojiBlastHeart } from "./EmojiBlastHeart";
 import { Text } from "./Text";
 ---
 
-<Text as="footer" font="label" fontSize="smaller" tone="muted">
-	Made with <EmojiBlastHeart client:visible /> in Boston
-	<br />
-	using Astro, Solid, and TypeScript.
-	<br />
-	<Anchor
-		class="anchor"
-		fontSize="smaller"
-		href="https://github.com/JoshuaKGoldberg/dot-com"
-		target="_blank"
-	>
-		view source
-	</Anchor>
-</Text>
+<footer>
+	<Text as="p" class="credit" font="label" fontSize="smallest">
+		Made with <EmojiBlastHeart client:visible /> in Boston using Astro, Solid,
+		and TypeScript.
+		<span aria-hidden="true" class="dot">
+			·
+		</span>
+		<Anchor href="https://github.com/JoshuaKGoldberg/dot-com" target="_blank">
+			view source
+		</Anchor>
+	</Text>
+</footer>
 
 <style>
 	footer {
-		justify-self: flex-end;
-		line-height: 1.5;
-		padding: clamp(1.5rem, 3.5vmin, 7rem) var(--widthPagePadding);
+		padding: clamp(4rem, 14vh, 9rem) var(--widthPagePadding)
+			clamp(4rem, 13vh, 7.5rem);
+		text-align: center;
 		width: 100%;
 	}
 
-	.anchor {
-		display: inline-block;
-		margin-top: 1rem;
+	.credit {
+		--squiggleOffset: -0.55em;
+
+		letter-spacing: 0.06em;
+		line-height: 1.8;
+		text-wrap: balance;
 	}
 
-	@media (min-width: 700px) {
-		footer {
-			text-align: center;
+	.dot {
+		opacity: 0.6;
+		padding: 0 0.55em;
+	}
+
+	/* Rises into view as it's scrolled to */
+	@supports (animation-timeline: view()) {
+		.credit {
+			animation: emerge linear both;
+			/* Without a var(), minifying merges the timeline into the shorthand */
+			animation-range: entry 0% cover var(--coverage, 12%);
+			animation-timeline: view();
+		}
+
+		:global(html[data-motion="paused"]) .credit {
+			animation: none;
 		}
 	}
 
-	@media (min-height: 938px) {
-		footer {
-			padding-top: max(2.8rem, 11.7vmin);
+	@keyframes emerge {
+		from {
+			opacity: 0;
+			translate: 0 18px;
 		}
 	}
 </style>

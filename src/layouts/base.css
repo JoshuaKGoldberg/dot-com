@@ -3,11 +3,11 @@
 		color-scheme: light;
 
 		--colorBackground: #fdffff;
-		--colorEmphasized: #1170d0;
+		--colorEmphasized: #0a5db4;
 		--colorForeground: #283556;
 		--colorForegroundExtra: #142842;
 		--colorMedium: #789dc7;
-		--colorMuted: #5b6b8c;
+		--colorMuted: #4d5b7b;
 		--colorSubtle: #d7e9ef;
 
 		/* Low to high, the hues of the auroras and everything that echoes them */
@@ -30,9 +30,10 @@
 			transparent
 		);
 
-		--fontSizeSmaller: 0.95rem;
+		--fontSizeSmallest: 0.85rem;
+		--fontSizeSmaller: 1rem;
 		--fontSizeSmall: 1.125rem;
-		--fontSizeMedium: 1.25rem;
+		--fontSizeMedium: 1.3rem;
 		--fontSizeSubtitle: clamp(1.4rem, 1.2rem + 1.2vw, 1.625rem);
 		--fontSizeTitle: clamp(2.5rem, 1.9rem + 2.4vw, 3.25rem);
 
@@ -119,6 +120,16 @@
 		position: relative;
 	}
 
+	[data-reveal] {
+		transition: opacity var(--transitionSlowest) ease-out;
+	}
+
+	@media (scripting: enabled) {
+		[data-reveal]:not([data-reveal="ready"]) {
+			opacity: 0;
+		}
+	}
+
 	html.dark {
 		color-scheme: dark;
 
@@ -165,6 +176,52 @@
 			scroll-behavior: smooth;
 		}
 	}
+}
+
+/*
+ * Only the page's content fades between pages, with the header on top of it.
+ * Everything else isn't part of transitions, so as to never stop moving.
+ */
+:root {
+	view-transition-name: none;
+}
+
+.content {
+	view-transition-name: content;
+}
+
+.fader {
+	view-transition-name: fader;
+}
+
+header {
+	view-transition-name: header;
+}
+
+::view-transition-group(content),
+::view-transition-group(fader),
+::view-transition-group(header),
+::view-transition-new(fader),
+::view-transition-new(header) {
+	animation: none;
+}
+
+::view-transition-old(content) {
+	translate: 0 var(--contentShift);
+}
+
+::view-transition-old(fader),
+::view-transition-old(header) {
+	display: none;
+}
+
+[data-motion="paused"]::view-transition-new(content),
+[data-motion="paused"]::view-transition-old(content) {
+	animation: none;
+}
+
+[data-motion="paused"]::view-transition-old(content) {
+	display: none;
 }
 
 @media (min-width: 700px) {

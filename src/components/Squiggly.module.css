@@ -11,29 +11,32 @@
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	mask: var(--squiggleMask) repeat-x center;
+	mask: var(--squiggleMask) repeat-x left;
 	pointer-events: none;
 	position: absolute;
 	transition: var(--transitionMedium) opacity;
 	width: 100%;
 }
 
-.squiggly:is(:focus-visible, :hover)::after {
-	--squiggleMask: url("~/assets/squiggles/wave.svg");
-}
-
-.onHover:not(:focus-visible, :hover)::after {
-	opacity: 0;
-}
-
-.passive::after {
-	--squiggleMask: url("~/assets/squiggles/wave.svg");
-
+.squiggly[data-squiggle="nav"]::after {
 	background: var(--colorEmphasized);
 }
 
+.squiggly:is([data-squiggle="nav"], :focus-visible, :hover)::after {
+	--squiggleMask: url("~/assets/squiggles/wave.svg");
+}
+
+.squiggly:is([data-squiggle="nav"], [data-squiggle="onHover"]):not(
+		[aria-current],
+		[aria-selected="true"] > *,
+		:focus-visible,
+		:hover
+	)::after {
+	opacity: 0;
+}
+
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
-.squiggly:global([data-squiggle-live])::after {
+.squiggly[data-squiggle-live]::after {
 	opacity: 0;
 	transition-duration: 0s;
 }

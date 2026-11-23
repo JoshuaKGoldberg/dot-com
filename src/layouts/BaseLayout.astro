@@ -30,10 +30,43 @@ const { class: className, description, image, title } = Astro.props;
 		<SkipLink />
 		<Header />
 
-		<main id="main-content">
-			<slot />
-		</main>
-		<Footer />
+		<div class="content">
+			<main id="main-content">
+				<slot />
+			</main>
+			<Footer />
+		</div>
+
+		<script data-astro-rerun is:inline>
+			// Eases images in once they're ready, instead of them suddenly appearing
+			for (const element of document.querySelectorAll("[data-reveal]")) {
+				const reveal = () => {
+					element.dataset.reveal = "ready";
+				};
+
+				element.querySelector("img").decode().then(reveal, reveal);
+			}
+		</script>
 		<Scenery />
 	</MainArea>
 </html>
+
+<script>
+	import { px } from "~/scenery/css";
+
+	const getContentTop = () =>
+		document.querySelector(".content")?.getBoundingClientRect().top ?? 0;
+
+	let previousTop = 0;
+
+	// Keeps the previous page from seeming to scroll as it fades out
+	document.addEventListener("astro:before-swap", () => {
+		previousTop = getContentTop();
+	});
+	document.addEventListener("astro:after-swap", () => {
+		document.documentElement.style.setProperty(
+			"--contentShift",
+			px(previousTop - getContentTop()),
+		);
+	});
+</script>

@@ -80,8 +80,11 @@ const { edge } = Astro.props;
 
 	@supports (animation-timeline: scroll()) {
 		.top {
+			--fadeDistance: 25rem;
+
 			animation: scroll-away linear both;
-			animation-range: 0 25rem;
+			/* Without a var(), minifying merges the timeline into the shorthand */
+			animation-range: 0 var(--fadeDistance);
 			animation-timeline: --page;
 		}
 

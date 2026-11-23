@@ -15,8 +15,8 @@ export function TabsSquiggly(props: TabsSquigglyProps) {
 		<Squiggly
 			as="div"
 			class={clsx(styles.squiggly, props.active && styles.active)}
-			font="label"
-			variant={props.active ? "passive" : "onHover"}
+			fontWeight="bold"
+			variant="nav"
 		>
 			{props.children}
 		</Squiggly>

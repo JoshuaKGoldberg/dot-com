@@ -39,7 +39,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						as="a"
 						class={styles.title}
 						data-squiggle="onHover"
-						font="label"
+						font="display"
 						fontSize="medium"
 						href={props.url}
 						tone="strong"
@@ -47,7 +47,7 @@ export function ContentEntry(props: ContentEntryProps) {
 					>
 						{props.title}
 					</Text>
-					<Text as="p" font="label" fontSize="smaller" tone="muted">
+					<Text as="p" fontSize="smaller" tone="muted">
 						{props.subtitle}
 					</Text>
 					{props.description && (

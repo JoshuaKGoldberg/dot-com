@@ -10,7 +10,8 @@ import { Squiggle } from "./Squiggle";
 const reach = 96;
 
 /** Links whose squiggles are part of the design, rather than reacting to anything. */
-const links = "[data-squiggle]:not([data-squiggle=passive]), article a";
+const links =
+	"[data-squiggle]:not([data-squiggle=nav]), article a:not(:has(img))";
 
 /** Draws the squiggles of links that are near the pointer. */
 export class SquiggleOverlayElement extends SceneryElement {
@@ -46,13 +47,6 @@ export class SquiggleOverlayElement extends SceneryElement {
 				}
 			},
 			{ capture: true, passive: true, signal },
-		);
-		document.addEventListener(
-			"astro:before-swap",
-			() => {
-				this.#clear();
-			},
-			{ signal },
 		);
 
 		return () => {
@@ -98,19 +92,22 @@ export class SquiggleOverlayElement extends SceneryElement {
 			this.#scan();
 		}
 
-		const bounds = this.#getLinks();
+		const measured = this.#getLinks();
 
 		for (const [link, squiggle] of this.#squiggles) {
+			const bounds = measured.find((other) => other.link === link)?.bounds;
+
+			if (!link.isConnected) {
+				squiggle.target = 0;
+			}
+
 			squiggle.step(seconds);
 
-			if (squiggle.isSettled || !link.isConnected) {
+			if (squiggle.isSettled) {
 				squiggle.destroy();
 				this.#squiggles.delete(link);
 			} else {
-				squiggle.paint(
-					bounds.find(({ link: other }) => other === link)?.bounds ?? [],
-					pointer.x,
-				);
+				squiggle.paint(pointer.x, bounds);
 			}
 		}
 

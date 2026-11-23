@@ -7,7 +7,7 @@
 	text-wrap: pretty;
 }
 
-.article a {
+.article a:not(:has(img)) {
 	background: var(--squiggleLine) 0 100% / 100% 2px no-repeat;
 	-webkit-box-decoration-break: clone;
 	box-decoration-break: clone;

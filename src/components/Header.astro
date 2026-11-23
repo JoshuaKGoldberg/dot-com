@@ -12,24 +12,48 @@ const links = [
 ] as const;
 ---
 
-<div class="fader" role="presentation"></div>
-<Text as="header" class="header" fontWeight="bold">
-	<div class="first">
-		<HeaderLink href="/">Josh Goldberg</HeaderLink>
-		<div class="toggles">
-			<MotionToggle />
-			<ThemeToggle />
+<div class="persisted" transition:persist="header">
+	<div class="fader" role="presentation"></div>
+	<Text as="header" class="header" fontWeight="bold">
+		<div class="first">
+			<HeaderLink href="/">Josh Goldberg</HeaderLink>
+			<div class="toggles">
+				<MotionToggle />
+				<ThemeToggle />
+			</div>
 		</div>
-	</div>
-	<div class="links">
-		{links.map(([text, href]) => {
-			return <HeaderLink href={href}>{text}</HeaderLink>;
-		})}
-	</div>
-</Text>
+		<div class="links">
+			{links.map(([text, href]) => {
+				return <HeaderLink href={href}>{text}</HeaderLink>;
+			})}
+		</div>
+	</Text>
+</div>
+
+<script>
+	import { isCurrentPath } from "~/utils";
+
+	// The header is kept between pages, so that changes to its links are animated
+	document.addEventListener("astro:after-swap", () => {
+		for (const link of document.querySelectorAll<HTMLAnchorElement>(
+			"header a",
+		)) {
+			if (isCurrentPath(link.getAttribute("href") ?? "", location.pathname)) {
+				link.setAttribute("aria-current", "true");
+			} else {
+				link.removeAttribute("aria-current");
+			}
+		}
+	});
+</script>
 
 <style>
+	.persisted {
+		display: contents;
+	}
+
 	header {
+		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem 3.5rem;
@@ -40,13 +64,16 @@ const links = [
 	}
 
 	.first {
+		align-items: center;
 		display: flex;
 		justify-content: space-between;
 		width: 100%;
 	}
 
+	/* Centered with how tall the text looks, rather than how tall it is */
 	.toggles {
 		position: relative;
+		top: -0.1rem;
 	}
 
 	.links {
@@ -58,8 +85,8 @@ const links = [
 	}
 
 	@keyframes fader-in {
-		from {
-			opacity: 0;
+		to {
+			opacity: 1;
 		}
 	}
 
@@ -96,11 +123,16 @@ const links = [
 			z-index: 1;
 		}
 
+		/* Pages too short to scroll have nothing to hide, and no timeline to play */
 		@supports (animation-timeline: scroll()) {
 			.fader {
+				--fadeDistance: 5rem;
+
 				animation: fader-in linear both;
-				animation-range: 0 5rem;
+				/* Without a var(), minifying merges the timeline into the shorthand */
+				animation-range: 0 var(--fadeDistance);
 				animation-timeline: --page;
+				opacity: 0;
 			}
 		}
 
@@ -118,7 +150,7 @@ const links = [
 			height: 0.7rem;
 			position: absolute;
 			right: 1.5rem;
-			top: 0.5rem;
+			top: calc(50% - 0.35rem);
 			width: 1px;
 		}
 

@@ -7,8 +7,13 @@ const namespace = "http://www.w3.org/2000/svg";
 /** Links with text at least this large have thicker squiggles. */
 const largeFontSize = 20;
 
-/** Squiggles are this much of their full height when the pointer isn't near. */
-const restingHeight = 0.2;
+/** Same shape as the static squiggles' images, so that changing from one is seamless. */
+const amplitude = 1.6;
+const period = 14;
+const restingHeight = 0.25;
+
+/** Vertical center of squiggles within their elements. */
+const center = 6;
 
 const settled = 0.004;
 
@@ -36,10 +41,12 @@ export class Squiggle {
 		return this.target === 0 && this.#near < settled;
 	}
 
+	#bounds: readonly DOMRect[] = [];
 	readonly #fontSize: number;
 	readonly #layer: HTMLElement;
 	#lines: Line[] = [];
 	#near = 0;
+	readonly #offset: number;
 	#phase = 0;
 
 	/** Whether the link has a squiggle even when the pointer isn't near. */
@@ -49,6 +56,7 @@ export class Squiggle {
 		this.link = link;
 		this.#fontSize = parseFloat(getComputedStyle(link).fontSize);
 		this.#layer = layer;
+		this.#offset = getOffset(link);
 		this.#rests = link.dataset.squiggle !== "onHover";
 		link.dataset.squiggleLive = "";
 	}
@@ -61,7 +69,10 @@ export class Squiggle {
 		}
 	}
 
-	paint(bounds: readonly DOMRect[], pointerX: number) {
+	/** Paints over the link's lines, or where they last were if it's since left the page. */
+	paint(pointerX: number, bounds = this.#bounds) {
+		this.#bounds = bounds;
+
 		while (this.#lines.length > bounds.length) {
 			this.#lines.pop()?.svg.remove();
 		}
@@ -87,16 +98,16 @@ export class Squiggle {
 	) {
 		const near = smoothstep(0, 1, this.#near);
 		const path = drawWave({
-			amplitude: this.#fontSize * 0.065 * interpolate(restingHeight, 1, near),
-			period: Math.max(10, this.#fontSize * 0.78),
+			amplitude: amplitude * interpolate(restingHeight, 1, near),
+			period,
 			phase: this.#phase,
 			width,
-			y: 6,
+			y: center,
 		});
 		const thickness = String(this.#fontSize >= largeFontSize ? 2.5 : 2);
 
-		svg.style.transform = `translate(${px(left)}, ${px(bottom - 5)})`;
-		svg.style.opacity = String(this.#rests ? 1 : near);
+		svg.style.transform = `translate(${px(left)}, ${px(snap(bottom + this.#offset) - center)})`;
+		svg.style.opacity = String(this.#rests && this.link.isConnected ? 1 : near);
 		svg.setAttribute("width", String(width));
 
 		for (const element of [base, highlight]) {
@@ -184,4 +195,18 @@ function createLine(layer: HTMLElement): Line {
 	layer.append(svg);
 
 	return { base, gradient, highlight, highlightMask, svg };
+}
+
+/** How far a link's squiggle is below the bottom of each of its lines. */
+function getOffset(link: HTMLElement) {
+	const { content, height, marginTop } = getComputedStyle(link, "::after");
+
+	return content === "none"
+		? -0.5
+		: parseFloat(marginTop) + parseFloat(height) / 2;
+}
+
+/** Rounds to whole screen pixels, as the browser does for static squiggles. */
+function snap(value: number) {
+	return Math.round(value * devicePixelRatio) / devicePixelRatio;
 }

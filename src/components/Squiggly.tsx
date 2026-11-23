@@ -6,30 +6,28 @@ import type { TextProps } from "./Text";
 import styles from "./Squiggly.module.css";
 import { Text } from "./Text";
 
-const variants = {
-	active: styles.active,
-	onHover: styles.onHover,
-	passive: styles.passive,
-};
-
 export type SquigglyProps<As extends keyof JSX.HTMLElementTags> =
 	TextProps<As> & {
 		variant?: SquigglyVariant;
 	};
 
-export type SquigglyVariant = keyof typeof variants;
+/**
+ * - active: always has a squiggle
+ * - nav: has one while it's current, hovered, or focused
+ * - onHover: has one while it's hovered or focused
+ */
+export type SquigglyVariant = "active" | "nav" | "onHover";
 
 export function Squiggly<As extends keyof JSX.HTMLElementTags>(
 	props: SquigglyProps<As>,
 ) {
 	const [squigglyProps, textProps] = splitProps(props, ["variant"]);
-	const variant = () => squigglyProps.variant ?? "active";
 
 	return (
 		<Text
 			{...textProps}
-			class={clsx(styles.squiggly, variants[variant()], props.class)}
-			data-squiggle={variant()}
+			class={clsx(styles.squiggly, props.class)}
+			data-squiggle={squigglyProps.variant ?? "active"}
 		>
 			{props.children}
 		</Text>

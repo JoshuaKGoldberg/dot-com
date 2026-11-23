@@ -2,233 +2,126 @@
 import XMark from "astro-heroicons/micro/XMark.astro";
 import Moon from "astro-heroicons/outline/Moon.astro";
 import Sun from "astro-heroicons/outline/Sun.astro";
+
+import HeaderToggle from "./HeaderToggle.astro";
 ---
 
 <div class="theme-buttons">
-	<button
-		aria-label="Theme toggle (enable JavaScript to use)"
-		class="theme-button"
+	<HeaderToggle
 		id="themeToggle"
+		label="Theme toggle (enable JavaScript to use)"
 	>
-		<Moon id="moon" width={24} height={24} />
-		<Sun id="sun" width={28} height={28} />
-	</button>
+		<Moon data-state="dark" />
+		<Sun data-out data-state="light" />
+	</HeaderToggle>
 	<button
 		aria-label="Clear theme preference (enable JavaScript to use)"
-		class="theme-button"
 		id="themeClear"
+		type="button"
 	>
-		<XMark width={16} height={16} />
+		<XMark height={16} width={16} />
 	</button>
 </div>
 
 <script is:inline>
-	const clear = () => document.getElementById("themeClear");
-	const html = () => document.documentElement;
-	const toggle = () => document.getElementById("themeToggle");
+	{
+		const clear = document.getElementById("themeClear");
+		const toggle = document.getElementById("themeToggle");
 
-	// Storage throws when the browser is set to block site data
-	function readStoredTheme() {
-		try {
-			return localStorage.getItem("theme");
-		} catch {
-			return null;
-		}
-	}
-
-	/**
-	 * @param {string | null} theme
-	 */
-	function storeTheme(theme) {
-		try {
-			if (theme) {
-				localStorage.setItem("theme", theme);
-			} else {
-				localStorage.removeItem("theme");
+		// Storage throws when the browser is set to block site data
+		const readStoredTheme = () => {
+			try {
+				return localStorage.getItem("theme");
+			} catch {
+				return null;
 			}
-		} catch {
-			// The theme still applies until the next page load
-		}
-	}
+		};
 
-	function getThemePreference() {
-		return matchMedia("(prefers-color-scheme: dark)").matches
-			? "dark"
-			: "light";
-	}
+		/**
+		 * @param {string | null} theme
+		 */
+		const storeTheme = (theme) => {
+			try {
+				if (theme) {
+					localStorage.setItem("theme", theme);
+				} else {
+					localStorage.removeItem("theme");
+				}
+			} catch {
+				// The choice still applies until the next page load
+			}
+		};
 
-	/**
-	 * @param {string} newTheme
-	 */
-	function updateElementsForTheme(newTheme) {
-		if (newTheme === "light") {
-			html().classList.remove("dark");
-		} else {
-			html().classList.add("dark");
-		}
+		const getPreferredTheme = () =>
+			matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 
-		toggle().setAttribute("aria-label", `Theme toggle (current: ${newTheme})`);
-	}
+		const update = (storedTheme = readStoredTheme()) => {
+			const theme = storedTheme ?? getPreferredTheme();
 
-	function initialize() {
-		html().classList.remove("theme-animated");
+			document.documentElement.classList.toggle("dark", theme === "dark");
+			clear.classList.toggle("clear-active", !!storedTheme);
+			toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
 
-		const startingTheme = readStoredTheme();
+			for (const icon of toggle.children) {
+				icon.toggleAttribute("data-out", icon.dataset.state !== theme);
+			}
+		};
 
-		if (startingTheme) {
-			clear().classList.add("clear-active");
-		}
-
-		const theme = startingTheme ?? getThemePreference();
-
-		updateElementsForTheme(theme);
-
-		clear().addEventListener("click", () => {
-			html().classList.add("theme-animated");
+		clear.addEventListener("click", () => {
 			storeTheme(null);
-			clear().classList.remove("clear-active");
-			updateElementsForTheme(getThemePreference());
+			toggle.dataset.used = "";
+			update(null);
 		});
 
-		toggle().addEventListener("click", () => {
-			html().classList.add("theme-animated");
-			clear().classList.add("clear-active");
+		toggle.addEventListener("click", () => {
+			const theme = document.documentElement.classList.contains("dark")
+				? "light"
+				: "dark";
 
-			const newTheme = html().classList.contains("dark") ? "light" : "dark";
-			updateElementsForTheme(newTheme);
-			storeTheme(newTheme);
+			storeTheme(theme);
+			toggle.dataset.used = "";
+			update(theme);
+		});
+
+		update();
+
+		// The header is kept between pages, but the root's attributes aren't
+		document.addEventListener("astro:after-swap", () => {
+			update();
 		});
 	}
-
-	initialize();
-
-	document.addEventListener("astro:after-swap", initialize);
 </script>
 
 <style>
 	.theme-buttons {
-		position: relative;
-		mask-image: linear-gradient(
-			to bottom,
-			black calc(95% - 0.35rem),
-			transparent 95%
-		);
-		padding: 0 1rem;
-	}
-
-	.theme-button {
-		background: none;
-		border: transparent;
-		cursor: pointer;
 		display: flex;
-	}
-
-	#themeToggle {
-		font-size: 1.5rem;
-		height: 2rem;
+		justify-content: center;
+		padding: 0 1rem;
 		position: relative;
-		width: 2.25rem;
-	}
-
-	#themeToggle svg {
-		display: block;
-		top: 0;
-		position: absolute;
-		transform-origin: bottom center;
-		animation-duration: var(--transitionSlow);
-		animation-fill-mode: both;
-		animation-timing-function: ease;
-	}
-
-	#moon {
-		margin-top: 0.15rem;
-	}
-
-	html.dark #sun {
-		opacity: 0;
-		transform: rotate(90deg);
-	}
-
-	html.dark #moon {
-		opacity: 1;
-		transform: rotate(0deg);
-	}
-
-	html:not(.dark) #moon {
-		opacity: 0;
-		transform: rotate(90deg);
-	}
-
-	html:not(.dark) #sun {
-		opacity: 1;
-		transform: rotate(0deg);
-	}
-
-	html.theme-animated.dark #sun,
-	html.theme-animated:not(.dark) #moon {
-		animation-name: orbitOutRight;
-		animation-delay: 0s;
-	}
-
-	html.theme-animated.dark #moon,
-	html.theme-animated:not(.dark) #sun {
-		animation-name: orbitInLeft;
-		animation-delay: calc(var(--transitionSlow) / 2);
-	}
-
-	@keyframes orbitInLeft {
-		from {
-			transform: rotate(-90deg);
-			opacity: 0;
-		}
-		to {
-			transform: rotate(0deg);
-			opacity: 1;
-		}
-	}
-
-	@keyframes orbitOutRight {
-		from {
-			transform: rotate(0deg);
-			opacity: 1;
-		}
-		to {
-			transform: rotate(90deg);
-			opacity: 0;
-		}
+		width: 4.25rem;
 	}
 
 	#themeClear {
+		background: none;
+		border: 0;
 		color: var(--colorForeground);
-		position: absolute;
-		right: -1.5rem;
-		margin-top: 0;
+		cursor: pointer;
+		display: flex;
 		opacity: 1;
+		padding: 0.5rem;
+		position: absolute;
+		right: -1rem;
+		top: 0;
 		transition:
 			var(--transitionMedium) color,
-			var(--transitionFast) margin-top,
-			var(--transitionFast) opacity;
-	}
-
-	@media (max-width: 479px) {
-		#themeClear {
-			right: -1rem;
-		}
+			var(--transitionFast) opacity,
+			var(--transitionFast) translate,
+			var(--transitionFast) visibility;
 	}
 
 	#themeClear:not(.clear-active) {
 		opacity: 0;
-		margin-top: 0.5rem;
-		animation: 1s fadeOut;
-		animation-fill-mode: forwards;
-	}
-
-	@keyframes fadeOut {
-		99% {
-			visibility: visible;
-		}
-		100% {
-			visibility: hidden;
-		}
+		translate: 0 0.5rem;
+		visibility: hidden;
 	}
 </style>

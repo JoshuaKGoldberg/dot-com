@@ -9,7 +9,7 @@ export interface ProjectSubEntryProps {
 export function ProjectSubEntry(props: ProjectSubEntryProps) {
 	return (
 		<Text as="li" fontSize="small">
-			<Text as="a" data-squiggle="onHover" font="label" href={props.href}>
+			<Text as="a" data-squiggle="onHover" font="display" href={props.href}>
 				{props.title}
 			</Text>
 			<Text as="span" fontWeight="light">

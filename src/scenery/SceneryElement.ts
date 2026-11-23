@@ -1,14 +1,15 @@
 /**
- * Custom element that ignores being moved around the document.
+ * Custom element that's only set up once it's on the page to stay.
  *
- * Astro moves persisted elements into each new page's body, which would
- * otherwise disconnect and reconnect them on every client-side navigation.
+ * Navigating between pages briefly inserts each new page's own copies of persisted
+ * elements, then replaces them with the originals moved over from the old page.
+ * Waiting for that to be done means originals keep going and copies never start.
  */
 export abstract class SceneryElement extends HTMLElement {
 	#disconnect: (() => void) | undefined;
 
 	connectedCallback() {
-		this.#disconnect ??= this.connect();
+		this.#settle();
 	}
 
 	/** Present so that browsers with `moveBefore` don't disconnect on moves. */
@@ -17,12 +18,7 @@ export abstract class SceneryElement extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		queueMicrotask(() => {
-			if (!this.isConnected) {
-				this.#disconnect?.();
-				this.#disconnect = undefined;
-			}
-		});
+		this.#settle();
 	}
 
 	/**
@@ -30,4 +26,15 @@ export abstract class SceneryElement extends HTMLElement {
 	 * @returns A function to tear the element down.
 	 */
 	protected abstract connect(): () => void;
+
+	#settle() {
+		queueMicrotask(() => {
+			if (this.isConnected) {
+				this.#disconnect ??= this.connect();
+			} else {
+				this.#disconnect?.();
+				this.#disconnect = undefined;
+			}
+		});
+	}
 }
