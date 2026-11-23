@@ -272,7 +272,7 @@ export function starrySky({
 				const a = nodes[bp], b = nodes[n], key = a.id + ">" + b.id;
 				want.add(key);
 				let e = edges.get(key);
-				if (!e) { edges.set(key, (e = { a, b, born: t, depth: depth[n], al: 0 })); stat("tree", "edge", (a.sx + b.sx) / 2, (a.sy + b.sy) / 2); }
+				if (!e) { edges.set(key, (e = { a, b, born: t, depth: depth[n], al: 0, L0: bd })); stat("tree", "edge", (a.sx + b.sx) / 2, (a.sy + b.sy) / 2); } // L0: on-screen length when linked
 				e.target = 1; e.depth = depth[n];
 			}
 		}
@@ -311,8 +311,10 @@ export function starrySky({
 			// wrap-aware: use the copy of b nearest to a, and fade the edge out once it stretches past ~1.6x its rest length (or rest + 60px)
 			const by = e.a.sy + wrapDy(e.b.sy - e.a.sy);
 			const pts = route(e.a.sx, e.a.sy, e.b.sx, by);
-			const rest0 = Math.hypot(e.b.x - e.a.x, wrapDy(e.b.y - e.a.y)), cur = Math.hypot(e.b.sx - e.a.sx, by - e.a.sy);
-			const lim = Math.min(rest0 * 1.6, rest0 + 60), stretch = 1 - sm(lim, lim + 40, cur);
+			// rest length is the on-screen length when the edge was linked: the stars' base positions can be far apart when they sit in different parallax layers,
+			// which used to let edges between them stretch to hundreds of px on scroll
+			const rest0 = e.L0 ?? Math.hypot(e.b.x - e.a.x, wrapDy(e.b.y - e.a.y)), cur = Math.hypot(e.b.sx - e.a.sx, by - e.a.sy);
+			const lim = Math.min(rest0 * 1.35, rest0 + 36), stretch = 1 - sm(lim, lim + 30, cur);
 			if (stretch <= 0.01) continue;
 			const dm = stretch * (1 - 0.5 * scrollFade) * (dwell ? 0.4 + 0.6 * dwell.v()[e.a.side ? "right" : "left"] : 1);
 			let tot = 0; const segs = [];
@@ -528,6 +530,16 @@ export function starrySky({
 			}
 			const dec = Math.exp(-damp * h);
 			for (const v of V) { if (!v.L) continue; v.vx = (v.vx + v.fx * h) * dec; v.vy = (v.vy + v.fy * h) * dec; v.px += v.vx * h; v.py += v.vy * h; }
+			// hard length cap: on fast scrolls the anchors' parallax can pull far harder than the edge springs resist, so project each edge back to at most
+			// ~1.35x its rest length (rest + 36px at most); the endpoints then drag behind their layers instead of drawing huge lines
+			for (let pass = 0; pass < 2; pass++) for (const e of I.el) {
+				const A = V[e.a], B = V[e.b]; if (!A.L || !B.L) continue;
+				const dx = B.px - A.px, dy = B.py - A.py, len = Math.hypot(dx, dy), max = Math.min(e.L0 * 1.35, e.L0 + 36);
+				if (len <= max) continue;
+				const c = (len - max) / len / 2;
+				A.px += dx * c; A.py += dy * c; B.px -= dx * c; B.py -= dy * c;
+				A.vx *= 0.8; A.vy *= 0.8; B.vx *= 0.8; B.vy *= 0.8;
+			}
 		}
 		let mv = 0, md = 0;
 		for (const v of V) { v.x = v.px; v.y = v.py; mv = Math.max(mv, Math.abs(v.vx || 0) + Math.abs(v.vy || 0)); md = Math.max(md, Math.abs(v.ax - v.px) + Math.abs(v.ay - v.py)); }

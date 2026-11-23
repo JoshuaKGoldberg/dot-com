@@ -11,12 +11,12 @@ import { smallGraph, leadSpark, loadGoldberg, pickSnark } from "../_vs4/graphs.j
 
 const TAU = Math.PI * 2, BASE_HUE_RATE = 24;
 // side palette: hue drifts toward blue with distance, saturation and lightness follow depth (network.js depthRgb)
-const depthRgb = (dark, hue, d) => { const far = 1 - d, dh = ((225 - hue + 540) % 360) - 180; return hsl((hue + dh * far * 0.5 + 360) % 360, ((dark ? 0.55 : 0.4) + d * 0.5) * 100, (dark ? 0.6 + d * 0.16 : 0.66 - d * 0.28) * 100); };
+export const depthRgb = (dark, hue, d) => { const far = 1 - d, dh = ((225 - hue + 540) % 360) - 180; return hsl((hue + dh * far * 0.5 + 360) % 360, ((dark ? 0.55 : 0.4) + d * 0.5) * 100, (dark ? 0.6 + d * 0.16 : 0.66 - d * 0.28) * 100); };
 const rgbs = (c, a) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
 const ease = (v) => v * v * (3 - 2 * v);
 
 // aurora backdrop: two precomputed saturations crossfaded by S.satw (0 = rest, 1 = flooded)
-const auroraSat = ({ sat0 = 0.35, rest = 0.5, hover = 1, depth = -1.2, still = false } = {}) => (E, { par }) => {
+export const auroraSat = ({ sat0 = 0.35, rest = 0.5, hover = 1, depth = -1.2, still = false } = {}) => (E, { par }) => {
 	const a0 = aurora(E, { sat: sat0 }), a1 = aurora(E, { sat: 1 });
 	const sky = (g, k) => { // navy sky pulled toward grey by (1 - k)
 		const gr = g.createLinearGradient(0, E.o, 0, E.o + E.D), s = (c) => { const y = 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2], q = sat0 + (1 - sat0) * k; return c.map((v) => (y + (v - y) * q) | 0); };
@@ -84,7 +84,7 @@ const graphsL = ({ gate = 0.1, every = 1.25, max = 4, snark = false, lead = fals
 };
 
 // constellation: star nodes with hairline edges in a band around the outline, blooming outward from the cursor as the dwell grows
-const constellationL = ({ count = 56, reach = 0.5, size = 1, alpha = 1, seed = 17, gap = 14, link = 36, lw = 0.6, a0 = 1, tint = false } = {}) => (E, { par }) => {
+export const constellationL = ({ count = 56, reach = 0.5, size = 1, alpha = 1, seed = 17, gap = 14, link = 36, lw = 0.6, a0 = 1, tint = false } = {}) => (E, { par }) => {
 	const f = E.fld, n = f.n, F = f.F, M = f.m, r = rng(seed), dk = E.dark, u = E.u, nodes = [];
 	for (let tries = 0; tries < 20000 && nodes.length < count; tries++) {
 		const i = (r() * n) | 0, j = (r() * n) | 0, k = j * n + i, d = F[k], x = i + 0.5 - n / 2, y = j + 0.5 - n / 2;
