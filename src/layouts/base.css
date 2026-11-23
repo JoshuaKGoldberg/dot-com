@@ -231,7 +231,7 @@
  * Light text's colors soften as well, the more of a glare there is behind them.
  */
 @supports (color: oklch(from red l c h)) {
-	:is([data-header-link], [role="tab"][aria-selected="true"] > *)[data-lit] {
+	:is([data-header-link], [role="tab"] > *)[data-lit] {
 		--litReach: 56px;
 		--softening: calc(var(--glare) * var(--litGlare));
 		--chroma: calc(c * (1 + 0.6 * (1 - var(--softening)) * var(--nearness)));

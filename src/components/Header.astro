@@ -33,22 +33,13 @@ const links = [
 </div>
 
 <script>
-	import { getCurrent } from "~/utils";
+	import { keepLinkStyles } from "~/transitions/keepLinkStyles";
 
 	// The header is kept between pages, so that changes to its links are animated
-	document.addEventListener("astro:after-swap", () => {
-		for (const link of document.querySelectorAll("[data-header-link]")) {
-			const current = getCurrent(
-				link.getAttribute("href") ?? "",
-				location.pathname,
-			);
-
-			if (current) {
-				link.setAttribute("aria-current", current);
-			} else {
-				link.removeAttribute("aria-current");
-			}
-		}
+	document.addEventListener("astro:before-swap", () => {
+		document.addEventListener("astro:after-swap", keepLinkStyles(), {
+			once: true,
+		});
 	});
 </script>
 

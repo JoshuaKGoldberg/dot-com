@@ -67,6 +67,14 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 	document.addEventListener("astro:before-swap", (event) => {
 		previousTop = getContentTop();
 		shiftTones(document, event.newDocument, event.viewTransition);
+
+		// Swapping to a page whose root was missing any, such as its theme, would keep
+		// the elements that stay between pages from transitioning to their new states
+		for (const { name, value } of document.documentElement.attributes) {
+			if (!event.newDocument.documentElement.hasAttribute(name)) {
+				event.newDocument.documentElement.setAttribute(name, value);
+			}
+		}
 	});
 	document.addEventListener("astro:after-swap", () => {
 		const shift = previousTop - getContentTop();

@@ -3,19 +3,21 @@
 	position: relative;
 }
 
+/* Its image is of the same wave at each step of its rise, from top to bottom */
 .squiggly::after {
-	--squiggleMask: url("~/assets/squiggles/rest.svg");
+	--rise: 0px;
 
 	background: var(--squiggleLine);
 	content: "";
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	mask: var(--squiggleMask) repeat-x left;
+	mask: url("~/assets/squiggles/rising.svg") repeat-x 0 calc(-1 * var(--rise));
 	pointer-events: none;
 	position: absolute;
 	transition:
 		var(--transitionMedium) opacity,
+		var(--transitionMedium) steps(12) mask-position,
 		var(--transitionSlow) filter;
 	width: 100%;
 }
@@ -27,13 +29,14 @@
 .squiggly:is([aria-selected] > *, :focus-visible, :hover):not(
 		[aria-current]
 	)::after {
-	--squiggleMask: url("~/assets/squiggles/wave.svg");
+	--rise: 96px;
 }
 
 .squiggly[data-squiggle="current"]:not([aria-current]):hover::after {
 	filter: var(--squiggleVivid);
 	transition:
 		var(--transitionMedium) opacity,
+		var(--transitionMedium) steps(12) mask-position,
 		var(--transitionVivid);
 }
 
@@ -44,11 +47,6 @@
 		:hover
 	)::after {
 	opacity: 0;
-	/* Keeps its shape until it's done fading out */
-	transition:
-		var(--transitionMedium) opacity,
-		var(--transitionSlow) filter,
-		mask-image 0s var(--transitionMedium) allow-discrete;
 }
 
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
