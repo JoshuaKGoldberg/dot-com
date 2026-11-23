@@ -40,9 +40,11 @@ import HeaderToggle from "./HeaderToggle.astro";
 </script>
 
 <style>
+	/* Its two buttons are closer to each other than to the motion toggle */
 	.theme-buttons {
 		display: flex;
 		justify-content: center;
+		padding-left: 0.5rem;
 		position: relative;
 		width: 4.25rem;
 	}
@@ -54,9 +56,9 @@ import HeaderToggle from "./HeaderToggle.astro";
 		cursor: pointer;
 		display: flex;
 		opacity: 1;
-		padding: 0.5rem;
+		padding: 0.5rem 0.25rem;
 		position: absolute;
-		right: -1rem;
+		right: -0.375rem;
 		top: 0;
 		transition:
 			var(--transitionMedium) color,
