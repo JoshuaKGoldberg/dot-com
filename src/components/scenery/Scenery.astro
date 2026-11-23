@@ -55,6 +55,17 @@ import AuroraBand from "./AuroraBand.astro";
 		overflow: visible;
 		position: absolute;
 		top: 0;
+		transition: var(--transitionSlow) filter;
+	}
+
+	.squiggles :global([data-hovered]) {
+		filter: var(--squiggleVivid);
+		transition: var(--transitionVivid);
+
+		/* Squiggles that are first drawn while already hovered fade up too */
+		@starting-style {
+			filter: saturate(1) brightness(1);
+		}
 	}
 
 	@media (forced-colors: active) {

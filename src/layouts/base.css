@@ -46,6 +46,8 @@
 		--squiggleMiddle: hsl(170 64% 30% / 74%);
 		--squiggleEnd: hsl(266 64% 30% / 74%);
 		--squiggleHighlight: rgb(14 36 108 / 95%);
+		--squiggleVivid: saturate(1.7) brightness(1.35);
+		--transitionVivid: 2s ease-in-out filter;
 
 		--squiggleLine: linear-gradient(
 			to right,
@@ -193,6 +195,7 @@
 		--squiggleMiddle: hsl(170 44% 74% / 64%);
 		--squiggleEnd: hsl(266 44% 74% / 64%);
 		--squiggleHighlight: rgb(198 222 255 / 95%);
+		--squiggleVivid: saturate(2.6) brightness(1.12);
 
 		/* Light text on navy reads thinner: a little more weight, leading, and tracking */
 		--fontWeightLight: 360;

@@ -121,6 +121,7 @@ export class Squiggle {
 		svg.style.transform = `translate(${px(left)}, ${px(snap(bottom + this.#offset) - center)})`;
 		svg.style.opacity = String(this.#rests && this.link.isConnected ? 1 : near);
 		svg.setAttribute("width", String(width));
+		svg.toggleAttribute("data-hovered", this.target === 1);
 
 		for (const element of [base, highlight]) {
 			element.setAttribute("d", path);

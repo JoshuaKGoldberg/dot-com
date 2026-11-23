@@ -14,7 +14,9 @@
 	mask: var(--squiggleMask) repeat-x left;
 	pointer-events: none;
 	position: absolute;
-	transition: var(--transitionMedium) opacity;
+	transition:
+		var(--transitionMedium) opacity,
+		var(--transitionSlow) filter;
 	width: 100%;
 }
 
@@ -28,6 +30,13 @@
 	--squiggleMask: url("~/assets/squiggles/wave.svg");
 }
 
+.squiggly[data-squiggle="current"]:not([aria-current]):hover::after {
+	filter: var(--squiggleVivid);
+	transition:
+		var(--transitionMedium) opacity,
+		var(--transitionVivid);
+}
+
 .squiggly:is([data-squiggle="current"], [data-squiggle="onHover"]):not(
 		[aria-current],
 		[aria-selected="true"] > *,
@@ -38,6 +47,7 @@
 	/* Keeps its shape until it's done fading out */
 	transition:
 		var(--transitionMedium) opacity,
+		var(--transitionSlow) filter,
 		mask-image 0s var(--transitionMedium) allow-discrete;
 }
 
