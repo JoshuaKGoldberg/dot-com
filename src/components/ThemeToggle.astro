@@ -1,20 +1,14 @@
 ---
-import XMark from "astro-heroicons/micro/XMark.astro";
 import Moon from "astro-heroicons/outline/Moon.astro";
 import Sun from "astro-heroicons/outline/Sun.astro";
 
 import HeaderToggle from "./HeaderToggle.astro";
 ---
 
-<div class="theme-buttons">
-	<HeaderToggle id="themeToggle" label="Theme toggle">
-		<Moon data-state="dark" />
-		<Sun data-out data-state="light" />
-	</HeaderToggle>
-	<button aria-label="Clear theme preference" id="themeClear" type="button">
-		<XMark height={16} width={16} />
-	</button>
-</div>
+<HeaderToggle clear="Clear theme preference" id="theme" label="Theme toggle">
+	<Moon data-state="dark" />
+	<Sun data-out data-state="light" />
+</HeaderToggle>
 
 <script>
 	import { fadeTheme } from "~/theme/fadeTheme";
@@ -23,61 +17,16 @@ import HeaderToggle from "./HeaderToggle.astro";
 </script>
 
 <script is:inline>
-	{
-		const clear = document.getElementById("themeClear");
-		const toggle = document.getElementById("themeToggle");
-
-		const setting = createRootSetting({
-			apply(theme, chosen) {
-				document.documentElement.classList.toggle("dark", theme === "dark");
-				clear.classList.toggle("clear-active", !!chosen);
-				toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
-			},
-			beforeChange() {
-				document.dispatchEvent(new Event("theme:before-change"));
-			},
-			key: "theme",
-			options: ["light", "dark"],
-			query: "(prefers-color-scheme: dark)",
-			toggle,
-		});
-
-		clear.addEventListener("click", () => {
-			setting.choose(undefined);
-		});
-	}
+	createRootSetting({
+		apply(theme, toggle) {
+			document.documentElement.classList.toggle("dark", theme === "dark");
+			toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
+		},
+		beforeChange() {
+			document.dispatchEvent(new Event("theme:before-change"));
+		},
+		id: "theme",
+		options: ["light", "dark"],
+		query: "(prefers-color-scheme: dark)",
+	});
 </script>
-
-<style>
-	/* Its two buttons are closer to each other than to the motion toggle */
-	.theme-buttons {
-		display: flex;
-		justify-content: center;
-		padding-left: 0.5rem;
-		position: relative;
-		width: 4.25rem;
-	}
-
-	#themeClear {
-		background: none;
-		border: 0;
-		color: var(--colorForeground);
-		cursor: pointer;
-		display: flex;
-		opacity: 1;
-		padding: 0.5rem 0.25rem;
-		position: absolute;
-		right: -0.375rem;
-		top: 0;
-		transition:
-			var(--transitionFast) opacity,
-			var(--transitionFast) translate,
-			var(--transitionFast) visibility;
-	}
-
-	#themeClear:not(.clear-active) {
-		opacity: 0;
-		translate: 0 0.5rem;
-		visibility: hidden;
-	}
-</style>

@@ -5,36 +5,23 @@ import Play from "astro-heroicons/outline/Play.astro";
 import HeaderToggle from "./HeaderToggle.astro";
 ---
 
-<div class="motion-toggle">
-	<HeaderToggle id="motionToggle" label="Pause animations">
-		<Pause data-state="playing" />
-		<Play data-state="paused" />
-	</HeaderToggle>
-</div>
+<HeaderToggle
+	clear="Clear motion preference"
+	id="motion"
+	label="Pause animations"
+>
+	<Pause data-state="playing" />
+	<Play data-state="paused" />
+</HeaderToggle>
 
 <script is:inline>
-	{
-		const toggle = document.getElementById("motionToggle");
-
-		createRootSetting({
-			apply(motion) {
-				document.documentElement.dataset.motion = motion;
-				toggle.setAttribute("aria-pressed", String(motion === "paused"));
-			},
-			key: "motion",
-			options: ["playing", "paused"],
-			query: "(prefers-reduced-motion: reduce)",
-			toggle,
-		});
-	}
+	createRootSetting({
+		apply(motion, toggle) {
+			document.documentElement.dataset.motion = motion;
+			toggle.setAttribute("aria-pressed", String(motion === "paused"));
+		},
+		id: "motion",
+		options: ["playing", "paused"],
+		query: "(prefers-reduced-motion: reduce)",
+	});
 </script>
-
-<style>
-	/* Out of flow, so the header's layout is the same with or without it */
-	.motion-toggle {
-		position: absolute;
-		right: calc(100% - 1rem);
-		top: 0;
-		z-index: 1;
-	}
-</style>

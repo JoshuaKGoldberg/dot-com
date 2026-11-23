@@ -222,7 +222,7 @@
 }
 
 /* Themes' colors are already transitioning, per fadeTheme.ts */
-[data-theme-fading] :is(body, body :not(#themeClear, [data-reveal])) {
+[data-theme-fading] :is(body, body :not([data-clear], [data-reveal])) {
 	transition: none !important;
 }
 

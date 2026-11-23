@@ -1,17 +1,27 @@
 ---
+import XMark from "astro-heroicons/micro/XMark.astro";
+
 interface Props {
+	/** Label for going back to the system's preference */
+	clear: string;
+
 	id: string;
 	label: string;
 }
 
-const { id, label } = Astro.props;
+const { clear, id, label } = Astro.props;
 ---
 
-<button aria-label={label} class="header-toggle" id={id} type="button">
-	<span class="icons">
-		<slot />
-	</span>
-</button>
+<div class="header-toggle" id={id}>
+	<button aria-label={label} class="toggle" data-toggle type="button">
+		<span class="icons">
+			<slot />
+		</span>
+	</button>
+	<button aria-label={clear} class="clear" data-clear type="button">
+		<XMark height={8} width={8} />
+	</button>
+</div>
 
 <style>
 	/* Needs JavaScript to do anything, which is also what sets data-motion */
@@ -19,7 +29,15 @@ const { id, label } = Astro.props;
 		visibility: hidden;
 	}
 
+	/* Two targets that don't overlap, and are as small as WCAG allows those to be */
 	.header-toggle {
+		--target: 1.5rem;
+
+		display: flex;
+		height: 2rem;
+	}
+
+	button {
 		background: none;
 		border: 0;
 		color: var(--colorForeground);
@@ -27,22 +45,48 @@ const { id, label } = Astro.props;
 		display: block;
 		padding: 0;
 		transition: var(--transitionMedium) color;
+		width: var(--target);
 	}
 
-	.header-toggle:hover {
+	button:hover {
 		color: var(--colorEmphasized);
+	}
+
+	/* Like a superscript: in the corner of its target that's nearest to the icon */
+	.clear {
+		align-items: flex-start;
+		display: flex;
+		height: var(--target);
+		padding-top: 0.2rem;
+		transition:
+			var(--transitionFast) opacity,
+			var(--transitionFast) translate,
+			var(--transitionFast) visibility;
+	}
+
+	.clear:not([data-active]) {
+		opacity: 0;
+		translate: 0 0.5rem;
+		visibility: hidden;
+	}
+
+	.clear :global(svg) {
+		display: block;
+		overflow: visible;
+		stroke: currentColor;
+		stroke-width: 0.75px;
 	}
 
 	/*
 	 * Shows whichever of its two icons its script hasn't marked as being out.
-	 * Once it's been used, changing between them has icons orbit in and out.
+	 * While it's been used, changing between them has icons orbit in and out.
 	 */
 	.icons {
 		display: block;
 		height: 2rem;
 		mask-image: linear-gradient(black 70%, transparent 95%);
 		position: relative;
-		width: 2rem;
+		width: 100%;
 	}
 
 	.icons :global(svg) {
@@ -50,11 +94,17 @@ const { id, label } = Astro.props;
 		animation-fill-mode: both;
 		animation-timing-function: ease;
 		height: 1.25rem;
-		inset: 0;
-		margin: auto;
+		inset: 0 0 0 auto;
+		margin: auto 0;
 		position: absolute;
 		transform-origin: 50% 1.75rem;
 		width: 1.25rem;
+	}
+
+	/* Narrower than it says it is, so it's moved closer to what's beside it */
+	.icons :global([data-state="paused"]),
+	.icons :global([data-state="playing"]) {
+		right: -0.2rem;
 	}
 
 	.icons :global([data-out]) {
@@ -62,15 +112,11 @@ const { id, label } = Astro.props;
 		transform: rotate(90deg);
 	}
 
-	:global(html[data-motion="playing"])
-		.header-toggle[data-used]
-		:global([data-out]) {
+	.header-toggle[data-used] :global([data-out]) {
 		animation-name: orbit-out;
 	}
 
-	:global(html[data-motion="playing"])
-		.header-toggle[data-used]
-		:global(svg:not([data-out])) {
+	.header-toggle[data-used] .icons :global(svg:not([data-out])) {
 		animation-delay: calc(var(--transitionSlow) / 2);
 		animation-name: orbit-in;
 	}

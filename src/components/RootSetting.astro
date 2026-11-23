@@ -6,14 +6,10 @@
 	 * Inline so that it runs before first paint. The header it's in is kept between
 	 * pages, but the root's attributes aren't, so they're reapplied after each swap.
 	 */
-	function createRootSetting({
-		apply,
-		beforeChange,
-		key,
-		options,
-		query,
-		toggle,
-	}) {
+	function createRootSetting({ apply, beforeChange, id, options, query }) {
+		const host = document.getElementById(id);
+		const clear = host.querySelector("[data-clear]");
+		const toggle = host.querySelector("[data-toggle]");
 		const [off, on] = options;
 		const preference = matchMedia(query);
 		let chosen = read();
@@ -21,7 +17,7 @@
 		// Storage throws when the browser is set to block site data
 		function read() {
 			try {
-				const stored = localStorage.getItem(key);
+				const stored = localStorage.getItem(id);
 
 				return options.includes(stored) ? stored : undefined;
 			} catch {
@@ -32,9 +28,9 @@
 		function write() {
 			try {
 				if (chosen) {
-					localStorage.setItem(key, chosen);
+					localStorage.setItem(id, chosen);
 				} else {
-					localStorage.removeItem(key);
+					localStorage.removeItem(id);
 				}
 			} catch {
 				// The choice still applies until the next full page load
@@ -48,7 +44,8 @@
 		function update() {
 			const current = getCurrent();
 
-			apply(current, chosen);
+			apply(current, toggle);
+			clear.toggleAttribute("data-active", !!chosen);
 
 			for (const icon of toggle.querySelectorAll("[data-state]")) {
 				icon.toggleAttribute("data-out", icon.dataset.state !== current);
@@ -59,12 +56,28 @@
 			beforeChange?.();
 			chosen = choice;
 			write();
-			toggle.dataset.used = "";
 			update();
+
+			// Only lasts for this change's animation, so that nothing else can replay it
+			if (document.documentElement.dataset.motion === "playing") {
+				host.dataset.used = "";
+			}
 		}
 
 		toggle.addEventListener("click", () => {
 			choose(getCurrent() === on ? off : on);
+		});
+
+		clear.addEventListener("click", () => {
+			// It's about to be hidden, which would otherwise lose the focus it has
+			toggle.focus({ focusVisible: clear.matches(":focus-visible") });
+			choose(undefined);
+		});
+
+		host.addEventListener("animationend", ({ target }) => {
+			if (!target.hasAttribute("data-out")) {
+				delete host.dataset.used;
+			}
 		});
 
 		preference.addEventListener("change", () => {
@@ -74,12 +87,10 @@
 
 		document.addEventListener("astro:after-swap", () => {
 			// Moving the toggle into the new page would otherwise replay its animation
-			delete toggle.dataset.used;
+			delete host.dataset.used;
 			update();
 		});
 
 		update();
-
-		return { choose };
 	}
 </script>
