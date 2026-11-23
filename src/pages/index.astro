@@ -13,6 +13,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 <HeroLayout
 	alt="Josh looking calmly at the camera from inside a purple hood with big ears and a triangular antenna"
 	description="I work to make web development better, most notably on typescript-eslint. Author of Learning TypeScript, speaker, SquiggleConf co-founder, and dev at Sentry."
+	fitsScreen
 	portrait={{ halo, image }}
 	primary="Hello. I’m Josh."
 	slug="josh"
@@ -42,11 +43,20 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	}
 
 	.about {
+		--squiggleOffset: -0.36em;
+
 		display: flex;
 		gap: clamp(1vh, 1.5rem, 3vh);
 		flex-direction: column;
+		grid-row: 4;
 		line-height: 1.35;
-		margin: 2rem 0 1rem;
+		margin-top: 1rem;
+	}
+
+	@media (max-height: 700px) and (max-width: 699px) {
+		.about :global(p) {
+			font-size: var(--fontSizeSmall);
+		}
 	}
 
 	@media (min-width: 700px) {
@@ -55,7 +65,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		}
 
 		.about {
-			margin-top: 3.5rem;
+			margin-top: clamp(0.5rem, 2vh, 1.5rem);
 			text-align: center;
 		}
 	}

@@ -13,11 +13,15 @@ import "./base.css";
 interface Props {
 	class?: string | undefined;
 	description: string;
+
+	/** Whether to spread out or squeeze in to the screen, scrolling only if it can't. */
+	fitsScreen?: boolean;
+
 	image: string;
 	title?: string;
 }
 
-const { class: className, description, image, title } = Astro.props;
+const { class: className, description, fitsScreen, image, title } = Astro.props;
 ---
 
 <html lang="en">
@@ -26,7 +30,7 @@ const { class: className, description, image, title } = Astro.props;
 		document.body.classList.add("javascriptEnabled");
 	</script>
 	<div id="#top"></div>
-	<MainArea as="body" class={className}>
+	<MainArea as="body" class={className} data-fits-screen={fitsScreen}>
 		<SkipLink />
 		<Header />
 
@@ -74,5 +78,22 @@ const { class: className, description, image, title } = Astro.props;
 <style>
 	.content {
 		view-transition-name: content;
+	}
+
+	[data-fits-screen],
+	[data-fits-screen] .content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	[data-fits-screen] .content {
+		flex: 1 0 auto;
+	}
+
+	/* Whatever height is left is shared with the footer, then mostly above the hero */
+	[data-fits-screen] main {
+		display: grid;
+		flex: 1.5 0 auto;
+		grid-template: 2fr auto 1fr auto / minmax(0, 1fr);
 	}
 </style>

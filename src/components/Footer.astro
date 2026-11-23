@@ -25,6 +25,12 @@ import { Text } from "./Text";
 		width: 100%;
 	}
 
+	:global([data-fits-screen]) footer {
+		align-content: center;
+		flex: 1 0 auto;
+		padding-block: clamp(0.5rem, 3vh, 1.5rem);
+	}
+
 	.credit {
 		--squiggleOffset: -0.55em;
 

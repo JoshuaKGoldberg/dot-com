@@ -34,6 +34,12 @@ interface Props {
 		max-width: 100%;
 	}
 
+	:global([data-fits-screen]) .hero {
+		grid-row: 2;
+		margin-block: 0;
+		padding-bottom: 0.5rem;
+	}
+
 	.first {
 		float: right;
 	}
@@ -47,6 +53,14 @@ interface Props {
 			flex-direction: row;
 			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(5rem, 10vh, 14rem);
 			padding: 0;
+		}
+
+		/* Starts beneath the header, which is fixed */
+		:global([data-fits-screen]) .hero {
+			--heroSizeLarge: clamp(10rem, 36dvh, 16rem);
+
+			height: auto;
+			padding: 6rem 0 1.5rem;
 		}
 
 		.half {
