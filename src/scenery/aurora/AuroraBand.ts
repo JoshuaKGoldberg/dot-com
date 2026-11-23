@@ -1,7 +1,9 @@
+import type { Dwell } from "../Dwell";
+
 import { cacheLayout } from "../cacheLayout";
-import { Dwell } from "../Dwell";
 import { footerDwell } from "../footerDwell";
 import { createFrameTask, type FrameTask } from "../frameLoop";
+import { headerDwell } from "../headerDwell";
 import { clamp, damp, smoothstep } from "../math";
 import { onPointer, pointer } from "../pointer";
 import { onPause } from "../rootState";
@@ -34,7 +36,7 @@ export class AuroraBand {
 
 	constructor(host: HTMLElement, signal: AbortSignal) {
 		this.#edge = host.getAttribute("edge") === "top" ? "top" : "bottom";
-		this.#dwell = this.#edge === "top" ? new Dwell() : footerDwell;
+		this.#dwell = this.#edge === "top" ? headerDwell : footerDwell;
 		this.#measure = cacheLayout(
 			() => ({
 				bounds: host.getBoundingClientRect(),

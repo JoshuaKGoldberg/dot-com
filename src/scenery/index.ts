@@ -1,6 +1,6 @@
 import { AuroraBand } from "./aurora/AuroraBand";
 import { defineScenery } from "./defineScenery";
-import { ActiveLinks } from "./links/ActiveLinks";
+import { LitLinks } from "./links/LitLinks";
 import { HeroPortrait } from "./portrait/HeroPortrait";
 import { SquiggleOverlay } from "./squiggles/SquiggleOverlay";
 import { StarField } from "./stars/StarField";
@@ -11,7 +11,7 @@ defineScenery(
 	(host, signal) => new HeroPortrait(host, signal),
 );
 defineScenery("squiggle-overlay", (host, signal) => {
-	new ActiveLinks(signal);
+	new LitLinks(signal);
 	new SquiggleOverlay(host, signal);
 });
 defineScenery("star-field", (host, signal) => new StarField(host, signal));

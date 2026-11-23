@@ -2,8 +2,9 @@
 	:root {
 		color-scheme: light;
 
-		--activeDimming: 0.055;
-		--activeLift: -0.04;
+		--litDimming: 0.055;
+		--litGlare: 0;
+		--litLift: -0.04;
 
 		--colorBackground: #ecf4f9;
 		--colorEmphasized: #0a58aa;
@@ -152,7 +153,8 @@
 	html.dark {
 		color-scheme: dark;
 
-		--activeLift: 0.12;
+		--litGlare: 1;
+		--litLift: 0.12;
 
 		--colorBackground: #0b1220;
 		--colorEmphasized: #77bbff;
@@ -221,45 +223,50 @@
 }
 
 /*
- * Active links are lit in shifting hues where the pointer is, per ActiveLinks.ts.
+ * Links are lit in shifting hues where the pointer is, per LitLinks.ts.
  * Their contrast rises too, to make up for harder to read hues and brighter auroras.
+ * Light text's colors soften as well, the more of a glare there is behind them.
  */
 @supports (color: oklch(from red l c h)) {
-	:is(
-		[data-header-link][aria-current],
-		[role="tab"][aria-selected="true"] > *
-	)[data-lit] {
-		--activeReach: 56px;
-		--chroma: calc(c * (1 + 0.6 * var(--nearness)));
-		--lightness: calc(l + var(--activeLift) * var(--nearness));
+	:is([data-header-link], [role="tab"][aria-selected="true"] > *)[data-lit] {
+		--litReach: 56px;
+		--softening: calc(var(--glare) * var(--litGlare));
+		--chroma: calc(c * (1 + 0.6 * (1 - var(--softening)) * var(--nearness)));
+		--lightness: calc(l + var(--litLift) * var(--nearness));
 		--litLightness: calc(
-			l + (var(--activeLift) - var(--activeDimming)) * var(--nearness)
+			l + (var(--litLift) - var(--litDimming) + 0.085 * var(--softening)) *
+				var(--nearness)
 		);
-		--colorActive: oklch(from var(--colorEmphasized) var(--lightness) c h);
-		--colorActiveStart: oklch(
+		--colorLit: oklch(from var(--colorEmphasized) var(--lightness) c h);
+		--colorLitStart: oklch(
 			from var(--colorEmphasized) var(--litLightness) var(--chroma)
 				calc(h + var(--hueShift) - 50 * var(--nearness))
 		);
-		--colorActiveMiddle: oklch(
+		--colorLitMiddle: oklch(
 			from var(--colorEmphasized) var(--litLightness) var(--chroma)
 				calc(h + var(--hueShift))
 		);
-		--colorActiveEnd: oklch(
+		--colorLitEnd: oklch(
 			from var(--colorEmphasized) var(--litLightness) var(--chroma)
 				calc(h + var(--hueShift) + 50 * var(--nearness))
 		);
-		--activeLight: linear-gradient(
+		--litGradient: linear-gradient(
 			to right,
-			var(--colorActive) calc(var(--lightX) - var(--activeReach)),
-			var(--colorActiveStart) calc(var(--lightX) - var(--activeReach) * 0.5),
-			var(--colorActiveMiddle) var(--lightX),
-			var(--colorActiveEnd) calc(var(--lightX) + var(--activeReach) * 0.5),
-			var(--colorActive) calc(var(--lightX) + var(--activeReach))
+			var(--colorLit) calc(var(--lightX) - var(--litReach)),
+			var(--colorLitStart) calc(var(--lightX) - var(--litReach) * 0.5),
+			var(--colorLitMiddle) var(--lightX),
+			var(--colorLitEnd) calc(var(--lightX) + var(--litReach) * 0.5),
+			var(--colorLit) calc(var(--lightX) + var(--litReach))
 		);
 
 		@media (forced-colors: none) {
-			-webkit-text-fill-color: transparent;
-			background: var(--activeLight) text;
+			/* Fades out, over what it's being lit as */
+			-webkit-text-fill-color: color-mix(
+				in srgb,
+				currentcolor calc((1 - var(--nearness)) * 100%),
+				transparent
+			);
+			background: var(--litGradient) text;
 
 			&::selection {
 				-webkit-text-fill-color: currentcolor;
@@ -342,7 +349,7 @@
 
 @keyframes portrait-blur {
 	50% {
-		filter: blur(4px);
+		filter: blur(1px);
 	}
 }
 

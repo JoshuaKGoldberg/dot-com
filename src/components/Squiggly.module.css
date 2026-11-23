@@ -19,7 +19,7 @@
 }
 
 .squiggly[data-squiggle="current"]::after {
-	background: var(--activeLight, var(--colorEmphasized));
+	background: var(--litGradient, var(--colorEmphasized));
 }
 
 .squiggly:is([aria-selected] > *, :focus-visible, :hover):not(
