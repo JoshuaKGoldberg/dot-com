@@ -3,6 +3,7 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import { getTone } from "./getTone";
 import GlassRing from "./GlassRing.astro";
 
 export interface HeroPortraitImages {
@@ -32,10 +33,15 @@ const overhang = image.height / image.width - usualHeight;
 ---
 
 <hero-portrait class="portrait">
-	<div aria-hidden="true" class="backdrop">
+	<div
+		aria-hidden="true"
+		class="backdrop"
+		data-layer="backdrop"
+		data-tone={scene && (await getTone(scene))}
+	>
 		<div class="aurora resting"></div>
 		{scene && (
-			<div class="scene" data-reveal>
+			<div class="scene">
 				<Image
 					alt=""
 					class="scene-image"
@@ -54,8 +60,8 @@ const overhang = image.height / image.width - usualHeight;
 	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
 	<GlassRing />
 	<GlassRing awake data-portrait="light" />
-	<div class="clip">
-		<div class="figure" data-portrait="figure" data-reveal>
+	<div class="clip" data-layer="figure" data-tone={await getTone(image)}>
+		<div class="figure" data-portrait="figure">
 			<div aria-hidden="true" class="glow" data-portrait="glow">
 				{haloSides.map((side) => (
 					<div
@@ -103,11 +109,8 @@ const overhang = image.height / image.width - usualHeight;
 	}
 
 	.backdrop {
-		background: linear-gradient(
-			var(--discTop),
-			var(--discMiddle) 60%,
-			var(--discBottom)
-		);
+		background: var(--discMiddle)
+			linear-gradient(var(--discTop), var(--discMiddle) 60%, var(--discBottom));
 		border-radius: 50%;
 		box-shadow: 0 0 2rem 0.5rem var(--discGlow);
 		contain: paint;
@@ -251,6 +254,7 @@ const overhang = image.height / image.width - usualHeight;
 	 * where 50% is of the circle itself: so that nothing ever covers the ring.
 	 */
 	.clip {
+		view-transition-name: portrait-figure;
 		clip-path: inset(-25% 0 0 0 round 0 0 50% 50%);
 	}
 

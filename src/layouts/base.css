@@ -149,16 +149,6 @@
 		position: relative;
 	}
 
-	[data-reveal] {
-		transition: opacity var(--transitionSlowest) ease-out;
-	}
-
-	@media (scripting: enabled) {
-		[data-reveal]:not([data-reveal="ready"]) {
-			opacity: 0;
-		}
-	}
-
 	html.dark {
 		color-scheme: dark;
 
@@ -279,7 +269,7 @@
 }
 
 /* Themes' colors are already transitioning, per fadeTheme.ts */
-[data-theme-fading] :is(body, body :not([data-clear], [data-reveal])) {
+[data-theme-fading] :is(body, body :not([data-clear])) {
 	transition: none !important;
 }
 
@@ -310,15 +300,50 @@
 }
 
 /* Slides from where it was on the last page to where it is on the next */
-::view-transition-group(portrait) {
+::view-transition-group(portrait),
+::view-transition-group(portrait-figure) {
 	animation-duration: 480ms;
 	animation-timing-function: cubic-bezier(0.3, 0, 0.1, 1);
 }
 
-::view-transition-image-pair(portrait),
 ::view-transition-new(portrait),
-::view-transition-old(portrait) {
-	animation-duration: 480ms;
+::view-transition-new(portrait-figure),
+::view-transition-old(portrait),
+::view-transition-old(portrait-figure) {
+	animation-duration: 300ms;
+}
+
+/*
+ * Done by the time that sliding has visibly settled.
+ * People are blurriest halfway, when each is as visible as the other.
+ * The circles that they're in stay sharp, including where they're cut off by one.
+ */
+::view-transition-image-pair(portrait-figure) {
+	animation: portrait-blur 300ms ease-in-out both;
+	clip-path: inset(-25% 0 0 0 round 0 0 50% 50%);
+}
+
+/* Colors meet along the way too, per shiftTones.ts */
+[data-shifting-tones~="backdrop"]::view-transition-new(portrait) {
+	filter: url("#tone-new-backdrop");
+}
+
+[data-shifting-tones~="backdrop"]::view-transition-old(portrait) {
+	filter: url("#tone-old-backdrop");
+}
+
+[data-shifting-tones~="figure"]::view-transition-new(portrait-figure) {
+	filter: url("#tone-new-figure");
+}
+
+[data-shifting-tones~="figure"]::view-transition-old(portrait-figure) {
+	filter: url("#tone-old-figure");
+}
+
+@keyframes portrait-blur {
+	50% {
+		filter: blur(8px);
+	}
 }
 
 @keyframes page-in {
@@ -338,7 +363,8 @@
 	display: none;
 }
 
-[data-motion="paused"]::view-transition-group(portrait),
+[data-motion="paused"]::view-transition-group(*),
+[data-motion="paused"]::view-transition-image-pair(*),
 [data-motion="paused"]::view-transition-new(*),
 [data-motion="paused"]::view-transition-old(*) {
 	animation: none;

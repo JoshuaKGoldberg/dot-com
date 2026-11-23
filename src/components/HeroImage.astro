@@ -3,6 +3,7 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import { getTone } from "./hero/getTone";
 import GlassRing from "./hero/GlassRing.astro";
 
 interface Props {
@@ -15,7 +16,11 @@ const size = 144;
 ---
 
 <div class="hero-image">
-	<div data-reveal>
+	<div
+		class="figure"
+		data-layer="figure"
+		data-tone={await getTone(Astro.props.src)}
+	>
 		<Image
 			alt={Astro.props.alt}
 			densities={[1, 2]}
@@ -40,7 +45,8 @@ const size = 144;
 		width: var(--imageSize);
 	}
 
-	[data-reveal] {
+	.figure {
+		view-transition-name: portrait-figure;
 		height: 100%;
 	}
 

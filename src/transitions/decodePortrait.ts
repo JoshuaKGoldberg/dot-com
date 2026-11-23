@@ -2,19 +2,14 @@
 const patience = 300;
 
 /**
- * Gets a new page's most important images ready to be shown the moment that it is.
- * Any that take too long will ease in on the page instead, as on a full page load.
+ * Gets the images of a new page's portrait ready to be shown the moment that it is.
+ * Any that take too long will show up on the page instead, as on a full page load.
  */
-export async function decodeReveals(page: Document) {
+export async function decodePortrait(page: Document) {
 	const decoding = Promise.all(
 		Array.from(
-			page.querySelectorAll<HTMLElement>("[data-reveal]"),
-			async (reveal) => {
-				const image = reveal.querySelector("img");
-				if (!image) {
-					return;
-				}
-
+			page.querySelectorAll<HTMLImageElement>("[data-layer] img"),
+			async (image) => {
 				const preloaded = new Image();
 				preloaded.srcset = image.srcset;
 				preloaded.src = image.src;
@@ -22,7 +17,6 @@ export async function decodeReveals(page: Document) {
 				try {
 					await preloaded.decode();
 					image.decoding = "sync";
-					reveal.dataset.reveal = "ready";
 				} catch {
 					// The page itself will show it in whatever way it can
 				}

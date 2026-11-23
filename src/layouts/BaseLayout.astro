@@ -41,29 +41,20 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 			<Footer />
 		</div>
 
-		<script data-astro-rerun is:inline>
-			// Eases images in once they're ready, instead of them suddenly appearing
-			for (const element of document.querySelectorAll("[data-reveal]")) {
-				const reveal = () => {
-					element.dataset.reveal = "ready";
-				};
-
-				element.querySelector("img").decode().then(reveal, reveal);
-			}
-		</script>
 		<Scenery />
 	</MainArea>
 </html>
 
 <script>
-	import { decodeReveals } from "~/transitions/decodeReveals";
+	import { decodePortrait } from "~/transitions/decodePortrait";
+	import { shiftTones } from "~/transitions/shiftTones";
 
 	document.addEventListener("astro:before-preparation", (event) => {
 		const load = event.loader;
 
 		event.loader = async () => {
 			await load();
-			await decodeReveals(event.newDocument);
+			await decodePortrait(event.newDocument);
 		};
 	});
 
@@ -73,8 +64,9 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 	let previousTop = 0;
 
 	// Keeps the previous page from seeming to scroll as it fades out
-	document.addEventListener("astro:before-swap", () => {
+	document.addEventListener("astro:before-swap", (event) => {
 		previousTop = getContentTop();
+		shiftTones(document, event.newDocument, event.viewTransition);
 	});
 	document.addEventListener("astro:after-swap", () => {
 		const shift = previousTop - getContentTop();
