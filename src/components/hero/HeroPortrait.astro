@@ -46,7 +46,10 @@ const { alt, halo, image, scene } = Astro.props;
 				/>
 			</div>
 		)}
-		<div class="aurora awake" data-portrait="light"></div>
+		<div
+			class:list={["aurora awake", scene && "vivid"]}
+			data-portrait="light"
+		></div>
 	</div>
 	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
 	<GlassRing />
@@ -149,11 +152,11 @@ const { alt, halo, image, scene } = Astro.props;
 			);
 		content: "";
 		inset: -20% -40%;
-		opacity: 0.6;
+		opacity: var(--front, 0.6);
 	}
 
 	.aurora::after {
-		opacity: 0.4;
+		opacity: var(--back, 0.4);
 		transform: scaleX(-1) translateY(12%);
 	}
 
@@ -164,6 +167,18 @@ const { alt, halo, image, scene } = Astro.props;
 
 	.awake {
 		opacity: var(--light, 0);
+	}
+
+	/* Photos can be dark in either theme, so light over them is always strong */
+	.vivid {
+		--curtainJade: rgb(56 255 153);
+		--curtainCornflower: rgb(51 191 255);
+		--curtainWisteria: rgb(173 115 255);
+		--curtainRose: rgb(255 102 158);
+		--back: 0.6;
+		--front: 0.85;
+
+		mix-blend-mode: screen;
 	}
 
 	/* Kept on their own layers, so that they're never repainted as they change */
