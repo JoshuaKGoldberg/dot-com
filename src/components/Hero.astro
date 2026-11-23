@@ -1,18 +1,22 @@
 ---
-import HeroImage, { type HeroImages } from "./HeroImage.astro";
+import HeroPortrait, {
+	type HeroPortraitImages,
+} from "./hero/HeroPortrait.astro";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
 	alt: string;
 	class?: string | undefined;
-	images: HeroImages;
+	portrait: HeroPortraitImages;
 	primary: string;
 }
 ---
 
 <div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
-		<HeroImage alt={Astro.props.alt} size="large" src={Astro.props.images} />
+		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait}>
+			<slot name="portrait" />
+		</HeroPortrait>
 	</div>
 	<div class="half second">
 		<HeroTitle>{Astro.props.primary}</HeroTitle>
@@ -23,6 +27,7 @@ interface Props {
 <style>
 	.hero {
 		margin: clamp(2rem, 8vmin, 8rem) auto;
+		overflow-x: clip;
 		padding: 0 var(--widthPagePadding) 1rem;
 		position: relative;
 		width: var(--widthFull);

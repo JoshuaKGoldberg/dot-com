@@ -18,7 +18,7 @@ const active =
 	as="a"
 	class={clsx("link", active && "active")}
 	fontSize="medium"
-	fontWeight="bolder"
+	fontWeight="bold"
 	href={href}
 	{...(href.startsWith("http") && { target: "_blank" })}
 	variant={active ? "passive" : "onHover"}
@@ -33,6 +33,5 @@ const active =
 
 	.active {
 		color: var(--colorEmphasized);
-		filter: drop-shadow(3px 3px 1px var(--colorSubtle));
 	}
 </style>

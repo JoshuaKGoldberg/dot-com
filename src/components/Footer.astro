@@ -4,14 +4,14 @@ import { EmojiBlastHeart } from "./EmojiBlastHeart";
 import { Text } from "./Text";
 ---
 
-<Text as="footer" fontSize="small" fontWeight="light">
+<Text as="footer" font="label" fontSize="smaller" tone="muted">
 	Made with <EmojiBlastHeart client:visible /> in Boston
 	<br />
 	using Astro, Solid, and TypeScript.
 	<br />
 	<Anchor
 		class="anchor"
-		fontSize="small"
+		fontSize="smaller"
 		href="https://github.com/JoshuaKGoldberg/dot-com"
 		target="_blank"
 	>
@@ -21,9 +21,9 @@ import { Text } from "./Text";
 
 <style>
 	footer {
-		opacity: 0.75;
-		padding: clamp(1.5rem, 3.5vmin, 7rem) var(--widthPagePadding);
 		justify-self: flex-end;
+		line-height: 1.5;
+		padding: clamp(1.5rem, 3.5vmin, 7rem) var(--widthPagePadding);
 		width: 100%;
 	}
 

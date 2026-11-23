@@ -205,9 +205,6 @@ importers:
       '@eslint/markdown':
         specifier: ^9.0.0
         version: 9.0.0(supports-color@10.2.2)
-      '@fontsource-variable/league-spartan':
-        specifier: ^5.2.8
-        version: 5.2.8
       '@kobalte/core':
         specifier: ^0.13.11
         version: 0.13.14(solid-js@1.9.19)
@@ -1271,9 +1268,6 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
-
-  '@fontsource-variable/league-spartan@5.2.8':
-    resolution: {integrity: sha512-cwi1hV4qsQh7FQ+eITyXxBNJY6JqBpfr651Ov0ux/BH1kUPl5gAPJdDyNYQ7QmljXcq11H359jIBC6S1PnIwRQ==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -6287,8 +6281,6 @@ snapshots:
       '@floating-ui/utils': 0.2.12
 
   '@floating-ui/utils@0.2.12': {}
-
-  '@fontsource-variable/league-spartan@5.2.8': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

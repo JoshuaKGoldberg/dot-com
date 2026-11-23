@@ -38,14 +38,16 @@ export function ContentEntry(props: ContentEntryProps) {
 					<Text
 						as="a"
 						class={styles.title}
+						data-squiggle="onHover"
+						font="label"
 						fontSize="medium"
-						fontWeight="bold"
 						href={props.url}
+						tone="strong"
 						{...(props.url.startsWith("/") ? {} : { target: "_blank" })}
 					>
 						{props.title}
 					</Text>
-					<Text as="p" class={styles.subtitle} fontWeight="light">
+					<Text as="p" font="label" fontSize="smaller" tone="muted">
 						{props.subtitle}
 					</Text>
 					{props.description && (
@@ -59,7 +61,7 @@ export function ContentEntry(props: ContentEntryProps) {
 						</Text>
 					)}
 					{props.links && (
-						<Text as="p" class={styles.links} fontWeight="light">
+						<Text as="p" class={styles.links} font="label">
 							<For each={props.links.sort(([a], [b]) => a.localeCompare(b))}>
 								{([text, href]) => (
 									<Anchor

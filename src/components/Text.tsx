@@ -4,8 +4,14 @@ import { Dynamic } from "solid-js/web";
 
 import styles from "./Text.module.css";
 
+const fonts = {
+	display: styles.fontDisplay,
+	label: styles.fontLabel,
+};
+
+export type Font = keyof typeof fonts;
+
 const fontSizes = {
-	large: styles.fontSizeLarge,
 	medium: styles.fontSizeMedium,
 	small: styles.fontSizeSmall,
 	smaller: styles.fontSizeSmaller,
@@ -17,21 +23,28 @@ export type FontSize = keyof typeof fontSizes;
 
 const fontWeights = {
 	bold: styles.fontWeightBold,
-	bolder: styles.fontWeightBolder,
 	light: styles.fontWeightLight,
-	medium: styles.fontWeightNormal,
 };
 
 export type FontWeight = keyof typeof fontWeights;
+
+const tones = {
+	muted: styles.toneMuted,
+	strong: styles.toneStrong,
+};
 
 export type TextProps<As extends keyof JSX.HTMLElementTags> =
 	JSX.HTMLElementTags[As] & {
 		as: As;
 		children: JSX.Element;
 		class?: string | undefined;
+		font?: Font;
 		fontSize?: FontSize;
 		fontWeight?: FontWeight;
+		tone?: Tone;
 	};
+
+export type Tone = keyof typeof tones;
 
 export function Text<As extends keyof JSX.HTMLElementTags>(
 	props: TextProps<As>,
@@ -39,8 +52,10 @@ export function Text<As extends keyof JSX.HTMLElementTags>(
 	const [knownProps, rest] = splitProps(props, [
 		"as",
 		"children",
+		"font",
 		"fontSize",
 		"fontWeight",
+		"tone",
 	]);
 
 	return (
@@ -50,8 +65,10 @@ export function Text<As extends keyof JSX.HTMLElementTags>(
 			{...rest}
 			class={clsx([
 				styles.text,
+				knownProps.font && fonts[knownProps.font],
 				knownProps.fontSize && fontSizes[knownProps.fontSize],
 				knownProps.fontWeight && fontWeights[knownProps.fontWeight],
+				knownProps.tone && tones[knownProps.tone],
 				rest.class,
 			])}
 		>

@@ -14,10 +14,10 @@ const socials = [
 ] as const;
 ---
 
-<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
+<Text as="p" class="socials" font="label" fontSize="smaller">
 	{socials.map(([alt, href, image]) => (
 		<a class="social" href={href} target="_blank">
-			<SocialImage alt={alt} image={image} />
+			<SocialImage alt="" image={image} />
 			<Squiggly as="span" fontSize="smaller" variant="onHover">
 				{alt}
 			</Squiggly>

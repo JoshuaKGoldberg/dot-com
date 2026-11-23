@@ -1,5 +1,6 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
+import MotionToggle from "./MotionToggle.astro";
 import { Text } from "./Text";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -15,7 +16,10 @@ const links = [
 <Text as="header" class="header" fontWeight="bold">
 	<div class="first">
 		<HeaderLink href="/">Josh Goldberg</HeaderLink>
-		<ThemeToggle />
+		<div class="toggles">
+			<MotionToggle />
+			<ThemeToggle />
+		</div>
 	</div>
 	<div class="links">
 		{links.map(([text, href]) => {
@@ -41,12 +45,22 @@ const links = [
 		width: 100%;
 	}
 
+	.toggles {
+		position: relative;
+	}
+
 	.links {
 		align-items: center;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		gap: 0 1rem;
+	}
+
+	@keyframes fader-in {
+		from {
+			opacity: 0;
+		}
 	}
 
 	@media (min-width: 700px) {
@@ -58,64 +72,36 @@ const links = [
 			z-index: 1;
 		}
 
-		header::after,
-		header::before {
-			--horizontalBlur: -3.5rem;
-			bottom: -1rem;
-			content: "";
-			filter: blur(1rem);
-			left: var(--horizontalBlur);
-			pointer-events: none;
-			position: absolute;
-			right: var(--horizontalBlur);
-		}
-
-		header::after {
-			backdrop-filter: blur(20px);
-			mask-image: linear-gradient(to bottom, black 50%, transparent);
-			top: 0;
-			z-index: -1;
-		}
-
-		header::before {
-			background:
-				radial-gradient(
-						ellipse at top,
-						var(--colorBackgroundTop) 0,
-						transparent 100vh
-					)
-					no-repeat,
-				radial-gradient(
-						ellipse at top,
-						var(--colorBackgroundTop) 0,
-						transparent 100vh
-					)
-					no-repeat;
-			content: "";
-			top: -1.5rem;
-		}
-
+		/* Hides content scrolled beneath the header, without hiding the aurora at rest */
 		.fader {
+			--column: calc(var(--widthFull) / 2);
+
 			background: linear-gradient(
 				to bottom,
-				var(--colorBackgroundTop),
-				transparent 70%
+				var(--colorBackground) 55%,
+				transparent
 			);
 			height: var(--heightMinimumFromHeader);
-			left: 5vw;
-			pointer-events: none;
-			position: fixed;
-			right: 5vw;
-			top: 0;
-			user-select: none;
+			left: 0;
 			mask-image: linear-gradient(
 				to right,
-				transparent 0%,
-				white 10%,
-				white 90%,
-				transparent 100%
+				transparent calc(50% - var(--column) - 6rem),
+				black calc(50% - var(--column)) calc(50% + var(--column)),
+				transparent calc(50% + var(--column) + 6rem)
 			);
+			pointer-events: none;
+			position: fixed;
+			right: 0;
+			top: 0;
 			z-index: 1;
+		}
+
+		@supports (animation-timeline: scroll()) {
+			.fader {
+				animation: fader-in linear both;
+				animation-range: 0 5rem;
+				animation-timeline: --page;
+			}
 		}
 
 		.first {

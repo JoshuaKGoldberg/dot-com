@@ -14,10 +14,14 @@
 }
 
 .description {
+	line-height: 1.35;
+	text-wrap: pretty;
 	margin: 0.75rem 0 0.5rem;
 }
 
 .title + .description {
+	line-height: 1.35;
+	text-wrap: pretty;
 	margin-top: 0;
 }
 

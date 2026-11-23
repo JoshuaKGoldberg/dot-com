@@ -1,0 +1,94 @@
+---
+import Pause from "astro-heroicons/outline/Pause.astro";
+import Play from "astro-heroicons/outline/Play.astro";
+---
+
+<button
+	aria-label="Pause animations"
+	aria-pressed="false"
+	class="motion-toggle"
+	id="motionToggle"
+	type="button"
+>
+	<Pause class="pause" height={18} width={18} />
+	<Play class="play" height={18} width={18} />
+</button>
+
+<script is:inline>
+	// Sets html[data-motion] before first paint: a stored choice, or the system's preference
+	{
+		const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+		const toggle = () => document.getElementById("motionToggle");
+
+		// Storage throws when the browser is set to block site data
+		const readStoredMotion = () => {
+			try {
+				return localStorage.getItem("motion");
+			} catch {
+				return null;
+			}
+		};
+
+		const update = (
+			motion = readStoredMotion() ??
+				(reducedMotion.matches ? "paused" : "playing"),
+		) => {
+			document.documentElement.dataset.motion = motion;
+			toggle().setAttribute("aria-pressed", String(motion === "paused"));
+		};
+
+		const initialize = () => {
+			update();
+
+			toggle().addEventListener("click", () => {
+				const motion =
+					document.documentElement.dataset.motion === "paused"
+						? "playing"
+						: "paused";
+
+				try {
+					localStorage.setItem("motion", motion);
+				} catch {
+					// The choice still applies until the next page load
+				}
+
+				update(motion);
+			});
+		};
+
+		initialize();
+
+		document.addEventListener("astro:after-swap", initialize);
+		reducedMotion.addEventListener("change", () => {
+			update();
+		});
+	}
+</script>
+
+<style>
+	/* Out of flow, so the header's layout is the same with or without it */
+	.motion-toggle {
+		align-items: center;
+		background: none;
+		border: 0;
+		color: var(--colorForeground);
+		cursor: pointer;
+		display: none;
+		height: 2rem;
+		justify-content: center;
+		padding: 0;
+		position: absolute;
+		right: calc(100% - 0.75rem);
+		top: 0;
+		width: 2rem;
+	}
+
+	:global(html[data-motion]) .motion-toggle {
+		display: flex;
+	}
+
+	:global(html[data-motion="paused"]) .pause,
+	:global(html[data-motion="playing"]) .play {
+		display: none;
+	}
+</style>

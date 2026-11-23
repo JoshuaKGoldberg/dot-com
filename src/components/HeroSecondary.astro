@@ -10,13 +10,14 @@ interface Props {
 	as="p"
 	class:list={["secondary", Astro.props.size ?? "normal"]}
 	fontSize="subtitle"
-	fontWeight="medium"
 >
 	<slot />
 </Text>
 
 <style>
 	.secondary {
+		line-height: 1.2;
+		text-wrap: balance;
 		margin: 1rem 0 2rem;
 	}
 

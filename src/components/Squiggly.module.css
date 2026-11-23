@@ -3,37 +3,43 @@
 	position: relative;
 }
 
-.squiggly.smaller {
-	--afterMarginTop: 0;
-}
+.squiggly::after {
+	--squiggleMask: url("~/assets/squiggles/rest.svg");
 
-.squiggly.medium {
-	--afterMarginTop: -0.2em;
-}
-
-.squiggly:not(.inactive)::after {
-	background: var(--squiggle) repeat-x;
-	background-size: contain;
+	background: var(--squiggleLine);
 	content: "";
 	display: block;
-	height: 0.25em;
-	image-rendering: smooth;
-	margin-top: var(--afterMarginTop);
-	opacity: 0;
+	height: 8px;
+	margin-top: var(--squiggleOffset, -0.2em);
+	mask: var(--squiggleMask) repeat-x center;
+	pointer-events: none;
 	position: absolute;
-	transition:
-		var(--transitionMedium) filter,
-		var(--transitionMedium) opacity,
-		var(--transitionMedium) transform;
+	transition: var(--transitionMedium) opacity;
 	width: 100%;
 }
 
-.squiggly.passive::after {
-	filter: blur(0.7px) opacity(0.7);
+.squiggly:is(:focus-visible, :hover)::after {
+	--squiggleMask: url("~/assets/squiggles/wave.svg");
 }
 
-.squiggly:is(.alwaysActive, .passive, :focus-visible, :hover):not(
-		.inactive
-	)::after {
-	opacity: 1;
+.onHover:not(:focus-visible, :hover)::after {
+	opacity: 0;
+}
+
+.passive::after {
+	--squiggleMask: url("~/assets/squiggles/wave.svg");
+
+	background: var(--colorEmphasized);
+}
+
+/* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
+.squiggly:global([data-squiggle-live])::after {
+	opacity: 0;
+	transition-duration: 0s;
+}
+
+@media (forced-colors: active) {
+	.squiggly::after {
+		background: LinkText;
+	}
 }

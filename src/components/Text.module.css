@@ -3,6 +3,27 @@
 	transition: var(--transitionMedium) color;
 }
 
+.toneMuted {
+	color: var(--colorMuted);
+}
+
+.toneStrong {
+	color: var(--colorForegroundExtra);
+}
+
+.fontDisplay {
+	font-family: var(--fontDisplay);
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	text-wrap: balance;
+}
+
+.fontLabel {
+	font-family: var(--fontLabel);
+	font-weight: 400;
+	letter-spacing: normal;
+}
+
 .fontSizeSmaller {
 	font-size: var(--fontSizeSmaller);
 }
@@ -15,10 +36,6 @@
 	font-size: var(--fontSizeMedium);
 }
 
-.fontSizeLarge {
-	font-size: var(--fontSizeLarge);
-}
-
 .fontSizeSubtitle {
 	font-size: var(--fontSizeSubtitle);
 }
@@ -29,20 +46,8 @@
 
 .fontWeightLight {
 	font-weight: var(--fontWeightLight);
-	text-rendering: optimizeLegibility;
-}
-
-.fontWeightNormal {
-	font-weight: var(--fontWeightNormal);
-	text-rendering: geometricPrecision;
 }
 
 .fontWeightBold {
 	font-weight: var(--fontWeightBold);
-	text-rendering: geometricPrecision;
-}
-
-.fontWeightBolder {
-	font-weight: var(--fontWeightBolder);
-	text-rendering: geometricPrecision;
 }

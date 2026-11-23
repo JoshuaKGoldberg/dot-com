@@ -27,6 +27,30 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 	const html = () => document.documentElement;
 	const toggle = () => document.getElementById("themeToggle");
 
+	// Storage throws when the browser is set to block site data
+	function readStoredTheme() {
+		try {
+			return localStorage.getItem("theme");
+		} catch {
+			return null;
+		}
+	}
+
+	/**
+	 * @param {string | null} theme
+	 */
+	function storeTheme(theme) {
+		try {
+			if (theme) {
+				localStorage.setItem("theme", theme);
+			} else {
+				localStorage.removeItem("theme");
+			}
+		} catch {
+			// The theme still applies until the next page load
+		}
+	}
+
 	function getThemePreference() {
 		return matchMedia("(prefers-color-scheme: dark)").matches
 			? "dark"
@@ -49,8 +73,7 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 	function initialize() {
 		html().classList.remove("theme-animated");
 
-		const startingTheme =
-			typeof localStorage !== "undefined" && localStorage.getItem("theme");
+		const startingTheme = readStoredTheme();
 
 		if (startingTheme) {
 			clear().classList.add("clear-active");
@@ -62,7 +85,7 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 
 		clear().addEventListener("click", () => {
 			html().classList.add("theme-animated");
-			localStorage.removeItem("theme");
+			storeTheme(null);
 			clear().classList.remove("clear-active");
 			updateElementsForTheme(getThemePreference());
 		});
@@ -73,7 +96,7 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 
 			const newTheme = html().classList.contains("dark") ? "light" : "dark";
 			updateElementsForTheme(newTheme);
-			localStorage.setItem("theme", newTheme);
+			storeTheme(newTheme);
 		});
 	}
 
@@ -185,6 +208,12 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 			var(--transitionMedium) color,
 			var(--transitionFast) margin-top,
 			var(--transitionFast) opacity;
+	}
+
+	@media (max-width: 479px) {
+		#themeClear {
+			right: -1rem;
+		}
 	}
 
 	#themeClear:not(.clear-active) {

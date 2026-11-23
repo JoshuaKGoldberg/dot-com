@@ -2,30 +2,47 @@
 	:root {
 		color-scheme: light;
 
-		--colorBackgroundBottom: #feffff;
-		--colorBackgroundTop: #fdffff;
+		--colorBackground: #fdffff;
 		--colorEmphasized: #1170d0;
 		--colorForeground: #283556;
 		--colorForegroundExtra: #142842;
 		--colorMedium: #789dc7;
+		--colorMuted: #5b6b8c;
 		--colorSubtle: #d7e9ef;
 
-		--fontSizeSmaller: 1rem;
-		--fontSizeSmall: 1.2rem;
-		--fontSizeMedium: 1.5rem;
-		--fontSizeLarge: 2rem;
-		--fontSizeSubtitle: 1.75rem;
-		--fontSizeTitle: 3.5rem;
+		/* Low to high, the hues of the auroras and everything that echoes them */
+		--auroraJade: rgb(60 175 140);
+		--auroraCornflower: rgb(80 150 205);
+		--auroraWisteria: rgb(160 115 200);
+		--auroraRose: rgb(225 120 150);
+
+		--squiggleStart: hsl(230 64% 30% / 74%);
+		--squiggleMiddle: hsl(170 64% 30% / 74%);
+		--squiggleEnd: hsl(266 64% 30% / 74%);
+		--squiggleHighlight: rgb(14 36 108 / 95%);
+
+		--squiggleLine: linear-gradient(
+			to right,
+			transparent,
+			var(--squiggleStart) 17%,
+			var(--squiggleMiddle) 50%,
+			var(--squiggleEnd) 83%,
+			transparent
+		);
+
+		--fontSizeSmaller: 0.95rem;
+		--fontSizeSmall: 1.125rem;
+		--fontSizeMedium: 1.25rem;
+		--fontSizeSubtitle: clamp(1.4rem, 1.2rem + 1.2vw, 1.625rem);
+		--fontSizeTitle: clamp(2.5rem, 1.9rem + 2.4vw, 3.25rem);
 
 		--fontWeightLight: 300;
-		--fontWeightMedium: 500;
 		--fontWeightBold: 600;
-		--fontWeightBolder: 700;
 
-		--lineHeightBase: 1.1;
-		--lineHeightParagraph: 1.35;
+		--letterSpacing: normal;
 
-		--textShadow: 3px 3px 1px var(--colorSubtle);
+		--lineHeightBase: 1.25;
+		--lineHeightParagraph: 1.55;
 
 		--transitionFast: 117ms;
 		--transitionMedium: 280ms;
@@ -47,48 +64,41 @@
 		--astro-code-color-deleted: #903838;
 		--astro-code-color-inserted: #0e601c;
 		--astro-code-color-text: #232642;
-		--astro-code-token-comment: #139e4b;
+		--astro-code-token-comment: #0f7a3a;
 		--astro-code-token-constant: #001080;
-		--astro-code-token-function: #466da3;
+		--astro-code-token-function: #3d6298;
 		--astro-code-token-keyword: #0058cb;
 		--astro-code-token-link: #e7ffe7;
-		--astro-code-token-parameter: #588591;
-		--astro-code-token-punctuation: #0f90a1;
-		--astro-code-token-string-expression: #408aa7;
+		--astro-code-token-parameter: #416f7b;
+		--astro-code-token-punctuation: #0a6f7d;
+		--astro-code-token-string-expression: #2d6e88;
 		--astro-code-token-string: #674cab;
 	}
 
 	html {
-		background: var(--colorBackgroundBottom);
+		background: var(--colorBackground);
 		overflow-y: auto;
 	}
 
 	body {
-		background:
-			linear-gradient(
-					to bottom,
-					transparent 70%,
-					var(--colorBackgroundBottom) 100%
-				)
-				no-repeat,
-			radial-gradient(
-					ellipse at top,
-					var(--colorBackgroundTop) 15%,
-					var(--colorBackgroundBottom) 100%
-				)
-				no-repeat;
-		overflow-y: auto;
+		background: var(--colorBackground);
+		font-optical-sizing: auto;
+		font-synthesis-weight: none;
+		font-weight: var(--fontWeightLight);
+		letter-spacing: var(--letterSpacing);
 		line-height: var(--lineHeightBase);
+		overflow-y: auto;
 		position: fixed;
 		top: 0;
 		bottom: 0;
+		scroll-timeline: --page block;
 		scrollbar-gutter: stable;
 		width: 100%;
 	}
 
 	body,
 	button {
-		font-family: "League Spartan Variable", sans-serif;
+		font-family: var(--fontText);
 	}
 
 	body,
@@ -99,6 +109,12 @@
 		text-decoration: none;
 	}
 
+	:focus-visible {
+		border-radius: 2px;
+		outline: 2px solid var(--colorEmphasized);
+		outline-offset: 3px;
+	}
+
 	main {
 		position: relative;
 	}
@@ -106,14 +122,27 @@
 	html.dark {
 		color-scheme: dark;
 
-		--colorBackgroundBottom: #111117;
-		--colorBackgroundTop: #071428;
+		--colorBackground: #0b1220;
 		--colorEmphasized: #77bbff;
 		--colorForeground: #dae7f3;
-		--colorForegroundExtra: #e5edf3;
-		--colorSubtle: #052438;
+		--colorForegroundExtra: #f1f6fb;
+		--colorMuted: #93a5bf;
+		--colorSubtle: #102a40;
 
-		--lineHeightParagraph: 1.5;
+		--auroraJade: rgb(56 255 153);
+		--auroraCornflower: rgb(51 191 255);
+		--auroraWisteria: rgb(173 115 255);
+		--auroraRose: rgb(255 102 158);
+
+		--squiggleStart: hsl(230 44% 74% / 64%);
+		--squiggleMiddle: hsl(170 44% 74% / 64%);
+		--squiggleEnd: hsl(266 44% 74% / 64%);
+		--squiggleHighlight: rgb(198 222 255 / 95%);
+
+		/* Light text on navy reads thinner: a little more weight, leading, and tracking */
+		--fontWeightLight: 360;
+		--letterSpacing: 0.004em;
+		--lineHeightParagraph: 1.6;
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */
 		--astro-code-color-text: #d3d6f0;

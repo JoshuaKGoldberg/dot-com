@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 
 interface Props {
@@ -113,6 +114,16 @@ const metaPairs = [
 	{metaPairs.map((meta) => (
 		<meta {...meta} />
 	))}
+	<Font
+		cssVariable="--fontDisplay"
+		preload={[{ style: "normal", subset: "latin" }]}
+	/>
+	<Font
+		cssVariable="--fontText"
+		preload={[{ style: "normal", subset: "latin" }]}
+	/>
+	<Font cssVariable="--fontLabel" />
+	<Font cssVariable="--fontCode" />
 	<meta content={Astro.generator} name="generator" />
 	<meta content="width=device-width" name="viewport" />
 	<title>{title}</title>

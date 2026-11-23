@@ -8,8 +8,7 @@ export function EmojiBlastHeart() {
 		<Text
 			as="button"
 			class={styles.heart}
-			fontSize="small"
-			fontWeight="light"
+			fontSize="smaller"
 			onClick={() => {
 				emojiBlast();
 			}}

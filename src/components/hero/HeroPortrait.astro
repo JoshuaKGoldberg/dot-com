@@ -1,0 +1,218 @@
+---
+import type { ImageMetadata } from "astro";
+
+import { Image } from "astro:assets";
+
+export interface HeroPortraitImages {
+	/** Blurred silhouette of the cutout, used only for its alpha */
+	halo: ImageMetadata;
+
+	/** Person cut out from their photo, with extra pixels below the circle */
+	image: ImageMetadata;
+}
+
+interface Props extends HeroPortraitImages {
+	alt: string;
+}
+
+const { alt, halo, image } = Astro.props;
+---
+
+<hero-portrait class="portrait">
+	<div aria-hidden="true" class="halo" style={`--halo: url("${halo.src}")`}>
+		<div class="halo-colors"></div>
+	</div>
+	<div aria-hidden="true" class="backdrop">
+		<div class="aurora resting"></div>
+		<div class="aurora awake"></div>
+	</div>
+	<div aria-hidden="true" class="constellation"></div>
+	<div class="clip">
+		<div class="figure">
+			<Image
+				alt={alt}
+				class="cutout"
+				densities={[1, 2]}
+				fetchpriority="high"
+				loading="eager"
+				quality="high"
+				src={image}
+				width={256}
+			/>
+			<slot />
+		</div>
+	</div>
+</hero-portrait>
+
+<style>
+	.portrait {
+		display: block;
+		height: var(--heroSizeLarge);
+		position: relative;
+		user-select: none;
+		width: var(--heroSizeLarge);
+	}
+
+	.backdrop,
+	.clip,
+	.constellation,
+	.halo {
+		inset: 0;
+		position: absolute;
+	}
+
+	.backdrop {
+		background: linear-gradient(#e9eff0, #efedf5 60%, #f7eeee);
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px
+			color-mix(in srgb, var(--auroraWisteria) 22%, transparent);
+		contain: paint;
+		overflow: hidden;
+	}
+
+	:global(html.dark) .backdrop {
+		background: linear-gradient(#0a0e17, #141a26 60%, #1a232d);
+	}
+
+	/* Curtains of light hanging from the top of the circle */
+	.aurora,
+	.aurora::after,
+	.aurora::before {
+		inset: 0;
+		position: absolute;
+	}
+
+	.aurora::after,
+	.aurora::before {
+		background:
+			radial-gradient(
+				ellipse 24% 46% at 16% 40%,
+				var(--auroraJade),
+				transparent
+			),
+			radial-gradient(
+				ellipse 26% 52% at 42% 32%,
+				var(--auroraCornflower),
+				transparent
+			),
+			radial-gradient(
+				ellipse 24% 48% at 68% 42%,
+				var(--auroraWisteria),
+				transparent
+			),
+			radial-gradient(
+				ellipse 22% 44% at 92% 36%,
+				var(--auroraRose),
+				transparent
+			);
+		content: "";
+		inset: -8% -40%;
+		opacity: 0.6;
+	}
+
+	.aurora::after {
+		opacity: 0.4;
+		transform: scaleX(-1) translateY(12%);
+	}
+
+	.resting {
+		filter: saturate(0.4);
+		opacity: 0.4;
+	}
+
+	.awake {
+		opacity: 0;
+	}
+
+	/* Kept on their own layers, so that they're never repainted as they change */
+	.awake,
+	.figure,
+	.halo {
+		will-change: opacity, transform;
+	}
+
+	.halo {
+		inset: -21.875%;
+		mask: var(--halo) center / 100% 100% no-repeat;
+		opacity: 0.06;
+	}
+
+	.halo-colors {
+		background: conic-gradient(
+			var(--auroraJade),
+			var(--auroraCornflower),
+			var(--auroraWisteria),
+			var(--auroraRose),
+			var(--auroraWisteria),
+			var(--auroraCornflower),
+			var(--auroraJade)
+		);
+		border-radius: 50%;
+		inset: -25%;
+		position: absolute;
+	}
+
+	/* Fades out before it could reach the text beside the portrait */
+	.constellation {
+		inset: -21.875%;
+		mask: radial-gradient(closest-side, black 80%, transparent);
+	}
+
+	.constellation :global(canvas) {
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	/* Open at the top for anything taller than the circle, round at the bottom */
+	.clip {
+		clip-path: inset(-25% 0 0 0 round 0 0 50% 50% / 0 0 40% 40%);
+	}
+
+	.figure {
+		position: relative;
+	}
+
+	.cutout {
+		display: block;
+		height: auto;
+		width: 100%;
+	}
+
+	.portrait[data-awake] .aurora::before {
+		animation: drift 40s ease-in-out infinite alternate;
+	}
+
+	.portrait[data-awake] .aurora::after {
+		animation: drift-back 52s ease-in-out infinite alternate;
+	}
+
+	.portrait[data-awake] .halo-colors {
+		animation: turn 60s linear infinite;
+	}
+
+	@keyframes drift {
+		to {
+			transform: translateX(14%);
+		}
+	}
+
+	@keyframes drift-back {
+		to {
+			transform: scaleX(-1) translate(12%, 12%);
+		}
+	}
+
+	@keyframes turn {
+		to {
+			transform: rotate(1turn);
+		}
+	}
+
+	@media print {
+		.constellation,
+		.halo {
+			display: none;
+		}
+	}
+</style>

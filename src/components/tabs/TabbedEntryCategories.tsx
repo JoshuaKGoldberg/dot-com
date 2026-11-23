@@ -19,12 +19,8 @@ export function TabbedEntryCategories<Entry>(
 	);
 
 	return (
-		<Tabs.Root
-			aria-label={`Tabs of ${props.collection} categories`}
-			onChange={setSelected}
-			value={selected()}
-		>
-			<TabsList>
+		<Tabs.Root onChange={setSelected} value={selected()}>
+			<TabsList label={`Tabs of ${props.collection} categories`}>
 				<For each={Object.keys(props.initialCategories)}>
 					{(category) => (
 						<TabsTrigger value={category}>

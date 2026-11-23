@@ -15,9 +15,10 @@ export function CategorizedEntryList(props: EntryListProps) {
 			<Text
 				as="h2"
 				class={styles.subHeading}
+				font="display"
 				fontSize="medium"
-				fontWeight="light"
 				id={props.category.toLowerCase().replaceAll(/\s+/g, "-")}
+				tone="strong"
 			>
 				{props.category}
 			</Text>

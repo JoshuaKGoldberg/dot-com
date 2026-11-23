@@ -1,0 +1,187 @@
+import { px } from "../css";
+import { damp, interpolate, smoothstep } from "../math";
+import { drawWave } from "./drawWave";
+
+const namespace = "http://www.w3.org/2000/svg";
+
+/** Links with text at least this large have thicker squiggles. */
+const largeFontSize = 20;
+
+/** Squiggles are this much of their full height when the pointer isn't near. */
+const restingHeight = 0.2;
+
+const settled = 0.004;
+
+interface Line {
+	base: SVGPathElement;
+	gradient: SVGLinearGradientElement;
+	highlight: SVGPathElement;
+	highlightMask: SVGLinearGradientElement;
+	svg: SVGSVGElement;
+}
+
+let nextId = 0;
+
+/**
+ * A link's squiggle that rises and wiggles as the pointer comes close to it.
+ * Links that wrap onto multiple lines have a squiggle on each line.
+ */
+export class Squiggle {
+	readonly link: HTMLElement;
+
+	/** How close the pointer is, from 0 to 1. */
+	target = 0;
+
+	get isSettled() {
+		return this.target === 0 && this.#near < settled;
+	}
+
+	readonly #fontSize: number;
+	readonly #layer: HTMLElement;
+	#lines: Line[] = [];
+	#near = 0;
+	#phase = 0;
+
+	/** Whether the link has a squiggle even when the pointer isn't near. */
+	readonly #rests: boolean;
+
+	constructor(link: HTMLElement, layer: HTMLElement) {
+		this.link = link;
+		this.#fontSize = parseFloat(getComputedStyle(link).fontSize);
+		this.#layer = layer;
+		this.#rests = link.dataset.squiggle !== "onHover";
+		link.dataset.squiggleLive = "";
+	}
+
+	destroy() {
+		delete this.link.dataset.squiggleLive;
+
+		for (const { svg } of this.#lines) {
+			svg.remove();
+		}
+	}
+
+	paint(bounds: readonly DOMRect[], pointerX: number) {
+		while (this.#lines.length > bounds.length) {
+			this.#lines.pop()?.svg.remove();
+		}
+
+		for (const [index, { bottom, left, width }] of bounds.entries()) {
+			const line = (this.#lines[index] ??= createLine(this.#layer));
+
+			this.#paintLine(line, left, bottom, width, pointerX - left);
+		}
+	}
+
+	step(seconds: number) {
+		this.#near = damp(this.#near, this.target, 10, seconds);
+		this.#phase -= seconds * this.#near * this.#near * Math.PI * 1.8;
+	}
+
+	#paintLine(
+		{ base, gradient, highlight, highlightMask, svg }: Line,
+		left: number,
+		bottom: number,
+		width: number,
+		pointerX: number,
+	) {
+		const near = smoothstep(0, 1, this.#near);
+		const path = drawWave({
+			amplitude: this.#fontSize * 0.065 * interpolate(restingHeight, 1, near),
+			period: Math.max(10, this.#fontSize * 0.78),
+			phase: this.#phase,
+			width,
+			y: 6,
+		});
+		const thickness = String(this.#fontSize >= largeFontSize ? 2.5 : 2);
+
+		svg.style.transform = `translate(${px(left)}, ${px(bottom - 5)})`;
+		svg.style.opacity = String(this.#rests ? 1 : near);
+		svg.setAttribute("width", String(width));
+
+		for (const element of [base, highlight]) {
+			element.setAttribute("d", path);
+			element.setAttribute("stroke-width", thickness);
+		}
+
+		// Ends fade out at rest, and fill in as the pointer comes closer
+		const faded = String(near);
+		gradient.setAttribute("x2", String(width));
+		gradient.firstElementChild?.setAttribute("stop-opacity", faded);
+		gradient.lastElementChild?.setAttribute("stop-opacity", faded);
+
+		const reach = interpolate(40, 94, near);
+		highlightMask.setAttribute("x1", String(pointerX - reach));
+		highlightMask.setAttribute("x2", String(pointerX + reach));
+		highlight.style.opacity = String(near * 0.8);
+	}
+}
+
+function createElement<Name extends keyof SVGElementTagNameMap>(
+	name: Name,
+	attributes: Record<string, string>,
+	children: SVGElement[] = [],
+) {
+	const element = document.createElementNS(namespace, name);
+
+	for (const [key, value] of Object.entries(attributes)) {
+		element.setAttribute(key, value);
+	}
+
+	element.append(...children);
+
+	return element;
+}
+
+function createGradient(id: string, stops: [offset: string, color: string][]) {
+	return createElement(
+		"linearGradient",
+		{ gradientUnits: "userSpaceOnUse", id },
+		stops.map(([offset, color]) =>
+			createElement("stop", {
+				offset,
+				style: `stop-color: ${color}`,
+			}),
+		),
+	);
+}
+
+function createLine(layer: HTMLElement): Line {
+	nextId += 1;
+
+	const id = `squiggle-${nextId.toString()}`;
+	const highlightId = `${id}-highlight`;
+
+	const gradient = createGradient(id, [
+		["0", "var(--squiggleStart)"],
+		["0.17", "var(--squiggleStart)"],
+		["0.5", "var(--squiggleMiddle)"],
+		["0.83", "var(--squiggleEnd)"],
+		["1", "var(--squiggleEnd)"],
+	]);
+	const highlightMask = createGradient(highlightId, [
+		["0", "transparent"],
+		["0.5", "var(--squiggleHighlight)"],
+		["1", "transparent"],
+	]);
+	const base = createElement("path", {
+		fill: "none",
+		stroke: `url(#${id})`,
+		"stroke-linecap": "round",
+	});
+	const highlight = createElement("path", {
+		fill: "none",
+		stroke: `url(#${highlightId})`,
+		"stroke-linecap": "round",
+	});
+	const svg = createElement("svg", { height: "12" }, [
+		gradient,
+		highlightMask,
+		base,
+		highlight,
+	]);
+
+	layer.append(svg);
+
+	return { base, gradient, highlight, highlightMask, svg };
+}

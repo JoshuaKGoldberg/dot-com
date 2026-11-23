@@ -1,4 +1,6 @@
 .squiggly {
+	--squiggleOffset: 0.2em;
+
 	color: var(--colorForeground);
 	cursor: pointer;
 	font-size: var(--fontSizeMedium);
@@ -7,8 +9,4 @@
 
 .squiggly.active {
 	color: var(--colorEmphasized);
-}
-
-.squiggly:not(.active):not(:hover)::after {
-	opacity: 0;
 }

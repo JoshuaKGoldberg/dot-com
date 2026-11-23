@@ -43,7 +43,6 @@
 		"@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
 		"@eslint/js": "^10.0.1",
 		"@eslint/markdown": "^9.0.0",
-		"@fontsource-variable/league-spartan": "^5.2.8",
 		"@kobalte/core": "^0.13.11",
 		"@konami-emoji-blast/astro": "^0.3.0",
 		"@types/eslint-plugin-jsx-a11y": "^6.10.1",

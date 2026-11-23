@@ -1,11 +1,11 @@
 ---
-import "@fontsource-variable/league-spartan/index.css";
 import { SkipLink } from "accessible-astro-components";
 
 import Footer from "~/components/Footer.astro";
 import Head from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
 import MainArea from "~/components/MainArea.astro";
+import Scenery from "~/components/scenery/Scenery.astro";
 
 import "./normalize.css";
 import "./base.css";
@@ -34,5 +34,6 @@ const { class: className, description, image, title } = Astro.props;
 			<slot />
 		</main>
 		<Footer />
+		<Scenery />
 	</MainArea>
 </html>

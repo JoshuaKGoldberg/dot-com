@@ -6,11 +6,12 @@ import styles from "./TabsList.module.css";
 
 export interface TabsListProps {
 	children: JSX.Element;
+	label: string;
 }
 
 export function TabsList(props: TabsListProps) {
 	return (
-		<Tabs.List class={styles.tabsList}>
+		<Tabs.List aria-label={props.label} class={styles.tabsList}>
 			{props.children}
 			<Tabs.Indicator class={styles.indicator} />
 		</Tabs.List>
