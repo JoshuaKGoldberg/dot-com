@@ -97,8 +97,8 @@ const edgeGrowth = 0.22;
 /** Portion of a graph's dissolve that each individual edge takes. */
 const edgeFade = 0.3;
 
-const secondsBeforeSnark = 25;
-const secondsBetweenSnarks = 100;
+const secondsBeforeSnark = 8;
+const secondsBetweenSnarks = 33;
 
 const snarkBlocks = [5, 7, 9];
 
