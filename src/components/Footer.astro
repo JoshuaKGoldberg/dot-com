@@ -24,15 +24,21 @@ import { Text } from "./Text";
 <style>
 	footer {
 		padding: clamp(4rem, 14vh, 9rem) var(--widthPagePadding)
-			clamp(4rem, 13vh, 7.5rem);
+			clamp(2.75rem, 8.7vh, 5rem);
 		text-align: center;
 		width: 100%;
 	}
 
 	:global([data-fits-screen]) footer {
-		align-content: center;
+		display: grid;
 		flex: 1 0 auto;
-		padding-block: clamp(0.5rem, 3vh, 1.5rem);
+		/* Twice as much space above as below */
+		grid-template-rows: 2fr auto 1fr;
+		padding-block: clamp(0.7rem, 4vh, 2rem) clamp(0.35rem, 2vh, 1rem);
+	}
+
+	:global([data-fits-screen]) .credit {
+		grid-row: 2;
 	}
 
 	.credit {
