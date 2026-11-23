@@ -14,12 +14,12 @@ export interface BlogImage {
 }
 
 interface Props {
-	body: string | undefined;
 	class?: string | undefined;
 	date: Date;
 	description: string;
 	download?: string | undefined;
 	image: BlogImage;
+	minutes: number;
 	title: string;
 }
 ---
@@ -40,8 +40,8 @@ interface Props {
 			<div class="hero-tertiary">
 				<HeroTertiary>
 					<DateAndMinutes
-						body={Astro.props.body}
 						date={Astro.props.date}
+						minutes={Astro.props.minutes}
 						year="numeric"
 					>
 						<BlogShare

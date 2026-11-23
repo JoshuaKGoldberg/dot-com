@@ -1,7 +1,7 @@
 import type { MarkdownHeading } from "astro";
 
 import clsx from "clsx";
-import { createEffect, createSignal, For } from "solid-js";
+import { createSignal, For, onCleanup, onMount } from "solid-js";
 
 import { Squiggly } from "../Squiggly";
 import { Text } from "../Text";
@@ -102,10 +102,15 @@ export function TableOfContents(props: TableOfContentsProps) {
 		setActiveSlug(headings[headings.length - 1].id);
 	}
 
-	createEffect(updateActiveHeading);
+	onMount(() => {
+		// Each client-side navigation swaps in a new body, so cleanup needs this one
+		const { body } = document;
 
-	document.body.addEventListener("scroll", updateActiveHeading, {
-		passive: true,
+		updateActiveHeading();
+		body.addEventListener("scroll", updateActiveHeading, { passive: true });
+		onCleanup(() => {
+			body.removeEventListener("scroll", updateActiveHeading);
+		});
 	});
 
 	return (
