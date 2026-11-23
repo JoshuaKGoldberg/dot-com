@@ -45,7 +45,7 @@ export class ActiveLinks {
 
 		const clear = () => {
 			for (const link of this.#colorings.keys()) {
-				uncolor(link);
+				resetColor(link);
 			}
 
 			this.#colorings.clear();
@@ -86,7 +86,7 @@ export class ActiveLinks {
 				coloring.nearness < settled.nearness &&
 				Math.abs(coloring.shift) < settled.shift
 			) {
-				uncolor(link);
+				resetColor(link);
 				this.#colorings.delete(link);
 			} else {
 				link.style.setProperty("--hueShift", coloring.shift.toFixed(1));
@@ -126,7 +126,7 @@ function measureLinks(): MeasuredLink[] {
 	);
 }
 
-function uncolor(link: HTMLElement) {
+function resetColor(link: HTMLElement) {
 	link.style.removeProperty("--hueShift");
 	link.style.removeProperty("--nearness");
 }
