@@ -103,7 +103,8 @@ export class SquiggleOverlayElement extends SceneryElement {
 
 			squiggle.step(seconds);
 
-			if (squiggle.isSettled) {
+			// Links that leave the page fade out, but ones scrolled away are just gone
+			if (squiggle.isSettled || (link.isConnected && !bounds)) {
 				squiggle.destroy();
 				this.#squiggles.delete(link);
 			} else {

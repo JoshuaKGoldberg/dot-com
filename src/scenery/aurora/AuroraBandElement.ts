@@ -13,7 +13,7 @@ const peakOpacity = "0.9";
 /** From these distances, in pixels, the pointer's fully near and not at all near. */
 const reaches = {
 	bottom: [0, 80],
-	top: [140, 310],
+	top: [100, 230],
 } as const;
 
 const palettes = {

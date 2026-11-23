@@ -18,7 +18,7 @@ export class ConstellationCanvas {
 	readonly #context = this.#canvas.getContext("2d");
 
 	constructor(host: HTMLElement) {
-		const size = host.clientWidth * Math.min(devicePixelRatio, 2);
+		const size = host.clientWidth * Math.min(devicePixelRatio, 1.5);
 
 		this.#canvas.height = size;
 		this.#canvas.width = size;
