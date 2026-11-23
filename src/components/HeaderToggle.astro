@@ -29,7 +29,7 @@ const { clear, id, label } = Astro.props;
 		visibility: hidden;
 	}
 
-	/* Two targets that don't overlap, and are as small as WCAG allows those to be */
+	/* Two targets that don't overlap, as small as accessibility guidelines allow */
 	.header-toggle {
 		--target: 1.5rem;
 
@@ -78,7 +78,7 @@ const { clear, id, label } = Astro.props;
 	}
 
 	/*
-	 * Shows whichever of its two icons its script hasn't marked as being out.
+	 * Shows whichever of its icons, if it has many, its script hasn't marked as being out.
 	 * While it's been used, changing between them has icons orbit in and out.
 	 */
 	.icons {
@@ -101,12 +101,6 @@ const { clear, id, label } = Astro.props;
 		width: 1.25rem;
 	}
 
-	/* Narrower than it says it is, so it's moved closer to what's beside it */
-	.icons :global([data-state="paused"]),
-	.icons :global([data-state="playing"]) {
-		right: -0.2rem;
-	}
-
 	.icons :global([data-out]) {
 		opacity: 0;
 		transform: rotate(90deg);
@@ -116,7 +110,7 @@ const { clear, id, label } = Astro.props;
 		animation-name: orbit-out;
 	}
 
-	.header-toggle[data-used] .icons :global(svg:not([data-out])) {
+	.header-toggle[data-used] .icons :global([data-state]:not([data-out])) {
 		animation-delay: calc(var(--transitionSlow) / 2);
 		animation-name: orbit-in;
 	}

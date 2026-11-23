@@ -1,7 +1,4 @@
 ---
-import Pause from "astro-heroicons/outline/Pause.astro";
-import Play from "astro-heroicons/outline/Play.astro";
-
 import HeaderToggle from "./HeaderToggle.astro";
 ---
 
@@ -10,8 +7,11 @@ import HeaderToggle from "./HeaderToggle.astro";
 	id="motion"
 	label="Pause animations"
 >
-	<Pause data-state="playing" />
-	<Play data-state="paused" />
+	<svg aria-hidden="true" class="play-pause" viewBox="0 0 24 24">
+		<path d="M8 5.5v13"></path>
+		<path class="fold upper" d="M16 5.5v6.5"></path>
+		<path class="fold lower" d="M16 12v6.5"></path>
+	</svg>
 </HeaderToggle>
 
 <script is:inline>
@@ -25,3 +25,38 @@ import HeaderToggle from "./HeaderToggle.astro";
 		query: "(prefers-reduced-motion: reduce)",
 	});
 </script>
+
+<style>
+	.play-pause {
+		fill: none;
+		/* Closer to what's beside it, as its icons are narrower than most */
+		right: -0.2rem;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-width: 1.25px;
+	}
+
+	path {
+		vector-effect: non-scaling-stroke;
+	}
+
+	/* Pause's right bar folds at its middle, which becomes the point of play */
+	.fold {
+		transform-origin: 16px 12px;
+		transition: transform var(--transitionMedium) cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	:global(html[data-motion="paused"]) .upper {
+		transform: translateX(3.5px) skewX(60.5deg);
+	}
+
+	:global(html[data-motion="paused"]) .lower {
+		transform: translateX(3.5px) skewX(-60.5deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fold {
+			transition: none;
+		}
+	}
+</style>

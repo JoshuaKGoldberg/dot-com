@@ -10,6 +10,7 @@
 		const host = document.getElementById(id);
 		const clear = host.querySelector("[data-clear]");
 		const toggle = host.querySelector("[data-toggle]");
+		const icons = toggle.querySelectorAll("[data-state]");
 		const [off, on] = options;
 		const preference = matchMedia(query);
 		let chosen = read();
@@ -47,7 +48,7 @@
 			apply(current, toggle);
 			clear.toggleAttribute("data-active", !!chosen);
 
-			for (const icon of toggle.querySelectorAll("[data-state]")) {
+			for (const icon of icons) {
 				icon.toggleAttribute("data-out", icon.dataset.state !== current);
 			}
 		}
@@ -59,7 +60,10 @@
 			update();
 
 			// Only lasts for this change's animation, so that nothing else can replay it
-			if (document.documentElement.dataset.motion === "playing") {
+			if (
+				icons.length &&
+				document.documentElement.dataset.motion === "playing"
+			) {
 				host.dataset.used = "";
 			}
 		}
