@@ -55,6 +55,12 @@ const { size = "medium" } = Astro.props;
 
 	.first {
 		float: right;
+		margin-left: 1rem;
+	}
+
+	/* Stays beside the portrait, rather than having some lines wrap around it */
+	.second {
+		display: flow-root;
 	}
 
 	@media (min-width: 700px) {
@@ -101,6 +107,7 @@ const { size = "medium" } = Astro.props;
 		.half.first {
 			display: flex;
 			justify-content: flex-end;
+			margin: 0;
 			max-height: initial;
 			width: 45%;
 		}

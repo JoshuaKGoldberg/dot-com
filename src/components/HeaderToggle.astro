@@ -31,10 +31,12 @@ const { clear, id, label } = Astro.props;
 
 	/* Two targets that don't overlap, as small as accessibility guidelines allow */
 	.header-toggle {
+		--icon: 1.25rem;
 		--target: 1.5rem;
 
 		display: flex;
 		height: 2rem;
+		position: relative;
 	}
 
 	button {
@@ -93,12 +95,12 @@ const { clear, id, label } = Astro.props;
 		animation-duration: var(--transitionSlow);
 		animation-fill-mode: both;
 		animation-timing-function: ease;
-		height: 1.25rem;
+		height: var(--icon);
 		inset: 0 0 0 auto;
 		margin: auto 0;
 		position: absolute;
 		transform-origin: 50% 1.75rem;
-		width: 1.25rem;
+		width: var(--icon);
 	}
 
 	.icons :global([data-out]) {
@@ -113,6 +115,28 @@ const { clear, id, label } = Astro.props;
 	.header-toggle[data-used] .icons :global([data-state]:not([data-out])) {
 		animation-delay: calc(var(--transitionSlow) / 2);
 		animation-name: orbit-in;
+	}
+
+	/* Narrow screens don't have room beside icons, but they do above them */
+	@media (max-width: 699px) {
+		.header-toggle {
+			--icon: 1rem;
+
+			height: var(--target);
+		}
+
+		.icons {
+			height: var(--target);
+		}
+
+		.clear {
+			align-items: flex-end;
+			bottom: 100%;
+			justify-content: flex-end;
+			padding: 0;
+			position: absolute;
+			right: -0.4rem;
+		}
 	}
 
 	@keyframes orbit-in {

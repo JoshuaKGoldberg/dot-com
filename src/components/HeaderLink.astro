@@ -27,7 +27,10 @@ const { href } = Astro.props;
 	.link {
 		display: inline-block;
 		/* On the narrowest screens, just small enough for a single row of links */
-		font-size: clamp(1.1rem, 0.85rem + 1.4vw, var(--fontSizeMedium));
+		font-size: calc(
+			clamp(1.1rem, 0.85rem + 1.4vw, var(--fontSizeMedium)) *
+				var(--linkScale, 1)
+		);
 	}
 
 	.link[aria-current] {

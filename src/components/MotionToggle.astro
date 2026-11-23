@@ -29,11 +29,16 @@ import HeaderToggle from "./HeaderToggle.astro";
 <style>
 	.play-pause {
 		fill: none;
-		/* Closer to what's beside it, as its icons are narrower than most */
-		right: -0.2rem;
 		stroke: currentColor;
 		stroke-linecap: round;
 		stroke-width: 1.25px;
+	}
+
+	/* Closer to what's beside it, as its icons are narrower than most */
+	@media (min-width: 700px) {
+		.play-pause {
+			right: -0.2rem;
+		}
 	}
 
 	path {
