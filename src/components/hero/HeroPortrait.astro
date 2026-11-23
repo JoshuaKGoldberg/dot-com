@@ -71,10 +71,20 @@ const { alt, halo, image } = Astro.props;
 	}
 
 	.backdrop {
-		background: radial-gradient(white 35%, #eefbff);
 		border-radius: 50%;
 		contain: paint;
 		overflow: hidden;
+	}
+
+	/* A bright light: none of its colors are darker than the page behind it */
+	:global(html:not(.dark)) .backdrop {
+		--auroraJade: #d2fff4;
+		--auroraCornflower: #defeff;
+		--auroraWisteria: #faf7ff;
+		--auroraRose: #fff5fa;
+
+		background: white;
+		box-shadow: 0 0 2rem 0.5rem rgb(255 255 255 / 40%);
 	}
 
 	:global(html.dark) .backdrop {
@@ -122,13 +132,9 @@ const { alt, halo, image } = Astro.props;
 		transform: scaleX(-1) translateY(12%);
 	}
 
-	.resting {
-		filter: saturate(1.5) brightness(1.12);
-		opacity: 0.4;
-	}
-
 	:global(html.dark) .resting {
 		filter: saturate(0.4);
+		opacity: 0.4;
 	}
 
 	.awake {
