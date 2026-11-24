@@ -158,12 +158,12 @@ This issue seemed like it'd be both a good way to challenge my understanding of 
 
 ## Technical Overview
 
-The pull request was large enough that instead of describing them all here, I've moved its details into a separate blog post: [TypeScript Contribution Diary: Allowing Code in Constructors Before `super()` (Technical Overview)](https://joshuakgoldberg.com/blog/code-before-super-technical-overview).
+The pull request was large enough that instead of describing them all here, I've moved its details into a separate blog post: [TypeScript Contribution Diary: Allowing Code in Constructors Before `super()` (Technical Overview)](/blog/typescript-contribution-diary-code-before-super-technical-overview).
 
 There ended up being two areas of source code I had to change:
 
-- [Updating the Type Checker](https://joshuakgoldberg.com/blog/code-before-super-technical-overview#updating-the-type-checker): Adjusting TypeScript's type errors to be more lenient
-- [Updating Transformers](https://joshuakgoldberg.com/blog/code-before-super-technical-overview#updating-transformers): Adjusting output JavaScript for more varieties of constructors
+- [Updating the Type Checker](/blog/typescript-contribution-diary-code-before-super-technical-overview#updating-the-type-checker): Adjusting TypeScript's type errors to be more lenient
+- [Updating Transformers](/blog/typescript-contribution-diary-code-before-super-technical-overview#updating-transformers): Adjusting output JavaScript for more varieties of constructors
 
 You can also see the final pull request: [#29374: Allowed non-this, non-super code before super call in derived classes with property initializers](https://github.com/microsoft/TypeScript/pull/29374).
 
