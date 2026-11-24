@@ -1,7 +1,10 @@
 import { Tabs } from "@kobalte/core";
 import { createSignal, For, type JSX } from "solid-js";
 
+import { slugify } from "~/utils";
+
 import { TabsList } from "../tabs/TabsList";
+import styles from "./TabbedEntryCategories.module.css";
 import { TabsSquiggly } from "./TabsSquiggly";
 import { TabsTrigger } from "./TabsTrigger";
 
@@ -14,21 +17,24 @@ export interface TabbedEntryCategoriesProps<Entry> {
 export function TabbedEntryCategories<Entry>(
 	props: TabbedEntryCategoriesProps<Entry>,
 ) {
+	const [hasChanged, setHasChanged] = createSignal(false);
 	const [selected, setSelected] = createSignal(
-		Object.keys(props.initialCategories)[1],
+		slugify(Object.keys(props.initialCategories)[1]),
 	);
 
 	return (
 		<Tabs.Root
-			aria-label={`Tabs of ${props.collection} categories`}
-			onChange={setSelected}
+			onChange={(category) => {
+				setHasChanged(true);
+				setSelected(category);
+			}}
 			value={selected()}
 		>
-			<TabsList>
+			<TabsList label={`Tabs of ${props.collection} categories`}>
 				<For each={Object.keys(props.initialCategories)}>
 					{(category) => (
-						<TabsTrigger value={category}>
-							<TabsSquiggly active={category === selected()}>
+						<TabsTrigger value={slugify(category)}>
+							<TabsSquiggly active={slugify(category) === selected()}>
 								{category}
 							</TabsSquiggly>
 						</TabsTrigger>
@@ -38,7 +44,10 @@ export function TabbedEntryCategories<Entry>(
 
 			<For each={Object.entries(props.initialCategories)}>
 				{([category, entries]) => (
-					<Tabs.Content value={category}>
+					<Tabs.Content
+						class={hasChanged() ? styles.changed : undefined}
+						value={slugify(category)}
+					>
 						{props.renderCategory(entries)}
 					</Tabs.Content>
 				)}

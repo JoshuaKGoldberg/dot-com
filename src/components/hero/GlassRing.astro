@@ -1,0 +1,55 @@
+---
+interface Props {
+	"data-portrait"?: string;
+	isLit?: boolean;
+}
+
+const { "data-portrait": portraitPart, isLit } = Astro.props;
+---
+
+<div
+	aria-hidden="true"
+	class:list={["glass-ring", isLit && "lit"]}
+	data-portrait={portraitPart}
+></div>
+
+<style>
+	.glass-ring {
+		--thickness: 2px;
+
+		background: conic-gradient(
+			from 300deg,
+			var(--ringShine),
+			var(--ringCornflower) 12%,
+			var(--ringWisteria) 28%,
+			var(--ringShine) 42%,
+			var(--ringRose) 52%,
+			var(--ringWisteria) 64%,
+			var(--ringJade) 80%,
+			var(--ringShine)
+		);
+		border-radius: 50%;
+		filter: saturate(0.6);
+		inset: calc(-1 * var(--thickness));
+		mask: radial-gradient(
+			closest-side,
+			transparent calc(100% - var(--thickness) - 0.5px),
+			black calc(100% - var(--thickness))
+		);
+		opacity: 0.5;
+		pointer-events: none;
+		position: absolute;
+	}
+
+	.lit {
+		filter: drop-shadow(
+			0 0 5px color-mix(in srgb, var(--ringWisteria) 45%, transparent)
+		);
+		opacity: 0;
+		will-change: opacity;
+	}
+
+	:global(html[data-motion="paused"]) .lit {
+		transition: var(--transitionMedium) opacity;
+	}
+</style>

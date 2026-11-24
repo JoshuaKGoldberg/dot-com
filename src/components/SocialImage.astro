@@ -5,25 +5,43 @@ import { Image } from "astro:assets";
 
 interface Props {
 	alt: string;
-	class?: string;
 	image: ImageMetadata;
 }
 ---
 
 <Image
 	alt={Astro.props.alt}
-	class:list={["social-image", Astro.props.class]}
+	class="social-image"
+	loading="eager"
 	src={Astro.props.image}
 />
 
 <style>
 	.social-image {
-		height: 1.25rem;
-		width: 1.25rem;
+		filter: invert(var(--iconInversion))
+			hue-rotate(calc(var(--iconInversion) * 180deg));
+		height: var(--socialSize, 1.25rem);
+		transition: var(--transitionMedium) scale;
+		width: var(--socialSize, 1.25rem);
 		vertical-align: text-bottom;
 	}
 
-	:global(html.dark) .social-image {
-		filter: invert() hue-rotate(180deg);
+	@media (hover: hover) {
+		:global(a:hover) > .social-image {
+			scale: 1.15;
+		}
+	}
+
+	/* Those colors are the system's, rather than the chosen theme's */
+	@media (forced-colors: active) and (prefers-color-scheme: dark) {
+		.social-image {
+			filter: invert() hue-rotate(180deg);
+		}
+	}
+
+	@media (forced-colors: active) and (prefers-color-scheme: light) {
+		.social-image {
+			filter: none;
+		}
 	}
 </style>

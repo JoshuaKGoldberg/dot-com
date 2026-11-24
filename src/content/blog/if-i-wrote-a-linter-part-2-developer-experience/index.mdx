@@ -556,11 +556,11 @@ Each line of the config _file_ would set exactly one thing and make it clear wha
 Here's a rough sketch of a starting TypeScript setup, compared to the closest ESLint equivalent:
 
 <Tabs>
-	<TabsList>
-		<TabsTab id="tab1" controls="panel1" selected>If I Wrote a Linter</TabsTab>
-		<TabsTab id="tab2" controls="panel2">ESLint Equivalent</TabsTab>
+	<TabsList aria-label="Linter">
+		<TabsTab id="config-tab1" controls="config-panel1" selected>If I Wrote a Linter</TabsTab>
+		<TabsTab id="config-tab2" controls="config-panel2">ESLint Equivalent</TabsTab>
 	</TabsList>
-	<TabsPanel id="panel1" labelledby="tab1" selected>
+	<TabsPanel id="config-panel1" labelledby="config-tab1" selected>
 
 ```ts
 // if-i-wrote-a-linter.config.ts
@@ -577,7 +577,7 @@ export default defineConfig({
 ```
 
     </TabsPanel>
-    <TabsPanel id="panel2" labelledby="tab2">
+    <TabsPanel id="config-panel2" labelledby="config-tab2">
 
 ```ts
 // eslint.config.ts
@@ -605,11 +605,11 @@ That sketch is different from the current ESLint flat config in a few ways:
 Here's a rough sketch that configures rules, ignores some files, and adds a plugin with settings:
 
 <Tabs>
-	<TabsList>
-		<TabsTab id="tab1" controls="panel1" selected>If I Wrote a Linter</TabsTab>
-		<TabsTab id="tab2" controls="panel2">ESLint Equivalent</TabsTab>
+	<TabsList aria-label="Linter">
+		<TabsTab id="rules-tab1" controls="rules-panel1" selected>If I Wrote a Linter</TabsTab>
+		<TabsTab id="rules-tab2" controls="rules-panel2">ESLint Equivalent</TabsTab>
 	</TabsList>
-	<TabsPanel id="panel1" labelledby="tab1" selected>
+	<TabsPanel id="rules-panel1" labelledby="rules-tab1" selected>
 
 ```ts
 // if-i-wrote-a-linter.config.ts
@@ -646,7 +646,7 @@ export default defineConfig({
 ```
 
   	</TabsPanel>
-	<TabsPanel id="panel2" labelledby="tab2">
+	<TabsPanel id="rules-panel2" labelledby="rules-tab2">
 
 ```ts
 // eslint.config.ts
@@ -693,15 +693,15 @@ That sketch shows a few more differences from the current ESLint flat config sys
   - Note: I also want the config system to ignore files listed in your `.gitignore` by default, in addition to ESLint's defaults of `.git/` and `node_modules/`.
 - Settings are specified inline in `use` through their plugin, rather than as a separate catch-all `settings` object
 
-I previously mentioned that I would want to [support common languages in core](/blog/if-i-wrote-a-linter-part-1-architecture#common-languages-in-core).
+I previously mentioned that I would want to [support common languages in core](/blog/if-i-wrote-a-linter-part-1-architecture#core-common-languages).
 Here's how the config system would look for a repository that enables logical and stylistic rules on all those languages:
 
 <Tabs>
-	<TabsList>
-		<TabsTab id="tab1" controls="panel1" selected>If I Wrote a Linter</TabsTab>
-		<TabsTab id="tab2" controls="panel2">ESLint Equivalent</TabsTab>
+	<TabsList aria-label="Linter">
+		<TabsTab id="settings-tab1" controls="settings-panel1" selected>If I Wrote a Linter</TabsTab>
+		<TabsTab id="settings-tab2" controls="settings-panel2">ESLint Equivalent</TabsTab>
 	</TabsList>
-	<TabsPanel id="panel1" labelledby="tab1" selected>
+	<TabsPanel id="settings-panel1" labelledby="settings-tab1" selected>
 
 ```ts
 // if-i-wrote-a-linter.config.ts
@@ -730,7 +730,7 @@ export default defineConfig({
 ```
 
   	</TabsPanel>
-	<TabsPanel id="panel2" labelledby="tab2">
+	<TabsPanel id="settings-panel2" labelledby="settings-tab2">
 
 ```ts
 // eslint.config.ts

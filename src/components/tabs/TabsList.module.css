@@ -12,7 +12,7 @@
 	position: absolute;
 }
 
-@media (min-width: 700px) {
+@media (width >= 43.75em) {
 	.tabsList {
 		flex-direction: row;
 		padding: 0 0 2rem;

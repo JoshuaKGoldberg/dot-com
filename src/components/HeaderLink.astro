@@ -1,5 +1,5 @@
 ---
-import clsx from "clsx";
+import { getAriaCurrent } from "~/utils";
 
 import { Squiggly } from "./Squiggly";
 
@@ -8,20 +8,16 @@ interface Props {
 }
 
 const { href } = Astro.props;
-const active =
-	href.length < 2
-		? Astro.url.pathname.length < 2
-		: Astro.url.pathname.startsWith(href);
 ---
 
 <Squiggly
+	aria-current={getAriaCurrent(href, Astro.url.pathname)}
 	as="a"
-	class={clsx("link", active && "active")}
-	fontSize="medium"
-	fontWeight="bolder"
+	class="link"
+	data-header-link
 	href={href}
 	{...(href.startsWith("http") && { target: "_blank" })}
-	variant={active ? "passive" : "onHover"}
+	variant="current"
 >
 	<slot />
 </Squiggly>
@@ -29,10 +25,15 @@ const active =
 <style>
 	.link {
 		display: inline-block;
+		font-size: var(--linkSize, var(--fontSizeMedium));
+		font-weight: var(--linkWeight, var(--fontWeightBold));
 	}
 
-	.active {
-		color: var(--colorEmphasized);
-		filter: drop-shadow(3px 3px 1px var(--colorSubtle));
+	.link[aria-current] {
+		color: var(--colorLit, var(--colorEmphasized));
+	}
+
+	.link[aria-current="page"] {
+		cursor: default;
 	}
 </style>

@@ -2,14 +2,14 @@
 import { Text } from "./Text";
 ---
 
-<Text as="h1" fontSize="title" fontWeight="bolder">
+<Text as="h1" font="display" tone="strong">
 	<slot />
 </Text>
 
 <style>
 	h1 {
-		color: var(--colorForegroundExtra);
-		line-height: 0.85;
-		text-shadow: var(--textShadow);
+		font-size: calc(var(--fontSizeTitle) * var(--heroScale, 1));
+		line-height: 0.98;
+		overflow-wrap: break-word;
 	}
 </style>

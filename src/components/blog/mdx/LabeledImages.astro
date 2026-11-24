@@ -1,27 +1,40 @@
 ---
+import type { ImageMetadata } from "astro";
+
+import { Image } from "astro:assets";
+
 import LabeledMedia from "./LabeledMedia.astro";
 
 export interface LabeledImage {
 	alt: string;
 	description?: string;
 	original?: string;
-	src: string | { src: string };
+	src: ImageMetadata;
 }
 
 interface Props {
 	description?: string;
 	images: [LabeledImage, LabeledImage];
 }
+
+const displayWidth = 372;
 ---
 
 <LabeledMedia description={Astro.props.description}>
 	<div class="labeled-images">
 		{Astro.props.images.map((image) => (
 			<div class="labeled-image-container">
-				<img
+				<Image
 					alt={image.alt}
-					class="labeled-image"
-					src={typeof image.src === "string" ? image.src : image.src.src}
+					class="labeled-images-image"
+					format="avif"
+					quality={55}
+					sizes={`min(45vw, ${displayWidth}px)`}
+					src={image.src}
+					width={Math.min(displayWidth, image.src.width)}
+					widths={[240, displayWidth, displayWidth * 2].filter(
+						(width) => width <= image.src.width,
+					)}
 				/>
 				{image.description && (
 					<div class="labeled-image-description">{image.description}</div>
@@ -46,8 +59,9 @@ interface Props {
 		max-width: calc(50% - 0.25rem);
 	}
 
-	label .labeled-images img.labeled-image {
+	.labeled-images-image {
 		display: block;
+		height: auto;
 		margin: auto;
 		width: 100%;
 	}

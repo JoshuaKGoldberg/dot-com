@@ -1,0 +1,108 @@
+<script is:inline>
+	/**
+	 * Keeps a root attribute in sync with a setting that's whatever was last chosen,
+	 * or if nothing was, the system's preference.
+	 *
+	 * Inline so that it runs before first paint.
+	 */
+	function createRootSetting({ apply, id, options: [off, on], query }) {
+		const preference = matchMedia(query);
+		let chosen;
+		let controls;
+		let current;
+
+		// Storage throws when the browser is set to block site data
+		function read() {
+			try {
+				const stored = localStorage.getItem(id);
+
+				return [off, on].includes(stored) ? stored : undefined;
+			} catch {
+				return chosen;
+			}
+		}
+
+		function write() {
+			try {
+				if (chosen) {
+					localStorage.setItem(id, chosen);
+				} else {
+					localStorage.removeItem(id);
+				}
+			} catch {
+				// The choice still applies until the next full page load
+			}
+		}
+
+		function update() {
+			const next = chosen ?? (preference.matches ? on : off);
+
+			if (next !== current) {
+				document.dispatchEvent(new Event(`${id}:before-change`));
+				current = next;
+				apply(current);
+			}
+
+			if (controls) {
+				controls.clear.toggleAttribute("data-active", !!chosen);
+				controls.toggle.setAttribute("aria-pressed", String(current === on));
+			}
+		}
+
+		function choose(choice) {
+			chosen = choice;
+			write();
+			update();
+		}
+
+		function synchronize() {
+			chosen = read();
+			update();
+		}
+
+		synchronize();
+		preference.addEventListener("change", update);
+
+		// Other tabs may change it too, including while this one's in the back/forward cache
+		addEventListener("pageshow", synchronize);
+		addEventListener("storage", synchronize);
+
+		return {
+			control({ clear, toggle }) {
+				controls = { clear, toggle };
+				toggle.addEventListener("click", () => {
+					choose(current === on ? off : on);
+				});
+				clear.addEventListener("click", () => {
+					// It's about to be hidden, which would otherwise lose the focus it has
+					toggle.focus({ focusVisible: clear.matches(":focus-visible") });
+					choose(undefined);
+				});
+				update();
+			},
+		};
+	}
+
+	var rootSettings = {
+		motion: createRootSetting({
+			apply(motion) {
+				document.documentElement.dataset.motion = motion;
+			},
+			id: "motion",
+			options: ["playing", "paused"],
+			query: "(prefers-reduced-motion: reduce)",
+		}),
+		theme: createRootSetting({
+			apply(theme) {
+				document.documentElement.classList.toggle("dark", theme === "dark");
+
+				for (const meta of document.querySelectorAll("[data-theme-color]")) {
+					meta.media = meta.dataset.themeColor === theme ? "all" : "not all";
+				}
+			},
+			id: "theme",
+			options: ["light", "dark"],
+			query: "(prefers-color-scheme: dark)",
+		}),
+	};
+</script>

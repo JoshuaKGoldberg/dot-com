@@ -1,0 +1,325 @@
+---
+import { Image } from "astro:assets";
+
+import { getOverhang, type Portrait } from "~/portraits";
+import { portraitSize, stageSize } from "~/scenery/portrait/sizes";
+
+import { getTone } from "./getTone";
+import GlassRing from "./GlassRing.astro";
+
+interface Props extends Portrait {
+	scale: number;
+}
+
+const { alt, halo, image, isSceneFaint, scale, scene } = Astro.props;
+
+const haloDirections = [-1, 0, 1];
+
+const imageSizes = {
+	sizes: `(width >= 43.75em) ${(16 * scale).toString()}rem, calc(clamp(min(6rem, 27vw), 20vmin, 12rem) * ${scale.toString()})`,
+	width: portraitSize,
+	widths: [144, 192, 256, 384, 512],
+};
+
+const overhang = getOverhang(image);
+const stageOverflow = (stageSize / portraitSize - 1) / 2;
+---
+
+<hero-portrait class="portrait" style={{ "--stageOverflow": stageOverflow }}>
+	<div aria-hidden="true" class="backdrop">
+		<div class="aurora resting"></div>
+		{scene && (
+			<div class:list={["scene", isSceneFaint && "faint"]}>
+				<Image
+					alt=""
+					class="scene-image"
+					loading="eager"
+					src={scene}
+					{...imageSizes}
+				/>
+			</div>
+		)}
+		<div
+			class:list={["aurora awake", scene && !isSceneFaint && "vivid"]}
+			data-portrait="light"
+		></div>
+	</div>
+	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
+	<GlassRing />
+	<GlassRing data-portrait="light" isLit />
+	<div class="clip" data-layer="figure" data-tone={await getTone(image)}>
+		<div class="figure" data-portrait="figure">
+			<div
+				aria-hidden="true"
+				class="glow"
+				data-portrait="glow"
+				style={{ "--halo": `url("${halo.src}")` }}
+			>
+				{haloDirections.map((direction) => (
+					<div
+						class="halo"
+						data-portrait="halo"
+						style={{ "--direction": direction }}
+					>
+						<div class="halo-colors" />
+					</div>
+				))}
+			</div>
+			<Image
+				alt={alt}
+				class="cutout"
+				fetchpriority="high"
+				loading="eager"
+				quality="high"
+				src={image}
+				style={{ "--overhang": `${(overhang * 100).toFixed(3)}%` }}
+				{...imageSizes}
+			/>
+		</div>
+	</div>
+</hero-portrait>
+
+<style>
+	.portrait {
+		--size: calc(var(--heroSizeLarge) * var(--heroScale, 1));
+		--stageInset: calc(-1 * var(--size) * var(--stageOverflow));
+
+		view-transition-name: portrait;
+		display: block;
+		height: var(--size);
+		position: relative;
+		-webkit-user-select: none;
+		user-select: none;
+		width: var(--size);
+	}
+
+	.backdrop,
+	.clip,
+	.constellation {
+		inset: 0;
+		position: absolute;
+	}
+
+	.backdrop {
+		background: var(--discMiddle)
+			linear-gradient(var(--discTop), var(--discMiddle) 60%, var(--discBottom));
+		border-radius: 50%;
+		box-shadow: 0 0 2rem 0.5rem var(--discGlow);
+		contain: paint;
+		overflow: hidden;
+	}
+
+	.scene {
+		inset: 0;
+		position: absolute;
+	}
+
+	.scene-image {
+		display: block;
+		height: auto;
+		mask: linear-gradient(
+			to right,
+			rgb(0 0 0 / 70%),
+			rgb(0 0 0 / 90%),
+			rgb(0 0 0 / 70%)
+		);
+		width: 100%;
+	}
+
+	.faint {
+		background: var(--colorBackgroundCenter);
+	}
+
+	/* Larger than the circle, so that its blurred edges are outside of it */
+	.faint .scene-image {
+		filter: blur(calc(var(--size) * 0.012)) saturate(0.83);
+		mask: none;
+		opacity: 0.62;
+		scale: 1.2;
+	}
+
+	.aurora,
+	.aurora::after,
+	.aurora::before {
+		inset: 0;
+		position: absolute;
+	}
+
+	.aurora::after,
+	.aurora::before {
+		background:
+			radial-gradient(
+				ellipse 24% 46% at 16% 40%,
+				var(--curtainJade),
+				transparent
+			),
+			radial-gradient(
+				ellipse 26% 52% at 42% 32%,
+				var(--curtainCornflower),
+				transparent
+			),
+			radial-gradient(
+				ellipse 24% 48% at 68% 42%,
+				var(--curtainWisteria),
+				transparent
+			),
+			radial-gradient(
+				ellipse 22% 44% at 92% 36%,
+				var(--curtainRose),
+				transparent
+			);
+		content: "";
+		inset: -20% -40%;
+		opacity: var(--front, 0.6);
+	}
+
+	.aurora::after {
+		opacity: var(--back, 0.4);
+		transform: scaleX(-1) translateY(12%);
+	}
+
+	.resting {
+		filter: saturate(var(--curtainSaturation));
+		opacity: var(--curtainStrength);
+	}
+
+	.awake,
+	.glow {
+		opacity: 0;
+	}
+
+	/* Photos can be dark in either theme, so light over them is always strong */
+	.vivid {
+		--curtainJade: var(--brightJade);
+		--curtainCornflower: var(--brightCornflower);
+		--curtainWisteria: var(--brightWisteria);
+		--curtainRose: var(--brightRose);
+		--back: 0.6;
+		--front: 0.85;
+
+		mix-blend-mode: screen;
+	}
+
+	/* Kept on their own layers, so that they're never repainted as they change */
+	.awake,
+	.figure,
+	.glow,
+	.halo {
+		will-change: opacity, transform;
+	}
+
+	.glow {
+		inset: 0;
+		position: absolute;
+	}
+
+	.halo {
+		aspect-ratio: 1;
+		left: var(--stageInset);
+		mask: var(--halo) center / 100% 100% no-repeat;
+		opacity: var(--haloStrength);
+		position: absolute;
+		right: var(--stageInset);
+		top: var(--stageInset);
+	}
+
+	.halo-colors {
+		animation: turn 48s linear calc(var(--direction) * 16s - 16s) infinite
+			paused;
+		background: conic-gradient(
+			var(--ringJade),
+			var(--ringCornflower),
+			var(--ringWisteria),
+			var(--ringRose),
+			var(--ringWisteria),
+			var(--ringCornflower),
+			var(--ringJade)
+		);
+		border-radius: 50%;
+		inset: -25%;
+		position: absolute;
+	}
+
+	/* Fades out before it could reach the text beside the portrait */
+	.constellation {
+		inset: var(--stageInset);
+		mask: radial-gradient(closest-side, black 80%, transparent);
+	}
+
+	.constellation :global(canvas) {
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+
+	/*
+	 * Open at the top for anything taller than the circle, and round at the bottom,
+	 * where 50% is of the circle itself: so that nothing ever covers the ring.
+	 */
+	.clip {
+		view-transition-name: portrait-figure;
+		clip-path: var(--portraitClip);
+	}
+
+	.figure {
+		display: flow-root;
+		position: relative;
+	}
+
+	.cutout {
+		display: block;
+		height: auto;
+		margin-top: calc(-1 * var(--overhang));
+		position: relative;
+		width: 100%;
+	}
+
+	/* Holding a finger on it wakes it up, instead of opening the image's menu */
+	@media (hover: none) {
+		.cutout,
+		.scene-image {
+			-webkit-touch-callout: none;
+			pointer-events: none;
+		}
+	}
+
+	/* HeroPortrait.ts advances these, only while there's light to see them in */
+	.aurora.awake::before {
+		animation: drift 40s ease-in-out infinite alternate paused;
+	}
+
+	.aurora.awake::after {
+		animation: drift-back 52s ease-in-out infinite alternate paused;
+	}
+
+	:global(html[data-motion="paused"]) :is(.awake, .figure, .glow) {
+		transition:
+			var(--transitionMedium) opacity,
+			var(--transitionMedium) transform;
+	}
+
+	@keyframes drift {
+		to {
+			transform: translateX(14%);
+		}
+	}
+
+	@keyframes drift-back {
+		to {
+			transform: scaleX(-1) translate(12%, 12%);
+		}
+	}
+
+	@keyframes turn {
+		to {
+			transform: rotate(1turn);
+		}
+	}
+
+	@media print {
+		.constellation,
+		.halo {
+			display: none;
+		}
+	}
+</style>

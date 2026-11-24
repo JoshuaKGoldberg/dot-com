@@ -1,14 +1,16 @@
 .squiggly {
+	--squiggleOffset: 0.2em;
+
 	color: var(--colorForeground);
 	cursor: pointer;
 	font-size: var(--fontSizeMedium);
 	line-height: 0.75;
+
+	/* Lights only show within the box, so it has to fit descenders */
+	margin-block: -0.3em;
+	padding-block: 0.3em;
 }
 
 .squiggly.active {
-	color: var(--colorEmphasized);
-}
-
-.squiggly:not(.active):not(:hover)::after {
-	opacity: 0;
+	color: var(--colorLit, var(--colorEmphasized));
 }

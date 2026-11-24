@@ -1,18 +1,21 @@
 ---
-import HeroImage, { type HeroImages } from "./HeroImage.astro";
+import type { Portrait } from "~/portraits";
+
+import HeroPortrait from "./hero/HeroPortrait.astro";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
-	alt: string;
-	class?: string | undefined;
-	images: HeroImages;
+	isLarge?: boolean | undefined;
+	portrait: Portrait;
 	primary: string;
 }
+
+const scale = Astro.props.isLarge ? 1 : 0.75;
 ---
 
-<div class:list={["hero", Astro.props.class]}>
+<div class="hero" style={{ "--heroScale": scale }}>
 	<div class="half first">
-		<HeroImage alt={Astro.props.alt} size="large" src={Astro.props.images} />
+		<HeroPortrait scale={scale} {...Astro.props.portrait} />
 	</div>
 	<div class="half second">
 		<HeroTitle>{Astro.props.primary}</HeroTitle>
@@ -22,26 +25,51 @@ interface Props {
 
 <style>
 	.hero {
-		margin: clamp(2rem, 8vmin, 8rem) auto;
-		padding: 0 var(--widthPagePadding) 1rem;
+		--heroSecondarySize: var(--fontSizeMedium);
+		--heroTertiarySize: var(--fontSizeSmaller);
+
+		margin: clamp(1.15rem, 4.5vmin, 2rem) auto clamp(1.3rem, 5.35vmin, 2.4rem);
+		overflow-x: clip;
+		padding: 0 var(--widthPagePadding) 0.67rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
 	}
 
-	.first {
-		float: right;
+	:global([data-fits-screen]) .hero {
+		--heroSecondarySize: var(--fontSizeSubtitle);
+		--heroTertiarySize: var(--fontSizeMedium);
+
+		grid-row: 2;
+		margin-block: clamp(0rem, 16dvh - 6.4rem, 2rem) 0;
+		padding-bottom: 0;
 	}
 
-	@media (min-width: 700px) {
+	.first {
+		float: right;
+		margin-left: 1rem;
+	}
+
+	/* Stays beside the portrait, rather than having some lines wrap around it */
+	.second {
+		display: flow-root;
+	}
+
+	@media (width >= 43.75em) {
 		.hero {
 			align-items: center;
 			display: flex;
 			gap: 2.5rem;
-			height: 35vh;
 			flex-direction: row;
-			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(5rem, 10vh, 14rem);
+			margin: max(7.4rem, 4rem + 10vh) 0 max(3.7rem, 18.25vh - 4rem);
 			padding: 0;
+		}
+
+		:global([data-fits-screen]) .hero {
+			--heroSizeLarge: clamp(10rem, 36dvh, 16rem);
+
+			margin-block: 0;
+			padding: 4.5rem 0 1.5rem;
 		}
 
 		.half {
@@ -51,6 +79,7 @@ interface Props {
 		.half.first {
 			display: flex;
 			justify-content: flex-end;
+			margin: 0;
 			max-height: initial;
 			width: 45%;
 		}

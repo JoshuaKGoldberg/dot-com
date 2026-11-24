@@ -1,0 +1,10 @@
+/* Only once tabs have been switched between, so that pages don't fade in on their own */
+.changed {
+	animation: appear var(--transitionMedium) ease-out;
+}
+
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+}

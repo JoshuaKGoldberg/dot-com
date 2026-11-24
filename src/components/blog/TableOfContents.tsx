@@ -1,7 +1,7 @@
 import type { MarkdownHeading } from "astro";
 
 import clsx from "clsx";
-import { createEffect, createSignal, For } from "solid-js";
+import { createSignal, For, onCleanup, onMount } from "solid-js";
 
 import { Squiggly } from "../Squiggly";
 import { Text } from "../Text";
@@ -74,7 +74,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 		}
 
 		// Case: If the first heading is within the top half of the screen, we're at the beginning
-		if (document.body.scrollTop < headings[0].offsetTop / 2) {
+		if (scrollY < headings[0].offsetTop / 2) {
 			setActiveSlug(undefined);
 			return;
 		}
@@ -102,36 +102,30 @@ export function TableOfContents(props: TableOfContentsProps) {
 		setActiveSlug(headings[headings.length - 1].id);
 	}
 
-	createEffect(updateActiveHeading);
-
-	document.body.addEventListener("scroll", updateActiveHeading, {
-		passive: true,
+	onMount(() => {
+		updateActiveHeading();
+		addEventListener("scroll", updateActiveHeading, { passive: true });
+		onCleanup(() => {
+			removeEventListener("scroll", updateActiveHeading);
+		});
 	});
 
 	return (
 		<>
 			<label class={styles.toggle}>
 				<input type="checkbox" value="Expand table of contents" />
-				<Squiggly as="span" fontSize="smaller">
+				<Squiggly as="span" fontSize="small">
 					Table of Contents
 				</Squiggly>
 			</label>
-			<nav class={styles.tableOfContents}>
+			<nav aria-label="Table of contents" class={styles.tableOfContents}>
 				<ol class={clsx(styles.ol, styles.tableRoot)}>
 					<li class={styles.li}>
 						<Text
 							as="a"
 							class={clsx(styles.back, !getActiveSlug() && styles.active)}
 							fontWeight="light"
-							href="#"
-							onClick={(event) => {
-								document.body.scroll({
-									behavior: "smooth",
-									top: 0,
-								});
-								window.location.hash = "";
-								event.preventDefault();
-							}}
+							href="#top"
 						>
 							Back to Top
 						</Text>
@@ -166,7 +160,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 													>
 														{h3.text}
 													</Text>
-													{h4s.length && (
+													{h4s.length ? (
 														<ol class={styles.ol}>
 															<For each={h4s}>
 																{(h4) => (
@@ -187,7 +181,7 @@ export function TableOfContents(props: TableOfContentsProps) {
 																)}
 															</For>
 														</ol>
-													)}
+													) : null}
 												</li>
 											)}
 										</For>

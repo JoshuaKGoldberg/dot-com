@@ -1,0 +1,54 @@
+---
+import HeaderToggle from "./HeaderToggle.astro";
+---
+
+<HeaderToggle
+	clearLabel="Clear motion preference"
+	label="Pause animations"
+	setting="motion"
+>
+	<svg aria-hidden="true" class="play-pause" viewBox="0 0 24 24">
+		<path d="M8 5.5v13"></path>
+		<path class="fold upper" d="M16 5.5v6.5"></path>
+		<path class="fold lower" d="M16 12v6.5"></path>
+	</svg>
+</HeaderToggle>
+
+<style>
+	.play-pause {
+		fill: none;
+		stroke: currentColor;
+		stroke-linecap: round;
+		stroke-width: 1.25px;
+	}
+
+	@media (width >= 43.75em) {
+		.play-pause {
+			right: -0.2rem;
+		}
+	}
+
+	path {
+		vector-effect: non-scaling-stroke;
+	}
+
+	/* Pause's right bar folds at its middle, which becomes the point of play */
+	.fold {
+		transform-origin: 16px 12px;
+		transition: transform var(--transitionMedium) cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	:global(html[data-motion="paused"]) .upper {
+		transform: translateX(3.5px) skewX(60.5deg);
+	}
+
+	:global(html[data-motion="paused"]) .lower {
+		transform: translateX(3.5px) skewX(-60.5deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.fold {
+			transition: none;
+		}
+	}
+</style>

@@ -24,8 +24,8 @@ const previous =
 const next = entryIndex === 0 ? undefined : entries[entryIndex - 1];
 ---
 
-<aside class="series">
-	<Text as="strong" class="series-strong" fontSize="medium" fontWeight="bolder">
+<aside class="series" role="note">
+	<Text as="strong" class="series-strong" fontSize="medium" fontWeight="bold">
 		Series: {Astro.props.series}
 	</Text>
 	{(next || previous) && (

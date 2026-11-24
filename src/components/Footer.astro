@@ -4,43 +4,85 @@ import { EmojiBlastHeart } from "./EmojiBlastHeart";
 import { Text } from "./Text";
 ---
 
-<Text as="footer" fontSize="small" fontWeight="light">
-	Made with <EmojiBlastHeart client:visible /> in Boston
-	<br />
-	using Astro, Solid, and TypeScript.
-	<br />
-	<Anchor
-		class="anchor"
-		fontSize="small"
-		href="https://github.com/JoshuaKGoldberg/dot-com"
-		target="_blank"
-	>
-		view source
-	</Anchor>
-</Text>
+<footer>
+	<Text as="p" class="credit" font="label" fontSize="smaller" tone="muted">
+		Made with <EmojiBlastHeart client:visible /> in Boston using Astro, Solid,
+		and TypeScript.
+		<span aria-hidden="true" class="dot">
+			·
+		</span>
+		<Anchor
+			href="https://github.com/JoshuaKGoldberg/dot-com"
+			target="_blank"
+			tone="muted"
+		>
+			view source
+		</Anchor>
+	</Text>
+</footer>
 
 <style>
 	footer {
-		opacity: 0.75;
-		padding: clamp(1.5rem, 3.5vmin, 7rem) var(--widthPagePadding);
-		justify-self: flex-end;
+		padding: clamp(4rem, 14vh, 9rem) var(--widthPagePadding)
+			clamp(2.75rem, 8.7vh, 5rem);
+		text-align: center;
 		width: 100%;
 	}
 
-	.anchor {
-		display: inline-block;
-		margin-top: 1rem;
+	/* Keeps its contrast with the aurora behind it */
+	:global(html:has(aurora-band[edge="bottom"][data-awake])) footer {
+		--colorMuted: var(--colorForeground);
 	}
 
-	@media (min-width: 700px) {
-		footer {
-			text-align: center;
+	:global([data-fits-screen]) footer {
+		display: grid;
+		flex: 1 0 auto;
+		grid-template-rows: 2fr auto 1fr;
+		padding-block: clamp(0.7rem, 6vh - 1.2rem, 2rem) clamp(0.35rem, 2vh, 1rem);
+	}
+
+	:global([data-fits-screen]) .credit {
+		grid-row: 2;
+	}
+
+	.credit {
+		--squiggleOffset: -0.55em;
+
+		/* Its font only has the one weight, which macOS would otherwise thicken */
+		-webkit-font-smoothing: antialiased;
+		letter-spacing: 0.06em;
+		line-height: 1.8;
+		text-wrap: balance;
+	}
+
+	.dot {
+		padding: 0 0.55em;
+	}
+
+	@supports (animation-timeline: view()) {
+		.credit {
+			animation-fill-mode: both;
+			animation-name: emerge;
+			animation-range: entry 0% cover 6%;
+			animation-timeline: view();
+			animation-timing-function: linear;
+		}
+
+		:global(html[data-motion="paused"]) .credit {
+			animation: none;
 		}
 	}
 
-	@media (min-height: 938px) {
-		footer {
-			padding-top: max(2.8rem, 11.7vmin);
+	@media print {
+		.credit {
+			animation: none;
+		}
+	}
+
+	@keyframes emerge {
+		from {
+			opacity: 0;
+			translate: 0 18px;
 		}
 	}
 </style>

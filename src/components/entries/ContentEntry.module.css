@@ -7,6 +7,8 @@
 	align-items: flex-start;
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
+	overflow-wrap: anywhere;
 }
 
 .title {
@@ -14,7 +16,9 @@
 }
 
 .description {
+	line-height: 1.35;
 	margin: 0.75rem 0 0.5rem;
+	text-wrap: pretty;
 }
 
 .title + .description {
@@ -26,17 +30,17 @@
 	gap: 0.5rem;
 }
 
-.anchorLarger {
+.anchorAlone {
 	margin-top: 0.5rem;
 }
 
-@media (min-width: 700px) {
+@media (width >= 43.75em) {
 	.contentEntry:not(.widthsFull) {
 		width: calc(50% - 1.5rem);
 	}
 }
 
-@media (min-width: 1017px) {
+@media (width >= 63.5625em) {
 	.contentEntry.widthsThird {
 		width: calc(32% - 1.5rem);
 	}

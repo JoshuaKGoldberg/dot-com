@@ -1,39 +1,27 @@
 ---
 import { getCollection } from "astro:content";
 
-import speakingDark from "~/assets/speaking-dark.webp";
-import speakingLight from "~/assets/speaking-light.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
-import { groupBy } from "~/utils";
 
+import { speakingDescription } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
 
-const allSpeakings = await getCollection("speaking");
-
-const categories = {
-	All: allSpeakings,
-	...groupBy(allSpeakings, (speaking) => speaking.data.category),
-};
+const speakings = (await getCollection("speaking")).map(({ data }) => data);
 ---
 
 <HeroLayout
-	alt="Josh looking up seriously wearing a dark blue shirt with a small pineapples and flamingos pattern"
-	description="I talk about static analysis, accessibility, and team culture."
-	images={{ dark: speakingDark, light: speakingLight }}
-	preview="images/speaking-preview.png"
+	description={speakingDescription}
+	portrait="speaking"
 	primary="Speaking"
 	title="Speaking"
 >
+	<!-- prettier-ignore -->
 	<Fragment slot="secondary">
-		I talk about static analysis and co-organize{" "}
-		<Anchor href="https://squiggleconf.com" target="_blank" variant="passive">
-			SquiggleConf
-		</Anchor>
-		.
+		I talk about static analysis and co-organize <Anchor href="https://squiggleconf.com" target="_blank">SquiggleConf</Anchor>.
 	</Fragment>
 	<BodyContents>
-		<SpeakingsTabbed categories={categories} client:load />
+		<SpeakingsTabbed client:load now={Date.now()} speakings={speakings} />
 	</BodyContents>
 </HeroLayout>

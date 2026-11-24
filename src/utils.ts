@@ -1,3 +1,13 @@
+export function getAriaCurrent(href: string, pathname: string) {
+	const path = pathname.replace(/(.)\/$/, "$1");
+
+	if (path === href) {
+		return "page";
+	}
+
+	return href !== "/" && path.startsWith(`${href}/`) ? "true" : undefined;
+}
+
 export function groupBy<T, K extends number | string>(
 	items: T[],
 	getKey: (item: T) => K,
@@ -12,4 +22,8 @@ export function groupBy<T, K extends number | string>(
 	return Object.fromEntries(
 		Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b)),
 	) as typeof grouped;
+}
+
+export function slugify(text: string) {
+	return text.toLowerCase().replaceAll(/\s+/g, "-");
 }

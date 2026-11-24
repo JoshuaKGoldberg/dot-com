@@ -19,6 +19,7 @@ export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
 	description?: string | undefined;
+	descriptionSize?: "medium" | "small";
 	image?: ContentEntryImageProps | undefined;
 	links?: [string, string][] | undefined;
 	subtitle: JSX.Element;
@@ -35,38 +36,39 @@ export function ContentEntry(props: ContentEntryProps) {
 			<li class={clsx(styles.contentEntry, widths[props.widths], props.class)}>
 				{props.image && <ContentEntryImage {...props.image} />}
 				<div class={styles.contents}>
-					<Text
-						as="a"
+					<Anchor
 						class={styles.title}
+						font="display"
 						fontSize="medium"
-						fontWeight="bold"
 						href={props.url}
+						tone="strong"
+						variant="onHover"
 						{...(props.url.startsWith("/") ? {} : { target: "_blank" })}
 					>
 						{props.title}
-					</Text>
-					<Text as="p" class={styles.subtitle} fontWeight="light">
+					</Anchor>
+					<Text as="p" fontSize="small" tone="muted">
 						{props.subtitle}
 					</Text>
 					{props.description && (
 						<Text
 							as="div"
 							class={styles.description}
-							fontSize="small"
+							fontSize={props.descriptionSize ?? "medium"}
 							fontWeight="light"
 						>
 							{props.description}
 						</Text>
 					)}
 					{props.links && (
-						<Text as="p" class={styles.links} fontWeight="light">
+						<Text as="p" class={styles.links} font="label">
 							<For each={props.links.sort(([a], [b]) => a.localeCompare(b))}>
 								{([text, href]) => (
 									<Anchor
-										{...(props.description
-											? { fontSize: "smaller" }
-											: { class: styles.anchorLarger, fontSize: "small" })}
+										class={props.description ? undefined : styles.anchorAlone}
+										fontSize="smaller"
 										href={href}
+										variant="onHover"
 									>
 										{text}
 									</Anchor>

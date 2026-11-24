@@ -2,50 +2,35 @@
 import bluesky from "~/assets/icons/bluesky.svg";
 import github from "~/assets/icons/github.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
-import { Squiggly } from "~/components/Squiggly";
-import { Text } from "~/components/Text";
+import { socialUrls } from "~/constants";
 
 import SocialImage from "./SocialImage.astro";
 
 const socials = [
-	["Bluesky", "https://bsky.app/profile/joshuakgoldberg.com", bluesky],
-	["GitHub", "https://github.com/JoshuaKGoldberg", github],
-	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", mastodon],
+	["Bluesky", socialUrls.bluesky, bluesky],
+	["GitHub", socialUrls.github, github],
+	["Mastodon", socialUrls.mastodon, mastodon],
 ] as const;
 ---
 
-<Text as="p" class="socials" fontSize="smaller" fontWeight="light">
+<p class="socials">
 	{socials.map(([alt, href, image]) => (
 		<a class="social" href={href} target="_blank">
 			<SocialImage alt={alt} image={image} />
-			<Squiggly as="span" fontSize="smaller" variant="onHover">
-				{alt}
-			</Squiggly>
 		</a>
 	))}
-</Text>
+</p>
 
 <style>
 	.socials {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 1rem;
-		max-width: 20rem;
-		margin: 1rem 0 0;
+		gap: 1.25rem;
+		margin: clamp(0.75rem, 3vh, 1.5rem) 0 0;
 	}
 
 	.social {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
+		--socialSize: 1.5rem;
 
-	@media (min-width: 700px) {
-		.socials {
-			display: grid;
-			grid-template-columns: auto auto auto;
-			grid-template-rows: auto auto;
-			margin-left: 0;
-		}
+		display: flex;
 	}
 </style>

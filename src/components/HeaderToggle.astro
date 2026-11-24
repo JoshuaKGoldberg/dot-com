@@ -1,0 +1,130 @@
+---
+import XMark from "astro-heroicons/micro/XMark.astro";
+
+interface Props {
+	clearLabel: string;
+	label: string;
+	setting: "motion" | "theme";
+}
+
+const { clearLabel, label, setting } = Astro.props;
+---
+
+<div class="header-toggle" data-setting={setting}>
+	<button aria-label={label} class="toggle" data-toggle type="button">
+		<span class="icons">
+			<slot />
+		</span>
+	</button>
+	<button aria-label={clearLabel} class="clear" data-clear type="button">
+		<XMark height={8} width={8} />
+	</button>
+</div>
+
+<script is:inline define:vars={{ setting }}>
+	const host = document.querySelector(`[data-setting="${setting}"]`);
+
+	rootSettings[setting].control({
+		clear: host.querySelector("[data-clear]"),
+		toggle: host.querySelector("[data-toggle]"),
+	});
+</script>
+
+<style>
+	/* Needs JavaScript to do anything, which is also what sets data-motion */
+	:global(html:not([data-motion])) .header-toggle {
+		visibility: hidden;
+	}
+
+	/* Two targets that don't overlap, as small as accessibility guidelines allow */
+	.header-toggle {
+		--icon: 1.25rem;
+		--target: 1.5rem;
+
+		display: flex;
+		height: 2rem;
+		position: relative;
+	}
+
+	button {
+		background: none;
+		border: 0;
+		color: var(--colorForeground);
+		cursor: pointer;
+		display: block;
+		padding: 0;
+		transition: var(--transitionMedium) color;
+		width: var(--target);
+	}
+
+	/* Touch screens keep whatever was last tapped hovered */
+	@media (hover: hover) {
+		button:hover {
+			color: var(--colorEmphasized);
+		}
+	}
+
+	.clear {
+		align-items: flex-start;
+		display: flex;
+		height: var(--target);
+		padding-top: 0.2rem;
+		transition:
+			var(--transitionFast) opacity,
+			var(--transitionFast) translate,
+			var(--transitionFast) visibility;
+	}
+
+	.clear:not([data-active]) {
+		opacity: 0;
+		translate: 0 0.5rem;
+		visibility: hidden;
+	}
+
+	.clear :global(svg) {
+		display: block;
+		overflow: visible;
+		stroke: currentColor;
+		stroke-width: 0.75px;
+	}
+
+	.icons {
+		display: block;
+		height: 2rem;
+		mask-image: linear-gradient(black 70%, transparent 95%);
+		/* Masks don't keep what they hide from being scrolled to */
+		overflow: clip;
+		position: relative;
+		width: 100%;
+	}
+
+	.icons :global(svg) {
+		height: var(--icon);
+		inset: 0 0 0 auto;
+		margin: auto 0;
+		position: absolute;
+		width: var(--icon);
+	}
+
+	/* Narrow screens don't have room beside icons, but they do above them */
+	@media (width < 43.75em) {
+		.header-toggle {
+			--icon: 1rem;
+
+			height: var(--target);
+		}
+
+		.icons {
+			height: var(--target);
+		}
+
+		.clear {
+			align-items: flex-end;
+			bottom: 100%;
+			justify-content: flex-end;
+			padding: 0;
+			position: absolute;
+			right: -0.4rem;
+		}
+	}
+</style>

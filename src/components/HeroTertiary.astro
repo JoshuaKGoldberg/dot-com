@@ -2,20 +2,18 @@
 import { Text } from "~/components/Text";
 ---
 
-<Text as="p" class="tertiary" fontSize="small" fontWeight="light">
+<Text as="p" class="tertiary">
 	<slot />
 </Text>
 
 <style>
 	.tertiary {
-		line-height: 1.25;
-		margin-top: 1rem;
-		max-width: 25rem;
-	}
+		--squiggleOffset: -0.49em;
 
-	@media (min-width: 700px) {
-		.tertiary {
-			margin-left: 0;
-		}
+		font-size: var(--heroTertiarySize, var(--fontSizeMedium));
+		line-height: 1.35;
+		margin-top: 1rem;
+		max-width: calc(25rem * var(--heroScale, 1));
+		text-wrap: balance;
 	}
 </style>

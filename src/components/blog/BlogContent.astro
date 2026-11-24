@@ -4,6 +4,8 @@ import type { Render } from "astro:content";
 import BodyContents from "../BodyContents.astro";
 import styles from "./BlogContent.module.css";
 import BlogSeries, { type Props as BlogSeriesProps } from "./BlogSeries.astro";
+import Pre from "./Pre.astro";
+import Table from "./Table.astro";
 import "./code.css";
 
 interface Props {
@@ -13,13 +15,7 @@ interface Props {
 ---
 
 <BodyContents as="article" class={styles.article}>
-	<Astro.props.rendered.Content />
+	<Astro.props.rendered.Content components={{ pre: Pre, table: Table }} />
 	<slot />
 	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 </BodyContents>
-
-<script>
-	for (const pre of document.querySelectorAll("pre")) {
-		pre.tabIndex = 0;
-	}
-</script>

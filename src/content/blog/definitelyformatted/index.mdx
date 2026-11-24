@@ -1,7 +1,7 @@
 ---
 description: "How we migrated the massive DefinitelyTyped repository from using a linter for formatting to the dprint formatter."
 image:
-  alt: "A small Shinto shrine called Hakusan Gongen, following the pre-Meiji terminology, at Kita-in, Kawagoe."
+  alt: Painting of soldiers on horseback overseeing the Battle of Königgrätz
   src: "~/assets/blog/battle-of-koniggratz.png"
 pubDate: 2024-04-30
 title: "Definitely Formatted"
@@ -23,6 +23,7 @@ It went through some twists and turns but I'm happy with how it all turned out.
 		"No plan survives contact with the enemy.",
 		"-Helmuth von Moltke",
 	]}
+	eager
 	src={helmuthVonMoltkePortrait}
 	original="https://commons.wikimedia.org/wiki/File:Conrad_Freyberg_Moltke.jpg"
 />
@@ -38,7 +39,7 @@ Much of that tooling exists in the [Microsoft/DefinitelyTyped-tools](https://git
 
 Back in mid-2023, DefinitelyTyped was still using the [TSLint](https://palantir.github.io/tslint) for linting.
 TSLint had long been deprecated in favor of [ESLint](https://eslint.org).
-As a [former maintainer of TSLint](./tslint-maintenance), I was motivated to help move DefinitelyTyped onto ESLint and off of the deprecated TSLint.
+As a [former maintainer of TSLint](/blog/tslint-maintenance), I was motivated to help move DefinitelyTyped onto ESLint and off of the deprecated TSLint.
 
 Although most of the old TSLint rules have equivalents in ESLint, many rules are implemented slightly different in ESLint-land.
 Rules around _formatting_ -changing the whitespace and other trivia without logic- tended to be particularly different.

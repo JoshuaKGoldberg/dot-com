@@ -1,15 +1,38 @@
 ---
+import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
+
+import { colorsBackground, siteName, socialUrls } from "~/constants";
+import { imageOrigin } from "~/previews/imageOrigin";
+import { previewSize } from "~/previews/previewSize";
+
+import RootSettings from "./RootSettings.astro";
+
+export interface Preview {
+	alt: string;
+
+	/** Name of one of the images under /previews */
+	name: string;
+}
 
 interface Props {
 	description: string;
-	image: string;
-	title: string | undefined;
+	preview: Preview;
+
+	published?: Date | undefined;
+
+	/** Without the site's name, for wherever that's already shown */
+	shortTitle: string;
+
+	tags?: string[] | undefined;
+	title: string;
 }
 
-const { description, image: imageRaw, title } = Astro.props;
-const image = new URL(imageRaw, Astro.site);
-const keywords = [
+const { description, preview, published, shortTitle, tags, title } =
+	Astro.props;
+const image = new URL(`/previews/${preview.name}.jpg`, imageOrigin);
+const url = new URL(Astro.url.pathname, Astro.site);
+const keywords = tags ?? [
 	"accessibility",
 	"developer",
 	"javascript",
@@ -21,76 +44,80 @@ const keywords = [
 	"web",
 ];
 
-const metaPairs = [
-	{
-		content: description,
-		name: `description`,
-	},
-	{
-		content: keywords.join(),
-		name: `keywords`,
-	},
-	{
-		content: title,
-		property: `og:title`,
-	},
-	{
-		content: description,
-		property: `og:description`,
-	},
-	{
-		content: image,
-		property: `og:image`,
-	},
-	{
-		content: image,
-		property: `og:image:secure_url`,
-	},
-	{
-		content: `website`,
-		property: `og:type`,
-	},
-	{
-		content: Astro.url,
-		property: `og:url`,
-	},
-	{
-		content: image,
-		name: `thumbnail`,
-	},
-	{
-		content: `summary`,
-		name: `twitter:card`,
-	},
-	{
-		content: Astro.site,
-		name: `twitter:domain`,
-	},
-	{
-		content: "Josh Goldberg",
-		name: `twitter:creator`,
-	},
-	{
-		content: image,
-		name: `twitter:image`,
-	},
-	{
-		content: `@JoshuaKGoldberg`,
-		name: `twitter:site`,
-	},
-	{
-		content: title,
-		name: `twitter:title`,
-	},
-	{
-		content: description,
-		name: `twitter:description`,
-	},
-];
+const author = {
+	"@type": "Person",
+	name: siteName,
+	sameAs: Object.values(socialUrls),
+	url: Astro.site,
+};
+
+const schema = {
+	"@context": "https://schema.org",
+	...(published
+		? {
+				"@type": "BlogPosting",
+				author,
+				datePublished: published,
+				description,
+				headline: shortTitle,
+				image,
+				mainEntityOfPage: url,
+			}
+		: {
+				"@type": url.pathname === "/" ? "WebSite" : "WebPage",
+				author,
+				description,
+				name: shortTitle,
+				url,
+			}),
+};
+
+const names = {
+	author: siteName,
+	description,
+	"fediverse:creator": "@JoshuaKGoldberg@fosstodon.org",
+	keywords: keywords.join(),
+	robots: "max-image-preview:large",
+	"twitter:card": "summary_large_image",
+	"twitter:creator": "@JoshuaKGoldberg",
+	"twitter:description": description,
+	"twitter:image": image,
+	"twitter:image:alt": preview.alt,
+	"twitter:site": "@JoshuaKGoldberg",
+	"twitter:title": shortTitle,
+};
+
+const properties = {
+	"og:description": description,
+	"og:image": image,
+	"og:image:alt": preview.alt,
+	"og:image:height": previewSize.height,
+	"og:image:type": "image/jpeg",
+	"og:image:width": previewSize.width,
+	"og:locale": "en_US",
+	"og:site_name": siteName,
+	"og:title": shortTitle,
+	"og:type": published ? "article" : "website",
+	"og:url": url,
+	...(published && {
+		"article:author": Astro.site,
+		"article:published_time": published.toISOString(),
+	}),
+};
 ---
 
 <head>
 	<meta charset="utf-8" />
+	{Object.entries(colorsBackground).map(([theme, color]) => (
+		<meta
+			content={color}
+			data-theme-color={theme}
+			media={`(prefers-color-scheme: ${theme})`}
+			name="theme-color"
+			transition:persist={`theme-color-${theme}`}
+		/>
+	))}
+	<RootSettings />
 	<link
 		href="/favicon-dark.svg"
 		media="(prefers-color-scheme: dark)"
@@ -110,14 +137,35 @@ const metaPairs = [
 		title="RSS Feed"
 		type="application/rss+xml"
 	/>
-	{metaPairs.map((meta) => (
-		<meta {...meta} />
+	<link href="/favicon.ico" rel="icon" sizes="32x32" />
+	<link href="/apple-touch-icon.png" rel="apple-touch-icon" />
+	<link href={url} rel="canonical" />
+	{Object.entries(names).map(([name, content]) => (
+		<meta content={content.toString()} name={name} />
 	))}
-	<meta content={description} name="description" />
-	<meta content={keywords.join()} name="keywords" />
+	{Object.entries(properties).map(([property, content]) => (
+		<meta content={content?.toString()} property={property} />
+	))}
+	{published &&
+		tags?.map((tag) => <meta content={tag} property="article:tag" />)}
+	<script
+		is:inline
+		set:html={JSON.stringify(schema).replaceAll("<", "\\u003c")}
+		type="application/ld+json"
+	/>
+	<Font
+		cssVariable="--fontDisplay"
+		preload={[{ style: "normal", subset: "latin" }]}
+	/>
+	<Font
+		cssVariable="--fontText"
+		preload={[{ style: "normal", subset: "latin" }]}
+	/>
+	<Font cssVariable="--fontBookTitle" />
+	<Font cssVariable="--fontLabel" />
+	<Font cssVariable="--fontCode" />
 	<meta content={Astro.generator} name="generator" />
 	<meta content="width=device-width" name="viewport" />
 	<title>{title}</title>
+	<ClientRouter />
 </head>
-
-<ClientRouter />

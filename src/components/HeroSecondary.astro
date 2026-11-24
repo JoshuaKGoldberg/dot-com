@@ -2,31 +2,31 @@
 import { Text } from "~/components/Text";
 
 interface Props {
-	size?: "normal" | "wide";
+	size?: "normal" | "wide" | undefined;
 }
 ---
 
-<Text
-	as="p"
-	class:list={["secondary", Astro.props.size ?? "normal"]}
-	fontSize="subtitle"
-	fontWeight="medium"
->
+<Text as="p" class:list={["secondary", Astro.props.size ?? "normal"]}>
 	<slot />
 </Text>
 
 <style>
 	.secondary {
-		margin: 1rem 0 2rem;
+		--squiggleOffset: -0.39em;
+
+		font-size: var(--heroSecondarySize, var(--fontSizeSubtitle));
+		line-height: 1.2;
+		text-wrap: balance;
+		margin: 0.75rem 0 clamp(1rem, 4vh, 2rem);
 	}
 
 	.secondary.normal {
-		max-width: 23rem;
+		max-width: calc(23rem * var(--heroScale, 1));
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.secondary {
-			margin: 0.75rem 0 0;
+			margin: 0.5rem 0 0;
 		}
 	}
 </style>

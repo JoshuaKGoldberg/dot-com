@@ -1,51 +1,60 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 
 import BlogContent from "~/components/blog/BlogContent.astro";
 import BlogHero from "~/components/blog/BlogHero.astro";
 import BlogShareBottom from "~/components/blog/BlogShareBottom.astro";
 import { TableOfContents } from "~/components/blog/TableOfContents";
-import { createBlogTitle } from "~/components/blog/utils";
+import {
+	createBlogDescription,
+	createBlogTitle,
+	getReadingMinutes,
+} from "~/components/blog/utils";
 import BodyContents from "~/components/BodyContents.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import { getPostPicture } from "~/previews/getPostPicture";
 
-const blogs = await getCollection("blog");
+interface Props {
+	entry: CollectionEntry<"blog">;
+}
 
 export async function getStaticPaths() {
 	const blogs = await getCollection("blog");
 
-	return blogs.map((blog) => ({
-		params: { slug: blog.id },
+	return blogs.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
 	}));
 }
 
-const slug = Astro.params.slug!;
-const entry = await getEntry("blog", slug);
-if (!entry) {
-	return Astro.redirect("/404");
-}
-
-const image = entry.data.thumbnail?.src ?? entry.data.image.src.src;
+const { entry } = Astro.props;
+const blogs = await getCollection("blog");
+const description = createBlogDescription(entry);
 const rendered = await render(entry);
 const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
-	description={entry.data.description}
-	image={image}
+	description={description}
+	preview={{
+		alt: `${title}: ${getPostPicture(entry).alt}`,
+		name: `blog/${entry.id}`,
+	}}
+	published={entry.data.pubDate}
+	shortTitle={title}
+	tags={entry.data.tags}
 	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">
 		<BlogHero
-			body={entry.body}
-			class="hero"
 			date={entry.data.pubDate}
-			description={entry.data.description}
+			description={description}
 			download={entry.data.download}
 			image={entry.data.image}
+			minutes={getReadingMinutes(entry.body)}
 			title={title}
 		/>
-		<TableOfContents client:only="react" headings={rendered.headings} />
+		<TableOfContents client:idle headings={rendered.headings} />
 	</BodyContents>
 	<BlogContent
 		rendered={rendered}
@@ -61,11 +70,7 @@ const title = createBlogTitle(entry);
 				: undefined
 		}
 	>
-		<BlogShareBottom
-			description={entry.data.description}
-			title={title}
-			url={Astro.url}
-		/>
+		<BlogShareBottom description={description} title={title} url={Astro.url} />
 	</BlogContent>
 </BaseLayout>
 
@@ -82,7 +87,7 @@ const title = createBlogTitle(entry);
 		width: 100%;
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.top {
 			margin-top: var(--heightMinimumFromHeader);
 		}
@@ -92,14 +97,10 @@ const title = createBlogTitle(entry);
 		}
 	}
 
-	@media (min-width: 1017px) {
+	@media (width >= 63.5625em) {
 		.top::after {
 			margin: 2rem 0;
 			width: calc(100% - var(--widthTableOfContents));
-		}
-
-		.hero {
-			max-width: calc(var(--widthSlim) + 4rem);
 		}
 	}
 </style>

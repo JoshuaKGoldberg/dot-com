@@ -97,7 +97,7 @@ I figured there were two things the code would need to do to remember the commen
 
 {/* spell-checker: disable */}
 
-TypeScript's `parser.ts` was [previously known to me](../enum-commas) as the place that parses raw text into AST nodes.
+TypeScript's `parser.ts` was [previously known to me](/blog/typescript-contribution-diary-enum-commas) as the place that parses raw text into AST nodes.
 I ran searches for `scanComment`, `scanSingleLine`, `scan(.*)omment`, and similar comment-related things but didn't find anything useful.
 The closest `comment`-related search result I could find was `processCommentPragmas`, but that didn't look like it was related to any prior `@ts-ignore` logic.
 Looks like nothing was explicitly handling the single line comments.

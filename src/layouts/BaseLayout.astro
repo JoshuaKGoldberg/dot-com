@@ -1,38 +1,146 @@
 ---
-import "@fontsource-variable/league-spartan/index.css";
 import { SkipLink } from "accessible-astro-components";
 
 import Footer from "~/components/Footer.astro";
-import Head from "~/components/Head.astro";
+import Head, { type Preview } from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
 import MainArea from "~/components/MainArea.astro";
+import Scenery from "~/components/scenery/Scenery.astro";
 
 import "./normalize.css";
 import "./base.css";
+import "./fonts.css";
 
 interface Props {
 	class?: string | undefined;
 	description: string;
-	image: string;
-	title?: string;
+
+	/** Whether to spread out or squeeze in to the screen, scrolling only if it can't. */
+	fitsScreen?: boolean;
+
+	preview: Preview;
+	published?: Date;
+	shortTitle: string;
+	tags?: string[];
+	title: string;
 }
 
-const { class: className, description, image, title } = Astro.props;
+const { class: className, fitsScreen, ...head } = Astro.props;
 ---
 
 <html lang="en">
-	<Head description={description} image={image} title={title} />
-	<script>
-		document.body.classList.add("javascriptEnabled");
-	</script>
-	<div id="#top"></div>
-	<MainArea as="body" class={className}>
+	<Head {...head} />
+	<MainArea as="body" class={className} data-fits-screen={fitsScreen}>
 		<SkipLink />
 		<Header />
 
-		<main id="main-content">
-			<slot />
-		</main>
-		<Footer />
+		<div class="content" data-content>
+			<main id="main-content">
+				<slot />
+			</main>
+			<Footer />
+		</div>
+
+		<Scenery />
 	</MainArea>
 </html>
+
+<script>
+	import { decodePortrait } from "~/transitions/decodePortrait";
+	import { shiftTones } from "~/transitions/shiftTones";
+	import { skipOffscreen } from "~/transitions/skipOffscreen";
+
+	document.addEventListener("astro:before-preparation", (event) => {
+		const load = event.loader;
+
+		event.loader = async () => {
+			await load();
+			await decodePortrait(event.newDocument);
+			skipOffscreen();
+		};
+	});
+
+	const getContentTop = () =>
+		document.querySelector("[data-content]")?.getBoundingClientRect().top ?? 0;
+
+	/** Chrome doesn't paint captures of content that's more than about this many pixels away. */
+	const farthestCapture = 7000;
+
+	let previousTop = 0;
+	let transitioned: Promise<unknown> | undefined;
+
+	// Keeps the previous page from seeming to scroll as it fades out
+	document.addEventListener("astro:before-swap", (event) => {
+		previousTop = getContentTop();
+		shiftTones(document, event.newDocument, event.viewTransition);
+		transitioned = event.viewTransition.finished;
+
+		// Swapping to a page whose root was missing any, such as its theme, would keep
+		// the elements that stay between pages from transitioning to their new states
+		for (const { name, value } of document.documentElement.attributes) {
+			if (!event.newDocument.documentElement.hasAttribute(name)) {
+				event.newDocument.documentElement.setAttribute(name, value);
+			}
+		}
+	});
+	document.addEventListener("astro:after-swap", () => {
+		skipOffscreen();
+
+		const root = document.documentElement;
+		const shift = previousTop - getContentTop();
+		const isFar = Math.abs(shift) > farthestCapture;
+
+		root.toggleAttribute("data-scrolled-far", isFar);
+		root.style.setProperty(
+			"--contentShift",
+			isFar ? "0px" : `${shift.toString()}px`,
+		);
+
+		if (isFar) {
+			const current = transitioned;
+			const arrivals = document
+				.querySelector("[data-content]")
+				?.getAnimations()
+				.map(({ finished }) => finished);
+
+			void Promise.allSettled([current, ...(arrivals ?? [])]).then(() => {
+				if (current === transitioned) {
+					root.removeAttribute("data-scrolled-far");
+				}
+			});
+		}
+	});
+</script>
+
+<style>
+	.content {
+		view-transition-name: content;
+	}
+
+	:global([data-scrolled-far]) .content {
+		view-transition-name: none;
+	}
+
+	:global([data-scrolled-far][data-motion="playing"]) .content {
+		animation: page-in 320ms ease-out var(--transitionPageOut) both;
+	}
+
+	[data-fits-screen],
+	[data-fits-screen] .content {
+		display: flex;
+		flex-direction: column;
+	}
+
+	[data-fits-screen] .content {
+		flex: 1 0 auto;
+	}
+
+	/* Whatever height is left is shared with the footer, then mostly above the hero */
+	@media (width >= 43.75em) {
+		[data-fits-screen] main {
+			display: grid;
+			flex: 1.1 0 auto;
+			grid-template: 1.6fr auto 1fr auto / minmax(0, 1fr);
+		}
+	}
+</style>

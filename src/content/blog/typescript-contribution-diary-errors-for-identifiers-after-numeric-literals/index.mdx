@@ -24,6 +24,7 @@ import tsdevtestVariousErrors from "~/assets/blog/tsdevtest-various-errors.webp"
 <LabeledImage
 	alt="Meme of drake gesturing away from a first panel and happily pointing towards a second. First: 'User reported bugs or feature suggestions'. Second: 'ECMAScript spec syntax errata'."
 	description="Admittedly, this contribution is not the most impactful."
+	eager
 	src={drakeSpecSyntaxErrata}
 />
 
@@ -41,12 +42,12 @@ For example:
 - **`3in`**: should become an error, not be considered the same as `3 in` _(referring to checking whether 3 exists in something)_
 - `let hasFour = 3in[null, null, null, null];` as an expansion of ☝
 
-### tl;dr
+## tl;dr
 
 You need a space between number literals (`3`) and identifiers or keywords (`a`, `in`).
 `3in` is bad; `3 in` is allowed.
 
-### Terminology
+## Terminology
 
 What on Earth do those terms mean?
 
@@ -236,7 +237,7 @@ The error showed!
 
 ## Test Time
 
-Per my previous post on [verifying parser changes](/blog/typescript-contribution-diary-trailing-type-parameter), TypeScript has a "baselines" system where you check in source files with expected types and errors.
+Per my previous post on [verifying parser changes](/blog/typescript-contribution-diary-trailing-type-parameters), TypeScript has a "baselines" system where you check in source files with expected types and errors.
 I added a `tests/cases/compiler/identifierStartAfterNumericLiteral.ts` to explicitly test these changes:
 
 ```ts

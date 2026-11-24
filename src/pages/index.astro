@@ -1,67 +1,91 @@
 ---
-import joshDark from "~/assets/josh-dark.webp";
-import joshLight from "~/assets/josh-light.webp";
+import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import Socials from "~/components/Socials.astro";
 import { Text } from "~/components/Text";
 
+import { bookTitle, homeTagline } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
 ---
 
 <HeroLayout
-	alt="Josh's half-smiling happy face"
-	description="I'm an open source maintainer in the TypeScript ecosystem."
-	images={{ dark: joshDark, light: joshLight }}
-	primary="Hi! I'm Josh."
-	slug="josh"
+	description="I work to make web development better, most notably on typescript-eslint. Author of Learning TypeScript, keynote speaker, SquiggleConf co-founder, Sentry dev."
+	fitsScreen
+	portrait="home"
+	primary={"Hello. I’m\u00A0Josh."}
 >
-	<Fragment slot="secondary">
-		I'm an open source maintainer in the TypeScript ecosystem.
-	</Fragment>
+	<Fragment slot="secondary">{homeTagline}</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">
+		<!-- prettier-ignore -->
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I work to make web development better, most notably on typescript-eslint:
+			I work to make web development better, most notably on <Anchor href="https://typescript-eslint.io" target="_blank">typescript-eslint</Anchor>:
 			<br class="tabletUp" />a powerful static analysis toolset for JavaScript
 			and TypeScript code.
 		</Text>
 		<!-- prettier-ignore -->
 		<Text as="p" fontSize="medium" fontWeight="light">
-			I’m the author of Learning TypeScript (O’Reilly), a Microsoft MVP,
+			I’m the author of <cite>{bookTitle}</cite> (O’Reilly), a Microsoft MVP,
 			<br class="tabletUp" />
-			a conference speaker, a community organizer, and a dev at <a
-				href="https://sentry.io?utm_source=joshsayshi"
-				target="_blank">Sentry</a
-			>.
+			a keynote speaker, a <Anchor href="https://squiggleconf.com" target="_blank">SquiggleConf</Anchor> co-founder, and a dev at <Anchor href="https://sentry.io" target="_blank">Sentry</Anchor>.
 		</Text>
 	</BodyContents>
 </HeroLayout>
 
 <style>
+	cite {
+		font-family: var(--fontBookTitle);
+	}
+
 	.tabletUp {
 		display: none;
 	}
 
 	.about {
+		--squiggleOffset: -0.36em;
+
 		display: flex;
 		gap: clamp(1vh, 1.5rem, 3vh);
 		flex-direction: column;
-		margin: 2rem 0 1rem;
+		grid-row: 4;
+		line-height: 1.35;
+		/* The extra width keeps lines from just barely fitting at common phones' widths */
+		margin-top: clamp(1rem, 20dvh - 7.5rem, 3rem);
+		padding-right: calc(var(--widthPagePadding) - 6px);
 	}
 
-	.about a {
-		text-decoration: underline;
-		text-decoration-color: var(--colorMedium);
-	}
-
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.tabletUp {
 			display: block;
 		}
 
 		.about {
-			margin-top: 3.5rem;
+			margin-top: clamp(0.5rem, 2vh, 1.5rem);
+			padding-right: var(--widthPagePadding);
 			text-align: center;
 		}
+	}
+</style>
+
+<style is:global>
+	/* Too little text for sizes measured from posts to be close enough */
+	@font-face {
+		ascent-override: 73.35%;
+		descent-override: 26.45%;
+		font-family: "Newsreader Times";
+		font-weight: 300 329;
+		line-gap-override: 0%;
+		size-adjust: 100.2%;
+		src: local("Times New Roman"), local("Liberation Serif");
+	}
+
+	@font-face {
+		ascent-override: 71.78%;
+		descent-override: 25.88%;
+		font-family: "Newsreader Times";
+		font-weight: 330 399;
+		line-gap-override: 0%;
+		size-adjust: 102.4%;
+		src: local("Times New Roman"), local("Liberation Serif");
 	}
 </style>

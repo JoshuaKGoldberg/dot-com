@@ -3,56 +3,56 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
-export interface HeroImages {
-	dark: ImageMetadata;
-	light: ImageMetadata;
-}
+import { getTone } from "./hero/getTone";
+import GlassRing from "./hero/GlassRing.astro";
 
 interface Props {
 	alt: string;
-	class?: string | undefined;
-	size: "large" | "small";
-	src: HeroImages | ImageMetadata;
+	src: ImageMetadata;
 }
 
-// TODO:
+const largestDisplayedSize = 128;
 ---
 
-<div class:list={["hero-image", Astro.props.size, Astro.props.class]}>
-	<!-- TODO: support both images.dark and images.light? -->
-	<Image
-		alt={Astro.props.alt}
-		loading="lazy"
-		src={"dark" in Astro.props.src ? Astro.props.src.dark : Astro.props.src}
-	/>
+<div class="hero-image">
+	<div
+		class="figure"
+		data-layer="figure"
+		data-tone={await getTone(Astro.props.src)}
+	>
+		<Image
+			alt={Astro.props.alt}
+			densities={[1, 2]}
+			fetchpriority="high"
+			fit="cover"
+			height={largestDisplayedSize}
+			loading="eager"
+			src={Astro.props.src}
+			width={largestDisplayedSize}
+		/>
+	</div>
+	<GlassRing />
 </div>
 
 <style>
 	.hero-image {
-		height: var(--imageSize);
-		width: var(--imageSize);
+		view-transition-name: portrait;
+		height: var(--heroSizeSmall);
+		position: relative;
+		width: var(--heroSizeSmall);
 	}
 
-	.hero-image.small {
-		--imageSize: var(--heroSizeSmall);
-	}
-
-	.hero-image.large {
-		--imageSize: var(--heroSizeLarge);
+	.figure {
+		view-transition-name: portrait-figure;
+		height: 100%;
 	}
 
 	.hero-image img {
-		display: block;
 		border-radius: 100%;
-		box-shadow: 0 3px 7px 3px var(--colorSubtle);
-		max-height: 100%;
-		max-width: 100%;
+		display: block;
+		height: 100%;
+		object-fit: cover;
 		user-select: none;
-	}
-
-	@media (min-width: 700px) {
-		.hero-image img {
-			box-shadow: 0 3px 14px 0 var(--colorSubtle);
-		}
+		width: 100%;
 	}
 </style>

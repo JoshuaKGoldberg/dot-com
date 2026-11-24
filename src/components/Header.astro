@@ -1,5 +1,6 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
+import MotionToggle from "./MotionToggle.astro";
 import { Text } from "./Text";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -11,21 +12,43 @@ const links = [
 ] as const;
 ---
 
-<div class="fader" role="presentation"></div>
-<Text as="header" class="header" fontWeight="bold">
-	<div class="first">
-		<HeaderLink href="/">Josh Goldberg</HeaderLink>
-		<ThemeToggle />
-	</div>
-	<div class="links">
-		{links.map(([text, href]) => {
-			return <HeaderLink href={href}>{text}</HeaderLink>;
-		})}
-	</div>
-</Text>
+<div class="persisted" transition:persist="header">
+	<div class="fader"></div>
+	<Text as="header">
+		<div class="first">
+			<HeaderLink href="/">Josh Goldberg</HeaderLink>
+			<div class="toggles">
+				<MotionToggle />
+				<ThemeToggle />
+			</div>
+		</div>
+		<nav aria-label="Main" class="links">
+			{links.map(([text, href]) => {
+				return <HeaderLink href={href}>{text}</HeaderLink>;
+			})}
+		</nav>
+	</Text>
+</div>
+
+<script>
+	import { keepLinkStyles } from "~/transitions/keepLinkStyles";
+
+	// The header is kept between pages, so that changes to its links are animated
+	document.addEventListener("astro:before-swap", ({ to }) => {
+		document.addEventListener("astro:after-swap", keepLinkStyles(to), {
+			once: true,
+		});
+	});
+</script>
 
 <style>
+	.persisted {
+		display: contents;
+	}
+
 	header {
+		view-transition-name: header;
+		align-items: center;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5rem 3.5rem;
@@ -36,9 +59,19 @@ const links = [
 	}
 
 	.first {
+		--linkWeight: 500;
+
+		align-items: center;
 		display: flex;
 		justify-content: space-between;
 		width: 100%;
+	}
+
+	/* Centered with how tall the text looks, rather than how tall it is */
+	.toggles {
+		display: flex;
+		position: relative;
+		top: -0.1rem;
 	}
 
 	.links {
@@ -49,73 +82,74 @@ const links = [
 		gap: 0 1rem;
 	}
 
-	@media (min-width: 700px) {
+	@media (width < 43.75em) {
+		.first {
+			--linkSize: var(--fontSizeSubtitle);
+		}
+
+		.toggles {
+			gap: 0.375rem;
+		}
+	}
+
+	@keyframes fader-in {
+		to {
+			opacity: 1;
+		}
+	}
+
+	@media (width >= 43.75em) {
 		header {
+			flex-wrap: nowrap;
 			gap: 1.5rem;
-			justify-content: space-between;
-			max-width: calc(var(--widthFull) - 1rem);
+			max-width: var(--widthFull);
 			position: fixed;
+			top: 0;
 			z-index: 1;
 		}
 
-		header::after,
-		header::before {
-			--horizontalBlur: -3.5rem;
-			bottom: -1rem;
-			content: "";
-			filter: blur(1rem);
-			left: var(--horizontalBlur);
-			pointer-events: none;
-			position: absolute;
-			right: var(--horizontalBlur);
-		}
-
-		header::after {
-			backdrop-filter: blur(20px);
-			mask-image: linear-gradient(to bottom, black 50%, transparent);
-			top: 0;
-			z-index: -1;
-		}
-
-		header::before {
-			background:
-				radial-gradient(
-						ellipse at top,
-						var(--colorBackgroundTop) 0,
-						transparent 100vh
-					)
-					no-repeat,
-				radial-gradient(
-						ellipse at top,
-						var(--colorBackgroundTop) 0,
-						transparent 100vh
-					)
-					no-repeat;
-			content: "";
-			top: -1.5rem;
-		}
-
+		/* Hides content scrolled beneath the header, without hiding the aurora at rest */
 		.fader {
+			--column: calc(var(--widthFull) / 2);
+
 			background: linear-gradient(
 				to bottom,
-				var(--colorBackgroundTop),
-				transparent 70%
+				var(--colorBackgroundCenter) 55%,
+				transparent
 			);
 			height: var(--heightMinimumFromHeader);
-			left: 5vw;
-			pointer-events: none;
-			position: fixed;
-			right: 5vw;
-			top: 0;
-			user-select: none;
+			left: 0;
 			mask-image: linear-gradient(
 				to right,
-				transparent 0%,
-				white 10%,
-				white 90%,
-				transparent 100%
+				transparent calc(50% - var(--column) - 6rem),
+				black calc(50% - var(--column)) calc(50% + var(--column)),
+				transparent calc(50% + var(--column) + 6rem)
 			);
+			pointer-events: none;
+			position: fixed;
+			right: 0;
+			top: 0;
+			view-transition-name: fader;
 			z-index: 1;
+		}
+
+		/* Pages too short to scroll have nothing to hide, and no timeline to play */
+		@supports (animation-timeline: scroll()) {
+			.fader {
+				animation-fill-mode: both;
+				animation-name: fader-in;
+				animation-range: 0 5rem;
+				animation-timeline: --page;
+				animation-timing-function: linear;
+				opacity: 0;
+			}
+		}
+
+		@media (forced-colors: active) {
+			.fader {
+				background: Canvas;
+				height: 5rem;
+			}
 		}
 
 		.first {
@@ -130,20 +164,33 @@ const links = [
 			content: "";
 			display: block;
 			height: 0.7rem;
+			opacity: 0.5;
 			position: absolute;
 			right: 1.5rem;
-			top: 0.5rem;
+			top: calc(50% - 0.5rem);
 			width: 1px;
 		}
 
 		.links {
+			gap: 0 1.5rem;
+			justify-content: end;
 			position: relative;
-			gap: 1.5rem;
-			justify-content: space-between;
 		}
 	}
 
-	@media (min-width: 1017px) {
+	/* Otherwise printed on top of every page */
+	@media print {
+		header {
+			position: static;
+		}
+
+		.fader,
+		.toggles {
+			display: none;
+		}
+	}
+
+	@media (width >= 63.5625em) {
 		header {
 			padding: 2rem 0;
 		}

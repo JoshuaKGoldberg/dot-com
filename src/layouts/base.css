@@ -2,42 +2,122 @@
 	:root {
 		color-scheme: light;
 
-		--colorBackgroundBottom: #feffff;
-		--colorBackgroundTop: #fdffff;
-		--colorEmphasized: #1170d0;
+		--litGlare: 0;
+		--litLift: -0.04;
+
+		--colorBackground: #f0f7fb;
+		--colorBackgroundCenter: #f4f9fd;
+		--colorEmphasized: #0a58aa;
+		--colorFaint: #5d6b8a;
 		--colorForeground: #283556;
 		--colorForegroundExtra: #142842;
 		--colorMedium: #789dc7;
+		--colorMuted: #4d5b7b;
 		--colorSubtle: #d7e9ef;
 
-		--fontSizeSmaller: 1rem;
-		--fontSizeSmall: 1.2rem;
-		--fontSizeMedium: 1.5rem;
-		--fontSizeLarge: 2rem;
-		--fontSizeSubtitle: 1.75rem;
-		--fontSizeTitle: 3.5rem;
+		/* Low to high, the hues of the auroras and everything that echoes them */
+		--auroraJade: rgb(60 175 140);
+		--auroraCornflower: rgb(80 150 205);
+		--auroraWisteria: rgb(160 115 200);
+		--auroraRose: rgb(225 120 150);
+
+		/* Portraits' backdrops are a bright light: nothing's darker than the page */
+		--curtainJade: #d2fff4;
+		--curtainCornflower: #defeff;
+		--curtainWisteria: #faf7ff;
+		--curtainRose: #fff5fa;
+		--curtainSaturation: 1;
+		--curtainStrength: 1;
+		--discBottom: white;
+		--discGlow: rgb(255 255 255 / 40%);
+		--discMiddle: white;
+		--discTop: white;
+
+		--haloStrength: 0.6;
+
+		--ringCornflower: #3f9df0;
+		--ringJade: #2cc79a;
+		--ringRose: #f573a4;
+		--ringShine: #c5ecff;
+		--ringWisteria: #a56cf0;
+
+		--iconInversion: 0;
+
+		--squiggleStart: hsl(230 64% 30% / 74%);
+		--squiggleMiddle: hsl(170 64% 30% / 74%);
+		--squiggleEnd: hsl(266 64% 30% / 74%);
+		--squiggleGray: hsl(0 0% 30% / 74%);
+		--squiggleHighlight: rgb(14 36 108 / 95%);
+		--squiggleVivid: saturate(1.7) brightness(1.35);
+		--transitionVivid: 2s ease-in-out filter;
+
+		--squiggleGrayness: 33%;
+		--squiggleRestingStart: color-mix(
+			in srgb,
+			var(--squiggleStart),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
+		--squiggleRestingMiddle: color-mix(
+			in srgb,
+			var(--squiggleMiddle),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
+		--squiggleRestingEnd: color-mix(
+			in srgb,
+			var(--squiggleEnd),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
+		--squigglePeriod: 6.75s;
+		--squiggleLine: linear-gradient(
+			to right,
+			transparent,
+			var(--squiggleRestingStart) 17%,
+			var(--squiggleRestingMiddle) 50%,
+			var(--squiggleRestingEnd) 83%,
+			transparent
+		);
+
+		--brightJade: rgb(56 255 153);
+		--brightCornflower: rgb(51 191 255);
+		--brightWisteria: rgb(173 115 255);
+		--brightRose: rgb(255 102 158);
+
+		--fontSizeSmaller: 0.875rem;
+		--fontSizeSmall: 1rem;
+		--fontSizeMedium: clamp(1.1rem, 0.85rem + 1.4vw, 1.2rem);
+		--fontSizeSubtitle: clamp(1.4rem, 1.2rem + 1.2vw, 1.625rem);
+		--fontSizeTitle: clamp(2.5rem, 1.9rem + 2.4vw, 3.25rem);
+
+		--fontSizeBlogBody: 1.125rem;
 
 		--fontWeightLight: 300;
-		--fontWeightMedium: 500;
 		--fontWeightBold: 600;
-		--fontWeightBolder: 700;
 
-		--lineHeightBase: 1.1;
-		--lineHeightParagraph: 1.35;
-
-		--textShadow: 3px 3px 1px var(--colorSubtle);
+		--lineHeightBase: 1.25;
+		--lineHeightParagraph: 1.55;
 
 		--transitionFast: 117ms;
 		--transitionMedium: 280ms;
 		--transitionSlow: 490ms;
 		--transitionSlowest: 700ms;
+		--transitionSquiggle: 800ms;
+		--transitionPageOut: 140ms;
+		--transitionPortrait: 300ms;
 
 		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
 
-		--heroSizeSmall: clamp(6rem, 12vmin, 9rem);
-		--heroSizeLarge: clamp(6rem, 20vmin, 12rem);
+		--heroSizeSmall: 6rem;
+		--heroSizeLarge: clamp(min(6rem, 27vw), 20vmin, 12rem);
 
-		--widthFull: 63rem;
+		--litDimming: 0.055;
+
+		/* People may be taller than the circles that they're in, but not wider */
+		--portraitClip: inset(-25% 0 0 0 round 0 0 50% 50%);
+
+		--columnFade: 160px;
+		--columnStrength: 50%;
+
+		--widthFull: 62rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
 		--widthPagePadding: clamp(0.5rem, 5vw, 2rem);
@@ -47,48 +127,53 @@
 		--astro-code-color-deleted: #903838;
 		--astro-code-color-inserted: #0e601c;
 		--astro-code-color-text: #232642;
-		--astro-code-token-comment: #139e4b;
+		--astro-code-token-comment: #0f7a3a;
 		--astro-code-token-constant: #001080;
-		--astro-code-token-function: #466da3;
+		--astro-code-token-function: #3d6298;
 		--astro-code-token-keyword: #0058cb;
 		--astro-code-token-link: #e7ffe7;
-		--astro-code-token-parameter: #588591;
-		--astro-code-token-punctuation: #0f90a1;
-		--astro-code-token-string-expression: #408aa7;
+		--astro-code-token-parameter: #416f7b;
+		--astro-code-token-punctuation: #0a6f7d;
+		--astro-code-token-string-expression: #2d6e88;
 		--astro-code-token-string: #674cab;
 	}
 
 	html {
-		background: var(--colorBackgroundBottom);
-		overflow-y: auto;
+		background: var(--colorBackgroundCenter);
+		scroll-padding-top: 1rem;
+		scroll-timeline: --page block;
+		overflow-y: scroll;
+	}
+
+	/* Only pages wider than their content have margins to fade into */
+	@media (width > 62rem) and (forced-colors: none) {
+		html {
+			--column: calc(var(--widthFull) / 2);
+
+			background: linear-gradient(
+					to right,
+					var(--colorBackground) calc(50% - var(--column) - var(--columnFade)),
+					var(--colorBackgroundCenter) calc(50% - var(--column))
+						calc(50% + var(--column)),
+					var(--colorBackground) calc(50% + var(--column) + var(--columnFade))
+				)
+				var(--colorBackground);
+		}
 	}
 
 	body {
-		background:
-			linear-gradient(
-					to bottom,
-					transparent 70%,
-					var(--colorBackgroundBottom) 100%
-				)
-				no-repeat,
-			radial-gradient(
-					ellipse at top,
-					var(--colorBackgroundTop) 15%,
-					var(--colorBackgroundBottom) 100%
-				)
-				no-repeat;
-		overflow-y: auto;
+		display: flow-root;
+		font-synthesis-weight: none;
+		font-weight: var(--fontWeightLight);
 		line-height: var(--lineHeightBase);
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		scrollbar-gutter: stable;
+		min-height: 100dvh;
+		position: relative;
 		width: 100%;
 	}
 
 	body,
 	button {
-		font-family: "League Spartan Variable", sans-serif;
+		font-family: var(--fontText);
 	}
 
 	body,
@@ -99,6 +184,12 @@
 		text-decoration: none;
 	}
 
+	:focus-visible {
+		border-radius: 2px;
+		outline: 2px solid var(--colorEmphasized);
+		outline-offset: 3px;
+	}
+
 	main {
 		position: relative;
 	}
@@ -106,14 +197,53 @@
 	html.dark {
 		color-scheme: dark;
 
-		--colorBackgroundBottom: #111117;
-		--colorBackgroundTop: #071428;
-		--colorEmphasized: #77bbff;
-		--colorForeground: #dae7f3;
-		--colorForegroundExtra: #e5edf3;
-		--colorSubtle: #052438;
+		--litGlare: 1;
+		--litLift: 0.12;
 
-		--lineHeightParagraph: 1.5;
+		--colorBackground: #0b1220;
+		--colorBackgroundCenter: #0b1220;
+		--colorEmphasized: #77bbff;
+		--colorFaint: #70819c;
+		--colorForeground: #dae7f3;
+		--colorForegroundExtra: #f1f6fb;
+		--colorMuted: #93a5bf;
+		--colorSubtle: #102a40;
+
+		--auroraJade: var(--brightJade);
+		--auroraCornflower: var(--brightCornflower);
+		--auroraWisteria: var(--brightWisteria);
+		--auroraRose: var(--brightRose);
+
+		--curtainJade: var(--brightJade);
+		--curtainCornflower: var(--brightCornflower);
+		--curtainWisteria: var(--brightWisteria);
+		--curtainRose: var(--brightRose);
+		--curtainSaturation: 0.4;
+		--curtainStrength: 0.4;
+		--discBottom: #1a232d;
+		--discGlow: transparent;
+		--discMiddle: #141a26;
+		--discTop: #0a0e17;
+
+		--haloStrength: 0.75;
+
+		--ringCornflower: #4fc3ff;
+		--ringJade: #4dffb0;
+		--ringRose: #ff7fb0;
+		--ringShine: white;
+		--ringWisteria: #b98aff;
+
+		--iconInversion: 1;
+
+		--squiggleStart: hsl(230 44% 74% / 64%);
+		--squiggleMiddle: hsl(170 44% 74% / 64%);
+		--squiggleEnd: hsl(266 44% 74% / 64%);
+		--squiggleGray: hsl(0 0% 74% / 64%);
+		--squiggleHighlight: rgb(198 222 255 / 95%);
+		--squiggleVivid: saturate(2.6) brightness(1.12);
+
+		/* Light text on navy reads thinner */
+		--fontWeightLight: 360;
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */
 		--astro-code-color-text: #d3d6f0;
@@ -130,22 +260,199 @@
 		--astro-code-token-string: #b3baf2;
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		html,
-		body {
-			scroll-behavior: smooth;
+	/* Navigating between pages shouldn't visibly scroll */
+	html[data-motion="playing"]:not([data-astro-transition]) {
+		scroll-behavior: smooth;
+	}
+}
+
+@property --nearness {
+	inherits: true;
+	initial-value: 0;
+	syntax: "<number>";
+}
+
+[data-motion="paused"] [data-lit] {
+	transition:
+		var(--transitionMedium) color,
+		var(--transitionMedium) --nearness;
+}
+
+/* Contrast rises with light, to make up for harder to read hues and brighter auroras */
+@supports (color: oklch(from red l c h)) {
+	[data-lit] {
+		--litReach: 56px;
+		--softening: calc(var(--glare) * var(--litGlare));
+		--chroma: calc(c * (1 + 0.6 * (1 - var(--softening)) * var(--nearness)));
+		--lightness: calc(l + var(--litLift) * var(--nearness));
+		--litLightness: calc(
+			l + (var(--litLift) - var(--litDimming) + 0.11 * var(--softening)) *
+				var(--nearness)
+		);
+		--colorLit: oklch(from var(--colorEmphasized) var(--lightness) c h);
+		--colorLitStart: oklch(
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift) - 50 * var(--nearness))
+		);
+		--colorLitMiddle: oklch(
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift))
+		);
+		--colorLitEnd: oklch(
+			from var(--colorEmphasized) var(--litLightness) var(--chroma)
+				calc(h + var(--hueShift) + 50 * var(--nearness))
+		);
+		--litGradient: linear-gradient(
+			to right,
+			var(--colorLit) calc(var(--lightX) - var(--litReach)),
+			var(--colorLitStart) calc(var(--lightX) - var(--litReach) * 0.5),
+			var(--colorLitMiddle) var(--lightX),
+			var(--colorLitEnd) calc(var(--lightX) + var(--litReach) * 0.5),
+			var(--colorLit) calc(var(--lightX) + var(--litReach))
+		);
+
+		@media (forced-colors: none) {
+			/* Fades out to reveal the lit gradient behind it */
+			-webkit-text-fill-color: color-mix(
+				in srgb,
+				currentcolor calc((1 - var(--nearness)) * 100%),
+				transparent
+			);
+			background: var(--litGradient) text;
+
+			&::selection {
+				-webkit-text-fill-color: currentcolor;
+			}
 		}
 	}
 }
 
-@media (min-width: 700px) {
+/* Themes' colors are already transitioning, per fadeTheme.ts */
+[data-theme-fading] :is(body, body :not([data-clear], [data-toggle] svg)) {
+	transition: none !important;
+}
+
+/* Whatever isn't part of transitions never stops moving */
+:root {
+	view-transition-name: none;
+}
+
+::view-transition-group(content),
+::view-transition-group(fader),
+::view-transition-group(header),
+::view-transition-new(header) {
+	animation: none;
+}
+
+/* One page leaves before the next arrives, so that they're never both readable */
+::view-transition-old(content) {
+	animation: page-out var(--transitionPageOut) ease-in both;
+	translate: 0 var(--contentShift);
+}
+
+::view-transition-new(content) {
+	animation: page-in 320ms ease-out var(--transitionPageOut) both;
+}
+
+::view-transition-old(header) {
+	display: none;
+}
+
+/* Anything that was only in view on one of the pages comes or goes with it */
+::view-transition-new(header):only-child,
+::view-transition-new(portrait):only-child,
+::view-transition-new(portrait-figure):only-child {
+	animation: page-in 320ms ease-out var(--transitionPageOut) both;
+}
+
+::view-transition-old(header):only-child,
+::view-transition-old(portrait):only-child,
+::view-transition-old(portrait-figure):only-child {
+	animation: page-out var(--transitionPageOut) ease-in both;
+	display: block;
+}
+
+/* Setting animations also removes the blending that keeps fades between them opaque */
+::view-transition-new(fader),
+::view-transition-old(fader) {
+	mix-blend-mode: plus-lighter;
+}
+
+::view-transition-new(fader) {
+	animation: page-in var(--transitionPageOut) ease-in both;
+}
+
+::view-transition-old(fader) {
+	animation: page-out var(--transitionPageOut) ease-in both;
+}
+
+::view-transition-group(portrait),
+::view-transition-group(portrait-figure) {
+	animation-duration: 480ms;
+	animation-timing-function: cubic-bezier(0.3, 0, 0.1, 1);
+}
+
+::view-transition-new(portrait),
+::view-transition-new(portrait-figure),
+::view-transition-old(portrait),
+::view-transition-old(portrait-figure) {
+	animation-duration: var(--transitionPortrait);
+}
+
+::view-transition-image-pair(portrait-figure) {
+	animation: portrait-blur var(--transitionPortrait) ease-in-out both;
+	clip-path: var(--portraitClip);
+}
+
+[data-shifting-tones]::view-transition-new(portrait-figure) {
+	filter: url("#tone-new");
+}
+
+[data-shifting-tones]::view-transition-old(portrait-figure) {
+	filter: url("#tone-old");
+}
+
+@keyframes portrait-blur {
+	50% {
+		filter: blur(1px);
+	}
+}
+
+@keyframes page-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@keyframes page-out {
+	to {
+		opacity: 0;
+	}
+}
+
+[data-motion="paused"]::view-transition-group(*),
+[data-motion="paused"]::view-transition-image-pair(*),
+[data-motion="paused"]::view-transition-new(*),
+[data-motion="paused"]::view-transition-old(*) {
+	animation: none !important;
+}
+
+[data-motion="paused"]::view-transition-old(*) {
+	display: none !important;
+}
+
+@media (width >= 43.75em) {
+	html {
+		scroll-padding-top: var(--heightMinimumFromHeader);
+	}
+
 	:root {
 		--heroSizeSmall: 128px;
 		--heroSizeLarge: clamp(12rem, 32vw, 16rem);
 	}
 }
 
-@media (min-width: 1017px) {
+@media (width >= 63.5625em) {
 	:root {
 		--heroSizeLarge: 256px;
 		--widthPagePadding: 0;

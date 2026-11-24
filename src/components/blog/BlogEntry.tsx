@@ -1,29 +1,29 @@
-import type { CollectionEntry } from "astro:content";
-
 import { ContentEntry } from "../entries/ContentEntry";
 import { DateAndMinutes } from "./DateAndMinutes";
-import { createBlogTitle } from "./utils";
+
+export interface BlogEntryData {
+	date: Date;
+	description: string;
+	id: string;
+	image: { alt: string; src: string };
+	minutes: number;
+	title: string;
+}
 
 export interface BlogEntryProps {
-	blog: CollectionEntry<"blog">;
+	blog: BlogEntryData;
 }
 
 export function BlogEntry(props: BlogEntryProps) {
-	const url = () => `/blog/${props.blog.id}`;
-
 	return (
 		<ContentEntry
-			description={props.blog.data.description}
-			image={{
-				alt: props.blog.data.image.alt,
-				src: props.blog.data.image.src.src,
-				variant: "round",
-			}}
+			description={props.blog.description}
+			image={{ ...props.blog.image, variant: "round" }}
 			subtitle={
-				<DateAndMinutes body={props.blog.body} date={props.blog.data.pubDate} />
+				<DateAndMinutes date={props.blog.date} minutes={props.blog.minutes} />
 			}
-			title={createBlogTitle(props.blog)}
-			url={url()}
+			title={props.blog.title}
+			url={`/blog/${props.blog.id}`}
 			widths="full"
 		/>
 	);

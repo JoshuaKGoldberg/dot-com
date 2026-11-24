@@ -1,0 +1,116 @@
+---
+interface Props {
+	edge: "bottom" | "top";
+}
+
+const { edge } = Astro.props;
+---
+
+<aurora-band
+	aria-hidden="true"
+	class:list={["band", edge]}
+	edge={edge}
+></aurora-band>
+
+<style>
+	/* The band's resting look, and all it has without JavaScript and WebGL */
+	.band {
+		--column: calc(var(--widthFull) / 2);
+
+		background: linear-gradient(
+			to var(--direction),
+			color-mix(in srgb, var(--auroraJade) var(--strength), transparent),
+			color-mix(
+					in srgb,
+					var(--auroraCornflower) calc(var(--strength) * 0.5),
+					transparent
+				)
+				28%,
+			color-mix(
+					in srgb,
+					var(--auroraWisteria) calc(var(--strength) * 0.2),
+					transparent
+				)
+				60%,
+			transparent
+		);
+		display: block;
+		left: 0;
+		mask-image: linear-gradient(
+			to right,
+			black calc(50% - var(--column) - var(--columnFade)),
+			rgb(0 0 0 / var(--columnStrength)) calc(50% - var(--column))
+				calc(50% + var(--column)),
+			black calc(50% + var(--column) + var(--columnFade))
+		);
+		position: absolute;
+		width: 100%;
+	}
+
+	.top {
+		--direction: bottom;
+		--strength: 6%;
+
+		height: 18.75rem;
+		top: 0;
+	}
+
+	.bottom {
+		--bandHeight: 22.5rem;
+		--direction: top;
+		--strength: 4%;
+
+		bottom: 0;
+		height: var(--bandHeight);
+	}
+
+	.band :global(canvas) {
+		display: block;
+		height: 100%;
+		opacity: 0;
+		width: 100%;
+	}
+
+	:global(html[data-motion="paused"]) .band :global(canvas) {
+		transition: var(--transitionMedium) opacity;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		.top {
+			animation-fill-mode: both;
+			animation-name: scroll-away;
+			animation-range: 0 25rem;
+			animation-timeline: --page;
+			animation-timing-function: linear;
+		}
+
+		/* Moves as though it were at the end of the page, without adding to its height */
+		.bottom {
+			animation-fill-mode: both;
+			animation-name: scroll-in;
+			animation-range: calc(100% - var(--bandHeight)) 100%;
+			animation-timeline: --page;
+			animation-timing-function: linear;
+		}
+	}
+
+	/* Otherwise it'd always be behind whatever's at the bottom of the screen */
+	@supports not (animation-timeline: scroll()) {
+		.bottom {
+			display: none;
+		}
+	}
+
+	@keyframes scroll-in {
+		from {
+			transform: translateY(100%);
+		}
+	}
+
+	@keyframes scroll-away {
+		to {
+			opacity: 0;
+			transform: translateY(-13.75rem);
+		}
+	}
+</style>

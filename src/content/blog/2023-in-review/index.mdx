@@ -22,6 +22,7 @@ It was my second year as a full-time independent open source maintainer, as well
 <LabeledImage
 	alt="Me raising hands happily while giving a talk on stage, with code projected behind me"
 	description="Me speaking at JSDay IE 2023 in Dublin. The 🙌 emoji is one of my favorites."
+	eager
 	src={meLiftingHandsOnStageWide}
 />
 
@@ -60,7 +61,7 @@ My total income is about $5,300 a month / $63,600 a year.
 That income is a combination of direct open source wages and side projects.
 
 <PieChart
-	client:load
+	client:visible
 	colors={[
 		"#2656c7",
 		"#e51b36",
@@ -114,7 +115,7 @@ My open source salary came to about $3,160 a month / $38,000 a year:
 That's an ~85% increase over the $1,700 a month / $20,400 a year open source income of 2022.
 
 <PieChart
-	client:load
+	client:visible
 	colors={["#2656c7", "#2dba4e", "#341bab", "#f6914d"]}
 	data={{
 		datasets: [
@@ -141,7 +142,7 @@ Separately from open source, I earned about $2,150 a month / $25,700 from side p
 That is a ~25% increase over the $1,725 a month / $20,700 a year side income of 2022.
 
 <PieChart
-	client:load
+	client:visible
 	colors={["#e51b36", "#95ab75", "#777777", "#9147ff"]}
 	data={{
 		datasets: [

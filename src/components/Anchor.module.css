@@ -1,9 +1,0 @@
-.anchor {
-	display: inline-block;
-	position: relative;
-	text-decoration: none;
-}
-
-.anchor::after {
-	top: calc(100% - 0.2em);
-}

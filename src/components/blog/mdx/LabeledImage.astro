@@ -10,6 +10,10 @@ import LabeledMedia from "./LabeledMedia.astro";
 interface Props {
 	alt: string;
 	description: string | string[];
+
+	/** For images that are visible as soon as their post is */
+	eager?: boolean;
+
 	note?: string;
 	original?: MediaOriginal | string;
 	src: ImageMetadata;
@@ -22,10 +26,21 @@ const alt =
 		? Astro.props.description.join(" ")
 		: Astro.props.description);
 
-// If I pass src.src (the actual string), Astro's build thinks it's a remote image and fails.
-// Adding catch (error) { and console.log(error) to node_modules/astro/dist/assets/internal.js > getImage:
-//   TypeError: Failed to parse URL from /_astro/me-laughing-on-stage-wide.abc123.webp
-const src = Astro.props.src as unknown as string;
+const { height, width } = Astro.props.src;
+
+const articleWidth = 752;
+const maximumHeight = 400;
+const maximumWidth = Astro.props.wide ? articleWidth : 600;
+
+const displayWidth = Math.round(
+	Math.min(width, maximumWidth, (maximumHeight * width) / height),
+);
+
+const phoneAndTabletWidths = [480, 640, 720, 960];
+
+const widths = [
+	...new Set([...phoneAndTabletWidths, displayWidth, displayWidth * 2]),
+].filter((candidate) => candidate <= Math.min(width, displayWidth * 2));
 ---
 
 <LabeledMedia
@@ -36,29 +51,22 @@ const src = Astro.props.src as unknown as string;
 >
 	<Image
 		alt={alt}
-		class:list={["labeled-image", Astro.props.wide && "labeled-image-wide"]}
-		inferSize
-		src={src}
-		style={{
-			// Astro manually sets aspect-ratio, height, and width on the image.
-			// With maximum widths and heights, that overrides the aspect-ratio,
-			// resulting in stretched images. 😬
-			height: "auto !important",
-			width: "auto !important",
-		}}
+		class="labeled-image"
+		fetchpriority={Astro.props.eager ? "high" : undefined}
+		format="avif"
+		height={Math.round((displayWidth * height) / width)}
+		loading={Astro.props.eager ? "eager" : "lazy"}
+		quality={55}
+		sizes={`min(90vw, ${displayWidth}px)`}
+		src={Astro.props.src}
+		width={displayWidth}
+		widths={widths}
 	/>
 </LabeledMedia>
 
 <style is:inline>
 	.labeled-image {
-		max-height: 25rem;
-	}
-
-	.labeled-image:not(.labeled-image-wide) {
-		max-width: min(100%, 37.5rem);
-	}
-
-	.labeled-image.labeled-image-wide {
+		height: auto;
 		max-width: 100%;
 	}
 </style>
