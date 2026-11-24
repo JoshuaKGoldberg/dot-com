@@ -8,6 +8,7 @@ import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
 
+import { speakingDescription } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
 
 const speakings = (await getCollection("speaking")).map(({ data }) => data);
@@ -15,9 +16,8 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 
 <HeroLayout
 	alt="Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt"
-	description="I talk about static analysis, accessibility, and team culture."
+	description={speakingDescription}
 	portrait={{ halo, image, scene }}
-	preview="images/speaking-preview.png"
 	primary="Speaking"
 	title="Speaking"
 >

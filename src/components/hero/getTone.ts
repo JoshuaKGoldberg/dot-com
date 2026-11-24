@@ -2,10 +2,11 @@ import type { ImageMetadata } from "astro";
 
 import sharp from "sharp";
 
+import { getImagePath } from "~/getImagePath";
+
 /** Finds an image's average red, green, and blue. */
 export async function getTone(image: ImageMetadata) {
-	const { fsPath } = image as ImageMetadata & { fsPath: string };
-	const [red, green, blue] = await sharp(fsPath)
+	const [red, green, blue] = await sharp(getImagePath(image))
 		.resize(1, 1, {
 			// Shrinking on load counts invisible pixels' colors
 			fastShrinkOnLoad: false,

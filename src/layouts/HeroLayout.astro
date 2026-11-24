@@ -3,6 +3,7 @@ import type { HeroPortraitImages } from "~/components/hero/HeroPortrait.astro";
 
 import Hero from "~/components/Hero.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
+import { siteName } from "~/constants";
 
 import BaseLayout from "./BaseLayout.astro";
 
@@ -12,7 +13,6 @@ interface Props {
 	description: string;
 	fitsScreen?: boolean;
 	portrait: HeroPortraitImages;
-	preview?: string;
 	primary: string;
 	slug?: string;
 	title?: string;
@@ -20,7 +20,6 @@ interface Props {
 
 const {
 	description,
-	preview,
 	primary,
 	slug = primary.toLowerCase(),
 	title,
@@ -28,10 +27,12 @@ const {
 ---
 
 <BaseLayout
-	{...Astro.props}
+	class={Astro.props.class}
 	description={description}
-	image={preview ?? `images/${slug}.png`}
-	title={title ? `${title} | Josh Goldberg` : "Josh Goldberg"}
+	fitsScreen={Astro.props.fitsScreen}
+	preview={{ alt: `${title ?? siteName}: ${Astro.props.alt}`, name: slug }}
+	shortTitle={title ?? siteName}
+	title={title ? `${title} | ${siteName}` : siteName}
 >
 	<Hero alt={Astro.props.alt} portrait={Astro.props.portrait} primary={primary}>
 		<HeroSecondary>

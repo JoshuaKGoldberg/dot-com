@@ -29,14 +29,19 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const blogs = await getCollection("blog");
 const description = createBlogDescription(entry);
-const image = entry.data.thumbnail?.src ?? entry.data.image.src.src;
 const rendered = await render(entry);
 const title = createBlogTitle(entry);
 ---
 
 <BaseLayout
 	description={description}
-	image={image}
+	preview={{
+		alt: `${title}: ${entry.data.image.alt}`,
+		name: `blog/${entry.id}`,
+	}}
+	published={entry.data.pubDate}
+	shortTitle={title}
+	tags={entry.data.tags}
 	title={`${title} | Goldblog`}
 >
 	<BodyContents class="top">

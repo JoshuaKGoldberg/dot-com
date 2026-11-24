@@ -1,5 +1,3 @@
-import type { APIContext } from "astro";
-
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
@@ -7,9 +5,9 @@ import {
 	createBlogDescription,
 	createBlogTitle,
 } from "../components/blog/utils";
-import { blogDescription, site } from "../constants";
+import { blogDescription, feedSite } from "../constants";
 
-export async function GET(context: APIContext) {
+export async function GET() {
 	const blog = await getCollection("blog");
 
 	return rss({
@@ -22,7 +20,7 @@ export async function GET(context: APIContext) {
 			pubDate: post.data.pubDate,
 			title: createBlogTitle(post),
 		})),
-		site: context.site?.toString() ?? site,
+		site: feedSite,
 		title: "Goldblog",
 	});
 }

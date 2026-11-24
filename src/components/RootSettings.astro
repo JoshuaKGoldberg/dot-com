@@ -95,6 +95,10 @@
 		theme: createRootSetting({
 			apply(theme) {
 				document.documentElement.classList.toggle("dark", theme === "dark");
+
+				for (const meta of document.querySelectorAll("[data-theme-color]")) {
+					meta.media = meta.dataset.themeColor === theme ? "all" : "not all";
+				}
 			},
 			id: "theme",
 			options: ["light", "dark"],

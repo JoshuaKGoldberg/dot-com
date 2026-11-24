@@ -6,7 +6,7 @@ import BodyContents from "~/components/BodyContents.astro";
 import Socials from "~/components/Socials.astro";
 import { Text } from "~/components/Text";
 
-import { bookTitle } from "../constants";
+import { bookTitle, homeTagline } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
 ---
 
@@ -16,9 +16,9 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 	fitsScreen
 	portrait={{ halo, image }}
 	primary={"Hello. I’m\u00A0Josh."}
-	slug="josh"
+	slug="home"
 >
-	<Fragment slot="secondary">I’m good at TypeScript.</Fragment>
+	<Fragment slot="secondary">{homeTagline}</Fragment>
 	<Socials slot="tertiary" />
 	<BodyContents class="about">
 		<!-- prettier-ignore -->
@@ -54,7 +54,8 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		grid-row: 4;
 		line-height: 1.35;
 		/* The extra width keeps lines from just barely fitting at common phones' widths */
-		margin: clamp(1rem, 20dvh - 7.5rem, 3rem) -6px 0 0;
+		margin-top: clamp(1rem, 20dvh - 7.5rem, 3rem);
+		padding-right: calc(var(--widthPagePadding) - 6px);
 	}
 
 	@media (width >= 43.75em) {
@@ -63,7 +64,8 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		}
 
 		.about {
-			margin: clamp(0.5rem, 2vh, 1.5rem) 0 0;
+			margin-top: clamp(0.5rem, 2vh, 1.5rem);
+			padding-right: var(--widthPagePadding);
 			text-align: center;
 		}
 	}
