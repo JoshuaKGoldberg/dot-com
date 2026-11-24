@@ -5,7 +5,8 @@
 		--litGlare: 0;
 		--litLift: -0.04;
 
-		--colorBackground: #ecf4f9;
+		--colorBackground: #f0f7fb;
+		--colorBackgroundCenter: #f4f9fd;
 		--colorEmphasized: #0a58aa;
 		--colorFaint: #5d6b8a;
 		--colorForeground: #283556;
@@ -138,10 +139,26 @@
 	}
 
 	html {
-		background: var(--colorBackground);
+		background: var(--colorBackgroundCenter);
 		scroll-padding-top: 1rem;
 		scroll-timeline: --page block;
 		overflow-y: scroll;
+	}
+
+	/* Only pages wider than their content have margins to fade into */
+	@media (width > 62rem) and (forced-colors: none) {
+		html {
+			--column: calc(var(--widthFull) / 2);
+
+			background: linear-gradient(
+					to right,
+					var(--colorBackground) calc(50% - var(--column) - var(--columnFade)),
+					var(--colorBackgroundCenter) calc(50% - var(--column))
+						calc(50% + var(--column)),
+					var(--colorBackground) calc(50% + var(--column) + var(--columnFade))
+				)
+				var(--colorBackground);
+		}
 	}
 
 	body {
@@ -184,6 +201,7 @@
 		--litLift: 0.12;
 
 		--colorBackground: #0b1220;
+		--colorBackgroundCenter: #0b1220;
 		--colorEmphasized: #77bbff;
 		--colorFaint: #70819c;
 		--colorForeground: #dae7f3;

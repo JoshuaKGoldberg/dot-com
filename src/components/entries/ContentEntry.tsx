@@ -22,7 +22,6 @@ export interface ContentEntryProps {
 	descriptionSize?: "medium" | "small";
 	image?: ContentEntryImageProps | undefined;
 	links?: [string, string][] | undefined;
-	linkSize?: "small" | "smaller";
 	subtitle: JSX.Element;
 	title: string;
 	url: string;
@@ -67,7 +66,7 @@ export function ContentEntry(props: ContentEntryProps) {
 								{([text, href]) => (
 									<Anchor
 										class={props.description ? undefined : styles.anchorAlone}
-										fontSize={props.linkSize ?? "small"}
+										fontSize="smaller"
 										href={href}
 										variant="onHover"
 									>

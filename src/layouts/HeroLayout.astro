@@ -12,10 +12,11 @@ interface Props {
 	fitsScreen?: boolean;
 	portrait: PortraitName;
 	primary: string;
+	secondarySize?: "normal" | "wide";
 	title?: string;
 }
 
-const { description, portrait, primary, title } = Astro.props;
+const { description, portrait, primary, secondarySize, title } = Astro.props;
 ---
 
 <BaseLayout
@@ -34,7 +35,7 @@ const { description, portrait, primary, title } = Astro.props;
 		portrait={portraits[portrait]}
 		primary={primary}
 	>
-		<HeroSecondary>
+		<HeroSecondary size={secondarySize}>
 			<slot name="secondary" />
 		</HeroSecondary>
 		<slot name="tertiary" />

@@ -31,7 +31,7 @@ export type PortraitName = "blog" | "home" | "projects" | "speaking";
 
 export const portraits: Record<PortraitName, Portrait> = {
 	blog: {
-		alt: "Josh speaking excitedly into a microphone while wearing a shiny silver space suit",
+		alt: "Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt",
 		halo: blogHalo,
 		image: blog,
 		scene: blogScene,
@@ -49,7 +49,7 @@ export const portraits: Record<PortraitName, Portrait> = {
 		scene: projectsScene,
 	},
 	speaking: {
-		alt: "Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt",
+		alt: "Josh speaking excitedly into a microphone while wearing a shiny silver space suit",
 		halo: speakingHalo,
 		image: speaking,
 		scene: speakingScene,

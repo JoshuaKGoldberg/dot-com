@@ -1,7 +1,7 @@
 export const bookTitle = "Learning TypeScript";
 
 export const blogDescription =
-	"A blog about open source, static analysis, and web dev.";
+	"A blog about open source maintenance, static analysis, and web development.";
 
 export const homeTagline = "I’m good at TypeScript.";
 
@@ -18,7 +18,7 @@ export const feedSite = "https://joshuakgoldberg.com";
 
 export const siteName = "Josh Goldberg";
 
-export const colorsBackground = { dark: "#0b1220", light: "#ecf4f9" };
+export const colorsBackground = { dark: "#0b1220", light: "#f4f9fd" };
 
 export const socialUrls = {
 	bluesky: "https://bsky.app/profile/joshuakgoldberg.com",

@@ -28,7 +28,6 @@ export function ProjectEntry(props: ProjectEntryProps) {
 				["Repo", projectUrl(props.project)],
 				...Object.entries(props.project.links ?? []),
 			]}
-			linkSize="smaller"
 			subtitle={props.project.role ?? "Creator & Maintainer"}
 			title={projectTitle(props.project)}
 			url={projectUrl(props.project)}
