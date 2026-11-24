@@ -1,11 +1,11 @@
 import { onPageScroll } from "./pageScroll";
 
 /** Covers rarer layout changes, such as fonts loading or tabs being switched. */
-const lifetimeMs = 500;
+const lifetimeMilliseconds = 500;
+
+let settlesAt = 0;
 
 /**
- * Creates a reader for something measured from the page's layout.
- *
  * Measuring right after changing styles makes the browser recalculate them early,
  * so measurements are reused until the page scrolls, resizes, or a moment passes.
  */
@@ -26,7 +26,11 @@ export function cacheLayout<T extends object>(
 	return () => {
 		const now = performance.now();
 
-		if (!measured || now - measuredAt > lifetimeMs) {
+		if (
+			!measured ||
+			now < settlesAt ||
+			now - measuredAt > lifetimeMilliseconds
+		) {
 			measured = measure();
 			measuredAt = now;
 		}
@@ -34,3 +38,8 @@ export function cacheLayout<T extends object>(
 		return measured;
 	};
 }
+
+// Scenery moves between where each page has it
+document.addEventListener("astro:after-swap", () => {
+	settlesAt = performance.now() + lifetimeMilliseconds;
+});

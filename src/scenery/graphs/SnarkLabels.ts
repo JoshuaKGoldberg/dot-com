@@ -1,5 +1,5 @@
-import type { Rectangle } from "../geometry";
-import type { LivingGraph, Region, SnarkState } from "./GraphSimulation";
+import type { Region } from "./createRegions";
+import type { LivingGraph, Snark } from "./GraphSimulation";
 
 import { px } from "../css";
 import { fadeAway } from "../fadeAway";
@@ -11,31 +11,26 @@ export interface PlacedGraph {
 }
 
 interface Label {
+	height: number;
 	link: HTMLAnchorElement;
 	width: number;
 }
 
-const href = "https://mathworld.wolfram.com/GoldbergSnark.html";
+const spaceBelowSnark = 8;
 
-/** Space between snarks and their labels, and between labels and their region's sides. */
-const margin = 8;
-
-/** Links beneath snarks that are done growing, to what they are. */
 export class SnarkLabels {
 	readonly #host = document.querySelector<HTMLElement>("[data-snark-labels]");
-	readonly #labels = new Map<LivingGraph, Label>();
-	readonly #onRelease: () => void;
+	readonly #labels = new Map<Snark, Label>();
+	readonly #onBlur: () => void;
 
-	/** @param onRelease Called when a snark's label stops being focused. */
-	constructor(onRelease: () => void, signal: AbortSignal) {
-		this.#onRelease = onRelease;
+	constructor(onBlur: () => void, signal: AbortSignal) {
+		this.#onBlur = onBlur;
 		signal.addEventListener("abort", () => {
 			this.update([], 0);
 		});
 	}
 
-	/** Moves labels to where their snarks now are, adding and removing any as needed. */
-	update(placed: PlacedGraph[], height: number) {
+	update(placed: PlacedGraph[], viewportHeight: number) {
 		for (const [graph, { link }] of this.#labels) {
 			if (!placed.some((other) => other.graph === graph)) {
 				this.#labels.delete(graph);
@@ -47,22 +42,20 @@ export class SnarkLabels {
 		for (const { graph, region } of placed) {
 			const opacity = smoothstep(0.8, 1, graph.growth) * (1 - graph.fade);
 
-			if (graph.snark && opacity > 0) {
-				const label =
-					this.#labels.get(graph) ??
-					this.#create(graph, graph.snark, region.bounds);
+			if (graph.kind === "snark" && opacity > 0) {
+				const label = this.#labels.get(graph) ?? this.#create(graph, region);
 
-				placeLabel(label, graph, region, height);
+				placeLabel(label, graph, region, viewportHeight);
 				label.link.style.opacity = opacity.toFixed(3);
 			}
 		}
 	}
 
-	#create(graph: LivingGraph, snark: SnarkState, { left, right }: Rectangle) {
+	#create(snark: Snark, { bounds }: Region) {
 		const link = document.createElement("a");
 
-		link.href = href;
-		link.style.maxWidth = px(right - left);
+		link.href = `https://goldbergsnarks.com/g${snark.blocks.toString()}`;
+		link.style.maxWidth = px(bounds.right - bounds.left);
 		link.target = "_blank";
 		link.textContent = `Goldberg snark G${snark.blocks.toString()}`;
 		link.addEventListener("focus", () => {
@@ -70,29 +63,29 @@ export class SnarkLabels {
 		});
 		link.addEventListener("blur", () => {
 			snark.isFocused = false;
-			this.#onRelease();
+			this.#onBlur();
 		});
 
 		this.#host?.append(link);
 
-		const label = { link, width: link.offsetWidth };
+		const label = { height: link.offsetHeight, link, width: link.offsetWidth };
 
-		this.#labels.set(graph, label);
+		this.#labels.set(snark, label);
 
 		return label;
 	}
 }
 
 function placeLabel(
-	{ link, width }: Label,
-	{ radius, x, y }: LivingGraph,
+	{ height, link, width }: Label,
+	{ isFocused, radius, x, y }: Snark,
 	{ bounds, offset }: Region,
-	height: number,
+	viewportHeight: number,
 ) {
 	const left = clamp(x - width / 2, bounds.left, bounds.right - width);
-	const top = y - offset + radius + margin;
+	const top = y - offset + radius + spaceBelowSnark;
 
-	// Anything that's focusable should be somewhere it can be seen
-	link.hidden = top < 0 || top > height;
+	// Anything that can become focused should be somewhere it can be seen
+	link.hidden = !isFocused && (top < -height || top > viewportHeight);
 	link.style.translate = `${px(left)} ${px(top)}`;
 }

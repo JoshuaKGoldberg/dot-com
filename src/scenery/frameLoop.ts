@@ -1,25 +1,13 @@
 import { onPause, rootState } from "./rootState";
 
-/**
- * Advances something by a frame.
- * @returns Whether there's anything left to do next frame.
- */
+/** @returns Whether there's anything left to do next frame. */
 export type FrameStep = (seconds: number) => boolean;
-
-export interface FrameTask {
-	/** Stops running until the next wake. */
-	sleep: () => void;
-
-	/** Runs repeatedly until the step reports it has nothing left to do. */
-	wake: () => void;
-}
 
 export interface FrameTaskOptions {
 	/** Whether to run as often as the screen refreshes, rather than at the usual rate. */
 	isSmooth?: boolean;
 
-	/** Stops the task for good once aborted. */
-	signal: AbortSignal;
+	signal?: AbortSignal;
 }
 
 interface RunningTask {
@@ -44,40 +32,29 @@ const running = new Set<RunningTask>();
 
 let frame: number | undefined;
 let nextStepAt = 0;
-let timer: ReturnType<typeof setTimeout> | undefined;
 
 /**
  * Creates a task on the single loop shared by all scenery.
  * The loop only runs while any task is awake, with all tasks' steps in unison.
- * Nothing wakes while motion is paused.
+ * @returns Wakes the task, unless motion is paused.
  */
 export function createFrameTask(
 	step: FrameStep,
-	{ isSmooth = false, signal }: FrameTaskOptions,
-): FrameTask {
+	{ isSmooth = false, signal }: FrameTaskOptions = {},
+) {
 	const task: RunningTask = { isSmooth, ranAt: undefined, step };
-	const sleep = () => {
+
+	signal?.addEventListener("abort", () => {
 		running.delete(task);
+	});
+
+	return () => {
+		if (rootState.isPlaying && !signal?.aborted && !running.has(task)) {
+			task.ranAt = undefined;
+			running.add(task);
+			schedule();
+		}
 	};
-
-	signal.addEventListener("abort", sleep);
-
-	return {
-		sleep,
-		wake() {
-			if (rootState.isPlaying && !signal.aborted && !running.has(task)) {
-				task.ranAt = undefined;
-				running.add(task);
-				schedule();
-			}
-		},
-	};
-}
-
-function requestFrame() {
-	clearTimeout(timer);
-	timer = undefined;
-	frame ??= requestAnimationFrame(runFrame);
 }
 
 function runFrame(now: number) {
@@ -114,18 +91,9 @@ function runTask(task: RunningTask, now: number) {
 	}
 }
 
-/** Animation frames use power even if nothing happens in them, so most are skipped. */
 function schedule() {
-	if (frame !== undefined || !running.size) {
-		return;
-	}
-
-	const wait = nextStepAt - performance.now() - defaultElapsed;
-
-	if (wait <= 0 || [...running].some(({ isSmooth }) => isSmooth)) {
-		requestFrame();
-	} else {
-		timer ??= setTimeout(requestFrame, wait);
+	if (running.size) {
+		frame ??= requestAnimationFrame(runFrame);
 	}
 }
 

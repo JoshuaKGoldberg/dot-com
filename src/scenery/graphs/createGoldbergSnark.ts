@@ -2,7 +2,7 @@ import type { Graph, Vertex } from "./createGraph";
 
 const blockSize = 8;
 
-/** One of a snark's repeating blocks, if it pointed upward. */
+/** One block's vertices, around straight up. */
 const block: { angle: number; depth: number; radius: number }[] = [
 	{ angle: -0.34, depth: 0.5, radius: 0.85 },
 	{ angle: 0.29, depth: 0.36, radius: 1 },
@@ -34,7 +34,7 @@ const edgesToNextBlock = [
 
 /**
  * Creates the Goldberg snark with an odd number of blocks, at least five.
- * @see https://mathworld.wolfram.com/GoldbergSnark.html
+ * @see https://goldbergsnarks.com
  */
 export function createGoldbergSnark(blocks: number): Graph {
 	const edges: [number, number][] = [];

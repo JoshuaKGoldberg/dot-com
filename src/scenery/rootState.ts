@@ -1,16 +1,10 @@
 import { Emitter, type Listener } from "./Emitter";
 
-export interface RootState {
-	isDark: boolean;
-	isPlaying: boolean;
-}
-
 const changes = new Emitter();
 
 /** The page's color theme and motion preference, as set on the root element. */
-export let rootState = readRootState();
+export const rootState = readRootState();
 
-/** Calls back each time motion is paused. */
 export function onPause(listener: Listener, signal?: AbortSignal) {
 	onRootState(() => {
 		if (!rootState.isPlaying) {
@@ -19,12 +13,11 @@ export function onPause(listener: Listener, signal?: AbortSignal) {
 	}, signal);
 }
 
-/** Calls back each time the root state changes. */
 export function onRootState(listener: Listener, signal?: AbortSignal) {
 	changes.listen(listener, signal);
 }
 
-function readRootState(): RootState {
+function readRootState() {
 	const { classList, dataset } = document.documentElement;
 
 	return {
@@ -34,19 +27,11 @@ function readRootState(): RootState {
 }
 
 new MutationObserver(() => {
-	// Navigating between pages briefly clears the root's attributes before the theme
-	// and motion scripts restore them, and that isn't a change worth repainting for
-	if (!document.documentElement.dataset.motion) {
-		return;
-	}
+	const { isDark, isPlaying } = readRootState();
 
-	const next = readRootState();
-
-	if (
-		next.isDark !== rootState.isDark ||
-		next.isPlaying !== rootState.isPlaying
-	) {
-		rootState = next;
+	if (isDark !== rootState.isDark || isPlaying !== rootState.isPlaying) {
+		rootState.isDark = isDark;
+		rootState.isPlaying = isPlaying;
 		changes.emit();
 	}
 }).observe(document.documentElement, {

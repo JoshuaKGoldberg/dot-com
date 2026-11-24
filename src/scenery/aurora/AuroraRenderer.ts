@@ -16,7 +16,6 @@ export interface AuroraUniforms {
 /** A fraction of a pixel per pixel: upscaling is what softens the light. */
 const resolution = 0.2;
 
-/** Draws auroras with WebGL, if it's available. */
 export class AuroraRenderer {
 	readonly canvas = document.createElement("canvas");
 
@@ -83,7 +82,6 @@ export class AuroraRenderer {
 			antialias: false,
 			depth: false,
 			powerPreference: "low-power",
-			premultipliedAlpha: true,
 			stencil: false,
 		});
 

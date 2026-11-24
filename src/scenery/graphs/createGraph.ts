@@ -1,6 +1,6 @@
 import type { Random } from "../random";
 
-import { clamp } from "../math";
+import { interpolate } from "../math";
 import { pick } from "../random";
 
 export interface Graph {
@@ -23,7 +23,6 @@ const graphCreators = [
 	createWeb,
 ];
 
-/** Creates a small random graph: a tree, a cycle, or a web of near neighbors. */
 export function createGraph(random: Random) {
 	return fitToUnitCircle(pick(random, graphCreators)(random));
 }
@@ -72,13 +71,12 @@ function createTree(random: Random): Graph {
 
 function createVertex(random: Random, angle: number, distance: number): Vertex {
 	return {
-		depth: clamp(0.5 + (random() - 0.5) * 0.8),
+		depth: interpolate(0.1, 0.9, random()),
 		x: Math.cos(angle) * distance,
 		y: Math.sin(angle) * distance,
 	};
 }
 
-/** Connects each vertex to its nearest earlier one, plus some to a second. */
 function createWeb(random: Random): Graph {
 	const count = 4 + Math.floor(random() * 6);
 	const edges: [number, number][] = [];

@@ -2,14 +2,10 @@ import { cacheLayout } from "../cacheLayout";
 import { resizeCanvas } from "../canvas";
 import { type Column, measureColumn, minimumMargin } from "../column";
 import { Dwell } from "../Dwell";
-import { fadeAwayPainting } from "../fadeAway";
+import { crossfadePainting, fadeAwayPainting } from "../fadeAway";
 import { footerDwell } from "../footerDwell";
-import { createFrameTask, type FrameTask } from "../frameLoop";
-import {
-	createRegions,
-	type FooterBounds,
-	measureFooter,
-} from "../graphs/createRegions";
+import { createFrameTask } from "../frameLoop";
+import { createRegions, measureFooter } from "../graphs/createRegions";
 import { GraphSimulation } from "../graphs/GraphSimulation";
 import { paintGraph } from "../graphs/paintGraphs";
 import { SnarkLabels } from "../graphs/SnarkLabels";
@@ -18,15 +14,10 @@ import { onPageScroll, pageScroll } from "../pageScroll";
 import { onPointer, pointer } from "../pointer";
 import { onPause, onRootState, rootState } from "../rootState";
 import { onTheme, theme } from "../theme";
-import {
-	createStars,
-	linkedDepth,
-	parallaxRates,
-	type Star,
-} from "./createStars";
+import { createStars, type Star } from "./createStars";
 import { paintStars } from "./paintStars";
-import { overscan, type Sky } from "./sky";
-import { lightRadius, StarLights } from "./StarLights";
+import { linkedDepth, overscan, parallaxRates, type Sky } from "./sky";
+import { StarLights } from "./StarLights";
 import { StarLinks } from "./StarLinks";
 
 /** How far into the column the pointer still counts as being by its margin. */
@@ -41,7 +32,6 @@ export class StarField {
 	#column: Column;
 	readonly #context = this.#canvas.getContext("2d");
 	readonly #graphs = new GraphSimulation(Math.random);
-	readonly #growing: FrameTask;
 	#height = 0;
 	readonly #host: HTMLElement;
 	readonly #labels: SnarkLabels;
@@ -49,28 +39,27 @@ export class StarField {
 	readonly #lights = new StarLights();
 	readonly #links = new StarLinks();
 	#marginStars: Star[] = [];
-	readonly #measureFooter: () => FooterBounds;
+	readonly #measureFooter: () => ReturnType<typeof measureFooter>;
+	#paintedDarkness = theme.darkness;
 	#paintedScroll = 0;
 	readonly #rightDwell = new Dwell();
-	readonly #scrolling: FrameTask;
+
+	/** How far the sky has scrolled, other than from the current page scrolling. */
+	#scrollBefore = 0;
+
 	#seconds = 0;
 	#stars: Star[] = [];
+	readonly #wakeGrowing: () => void;
 	#width = 0;
 
 	constructor(host: HTMLElement, signal: AbortSignal) {
 		this.#column = measureColumn();
-		this.#growing = createFrameTask((seconds) => this.#grow(seconds), {
-			signal,
-		});
 		this.#host = host;
-		this.#labels = new SnarkLabels(() => {
-			this.#growing.wake();
-		}, signal);
 		this.#measureFooter = cacheLayout(measureFooter, signal);
-		this.#scrolling = createFrameTask(() => this.#scroll(), {
-			isSmooth: true,
+		this.#wakeGrowing = createFrameTask((seconds) => this.#grow(seconds), {
 			signal,
 		});
+		this.#labels = new SnarkLabels(this.#wakeGrowing, signal);
 
 		host.append(this.#canvas);
 
@@ -80,20 +69,33 @@ export class StarField {
 
 		const resizes = new ResizeObserver(resize);
 
-		// Resizes the window are also when its pixel ratio may have changed
+		// Also fires when only the pixel ratio changes
 		addEventListener("resize", resize, { signal });
 		document.addEventListener("astro:page-load", resize, { signal });
 		resizes.observe(host);
 
-		onPageScroll(() => {
-			this.#scrolling.wake();
-		}, signal);
-		onPause(() => {
-			if (this.#graphs.graphs.length || this.#lights.lit.length) {
-				fadeAwayPainting(this.#canvas);
-			}
+		document.addEventListener(
+			"astro:after-swap",
+			() => {
+				this.#keepScroll();
 
-			this.#rest();
+				if (this.#graphs.graphs.length) {
+					this.#wakeGrowing();
+				}
+			},
+			{ signal },
+		);
+		onPageScroll(
+			createFrameTask(() => this.#scroll(), { isSmooth: true, signal }),
+			signal,
+		);
+		onPause(() => {
+			fadeAwayPainting(this.#canvas);
+			this.#graphs.clear();
+			this.#leftDwell.reset();
+			this.#lights.clear();
+			this.#links.clear();
+			this.#rightDwell.reset();
 		}, signal);
 		onPointer(() => {
 			if (
@@ -101,13 +103,21 @@ export class StarField {
 				this.#isNearFooter() ||
 				this.#graphs.graphs.length
 			) {
-				this.#growing.wake();
+				this.#wakeGrowing();
 			}
 		}, signal);
-		onRootState(() => {
+		onTheme(() => {
+			if (!rootState.isPlaying && theme.darkness !== this.#paintedDarkness) {
+				crossfadePainting(this.#canvas);
+			}
+
 			this.#paint();
 		}, signal);
-		onTheme(() => {
+		onRootState(() => {
+			if (rootState.isPlaying) {
+				this.#keepScroll();
+			}
+
 			this.#paint();
 		}, signal);
 		signal.addEventListener("abort", () => {
@@ -121,8 +131,23 @@ export class StarField {
 			darkness: theme.darkness,
 			dwell: { left: this.#leftDwell.level, right: this.#rightDwell.level },
 			period: this.#height + overscan * 2,
-			scroll: rootState.isPlaying ? pageScroll.top : 0,
+			scroll: rootState.isPlaying
+				? this.#scrollBefore + pageScroll.top
+				: this.#paintedScroll,
 			width: this.#width,
+		};
+	}
+
+	#getNearness() {
+		const { left, right } = this.#column;
+		const get = (margin: number, distance: number) =>
+			pointer.isPresent && margin > minimumMargin
+				? 1 - clamp(distance / reach)
+				: 0;
+
+		return {
+			left: get(left, pointer.x - left),
+			right: get(this.#width - right, right - pointer.x),
 		};
 	}
 
@@ -130,29 +155,18 @@ export class StarField {
 		return createRegions({
 			column: this.#column,
 			dwell,
-			footer: this.#measureFooter(),
+			footer: this.#measureFooter().bounds,
 			height: this.#height,
 			marginOffset: scroll * parallaxRates[linkedDepth],
 			width: this.#width,
 		});
 	}
 
-	/** How near the pointer is to a margin, given how far it is into the column. */
-	#getNearness(margin: number, distance: number) {
-		return pointer.isPresent && margin > minimumMargin
-			? 1 - clamp(distance / reach)
-			: 0;
-	}
-
-	/** Advances everything that's been brought out by the pointer. */
 	#grow(seconds: number) {
-		const { left, right } = this.#column;
+		const nearness = this.#getNearness();
 		const isDwelling = [
-			this.#leftDwell.step(seconds, this.#getNearness(left, pointer.x - left)),
-			this.#rightDwell.step(
-				seconds,
-				this.#getNearness(this.#width - right, right - pointer.x),
-			),
+			this.#leftDwell.step(seconds, nearness.left),
+			this.#rightDwell.step(seconds, nearness.right),
 			this.#isNearFooter(),
 		].some(Boolean);
 		const sky = this.#createSky();
@@ -164,12 +178,7 @@ export class StarField {
 			sky,
 		);
 		this.#links.step(seconds);
-		this.#graphs.step(
-			seconds,
-			this.#getRegions(sky),
-			{ height: this.#height },
-			pointer,
-		);
+		this.#graphs.step(seconds, this.#getRegions(sky), this.#height, pointer);
 		this.#paint();
 
 		return (
@@ -181,20 +190,23 @@ export class StarField {
 	}
 
 	#isNearFooter() {
-		const { band } = this.#measureFooter();
+		const { bounds } = this.#measureFooter();
 
 		return (
 			footerDwell.level > 0 ||
-			(pointer.isPresent && !!band && pointer.y > band.top)
+			(pointer.isPresent && !!bounds && pointer.y > bounds.aurora.top)
 		);
 	}
 
 	#isNearMargin() {
-		return (
-			pointer.isPresent &&
-			(pointer.x < this.#column.left + lightRadius ||
-				pointer.x > this.#column.right - lightRadius)
-		);
+		const { left, right } = this.#getNearness();
+
+		return left > 0 || right > 0;
+	}
+
+	/** Has the sky stay where it was last painted, wherever the page has since gone. */
+	#keepScroll() {
+		this.#scrollBefore = this.#paintedScroll - pageScroll.top;
 	}
 
 	#paint() {
@@ -217,20 +229,26 @@ export class StarField {
 		this.#paintGraphs(context, sky);
 
 		context.globalAlpha = 1;
+		this.#paintedDarkness = sky.darkness;
 		this.#paintedScroll = sky.scroll;
 	}
 
 	#paintGraphs(context: CanvasRenderingContext2D, sky: Sky) {
-		const regions = this.#graphs.graphs.length ? this.#getRegions(sky) : [];
+		if (!this.#graphs.graphs.length) {
+			this.#labels.update([], this.#height);
+
+			return;
+		}
+
+		const regions = this.#getRegions(sky);
 		const scene = {
 			column: this.#column,
 			darkness: sky.darkness,
-			pointer: pointer.isInside ? pointer : undefined,
 			seconds: this.#seconds,
 		};
 
 		const placed = this.#graphs.graphs.flatMap((graph) => {
-			const region = regions.find(({ name }) => name === graph.region);
+			const region = regions.get(graph.region);
 
 			return region ? [{ graph, region }] : [];
 		});
@@ -240,7 +258,7 @@ export class StarField {
 				context,
 				graph,
 				region.offset,
-				graph.snark ? 1 : interpolate(0.45, 1, region.dwell),
+				graph.kind === "snark" ? 1 : interpolate(0.45, 1, region.dwell),
 				scene,
 			);
 		}
@@ -251,18 +269,30 @@ export class StarField {
 	#resize() {
 		const { clientHeight, clientWidth } = this.#host;
 		const column = measureColumn();
-		const wasCleared = resizeCanvas(this.#canvas, clientWidth, clientHeight);
-
-		if (
-			clientHeight !== this.#height ||
+		const areMarginsMoved =
 			clientWidth !== this.#width ||
 			column.left !== this.#column.left ||
-			column.right !== this.#column.right
+			column.right !== this.#column.right;
+		const areStarsMoved = areMarginsMoved || clientHeight !== this.#height;
+
+		if (
+			(areMarginsMoved && this.#graphs.graphs.length) ||
+			(areStarsMoved && this.#lights.lit.length)
 		) {
+			crossfadePainting(this.#canvas);
+		}
+
+		const wasCleared = resizeCanvas(this.#canvas, clientWidth, clientHeight);
+
+		if (areMarginsMoved) {
+			this.#graphs.clear();
+		}
+
+		if (areStarsMoved) {
 			this.#column = column;
 			this.#height = clientHeight;
-			this.#width = clientWidth;
-			this.#rest();
+			this.#lights.clear();
+			this.#links.clear();
 			this.#stars = createStars({
 				column,
 				period: clientHeight + overscan * 2,
@@ -271,25 +301,16 @@ export class StarField {
 			this.#marginStars = this.#stars.filter(
 				({ x }) => x < column.left || x > column.right,
 			);
-		} else if (!wasCleared) {
-			return;
+			this.#width = clientWidth;
 		}
 
-		this.#paint();
+		if (areStarsMoved || wasCleared) {
+			this.#paint();
+		}
 	}
 
-	/** Immediately removes everything that's been brought out by the pointer. */
-	#rest() {
-		this.#graphs.clear();
-		this.#leftDwell.reset();
-		this.#lights.clear();
-		this.#links.clear();
-		this.#rightDwell.reset();
-	}
-
-	/** Keeps stars' parallax up to date with the page. */
 	#scroll() {
-		if (this.#paintedScroll === pageScroll.top) {
+		if (this.#paintedScroll === this.#createSky().scroll) {
 			return false;
 		}
 

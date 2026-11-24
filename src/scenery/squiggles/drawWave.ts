@@ -11,7 +11,6 @@ export interface Wave {
 
 const pixelsPerPoint = 2;
 
-/** Draws a sine wave as SVG path data. */
 export function drawWave({ amplitude, period, phase, width, y }: Wave) {
 	const count = Math.max(2, Math.ceil(width / pixelsPerPoint));
 	const points = Array.from({ length: count + 1 }, (_, i) => {

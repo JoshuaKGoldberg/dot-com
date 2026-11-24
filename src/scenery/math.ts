@@ -21,7 +21,6 @@ export function modulo(value: number, size: number) {
 	return ((value % size) + size) % size;
 }
 
-/** Moves toward a target at a constant speed, without overshooting. */
 export function moveToward(current: number, target: number, maxStep: number) {
 	return current < target
 		? Math.min(target, current + maxStep)

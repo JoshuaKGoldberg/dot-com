@@ -13,10 +13,7 @@ const { edge } = Astro.props;
 ></aurora-band>
 
 <style>
-	/*
-	 * The band's resting look, and all it has without JavaScript and WebGL.
-	 * Half as strong behind the center column, where there's text in front of it.
-	 */
+	/* The band's resting look, and all it has without JavaScript and WebGL */
 	.band {
 		--column: calc(var(--widthFull) / 2);
 
@@ -80,23 +77,20 @@ const { edge } = Astro.props;
 
 	@supports (animation-timeline: scroll()) {
 		.top {
-			--fadeDistance: 25rem;
-
-			animation: scroll-away linear both;
-			/* Without a var(), minifying merges the timeline into the shorthand */
-			animation-range: 0 var(--fadeDistance);
+			animation-fill-mode: both;
+			animation-name: scroll-away;
+			animation-range: 0 25rem;
 			animation-timeline: --page;
-		}
-
-		:global(html[data-motion="paused"]) .top {
-			animation-name: fade-away;
+			animation-timing-function: linear;
 		}
 
 		/* Moves as though it were at the end of the page, without adding to its height */
 		.bottom {
-			animation: scroll-in linear both;
+			animation-fill-mode: both;
+			animation-name: scroll-in;
 			animation-range: calc(100% - var(--bandHeight)) 100%;
 			animation-timeline: --page;
+			animation-timing-function: linear;
 		}
 	}
 
@@ -104,12 +98,6 @@ const { edge } = Astro.props;
 	@supports not (animation-timeline: scroll()) {
 		.bottom {
 			display: none;
-		}
-	}
-
-	@keyframes fade-away {
-		to {
-			opacity: 0;
 		}
 	}
 

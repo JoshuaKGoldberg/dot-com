@@ -6,9 +6,6 @@ export interface Star {
 	/** Opacity when fully revealed. */
 	alpha: number;
 
-	/** Index into each theme's star temperatures. */
-	temperature: number;
-
 	/** Which of the parallax depths the star is at, from farthest to nearest. */
 	depth: number;
 
@@ -20,6 +17,9 @@ export interface Star {
 	ornament: "pad" | "ring" | undefined;
 	radius: number;
 
+	/** Index into each theme's star temperatures. */
+	temperature: number;
+
 	/** Dwell needed before the star appears. Most always do. */
 	threshold: number;
 
@@ -30,17 +30,12 @@ export interface Star {
 export interface StarBounds {
 	column: Column;
 
-	/** Height of the repeating area stars are placed in. */
 	period: number;
-
 	width: number;
 }
 
-/** How far stars at each depth scroll per pixel the page scrolls. */
-export const parallaxRates = [0.024, 0.11, 0.23];
-
-/** Depth whose stars sit among the graphs, and so are linked with them. */
-export const linkedDepth = 1;
+/** Pixels that stars take to thicken over, where a margin is any narrower than that. */
+const narrowestGradient = 140;
 
 const areaPerCandidate = 217;
 const maximumStars = 2400;
@@ -52,7 +47,6 @@ const densityAtEdge = 0.62;
 
 const temperatureWeights = [0.34, 0.24, 0.2, 0.14, 0.08];
 
-/** Scatters stars that thicken gradually from the column out to the screen's edges. */
 export function createStars({ column, period, width }: StarBounds) {
 	const random = seededRandom(seed);
 	const candidates = Math.round((width * period) / areaPerCandidate);
@@ -78,7 +72,7 @@ export function createStars({ column, period, width }: StarBounds) {
 			0.72 + random() * 0.45,
 			1.15 + random() * 0.75,
 		][depth];
-		const magnitude = clamp(((radius - 0.4) / 1.55) * 0.65 + random() * 0.35);
+		const magnitude = ((radius - 0.4) / 1.55) * 0.65 + random() * 0.35;
 
 		stars.push({
 			alpha:
@@ -104,27 +98,20 @@ export function createStars({ column, period, width }: StarBounds) {
 	return stars.sort((a, b) => a.temperature - b.temperature);
 }
 
-function getMarginDepth(
-	x: number,
-	column: StarBounds["column"],
-	width: number,
-) {
-	if (x < column.left) {
-		return Math.min(1, (column.left - x) / Math.max(140, column.left));
-	}
+/** From 0 at the column to 1 at the screen's edge. */
+function getMarginDepth(x: number, { left, right }: Column, width: number) {
+	const [distance, margin] =
+		x < left ? [left - x, left] : [x - right, width - right];
 
-	if (x > column.right) {
-		return Math.min(
-			1,
-			(x - column.right) / Math.max(140, width - column.right),
-		);
-	}
-
-	return 0;
+	return clamp(distance / Math.max(narrowestGradient, margin));
 }
 
 function getOrnament(isOrnamented: boolean, roll: number) {
-	return isOrnamented ? (roll < 0.5 ? "ring" : "pad") : undefined;
+	if (!isOrnamented) {
+		return undefined;
+	}
+
+	return roll < 0.5 ? "ring" : "pad";
 }
 
 function getTemperature(roll: number) {

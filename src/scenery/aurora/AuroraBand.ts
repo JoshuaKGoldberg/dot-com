@@ -1,42 +1,43 @@
 import type { Dwell } from "../Dwell";
 
 import { cacheLayout } from "../cacheLayout";
+import { px, readMilliseconds } from "../css";
 import { footerDwell } from "../footerDwell";
-import { createFrameTask, type FrameTask } from "../frameLoop";
+import { createFrameTask } from "../frameLoop";
 import { headerDwell } from "../headerDwell";
 import { clamp, damp, smoothstep } from "../math";
 import { onPointer, pointer } from "../pointer";
-import { onPause } from "../rootState";
+import { onPause, rootState } from "../rootState";
 import { onTheme, theme } from "../theme";
 import { AuroraRenderer } from "./AuroraRenderer";
 import { readPalette } from "./readPalette";
 
-/** Opacity of the light when the pointer's lingered as long as it can matter. */
 const peakOpacity = "0.9";
 
-/** Pixels from the edge at which the pointer's as near as it can be, and not near. */
+/** Pixels from the edge that count as fully near, and as not near. */
 const reaches = {
-	bottom: [360, 440],
-	top: [100, 230],
-} as const;
+	bottom: ({ height }: DOMRect) => [height, height + 80] as const,
+	top: () => [100, 230] as const,
+};
 
-/** Light along an edge of the page that comes to life as the pointer lingers by it. */
 export class AuroraBand {
 	#cursor = 0;
 	readonly #dwell: Dwell;
 	readonly #edge: keyof typeof reaches;
 	#flow = 0;
+	readonly #host: HTMLElement;
 	readonly #measure: () => { bounds: DOMRect; opacity: number };
-	#palette: readonly number[];
+	#palette: readonly number[] | undefined;
 	#presence = 0;
 	readonly #renderer = new AuroraRenderer();
 	#stir = 0;
-	readonly #task: FrameTask;
 	#time = 12;
+	readonly #wake: () => void;
 
 	constructor(host: HTMLElement, signal: AbortSignal) {
 		this.#edge = host.getAttribute("edge") === "top" ? "top" : "bottom";
 		this.#dwell = this.#edge === "top" ? headerDwell : footerDwell;
+		this.#host = host;
 		this.#measure = cacheLayout(
 			() => ({
 				bounds: host.getBoundingClientRect(),
@@ -44,8 +45,7 @@ export class AuroraBand {
 			}),
 			signal,
 		);
-		this.#palette = readPalette();
-		this.#task = createFrameTask((seconds) => this.#step(seconds), { signal });
+		this.#wake = createFrameTask((seconds) => this.#step(seconds), { signal });
 
 		host.append(this.#renderer.canvas);
 
@@ -54,26 +54,26 @@ export class AuroraBand {
 		}, signal);
 		onPointer(() => {
 			if (this.#getNearness() > 0) {
-				this.#task.wake();
+				this.#wake();
 			}
 		}, signal);
 		onTheme(() => {
-			this.#palette = readPalette();
+			this.#palette = undefined;
 		}, signal);
+		keepPlace(host, signal);
 		signal.addEventListener("abort", () => {
 			this.#rest();
 			this.#renderer.canvas.remove();
 		});
 	}
 
-	/** How near the pointer is to the edge, from 0 to 1. */
 	#getNearness() {
 		if (!pointer.isPresent) {
 			return 0;
 		}
 
 		const { bounds, opacity } = this.#measure();
-		const [near, far] = reaches[this.#edge];
+		const [near, far] = reaches[this.#edge](bounds);
 		const distance =
 			this.#edge === "top" ? pointer.y - bounds.top : bounds.bottom - pointer.y;
 
@@ -85,6 +85,7 @@ export class AuroraBand {
 		this.#dwell.reset();
 		this.#presence = 0;
 		this.#renderer.canvas.style.opacity = "0";
+		delete this.#host.dataset.awake;
 	}
 
 	#step(seconds: number) {
@@ -121,6 +122,8 @@ export class AuroraBand {
 		);
 		this.#time += seconds * (0.2 + this.#stir * 0.4 + this.#flow * 0.7);
 
+		this.#palette ??= readPalette();
+
 		const { height, width } = this.#measure().bounds;
 		const wasDrawn = this.#renderer.draw({
 			uCursor: this.#cursor,
@@ -136,7 +139,42 @@ export class AuroraBand {
 		});
 
 		this.#renderer.canvas.style.opacity = wasDrawn ? peakOpacity : "0";
+		this.#host.dataset.awake = "";
 
 		return true;
 	}
+}
+
+/**
+ * Pages may have bands in different places, such as if they're scrolled, so they
+ * move from where they were on the last page instead of suddenly being elsewhere.
+ */
+function keepPlace(host: HTMLElement, signal: AbortSignal) {
+	let keyframe: Keyframe;
+
+	document.addEventListener(
+		"astro:before-swap",
+		() => {
+			const { top } = host.getBoundingClientRect();
+
+			keyframe = {
+				offset: 0,
+				opacity: getComputedStyle(host).opacity,
+				transform: `translateY(${px(top - host.offsetTop)})`,
+			};
+		},
+		{ signal },
+	);
+	document.addEventListener(
+		"astro:after-swap",
+		() => {
+			if (rootState.isPlaying) {
+				host.animate([keyframe], {
+					duration: readMilliseconds("--transitionMedium"),
+					easing: "ease-in-out",
+				});
+			}
+		},
+		{ signal },
+	);
 }

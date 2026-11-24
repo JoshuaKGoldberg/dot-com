@@ -5,13 +5,13 @@ import { interpolate, smoothstep } from "./math";
  * Background effects are weaker behind it, where there's text in front of them.
  */
 export interface Column {
-	/** How far outside the column effects take to reach full strength. */
+	/** Distance outside the column that effects take to reach full strength. */
 	fade: number;
 
 	left: number;
 	right: number;
 
-	/** How strong effects are inside the column. */
+	/** Of effects inside the column, from 0 to 1. */
 	strength: number;
 }
 

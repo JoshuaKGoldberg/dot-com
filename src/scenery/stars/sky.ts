@@ -1,12 +1,8 @@
 import { modulo } from "../math";
-import { parallaxRates } from "./createStars";
 
 export interface Sky {
-	/** How much the pointer has lingered by each margin, from 0 to 1. */
-	dwell: { left: number; right: number };
-
-	/** How far the theme is from light to dark, from 0 to 1. */
 	darkness: number;
+	dwell: { left: number; right: number };
 
 	/** Height of the repeating area stars are placed in. */
 	period: number;
@@ -17,6 +13,12 @@ export interface Sky {
 
 /** How far above the screen the repeating area starts, so wraps are never seen. */
 export const overscan = 160;
+
+/** How far stars at each depth scroll per pixel the page scrolls. */
+export const parallaxRates = [0.024, 0.11, 0.23];
+
+/** Depth whose stars sit among the graphs, and so are linked with them. */
+export const linkedDepth = 1;
 
 /** Vertical position, in viewport pixels, of a star or anything moving with it. */
 export function getScreenY(y: number, depth: number, sky: Sky) {

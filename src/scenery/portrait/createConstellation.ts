@@ -1,16 +1,13 @@
+import type { Vertex } from "../graphs/createGraph";
+
 import { seededRandom } from "../random";
 
 export interface Constellation {
 	/** Pairs of indices into stars. */
 	lines: [number, number][];
-	stars: ConstellationStar[];
-}
 
-/** A position in a portrait 256 units wide with its own center at 0. */
-export interface ConstellationStar {
-	depth: number;
-	x: number;
-	y: number;
+	/** In portrait units. */
+	stars: Vertex[];
 }
 
 const count = 170;
@@ -23,10 +20,9 @@ const seed = 23;
 /** Below this, the portrait's subject is in the way of everything. */
 const lowest = 90;
 
-/** Scatters stars around a portrait's subject, joining those that are close. */
 export function createConstellation(): Constellation {
 	const random = seededRandom(seed);
-	const stars: ConstellationStar[] = [];
+	const stars: Vertex[] = [];
 
 	for (let attempt = 0; attempt < 4000 && stars.length < count; attempt += 1) {
 		const x = (random() - 0.5) * 2 * outerRadius;

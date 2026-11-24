@@ -1,33 +1,41 @@
 import type { Rectangle } from "../geometry";
-import type { Region } from "./GraphSimulation";
 
 import { type Column, minimumMargin } from "../column";
 import { footerDwell } from "../footerDwell";
 
 export interface FooterBounds {
-	/** Where the bottom aurora is. */
-	band: Rectangle | undefined;
-
-	/** Where the footer's text is. */
-	text: Rectangle | undefined;
+	aurora: Rectangle;
+	footer: Rectangle;
+	text: Rectangle;
 }
 
-export interface RegionContext {
+export interface Region {
+	avoid?: Rectangle;
+	bounds: Rectangle;
+	dwell: number;
+
+	/** Pixels the region's contents have scrolled up by. */
+	offset: number;
+
+	smallGraphLimit: number;
+
+	/** At full dwell. */
+	smallGraphsPerSecond: number;
+}
+
+export type RegionName = "bottom" | "left" | "right";
+
+export type Regions = ReadonlyMap<RegionName, Region>;
+
+interface RegionContext {
 	column: Column;
-
-	/** How much the pointer has lingered by each margin, from 0 to 1. */
 	dwell: { left: number; right: number };
-
-	footer: FooterBounds;
+	footer: FooterBounds | undefined;
 	height: number;
-
-	/** Pixels that the margins' contents have scrolled up by. */
 	marginOffset: number;
-
 	width: number;
 }
 
-/** Creates the regions of the screen that graphs may grow in. */
 export function createRegions({
 	column,
 	dwell,
@@ -35,49 +43,68 @@ export function createRegions({
 	height,
 	marginOffset,
 	width,
-}: RegionContext) {
-	const margin = { limit: 11, offset: marginOffset, rate: 1 };
-	const regions: Region[] = [];
+}: RegionContext): Regions {
+	const margin = {
+		offset: marginOffset,
+		smallGraphLimit: 11,
+		smallGraphsPerSecond: 1,
+	};
+	const regions = new Map<RegionName, Region>();
 
 	if (column.left > minimumMargin) {
-		regions.push({
+		regions.set("left", {
 			...margin,
 			bounds: { bottom: height, left: 0, right: column.left, top: 0 },
 			dwell: dwell.left,
-			name: "left",
 		});
 	}
 
 	if (width - column.right > minimumMargin) {
-		regions.push({
+		regions.set("right", {
 			...margin,
 			bounds: { bottom: height, left: column.right, right: width, top: 0 },
 			dwell: dwell.right,
-			name: "right",
 		});
 	}
 
-	if (footer.band) {
-		regions.push({
+	if (footer) {
+		const { bottom, left, right, top } = footer.aurora;
+
+		regions.set("bottom", {
 			avoid: footer.text,
-			bounds: footer.band,
+			bounds: { bottom, left, right, top: Math.max(top, footer.footer.top) },
 			dwell: footerDwell.level,
-			limit: 8,
-			name: "bottom",
-			offset: -footer.band.top,
-			rate: 0.3,
+			offset: -top,
+			smallGraphLimit: 8,
+			smallGraphsPerSecond: 0.3,
 		});
 	}
 
 	return regions;
 }
 
-export function measureFooter(): FooterBounds {
-	const getBounds = (selector: string) =>
-		document.querySelector(selector)?.getBoundingClientRect();
+export function measureFooter(): { bounds: FooterBounds | undefined } {
+	const aurora = document
+		.querySelector("aurora-band[edge=bottom]")
+		?.getBoundingClientRect();
+	const footer = document.querySelector("footer");
+	const paragraph = document.querySelector("footer p");
+
+	// The aurora isn't displayed where it can't scroll into view
+	if (!aurora?.height || !footer || !paragraph) {
+		return { bounds: undefined };
+	}
+
+	const text = document.createRange();
+
+	// Paragraphs themselves are as wide as the footer is
+	text.selectNodeContents(paragraph);
 
 	return {
-		band: getBounds("aurora-band[edge=bottom]"),
-		text: getBounds("footer p"),
+		bounds: {
+			aurora,
+			footer: footer.getBoundingClientRect(),
+			text: text.getBoundingClientRect(),
+		},
 	};
 }

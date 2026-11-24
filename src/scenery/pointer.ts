@@ -1,17 +1,17 @@
 import { Emitter, type Listener } from "./Emitter";
+import { rootState } from "./rootState";
 
-/** Pointers that haven't moved in this long are treated as though they left. */
-const parkedAfterMs = 30_000;
+const parkedAfterMilliseconds = 30_000;
 
 /** Fingers can't stay without being in the way, so taps count for a while after them. */
-const touchParkedAfterMs = 12_000;
+const touchParkedAfterMilliseconds = 12_000;
 
 const changes = new Emitter();
 
 let isInside = false;
 let parkedAt = 0;
 
-/** The last known mouse, pen, or finger position, in viewport pixels. */
+/** In viewport pixels. */
 export const pointer = {
 	/** Whether the pointer is over the page, no matter how long it's been still for. */
 	get isInside() {
@@ -27,9 +27,13 @@ export const pointer = {
 	y: 0,
 };
 
-/** Calls back each time the pointer moves, or leaves the page. */
+/** Nothing reacts to the pointer while motion is paused. */
 export function onPointer(listener: Listener, signal: AbortSignal) {
-	changes.listen(listener, signal);
+	changes.listen(() => {
+		if (rootState.isPlaying) {
+			listener();
+		}
+	}, signal);
 }
 
 function movePointer(
@@ -48,7 +52,7 @@ addEventListener(
 	(event) => {
 		// Fingers' own events keep on being sent while they scroll the page
 		if (event.pointerType !== "touch") {
-			movePointer(event, parkedAfterMs);
+			movePointer(event, parkedAfterMilliseconds);
 		}
 	},
 	{ passive: true },
@@ -58,7 +62,7 @@ for (const type of ["touchstart", "touchmove"] as const) {
 	addEventListener(
 		type,
 		({ touches: [touch] }) => {
-			movePointer(touch, touchParkedAfterMs);
+			movePointer(touch, touchParkedAfterMilliseconds);
 		},
 		{ passive: true },
 	);

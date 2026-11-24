@@ -1,37 +1,37 @@
 import type { Point } from "../geometry";
+import type { Vertex } from "../graphs/createGraph";
 
 import { resizeCanvas } from "../canvas";
-import { angleToHue, depthColor, hueDriftRate } from "../color";
+import { angleToHue, depthColor, hueDegreesPerSecond } from "../color";
 import { fadeAway } from "../fadeAway";
 import { interpolate, smoothstep } from "../math";
 import { theme } from "../theme";
-import {
-	type ConstellationStar,
-	createConstellation,
-} from "./createConstellation";
-import { stageSize } from "./units";
+import { type Constellation, createConstellation } from "./createConstellation";
+import { portraitSize, stageSize } from "./sizes";
 
-const { lines, stars } = createConstellation();
+let constellation: Constellation | undefined;
 
-/** Stars and lines around a portrait that bloom out from the pointer. */
 export class ConstellationCanvas {
 	readonly #canvas = document.createElement("canvas");
 	readonly #context = this.#canvas.getContext("2d");
-	readonly #host: HTMLElement;
 
 	constructor(host: HTMLElement) {
-		this.#host = host;
 		host.append(this.#canvas);
 	}
 
-	/** @param from Where stars are revealed around, in portrait units. */
-	paint(from: Point, level: number, seconds: number) {
+	/** Reveals stars around a position in portrait units. */
+	paint(from: Point, level: number, seconds: number, portraitWidth: number) {
 		const context = this.#context;
 		if (!context) {
 			return;
 		}
 
-		resizeCanvas(this.#canvas, this.#host.clientWidth, this.#host.clientHeight);
+		constellation ??= createConstellation();
+
+		const { lines, stars } = constellation;
+		const size = (portraitWidth * stageSize) / portraitSize;
+
+		resizeCanvas(this.#canvas, size, size);
 
 		const { height, width } = this.#canvas;
 		const scale = width / stageSize;
@@ -41,9 +41,9 @@ export class ConstellationCanvas {
 				level *
 				smoothstep(reach, reach - 34, Math.hypot(x - from.x, y - from.y)),
 		);
-		const getColor = ({ depth, x, y }: ConstellationStar) =>
+		const getColor = ({ depth, x, y }: Vertex) =>
 			depthColor(
-				angleToHue(x - from.x, y - from.y) + seconds * hueDriftRate,
+				angleToHue(x - from.x, y - from.y) + seconds * hueDegreesPerSecond,
 				0.3 + depth * 0.6,
 				theme.darkness,
 			);

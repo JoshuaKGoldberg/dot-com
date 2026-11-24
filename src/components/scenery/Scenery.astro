@@ -20,7 +20,7 @@ import AuroraBand from "./AuroraBand.astro";
 ></aside>
 
 <script>
-	// Everything looks complete without this: it only adds what happens on approach
+	// Only adds what happens on approach
 	const whenIdle = globalThis.requestIdleCallback ?? setTimeout;
 
 	whenIdle(() => {
@@ -37,9 +37,13 @@ import AuroraBand from "./AuroraBand.astro";
 		z-index: -1;
 	}
 
+	/* Stays the same size as mobile browsers' bars come and go */
 	.stars {
-		inset: 0;
+		height: 100lvh;
+		left: 0;
 		position: absolute;
+		top: 0;
+		width: 100%;
 	}
 
 	.stars :global(canvas) {
@@ -76,18 +80,21 @@ import AuroraBand from "./AuroraBand.astro";
 		pointer-events: auto;
 		position: absolute;
 		text-align: center;
-		/* Keeps whatever's painted behind it from making it less readable */
-		text-shadow:
-			0 0 2px var(--colorBackground),
-			0 0 2px var(--colorBackground),
-			0 0 3px var(--colorBackground),
-			0 0 3px var(--colorBackground),
-			0 0 4px var(--colorBackground),
-			0 0 4px var(--colorBackground);
 		text-transform: uppercase;
 		text-wrap: balance;
 		top: calc(-1 * var(--padding));
 		width: max-content;
+	}
+
+	/* Covers whatever's painted behind the text, which could make it less readable */
+	.labels :global(a)::before {
+		background: var(--colorBackground);
+		border-radius: 8px;
+		content: "";
+		filter: blur(3px);
+		inset: 1px -2px;
+		position: absolute;
+		z-index: -1;
 	}
 
 	.labels :global(a:is(:hover, :focus-visible)) {
@@ -120,13 +127,7 @@ import AuroraBand from "./AuroraBand.astro";
 		}
 	}
 
-	@media (forced-colors: active) {
-		.squiggles {
-			display: none;
-		}
-	}
-
-	@media print {
+	@media print, (forced-colors: active) {
 		.labels,
 		.scenery,
 		.squiggles {

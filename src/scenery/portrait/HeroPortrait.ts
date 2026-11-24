@@ -2,12 +2,13 @@ import type { Point } from "../geometry";
 
 import { cacheLayout } from "../cacheLayout";
 import { px } from "../css";
-import { createFrameTask, type FrameTask } from "../frameLoop";
+import { createFrameTask } from "../frameLoop";
 import { clamp, damp, interpolate, moveToward, smoothstep } from "../math";
 import { onPointer, pointer } from "../pointer";
-import { onPause, rootState } from "../rootState";
+import { onPause } from "../rootState";
 import { ConstellationCanvas } from "./ConstellationCanvas";
-import { getPortraitPointer, portraitSize } from "./units";
+import { getPortraitPointer } from "./getPortraitPointer";
+import { portraitSize } from "./sizes";
 
 const radius = portraitSize / 2;
 
@@ -18,19 +19,26 @@ const leaveRadius = radius * 1.14;
 const secondsBeforeLight = 1;
 
 /** How many times sooner than the rest of its light that the portrait's glow peaks. */
-const glowSpeed = 2.5;
+const glowHeadStart = 2.5;
 
 const secondsOfLight = 10;
 const secondsToFullTilt = 8;
 
-/** Light too faint to be visible. */
-const darkness = 0.002;
+const minimumLight = 0.002;
 
 /** How much further than at the edge the figure may lean, such as just outside it. */
 const maximumLean = 1.3;
 
-/** Distance the hues of the portrait's light come apart by, in portrait units. */
-const split = 7;
+/** Distances, in portrait units, that parts move by when fully leaned. */
+const haloDistance = 7;
+const figureDistance = { x: 4.8, y: 3.2 };
+
+const figureLift = 4;
+const figureRadians = 0.025;
+const figureGrowth = 0.05;
+
+/** Of the figure's movement, before and after it's been hovered for a while. */
+const strengths = [0.57, 1.14] as const;
 
 /**
  * A portrait that tilts toward the pointer, and slowly lights up as it's hovered.
@@ -54,14 +62,12 @@ export class HeroPortrait {
 	/** Smoothed position of the pointer, in portrait units. */
 	readonly #lean: Point = { x: 0, y: 0 };
 
-	/** How lit up the portrait is, from 0 to 1. */
 	#light = 0;
-
 	readonly #lights: readonly HTMLElement[];
 	readonly #measure: () => DOMRect;
 	#seconds = 0;
 	readonly #sky: HTMLElement;
-	readonly #task: FrameTask;
+	readonly #wake: () => void;
 
 	/** How much of its full tilt the portrait is up to yet, from 0 to 1. */
 	#willingness = 0;
@@ -77,33 +83,44 @@ export class HeroPortrait {
 		this.#lights = find("light");
 		this.#measure = cacheLayout(() => host.getBoundingClientRect(), signal);
 		[this.#sky] = find("sky");
-		this.#task = createFrameTask((seconds) => this.#step(seconds), { signal });
+		this.#wake = createFrameTask((seconds) => this.#step(seconds), { signal });
 
 		onPause(() => {
 			this.#rest();
 		}, signal);
 		onPointer(() => {
-			if (rootState.isPlaying) {
-				this.#updateHovered();
-			}
+			this.#updateHovered();
 		}, signal);
+	}
+
+	/** CSS would run these as often as the screen refreshes, so there they're paused. */
+	#animateLight() {
+		for (const animation of this.#host.getAnimations({ subtree: true })) {
+			if (animation instanceof CSSAnimation) {
+				animation.currentTime = this.#seconds * 1000;
+			}
+		}
 	}
 
 	#paintLight() {
 		const level = smoothstep(0, 1, this.#light);
-		const isLit = this.#light > darkness;
+		const isLit = this.#light > minimumLight;
 
 		for (const light of this.#lights) {
 			light.style.opacity = level.toFixed(4);
 		}
 
-		this.#glow.style.opacity = clamp(level * glowSpeed).toFixed(4);
-
-		this.#host.toggleAttribute("data-awake", isLit);
+		this.#glow.style.opacity = clamp(level * glowHeadStart).toFixed(4);
 
 		if (isLit) {
+			this.#animateLight();
 			this.#constellation ??= new ConstellationCanvas(this.#sky);
-			this.#constellation.paint(this.#lean, level, this.#seconds);
+			this.#constellation.paint(
+				this.#lean,
+				level,
+				this.#seconds,
+				this.#measure().width,
+			);
 		} else {
 			this.#constellation?.remove();
 			this.#constellation = undefined;
@@ -174,8 +191,10 @@ export class HeroPortrait {
 			return;
 		}
 
-		const strength =
-			1.14 * interpolate(0.5, 1, smoothstep(0, 1, this.#willingness));
+		const strength = interpolate(
+			...strengths,
+			smoothstep(0, 1, this.#willingness),
+		);
 		const unit = this.#measure().width / portraitSize;
 		const x =
 			clamp(this.#lean.x / radius, -maximumLean, maximumLean) * this.#hover;
@@ -183,15 +202,18 @@ export class HeroPortrait {
 			clamp(this.#lean.y / radius, -maximumLean, maximumLean) * this.#hover;
 
 		for (const halo of this.#halos) {
-			const distance = Number(halo.dataset.side) * split * unit;
+			const distance =
+				Number(halo.style.getPropertyValue("--direction")) *
+				haloDistance *
+				unit;
 
 			halo.style.transform = `translate(${px(x * distance)}, ${px(y * distance)})`;
 		}
 
 		this.#figure.style.transform = [
-			`translate(${px(x * 4.8 * strength * unit)}, ${px((y * 3.2 - this.#hover * 4) * strength * unit)})`,
-			`rotate(${(x * 0.025 * strength).toFixed(5)}rad)`,
-			`scale(${(1 + 0.05 * this.#hover * strength).toFixed(5)})`,
+			`translate(${px(x * figureDistance.x * strength * unit)}, ${px((y * figureDistance.y - this.#hover * figureLift) * strength * unit)})`,
+			`rotate(${(x * figureRadians * strength).toFixed(5)}rad)`,
+			`scale(${(1 + figureGrowth * this.#hover * strength).toFixed(5)})`,
 		].join(" ");
 	}
 
@@ -204,7 +226,7 @@ export class HeroPortrait {
 			Math.hypot(x, y) < (this.#isHovered ? leaveRadius : enterRadius);
 
 		if (this.#isHovered) {
-			this.#task.wake();
+			this.#wake();
 		}
 	}
 }

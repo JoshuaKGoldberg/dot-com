@@ -1,7 +1,6 @@
 import { interpolate, modulo } from "./math";
 
-/** Degrees per second that hues drift. */
-export const hueDriftRate = 24;
+export const hueDegreesPerSecond = 24;
 
 const distantHue = 225;
 
@@ -42,7 +41,8 @@ export function depthColor(hue: number, depth: number, darkness: number) {
 }
 
 function createDepthColor(hue: number, depth: number, darkness: number) {
-	const shifted = hue + hueBetween(hue, distantHue) * (1 - depth) * 0.35;
+	const shifted =
+		hue + getShortestRotation(hue, distantHue) * (1 - depth) * 0.35;
 	const saturation = interpolate(
 		interpolate(45, 90, depth),
 		interpolate(60, 100, depth),
@@ -57,7 +57,6 @@ function createDepthColor(hue: number, depth: number, darkness: number) {
 	return `hsl(${shifted.toFixed(0)} ${saturation.toFixed(0)}% ${lightness.toFixed(0)}%)`;
 }
 
-/** Shortest rotation, in degrees, from one hue to another. */
-function hueBetween(from: number, to: number) {
+function getShortestRotation(from: number, to: number) {
 	return ((to - from + 540) % 360) - 180;
 }

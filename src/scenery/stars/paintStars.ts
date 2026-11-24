@@ -20,10 +20,9 @@ const temperatures = {
 	],
 };
 
-/** Opacity of all stars when the pointer isn't near. */
 const restingAlpha = 0.18;
 
-/** Opacity of individual stars when the pointer isn't lighting them up. */
+/** Of individual stars, as opposed to all of them at once. */
 const restingBrightness = { dark: 0.65, light: 0.3 };
 
 /** Anything fainter isn't visible, and so isn't worth drawing. */

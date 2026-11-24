@@ -8,7 +8,6 @@ import { drawWave } from "./drawWave";
 
 const namespace = "http://www.w3.org/2000/svg";
 
-/** Links with text at least this large have thicker squiggles. */
 const largeFontSize = 20;
 
 /** Same shape as the static squiggles' images, so that changing from one is seamless. */
@@ -16,7 +15,6 @@ const amplitude = 1.6;
 const period = 14;
 const restingHeight = 0.25;
 
-/** Vertical center of squiggles within their elements. */
 const center = 6;
 
 const settled = 0.004;
@@ -39,8 +37,6 @@ let nextId = 0;
  * Links that wrap onto multiple lines have a squiggle on each line.
  */
 export class Squiggle {
-	readonly link: HTMLElement;
-
 	/** How close the pointer is, from 0 to 1. */
 	target = 0;
 
@@ -48,46 +44,68 @@ export class Squiggle {
 		return this.target === 0 && this.#near < settled;
 	}
 
-	#drawn: DrawnLine[] = [];
-	readonly #fontSize: number;
-
-	/** Where the highlight is, as it catches up to the pointer. */
+	readonly #drawn: DrawnLine[] = [];
 	#highlightX: number | undefined;
-
+	readonly #isAlwaysVisible: boolean;
 	readonly #layer: HTMLElement;
-	#lines: readonly LinkLine[] = [];
+	readonly #link: HTMLElement;
 	#near = 0;
 	readonly #offset: number;
+	readonly #opacity: number;
 	#phase = 0;
-
-	/** Whether the link has a squiggle even when the pointer isn't near. */
-	readonly #rests: boolean;
+	readonly #restingHeight: number;
+	readonly #restingThickness: number;
+	readonly #riseSpeed: number;
+	readonly #thickness: number;
+	readonly #waveSpeed: number;
 
 	constructor(link: HTMLElement, layer: HTMLElement) {
-		this.link = link;
-		this.#fontSize = parseFloat(getComputedStyle(link).fontSize);
+		const { content, height, marginTop } = getComputedStyle(link, "::after");
+		const isStraight = content === "none";
+		const styles = getComputedStyle(link);
+		const thickness = styles.getPropertyValue("--squiggleThickness");
+
+		this.#isAlwaysVisible = link.dataset.squiggle !== "onHover";
 		this.#layer = layer;
-		this.#offset = getOffset(link);
-		this.#rests = link.dataset.squiggle !== "onHover";
+		this.#link = link;
+		this.#opacity =
+			parseFloat(styles.getPropertyValue("--squiggleOpacity") || "100%") / 100;
+		this.#restingHeight = isStraight ? 0 : restingHeight;
+		this.#riseSpeed = Number(
+			styles.getPropertyValue("--squiggleRiseSpeed") || 1,
+		);
+		this.#waveSpeed = Number(
+			styles.getPropertyValue("--squiggleWaveSpeed") || 1,
+		);
+		this.#thickness = thickness
+			? parseFloat(thickness)
+			: parseFloat(styles.fontSize) >= largeFontSize
+				? 2.5
+				: 2;
+		this.#restingThickness = thickness ? this.#thickness : this.#thickness - 1;
+		this.#offset = isStraight
+			? this.#thickness / -2
+			: parseFloat(marginTop) + parseFloat(height) / 2;
 		link.dataset.squiggleLive = "";
 	}
 
-	remove() {
-		delete this.link.dataset.squiggleLive;
-
+	/** Keeps looking as it does now, as moving to a new page restarts transitions. */
+	freeze() {
 		for (const { svg } of this.#drawn) {
-			if (this.isSettled) {
-				svg.remove();
-			} else {
-				fadeAway(svg);
-			}
+			svg.style.filter = getComputedStyle(svg).filter;
+			svg.style.transition = "none";
 		}
 	}
 
-	/** Paints over the link's lines, or where they last were if it's since left the page. */
-	paint(lines = this.#lines) {
-		this.#lines = lines;
+	/** Fades away where it was on screen, now that its link's page is gone. */
+	leave(scrolled: number) {
+		for (const { svg } of this.#drawn) {
+			svg.style.translate = `0 ${px(scrolled)}`;
+			fadeAway(svg);
+		}
+	}
 
+	paint(lines: readonly LinkLine[]) {
 		while (this.#drawn.length > lines.length) {
 			this.#drawn.pop()?.svg.remove();
 		}
@@ -99,12 +117,25 @@ export class Squiggle {
 		}
 	}
 
+	remove() {
+		delete this.#link.dataset.squiggleLive;
+
+		for (const { svg } of this.#drawn) {
+			if (this.isSettled) {
+				svg.remove();
+			} else {
+				fadeAway(svg);
+			}
+		}
+	}
+
 	step(seconds: number, pointerX: number) {
 		const highlightX = this.#highlightX ?? pointerX;
 
 		this.#highlightX = followLight(highlightX, pointerX, seconds);
-		this.#near = damp(this.#near, this.target, 10, seconds);
-		this.#phase -= seconds * this.#near * this.#near * Math.PI * 1.8;
+		this.#near = damp(this.#near, this.target, 10 * this.#riseSpeed, seconds);
+		this.#phase -=
+			seconds * this.#near * this.#near * this.#waveSpeed * Math.PI * 1.8;
 	}
 
 	#paintLine(
@@ -115,16 +146,21 @@ export class Squiggle {
 	) {
 		const near = smoothstep(0, 1, this.#near);
 		const path = drawWave({
-			amplitude: amplitude * interpolate(restingHeight, 1, near),
+			amplitude: amplitude * interpolate(this.#restingHeight, 1, near),
 			period,
 			phase: this.#phase,
 			width,
 			y: center,
 		});
-		const thickness = String(this.#fontSize >= largeFontSize ? 2.5 : 2);
+		const thickness = String(
+			interpolate(this.#restingThickness, this.#thickness, near),
+		);
 
 		svg.style.transform = `translate(${px(left)}, ${px(snap(bottom + this.#offset) - center)})`;
-		svg.style.opacity = String(this.#rests && this.link.isConnected ? 1 : near);
+		svg.style.opacity = String(
+			this.#opacity * (this.#isAlwaysVisible ? 1 : near),
+		);
+		svg.style.setProperty("--resting", String(1 - near));
 		svg.setAttribute("width", String(width));
 		svg.toggleAttribute("data-hovered", this.target === 1);
 
@@ -182,12 +218,14 @@ function createLine(layer: HTMLElement): DrawnLine {
 	const id = `squiggle-${nextId.toString()}`;
 	const highlightId = `${id}-highlight`;
 
+	const end = mixGray("var(--squiggleEnd)");
+	const start = mixGray("var(--squiggleStart)");
 	const gradient = createGradient(id, [
-		["0", "var(--squiggleStart)"],
-		["0.17", "var(--squiggleStart)"],
-		["0.5", "var(--squiggleMiddle)"],
-		["0.83", "var(--squiggleEnd)"],
-		["1", "var(--squiggleEnd)"],
+		["0", start],
+		["0.17", start],
+		["0.5", mixGray("var(--squiggleMiddle)")],
+		["0.83", end],
+		["1", end],
 	]);
 	const highlightMask = createGradient(highlightId, [
 		["0", "transparent"],
@@ -204,7 +242,7 @@ function createLine(layer: HTMLElement): DrawnLine {
 		stroke: `url(#${highlightId})`,
 		"stroke-linecap": "round",
 	});
-	const svg = createElement("svg", { height: "12" }, [
+	const svg = createElement("svg", { height: String(center * 2) }, [
 		gradient,
 		highlightMask,
 		base,
@@ -216,13 +254,8 @@ function createLine(layer: HTMLElement): DrawnLine {
 	return { base, gradient, highlight, highlightMask, svg };
 }
 
-/** How far a link's squiggle is below the bottom of each of its lines. */
-function getOffset(link: HTMLElement) {
-	const { content, height, marginTop } = getComputedStyle(link, "::after");
-
-	return content === "none"
-		? -0.5
-		: parseFloat(marginTop) + parseFloat(height) / 2;
+function mixGray(color: string) {
+	return `color-mix(in srgb, ${color}, var(--squiggleGray) calc(var(--squiggleGrayness) * var(--resting)))`;
 }
 
 /** Rounds to whole screen pixels, as the browser does for static squiggles. */

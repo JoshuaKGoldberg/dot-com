@@ -5,7 +5,6 @@ const secondsToFall = 12;
 
 /** How long the pointer has been lingering near something, from 0 to 1. */
 export class Dwell {
-	/** Eased amount of time lingered. */
 	get level() {
 		return smoothstep(0, 1, this.#amount);
 	}

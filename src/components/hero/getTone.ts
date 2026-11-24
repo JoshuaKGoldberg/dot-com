@@ -2,14 +2,16 @@ import type { ImageMetadata } from "astro";
 
 import sharp from "sharp";
 
-/** Finds the average color of an image, as space-separated red, green, and blue. */
+/** Finds an image's average red, green, and blue. */
 export async function getTone(image: ImageMetadata) {
 	const { fsPath } = image as ImageMetadata & { fsPath: string };
 	const [red, green, blue] = await sharp(fsPath)
-		// Otherwise, invisible pixels' colors would be counted too
-		.resize(1, 1, { fastShrinkOnLoad: false, fit: "fill", kernel: "linear" })
+		.resize(1, 1, {
+			// Shrinking on load counts invisible pixels' colors
+			fastShrinkOnLoad: false,
+			fit: "fill",
+		})
 		.toColorspace("srgb")
-		.ensureAlpha()
 		.raw()
 		.toBuffer();
 

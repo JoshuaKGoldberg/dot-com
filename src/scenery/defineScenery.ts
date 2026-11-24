@@ -1,7 +1,3 @@
-/**
- * Sets up an element's behavior.
- * @param signal Aborted once the element's gone, to tear everything back down.
- */
 export type SceneryCreator = (host: HTMLElement, signal: AbortSignal) => void;
 
 /**

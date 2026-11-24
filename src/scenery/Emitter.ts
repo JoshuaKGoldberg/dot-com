@@ -1,12 +1,16 @@
 export type Listener = () => void;
 
-/** Tells listeners when something's happened, until any signals they have are aborted. */
 export class Emitter {
 	readonly #listeners = new Set<Listener>();
 
 	emit() {
 		for (const listener of this.#listeners) {
-			listener();
+			try {
+				listener();
+			} catch (error) {
+				// One listener failing shouldn't keep the rest from being told
+				reportError(error);
+			}
 		}
 	}
 

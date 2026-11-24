@@ -1,22 +1,18 @@
 import type { Star } from "./createStars";
 
-import { angleToHue, depthColor, hueDriftRate } from "../color";
+import { angleToHue, depthColor, hueDegreesPerSecond } from "../color";
 import { damp, smoothstep } from "../math";
 import { pointer } from "../pointer";
 import { getScreenY, type Sky } from "./sky";
 
 export interface LitStar {
-	/** Pixels from the pointer. */
 	distance: number;
-
 	hue: number;
 	star: Star;
 }
 
-/** Distance from the pointer, in pixels, within which stars are lit up by it. */
-export const lightRadius = 150;
+const lightRadius = 150;
 
-/** Lights up stars around the pointer. */
 export class StarLights {
 	lit: readonly LitStar[] = [];
 
@@ -31,7 +27,7 @@ export class StarLights {
 	paint(context: CanvasRenderingContext2D, sky: Sky, seconds: number) {
 		for (const { hue, star } of this.lit) {
 			context.fillStyle = depthColor(
-				hue + seconds * hueDriftRate,
+				hue + seconds * hueDegreesPerSecond,
 				0.7,
 				sky.darkness,
 			);
@@ -48,7 +44,6 @@ export class StarLights {
 		}
 	}
 
-	/** Brightens stars around the pointer, and dims the rest. */
 	step(seconds: number, stars: readonly Star[], sky: Sky) {
 		const { isPresent, x: pointerX, y: pointerY } = pointer;
 		const lit: LitStar[] = [];

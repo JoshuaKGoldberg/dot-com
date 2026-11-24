@@ -1,5 +1,6 @@
 import { cacheLayout } from "../cacheLayout";
-import { createFrameTask, type FrameTask } from "../frameLoop";
+import { createFrameTask } from "../frameLoop";
+import { getDistance } from "../geometry";
 import { clamp } from "../math";
 import { onPageScroll, pageScroll } from "../pageScroll";
 import { onPointer, pointer } from "../pointer";
@@ -11,28 +12,26 @@ interface MeasuredLink {
 	link: HTMLElement;
 }
 
-/** Distance from the pointer, in pixels, within which squiggles react to it. */
+const forcedColors = matchMedia("(forced-colors: active)");
+
 const reach = 96;
 
 /** Links that have squiggles, other than those that show what's current. */
 const selector =
 	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img))";
 
-/**
- * Draws the squiggles of links that are near the pointer.
- * It's inside of the page's scrolling content, so squiggles stay with their links.
- */
+/** It's inside of the page's scrolling content, so squiggles stay with their links. */
 export class SquiggleOverlay {
 	readonly #host: HTMLElement;
 	readonly #measureLinks: () => MeasuredLink[];
 	#needsScan = false;
 	readonly #squiggles = new Map<HTMLElement, Squiggle>();
-	readonly #task: FrameTask;
+	readonly #wake: () => void;
 
 	constructor(host: HTMLElement, signal: AbortSignal) {
 		this.#host = host;
 		this.#measureLinks = cacheLayout(measureLinks, signal);
-		this.#task = createFrameTask((seconds) => this.#step(seconds), { signal });
+		this.#wake = createFrameTask((seconds) => this.#step(seconds), { signal });
 
 		const clear = () => {
 			this.#clear();
@@ -40,10 +39,21 @@ export class SquiggleOverlay {
 
 		const scan = () => {
 			this.#needsScan = true;
-			this.#task.wake();
+			this.#wake();
 		};
 
-		onPageScroll(scan, signal);
+		document.addEventListener(
+			"astro:before-swap",
+			() => {
+				this.#leave();
+			},
+			{ signal },
+		);
+		onPageScroll(() => {
+			if (pointer.isPresent || this.#squiggles.size) {
+				scan();
+			}
+		}, signal);
 		onPause(clear, signal);
 		onPointer(scan, signal);
 		signal.addEventListener("abort", clear);
@@ -57,11 +67,33 @@ export class SquiggleOverlay {
 		this.#squiggles.clear();
 	}
 
+	#leave() {
+		const squiggles = [...this.#squiggles.values()];
+		const top = pageScroll.top;
+
+		for (const squiggle of squiggles) {
+			squiggle.freeze();
+		}
+
+		this.#squiggles.clear();
+
+		document.addEventListener(
+			"astro:after-swap",
+			() => {
+				for (const squiggle of squiggles) {
+					squiggle.leave(pageScroll.top - top);
+				}
+			},
+			{ once: true },
+		);
+	}
+
 	#scan() {
-		const { isPresent } = pointer;
+		// Links keep their own underlines then, as these aren't shown
+		const isPresent = pointer.isPresent && !forcedColors.matches;
 
 		for (const { lines, link } of this.#measureLinks()) {
-			const nearness = isPresent ? clamp(1 - getDistance(lines) / reach) : 0;
+			const nearness = isPresent ? clamp(1 - getNearest(lines) / reach) : 0;
 			let squiggle = this.#squiggles.get(link);
 
 			if (!squiggle && nearness) {
@@ -86,14 +118,9 @@ export class SquiggleOverlay {
 		for (const [link, squiggle] of this.#squiggles) {
 			const lines = measured.find((other) => other.link === link)?.lines;
 
-			if (!link.isConnected) {
-				squiggle.target = 0;
-			}
-
 			squiggle.step(seconds, pointer.x);
 
-			// Links that leave the page fade out, but ones scrolled away are just gone
-			if (squiggle.isSettled || (link.isConnected && !lines)) {
+			if (squiggle.isSettled || !lines) {
 				squiggle.remove();
 				this.#squiggles.delete(link);
 			} else {
@@ -105,16 +132,11 @@ export class SquiggleOverlay {
 	}
 }
 
-function getDistance(lines: readonly LinkLine[]) {
-	const pointerY = pointer.y + pageScroll.top;
+function getNearest(lines: readonly LinkLine[]) {
+	const { x, y } = pointer;
 
 	return Math.min(
-		...lines.map(({ bottom, left, right, top }) =>
-			Math.hypot(
-				Math.max(left - pointer.x, 0, pointer.x - right),
-				Math.max(top - pointerY, 0, pointerY - bottom),
-			),
-		),
+		...lines.map((line) => getDistance({ x, y: y + pageScroll.top }, line)),
 	);
 }
 

@@ -3,20 +3,22 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import { portraitSize, stageSize } from "~/scenery/portrait/sizes";
+
 import { getTone } from "./getTone";
 import GlassRing from "./GlassRing.astro";
 
 export interface HeroPortraitImages {
-	/** Blurred silhouette of the cutout, used only for its alpha */
+	/** Blurred silhouette of the cutout, used only for its alpha. */
 	halo: ImageMetadata;
 
-	/** Person cut out from their photo, with extra pixels below the circle, and maybe above it */
+	/** Person cut out from their photo, with extra pixels below the circle, and maybe above it. */
 	image: ImageMetadata;
 
-	/** Whether the scene mostly blends into the page's background, if it's a busy one */
+	/** Makes busy scenes less distracting. */
 	isSceneFaint?: boolean;
 
-	/** What's behind them in their photo, for the same area as the circle */
+	/** What's behind them in their photo, for the same area as the circle. */
 	scene?: ImageMetadata;
 }
 
@@ -29,30 +31,29 @@ const { alt, halo, image, isSceneFaint, scene } = Astro.props;
 /** Height, relative to its width, of a cutout that starts at the top of the circle. */
 const usualHeight = 544 / 512;
 
-/** Which way each of the hues of light from behind the person moves as they split apart. */
-const haloSides = [-1, 0, 1];
+const haloDirections = [-1, 0, 1];
+
+const imageSizes = {
+	sizes: "(width >= 43.75em) 16rem, clamp(6rem, 20vmin, 12rem)",
+	width: portraitSize,
+	widths: [144, 192, 256, 384, 512],
+};
 
 const overhang = image.height / image.width - usualHeight;
+const stageOverflow = (stageSize / portraitSize - 1) / 2;
 ---
 
-<hero-portrait class="portrait">
-	<div
-		aria-hidden="true"
-		class="backdrop"
-		data-layer="backdrop"
-		data-scene-faint={isSceneFaint}
-		data-tone={scene && (await getTone(scene))}
-	>
+<hero-portrait class="portrait" style={{ "--stageOverflow": stageOverflow }}>
+	<div aria-hidden="true" class="backdrop">
 		<div class="aurora resting"></div>
 		{scene && (
 			<div class:list={["scene", isSceneFaint && "faint"]}>
 				<Image
 					alt=""
 					class="scene-image"
-					densities={[1, 2]}
 					loading="eager"
 					src={scene}
-					width={256}
+					{...imageSizes}
 				/>
 			</div>
 		)}
@@ -63,16 +64,20 @@ const overhang = image.height / image.width - usualHeight;
 	</div>
 	<div aria-hidden="true" class="constellation" data-portrait="sky"></div>
 	<GlassRing />
-	<GlassRing awake data-portrait="light" />
+	<GlassRing data-portrait="light" isLit />
 	<div class="clip" data-layer="figure" data-tone={await getTone(image)}>
 		<div class="figure" data-portrait="figure">
-			<div aria-hidden="true" class="glow" data-portrait="glow">
-				{haloSides.map((side) => (
+			<div
+				aria-hidden="true"
+				class="glow"
+				data-portrait="glow"
+				style={{ "--halo": `url("${halo.src}")` }}
+			>
+				{haloDirections.map((direction) => (
 					<div
 						class="halo"
 						data-portrait="halo"
-						data-side={side}
-						style={{ "--halo": `url("${halo.src}")`, "--side": side }}
+						style={{ "--direction": direction }}
 					>
 						<div class="halo-colors" />
 					</div>
@@ -81,13 +86,12 @@ const overhang = image.height / image.width - usualHeight;
 			<Image
 				alt={alt}
 				class="cutout"
-				densities={[1, 2]}
 				fetchpriority="high"
 				loading="eager"
 				quality="high"
 				src={image}
 				style={{ "--overhang": `${(overhang * 100).toFixed(3)}%` }}
-				width={256}
+				{...imageSizes}
 			/>
 		</div>
 	</div>
@@ -96,11 +100,13 @@ const overhang = image.height / image.width - usualHeight;
 <style>
 	.portrait {
 		--size: calc(var(--heroSizeLarge) * var(--heroScale, 1));
+		--stageInset: calc(-1 * var(--size) * var(--stageOverflow));
 
 		view-transition-name: portrait;
 		display: block;
 		height: var(--size);
 		position: relative;
+		-webkit-user-select: none;
 		user-select: none;
 		width: var(--size);
 	}
@@ -121,7 +127,6 @@ const overhang = image.height / image.width - usualHeight;
 		overflow: hidden;
 	}
 
-	/* What was really behind them, with them removed from it */
 	.scene {
 		inset: 0;
 		position: absolute;
@@ -151,7 +156,6 @@ const overhang = image.height / image.width - usualHeight;
 		scale: 1.2;
 	}
 
-	/* Curtains of light hanging from the top of the circle */
 	.aurora,
 	.aurora::after,
 	.aurora::before {
@@ -204,10 +208,10 @@ const overhang = image.height / image.width - usualHeight;
 
 	/* Photos can be dark in either theme, so light over them is always strong */
 	.vivid {
-		--curtainJade: rgb(56 255 153);
-		--curtainCornflower: rgb(51 191 255);
-		--curtainWisteria: rgb(173 115 255);
-		--curtainRose: rgb(255 102 158);
+		--curtainJade: var(--brightJade);
+		--curtainCornflower: var(--brightCornflower);
+		--curtainWisteria: var(--brightWisteria);
+		--curtainRose: var(--brightRose);
 		--back: 0.6;
 		--front: 0.85;
 
@@ -222,7 +226,6 @@ const overhang = image.height / image.width - usualHeight;
 		will-change: opacity, transform;
 	}
 
-	/* Light from behind the person, whose hues come apart in the pointer's direction */
 	.glow {
 		inset: 0;
 		position: absolute;
@@ -230,15 +233,17 @@ const overhang = image.height / image.width - usualHeight;
 
 	.halo {
 		aspect-ratio: 1;
-		left: -21.875%;
+		left: var(--stageInset);
 		mask: var(--halo) center / 100% 100% no-repeat;
 		opacity: var(--haloStrength);
 		position: absolute;
-		top: calc(-0.21875 * var(--size));
-		width: 143.75%;
+		right: var(--stageInset);
+		top: var(--stageInset);
 	}
 
 	.halo-colors {
+		animation: turn 48s linear calc(var(--direction) * 16s - 16s) infinite
+			paused;
 		background: conic-gradient(
 			var(--ringJade),
 			var(--ringCornflower),
@@ -255,7 +260,7 @@ const overhang = image.height / image.width - usualHeight;
 
 	/* Fades out before it could reach the text beside the portrait */
 	.constellation {
-		inset: -21.875%;
+		inset: var(--stageInset);
 		mask: radial-gradient(closest-side, black 80%, transparent);
 	}
 
@@ -271,7 +276,7 @@ const overhang = image.height / image.width - usualHeight;
 	 */
 	.clip {
 		view-transition-name: portrait-figure;
-		clip-path: inset(-25% 0 0 0 round 0 0 50% 50%);
+		clip-path: var(--portraitClip);
 	}
 
 	.figure {
@@ -296,16 +301,13 @@ const overhang = image.height / image.width - usualHeight;
 		}
 	}
 
-	.portrait[data-awake] .awake::before {
-		animation: drift 40s ease-in-out infinite alternate;
+	/* HeroPortrait.ts advances these, only while there's light to see them in */
+	.aurora.awake::before {
+		animation: drift 40s ease-in-out infinite alternate paused;
 	}
 
-	.portrait[data-awake] .awake::after {
-		animation: drift-back 52s ease-in-out infinite alternate;
-	}
-
-	.portrait[data-awake] .halo-colors {
-		animation: turn 48s linear calc(var(--side) * 16s - 16s) infinite;
+	.aurora.awake::after {
+		animation: drift-back 52s ease-in-out infinite alternate paused;
 	}
 
 	:global(html[data-motion="paused"]) :is(.awake, .figure, .glow) {

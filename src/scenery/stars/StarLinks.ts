@@ -9,22 +9,19 @@ import { getScreenY, type Sky } from "./sky";
 interface Link {
 	from: Star;
 	hue: number;
+	isWanted: boolean;
 
 	/** How revealed the link is, from 0 to 1. */
 	reveal: number;
 
 	to: Star;
-	wanted: boolean;
 }
 
 /** Links fade out as they approach this length, so none is ever seen stretching. */
 const maximumLinkLength = 130;
 
 const fadeLength = 100;
-/** Larger than any star's id, so that pairs of ids have unique keys. */
-const idSpan = 10_000;
-
-const maximumStars = 48;
+const maximumLinkedStars = 48;
 const minimumGlow = 0.2;
 
 /**
@@ -38,7 +35,7 @@ export class StarLinks {
 		return !this.#links.size;
 	}
 
-	readonly #links = new Map<number, Link>();
+	readonly #links = new Map<string, Link>();
 
 	clear() {
 		this.#links.clear();
@@ -84,13 +81,13 @@ export class StarLinks {
 	/** Links each lit star to its nearest one that's closer to the pointer. */
 	relink(lit: readonly LitStar[], sky: Sky) {
 		for (const link of this.#links.values()) {
-			link.wanted = false;
+			link.isWanted = false;
 		}
 
 		const nearest = lit
 			.filter(({ star }) => star.glow > minimumGlow)
 			.sort((a, b) => a.distance - b.distance)
-			.slice(0, maximumStars);
+			.slice(0, maximumLinkedStars);
 
 		for (const [index, { hue, star }] of nearest.entries()) {
 			const parent = findNearest(
@@ -103,19 +100,19 @@ export class StarLinks {
 				continue;
 			}
 
-			const key = parent.id * idSpan + star.id;
+			const key = `${parent.id.toString()}-${star.id.toString()}`;
 			const existing = this.#links.get(key);
 
 			if (existing) {
 				existing.hue = hue;
-				existing.wanted = true;
+				existing.isWanted = true;
 			} else {
 				this.#links.set(key, {
 					from: parent,
 					hue,
+					isWanted: true,
 					reveal: 0,
 					to: star,
-					wanted: true,
 				});
 			}
 		}
@@ -125,12 +122,12 @@ export class StarLinks {
 		for (const [key, link] of this.#links) {
 			link.reveal = damp(
 				link.reveal,
-				link.wanted ? 1 : 0,
-				link.wanted ? 1.8 : 1.6,
+				link.isWanted ? 1 : 0,
+				link.isWanted ? 1.8 : 1.6,
 				seconds,
 			);
 
-			if (!link.wanted && link.reveal < 0.01) {
+			if (!link.isWanted && link.reveal < 0.01) {
 				this.#links.delete(key);
 			}
 		}

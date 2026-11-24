@@ -1,14 +1,8 @@
 import type { Point } from "../geometry";
 
 import { pointer } from "../pointer";
+import { portraitSize } from "./sizes";
 
-/** Width of a portrait in its own units, which have an origin at its center. */
-export const portraitSize = 256;
-
-/** Width of the area around a portrait that its light may reach. */
-export const stageSize = 368;
-
-/** Converts the pointer's position to a portrait's units. */
 export function getPortraitPointer({
 	height,
 	left,

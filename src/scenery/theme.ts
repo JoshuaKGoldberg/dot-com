@@ -1,51 +1,56 @@
-import { fadeMilliseconds } from "~/theme/fadeTheme";
+import { fadeMilliseconds, maximumFadeMilliseconds } from "~/theme/fadeTheme";
 
 import { Emitter, type Listener } from "./Emitter";
 import { createFrameTask } from "./frameLoop";
-import { moveToward } from "./math";
+import { moveToward, smoothstep } from "./math";
 import { onRootState, rootState } from "./rootState";
 
 const changes = new Emitter();
 
+let progress = Number(rootState.isDark);
+
 /** The page's color theme, which changes gradually. */
 export const theme = {
 	/** How far it is from light to dark, from 0 to 1. */
-	darkness: Number(rootState.isDark),
+	get darkness() {
+		return smoothstep(0, 1, progress);
+	},
 };
 
-/** Calls back each time the theme has changed, including while it's changing. */
+/** Includes each frame while the theme is changing. */
 export function onTheme(listener: Listener, signal: AbortSignal) {
 	changes.listen(listener, signal);
 }
 
-const fading = createFrameTask(
+const wakeFading = createFrameTask(
 	(seconds) => {
 		const { themeFading } = document.documentElement.dataset;
 
-		theme.darkness = moveToward(
-			theme.darkness,
+		progress = moveToward(
+			progress,
 			Number(rootState.isDark),
 			(seconds * 1000) / fadeMilliseconds,
 		);
 		changes.emit();
 
 		// Styles that are read from the page may finish changing a little later
-		return (
-			themeFading !== undefined || theme.darkness !== Number(rootState.isDark)
-		);
+		return themeFading !== undefined || progress !== Number(rootState.isDark);
 	},
-	{ isSmooth: true, signal: new AbortController().signal },
+	{ isSmooth: true },
 );
 
 onRootState(() => {
-	if (theme.darkness === Number(rootState.isDark)) {
+	if (progress === Number(rootState.isDark)) {
 		return;
 	}
 
 	if (rootState.isPlaying) {
-		fading.wake();
+		wakeFading();
 	} else {
-		theme.darkness = Number(rootState.isDark);
+		progress = Number(rootState.isDark);
 		changes.emit();
+		setTimeout(() => {
+			changes.emit();
+		}, maximumFadeMilliseconds);
 	}
 });
