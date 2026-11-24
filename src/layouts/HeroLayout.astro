@@ -14,7 +14,6 @@ interface Props {
 	portrait: HeroPortraitImages;
 	preview?: string;
 	primary: string;
-	size?: "large" | "medium";
 	slug?: string;
 	title?: string;
 }
@@ -23,7 +22,6 @@ const {
 	description,
 	preview,
 	primary,
-	size,
 	slug = primary.toLowerCase(),
 	title,
 } = Astro.props;
@@ -35,12 +33,7 @@ const {
 	image={preview ?? `images/${slug}.png`}
 	title={title ? `${title} | Josh Goldberg` : "Josh Goldberg"}
 >
-	<Hero
-		alt={Astro.props.alt}
-		portrait={Astro.props.portrait}
-		primary={primary}
-		size={size}
-	>
+	<Hero alt={Astro.props.alt} portrait={Astro.props.portrait} primary={primary}>
 		<HeroSecondary>
 			<slot name="secondary" />
 		</HeroSecondary>

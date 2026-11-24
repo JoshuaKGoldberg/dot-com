@@ -26,10 +26,6 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 
 <html lang="en">
 	<Head description={description} image={image} title={title} />
-	<script>
-		document.body.classList.add("javascriptEnabled");
-	</script>
-	<div id="#top"></div>
 	<MainArea as="body" class={className} data-fits-screen={fitsScreen}>
 		<SkipLink />
 		<Header />
@@ -48,6 +44,7 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 <script>
 	import { decodePortrait } from "~/transitions/decodePortrait";
 	import { shiftTones } from "~/transitions/shiftTones";
+	import { skipOffscreen } from "~/transitions/skipOffscreen";
 
 	document.addEventListener("astro:before-preparation", (event) => {
 		const load = event.loader;
@@ -55,6 +52,7 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 		event.loader = async () => {
 			await load();
 			await decodePortrait(event.newDocument);
+			skipOffscreen();
 		};
 	});
 
@@ -77,6 +75,8 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 		}
 	});
 	document.addEventListener("astro:after-swap", () => {
+		skipOffscreen();
+
 		const shift = previousTop - getContentTop();
 
 		document.documentElement.style.setProperty(
@@ -102,7 +102,7 @@ const { class: className, description, fitsScreen, image, title } = Astro.props;
 	}
 
 	/* Whatever height is left is shared with the footer, then mostly above the hero */
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		[data-fits-screen] main {
 			display: grid;
 			flex: 1.1 0 auto;

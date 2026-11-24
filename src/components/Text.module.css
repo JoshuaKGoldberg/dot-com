@@ -36,14 +36,6 @@
 	font-size: var(--fontSizeMedium);
 }
 
-.fontSizeSubtitle {
-	font-size: var(--fontSizeSubtitle);
-}
-
-.fontSizeTitle {
-	font-size: var(--fontSizeTitle);
-}
-
 .fontWeightLight {
 	font-weight: var(--fontWeightLight);
 }

@@ -2,6 +2,8 @@
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 
+import RootSettings from "./RootSettings.astro";
+
 interface Props {
 	description: string;
 	image: string;
@@ -92,6 +94,7 @@ const metaPairs = [
 
 <head>
 	<meta charset="utf-8" />
+	<RootSettings />
 	<link
 		href="/favicon-dark.svg"
 		media="(prefers-color-scheme: dark)"
@@ -127,6 +130,5 @@ const metaPairs = [
 	<meta content={Astro.generator} name="generator" />
 	<meta content="width=device-width" name="viewport" />
 	<title>{title}</title>
+	<ClientRouter />
 </head>
-
-<ClientRouter />

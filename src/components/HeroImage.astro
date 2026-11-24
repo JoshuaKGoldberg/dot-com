@@ -11,8 +11,7 @@ interface Props {
 	src: ImageMetadata;
 }
 
-// The image's displayed size at most, per --heroSizeSmall
-const size = 144;
+const largestDisplayedSize = 128;
 ---
 
 <div class="hero-image">
@@ -26,10 +25,10 @@ const size = 144;
 			densities={[1, 2]}
 			fetchpriority="high"
 			fit="cover"
-			height={size}
+			height={largestDisplayedSize}
 			loading="eager"
 			src={Astro.props.src}
-			width={size}
+			width={largestDisplayedSize}
 		/>
 	</div>
 	<GlassRing />
@@ -37,12 +36,10 @@ const size = 144;
 
 <style>
 	.hero-image {
-		--imageSize: var(--heroSizeSmall);
-
 		view-transition-name: portrait;
-		height: var(--imageSize);
+		height: var(--heroSizeSmall);
 		position: relative;
-		width: var(--imageSize);
+		width: var(--heroSizeSmall);
 	}
 
 	.figure {

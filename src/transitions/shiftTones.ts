@@ -5,20 +5,8 @@ const namespace = "http://www.w3.org/2000/svg";
 /** Farthest that a channel is brightened or darkened, so that people stay recognizable. */
 const maximumGain = 2.2;
 
-/** Roughly how opaque scenes are over portraits' backdrops. */
-const sceneOpacity = 0.8;
-const faintSceneOpacity = 0.62;
-
-/** Parts of portraits that transition separately, and how to find their average color. */
-const layers = { backdrop: getBackdropColor, figure: getTone };
-
-interface Shift {
-	gains: Color;
-	layer: string;
-}
-
 /**
- * Shifts the colors of portraits between pages, as one transitions into another.
+ * Shifts the colors of people between pages, as one transitions into another.
  * The old one's become the new one's, which start off as the old one's, so that
  * they're of the same average color the whole way through.
  */
@@ -27,22 +15,16 @@ export function shiftTones(
 	newPage: Document,
 	transition: ViewTransition,
 ) {
-	const shifts = Object.entries(layers).flatMap(
-		([layer, getColor]): Shift[] => {
-			const from = getColor(findLayer(oldPage, layer), oldPage);
-			const to = getColor(findLayer(newPage, layer), oldPage);
+	const from = getTone(oldPage);
+	const to = getTone(newPage);
 
-			return from && to ? [{ gains: getGains(from, to), layer }] : [];
-		},
-	);
-
-	if (!shifts.length) {
+	if (!from || !to) {
 		return;
 	}
 
 	transition.ready.then(
 		() => {
-			animateShifts(shifts, transition);
+			animateShift(getGains(from, to), transition);
 		},
 		() => {
 			// Transitions that were skipped don't have any colors to shift
@@ -74,13 +56,13 @@ function addFilter(filters: SVGElement, id: string) {
 	};
 }
 
-function animateShifts(shifts: Shift[], transition: ViewTransition) {
+function animateShift(gains: Color, transition: ViewTransition) {
 	const animation = document
 		.getAnimations()
 		.find(
 			({ effect }) =>
 				effect instanceof KeyframeEffect &&
-				effect.pseudoElement === "::view-transition-old(portrait)",
+				effect.pseudoElement === "::view-transition-old(portrait-figure)",
 		);
 
 	if (!animation) {
@@ -89,21 +71,15 @@ function animateShifts(shifts: Shift[], transition: ViewTransition) {
 
 	const root = document.documentElement;
 	const filters = document.createElementNS(namespace, "svg");
-	const setters = shifts.map(({ gains, layer }) => ({
-		gains,
-		setNew: addFilter(filters, `tone-new-${layer}`),
-		setOld: addFilter(filters, `tone-old-${layer}`),
-	}));
+	const setNew = addFilter(filters, "tone-new");
+	const setOld = addFilter(filters, "tone-old");
 	let frame = 0;
 
 	const step = () => {
 		const progress = animation.effect?.getComputedTiming().progress ?? 1;
 
-		for (const { gains, setNew, setOld } of setters) {
-			setOld(gains.map((gain) => gain ** progress));
-			setNew(gains.map((gain) => gain ** (progress - 1)));
-		}
-
+		setOld(gains.map((gain) => gain ** progress));
+		setNew(gains.map((gain) => gain ** (progress - 1)));
 		frame = requestAnimationFrame(step);
 	};
 
@@ -118,34 +94,9 @@ function animateShifts(shifts: Shift[], transition: ViewTransition) {
 	filters.style.position = "absolute";
 	filters.style.width = "0";
 	document.body.append(filters);
-	root.dataset.shiftingTones = shifts.map(({ layer }) => layer).join(" ");
+	root.dataset.shiftingTones = "";
 	step();
 	transition.finished.then(stop, stop);
-}
-
-function findLayer(page: Document, layer: string) {
-	return page.querySelector<HTMLElement>(`[data-layer=${layer}]`);
-}
-
-/** Only pages that have been shown have styles, but backdrops are the same on each. */
-function getBackdropColor(element: HTMLElement | null, shownPage: Document) {
-	const backdrop = findLayer(shownPage, "backdrop");
-	if (!backdrop || !element) {
-		return undefined;
-	}
-
-	const color = getComputedStyle(backdrop).backgroundColor.match(/[\d.]+/g);
-	const scene = getTone(element);
-	const opacity =
-		element.dataset.sceneFaint === undefined ? sceneOpacity : faintSceneOpacity;
-
-	return color
-		?.slice(0, 3)
-		.map((channel, index) =>
-			scene
-				? Number(channel) * (1 - opacity) + scene[index] * opacity
-				: Number(channel),
-		);
 }
 
 function getGains(from: Color, to: Color): Color {
@@ -157,6 +108,9 @@ function getGains(from: Color, to: Color): Color {
 	);
 }
 
-function getTone(element: HTMLElement | null): Color | undefined {
-	return element?.dataset.tone?.split(" ").map(Number);
+function getTone(page: Document): Color | undefined {
+	return page
+		.querySelector<HTMLElement>("[data-layer=figure]")
+		?.dataset.tone?.split(" ")
+		.map(Number);
 }

@@ -25,7 +25,7 @@ export default defineConfig({
 			name: "Newsreader",
 			provider: fontProviders.google(),
 			styles: ["normal", "italic"],
-			subsets: ["latin"],
+			subsets: ["latin", "latin-ext"],
 			weights: ["300 600"],
 		},
 		{
@@ -55,6 +55,6 @@ export default defineConfig({
 		processor: unified(),
 		syntaxHighlight: "prism",
 	},
-	prefetch: true,
+	prefetch: { prefetchAll: false },
 	site,
 });

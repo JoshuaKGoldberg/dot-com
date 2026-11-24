@@ -6,11 +6,7 @@ interface Props {
 }
 ---
 
-<Text
-	as="p"
-	class:list={["secondary", Astro.props.size ?? "normal"]}
-	fontSize="subtitle"
->
+<Text as="p" class:list={["secondary", Astro.props.size ?? "normal"]}>
 	<slot />
 </Text>
 
@@ -26,7 +22,7 @@ interface Props {
 		max-width: calc(23rem * var(--heroScale, 1));
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.secondary {
 			margin: 0.5rem 0 0;
 		}

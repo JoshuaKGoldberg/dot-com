@@ -3,9 +3,9 @@ import HeaderToggle from "./HeaderToggle.astro";
 ---
 
 <HeaderToggle
-	clear="Clear motion preference"
-	id="motion"
+	clearLabel="Clear motion preference"
 	label="Pause animations"
+	setting="motion"
 >
 	<svg aria-hidden="true" class="play-pause" viewBox="0 0 24 24">
 		<path d="M8 5.5v13"></path>
@@ -13,18 +13,6 @@ import HeaderToggle from "./HeaderToggle.astro";
 		<path class="fold lower" d="M16 12v6.5"></path>
 	</svg>
 </HeaderToggle>
-
-<script is:inline>
-	createRootSetting({
-		apply(motion, toggle) {
-			document.documentElement.dataset.motion = motion;
-			toggle.setAttribute("aria-pressed", String(motion === "paused"));
-		},
-		id: "motion",
-		options: ["playing", "paused"],
-		query: "(prefers-reduced-motion: reduce)",
-	});
-</script>
 
 <style>
 	.play-pause {
@@ -34,8 +22,7 @@ import HeaderToggle from "./HeaderToggle.astro";
 		stroke-width: 1.25px;
 	}
 
-	/* Closer to what's beside it, as its icons are narrower than most */
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.play-pause {
 			right: -0.2rem;
 		}

@@ -15,8 +15,6 @@ const fontSizes = {
 	medium: styles.fontSizeMedium,
 	small: styles.fontSizeSmall,
 	smaller: styles.fontSizeSmaller,
-	subtitle: styles.fontSizeSubtitle,
-	title: styles.fontSizeTitle,
 };
 
 export type FontSize = keyof typeof fontSizes;

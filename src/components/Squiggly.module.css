@@ -17,7 +17,8 @@
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	mask: url("~/assets/squiggles/rising.svg") repeat-x 0 calc(-8px * var(--rise));
+	mask: url("~/assets/squiggles/rising-inline.svg") repeat-x 0
+		calc(-8px * var(--rise));
 	pointer-events: none;
 	position: absolute;
 	transition:
@@ -29,12 +30,26 @@
 
 .squiggly[data-squiggle="current"]::after {
 	background: var(--litGradient, var(--colorEmphasized));
+	mask-image: url("~/assets/squiggles/rising.svg");
 }
 
 .squiggly:is([aria-selected] > *, :focus-visible, :hover):not(
 		[aria-current]
 	)::after {
 	--rise: 12;
+}
+
+/* Chrome uses the fallback above while --nearness is transitioning */
+@supports (color: oklch(from red l c h)) {
+	@media (forced-colors: none) {
+		.squiggly[data-squiggle="current"][data-lit]::after {
+			background: var(--litGradient);
+		}
+	}
+}
+
+.squiggly:not([data-squiggle="current"]):is(:focus-visible, :hover)::after {
+	filter: saturate(1.5);
 }
 
 .squiggly[data-squiggle="current"]:not([aria-current]):hover::after {

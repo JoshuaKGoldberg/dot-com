@@ -2,7 +2,7 @@
 import { Text } from "./Text";
 ---
 
-<Text as="h1" font="display" fontSize="title" tone="strong">
+<Text as="h1" font="display" tone="strong">
 	<slot />
 </Text>
 
@@ -10,5 +10,6 @@ import { Text } from "./Text";
 	h1 {
 		font-size: calc(var(--fontSizeTitle) * var(--heroScale, 1));
 		line-height: 0.98;
+		overflow-wrap: break-word;
 	}
 </style>

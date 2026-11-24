@@ -1,6 +1,5 @@
-import { getCurrent } from "~/utils";
-
-const duration = 280;
+import { readMilliseconds } from "~/scenery/css";
+import { getAriaCurrent } from "~/utils";
 
 /**
  * Changes which header link is current, as the page they're on does.
@@ -9,9 +8,9 @@ const duration = 280;
  * be hovered. So links animate from exactly how they looked just before that.
  * @returns Starts animating, for once links are on the new page.
  */
-export function keepLinkStyles() {
+export function keepLinkStyles({ pathname }: URL) {
 	const links = Array.from(
-		document.querySelectorAll<HTMLElement>("[data-header-link]"),
+		document.querySelectorAll<HTMLAnchorElement>("[data-header-link]"),
 		(link) => {
 			const { color } = getComputedStyle(link);
 			const squiggle = getComputedStyle(link, "::after");
@@ -23,11 +22,10 @@ export function keepLinkStyles() {
 	);
 
 	return () => {
+		const duration = readMilliseconds("--transitionMedium");
+
 		for (const { color, filter, link, opacity, rise } of links) {
-			const current = getCurrent(
-				link.getAttribute("href") ?? "",
-				location.pathname,
-			);
+			const current = getAriaCurrent(link.getAttribute("href") ?? "", pathname);
 
 			if (current) {
 				link.setAttribute("aria-current", current);

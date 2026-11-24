@@ -2,7 +2,6 @@
 	:root {
 		color-scheme: light;
 
-		--litDimming: 0.055;
 		--litGlare: 0;
 		--litLift: -0.04;
 
@@ -46,18 +45,40 @@
 		--squiggleStart: hsl(230 64% 30% / 74%);
 		--squiggleMiddle: hsl(170 64% 30% / 74%);
 		--squiggleEnd: hsl(266 64% 30% / 74%);
+		--squiggleGray: hsl(0 0% 30% / 74%);
 		--squiggleHighlight: rgb(14 36 108 / 95%);
 		--squiggleVivid: saturate(1.7) brightness(1.35);
 		--transitionVivid: 2s ease-in-out filter;
 
+		--squiggleGrayness: 33%;
+		--squiggleRestingStart: color-mix(
+			in srgb,
+			var(--squiggleStart),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
+		--squiggleRestingMiddle: color-mix(
+			in srgb,
+			var(--squiggleMiddle),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
+		--squiggleRestingEnd: color-mix(
+			in srgb,
+			var(--squiggleEnd),
+			var(--squiggleGray) var(--squiggleGrayness)
+		);
 		--squiggleLine: linear-gradient(
 			to right,
 			transparent,
-			var(--squiggleStart) 17%,
-			var(--squiggleMiddle) 50%,
-			var(--squiggleEnd) 83%,
+			var(--squiggleRestingStart) 17%,
+			var(--squiggleRestingMiddle) 50%,
+			var(--squiggleRestingEnd) 83%,
 			transparent
 		);
+
+		--brightJade: rgb(56 255 153);
+		--brightCornflower: rgb(51 191 255);
+		--brightWisteria: rgb(173 115 255);
+		--brightRose: rgb(255 102 158);
 
 		--fontSizeSmaller: 0.875rem;
 		--fontSizeSmall: 1rem;
@@ -65,13 +86,10 @@
 		--fontSizeSubtitle: clamp(1.4rem, 1.2rem + 1.2vw, 1.625rem);
 		--fontSizeTitle: clamp(2.5rem, 1.9rem + 2.4vw, 3.25rem);
 
-		/* Only for the text of blog posts */
-		--fontSizeBody: 1.125rem;
+		--fontSizeBlogBody: 1.125rem;
 
 		--fontWeightLight: 300;
 		--fontWeightBold: 600;
-
-		--letterSpacing: 0px;
 
 		--lineHeightBase: 1.25;
 		--lineHeightParagraph: 1.55;
@@ -80,17 +98,23 @@
 		--transitionMedium: 280ms;
 		--transitionSlow: 490ms;
 		--transitionSlowest: 700ms;
+		--transitionPageOut: 140ms;
+		--transitionPortrait: 300ms;
 
 		--heightMinimumFromHeader: clamp(7rem, 15vmin, 9rem);
 
-		--heroSizeSmall: clamp(6rem, 12vmin, 9rem);
-		--heroSizeLarge: clamp(6rem, 20vmin, 12rem);
+		--heroSizeSmall: 6rem;
+		--heroSizeLarge: clamp(min(6rem, 27vw), 20vmin, 12rem);
 
-		/* Background effects are weaker behind the center column, easing in beside it */
+		--litDimming: 0.055;
+
+		/* People may be taller than the circles that they're in, but not wider */
+		--portraitClip: inset(-25% 0 0 0 round 0 0 50% 50%);
+
 		--columnFade: 160px;
 		--columnStrength: 50%;
 
-		--widthFull: 63rem;
+		--widthFull: 62rem;
 		--widthSlim: 47rem;
 		--widthTableOfContents: 15rem;
 		--widthPagePadding: clamp(0.5rem, 5vw, 2rem);
@@ -113,22 +137,18 @@
 
 	html {
 		background: var(--colorBackground);
-		overflow-y: auto;
+		scroll-padding-top: 1rem;
+		scroll-timeline: --page block;
+		overflow-y: scroll;
 	}
 
 	body {
-		background: var(--colorBackground);
-		font-optical-sizing: auto;
+		display: flow-root;
 		font-synthesis-weight: none;
 		font-weight: var(--fontWeightLight);
-		letter-spacing: var(--letterSpacing);
 		line-height: var(--lineHeightBase);
-		overflow-y: auto;
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		scroll-timeline: --page block;
-		scrollbar-gutter: stable;
+		min-height: 100dvh;
+		position: relative;
 		width: 100%;
 	}
 
@@ -169,15 +189,15 @@
 		--colorMuted: #93a5bf;
 		--colorSubtle: #102a40;
 
-		--auroraJade: rgb(56 255 153);
-		--auroraCornflower: rgb(51 191 255);
-		--auroraWisteria: rgb(173 115 255);
-		--auroraRose: rgb(255 102 158);
+		--auroraJade: var(--brightJade);
+		--auroraCornflower: var(--brightCornflower);
+		--auroraWisteria: var(--brightWisteria);
+		--auroraRose: var(--brightRose);
 
-		--curtainJade: rgb(56 255 153);
-		--curtainCornflower: rgb(51 191 255);
-		--curtainWisteria: rgb(173 115 255);
-		--curtainRose: rgb(255 102 158);
+		--curtainJade: var(--brightJade);
+		--curtainCornflower: var(--brightCornflower);
+		--curtainWisteria: var(--brightWisteria);
+		--curtainRose: var(--brightRose);
 		--curtainSaturation: 0.4;
 		--curtainStrength: 0.4;
 		--discBottom: #1a232d;
@@ -198,13 +218,12 @@
 		--squiggleStart: hsl(230 44% 74% / 64%);
 		--squiggleMiddle: hsl(170 44% 74% / 64%);
 		--squiggleEnd: hsl(266 44% 74% / 64%);
+		--squiggleGray: hsl(0 0% 74% / 64%);
 		--squiggleHighlight: rgb(198 222 255 / 95%);
 		--squiggleVivid: saturate(2.6) brightness(1.12);
 
-		/* Light text on navy reads thinner: a little more weight, leading, and tracking */
+		/* Light text on navy reads thinner */
 		--fontWeightLight: 360;
-		--letterSpacing: 0.064px;
-		--lineHeightParagraph: 1.6;
 
 		/* Note: some of these are unused in Prism, but would be in Shiki. */
 		--astro-code-color-text: #d3d6f0;
@@ -221,11 +240,9 @@
 		--astro-code-token-string: #b3baf2;
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		html,
-		body {
-			scroll-behavior: smooth;
-		}
+	/* Navigating between pages shouldn't visibly scroll */
+	html[data-motion="playing"]:not([data-astro-transition]) {
+		scroll-behavior: smooth;
 	}
 }
 
@@ -241,13 +258,9 @@
 		var(--transitionMedium) --nearness;
 }
 
-/*
- * Links are lit in shifting hues where the pointer is, per LitLinks.ts.
- * Their contrast rises too, to make up for harder to read hues and brighter auroras.
- * Light text's colors soften as well, the more of a glare there is behind them.
- */
+/* Contrast rises with light, to make up for harder to read hues and brighter auroras */
 @supports (color: oklch(from red l c h)) {
-	:is([data-header-link], [role="tab"] > *)[data-lit] {
+	[data-lit] {
 		--litReach: 56px;
 		--softening: calc(var(--glare) * var(--litGlare));
 		--chroma: calc(c * (1 + 0.6 * (1 - var(--softening)) * var(--nearness)));
@@ -279,7 +292,7 @@
 		);
 
 		@media (forced-colors: none) {
-			/* Fades out, over what it's being lit as */
+			/* Fades out to reveal the lit gradient behind it */
 			-webkit-text-fill-color: color-mix(
 				in srgb,
 				currentcolor calc((1 - var(--nearness)) * 100%),
@@ -295,14 +308,11 @@
 }
 
 /* Themes' colors are already transitioning, per fadeTheme.ts */
-[data-theme-fading] :is(body, body :not([data-clear])) {
+[data-theme-fading] :is(body, body :not([data-clear], [data-toggle] svg)) {
 	transition: none !important;
 }
 
-/*
- * Only the page's content and portrait change between pages, beneath the header.
- * Everything else isn't part of transitions, so as to never stop moving.
- */
+/* Whatever isn't part of transitions never stops moving */
 :root {
 	view-transition-name: none;
 }
@@ -310,22 +320,52 @@
 ::view-transition-group(content),
 ::view-transition-group(fader),
 ::view-transition-group(header),
-::view-transition-new(fader),
 ::view-transition-new(header) {
 	animation: none;
 }
 
 /* One page leaves before the next arrives, so that they're never both readable */
 ::view-transition-old(content) {
-	animation: page-out 140ms ease-in both;
+	animation: page-out var(--transitionPageOut) ease-in both;
 	translate: 0 var(--contentShift);
 }
 
 ::view-transition-new(content) {
-	animation: page-in 320ms ease-out 140ms both;
+	animation: page-in 320ms ease-out var(--transitionPageOut) both;
 }
 
-/* Slides from where it was on the last page to where it is on the next */
+::view-transition-old(header) {
+	display: none;
+}
+
+/* Anything that was only in view on one of the pages comes or goes with it */
+::view-transition-new(header):only-child,
+::view-transition-new(portrait):only-child,
+::view-transition-new(portrait-figure):only-child {
+	animation: page-in 320ms ease-out var(--transitionPageOut) both;
+}
+
+::view-transition-old(header):only-child,
+::view-transition-old(portrait):only-child,
+::view-transition-old(portrait-figure):only-child {
+	animation: page-out var(--transitionPageOut) ease-in both;
+	display: block;
+}
+
+/* Setting animations also removes the blending that keeps fades between them opaque */
+::view-transition-new(fader),
+::view-transition-old(fader) {
+	mix-blend-mode: plus-lighter;
+}
+
+::view-transition-new(fader) {
+	animation: page-in var(--transitionPageOut) ease-in both;
+}
+
+::view-transition-old(fader) {
+	animation: page-out var(--transitionPageOut) ease-in both;
+}
+
 ::view-transition-group(portrait),
 ::view-transition-group(portrait-figure) {
 	animation-duration: 480ms;
@@ -336,34 +376,21 @@
 ::view-transition-new(portrait-figure),
 ::view-transition-old(portrait),
 ::view-transition-old(portrait-figure) {
-	animation-duration: 300ms;
+	animation-duration: var(--transitionPortrait);
 }
 
-/*
- * Done by the time that sliding has visibly settled.
- * People are blurriest halfway, when each is as visible as the other.
- * The circles that they're in stay sharp, including where they're cut off by one.
- */
+/* People are blurriest halfway, when each is as visible as the other */
 ::view-transition-image-pair(portrait-figure) {
-	animation: portrait-blur 300ms ease-in-out both;
-	clip-path: inset(-25% 0 0 0 round 0 0 50% 50%);
+	animation: portrait-blur var(--transitionPortrait) ease-in-out both;
+	clip-path: var(--portraitClip);
 }
 
-/* Colors meet along the way too, per shiftTones.ts */
-[data-shifting-tones~="backdrop"]::view-transition-new(portrait) {
-	filter: url("#tone-new-backdrop");
+[data-shifting-tones]::view-transition-new(portrait-figure) {
+	filter: url("#tone-new");
 }
 
-[data-shifting-tones~="backdrop"]::view-transition-old(portrait) {
-	filter: url("#tone-old-backdrop");
-}
-
-[data-shifting-tones~="figure"]::view-transition-new(portrait-figure) {
-	filter: url("#tone-new-figure");
-}
-
-[data-shifting-tones~="figure"]::view-transition-old(portrait-figure) {
-	filter: url("#tone-old-figure");
+[data-shifting-tones]::view-transition-old(portrait-figure) {
+	filter: url("#tone-old");
 }
 
 @keyframes portrait-blur {
@@ -384,30 +411,29 @@
 	}
 }
 
-::view-transition-old(fader),
-::view-transition-old(header) {
-	display: none;
-}
-
 [data-motion="paused"]::view-transition-group(*),
 [data-motion="paused"]::view-transition-image-pair(*),
 [data-motion="paused"]::view-transition-new(*),
 [data-motion="paused"]::view-transition-old(*) {
-	animation: none;
+	animation: none !important;
 }
 
 [data-motion="paused"]::view-transition-old(*) {
-	display: none;
+	display: none !important;
 }
 
-@media (min-width: 700px) {
+@media (width >= 43.75em) {
+	html {
+		scroll-padding-top: var(--heightMinimumFromHeader);
+	}
+
 	:root {
 		--heroSizeSmall: 128px;
 		--heroSizeLarge: clamp(12rem, 32vw, 16rem);
 	}
 }
 
-@media (min-width: 1017px) {
+@media (width >= 63.5625em) {
 	:root {
 		--heroSizeLarge: 256px;
 		--widthPagePadding: 0;

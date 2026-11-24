@@ -1,5 +1,5 @@
 ---
-import { getCurrent } from "~/utils";
+import { getAriaCurrent } from "~/utils";
 
 import { Squiggly } from "./Squiggly";
 
@@ -11,11 +11,10 @@ const { href } = Astro.props;
 ---
 
 <Squiggly
-	aria-current={getCurrent(href, Astro.url.pathname)}
+	aria-current={getAriaCurrent(href, Astro.url.pathname)}
 	as="a"
 	class="link"
 	data-header-link
-	fontWeight="bold"
 	href={href}
 	{...(href.startsWith("http") && { target: "_blank" })}
 	variant="current"
@@ -27,13 +26,13 @@ const { href } = Astro.props;
 	.link {
 		display: inline-block;
 		font-size: var(--linkSize, var(--fontSizeMedium));
+		font-weight: var(--linkWeight, var(--fontWeightBold));
 	}
 
 	.link[aria-current] {
 		color: var(--colorLit, var(--colorEmphasized));
 	}
 
-	/* It's already here. Links for the page's section still go to somewhere else. */
 	.link[aria-current="page"] {
 		cursor: default;
 	}

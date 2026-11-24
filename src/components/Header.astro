@@ -1,7 +1,6 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import MotionToggle from "./MotionToggle.astro";
-import RootSetting from "./RootSetting.astro";
 import { Text } from "./Text";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -14,21 +13,20 @@ const links = [
 ---
 
 <div class="persisted" transition:persist="header">
-	<div class="fader" role="presentation"></div>
-	<Text as="header" fontWeight="bold">
+	<div class="fader"></div>
+	<Text as="header">
 		<div class="first">
 			<HeaderLink href="/">Josh Goldberg</HeaderLink>
 			<div class="toggles">
-				<RootSetting />
 				<MotionToggle />
 				<ThemeToggle />
 			</div>
 		</div>
-		<div class="links">
+		<nav aria-label="Main" class="links">
 			{links.map(([text, href]) => {
 				return <HeaderLink href={href}>{text}</HeaderLink>;
 			})}
-		</div>
+		</nav>
 	</Text>
 </div>
 
@@ -36,8 +34,8 @@ const links = [
 	import { keepLinkStyles } from "~/transitions/keepLinkStyles";
 
 	// The header is kept between pages, so that changes to its links are animated
-	document.addEventListener("astro:before-swap", () => {
-		document.addEventListener("astro:after-swap", keepLinkStyles(), {
+	document.addEventListener("astro:before-swap", ({ to }) => {
+		document.addEventListener("astro:after-swap", keepLinkStyles(to), {
 			once: true,
 		});
 	});
@@ -61,6 +59,8 @@ const links = [
 	}
 
 	.first {
+		--linkWeight: 500;
+
 		align-items: center;
 		display: flex;
 		justify-content: space-between;
@@ -82,7 +82,7 @@ const links = [
 		gap: 0 1rem;
 	}
 
-	@media (max-width: 699px) {
+	@media (width < 43.75em) {
 		.first {
 			--linkSize: var(--fontSizeSubtitle);
 		}
@@ -98,12 +98,13 @@ const links = [
 		}
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		header {
+			flex-wrap: nowrap;
 			gap: 1.5rem;
-			justify-content: space-between;
-			max-width: calc(var(--widthFull) - 1rem);
+			max-width: var(--widthFull);
 			position: fixed;
+			top: 0;
 			z-index: 1;
 		}
 
@@ -135,13 +136,19 @@ const links = [
 		/* Pages too short to scroll have nothing to hide, and no timeline to play */
 		@supports (animation-timeline: scroll()) {
 			.fader {
-				--fadeDistance: 5rem;
-
-				animation: fader-in linear both;
-				/* Without a var(), minifying merges the timeline into the shorthand */
-				animation-range: 0 var(--fadeDistance);
+				animation-fill-mode: both;
+				animation-name: fader-in;
+				animation-range: 0 5rem;
 				animation-timeline: --page;
+				animation-timing-function: linear;
 				opacity: 0;
+			}
+		}
+
+		@media (forced-colors: active) {
+			.fader {
+				background: Canvas;
+				height: 5rem;
 			}
 		}
 
@@ -160,19 +167,30 @@ const links = [
 			opacity: 0.5;
 			position: absolute;
 			right: 1.5rem;
-			/* Centered with how tall the text and icons look */
 			top: calc(50% - 0.5rem);
 			width: 1px;
 		}
 
 		.links {
+			gap: 0 1.5rem;
+			justify-content: end;
 			position: relative;
-			gap: 1.5rem;
-			justify-content: space-between;
 		}
 	}
 
-	@media (min-width: 1017px) {
+	/* Otherwise printed on top of every page */
+	@media print {
+		header {
+			position: static;
+		}
+
+		.fader,
+		.toggles {
+			display: none;
+		}
+	}
+
+	@media (width >= 63.5625em) {
 		header {
 			padding: 2rem 0;
 		}

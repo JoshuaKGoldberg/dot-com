@@ -5,9 +5,13 @@ import Sun from "astro-heroicons/outline/Sun.astro";
 import HeaderToggle from "./HeaderToggle.astro";
 ---
 
-<HeaderToggle clear="Clear theme preference" id="theme" label="Theme toggle">
-	<Moon data-state="dark" />
-	<Sun data-out data-state="light" />
+<HeaderToggle
+	clearLabel="Clear theme preference"
+	label="Dark theme"
+	setting="theme"
+>
+	<Moon class="moon" />
+	<Sun class="sun" />
 </HeaderToggle>
 
 <script>
@@ -16,17 +20,30 @@ import HeaderToggle from "./HeaderToggle.astro";
 	document.addEventListener("theme:before-change", fadeTheme);
 </script>
 
-<script is:inline>
-	createRootSetting({
-		apply(theme, toggle) {
-			document.documentElement.classList.toggle("dark", theme === "dark");
-			toggle.setAttribute("aria-label", `Theme toggle (current: ${theme})`);
-		},
-		beforeChange() {
-			document.dispatchEvent(new Event("theme:before-change"));
-		},
-		id: "theme",
-		options: ["light", "dark"],
-		query: "(prefers-color-scheme: dark)",
-	});
-</script>
+<style>
+	/* The old icon orbits out one side, then the new one orbits in from the other */
+	.moon,
+	.sun {
+		transform-origin: 50% 1.75rem;
+	}
+
+	:global(html[data-motion="playing"]) :is(.moon, .sun) {
+		transition:
+			var(--transitionSlow) calc(var(--transitionSlow) / 2) opacity,
+			var(--transitionSlow) calc(var(--transitionSlow) / 2) transform;
+	}
+
+	:global(html.dark) .sun,
+	:global(html:not(.dark)) .moon {
+		opacity: 0;
+		transition-delay: 0s;
+	}
+
+	:global(html.dark) .sun {
+		transform: rotate(-90deg);
+	}
+
+	:global(html:not(.dark)) .moon {
+		transform: rotate(90deg);
+	}
+</style>

@@ -9,13 +9,10 @@ interface Props {
 	class?: string | undefined;
 	portrait: HeroPortraitImages;
 	primary: string;
-	size?: "large" | "medium";
 }
-
-const { size = "medium" } = Astro.props;
 ---
 
-<div class:list={["hero", size, Astro.props.class]}>
+<div class:list={["hero", Astro.props.class]}>
 	<div class="half first">
 		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait} />
 	</div>
@@ -27,29 +24,23 @@ const { size = "medium" } = Astro.props;
 
 <style>
 	.hero {
-		margin: clamp(2rem, 8vmin, 8rem) auto;
+		--heroScale: 0.75;
+		--heroSecondarySize: var(--fontSizeMedium);
+		--heroTertiarySize: var(--fontSizeSmaller);
+
+		margin: clamp(1.15rem, 4.5vmin, 2rem) auto clamp(1.3rem, 5.35vmin, 2.4rem);
 		overflow-x: clip;
-		padding: 0 var(--widthPagePadding) 1rem;
+		padding: 0 var(--widthPagePadding) 0.67rem;
 		position: relative;
 		width: var(--widthFull);
 		max-width: 100%;
 	}
 
-	/* Scales the portrait and the text alongside it, and the space around them */
-	.medium {
-		--heroScale: 0.75;
-		--heroSecondarySize: var(--fontSizeMedium);
-		--heroTertiarySize: var(--fontSizeSmaller);
-		--spaceAboveScale: 0.567;
-		--spaceBelowScale: 0.667;
-		--space: clamp(2rem, 8vmin, 8rem);
-
-		margin-block: calc(var(--space) * var(--spaceAboveScale))
-			calc(var(--space) * var(--spaceBelowScale));
-		padding-bottom: calc(1rem * var(--spaceBelowScale));
-	}
-
 	:global([data-fits-screen]) .hero {
+		--heroScale: 1;
+		--heroSecondarySize: var(--fontSizeSubtitle);
+		--heroTertiarySize: var(--fontSizeMedium);
+
 		grid-row: 2;
 		margin-block: clamp(0rem, 16dvh - 6.4rem, 2rem) 0;
 		padding-bottom: 0;
@@ -65,39 +56,19 @@ const { size = "medium" } = Astro.props;
 		display: flow-root;
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.hero {
 			align-items: center;
 			display: flex;
 			gap: 2.5rem;
-			height: 35vh;
 			flex-direction: row;
-			margin: clamp(8.5rem, 10vh, 10rem) 0 clamp(5rem, 10vh, 14rem);
+			margin: max(7.4rem, 4rem + 10vh) 0 max(3.7rem, 18.25vh - 4rem);
 			padding: 0;
 		}
 
-		.medium {
-			--headerHeight: 6rem;
-			--portraitHeight: calc(var(--heroSizeLarge) * var(--heroScale));
-			--extra: max(0px, (35vh - var(--portraitHeight)) / 2);
-			--above: calc(
-				clamp(8.5rem, 10vh, 10rem) - var(--headerHeight) + var(--extra)
-			);
-			--below: calc(clamp(5rem, 10vh, 14rem) + var(--extra));
-
-			height: auto;
-			margin-block: calc(
-					var(--headerHeight) + var(--above) * var(--spaceAboveScale)
-				)
-				calc(var(--below) * var(--spaceBelowScale));
-			padding-bottom: 0;
-		}
-
-		/* Starts beneath the header, which is fixed */
 		:global([data-fits-screen]) .hero {
 			--heroSizeLarge: clamp(10rem, 36dvh, 16rem);
 
-			height: auto;
 			margin-block: 0;
 			padding: 4.5rem 0 1.5rem;
 		}

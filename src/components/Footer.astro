@@ -29,12 +29,16 @@ import { Text } from "./Text";
 		width: 100%;
 	}
 
+	/* Keeps its contrast with the aurora behind it */
+	:global(html:has(aurora-band[edge="bottom"][data-awake])) footer {
+		--colorMuted: var(--colorForeground);
+	}
+
 	:global([data-fits-screen]) footer {
 		display: grid;
 		flex: 1 0 auto;
-		/* Twice as much space above as below */
 		grid-template-rows: 2fr auto 1fr;
-		padding-block: clamp(0.7rem, 4vh, 2rem) clamp(0.35rem, 2vh, 1rem);
+		padding-block: clamp(0.7rem, 6vh - 1.2rem, 2rem) clamp(0.35rem, 2vh, 1rem);
 	}
 
 	:global([data-fits-screen]) .credit {
@@ -55,18 +59,22 @@ import { Text } from "./Text";
 		padding: 0 0.55em;
 	}
 
-	/* Rises into view as it's scrolled to */
 	@supports (animation-timeline: view()) {
 		.credit {
-			--fadeEnd: 6%;
-
-			animation: emerge linear both;
-			/* Without a var(), minifying merges the timeline into the shorthand */
-			animation-range: entry 0% cover var(--fadeEnd);
+			animation-fill-mode: both;
+			animation-name: emerge;
+			animation-range: entry 0% cover 6%;
 			animation-timeline: view();
+			animation-timing-function: linear;
 		}
 
 		:global(html[data-motion="paused"]) .credit {
+			animation: none;
+		}
+	}
+
+	@media print {
+		.credit {
 			animation: none;
 		}
 	}

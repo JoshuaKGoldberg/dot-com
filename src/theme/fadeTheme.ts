@@ -1,71 +1,22 @@
-/** How long it takes for anything other than text to change themes. */
 export const fadeMilliseconds = 350;
+const startingGraceMilliseconds = 100;
+
+export const maximumFadeMilliseconds =
+	fadeMilliseconds + startingGraceMilliseconds;
+
+const timing = `${fadeMilliseconds.toString()}ms ease-in-out`;
 
 /** Text is quicker, as partway through it's the same color as what's behind it. */
 const textTiming = "150ms linear 100ms";
-const timing = `${fadeMilliseconds.toString()}ms ease-in-out`;
 
-/** Time after a fade before styles stop expecting one, as it doesn't start right away. */
-const grace = 100;
+const textProperty =
+	/^--(?:astro-code|color(?!Background|Subtle)|font|icon|lit)/;
 
-const textProperties = {
-	"<color>": [
-		"--astro-code-color-deleted",
-		"--astro-code-color-inserted",
-		"--astro-code-color-text",
-		"--astro-code-token-comment",
-		"--astro-code-token-constant",
-		"--astro-code-token-function",
-		"--astro-code-token-keyword",
-		"--astro-code-token-link",
-		"--astro-code-token-parameter",
-		"--astro-code-token-punctuation",
-		"--astro-code-token-string",
-		"--astro-code-token-string-expression",
-		"--colorEmphasized",
-		"--colorFaint",
-		"--colorForeground",
-		"--colorForegroundExtra",
-		"--colorMuted",
-	],
-	"<length>": ["--letterSpacing"],
-	"<number>": ["--fontWeightLight", "--iconInversion", "--lineHeightParagraph"],
-};
-
-const otherProperties = {
-	"<color>": [
-		"--auroraCornflower",
-		"--auroraJade",
-		"--auroraRose",
-		"--auroraWisteria",
-		"--colorBackground",
-		"--colorSubtle",
-		"--curtainCornflower",
-		"--curtainJade",
-		"--curtainRose",
-		"--curtainWisteria",
-		"--discBottom",
-		"--discGlow",
-		"--discMiddle",
-		"--discTop",
-		"--ringCornflower",
-		"--ringJade",
-		"--ringRose",
-		"--ringShine",
-		"--ringWisteria",
-		"--squiggleEnd",
-		"--squiggleHighlight",
-		"--squiggleMiddle",
-		"--squiggleStart",
-	],
-	"<number>": ["--curtainSaturation", "--curtainStrength", "--haloStrength"],
-};
-
-const initialValues: Record<string, string> = {
-	"<color>": "transparent",
-	"<length>": "0px",
-	"<number>": "0",
-};
+/** Only custom properties that are registered with their types can transition. */
+const types = [
+	{ initialValue: "0", matches: isNumber, syntax: "<number>" },
+	{ initialValue: "transparent", matches: isColor, syntax: "<color>" },
+];
 
 let timer: ReturnType<typeof setTimeout> | undefined;
 let transition: string | undefined;
@@ -80,7 +31,7 @@ export function fadeTheme() {
 	const root = document.documentElement;
 
 	if (!transition) {
-		transition = createTransition();
+		transition = createTransition(getComputedStyle(root));
 
 		// Nothing transitions from values that were from before it was registered
 		getComputedStyle(root).getPropertyValue("--colorBackground");
@@ -88,33 +39,66 @@ export function fadeTheme() {
 
 	root.dataset.themeFading = "";
 	root.style.transition = transition;
+	root.style.transitionBehavior = "allow-discrete";
 
 	clearTimeout(timer);
 	timer = setTimeout(() => {
 		delete root.dataset.themeFading;
 		root.style.removeProperty("transition");
-	}, fadeMilliseconds + grace);
+	}, maximumFadeMilliseconds);
 }
 
-/** Only custom properties with known types can transition, so this registers them. */
-function createTransition() {
+function createTransition(styles: CSSStyleDeclaration) {
+	// Reading is slow after registering, so all of it's done before any of that
+	const properties = getThemedProperties()
+		.map((name) => ({ name, value: styles.getPropertyValue(name) }))
+		.filter(({ name, value }) => register(name, value))
+		.map(({ name }) => name);
+
 	return [
-		...register(otherProperties).map((name) => `${name} ${timing}`),
-		...register(textProperties).map((name) => `${name} ${textTiming}`),
+		`color-scheme ${timing}`,
+		...properties.map(
+			(name) => `${name} ${textProperty.test(name) ? textTiming : timing}`,
+		),
 	].join(", ");
 }
 
-function register(properties: Record<string, string[]>) {
-	return Object.entries(properties).flatMap(([syntax, names]) => {
-		for (const name of names) {
-			CSS.registerProperty({
-				inherits: true,
-				initialValue: initialValues[syntax],
-				name,
-				syntax,
-			});
-		}
+function getRules(rules: CSSRuleList): CSSStyleRule[] {
+	return Array.from(rules).flatMap((rule) =>
+		rule instanceof CSSStyleRule
+			? rule
+			: rule instanceof CSSGroupingRule
+				? getRules(rule.cssRules)
+				: [],
+	);
+}
 
-		return names;
-	});
+function getThemedProperties() {
+	return Array.from(document.styleSheets)
+		.filter(({ href }) => !href || new URL(href).origin === location.origin)
+		.flatMap((sheet) => getRules(sheet.cssRules))
+		.filter((rule) => rule.selectorText === "html.dark")
+		.flatMap((rule) => Array.from(rule.style))
+		.filter((name) => name.startsWith("--"));
+}
+
+function isColor(value: string) {
+	return CSS.supports("color", value);
+}
+
+function isNumber(value: string) {
+	return !Number.isNaN(Number(value));
+}
+
+function register(name: string, value: string) {
+	const type = types.find(({ matches }) => matches(value));
+	if (!type) {
+		return false;
+	}
+
+	const { initialValue, syntax } = type;
+
+	CSS.registerProperty({ inherits: true, initialValue, name, syntax });
+
+	return true;
 }
