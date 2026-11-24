@@ -1,5 +1,11 @@
 {
-	"dictionaries": ["css", "html", "node", "npm", "typescript"],
+	"dictionaries": [
+		"css",
+		"html",
+		"node",
+		"npm",
+		"typescript"
+	],
 	"ignorePaths": [
 		".all-contributorsrc",
 		"CHANGELOG.md",
@@ -306,6 +312,7 @@
 		"humblebrag",
 		"hyperfocusing",
 		"ified",
+		"inclusivity",
 		"influencers",
 		"intaking",
 		"jetlagged",
