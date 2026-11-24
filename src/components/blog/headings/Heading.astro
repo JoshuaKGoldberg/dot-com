@@ -64,6 +64,13 @@ const linkable = rest.id &&
 		}
 	}
 
+	/* Has the table of contents' margin to be in, so that it never wraps its heading */
+	@media (hover: hover) and (width >= 63.5625em) {
+		.heading-link {
+			position: absolute;
+		}
+	}
+
 	@media print {
 		.heading-link {
 			display: none;
