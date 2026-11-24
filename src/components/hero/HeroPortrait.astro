@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 import { getOverhang, type Portrait } from "~/portraits";
 import { portraitSize, stageSize } from "~/scenery/portrait/sizes";
 
+import FadeImagesIn from "./FadeImagesIn.astro";
 import { getTone } from "./getTone";
 import GlassRing from "./GlassRing.astro";
 
@@ -33,6 +34,7 @@ const stageOverflow = (stageSize / portraitSize - 1) / 2;
 				<Image
 					alt=""
 					class="scene-image"
+					data-fades-in
 					loading="eager"
 					src={scene}
 					{...imageSizes}
@@ -68,6 +70,7 @@ const stageOverflow = (stageSize / portraitSize - 1) / 2;
 			<Image
 				alt={alt}
 				class="cutout"
+				data-fades-in
 				fetchpriority="high"
 				loading="eager"
 				quality="high"
@@ -78,6 +81,8 @@ const stageOverflow = (stageSize / portraitSize - 1) / 2;
 		</div>
 	</div>
 </hero-portrait>
+
+<FadeImagesIn />
 
 <style>
 	.portrait {

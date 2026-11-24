@@ -3,6 +3,7 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import FadeImagesIn from "./hero/FadeImagesIn.astro";
 import { getTone } from "./hero/getTone";
 import GlassRing from "./hero/GlassRing.astro";
 
@@ -22,6 +23,7 @@ const largestDisplayedSize = 128;
 	>
 		<Image
 			alt={Astro.props.alt}
+			data-fades-in
 			densities={[1, 2]}
 			fetchpriority="high"
 			fit="cover"
@@ -33,6 +35,8 @@ const largestDisplayedSize = 128;
 	</div>
 	<GlassRing />
 </div>
+
+<FadeImagesIn />
 
 <style>
 	.hero-image {
