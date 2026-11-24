@@ -2,13 +2,14 @@
 import bluesky from "~/assets/icons/bluesky.svg";
 import github from "~/assets/icons/github.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
+import { socialUrls } from "~/constants";
 
 import SocialImage from "./SocialImage.astro";
 
 const socials = [
-	["Bluesky", "https://bsky.app/profile/joshuakgoldberg.com", bluesky],
-	["GitHub", "https://github.com/JoshuaKGoldberg", github],
-	["Mastodon", "https://fosstodon.org/@JoshuaKGoldberg", mastodon],
+	["Bluesky", socialUrls.bluesky, bluesky],
+	["GitHub", socialUrls.github, github],
+	["Mastodon", socialUrls.mastodon, mastodon],
 ] as const;
 ---
 
@@ -31,12 +32,5 @@ const socials = [
 		--socialSize: 1.5rem;
 
 		display: flex;
-		transition: var(--transitionMedium) scale;
-	}
-
-	@media (hover: hover) {
-		.social:hover {
-			scale: 1.15;
-		}
 	}
 </style>

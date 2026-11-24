@@ -1,8 +1,10 @@
+import type { Margin } from "../column";
+
 import { modulo } from "../math";
 
 export interface Sky {
 	darkness: number;
-	dwell: { left: number; right: number };
+	dwell: Record<Margin, number>;
 
 	/** Height of the repeating area stars are placed in. */
 	period: number;

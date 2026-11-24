@@ -20,7 +20,7 @@ const reach = 96;
 const selector =
 	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img))";
 
-/** It's inside of the page's scrolling content, so squiggles stay with their links. */
+/** Squiggles are inside of the page's scrolling content, so they stay with their links. */
 export class SquiggleOverlay {
 	readonly #host: HTMLElement;
 	readonly #measureLinks: () => MeasuredLink[];
@@ -49,6 +49,8 @@ export class SquiggleOverlay {
 			},
 			{ signal },
 		);
+		document.addEventListener("focusin", scan, { signal });
+		document.addEventListener("focusout", scan, { signal });
 		onPageScroll(() => {
 			if (pointer.isPresent || this.#squiggles.size) {
 				scan();
@@ -102,7 +104,8 @@ export class SquiggleOverlay {
 			}
 
 			if (squiggle) {
-				squiggle.target = nearness;
+				squiggle.isNear = nearness > 0;
+				squiggle.target = link.matches(":focus-visible") ? 1 : nearness;
 			}
 		}
 	}

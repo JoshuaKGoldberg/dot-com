@@ -33,7 +33,7 @@ export function fadeTheme() {
 	if (!transition) {
 		transition = createTransition(getComputedStyle(root));
 
-		// Nothing transitions from values that were from before it was registered
+		// Values from before registering can't be transitioned from, so this computes new ones
 		getComputedStyle(root).getPropertyValue("--colorBackground");
 	}
 
@@ -49,7 +49,7 @@ export function fadeTheme() {
 }
 
 function createTransition(styles: CSSStyleDeclaration) {
-	// Reading is slow after registering, so all of it's done before any of that
+	// Reading is slow after registering, so everything's read first
 	const properties = getThemedProperties()
 		.map((name) => ({ name, value: styles.getPropertyValue(name) }))
 		.filter(({ name, value }) => register(name, value))

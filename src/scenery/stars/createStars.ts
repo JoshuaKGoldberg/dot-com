@@ -1,5 +1,5 @@
 import { type Column, columnAlpha } from "../column";
-import { clamp } from "../math";
+import { clamp, interpolate } from "../math";
 import { seededRandom } from "../random";
 
 export interface Star {
@@ -34,7 +34,7 @@ export interface StarBounds {
 	width: number;
 }
 
-/** Pixels that stars take to thicken over, where a margin is any narrower than that. */
+/** Shortest distance that stars thicken over, however narrow the margin. */
 const narrowestGradient = 140;
 
 const areaPerCandidate = 217;
@@ -57,10 +57,7 @@ export function createStars({ column, period, width }: StarBounds) {
 		const y = random() * period;
 		const marginDepth = getMarginDepth(x, column, width);
 
-		if (
-			random() >
-			densityInColumn + (densityAtEdge - densityInColumn) * marginDepth
-		) {
+		if (random() > interpolate(densityInColumn, densityAtEdge, marginDepth)) {
 			continue;
 		}
 
@@ -77,7 +74,7 @@ export function createStars({ column, period, width }: StarBounds) {
 		stars.push({
 			alpha:
 				(0.18 + magnitude * 0.66) *
-				(0.35 + 0.65 * marginDepth) *
+				interpolate(0.35, 1, marginDepth) *
 				columnAlpha(x, column),
 			depth,
 			glow: 0,

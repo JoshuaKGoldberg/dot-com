@@ -19,7 +19,7 @@ export function ChartFigure(props: ChartFigureProps) {
 				margin: 0,
 			}}
 		>
-			<p
+			<figcaption
 				style={{
 					"font-family": "var(--fontDisplay)",
 					"font-size": "1.5rem",
@@ -28,7 +28,7 @@ export function ChartFigure(props: ChartFigureProps) {
 				}}
 			>
 				{props.title}
-			</p>
+			</figcaption>
 			{props.caption}
 			<div
 				aria-label={props.title}

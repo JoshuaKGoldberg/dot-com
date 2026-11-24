@@ -1,6 +1,6 @@
 import type { Rectangle } from "../geometry";
 
-import { type Column, minimumMargin } from "../column";
+import { type Column, type Margin, minimumMargin } from "../column";
 import { footerDwell } from "../footerDwell";
 
 export interface FooterBounds {
@@ -26,17 +26,17 @@ export interface Region {
 	spread: number;
 }
 
-export type RegionName = "bottom" | "left" | "right";
+export type RegionName = "bottom" | Margin;
 
 export type Regions = ReadonlyMap<RegionName, Region>;
 
 interface RegionContext {
 	column: Column;
-	dwell: { left: number; right: number };
+	dwell: Record<Margin, number>;
 	footer: FooterBounds | undefined;
 	height: number;
 	marginOffset: number;
-	spread: number;
+	spread: Record<Margin, number>;
 	width: number;
 }
 
@@ -49,27 +49,26 @@ export function createRegions({
 	spread,
 	width,
 }: RegionContext): Regions {
-	const margin = {
+	const getMargin = (name: Margin) => ({
+		dwell: dwell[name],
 		offset: marginOffset,
-		smallGraphLimit: 11 * spread,
-		smallGraphsPerSecond: spread,
-		spread,
-	};
+		smallGraphLimit: 11 * spread[name],
+		smallGraphsPerSecond: spread[name],
+		spread: spread[name],
+	});
 	const regions = new Map<RegionName, Region>();
 
 	if (column.left > minimumMargin) {
 		regions.set("left", {
-			...margin,
+			...getMargin("left"),
 			bounds: { bottom: height, left: 0, right: column.left, top: 0 },
-			dwell: dwell.left,
 		});
 	}
 
 	if (width - column.right > minimumMargin) {
 		regions.set("right", {
-			...margin,
+			...getMargin("right"),
 			bounds: { bottom: height, left: column.right, right: width, top: 0 },
-			dwell: dwell.right,
 		});
 	}
 

@@ -1,5 +1,7 @@
 import type { Graph, Vertex } from "./createGraph";
 
+export const snarkBlocks = [5, 7, 9, 11, 13, 15];
+
 const blockSize = 8;
 
 /** One block's vertices, around straight up. */

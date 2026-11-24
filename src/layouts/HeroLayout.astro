@@ -1,40 +1,39 @@
 ---
-import type { HeroPortraitImages } from "~/components/hero/HeroPortrait.astro";
-
 import Hero from "~/components/Hero.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
 import { siteName } from "~/constants";
+import { type PortraitName, portraits } from "~/portraits";
 
 import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
-	alt: string;
 	class?: string | undefined;
 	description: string;
 	fitsScreen?: boolean;
-	portrait: HeroPortraitImages;
+	portrait: PortraitName;
 	primary: string;
-	slug?: string;
 	title?: string;
 }
 
-const {
-	description,
-	primary,
-	slug = primary.toLowerCase(),
-	title,
-} = Astro.props;
+const { description, portrait, primary, title } = Astro.props;
 ---
 
 <BaseLayout
 	class={Astro.props.class}
 	description={description}
 	fitsScreen={Astro.props.fitsScreen}
-	preview={{ alt: `${title ?? siteName}: ${Astro.props.alt}`, name: slug }}
+	preview={{
+		alt: `${title ?? siteName}: ${portraits[portrait].alt}`,
+		name: portrait,
+	}}
 	shortTitle={title ?? siteName}
 	title={title ? `${title} | ${siteName}` : siteName}
 >
-	<Hero alt={Astro.props.alt} portrait={Astro.props.portrait} primary={primary}>
+	<Hero
+		isLarge={Astro.props.fitsScreen}
+		portrait={portraits[portrait]}
+		primary={primary}
+	>
 		<HeroSecondary>
 			<slot name="secondary" />
 		</HeroSecondary>

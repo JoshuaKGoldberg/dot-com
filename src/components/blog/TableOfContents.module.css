@@ -80,6 +80,7 @@ li:has(.back) {
 }
 
 .a.active,
+.a:hover,
 .back:not(.active) {
 	opacity: 1;
 }

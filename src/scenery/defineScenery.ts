@@ -19,9 +19,8 @@ export function defineScenery(name: string, create: SceneryCreator) {
 				});
 			}
 
-			/** Present so that browsers with `moveBefore` don't disconnect on moves. */
 			connectedMoveCallback() {
-				// (intentionally empty)
+				// Without this, browsers with `moveBefore` disconnect on moves
 			}
 
 			disconnectedCallback() {

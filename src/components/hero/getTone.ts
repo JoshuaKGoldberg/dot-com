@@ -4,7 +4,6 @@ import sharp from "sharp";
 
 import { getImagePath } from "~/getImagePath";
 
-/** Finds an image's average red, green, and blue. */
 export async function getTone(image: ImageMetadata) {
 	const [red, green, blue] = await sharp(getImagePath(image))
 		.resize(1, 1, {

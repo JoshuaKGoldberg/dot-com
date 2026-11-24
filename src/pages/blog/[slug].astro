@@ -12,6 +12,7 @@ import {
 } from "~/components/blog/utils";
 import BodyContents from "~/components/BodyContents.astro";
 import BaseLayout from "~/layouts/BaseLayout.astro";
+import { getPostPicture } from "~/previews/getPostPicture";
 
 interface Props {
 	entry: CollectionEntry<"blog">;
@@ -36,7 +37,7 @@ const title = createBlogTitle(entry);
 <BaseLayout
 	description={description}
 	preview={{
-		alt: `${title}: ${entry.data.image.alt}`,
+		alt: `${title}: ${getPostPicture(entry).alt}`,
 		name: `blog/${entry.id}`,
 	}}
 	published={entry.data.pubDate}

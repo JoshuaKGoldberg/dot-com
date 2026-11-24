@@ -11,7 +11,7 @@ interface Link {
 	hue: number;
 	isWanted: boolean;
 
-	/** How revealed the link is, from 0 to 1. */
+	/** From 0 to 1. */
 	reveal: number;
 
 	to: Star;
@@ -100,7 +100,6 @@ export class StarLinks {
 			const existing = this.#links.get(key);
 
 			if (existing) {
-				existing.hue = hue;
 				existing.isWanted = true;
 			} else {
 				this.#links.set(key, {

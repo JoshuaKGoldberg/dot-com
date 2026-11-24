@@ -6,7 +6,7 @@ import type { Region, RegionName, Regions } from "./createRegions";
 
 import { damp, interpolate, moveToward, smoothstep } from "../math";
 import { pick, type Random } from "../random";
-import { createGoldbergSnark } from "./createGoldbergSnark";
+import { createGoldbergSnark, snarkBlocks } from "./createGoldbergSnark";
 import { createGraph, type Graph, type Vertex } from "./createGraph";
 import { type LivingEdge, orderEdges } from "./edges";
 import {
@@ -24,14 +24,14 @@ export type LivingGraph = SmallGraph | Snark;
 export interface Snark extends LivingGraphBase {
 	ageSeconds: number;
 
-	/** Seconds that the pointer's now been far away from it for. */
 	awaySeconds: number;
 
 	blocks: number;
 
-	/** Whether its label is focused, which keeps it from fading. */
 	isFading: boolean;
-	isFocused: boolean;
+
+	/** Whether its label is focused or hovered, which keeps it from fading. */
+	isHeld: boolean;
 
 	kind: "snark";
 }
@@ -43,7 +43,7 @@ export interface Snark extends LivingGraphBase {
  * scrolls, none of its edges can ever stretch.
  */
 interface LivingGraphBase extends GraphSize {
-	/** Smoothed extra brightness from being near the pointer. */
+	/** Smoothed brightness, higher near the pointer. */
 	boost: number;
 
 	edges: LivingEdge[];
@@ -76,7 +76,6 @@ interface RegionState {
 }
 
 interface SmallGraph extends LivingGraphBase {
-	/** How much longer the graph stays once it's grown. */
 	holdSeconds: number;
 
 	kind: "small";
@@ -98,7 +97,6 @@ const secondsBetweenSnarks = 16.5;
 /** If there wasn't anywhere for a snark. */
 const secondsBeforeRetry = 2;
 
-const snarkBlocks = [5, 7, 9, 11, 13, 15];
 const snarksPerRegion = 3;
 
 const maximumSnarkRadius = 88;
@@ -110,11 +108,11 @@ const snarkLabelSpace = 28;
 const snarkMinimumSeconds = 30;
 const snarkAwaySeconds = 10;
 
-/** How grown fading snarks need to be for hovering them to bring them back. */
-const returnableGrowth = 0.75;
-
 /** Pixels from a snark's edge that count as far away. */
 const snarkAwayDistance = 250;
+
+/** Farthest that pointers might have moved from where they were when a snark grew. */
+const snarkOriginDrift = 40;
 
 export class GraphSimulation {
 	graphs: LivingGraph[] = [];
@@ -297,6 +295,7 @@ export class GraphSimulation {
 
 		const blocks = this.#pickBlocks();
 
+		this.#shownBlocks.add(blocks);
 		this.graphs.push({
 			...this.#createBase(
 				createGoldbergSnark(blocks),
@@ -311,7 +310,7 @@ export class GraphSimulation {
 			blocks,
 			growthSeconds: interpolate(5.3, 7.3, this.#random()),
 			isFading: false,
-			isFocused: false,
+			isHeld: false,
 			kind: "snark",
 		});
 
@@ -395,7 +394,7 @@ export class GraphSimulation {
 		}
 
 		if (state.pending >= 1) {
-			state.pending = 0;
+			state.pending -= 1;
 
 			if (siblings.length - snarks.length < region.smallGraphLimit) {
 				this.#growSmallGraph(name, region, pointer);
@@ -423,16 +422,19 @@ function ageSmallGraph(graph: SmallGraph, seconds: number, dwell: number) {
 
 /** @returns Whether there's still any of it left. */
 function ageSnark(snark: Snark, seconds: number, pointerDistance: number) {
+	const grownFrom = Math.hypot(
+		snark.x - snark.origin.x,
+		snark.y - snark.origin.y,
+	);
 	const isAway =
-		!snark.isFocused && pointerDistance > snark.radius + snarkAwayDistance;
+		!snark.isHeld &&
+		pointerDistance >
+			Math.max(snark.radius + snarkAwayDistance, grownFrom + snarkOriginDrift);
 
 	snark.ageSeconds += seconds;
 	snark.awaySeconds = isAway ? snark.awaySeconds + seconds : 0;
 
-	const isReturnedTo =
-		pointerDistance < snark.radius && snark.growth > returnableGrowth;
-
-	if (snark.isFocused || isReturnedTo) {
+	if (snark.isHeld || pointerDistance < snark.radius) {
 		snark.isFading = false;
 	} else if (
 		snark.ageSeconds > snarkMinimumSeconds &&

@@ -20,7 +20,7 @@ import AuroraBand from "./AuroraBand.astro";
 ></aside>
 
 <script>
-	// Only adds what happens on approach
+	// Pages are complete without it
 	const whenIdle = globalThis.requestIdleCallback ?? setTimeout;
 
 	whenIdle(() => {
@@ -64,7 +64,7 @@ import AuroraBand from "./AuroraBand.astro";
 	}
 
 	.labels :global(a) {
-		/* The smallest that links' areas can be is 24px, however small their text is */
+		/* Makes links 24px tall, the smallest that accessibility guidelines allow */
 		--padding: 7px;
 
 		-webkit-font-smoothing: antialiased;
@@ -99,6 +99,10 @@ import AuroraBand from "./AuroraBand.astro";
 
 	.labels :global(a:is(:hover, :focus-visible)) {
 		color: var(--colorForeground);
+	}
+
+	.labels :global(a:focus-visible) {
+		opacity: 1 !important;
 	}
 
 	/* Scrolls along with the page, and has no size of its own to get in its way */

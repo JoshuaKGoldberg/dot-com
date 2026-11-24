@@ -93,7 +93,7 @@ export class HeroPortrait {
 		}, signal);
 	}
 
-	/** CSS would run these as often as the screen refreshes, so there they're paused. */
+	/** CSS would run these as often as the screen refreshes, so they're paused there. */
 	#animateLight() {
 		for (const animation of this.#host.getAnimations({ subtree: true })) {
 			if (animation instanceof CSSAnimation) {

@@ -21,8 +21,7 @@ export function crossfadePainting(canvas: HTMLCanvasElement) {
 	});
 }
 
-/** Fades away what's on a canvas, as it's about to be painted with something else. */
-export function fadeAwayPainting(canvas: HTMLCanvasElement) {
+function fadeAwayPainting(canvas: HTMLCanvasElement) {
 	// Canvases without a size throw when they're drawn
 	if (!canvas.height || !canvas.width) {
 		return;

@@ -35,7 +35,7 @@ export function PieChart(props: PieChartProps) {
 	return (
 		<ChartFigure
 			caption={
-				<figcaption
+				<div
 					style={{
 						display: "flex",
 						"flex-wrap": "wrap",
@@ -69,7 +69,7 @@ export function PieChart(props: PieChartProps) {
 							</Text>
 						)}
 					</For>
-				</figcaption>
+				</div>
 			}
 			title={props.title}
 		>

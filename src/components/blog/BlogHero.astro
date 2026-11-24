@@ -26,7 +26,7 @@ interface Props {
 <div class="blogHero">
 	<div class="left">
 		<div class="primary">
-			<div class="hero-image">
+			<div class="image">
 				<HeroImage {...Astro.props.image} />
 			</div>
 			<div class="hero-title">
@@ -65,9 +65,10 @@ interface Props {
 		width: 100%;
 	}
 
-	.hero-image {
+	.image {
 		float: right;
-		margin-left: 0.1rem;
+		/* Otherwise sticks out just far enough to make the date's line narrower too */
+		margin: 0 0 -2px 0.1rem;
 	}
 
 	.download {
@@ -82,12 +83,12 @@ interface Props {
 			grid-template-rows: max-content max-content auto;
 		}
 
-		.hero-image {
+		.image {
 			grid-column: 2;
 			grid-row: 1 / 3;
 			display: flex;
 			justify-content: flex-end;
-			margin-left: 0;
+			margin: 0;
 		}
 
 		.hero-title {
@@ -111,7 +112,7 @@ interface Props {
 			grid-column: 2;
 		}
 
-		.hero-image {
+		.image {
 			grid-column: 1;
 		}
 

@@ -1,8 +1,13 @@
 import { cacheLayout } from "../cacheLayout";
 import { resizeCanvas } from "../canvas";
-import { type Column, measureColumn, minimumMargin } from "../column";
+import {
+	type Column,
+	type Margin,
+	measureColumn,
+	minimumMargin,
+} from "../column";
 import { Dwell } from "../Dwell";
-import { crossfadePainting, fadeAwayPainting } from "../fadeAway";
+import { crossfadePainting } from "../fadeAway";
 import { footerDwell } from "../footerDwell";
 import { createFrameTask } from "../frameLoop";
 import { createRegions, measureFooter } from "../graphs/createRegions";
@@ -32,19 +37,18 @@ export class StarField {
 	readonly #canvas = document.createElement("canvas");
 	#column: Column;
 	readonly #context = this.#canvas.getContext("2d");
+	readonly #dwells = { left: new Dwell(), right: new Dwell() };
 	readonly #graphs = new GraphSimulation(Math.random);
 	#height = 0;
 	readonly #host: HTMLElement;
 	readonly #labels: SnarkLabels;
-	readonly #leftDwell = new Dwell();
 	readonly #lights = new StarLights();
 	readonly #links = new StarLinks();
 	#marginStars: Star[] = [];
 	readonly #measureFooter: () => ReturnType<typeof measureFooter>;
 	#paintedDarkness = theme.darkness;
 	#paintedScroll = 0;
-	readonly #rightDwell = new Dwell();
-	readonly #spread = new Spread();
+	readonly #spreads = { left: new Spread(), right: new Spread() };
 
 	/** How far the sky has scrolled, other than from the current page scrolling. */
 	#scrollBefore = 0;
@@ -92,13 +96,14 @@ export class StarField {
 			signal,
 		);
 		onPause(() => {
-			fadeAwayPainting(this.#canvas);
+			crossfadePainting(this.#canvas);
 			this.#graphs.clear();
-			this.#leftDwell.reset();
+			this.#dwells.left.reset();
+			this.#dwells.right.reset();
 			this.#lights.clear();
 			this.#links.clear();
-			this.#rightDwell.reset();
-			this.#spread.reset();
+			this.#spreads.left.reset();
+			this.#spreads.right.reset();
 		}, signal);
 		onPointer(() => {
 			if (
@@ -132,7 +137,7 @@ export class StarField {
 	#createSky(): Sky {
 		return {
 			darkness: theme.darkness,
-			dwell: { left: this.#leftDwell.level, right: this.#rightDwell.level },
+			dwell: { left: this.#dwells.left.level, right: this.#dwells.right.level },
 			period: this.#height + overscan * 2,
 			scroll: rootState.isPlaying
 				? this.#scrollBefore + pageScroll.top
@@ -154,53 +159,60 @@ export class StarField {
 		};
 	}
 
-	#getRegions({ dwell, scroll }: Sky) {
+	#getRegions({ dwell, scroll }: Sky, spread: Record<Margin, number>) {
 		return createRegions({
 			column: this.#column,
 			dwell,
 			footer: this.#measureFooter().bounds,
 			height: this.#height,
 			marginOffset: scroll * parallaxRates[linkedDepth],
-			spread: this.#getSpread(),
+			spread,
 			width: this.#width,
 		});
 	}
 
-	#getSpread() {
+	#getSpread(): Record<Margin, number> {
 		const { left, right } = this.#column;
+		const height = this.#height;
 
-		return this.#spread.getScale(linkedRadius, {
-			height: this.#height,
-			width: Math.min(left, this.#width - right),
-		});
+		return {
+			left: this.#spreads.left.getScale(linkedRadius, { height, width: left }),
+			right: this.#spreads.right.getScale(linkedRadius, {
+				height,
+				width: this.#width - right,
+			}),
+		};
 	}
 
 	#grow(seconds: number) {
 		const nearness = this.#getNearness();
 		const isDwelling = [
-			this.#leftDwell.step(seconds, nearness.left),
-			this.#rightDwell.step(seconds, nearness.right),
+			this.#dwells.left.step(seconds, nearness.left),
+			this.#dwells.right.step(seconds, nearness.right),
 			this.#isNearFooter(),
 		].some(Boolean);
 		const sky = this.#createSky();
 
 		this.#seconds += seconds;
-		this.#spread.step(
-			seconds,
-			pointer,
-			nearness.left > 0 || nearness.right > 0,
-		);
+		this.#spreads.left.step(seconds, pointer, nearness.left > 0);
+		this.#spreads.right.step(seconds, pointer, nearness.right > 0);
 
 		const spread = this.#getSpread();
+		const nearest = pointer.x < this.#width / 2 ? spread.left : spread.right;
 
-		this.#lights.step(seconds, this.#marginStars, sky, spread);
+		this.#lights.step(seconds, this.#marginStars, sky, nearest);
 		this.#links.relink(
 			this.#lights.lit.filter(({ star }) => star.depth === linkedDepth),
 			sky,
-			spread,
+			nearest,
 		);
 		this.#links.step(seconds);
-		this.#graphs.step(seconds, this.#getRegions(sky), this.#height, pointer);
+		this.#graphs.step(
+			seconds,
+			this.#getRegions(sky, spread),
+			this.#height,
+			pointer,
+		);
 		this.#paint();
 
 		return (
@@ -262,7 +274,7 @@ export class StarField {
 			return;
 		}
 
-		const regions = this.#getRegions(sky);
+		const regions = this.#getRegions(sky, this.#getSpread());
 		const scene = {
 			column: this.#column,
 			darkness: sky.darkness,

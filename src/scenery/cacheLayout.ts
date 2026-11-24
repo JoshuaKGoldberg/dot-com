@@ -39,7 +39,7 @@ export function cacheLayout<T extends object>(
 	};
 }
 
-// Scenery moves between where each page has it
+// Bands are still moving to their new places
 document.addEventListener("astro:after-swap", () => {
 	settlesAt = performance.now() + lifetimeMilliseconds;
 });

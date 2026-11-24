@@ -2,7 +2,6 @@ import { Emitter, type Listener } from "./Emitter";
 
 const changes = new Emitter();
 
-/** The page's color theme and motion preference, as set on the root element. */
 export const rootState = readRootState();
 
 export function onPause(listener: Listener, signal?: AbortSignal) {

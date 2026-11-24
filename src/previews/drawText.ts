@@ -1,11 +1,16 @@
 import type { Font, PathCommand } from "opentype.js";
 
+import { textFont } from "./fonts";
+
 export interface TextBlock {
 	color: string;
 	font: Font;
 	lineHeight: number;
 	maximumHeight: number;
+
+	/** From largest to smallest. */
 	sizes: number[];
+
 	text: string;
 	width: number;
 }
@@ -15,7 +20,37 @@ export interface TextLayout {
 	toSvg: (x: number, y: number) => string;
 }
 
-/** Lays out text at the largest size that fits, as shapes, so no fonts need to be installed. */
+export interface TextLine {
+	color: string;
+	font: Font;
+	size: number;
+	text: string;
+	x: number;
+	y: number;
+}
+
+/** As shapes, so that no fonts need to be installed. */
+export function drawLine({ color, font, size, text, x, y }: TextLine) {
+	let left = x;
+
+	const data = splitByFont(font, text).map((run) => {
+		const { commands } = run.font.getPath(run.text, left, y, size);
+
+		left += run.font.getAdvanceWidth(run.text, size);
+
+		return commands.map(toPathData).join("");
+	});
+
+	return `<path d="${data.join("")}" fill="${color}"/>`;
+}
+
+export function getWidth(font: Font, text: string, size: number) {
+	return splitByFont(font, text).reduce(
+		(width, run) => width + run.font.getAdvanceWidth(run.text, size),
+		0,
+	);
+}
+
 export function layOutText({
 	color,
 	font,
@@ -25,11 +60,15 @@ export function layOutText({
 	text,
 	width,
 }: TextBlock): TextLayout {
-	const getHeight = (size: number) =>
-		wrap(font, text, size, width).length * size * lineHeight;
 	const size =
-		sizes.find((size) => getHeight(size) <= maximumHeight) ??
-		sizes[sizes.length - 1];
+		sizes.find((candidate) => {
+			const lines = wrap(font, text, candidate, width);
+
+			return (
+				lines.length * candidate * lineHeight <= maximumHeight &&
+				lines.every((line) => getWidth(font, line, candidate) <= width)
+			);
+		}) ?? sizes[sizes.length - 1];
 	const lines = balance(font, text, size, width);
 
 	return {
@@ -37,33 +76,20 @@ export function layOutText({
 		toSvg: (x, y) =>
 			lines
 				.map((line, index) =>
-					drawLine(
-						font,
-						line,
-						x,
-						y + (index + 0.78) * size * lineHeight,
-						size,
+					drawLine({
 						color,
-					),
+						font,
+						size,
+						text: line,
+						x,
+						y: y + (index + 0.78) * size * lineHeight,
+					}),
 				)
 				.join(""),
 	};
 }
 
 /** Wraps to the narrowest width that doesn't need any more lines. */
-export function drawLine(
-	font: Font,
-	text: string,
-	x: number,
-	y: number,
-	size: number,
-	color: string,
-) {
-	const data = font.getPath(text, x, y, size).commands.map(toPathData).join("");
-
-	return `<path d="${data}" fill="${color}"/>`;
-}
-
 function balance(font: Font, text: string, size: number, width: number) {
 	const { length } = wrap(font, text, size, width);
 	let narrowest = width;
@@ -78,6 +104,33 @@ function balance(font: Font, text: string, size: number, width: number) {
 	return wrap(font, text, size, narrowest);
 }
 
+/** Characters that neither font has, such as emoji, are left out. */
+function splitByFont(preferred: Font, text: string) {
+	const runs: { font: Font; text: string }[] = [];
+
+	for (const character of text) {
+		const font = [preferred, textFont].find(
+			(candidate) => candidate.charToGlyphIndex(character) > 0,
+		);
+		const last = runs.at(-1);
+
+		if (font && font === last?.font) {
+			last.text += character;
+		} else if (font) {
+			runs.push({ font, text: character });
+		}
+	}
+
+	return runs;
+}
+
+/** Path.toPathData() rounds numbers that are nearly 0 to NaN. */
+function toPathData(command: PathCommand) {
+	return Object.values<number | string>(command)
+		.map((value) => (typeof value === "number" ? value.toFixed(2) : value))
+		.join(" ");
+}
+
 function wrap(font: Font, text: string, size: number, width: number) {
 	const lines: string[] = [];
 
@@ -85,7 +138,7 @@ function wrap(font: Font, text: string, size: number, width: number) {
 		const last = lines.at(-1);
 		const longer = last === undefined ? word : `${last} ${word}`;
 
-		if (last !== undefined && font.getAdvanceWidth(longer, size) <= width) {
+		if (last !== undefined && getWidth(font, longer, size) <= width) {
 			lines[lines.length - 1] = longer;
 		} else {
 			lines.push(word);
@@ -93,18 +146,4 @@ function wrap(font: Font, text: string, size: number, width: number) {
 	}
 
 	return lines;
-}
-
-/** Path.toSVG() rounds numbers that are nearly 0 to NaN. */
-function toPathData(command: PathCommand) {
-	const points =
-		command.type === "Z"
-			? []
-			: command.type === "C"
-				? [command.x1, command.y1, command.x2, command.y2, command.x, command.y]
-				: command.type === "Q"
-					? [command.x1, command.y1, command.x, command.y]
-					: [command.x, command.y];
-
-	return command.type + points.map((point) => point.toFixed(2)).join(" ");
 }

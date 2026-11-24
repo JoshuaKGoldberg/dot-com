@@ -1,20 +1,21 @@
 ---
-import HeroPortrait, {
-	type HeroPortraitImages,
-} from "./hero/HeroPortrait.astro";
+import type { Portrait } from "~/portraits";
+
+import HeroPortrait from "./hero/HeroPortrait.astro";
 import HeroTitle from "./HeroTitle.astro";
 
 interface Props {
-	alt: string;
-	class?: string | undefined;
-	portrait: HeroPortraitImages;
+	isLarge?: boolean | undefined;
+	portrait: Portrait;
 	primary: string;
 }
+
+const scale = Astro.props.isLarge ? 1 : 0.75;
 ---
 
-<div class:list={["hero", Astro.props.class]}>
+<div class="hero" style={{ "--heroScale": scale }}>
 	<div class="half first">
-		<HeroPortrait alt={Astro.props.alt} {...Astro.props.portrait} />
+		<HeroPortrait scale={scale} {...Astro.props.portrait} />
 	</div>
 	<div class="half second">
 		<HeroTitle>{Astro.props.primary}</HeroTitle>
@@ -24,7 +25,6 @@ interface Props {
 
 <style>
 	.hero {
-		--heroScale: 0.75;
 		--heroSecondarySize: var(--fontSizeMedium);
 		--heroTertiarySize: var(--fontSizeSmaller);
 
@@ -37,7 +37,6 @@ interface Props {
 	}
 
 	:global([data-fits-screen]) .hero {
-		--heroScale: 1;
 		--heroSecondarySize: var(--fontSizeSubtitle);
 		--heroTertiarySize: var(--fontSizeMedium);
 

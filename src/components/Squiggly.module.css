@@ -3,7 +3,7 @@
 	position: relative;
 }
 
-/* Which of the squiggle image's steps to show: whole, even when reversed partway */
+/* An integer, so that only whole steps of the image are shown, even when reversed partway */
 @property --rise {
 	inherits: false;
 	initial-value: 0;
@@ -16,17 +16,16 @@
 	syntax: "<length>";
 }
 
-/* Its image is of the same wave at each step of its rise, from top to bottom */
+/* Its image stacks the same wave at each step of its rise, from top to bottom */
 .squiggly::after {
 	background: var(--squiggleLine);
 	content: "";
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	/* Paused rather than removed, so that it stops wherever it is */
-	animation: travel var(--squigglePeriod) steps(112) infinite paused;
-	mask: url("~/assets/squiggles/rising-inline.svg") repeat-x var(--shift)
-		calc(-8px * var(--rise));
+	mask: url("~/assets/squiggles/rising-inline.svg") repeat-x;
+	/* Safari doesn't round integers that are being transitioned */
+	mask-position: var(--shift) calc(-8px * round(var(--rise), 1));
 	pointer-events: none;
 	position: absolute;
 	transition:
@@ -37,6 +36,8 @@
 }
 
 .squiggly[data-squiggle="current"]::after {
+	/* Paused rather than removed, so that it stops wherever it is */
+	animation: travel var(--squigglePeriod) steps(112) infinite paused;
 	background: var(--litGradient, var(--colorEmphasized));
 	mask-image: url("~/assets/squiggles/rising.svg");
 }
@@ -78,9 +79,8 @@
 }
 
 :global(html[data-motion="playing"])
-	.squiggly:is(:focus-visible, :hover):not(
-		[aria-current],
-		[data-squiggle-live]
+	.squiggly[data-squiggle="current"][data-lit]:hover:not(
+		[aria-current]
 	)::after {
 	animation-play-state: running;
 }
@@ -93,8 +93,15 @@
 
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
 .squiggly[data-squiggle-live]::after {
-	opacity: 0;
-	transition-duration: 0s;
+	visibility: hidden;
+}
+
+/* Moved links' squiggles transition from however they were held to have looked */
+.squiggly[data-held]::after {
+	--rise: var(--heldRise) !important;
+	filter: var(--heldFilter) !important;
+	opacity: var(--heldOpacity) !important;
+	transition: none !important;
 }
 
 @media (forced-colors: active) {

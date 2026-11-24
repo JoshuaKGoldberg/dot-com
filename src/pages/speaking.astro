@@ -1,9 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 
-import halo from "~/assets/heroes/speaking-halo.webp";
-import scene from "~/assets/heroes/speaking-scene.webp";
-import image from "~/assets/heroes/speaking.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
@@ -15,9 +12,8 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 ---
 
 <HeroLayout
-	alt="Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt"
 	description={speakingDescription}
-	portrait={{ halo, image, scene }}
+	portrait="speaking"
 	primary="Speaking"
 	title="Speaking"
 >

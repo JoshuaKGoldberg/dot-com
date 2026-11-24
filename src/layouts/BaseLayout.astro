@@ -63,12 +63,17 @@ const { class: className, fitsScreen, ...head } = Astro.props;
 	const getContentTop = () =>
 		document.querySelector("[data-content]")?.getBoundingClientRect().top ?? 0;
 
+	/** Chrome doesn't paint captures of content that's more than about this many pixels away. */
+	const farthestCapture = 7000;
+
 	let previousTop = 0;
+	let transitioned: Promise<unknown> | undefined;
 
 	// Keeps the previous page from seeming to scroll as it fades out
 	document.addEventListener("astro:before-swap", (event) => {
 		previousTop = getContentTop();
 		shiftTones(document, event.newDocument, event.viewTransition);
+		transitioned = event.viewTransition.finished;
 
 		// Swapping to a page whose root was missing any, such as its theme, would keep
 		// the elements that stay between pages from transitioning to their new states
@@ -81,18 +86,43 @@ const { class: className, fitsScreen, ...head } = Astro.props;
 	document.addEventListener("astro:after-swap", () => {
 		skipOffscreen();
 
+		const root = document.documentElement;
 		const shift = previousTop - getContentTop();
+		const isFar = Math.abs(shift) > farthestCapture;
 
-		document.documentElement.style.setProperty(
+		root.toggleAttribute("data-scrolled-far", isFar);
+		root.style.setProperty(
 			"--contentShift",
-			`${shift.toString()}px`,
+			isFar ? "0px" : `${shift.toString()}px`,
 		);
+
+		if (isFar) {
+			const current = transitioned;
+			const arrivals = document
+				.querySelector("[data-content]")
+				?.getAnimations()
+				.map(({ finished }) => finished);
+
+			void Promise.allSettled([current, ...(arrivals ?? [])]).then(() => {
+				if (current === transitioned) {
+					root.removeAttribute("data-scrolled-far");
+				}
+			});
+		}
 	});
 </script>
 
 <style>
 	.content {
 		view-transition-name: content;
+	}
+
+	:global([data-scrolled-far]) .content {
+		view-transition-name: none;
+	}
+
+	:global([data-scrolled-far][data-motion="playing"]) .content {
+		animation: page-in 320ms ease-out var(--transitionPageOut) both;
 	}
 
 	[data-fits-screen],

@@ -43,7 +43,7 @@
 
 .article a:is(:focus-visible, :hover):not(:global([data-squiggle-live])) {
 	background: none;
-	text-decoration: underline wavy 1.5px
+	text-decoration: underline wavy var(--squiggleThickness)
 		color-mix(
 			in srgb,
 			var(--colorEmphasized) var(--squiggleOpacity),
@@ -52,7 +52,6 @@
 	text-underline-offset: 0.2em;
 }
 
-/* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
 .article a:global([data-squiggle-live]) {
 	background: none;
 }
@@ -171,8 +170,10 @@
 }
 
 .article :global(.data-footnote-backref) {
-	/* Enough room for accessibility guidelines' smallest touch targets */
-	margin-left: 0.1em;
+	display: inline-block;
+	min-height: 24px;
+	min-width: 24px;
+	text-align: center;
 }
 
 .article sup a {

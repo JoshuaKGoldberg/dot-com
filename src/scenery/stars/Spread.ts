@@ -5,7 +5,7 @@ import { damp, interpolate, moveToward, smoothstep } from "../math";
 const secondsToGrow = 40;
 const secondsToShrink = 4;
 
-/** Pixels that pointers stray from where they've been while still counting as still. */
+/** Pixels a pointer may stray by and still count as still. */
 const stillness = 40;
 
 /** How far from the pointer a margin comes to life: farther the longer it's still. */
@@ -15,9 +15,9 @@ export class Spread {
 
 	/** @returns How many times farther than usual, at least 1. */
 	getScale(usualRadius: number, margin: { height: number; width: number }) {
-		// A circle of half the margin's area, or what half of it would be if it's narrow
+		// About half of the margin: by area, or by height if it's too narrow for a circle
 		const halfRadius = Math.max(
-			Math.sqrt((margin.width * margin.height) / 2 / Math.PI),
+			Math.sqrt((Math.max(0, margin.width) * margin.height) / 2 / Math.PI),
 			margin.height / 4,
 		);
 

@@ -224,7 +224,7 @@ importers:
         specifier: ^26.6.2
         version: 26.6.6
       '@types/opentype.js':
-        specifier: 1.3.10
+        specifier: ^1.3.10
         version: 1.3.10
       accessible-astro-components:
         specifier: ^5.8.1

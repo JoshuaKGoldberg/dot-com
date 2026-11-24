@@ -66,7 +66,7 @@
 			var(--squiggleEnd),
 			var(--squiggleGray) var(--squiggleGrayness)
 		);
-		--squigglePeriod: 9s;
+		--squigglePeriod: 6.75s;
 		--squiggleLine: linear-gradient(
 			to right,
 			transparent,
@@ -381,7 +381,6 @@
 	animation-duration: var(--transitionPortrait);
 }
 
-/* People are blurriest halfway, when each is as visible as the other */
 ::view-transition-image-pair(portrait-figure) {
 	animation: portrait-blur var(--transitionPortrait) ease-in-out both;
 	clip-path: var(--portraitClip);

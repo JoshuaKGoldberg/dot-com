@@ -13,17 +13,15 @@ export const speakingDescription =
 
 export const site = "https://www.joshuakgoldberg.com";
 
-/** Feed readers know posts by their URLs, so those need to never change. */
+/** Feed readers know posts by their URLs, so those must never change. */
 export const feedSite = "https://joshuakgoldberg.com";
 
 export const siteName = "Josh Goldberg";
 
 export const colorsBackground = { dark: "#0b1220", light: "#ecf4f9" };
 
-const branch = process.env.WORKERS_CI_BRANCH;
-
-/** Where images for links are, which for branches' previews isn't the site yet. */
-export const imageOrigin =
-	branch && branch !== "main"
-		? `https://${branch.replaceAll(/[^a-z\d]+/gi, "-").toLowerCase()}-dot-com.dot-com.workers.dev`
-		: site;
+export const socialUrls = {
+	bluesky: "https://bsky.app/profile/joshuakgoldberg.com",
+	github: "https://github.com/JoshuaKGoldberg",
+	mastodon: "https://fosstodon.org/@JoshuaKGoldberg",
+};

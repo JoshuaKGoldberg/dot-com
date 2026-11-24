@@ -30,7 +30,7 @@ export default defineConfig({
 			weights: ["300 600"],
 		},
 		{
-			// Small enough to load alongside the rest of its line, so it doesn't shift later
+			// Only these letters, as the whole italic font loads late enough to shift text after it
 			cssVariable: "--fontBookTitle",
 			fallbacks: ["Book Title Times", "Book Title Noto", "serif"],
 			name: "Newsreader",
@@ -68,6 +68,6 @@ export default defineConfig({
 		processor: unified(),
 		syntaxHighlight: "prism",
 	},
-	prefetch: { prefetchAll: false },
+	prefetch: false,
 	site,
 });

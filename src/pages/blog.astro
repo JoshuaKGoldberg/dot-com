@@ -2,9 +2,6 @@
 import { getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 
-import halo from "~/assets/heroes/blog-halo.webp";
-import scene from "~/assets/heroes/blog-scene.webp";
-import image from "~/assets/heroes/blog.webp";
 import { Anchor } from "~/components/Anchor";
 import { BlogsGrouped } from "~/components/blog/BlogsGrouped";
 import {
@@ -47,9 +44,8 @@ const blogs = await Promise.all(
 ---
 
 <HeroLayout
-	alt="Josh speaking excitedly into a microphone while wearing a shiny silver space suit"
 	description={blogDescription}
-	portrait={{ halo, image, scene }}
+	portrait="blog"
 	primary="Goldblog"
 	title="Goldblog"
 >

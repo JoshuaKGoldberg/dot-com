@@ -2,7 +2,8 @@
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 
-import { colorsBackground, imageOrigin, siteName } from "~/constants";
+import { colorsBackground, siteName, socialUrls } from "~/constants";
+import { imageOrigin } from "~/previews/imageOrigin";
 import { previewSize } from "~/previews/previewSize";
 
 import RootSettings from "./RootSettings.astro";
@@ -18,10 +19,9 @@ interface Props {
 	description: string;
 	preview: Preview;
 
-	/** When the page was published, if it's an article */
 	published?: Date | undefined;
 
-	/** What the page is called anywhere that also shows what site it's on */
+	/** Without the site's name, for wherever that's already shown */
 	shortTitle: string;
 
 	tags?: string[] | undefined;
@@ -47,11 +47,7 @@ const keywords = tags ?? [
 const author = {
 	"@type": "Person",
 	name: siteName,
-	sameAs: [
-		"https://bsky.app/profile/joshuakgoldberg.com",
-		"https://github.com/JoshuaKGoldberg",
-		"https://fosstodon.org/@JoshuaKGoldberg",
-	],
+	sameAs: Object.values(socialUrls),
 	url: Astro.site,
 };
 
@@ -68,11 +64,11 @@ const schema = {
 				mainEntityOfPage: url,
 			}
 		: {
-				"@type": "WebSite",
+				"@type": url.pathname === "/" ? "WebSite" : "WebPage",
 				author,
 				description,
-				name: siteName,
-				url: Astro.site,
+				name: shortTitle,
+				url,
 			}),
 };
 
@@ -81,6 +77,7 @@ const names = {
 	description,
 	"fediverse:creator": "@JoshuaKGoldberg@fosstodon.org",
 	keywords: keywords.join(),
+	robots: "max-image-preview:large",
 	"twitter:card": "summary_large_image",
 	"twitter:creator": "@JoshuaKGoldberg",
 	"twitter:description": description,

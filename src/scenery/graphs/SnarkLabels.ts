@@ -21,10 +21,10 @@ const spaceBelowSnark = 8;
 export class SnarkLabels {
 	readonly #host = document.querySelector<HTMLElement>("[data-snark-labels]");
 	readonly #labels = new Map<Snark, Label>();
-	readonly #onBlur: () => void;
+	readonly #onRelease: () => void;
 
-	constructor(onBlur: () => void, signal: AbortSignal) {
-		this.#onBlur = onBlur;
+	constructor(onRelease: () => void, signal: AbortSignal) {
+		this.#onRelease = onRelease;
 		signal.addEventListener("abort", () => {
 			this.update([], 0);
 		});
@@ -58,13 +58,19 @@ export class SnarkLabels {
 		link.style.maxWidth = px(bounds.right - bounds.left);
 		link.target = "_blank";
 		link.textContent = `Goldberg snark G${snark.blocks.toString()}`;
-		link.addEventListener("focus", () => {
-			snark.isFocused = true;
-		});
-		link.addEventListener("blur", () => {
-			snark.isFocused = false;
-			this.#onBlur();
-		});
+
+		for (const type of ["focus", "pointerenter"]) {
+			link.addEventListener(type, () => {
+				snark.isHeld = true;
+			});
+		}
+
+		for (const type of ["blur", "pointerleave"]) {
+			link.addEventListener(type, () => {
+				snark.isHeld = link === document.activeElement;
+				this.#onRelease();
+			});
+		}
 
 		this.#host?.append(link);
 
@@ -78,7 +84,7 @@ export class SnarkLabels {
 
 function placeLabel(
 	{ height, link, width }: Label,
-	{ isFocused, radius, x, y }: Snark,
+	{ isHeld, radius, x, y }: Snark,
 	{ bounds, offset }: Region,
 	viewportHeight: number,
 ) {
@@ -86,6 +92,6 @@ function placeLabel(
 	const top = y - offset + radius + spaceBelowSnark;
 
 	// Anything that can become focused should be somewhere it can be seen
-	link.hidden = !isFocused && (top < -height || top > viewportHeight);
+	link.hidden = !isHeld && (top < -height || top > viewportHeight);
 	link.style.translate = `${px(left)} ${px(top)}`;
 }

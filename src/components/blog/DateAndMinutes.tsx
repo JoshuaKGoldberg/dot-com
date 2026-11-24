@@ -12,12 +12,14 @@ export interface DateAndMinutesProps {
 export function DateAndMinutes(props: DateAndMinutesProps) {
 	return (
 		<>
-			{props.date.toLocaleString("en-US", {
-				day: "numeric",
-				month: "short",
-				timeZone: "GMT",
-				year: props.year,
-			})}
+			<span class={styles.together}>
+				{props.date.toLocaleString("en-US", {
+					day: "numeric",
+					month: "short",
+					timeZone: "GMT",
+					year: props.year,
+				})}
+			</span>
 			<span class={styles.betweenDateAndTime} />
 			<span class={styles.together}>{props.minutes} minute read</span>
 			{props.children && (

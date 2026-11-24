@@ -1,45 +1,27 @@
 ---
-import type { ImageMetadata } from "astro";
-
 import { Image } from "astro:assets";
 
+import { getOverhang, type Portrait } from "~/portraits";
 import { portraitSize, stageSize } from "~/scenery/portrait/sizes";
 
 import { getTone } from "./getTone";
 import GlassRing from "./GlassRing.astro";
 
-export interface HeroPortraitImages {
-	/** Blurred silhouette of the cutout, used only for its alpha. */
-	halo: ImageMetadata;
-
-	/** Person cut out from their photo, with extra pixels below the circle, and maybe above it. */
-	image: ImageMetadata;
-
-	/** Makes busy scenes less distracting. */
-	isSceneFaint?: boolean;
-
-	/** What's behind them in their photo, for the same area as the circle. */
-	scene?: ImageMetadata;
+interface Props extends Portrait {
+	scale: number;
 }
 
-interface Props extends HeroPortraitImages {
-	alt: string;
-}
-
-const { alt, halo, image, isSceneFaint, scene } = Astro.props;
-
-/** Height, relative to its width, of a cutout that starts at the top of the circle. */
-const usualHeight = 544 / 512;
+const { alt, halo, image, isSceneFaint, scale, scene } = Astro.props;
 
 const haloDirections = [-1, 0, 1];
 
 const imageSizes = {
-	sizes: "(width >= 43.75em) 16rem, clamp(6rem, 20vmin, 12rem)",
+	sizes: `(width >= 43.75em) ${(16 * scale).toString()}rem, calc(clamp(min(6rem, 27vw), 20vmin, 12rem) * ${scale.toString()})`,
 	width: portraitSize,
 	widths: [144, 192, 256, 384, 512],
 };
 
-const overhang = image.height / image.width - usualHeight;
+const overhang = getOverhang(image);
 const stageOverflow = (stageSize / portraitSize - 1) / 2;
 ---
 

@@ -1,9 +1,6 @@
 ---
 import { projectCategories } from "joshuakgoldberg";
 
-import halo from "~/assets/heroes/projects-halo.webp";
-import scene from "~/assets/heroes/projects-scene.webp";
-import image from "~/assets/heroes/projects.webp";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import HeroTertiary from "~/components/HeroTertiary.astro";
@@ -34,9 +31,8 @@ const categories = {
 ---
 
 <HeroLayout
-	alt="Josh smiling warmly in a grey zip-up fleece"
 	description={projectsDescription}
-	portrait={{ halo, image, isSceneFaint: true, scene }}
+	portrait="projects"
 	primary="Projects"
 	title="Projects"
 >

@@ -1,37 +1,44 @@
 import sharp from "sharp";
 
+import { colorsBackground, feedSite } from "~/constants";
 import { angleToHue, depthColor } from "~/scenery/color";
-import { createGoldbergSnark } from "~/scenery/graphs/createGoldbergSnark";
+import {
+	createGoldbergSnark,
+	snarkBlocks,
+} from "~/scenery/graphs/createGoldbergSnark";
 import { interpolate } from "~/scenery/math";
-import { pick, seededRandom } from "~/scenery/random";
+import { pick, type Random, seededRandom } from "~/scenery/random";
 import { drawWave } from "~/scenery/squiggles/drawWave";
 
-import { drawLine, layOutText } from "./drawText";
+import { diameter, type Picture } from "./drawPicture";
+import { drawLine, getWidth, layOutText } from "./drawText";
 import { displayFont, textFont } from "./fonts";
 import { previewSize } from "./previewSize";
 
-export interface Picture {
-	file: Buffer;
-
-	/** Whether it may be in front of the top of its circle. */
-	isPerson: boolean;
-}
-
 export interface PreviewContents {
-	/** Centered on its circle, other than whatever's above that. */
+	/** Its bottom is its circle's bottom. */
 	picture: Picture;
-	signature: string;
+
 	subtitle: string;
 	title: string;
 }
 
 const { height, width } = previewSize;
 
-const background = "#0b1220";
+/** The dark theme's, except for brighter squiggles. */
+const colors = {
+	disc: "#141a26",
+	foreground: "#dae7f3",
+	foregroundExtra: "#f1f6fb",
+	muted: "#93a5bf",
+	ring: ["#4fc3ff", "#b98aff", "#ff7fb0", "#4dffb0"],
+	squiggle: ["#8a9bde", "#8fded0", "#b99be0"],
+};
+
 const left = 80;
 const textWidth = 540;
 
-const circle = { radius: 195, x: 905, y: 315 };
+const circle = { radius: diameter / 2, x: 905, y: 315 };
 const snarkRadius = 285;
 
 const auroras = [
@@ -41,15 +48,34 @@ const auroras = [
 	{ color: "#ff669e", opacity: 0.16, rx: 260, ry: 130, x: 1190, y: 640 },
 ];
 
+const signature = {
+	color: colors.muted,
+	font: textFont,
+	size: 28,
+	text: new URL(feedSite).hostname,
+	x: left,
+	y: height - 76,
+};
+
+// Only drawn once, as blurring is slow
+const backdrop = await sharp(
+	createSvg(`
+		<filter id="blur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="70"/></filter>
+		<rect width="100%" height="100%" fill="${colorsBackground.dark}"/>
+		<g filter="url(#blur)">${auroras.map(({ color, opacity, rx, ry, x, y }) => `<ellipse cx="${x.toString()}" cy="${y.toString()}" rx="${rx.toString()}" ry="${ry.toString()}" fill="${color}" opacity="${opacity.toString()}"/>`).join("")}</g>
+	`),
+)
+	.png()
+	.toBuffer();
+
 export async function drawPreview({
 	picture,
-	signature,
 	subtitle,
 	title,
 }: PreviewContents) {
 	const random = seededRandom(getSeed(title));
 	const titleText = layOutText({
-		color: "#f1f6fb",
+		color: colors.foregroundExtra,
 		font: displayFont,
 		lineHeight: 1.06,
 		maximumHeight: 240,
@@ -58,7 +84,7 @@ export async function drawPreview({
 		width: textWidth,
 	});
 	const subtitleText = layOutText({
-		color: "#b9c8dc",
+		color: colors.foreground,
 		font: textFont,
 		lineHeight: 1.3,
 		maximumHeight: 150,
@@ -68,46 +94,58 @@ export async function drawPreview({
 	});
 	const gap = 22;
 	const top = (height - 70 - titleText.height - gap - subtitleText.height) / 2;
-	const signatureY = height - 76;
-	const signatureWidth = textFont.getAdvanceWidth(signature, 28);
+	const wave = drawWave({
+		amplitude: 2.6,
+		phase: 0,
+		wavelength: 24,
+		width: getWidth(signature.font, signature.text, signature.size),
+		y: 6,
+	});
 
-	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width.toString()}" height="${height.toString()}">
-		<defs>
-			<filter id="blur" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="70"/></filter>
-			<linearGradient id="squiggle"><stop offset="0" stop-color="#8a9bde"/><stop offset="0.5" stop-color="#8fded0"/><stop offset="1" stop-color="#b99be0"/></linearGradient>
-		</defs>
-		<rect width="100%" height="100%" fill="${background}"/>
-		<g filter="url(#blur)">${auroras.map(({ color, opacity, rx, ry, x, y }) => `<ellipse cx="${x.toString()}" cy="${y.toString()}" rx="${rx.toString()}" ry="${ry.toString()}" fill="${color}" opacity="${opacity.toString()}"/>`).join("")}</g>
-		${drawStars(random)}
-		${drawSnark(pick(random, [5, 7, 9, 11, 13, 15]))}
-		<circle cx="${circle.x.toString()}" cy="${circle.y.toString()}" r="${circle.radius.toString()}" fill="#141a26"/>
-		${drawRing(0)}
-		${titleText.toSvg(left, top)}
-		${subtitleText.toSvg(left, top + titleText.height + gap)}
-		${drawLine(textFont, signature, left, signatureY, 28, "#93a5bf")}
-		<path transform="translate(${left.toString()} ${(signatureY + 10).toString()})" d="${drawWave({ amplitude: 2.6, period: 24, phase: 0, width: signatureWidth, y: 6 })}" fill="none" stroke="url(#squiggle)" stroke-width="3" stroke-linecap="round"/>
-	</svg>`;
-	const pictureHeight = (await sharp(picture.file).metadata()).height;
-
-	return sharp(Buffer.from(svg))
+	return sharp(backdrop)
 		.composite([
+			{
+				input: createSvg(`
+					${createGradient("squiggle", "", colors.squiggle)}
+					${drawStars(random)}
+					${drawSnark(pick(random, snarkBlocks))}
+					<circle cx="${circle.x.toString()}" cy="${circle.y.toString()}" r="${circle.radius.toString()}" fill="${colors.disc}"/>
+					${drawRing(0)}
+					${titleText.toSvg(left, top)}
+					${subtitleText.toSvg(left, top + titleText.height + gap)}
+					${drawLine(signature)}
+					<path transform="translate(${left.toString()} ${(signature.y + 10).toString()})" d="${wave}" fill="none" stroke="url(#squiggle)" stroke-width="3" stroke-linecap="round"/>
+				`),
+			},
 			{
 				input: picture.file,
 				left: circle.x - circle.radius,
-				top: circle.y + circle.radius - pictureHeight,
+				top: circle.y - circle.radius - picture.above,
 			},
-			{
-				input: Buffer.from(
-					`<svg xmlns="http://www.w3.org/2000/svg" width="${width.toString()}" height="${height.toString()}">${drawRing(picture.isPerson ? circle.y : 0)}</svg>`,
-				),
-			},
+			{ input: createSvg(drawRing(picture.isPerson ? circle.y : 0)) },
 		])
 		.jpeg({ mozjpeg: true, quality: 88 })
 		.toBuffer();
 }
 
+function createGradient(id: string, attributes: string, stops: string[]) {
+	const last = stops.length - 1;
+
+	return `<linearGradient id="${id}" ${attributes}>${stops.map((color, index) => `<stop offset="${(index / last).toString()}" stop-color="${color}"/>`).join("")}</linearGradient>`;
+}
+
+function createSvg(contents: string) {
+	return Buffer.from(
+		`<svg xmlns="http://www.w3.org/2000/svg" width="${width.toString()}" height="${height.toString()}">${contents}</svg>`,
+	);
+}
+
 function drawRing(top: number) {
-	return `<defs><linearGradient id="ring" x2="1" y2="1"><stop offset="0" stop-color="#4fc3ff"/><stop offset="0.4" stop-color="#b98aff"/><stop offset="0.7" stop-color="#ff7fb0"/><stop offset="1" stop-color="#4dffb0"/></linearGradient><clipPath id="below"><rect y="${top.toString()}" width="100%" height="100%"/></clipPath></defs><circle cx="${circle.x.toString()}" cy="${circle.y.toString()}" r="${(circle.radius + 1).toString()}" fill="none" stroke="url(#ring)" stroke-width="3" opacity="0.8" clip-path="url(#below)"/>`;
+	return `
+		${createGradient("ring", `x2="1" y2="1"`, colors.ring)}
+		<clipPath id="below"><rect y="${top.toString()}" width="100%" height="100%"/></clipPath>
+		<circle cx="${circle.x.toString()}" cy="${circle.y.toString()}" r="${(circle.radius + 1).toString()}" fill="none" stroke="url(#ring)" stroke-width="3" opacity="0.8" clip-path="url(#below)"/>
+	`;
 }
 
 function drawSnark(blocks: number) {
@@ -131,14 +169,14 @@ function drawSnark(blocks: number) {
 	return [...lines, ...dots].join("");
 }
 
-function drawStars(random: () => number) {
+function drawStars(random: Random) {
 	return Array.from({ length: 130 }, () => {
 		const x = random() * width;
 		const y = random() * height;
 		const opacity = interpolate(0.08, 0.4, random());
 		const radius = interpolate(0.6, 1.9, random() ** 2);
 
-		return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${radius.toFixed(1)}" fill="#dae7f3" opacity="${opacity.toFixed(2)}"/>`;
+		return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${radius.toFixed(1)}" fill="${colors.foreground}" opacity="${opacity.toFixed(2)}"/>`;
 	}).join("");
 }
 

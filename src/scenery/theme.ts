@@ -9,7 +9,6 @@ const changes = new Emitter();
 
 let progress = Number(rootState.isDark);
 
-/** The page's color theme, which changes gradually. */
 export const theme = {
 	/** How far it is from light to dark, from 0 to 1. */
 	get darkness() {

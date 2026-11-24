@@ -1,14 +1,7 @@
-import type { APIRoute, GetStaticPaths, ImageMetadata } from "astro";
+import type { APIRoute, GetStaticPaths } from "astro";
 
 import { getCollection } from "astro:content";
 
-import blogScene from "~/assets/heroes/blog-scene.webp";
-import blog from "~/assets/heroes/blog.webp";
-import home from "~/assets/heroes/home.webp";
-import projectsScene from "~/assets/heroes/projects-scene.webp";
-import projects from "~/assets/heroes/projects.webp";
-import speakingScene from "~/assets/heroes/speaking-scene.webp";
-import speaking from "~/assets/heroes/speaking.webp";
 import {
 	createBlogDescription,
 	createBlogTitle,
@@ -17,80 +10,59 @@ import {
 	blogDescription,
 	homeTagline,
 	projectsDescription,
+	siteName,
 	speakingDescription,
 } from "~/constants";
-import { drawPortrait, drawThumbnail } from "~/previews/drawPicture";
+import { type PortraitName, portraits } from "~/portraits";
+import { drawPortrait, type Picture } from "~/previews/drawPicture";
 import { drawPreview } from "~/previews/drawPreview";
+import { getPostPicture } from "~/previews/getPostPicture";
 
 interface Props {
-	portrait?: [ImageMetadata, ImageMetadata?];
+	drawPicture: () => Promise<Picture>;
 	subtitle: string;
-	thumbnail?: ImageMetadata;
 	title: string;
 }
 
-const signature = "joshuakgoldberg.com";
+const pages: Record<PortraitName, { subtitle: string; title: string }> = {
+	blog: { subtitle: blogDescription, title: "Goldblog" },
+	home: { subtitle: homeTagline, title: siteName },
+	projects: { subtitle: projectsDescription, title: "Projects" },
+	speaking: { subtitle: speakingDescription, title: "Speaking" },
+};
 
 export const getStaticPaths = (async () => {
 	const posts = await getCollection("blog");
 
 	return [
-		{
-			params: { name: "home" },
+		...Object.entries(portraits).map(([name, portrait]) => ({
+			params: { name },
 			props: {
-				portrait: [home],
-				subtitle: homeTagline,
-				title: "Josh Goldberg",
-			},
-		},
-		{
-			params: { name: "goldblog" },
-			props: {
-				portrait: [blog, blogScene],
-				subtitle: blogDescription,
-				title: "Goldblog",
-			},
-		},
-		{
-			params: { name: "projects" },
-			props: {
-				portrait: [projects, projectsScene],
-				subtitle: projectsDescription,
-				title: "Projects",
-			},
-		},
-		{
-			params: { name: "speaking" },
-			props: {
-				portrait: [speaking, speakingScene],
-				subtitle: speakingDescription,
-				title: "Speaking",
-			},
-		},
+				...pages[name as PortraitName],
+				drawPicture: () => drawPortrait(portrait),
+			} satisfies Props,
+		})),
 		...posts.map((post) => ({
 			params: { name: `blog/${post.id}` },
 			props: {
+				drawPicture: getPostPicture(post).draw,
 				subtitle: createBlogDescription(post),
-				thumbnail: post.data.thumbnail ?? post.data.image.src,
 				title: createBlogTitle(post),
-			},
+			} satisfies Props,
 		})),
 	];
 }) satisfies GetStaticPaths;
 
 export const GET: APIRoute<Props> = async ({
-	props: { portrait, subtitle, thumbnail, title },
+	props: { drawPicture, subtitle, title },
 }) => {
-	const picture = portrait
-		? await drawPortrait(...portrait)
-		: thumbnail && (await drawThumbnail(thumbnail));
+	const preview = await drawPreview({
+		picture: await drawPicture(),
+		subtitle,
+		title,
+	});
 
-	if (!picture) {
-		return new Response(null, { status: 404 });
-	}
-
-	return new Response(
-		new Uint8Array(await drawPreview({ picture, signature, subtitle, title })),
-		{ headers: { "Content-Type": "image/jpeg" } },
-	);
+	return new Response(new Uint8Array(preview), {
+		headers: { "Content-Type": "image/jpeg" },
+	});
 };

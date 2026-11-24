@@ -1,26 +1,16 @@
 /*
  * What's shown until fonts have loaded, sized so that text wraps the same either way.
  * Astro generates these too, but with the average width of every character that fonts
- * have, which Newsreader's is far from. Sizes here are of the widths of posts' text.
+ * have, which for Newsreader is far from that of English. These were measured from posts.
  */
 
 @font-face {
-	ascent-override: 73.35%;
-	descent-override: 26.45%;
+	ascent-override: 72.27%;
+	descent-override: 26.06%;
 	font-family: "Newsreader Times";
 	font-weight: 300 329;
 	line-gap-override: 0%;
-	size-adjust: 100.2%;
-	src: local("Times New Roman"), local("Liberation Serif");
-}
-
-@font-face {
-	ascent-override: 71.78%;
-	descent-override: 25.88%;
-	font-family: "Newsreader Times";
-	font-weight: 330 479;
-	line-gap-override: 0%;
-	size-adjust: 102.4%;
+	size-adjust: 101.7%;
 	src: local("Times New Roman"), local("Liberation Serif");
 }
 
@@ -28,9 +18,39 @@
 	ascent-override: 71.08%;
 	descent-override: 25.63%;
 	font-family: "Newsreader Times";
-	font-weight: 480 600;
+	font-weight: 330 399;
 	line-gap-override: 0%;
 	size-adjust: 103.4%;
+	src: local("Times New Roman"), local("Liberation Serif");
+}
+
+@font-face {
+	ascent-override: 69.54%;
+	descent-override: 25.07%;
+	font-family: "Newsreader Times";
+	font-weight: 400 479;
+	line-gap-override: 0%;
+	size-adjust: 105.7%;
+	src: local("Times New Roman"), local("Liberation Serif");
+}
+
+@font-face {
+	ascent-override: 73.28%;
+	descent-override: 26.42%;
+	font-family: "Newsreader Times";
+	font-weight: 480 549;
+	line-gap-override: 0%;
+	size-adjust: 100.3%;
+	src: local("Times New Roman Bold"), local("Liberation Serif Bold");
+}
+
+@font-face {
+	ascent-override: 70.74%;
+	descent-override: 25.51%;
+	font-family: "Newsreader Times";
+	font-weight: 550 600;
+	line-gap-override: 0%;
+	size-adjust: 103.9%;
 	src: local("Times New Roman Bold"), local("Liberation Serif Bold");
 }
 
@@ -39,9 +59,20 @@
 	descent-override: 28.07%;
 	font-family: "Newsreader Times";
 	font-style: italic;
-	font-weight: 300 600;
+	font-weight: 300 329;
 	line-gap-override: 0%;
 	size-adjust: 94.4%;
+	src: local("Times New Roman Italic"), local("Liberation Serif Italic");
+}
+
+@font-face {
+	ascent-override: 76.24%;
+	descent-override: 27.49%;
+	font-family: "Newsreader Times";
+	font-style: italic;
+	font-weight: 330 600;
+	line-gap-override: 0%;
+	size-adjust: 96.4%;
 	src: local("Times New Roman Italic"), local("Liberation Serif Italic");
 }
 
@@ -66,12 +97,22 @@
 }
 
 @font-face {
-	ascent-override: 84.1%;
-	descent-override: 30.32%;
+	ascent-override: 85.66%;
+	descent-override: 30.89%;
 	font-family: "Newsreader Noto";
-	font-weight: 480 600;
+	font-weight: 480 549;
 	line-gap-override: 0%;
-	size-adjust: 87.4%;
+	size-adjust: 85.8%;
+	src: local("Noto Serif Bold"), local("NotoSerif-Bold");
+}
+
+@font-face {
+	ascent-override: 81.67%;
+	descent-override: 29.44%;
+	font-family: "Newsreader Noto";
+	font-weight: 550 600;
+	line-gap-override: 0%;
+	size-adjust: 90%;
 	src: local("Noto Serif Bold"), local("NotoSerif-Bold");
 }
 
@@ -80,9 +121,20 @@
 	descent-override: 32.28%;
 	font-family: "Newsreader Noto";
 	font-style: italic;
-	font-weight: 300 600;
+	font-weight: 300 329;
 	line-gap-override: 0%;
 	size-adjust: 82.1%;
+	src: local("Noto Serif Italic"), local("NotoSerif-Italic");
+}
+
+@font-face {
+	ascent-override: 87.4%;
+	descent-override: 31.51%;
+	font-family: "Newsreader Noto";
+	font-style: italic;
+	font-weight: 330 600;
+	line-gap-override: 0%;
+	size-adjust: 84.1%;
 	src: local("Noto Serif Italic"), local("NotoSerif-Italic");
 }
 

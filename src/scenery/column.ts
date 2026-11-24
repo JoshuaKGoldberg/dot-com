@@ -15,7 +15,8 @@ export interface Column {
 	strength: number;
 }
 
-/** Margins narrower than this don't have any effects of their own. */
+export type Margin = "left" | "right";
+
 export const minimumMargin = 72;
 
 export function columnAlpha(

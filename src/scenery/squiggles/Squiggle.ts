@@ -12,12 +12,15 @@ const largeFontSize = 20;
 
 /** Same shape as the static squiggles' images, so that changing from one is seamless. */
 const amplitude = 1.6;
-const period = 14;
+const wavelength = 14;
 const restingHeight = 0.25;
 
 const center = 6;
 
 const settled = 0.004;
+const settledPhase = 0.1;
+
+const turn = Math.PI * 2;
 
 /** A line of a link's text, in the page's coordinates. */
 export type LinkLine = Rectangle;
@@ -37,11 +40,18 @@ let nextId = 0;
  * Links that wrap onto multiple lines have a squiggle on each line.
  */
 export class Squiggle {
-	/** How close the pointer is, from 0 to 1. */
+	isNear = false;
+
+	/** How risen it's becoming, from 0 to 1. */
 	target = 0;
 
+	/** Whether it looks the same as the static squiggle that it's in place of. */
 	get isSettled() {
-		return this.target === 0 && this.#near < settled;
+		return (
+			!this.isNear &&
+			Math.abs(this.#near - this.target) < settled &&
+			Math.abs(this.#phase - this.#wholePhase) < settledPhase
+		);
 	}
 
 	readonly #drawn: DrawnLine[] = [];
@@ -49,7 +59,7 @@ export class Squiggle {
 	readonly #isAlwaysVisible: boolean;
 	readonly #layer: HTMLElement;
 	readonly #link: HTMLElement;
-	#near = 0;
+	#near: number;
 	readonly #offset: number;
 	readonly #opacity: number;
 	readonly #periodSeconds = readMilliseconds("--squigglePeriod") / 1000;
@@ -57,6 +67,11 @@ export class Squiggle {
 	readonly #restingHeight: number;
 	readonly #restingThickness: number;
 	readonly #thickness: number;
+
+	/** The nearest one that static squiggles start from. */
+	get #wholePhase() {
+		return Math.round(this.#phase / turn) * turn;
+	}
 
 	constructor(link: HTMLElement, layer: HTMLElement) {
 		const { content, height, marginTop } = getComputedStyle(link, "::after");
@@ -67,6 +82,7 @@ export class Squiggle {
 		this.#isAlwaysVisible = link.dataset.squiggle !== "onHover";
 		this.#layer = layer;
 		this.#link = link;
+		this.#near = Number(link.matches(":focus-visible"));
 		this.#opacity =
 			parseFloat(styles.getPropertyValue("--squiggleOpacity") || "100%") / 100;
 		this.#restingHeight = isStraight ? 0 : restingHeight;
@@ -114,7 +130,7 @@ export class Squiggle {
 		delete this.#link.dataset.squiggleLive;
 
 		for (const { svg } of this.#drawn) {
-			if (this.isSettled) {
+			if (this.isSettled && !this.target) {
 				svg.remove();
 			} else {
 				fadeAway(svg);
@@ -127,8 +143,20 @@ export class Squiggle {
 
 		this.#highlightX = followLight(highlightX, pointerX, seconds);
 		this.#near = damp(this.#near, this.target, 2.5, seconds);
-		this.#phase -=
-			(seconds / this.#periodSeconds) * this.#near * this.#near * Math.PI * 2;
+
+		if (this.isNear || !this.target) {
+			this.#phase -=
+				(seconds / this.#periodSeconds) * this.#near * this.#near * turn;
+		}
+
+		if (!this.isNear) {
+			this.#phase = damp(
+				this.#phase,
+				this.#wholePhase,
+				2.5 * (this.target || (1 - this.#near) ** 4),
+				seconds,
+			);
+		}
 	}
 
 	#paintLine(
@@ -140,8 +168,8 @@ export class Squiggle {
 		const near = smoothstep(0, 1, this.#near);
 		const path = drawWave({
 			amplitude: amplitude * interpolate(this.#restingHeight, 1, near),
-			period,
 			phase: this.#phase,
+			wavelength,
 			width,
 			y: center,
 		});
