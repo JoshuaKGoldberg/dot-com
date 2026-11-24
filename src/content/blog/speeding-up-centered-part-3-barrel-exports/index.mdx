@@ -8,8 +8,8 @@ title: "Speeding Up Centered Part 3: Barrel Exports"
 ---
 
 import LabeledImage from "~/components/blog/mdx/LabeledImage.astro";
-import lighthousePerformanceOverviewAfter from "~/assets/blog/lighthouse-performance-overview-after.png";
-import lighthousePerformanceOverviewBefore from "~/assets/blog/lighthouse-performance-overview-after.png";
+import lighthousePerformanceOverviewAfter from "~/assets/blog/lighthouse-performance-overview-part-3-after.png";
+import lighthousePerformanceOverviewBefore from "~/assets/blog/lighthouse-performance-overview-part-2-after.png";
 import webpackBundleAnalyzerBefore from "~/assets/blog/webpack-bundle-analyzer-before.png";
 import webpackBundleAnalyzerAfterCodemod from "~/assets/blog/webpack-bundle-analyzer-after-codemod.png";
 import webpackBundleAnalyzerAfterProLight from "~/assets/blog/webpack-bundle-analyzer-after-pro-light.png";
@@ -176,7 +176,7 @@ As nice as it was to see the main page bundle shrinking, no performance investig
 I ran a Lighthouse performance audit on the new production build:
 
 <LabeledImage
-	alt="Lighthouse performance report of 51 (in the orange). 0.6 First Contentful Paint (green), 12.1 Largest Contentful Paint (red), 350ms Total Blocking Time (orange), 0.035 Cumulative Layout Shift (green), 5.4s Speed Index (red)."
+	alt="Lighthouse performance report of 51 (in the orange). 0.6 First Contentful Paint (green), 12.1 Largest Contentful Paint (red), 340ms Total Blocking Time (orange), 0.035 Cumulative Layout Shift (green), 5.4s Speed Index (red)."
 	note="LCP only shrunk by a second, but total blocking time was a third of its previous 950ms."
 	src={lighthousePerformanceOverviewAfter}
 />
