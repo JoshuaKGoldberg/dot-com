@@ -5,22 +5,22 @@
  */
 
 @font-face {
-	ascent-override: 72.27%;
-	descent-override: 26.06%;
+	ascent-override: 73.35%;
+	descent-override: 26.45%;
 	font-family: "Newsreader Times";
 	font-weight: 300 329;
 	line-gap-override: 0%;
-	size-adjust: 101.7%;
+	size-adjust: 100.2%;
 	src: local("Times New Roman"), local("Liberation Serif");
 }
 
 @font-face {
-	ascent-override: 71.15%;
-	descent-override: 25.65%;
+	ascent-override: 71.78%;
+	descent-override: 25.88%;
 	font-family: "Newsreader Times";
 	font-weight: 330 479;
 	line-gap-override: 0%;
-	size-adjust: 103.3%;
+	size-adjust: 102.4%;
 	src: local("Times New Roman"), local("Liberation Serif");
 }
 
@@ -94,4 +94,48 @@
 	line-gap-override: 0%;
 	size-adjust: 93.3%;
 	src: local("Noto Serif"), local("NotoSerif");
+}
+
+@font-face {
+	ascent-override: 75.62%;
+	descent-override: 27.26%;
+	font-family: "Book Title Times";
+	font-style: italic;
+	font-weight: 300 329;
+	line-gap-override: 0%;
+	size-adjust: 97.2%;
+	src: local("Times New Roman Italic"), local("Liberation Serif Italic");
+}
+
+@font-face {
+	ascent-override: 74.02%;
+	descent-override: 26.69%;
+	font-family: "Book Title Times";
+	font-style: italic;
+	font-weight: 330 600;
+	line-gap-override: 0%;
+	size-adjust: 99.3%;
+	src: local("Times New Roman Italic"), local("Liberation Serif Italic");
+}
+
+@font-face {
+	ascent-override: 87.29%;
+	descent-override: 31.47%;
+	font-family: "Book Title Noto";
+	font-style: italic;
+	font-weight: 300 329;
+	line-gap-override: 0%;
+	size-adjust: 84.2%;
+	src: local("Noto Serif Italic"), local("NotoSerif-Italic");
+}
+
+@font-face {
+	ascent-override: 85.47%;
+	descent-override: 30.81%;
+	font-family: "Book Title Noto";
+	font-style: italic;
+	font-weight: 330 600;
+	line-gap-override: 0%;
+	size-adjust: 86%;
+	src: local("Noto Serif Italic"), local("NotoSerif-Italic");
 }

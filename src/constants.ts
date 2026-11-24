@@ -1,3 +1,5 @@
+export const bookTitle = "Learning TypeScript";
+
 export const blogDescription =
 	"A blog about open source, static analysis, and web dev.";
 

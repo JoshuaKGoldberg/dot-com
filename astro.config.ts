@@ -5,7 +5,7 @@ import solidJs from "@astrojs/solid-js";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 
-import { site } from "./src/constants";
+import { bookTitle, site } from "./src/constants";
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,6 +27,18 @@ export default defineConfig({
 			provider: fontProviders.google(),
 			styles: ["normal", "italic"],
 			subsets: ["latin", "latin-ext"],
+			weights: ["300 600"],
+		},
+		{
+			// Small enough to load alongside the rest of its line, so it doesn't shift later
+			cssVariable: "--fontBookTitle",
+			fallbacks: ["Book Title Times", "Book Title Noto", "serif"],
+			name: "Newsreader",
+			optimizedFallbacks: false,
+			options: { experimental: { glyphs: [bookTitle] } },
+			provider: fontProviders.google(),
+			styles: ["italic"],
+			subsets: ["latin"],
 			weights: ["300 600"],
 		},
 		{
