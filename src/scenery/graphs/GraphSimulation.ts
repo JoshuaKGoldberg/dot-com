@@ -4,7 +4,7 @@ import type { Point } from "../geometry";
 import type { pointer as pagePointer } from "../pointer";
 import type { Region, RegionName, Regions } from "./createRegions";
 
-import { damp, interpolate, smoothstep } from "../math";
+import { damp, interpolate, moveToward, smoothstep } from "../math";
 import { pick, type Random } from "../random";
 import { createGoldbergSnark } from "./createGoldbergSnark";
 import { createGraph, type Graph, type Vertex } from "./createGraph";
@@ -30,6 +30,7 @@ export interface Snark extends LivingGraphBase {
 	blocks: number;
 
 	/** Whether its label is focused, which keeps it from fading. */
+	isFading: boolean;
 	isFocused: boolean;
 
 	kind: "snark";
@@ -108,6 +109,9 @@ const snarkLabelSpace = 28;
 /** Snarks stay at least this long, then until the pointer's been far away for a while. */
 const snarkMinimumSeconds = 30;
 const snarkAwaySeconds = 10;
+
+/** How grown fading snarks need to be for hovering them to bring them back. */
+const returnableGrowth = 0.75;
 
 /** Pixels from a snark's edge that count as far away. */
 const snarkAwayDistance = 250;
@@ -306,6 +310,7 @@ export class GraphSimulation {
 			awaySeconds: 0,
 			blocks,
 			growthSeconds: interpolate(5.3, 7.3, this.#random()),
+			isFading: false,
 			isFocused: false,
 			kind: "snark",
 		});
@@ -424,14 +429,24 @@ function ageSnark(snark: Snark, seconds: number, pointerDistance: number) {
 	snark.ageSeconds += seconds;
 	snark.awaySeconds = isAway ? snark.awaySeconds + seconds : 0;
 
-	if (snark.isFocused && snark.fade > 0) {
-		snark.fade = Math.max(0, snark.fade - seconds / snarkFadeSeconds);
+	const isReturnedTo =
+		pointerDistance < snark.radius && snark.growth > returnableGrowth;
+
+	if (snark.isFocused || isReturnedTo) {
+		snark.isFading = false;
 	} else if (
-		snark.fade > 0 ||
-		(snark.ageSeconds > snarkMinimumSeconds &&
-			snark.awaySeconds > snarkAwaySeconds)
+		snark.ageSeconds > snarkMinimumSeconds &&
+		snark.awaySeconds > snarkAwaySeconds
 	) {
-		snark.fade += seconds / snarkFadeSeconds;
+		snark.isFading = true;
+	}
+
+	if (snark.isFading || snark.fade > 0) {
+		snark.fade = moveToward(
+			snark.fade,
+			Number(snark.isFading),
+			seconds / snarkFadeSeconds,
+		);
 	} else {
 		snark.growth = Math.min(1, snark.growth + seconds / snark.growthSeconds);
 	}
