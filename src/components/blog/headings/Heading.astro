@@ -1,0 +1,72 @@
+---
+interface Props {
+	as: "h2" | "h3" | "h4" | "h5";
+	class?: string;
+	id?: string;
+}
+
+const { as: As, ...rest } = Astro.props;
+
+/** Footnotes' heading is only for screen readers, so there's nowhere to show a link. */
+const linkable = rest.id &&
+	!rest.class && {
+		id: rest.id,
+		linkId: `${rest.id}-link`,
+		textId: `${rest.id}-text`,
+	};
+---
+
+{/* Named by only its text, so that its link isn't read out as part of it */}
+{linkable ? (
+	<As {...rest} aria-labelledby={linkable.textId} class="heading">
+		<span id={linkable.textId}>
+			<slot />
+		</span>
+		<a
+			aria-label="Link to"
+			aria-labelledby={`${linkable.linkId} ${linkable.textId}`}
+			class="heading-link"
+			data-heading-link
+			href={`#${linkable.id}`}
+			id={linkable.linkId}
+		>
+			&#8288;#
+		</a>
+	</As>
+) : (
+	<As {...rest}>
+		<slot />
+	</As>
+)}
+
+<style>
+	.heading-link {
+		color: var(--colorMuted);
+		margin-left: 0.3em;
+		user-select: none;
+	}
+
+	.heading-link:is(:focus-visible, :hover) {
+		color: var(--colorEmphasized);
+	}
+
+	@media (hover: hover) {
+		.heading-link {
+			opacity: 0;
+			transition:
+				var(--transitionMedium) color,
+				var(--transitionFast) opacity;
+		}
+
+		.heading:hover .heading-link,
+		.heading-link:focus-visible {
+			opacity: 1;
+		}
+	}
+
+	@media print {
+		.heading-link {
+			display: none;
+		}
+	}
+</style>
