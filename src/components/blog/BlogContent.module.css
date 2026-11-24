@@ -10,9 +10,7 @@
 
 .article a:not(:has(img)) {
 	--squiggleOpacity: 70%;
-	--squiggleRiseSpeed: 0.5;
 	--squiggleThickness: 2px;
-	--squiggleWaveSpeed: 0.25;
 
 	background: linear-gradient(
 			to right,

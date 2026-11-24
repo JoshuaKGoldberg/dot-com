@@ -16,15 +16,20 @@ export function keepLinkStyles({ pathname }: URL) {
 			const squiggle = getComputedStyle(link, "::after");
 			const { filter, opacity } = squiggle;
 			const rise = squiggle.getPropertyValue("--rise");
+			const shift = squiggle.getPropertyValue("--shift");
 
-			return { color, filter, link, opacity, rise };
+			return { color, filter, link, opacity, rise, shift };
 		},
 	);
 
 	return () => {
 		const duration = readMilliseconds("--transitionMedium");
+		const squiggle = {
+			duration: readMilliseconds("--transitionSquiggle"),
+			pseudoElement: "::after",
+		};
 
-		for (const { color, filter, link, opacity, rise } of links) {
+		for (const { color, filter, link, opacity, rise, shift } of links) {
 			const current = getAriaCurrent(link.getAttribute("href") ?? "", pathname);
 
 			if (current) {
@@ -33,10 +38,11 @@ export function keepLinkStyles({ pathname }: URL) {
 				link.removeAttribute("aria-current");
 			}
 
-			const squiggle = { duration, pseudoElement: "::after" };
-
 			link.animate([{ color, offset: 0 }], duration);
-			link.animate([{ "--rise": rise, filter, offset: 0, opacity }], squiggle);
+			link.animate(
+				[{ "--rise": rise, "--shift": shift, filter, offset: 0, opacity }],
+				squiggle,
+			);
 		}
 	};
 }

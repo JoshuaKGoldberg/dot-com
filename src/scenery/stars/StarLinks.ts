@@ -79,7 +79,7 @@ export class StarLinks {
 	}
 
 	/** Links each lit star to its nearest one that's closer to the pointer. */
-	relink(lit: readonly LitStar[], sky: Sky) {
+	relink(lit: readonly LitStar[], sky: Sky, spread: number) {
 		for (const link of this.#links.values()) {
 			link.isWanted = false;
 		}
@@ -87,14 +87,10 @@ export class StarLinks {
 		const nearest = lit
 			.filter(({ star }) => star.glow > minimumGlow)
 			.sort((a, b) => a.distance - b.distance)
-			.slice(0, maximumLinkedStars);
+			.slice(0, Math.round(maximumLinkedStars * spread ** 2));
 
 		for (const [index, { hue, star }] of nearest.entries()) {
-			const parent = findNearest(
-				star,
-				nearest.slice(0, index).map((other) => other.star),
-				sky,
-			);
+			const parent = findNearest(star, nearest, index, sky);
 
 			if (!parent) {
 				continue;
@@ -134,12 +130,19 @@ export class StarLinks {
 	}
 }
 
-function findNearest(star: Star, others: readonly Star[], sky: Sky) {
+/** Only looks through those before the index. */
+function findNearest(
+	star: Star,
+	others: readonly LitStar[],
+	index: number,
+	sky: Sky,
+) {
 	const y = getScreenY(star.y, star.depth, sky);
 	let nearest: Star | undefined;
 	let nearestDistance = fadeLength;
 
-	for (const other of others) {
+	for (let i = 0; i < index; i += 1) {
+		const other = others[i].star;
 		const distance = Math.hypot(
 			other.x - star.x,
 			getScreenY(other.y, other.depth, sky) - y,

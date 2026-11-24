@@ -1,6 +1,6 @@
 import type { Rectangle } from "../geometry";
 
-import { px } from "../css";
+import { px, readMilliseconds } from "../css";
 import { fadeAway } from "../fadeAway";
 import { followLight } from "../followLight";
 import { damp, interpolate, smoothstep } from "../math";
@@ -52,12 +52,11 @@ export class Squiggle {
 	#near = 0;
 	readonly #offset: number;
 	readonly #opacity: number;
+	readonly #periodSeconds = readMilliseconds("--squigglePeriod") / 1000;
 	#phase = 0;
 	readonly #restingHeight: number;
 	readonly #restingThickness: number;
-	readonly #riseSpeed: number;
 	readonly #thickness: number;
-	readonly #waveSpeed: number;
 
 	constructor(link: HTMLElement, layer: HTMLElement) {
 		const { content, height, marginTop } = getComputedStyle(link, "::after");
@@ -71,12 +70,6 @@ export class Squiggle {
 		this.#opacity =
 			parseFloat(styles.getPropertyValue("--squiggleOpacity") || "100%") / 100;
 		this.#restingHeight = isStraight ? 0 : restingHeight;
-		this.#riseSpeed = Number(
-			styles.getPropertyValue("--squiggleRiseSpeed") || 1,
-		);
-		this.#waveSpeed = Number(
-			styles.getPropertyValue("--squiggleWaveSpeed") || 1,
-		);
 		this.#thickness = thickness
 			? parseFloat(thickness)
 			: parseFloat(styles.fontSize) >= largeFontSize
@@ -133,9 +126,9 @@ export class Squiggle {
 		const highlightX = this.#highlightX ?? pointerX;
 
 		this.#highlightX = followLight(highlightX, pointerX, seconds);
-		this.#near = damp(this.#near, this.target, 10 * this.#riseSpeed, seconds);
+		this.#near = damp(this.#near, this.target, 2.5, seconds);
 		this.#phase -=
-			seconds * this.#near * this.#near * this.#waveSpeed * Math.PI * 1.8;
+			(seconds / this.#periodSeconds) * this.#near * this.#near * Math.PI * 2;
 	}
 
 	#paintLine(

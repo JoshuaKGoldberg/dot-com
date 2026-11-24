@@ -58,6 +58,7 @@ export function findRandomPlacement(
 	{ clearance, radius }: GraphSize,
 	pointer: Point,
 	obstacles: readonly Placement[],
+	spread = 1,
 ) {
 	const { bounds } = region;
 
@@ -71,9 +72,10 @@ export function findRandomPlacement(
 	for (let attempt = 0; attempt < 12; attempt += 1) {
 		const angle = random() * Math.PI * 2;
 		const distance =
-			random() < 0.85
+			spread *
+			(random() < 0.85
 				? interpolate(30, 120, random())
-				: interpolate(120, 320, random());
+				: interpolate(120, 320, random()));
 		const placement = {
 			clearance,
 			x: clamp(

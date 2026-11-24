@@ -1,7 +1,7 @@
 import { Emitter, type Listener } from "./Emitter";
 import { rootState } from "./rootState";
 
-const parkedAfterMilliseconds = 30_000;
+const parkedAfterMilliseconds = 60_000;
 
 /** Fingers can't stay without being in the way, so taps count for a while after them. */
 const touchParkedAfterMilliseconds = 12_000;

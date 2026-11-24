@@ -12,7 +12,7 @@ export default defineConfig({
 	fonts: [
 		{
 			cssVariable: "--fontDisplay",
-			fallbacks: ["serif"],
+			fallbacks: ["Redaction Noto", "serif"],
 			name: "Redaction",
 			provider: fontProviders.google(),
 			styles: ["normal"],
@@ -21,8 +21,9 @@ export default defineConfig({
 		},
 		{
 			cssVariable: "--fontText",
-			fallbacks: ["serif"],
+			fallbacks: ["Newsreader Times", "Newsreader Noto", "serif"],
 			name: "Newsreader",
+			optimizedFallbacks: false,
 			provider: fontProviders.google(),
 			styles: ["normal", "italic"],
 			subsets: ["latin", "latin-ext"],

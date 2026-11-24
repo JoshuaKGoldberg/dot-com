@@ -10,6 +10,10 @@ import LabeledMedia from "./LabeledMedia.astro";
 interface Props {
 	alt: string;
 	description: string | string[];
+
+	/** For images that are visible as soon as their post is */
+	eager?: boolean;
+
 	note?: string;
 	original?: MediaOriginal | string;
 	src: ImageMetadata;
@@ -48,8 +52,10 @@ const widths = [
 	<Image
 		alt={alt}
 		class="labeled-image"
+		fetchpriority={Astro.props.eager ? "high" : undefined}
 		format="avif"
 		height={Math.round((displayWidth * height) / width)}
+		loading={Astro.props.eager ? "eager" : "lazy"}
 		quality={55}
 		sizes={`min(100vw, ${displayWidth}px)`}
 		src={Astro.props.src}

@@ -1,0 +1,97 @@
+/*
+ * What's shown until fonts have loaded, sized so that text wraps the same either way.
+ * Astro generates these too, but with the average width of every character that fonts
+ * have, which Newsreader's is far from. Sizes here are of the widths of posts' text.
+ */
+
+@font-face {
+	ascent-override: 72.27%;
+	descent-override: 26.06%;
+	font-family: "Newsreader Times";
+	font-weight: 300 329;
+	line-gap-override: 0%;
+	size-adjust: 101.7%;
+	src: local("Times New Roman"), local("Liberation Serif");
+}
+
+@font-face {
+	ascent-override: 71.15%;
+	descent-override: 25.65%;
+	font-family: "Newsreader Times";
+	font-weight: 330 479;
+	line-gap-override: 0%;
+	size-adjust: 103.3%;
+	src: local("Times New Roman"), local("Liberation Serif");
+}
+
+@font-face {
+	ascent-override: 71.08%;
+	descent-override: 25.63%;
+	font-family: "Newsreader Times";
+	font-weight: 480 600;
+	line-gap-override: 0%;
+	size-adjust: 103.4%;
+	src: local("Times New Roman Bold"), local("Liberation Serif Bold");
+}
+
+@font-face {
+	ascent-override: 77.86%;
+	descent-override: 28.07%;
+	font-family: "Newsreader Times";
+	font-style: italic;
+	font-weight: 300 600;
+	line-gap-override: 0%;
+	size-adjust: 94.4%;
+	src: local("Times New Roman Italic"), local("Liberation Serif Italic");
+}
+
+@font-face {
+	ascent-override: 85.27%;
+	descent-override: 30.74%;
+	font-family: "Newsreader Noto";
+	font-weight: 300 329;
+	line-gap-override: 0%;
+	size-adjust: 86.2%;
+	src: local("Noto Serif"), local("NotoSerif");
+}
+
+@font-face {
+	ascent-override: 83.9%;
+	descent-override: 30.25%;
+	font-family: "Newsreader Noto";
+	font-weight: 330 479;
+	line-gap-override: 0%;
+	size-adjust: 87.6%;
+	src: local("Noto Serif"), local("NotoSerif");
+}
+
+@font-face {
+	ascent-override: 84.1%;
+	descent-override: 30.32%;
+	font-family: "Newsreader Noto";
+	font-weight: 480 600;
+	line-gap-override: 0%;
+	size-adjust: 87.4%;
+	src: local("Noto Serif Bold"), local("NotoSerif-Bold");
+}
+
+@font-face {
+	ascent-override: 89.52%;
+	descent-override: 32.28%;
+	font-family: "Newsreader Noto";
+	font-style: italic;
+	font-weight: 300 600;
+	line-gap-override: 0%;
+	size-adjust: 82.1%;
+	src: local("Noto Serif Italic"), local("NotoSerif-Italic");
+}
+
+@font-face {
+	ascent-override: 96.46%;
+	descent-override: 32.15%;
+	font-family: "Redaction Noto";
+	font-weight: 400;
+	line-gap-override: 0%;
+	size-adjust: 93.3%;
+	src: local("Noto Serif"), local("NotoSerif");
+}

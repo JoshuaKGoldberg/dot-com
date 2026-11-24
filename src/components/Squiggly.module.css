@@ -10,6 +10,12 @@
 	syntax: "<integer>";
 }
 
+@property --shift {
+	inherits: false;
+	initial-value: 0px;
+	syntax: "<length>";
+}
+
 /* Its image is of the same wave at each step of its rise, from top to bottom */
 .squiggly::after {
 	background: var(--squiggleLine);
@@ -17,13 +23,15 @@
 	display: block;
 	height: 8px;
 	margin-top: var(--squiggleOffset, -0.2em);
-	mask: url("~/assets/squiggles/rising-inline.svg") repeat-x 0
+	/* Paused rather than removed, so that it stops wherever it is */
+	animation: travel var(--squigglePeriod) steps(112) infinite paused;
+	mask: url("~/assets/squiggles/rising-inline.svg") repeat-x var(--shift)
 		calc(-8px * var(--rise));
 	pointer-events: none;
 	position: absolute;
 	transition:
-		var(--transitionMedium) opacity,
-		var(--transitionMedium) linear --rise,
+		var(--transitionSquiggle) opacity,
+		var(--transitionSquiggle) linear --rise,
 		var(--transitionSlow) filter;
 	width: 100%;
 }
@@ -55,8 +63,8 @@
 .squiggly[data-squiggle="current"]:not([aria-current]):hover::after {
 	filter: var(--squiggleVivid);
 	transition:
-		var(--transitionMedium) opacity,
-		var(--transitionMedium) linear --rise,
+		var(--transitionSquiggle) opacity,
+		var(--transitionSquiggle) linear --rise,
 		var(--transitionVivid);
 }
 
@@ -67,6 +75,20 @@
 		:hover
 	)::after {
 	opacity: 0;
+}
+
+:global(html[data-motion="playing"])
+	.squiggly:is(:focus-visible, :hover):not(
+		[aria-current],
+		[data-squiggle-live]
+	)::after {
+	animation-play-state: running;
+}
+
+@keyframes travel {
+	to {
+		--shift: 14px;
+	}
 }
 
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */

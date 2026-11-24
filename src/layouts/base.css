@@ -66,6 +66,7 @@
 			var(--squiggleEnd),
 			var(--squiggleGray) var(--squiggleGrayness)
 		);
+		--squigglePeriod: 9s;
 		--squiggleLine: linear-gradient(
 			to right,
 			transparent,
@@ -98,6 +99,7 @@
 		--transitionMedium: 280ms;
 		--transitionSlow: 490ms;
 		--transitionSlowest: 700ms;
+		--transitionSquiggle: 800ms;
 		--transitionPageOut: 140ms;
 		--transitionPortrait: 300ms;
 

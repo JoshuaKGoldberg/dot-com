@@ -17,7 +17,8 @@ import { onTheme, theme } from "../theme";
 import { createStars, type Star } from "./createStars";
 import { paintStars } from "./paintStars";
 import { linkedDepth, overscan, parallaxRates, type Sky } from "./sky";
-import { StarLights } from "./StarLights";
+import { Spread } from "./Spread";
+import { linkedRadius, StarLights } from "./StarLights";
 import { StarLinks } from "./StarLinks";
 
 /** How far into the column the pointer still counts as being by its margin. */
@@ -43,6 +44,7 @@ export class StarField {
 	#paintedDarkness = theme.darkness;
 	#paintedScroll = 0;
 	readonly #rightDwell = new Dwell();
+	readonly #spread = new Spread();
 
 	/** How far the sky has scrolled, other than from the current page scrolling. */
 	#scrollBefore = 0;
@@ -96,6 +98,7 @@ export class StarField {
 			this.#lights.clear();
 			this.#links.clear();
 			this.#rightDwell.reset();
+			this.#spread.reset();
 		}, signal);
 		onPointer(() => {
 			if (
@@ -158,7 +161,17 @@ export class StarField {
 			footer: this.#measureFooter().bounds,
 			height: this.#height,
 			marginOffset: scroll * parallaxRates[linkedDepth],
+			spread: this.#getSpread(),
 			width: this.#width,
+		});
+	}
+
+	#getSpread() {
+		const { left, right } = this.#column;
+
+		return this.#spread.getScale(linkedRadius, {
+			height: this.#height,
+			width: Math.min(left, this.#width - right),
 		});
 	}
 
@@ -172,10 +185,19 @@ export class StarField {
 		const sky = this.#createSky();
 
 		this.#seconds += seconds;
-		this.#lights.step(seconds, this.#marginStars, sky);
+		this.#spread.step(
+			seconds,
+			pointer,
+			nearness.left > 0 || nearness.right > 0,
+		);
+
+		const spread = this.#getSpread();
+
+		this.#lights.step(seconds, this.#marginStars, sky, spread);
 		this.#links.relink(
 			this.#lights.lit.filter(({ star }) => star.depth === linkedDepth),
 			sky,
+			spread,
 		);
 		this.#links.step(seconds);
 		this.#graphs.step(seconds, this.#getRegions(sky), this.#height, pointer);

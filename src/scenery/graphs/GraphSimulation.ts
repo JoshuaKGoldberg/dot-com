@@ -250,6 +250,7 @@ export class GraphSimulation {
 			size,
 			pointer,
 			this.graphs.map((graph) => this.#getPlacement(graph)),
+			region.spread,
 		);
 
 		if (placement) {

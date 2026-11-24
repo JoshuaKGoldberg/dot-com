@@ -13,6 +13,9 @@ export interface LitStar {
 
 const lightRadius = 150;
 
+/** Stars any farther than this from the pointer are too faint to be linked. */
+export const linkedRadius = lightRadius * 0.7;
+
 export class StarLights {
 	lit: readonly LitStar[] = [];
 
@@ -44,20 +47,21 @@ export class StarLights {
 		}
 	}
 
-	step(seconds: number, stars: readonly Star[], sky: Sky) {
+	step(seconds: number, stars: readonly Star[], sky: Sky, spread: number) {
+		const radius = lightRadius * spread;
 		const { isPresent, x: pointerX, y: pointerY } = pointer;
 		const lit: LitStar[] = [];
 
 		for (const star of stars) {
 			// Most stars are nowhere near the pointer, so they need to be skipped quickly
-			if (!star.glow && Math.abs(star.x - pointerX) > lightRadius) {
+			if (!star.glow && Math.abs(star.x - pointerX) > radius) {
 				continue;
 			}
 
 			const offsetX = star.x - pointerX;
 			const offsetY = getScreenY(star.y, star.depth, sky) - pointerY;
 			const distance = Math.hypot(offsetX, offsetY);
-			const target = isPresent ? smoothstep(lightRadius, 0, distance) : 0;
+			const target = isPresent ? smoothstep(radius, 0, distance) : 0;
 
 			star.glow = damp(
 				star.glow,

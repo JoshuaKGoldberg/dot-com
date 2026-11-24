@@ -21,6 +21,9 @@ export interface Region {
 
 	/** At full dwell. */
 	smallGraphsPerSecond: number;
+
+	/** How many times farther than usual from the pointer small graphs may be. */
+	spread: number;
 }
 
 export type RegionName = "bottom" | "left" | "right";
@@ -33,6 +36,7 @@ interface RegionContext {
 	footer: FooterBounds | undefined;
 	height: number;
 	marginOffset: number;
+	spread: number;
 	width: number;
 }
 
@@ -42,12 +46,14 @@ export function createRegions({
 	footer,
 	height,
 	marginOffset,
+	spread,
 	width,
 }: RegionContext): Regions {
 	const margin = {
 		offset: marginOffset,
-		smallGraphLimit: 11,
-		smallGraphsPerSecond: 1,
+		smallGraphLimit: 11 * spread,
+		smallGraphsPerSecond: spread,
+		spread,
 	};
 	const regions = new Map<RegionName, Region>();
 
@@ -77,6 +83,7 @@ export function createRegions({
 			offset: -top,
 			smallGraphLimit: 8,
 			smallGraphsPerSecond: 0.3,
+			spread: 1,
 		});
 	}
 

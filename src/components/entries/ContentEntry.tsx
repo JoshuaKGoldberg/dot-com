@@ -65,9 +65,8 @@ export function ContentEntry(props: ContentEntryProps) {
 							<For each={props.links.sort(([a], [b]) => a.localeCompare(b))}>
 								{([text, href]) => (
 									<Anchor
-										{...(props.description
-											? { fontSize: "small" }
-											: { class: styles.anchorLarger, fontSize: "medium" })}
+										class={props.description ? undefined : styles.anchorAlone}
+										fontSize="small"
 										href={href}
 									>
 										{text}

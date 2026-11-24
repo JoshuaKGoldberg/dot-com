@@ -12,6 +12,7 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 	return (
 		<ContentEntry
 			description={props.speaking.title}
+			descriptionSize="small"
 			links={props.speaking.links && Object.entries(props.speaking.links)}
 			subtitle={[
 				props.speaking.date.toLocaleString("en-US", {
