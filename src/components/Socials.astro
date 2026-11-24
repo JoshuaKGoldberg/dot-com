@@ -28,16 +28,15 @@ const socials = [
 	}
 
 	.social {
+		--socialSize: 1.5rem;
+
+		display: flex;
 		transition: var(--transitionMedium) scale;
 	}
 
-	.social:hover {
-		scale: 1.15;
-	}
-
-	.social :global(img) {
-		display: block;
-		height: 1.5rem;
-		width: 1.5rem;
+	@media (hover: hover) {
+		.social:hover {
+			scale: 1.15;
+		}
 	}
 </style>

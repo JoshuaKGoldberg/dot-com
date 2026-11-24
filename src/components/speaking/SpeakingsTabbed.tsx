@@ -6,6 +6,7 @@ import { TabbedEntryCategories } from "../tabs/TabbedEntryCategories";
 import { SpeakingsGrouped } from "./SpeakingsGrouped";
 
 export interface SpeakingsTabbedProps {
+	now: number;
 	speakings: SpeakingData[];
 }
 
@@ -20,7 +21,7 @@ export function SpeakingsTabbed(props: SpeakingsTabbedProps) {
 			collection="speaking"
 			initialCategories={categories()}
 			renderCategory={(speakings) => (
-				<SpeakingsGrouped allSpeakings={speakings} />
+				<SpeakingsGrouped allSpeakings={speakings} now={props.now} />
 			)}
 		/>
 	);

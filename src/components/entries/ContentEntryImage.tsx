@@ -7,6 +7,8 @@ const variants = {
 	square: styles.square,
 };
 
+export const largestEntryImagePixels = 80;
+
 export interface ContentEntryImageProps {
 	alt: string;
 	src: string;
@@ -20,8 +22,10 @@ export function ContentEntryImage(props: ContentEntryImageProps) {
 		<img
 			alt={props.alt}
 			class={clsx(styles.contentEntryImage, variants[props.variant])}
+			height={largestEntryImagePixels}
 			loading="lazy"
 			src={props.src}
+			width={largestEntryImagePixels}
 		/>
 	);
 }

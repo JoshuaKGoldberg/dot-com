@@ -15,7 +15,7 @@
 	display: inline-block;
 }
 
-@media (min-width: 490px) {
+@media (width >= 30.625em) {
 	.betweenDateAndTime,
 	.beforeChildren {
 		display: inline-block;

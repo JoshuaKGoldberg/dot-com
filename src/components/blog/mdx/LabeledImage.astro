@@ -24,24 +24,19 @@ const alt =
 
 const { height, width } = Astro.props.src;
 
-/** Tallest and, unless they're wide, widest that images are displayed. */
+const articleWidth = 752;
 const maximumHeight = 400;
-const maximumWidth = Astro.props.wide ? Infinity : 600;
+const maximumWidth = Astro.props.wide ? articleWidth : 600;
 
-// Knowing exactly how wide the image will be displayed reserves the right space for it
 const displayWidth = Math.round(
 	Math.min(width, maximumWidth, (maximumHeight * width) / height),
 );
 
-// Enough for phones, for smaller screens, and for high-density screens
-const widths = [480, 640, 720, 960, displayWidth, displayWidth * 2].filter(
-	(candidate) => candidate <= Math.min(width, displayWidth * 2),
-);
+const phoneAndTabletWidths = [480, 640, 720, 960];
 
-// A post's first image is often visible right away, so it shouldn't wait to be loaded
-const isFirst = !Astro.locals.hasLabeledImage;
-
-Astro.locals.hasLabeledImage = true;
+const widths = [
+	...new Set([...phoneAndTabletWidths, displayWidth, displayWidth * 2]),
+].filter((candidate) => candidate <= Math.min(width, displayWidth * 2));
 ---
 
 <LabeledMedia
@@ -53,9 +48,8 @@ Astro.locals.hasLabeledImage = true;
 	<Image
 		alt={alt}
 		class="labeled-image"
-		{...(isFirst && { fetchpriority: "high", loading: "eager" })}
-		height={Math.round((displayWidth * height) / width)}
 		format="avif"
+		height={Math.round((displayWidth * height) / width)}
 		quality={55}
 		sizes={`min(100vw, ${displayWidth}px)`}
 		src={Astro.props.src}

@@ -9,7 +9,6 @@
 	position: relative;
 }
 
-/* Easier to press than it looks */
 .heart::after {
 	content: "";
 	inset: -0.5rem;

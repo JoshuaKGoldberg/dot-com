@@ -12,7 +12,7 @@ export interface DateAndMinutesProps {
 export function DateAndMinutes(props: DateAndMinutesProps) {
 	return (
 		<>
-			{props.date.toLocaleString("default", {
+			{props.date.toLocaleString("en-US", {
 				day: "numeric",
 				month: "short",
 				timeZone: "GMT",

@@ -1,14 +1,43 @@
 .article {
 	display: flex;
 	flex-direction: column;
-	font-size: var(--fontSizeBody);
+	font-size: var(--fontSizeBlogBody);
 	gap: 1rem;
 	line-height: var(--lineHeightParagraph);
+	overflow-wrap: break-word;
 	text-wrap: pretty;
 }
 
 .article a:not(:has(img)) {
-	background: var(--squiggleLine) 0 100% / 100% 2px no-repeat;
+	--squiggleOpacity: 70%;
+	--squiggleRiseSpeed: 0.5;
+	--squiggleThickness: 2px;
+	--squiggleWaveSpeed: 0.25;
+
+	background: linear-gradient(
+			to right,
+			transparent,
+			color-mix(
+					in srgb,
+					var(--squiggleRestingStart) var(--squiggleOpacity),
+					transparent
+				)
+				17%,
+			color-mix(
+					in srgb,
+					var(--squiggleRestingMiddle) var(--squiggleOpacity),
+					transparent
+				)
+				50%,
+			color-mix(
+					in srgb,
+					var(--squiggleRestingEnd) var(--squiggleOpacity),
+					transparent
+				)
+				83%,
+			transparent
+		)
+		0 100% / 100% var(--squiggleThickness) no-repeat;
 	-webkit-box-decoration-break: clone;
 	box-decoration-break: clone;
 	padding-bottom: 0.1em;
@@ -16,7 +45,12 @@
 
 .article a:is(:focus-visible, :hover):not(:global([data-squiggle-live])) {
 	background: none;
-	text-decoration: underline wavy var(--colorEmphasized) 1.5px;
+	text-decoration: underline wavy 1.5px
+		color-mix(
+			in srgb,
+			var(--colorEmphasized) var(--squiggleOpacity),
+			transparent
+		);
 	text-underline-offset: 0.2em;
 }
 
@@ -26,20 +60,10 @@
 }
 
 /* Backgrounds aren't shown in either of these */
-@media (forced-colors: active) {
+@media print, (forced-colors: active) {
 	.article a:not(:has(img)) {
 		text-decoration: underline;
 	}
-}
-
-@media print {
-	.article a:not(:has(img)) {
-		text-decoration: underline;
-	}
-}
-
-.article :is(a, h2, h3, h4, h5, [data-footnotes] li) {
-	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
 .article :is(h2, h3, h4) {
@@ -124,6 +148,7 @@
 
 .article hr {
 	border-color: var(--colorMedium);
+	border-style: solid;
 	border-width: 0 0 1px 0;
 	margin: 3rem auto 2rem;
 	width: 100%;
@@ -147,9 +172,13 @@
 	font-weight: calc((var(--fontWeightLight) + var(--fontWeightBold)) / 2);
 }
 
+.article :global(.data-footnote-backref) {
+	/* Enough room for accessibility guidelines' smallest touch targets */
+	margin-left: 0.1em;
+}
+
 .article sup a {
 	padding: 0 0.1rem 0 0.2rem;
-	scroll-margin-top: var(--heightMinimumFromHeader);
 }
 
 .article table {
@@ -160,7 +189,7 @@
 
 .article summary {
 	cursor: pointer;
-	font-size: var(--fontSizeBody);
+	font-size: var(--fontSizeBlogBody);
 	font-style: italic;
 	text-align: right;
 }
@@ -185,11 +214,11 @@
 .article small {
 	display: flex;
 	gap: 0.35rem;
+	justify-content: center;
 }
 
-@media (min-width: 1017px) {
+@media (width >= 63.5625em) {
 	.article {
-		max-width: calc(var(--widthSlim) + 4rem);
 		margin: 0 var(--widthTableOfContents) 0 0;
 	}
 }

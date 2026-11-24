@@ -1,6 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+export interface VideoSize {
+	height: number;
+	width: number;
+}
+
 const videos = import.meta.glob<string>("/src/assets/blog/*.webm", {
 	eager: true,
 	import: "default",
@@ -14,23 +19,23 @@ const videos = import.meta.glob<string>("/src/assets/blog/*.webm", {
 const sizePattern =
 	/\xb0[\x81\x82](?<width>(?<=\x81).|(?<=\x82)..)\xba[\x81\x82](?<height>(?<=\x81).|(?<=\x82)..)/s;
 
-/** Reads the dimensions of a WebM asset, so that space can be reserved for it. */
-export async function readVideoSize(src: string) {
+export async function readVideoSize(src: string): Promise<VideoSize> {
 	const file = Object.entries(videos).find(([, url]) => url === src)?.[0];
 	if (!file) {
-		return null;
+		throw new Error(`Not a WebM in src/assets/blog: ${src}`);
 	}
 
 	const contents = await readFile(path.join(process.cwd(), file));
 	const { height, width } =
 		sizePattern.exec(contents.toString("latin1"))?.groups ?? {};
 
-	return height && width
-		? { height: readNumber(height), width: readNumber(width) }
-		: null;
+	if (!height || !width) {
+		throw new Error(`Could not read the video's size, is it a WebM? ${file}`);
+	}
+
+	return { height: readBigEndian(height), width: readBigEndian(width) };
 }
 
-/** Reads a big-endian number from the characters of its bytes. */
-function readNumber(bytes: string) {
+function readBigEndian(bytes: string) {
 	return Buffer.from(bytes, "latin1").readUIntBE(0, bytes.length);
 }

@@ -1,0 +1,18 @@
+---
+import { LoopedVideo } from "./LoopedVideo";
+import { readVideoSize } from "./readVideoSize";
+
+interface Props {
+	alt: string;
+	src: string;
+}
+
+const { alt, src } = Astro.props;
+---
+
+<LoopedVideo
+	alt={alt}
+	client:visible
+	size={await readVideoSize(src)}
+	src={src}
+/>

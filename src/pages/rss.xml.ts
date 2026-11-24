@@ -3,6 +3,10 @@ import type { APIContext } from "astro";
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 
+import {
+	createBlogDescription,
+	createBlogTitle,
+} from "../components/blog/utils";
 import { blogDescription, site } from "../constants";
 
 export async function GET(context: APIContext) {
@@ -13,10 +17,10 @@ export async function GET(context: APIContext) {
 		description: blogDescription,
 		items: blog.map((post) => ({
 			customData: post.data.customData,
-			description: post.data.description,
+			description: createBlogDescription(post),
 			link: `/blog/${post.id}`,
 			pubDate: post.data.pubDate,
-			title: post.data.title,
+			title: createBlogTitle(post),
 		})),
 		site: context.site?.toString() ?? site,
 		title: "Goldblog",

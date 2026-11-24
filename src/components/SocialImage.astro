@@ -5,15 +5,14 @@ import { Image } from "astro:assets";
 
 interface Props {
 	alt: string;
-	class?: string;
 	image: ImageMetadata;
 }
 ---
 
 <Image
-	loading="eager"
 	alt={Astro.props.alt}
-	class:list={["social-image", Astro.props.class]}
+	class="social-image"
+	loading="eager"
 	src={Astro.props.image}
 />
 
@@ -21,8 +20,8 @@ interface Props {
 	.social-image {
 		filter: invert(var(--iconInversion))
 			hue-rotate(calc(var(--iconInversion) * 180deg));
-		height: 1.25rem;
-		width: 1.25rem;
+		height: var(--socialSize, 1.25rem);
+		width: var(--socialSize, 1.25rem);
 		vertical-align: text-bottom;
 	}
 </style>

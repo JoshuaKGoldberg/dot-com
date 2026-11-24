@@ -8,7 +8,9 @@ export function EmojiBlastHeart() {
 			aria-label="love"
 			class={styles.heart}
 			onClick={() => {
-				emojiBlast();
+				if (document.documentElement.dataset.motion === "playing") {
+					emojiBlast();
+				}
 			}}
 			type="button"
 		>

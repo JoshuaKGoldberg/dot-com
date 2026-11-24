@@ -8,7 +8,7 @@
 	width: 100%;
 }
 
-@media (min-width: 700px) {
+@media (width >= 43.75em) {
 	.trigger:first-of-type {
 		margin-right: 3rem;
 		width: initial;

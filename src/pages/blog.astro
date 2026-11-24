@@ -7,22 +7,27 @@ import scene from "~/assets/heroes/blog-scene.webp";
 import image from "~/assets/heroes/blog.webp";
 import { Anchor } from "~/components/Anchor";
 import { BlogsGrouped } from "~/components/blog/BlogsGrouped";
-import { createBlogTitle, getReadingMinutes } from "~/components/blog/utils";
+import {
+	createBlogDescription,
+	createBlogTitle,
+	getReadingMinutes,
+} from "~/components/blog/utils";
 import BodyContents from "~/components/BodyContents.astro";
+import { largestEntryImagePixels } from "~/components/entries/ContentEntryImage";
 import HeroTertiary from "~/components/HeroTertiary.astro";
 
 import { blogDescription } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
 
-// Twice ContentEntryImage's largest size, for high-density screens
-const thumbnailSize = 160;
+const thumbnailDensity = 2;
+const thumbnailSize = largestEntryImagePixels * thumbnailDensity;
 
 const blogs = await Promise.all(
 	(await getCollection("blog"))
 		.sort((a, b) => +b.data.pubDate - +a.data.pubDate)
 		.map(async (blog) => ({
 			date: blog.data.pubDate,
-			description: blog.data.description,
+			description: createBlogDescription(blog),
 			id: blog.id,
 			image: {
 				alt: blog.data.image.alt,
@@ -44,18 +49,15 @@ const blogs = await Promise.all(
 <HeroLayout
 	alt="Josh speaking excitedly into a microphone while wearing a shiny silver space suit"
 	description={blogDescription}
-	preview="images/goldblog-preview.png"
 	portrait={{ halo, image, scene }}
+	preview="images/goldblog-preview.png"
 	primary="Goldblog"
 	title="Goldblog"
 >
 	<Fragment slot="secondary">{blogDescription}</Fragment>
+	<!-- prettier-ignore -->
 	<HeroTertiary slot="tertiary">
-		New posts are shared online and posted to an RSS feed at{" "}
-		<Anchor href="/rss.xml" target="_blank">
-			/rss.xml
-		</Anchor>
-		.
+		New posts are shared online and posted to an RSS feed at <Anchor href="/rss.xml" target="_blank">/rss.xml</Anchor>.
 	</HeroTertiary>
 
 	<BodyContents>

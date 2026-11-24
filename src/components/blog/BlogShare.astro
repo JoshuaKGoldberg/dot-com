@@ -6,44 +6,57 @@ import mastodon from "~/assets/icons/mastodon.svg";
 import SocialImage from "../SocialImage.astro";
 
 interface Props {
-	class?: string;
 	description: string;
 	title: string;
 	url: URL;
 }
 
-const text = [
-	`📝 ${Astro.props.title}`,
-	`"${Astro.props.description}"`,
-	"",
-].join("%0a%0a");
-
+const { description, title } = Astro.props;
 const url = Astro.props.url.toString();
+
+function createLink(base: string, parameters: Record<string, string>) {
+	// Not URLSearchParams, as not every network reads its + signs as spaces
+	const query = Object.entries(parameters)
+		.map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+		.join("&");
+
+	return `${base}?${query}`;
+}
+
+function createText(author: string) {
+	return [`📝 ${title}`, `"${description}"`, `- by ${author}`, url].join(
+		"\n\n",
+	);
+}
 
 const channels = [
 	[
 		"Bluesky",
-		`https://bsky.app/intent/compose?text=${text}- by @joshuakgoldberg.com%0A%0A${url}`,
+		createLink("https://bsky.app/intent/compose", {
+			text: createText("@joshuakgoldberg.com"),
+		}),
 		bluesky,
 	],
 	[
 		"LinkedIn",
-		`https://linkedin.com/sharing/share-offsite/?url=${url}`,
+		createLink("https://linkedin.com/sharing/share-offsite/", { url }),
 		linkedin,
 	],
 	[
 		"Mastodon",
-		`https://fosstodon.org/share?text=${text} by @JoshuaKGoldberg@fosstodon.org`,
+		createLink("https://fosstodon.org/share", {
+			text: createText("@JoshuaKGoldberg@fosstodon.org"),
+		}),
 		mastodon,
 	],
 ] as const;
 ---
 
-<span class:list={["shares", Astro.props.class]}>
+<span class="shares">
 	<slot />
 	{channels.map(([network, href, image]) => (
 		<a class="share" href={href} target="_blank" title={`Share on ${network}`}>
-			<SocialImage alt={`${network} logo`} class="share-img" image={image} />
+			<SocialImage alt={`Share on ${network}`} image={image} />
 		</a>
 	))}
 </span>
@@ -56,7 +69,7 @@ const channels = [
 		margin: 0.5em 0 0;
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.shares {
 			margin: 0 0 -0.25em;
 		}

@@ -11,11 +11,10 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 
 <HeroLayout
 	alt="Josh looking calmly at the camera from inside a purple hood with big ears and a triangular antenna"
-	description="I work to make web development better, most notably on typescript-eslint. Author of Learning TypeScript, speaker, SquiggleConf co-founder, and dev at Sentry."
+	description="I work to make web development better, most notably on typescript-eslint. Author of Learning TypeScript, keynote speaker, SquiggleConf co-founder, Sentry dev."
 	fitsScreen
 	portrait={{ halo, image }}
 	primary={"Hello. I’m\u00A0Josh."}
-	size="large"
 	slug="josh"
 >
 	<Fragment slot="secondary">I’m good at TypeScript.</Fragment>
@@ -52,7 +51,7 @@ import HeroLayout from "../layouts/HeroLayout.astro";
 		margin-top: clamp(1rem, 20dvh - 7.5rem, 3rem);
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.tabletUp {
 			display: block;
 		}

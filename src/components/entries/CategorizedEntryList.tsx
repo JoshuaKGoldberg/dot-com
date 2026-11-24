@@ -1,5 +1,7 @@
 import type { JSX } from "solid-js";
 
+import { slugify } from "~/utils";
+
 import { Text } from "../Text";
 import styles from "./CategorizedEntryList.module.css";
 import { EntryList } from "./EntryList";
@@ -17,7 +19,7 @@ export function CategorizedEntryList(props: EntryListProps) {
 				class={styles.subHeading}
 				font="display"
 				fontSize="medium"
-				id={props.category.toLowerCase().replaceAll(/\s+/g, "-")}
+				id={slugify(props.category)}
 				tone="strong"
 			>
 				{props.category}

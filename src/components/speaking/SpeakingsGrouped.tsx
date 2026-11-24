@@ -8,19 +8,20 @@ import { type SpeakingData, SpeakingEntry } from "./SpeakingEntry";
 
 export interface SpeakingsGroupedProps {
 	allSpeakings: SpeakingData[];
+
+	/** From when the page was built, so that hydrating renders the same entries. */
+	now: number;
 }
 
 export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
-	const now = Date.now();
-
 	const previous = () =>
 		props.allSpeakings
-			.filter((speaking) => +speaking.date < now)
+			.filter((speaking) => +speaking.date < props.now)
 			.sort((a, b) => +b.date - +a.date);
 
 	const upcoming = () =>
 		props.allSpeakings
-			.filter((speaking) => +speaking.date > now)
+			.filter((speaking) => +speaking.date >= props.now)
 			.sort((a, b) => +a.date - +b.date);
 
 	return (
@@ -34,16 +35,10 @@ export function SpeakingsGrouped(props: SpeakingsGroupedProps) {
 			) : null}
 			<GroupedEntries
 				groups={Object.entries(
-					groupBy(previous(), (speaking) => yearOrUpcoming(speaking.date)),
-				).sort(([a], [b]) => (a === "Upcoming" ? -1 : +b - +a))}
+					groupBy(previous(), (speaking) => speaking.date.getUTCFullYear()),
+				).sort(([a], [b]) => +b - +a)}
 				renderEntry={(speaking) => <SpeakingEntry speaking={speaking} />}
 			/>
 		</>
 	);
-}
-
-const now = Date.now();
-
-function yearOrUpcoming(date: Date) {
-	return +date < now ? date.getFullYear() : "Upcoming";
 }

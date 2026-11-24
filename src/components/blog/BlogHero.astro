@@ -14,7 +14,6 @@ export interface BlogImage {
 }
 
 interface Props {
-	class?: string | undefined;
 	date: Date;
 	description: string;
 	download?: string | undefined;
@@ -24,18 +23,14 @@ interface Props {
 }
 ---
 
-<div class:list={["blogHero", Astro.props.class]}>
+<div class="blogHero">
 	<div class="left">
 		<div class="primary">
 			<div class="hero-image">
 				<HeroImage {...Astro.props.image} />
 			</div>
 			<div class="hero-title">
-				<HeroTitle>
-					{Astro.props.title
-						// TODO: use a markdown renderer
-						.replaceAll("`", "")}
-				</HeroTitle>
+				<HeroTitle>{Astro.props.title}</HeroTitle>
 			</div>
 			<div class="hero-tertiary">
 				<HeroTertiary>
@@ -79,13 +74,11 @@ interface Props {
 		margin-top: 1.5rem;
 	}
 
-	@media (min-width: 490px) {
+	@media (width >= 30.625em) {
 		.primary {
-			--imageSize: var(--heroSizeSmall);
-
 			display: grid;
 			column-gap: 0.5rem;
-			grid-template-columns: auto var(--imageSize);
+			grid-template-columns: auto var(--heroSizeSmall);
 			grid-template-rows: max-content max-content auto;
 		}
 
@@ -109,15 +102,12 @@ interface Props {
 		}
 	}
 
-	@media (min-width: 700px) {
+	@media (width >= 43.75em) {
 		.primary {
-			grid-template-columns: var(--imageSize) auto;
+			grid-template-columns: var(--heroSizeSmall) auto;
 			grid-template-rows: auto;
 			margin-bottom: 1.5rem;
 			column-gap: 1.5rem;
-		}
-
-		.primary {
 			grid-column: 2;
 		}
 
@@ -130,7 +120,7 @@ interface Props {
 		}
 	}
 
-	@media (min-width: 1017px) {
+	@media (width >= 63.5625em) {
 		.blogHero {
 			margin-right: var(--widthTableOfContents);
 		}

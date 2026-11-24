@@ -1,7 +1,10 @@
 import { CachedFactory } from "cached-factory";
 import { type ActiveElement, Chart, LinearScale, Tooltip } from "chart.js";
 import { Bar, type ChartProps } from "solid-chartjs";
-import { onMount } from "solid-js";
+import { onCleanup, onMount } from "solid-js";
+
+import { chartAnimation } from "./chartAnimation";
+import { ChartFigure } from "./ChartFigure";
 
 export interface BarChartProps {
 	colors: string[];
@@ -18,9 +21,22 @@ export interface BarChartProps {
 	title: string;
 }
 
+const ticks = {
+	color: ({ chart }: { chart: Chart }) => getComputedStyle(chart.canvas).color,
+};
+
 export function BarChart(props: BarChartProps) {
+	let canvas!: HTMLCanvasElement;
+
 	onMount(() => {
+		const controller = new AbortController();
+
 		Chart.register(LinearScale, Tooltip);
+		onCleanup(() => {
+			controller.abort();
+		});
+
+		void followTheme(canvas, controller.signal);
 	});
 
 	// TODO: Fix reactivity reports added by recent eslint-plugin-solid version
@@ -36,60 +52,49 @@ export function BarChart(props: BarChartProps) {
 	});
 	/* eslint-enable solid/reactivity */
 
-	// Why the inline CSS instead of CSS modules, you ask?
-	// ...because Astro isn't loading them in production builds:
-	// https://github.com/JoshuaKGoldberg/dot-com/issues/195
 	return (
-		<figure
-			style={{
-				"align-items": "center",
-				display: "flex",
-				"flex-direction": "column",
-				margin: 0,
-			}}
-		>
-			<p
-				style={{
-					"font-family": "var(--fontDisplay)",
-					"font-size": "1.5rem",
-					"margin-top": "0.75rem",
-					"text-align": "center",
+		<ChartFigure title={props.title}>
+			<Bar
+				data={props.data}
+				options={{
+					animation: chartAnimation,
+					elements: {
+						bar: {
+							backgroundColor: ({ element }: ActiveElement) =>
+								elementColors.get(element),
+						},
+					},
+					layout: {
+						padding: {
+							bottom: 20,
+						},
+					},
+					maintainAspectRatio: true,
+					responsive: true,
+					scales: {
+						x: {
+							stacked: true,
+							ticks,
+						},
+						y: {
+							stacked: true,
+							ticks,
+						},
+					},
 				}}
-			>
-				{props.title}
-			</p>
-			<div
-				style={{
-					"max-height": "25rem",
-				}}
-			>
-				<Bar
-					data={props.data}
-					options={{
-						elements: {
-							bar: {
-								backgroundColor: ({ element }: ActiveElement) =>
-									elementColors.get(element),
-							},
-						},
-						layout: {
-							padding: {
-								bottom: 20,
-							},
-						},
-						maintainAspectRatio: true,
-						responsive: true,
-						scales: {
-							x: {
-								stacked: true,
-							},
-							y: {
-								stacked: true,
-							},
-						},
-					}}
-				/>
-			</div>
-		</figure>
+				ref={canvas}
+			/>
+		</ChartFigure>
 	);
+}
+
+async function followTheme(canvas: HTMLCanvasElement, signal: AbortSignal) {
+	// Reads from the document, so it can't be imported on the server
+	const { onTheme } = await import("~/scenery/theme");
+
+	if (!signal.aborted) {
+		onTheme(() => {
+			Chart.getChart(canvas)?.update("none");
+		}, signal);
+	}
 }

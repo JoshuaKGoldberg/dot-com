@@ -14,7 +14,7 @@ export function SpeakingEntry(props: SpeakingEntryProps) {
 			description={props.speaking.title}
 			links={props.speaking.links && Object.entries(props.speaking.links)}
 			subtitle={[
-				props.speaking.date.toLocaleString("default", {
+				props.speaking.date.toLocaleString("en-US", {
 					day: "numeric",
 					month: "short",
 					timeZone: "GMT",

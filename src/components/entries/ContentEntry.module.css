@@ -32,13 +32,13 @@
 	margin-top: 0.5rem;
 }
 
-@media (min-width: 700px) {
+@media (width >= 43.75em) {
 	.contentEntry:not(.widthsFull) {
 		width: calc(50% - 1.5rem);
 	}
 }
 
-@media (min-width: 1017px) {
+@media (width >= 63.5625em) {
 	.contentEntry.widthsThird {
 		width: calc(32% - 1.5rem);
 	}

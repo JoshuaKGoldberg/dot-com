@@ -1,0 +1,11 @@
+<div aria-label="Table" class="table-overflow" role="group" tabindex="0">
+	<table {...Astro.props}>
+		<slot />
+	</table>
+</div>
+
+<style>
+	.table-overflow {
+		overflow-x: auto;
+	}
+</style>

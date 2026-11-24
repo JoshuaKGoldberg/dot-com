@@ -16,19 +16,16 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 <HeroLayout
 	alt="Josh mid-sentence on stage under green lights, wearing a headset microphone and a light patterned shirt"
 	description="I talk about static analysis, accessibility, and team culture."
-	preview="images/speaking-preview.png"
 	portrait={{ halo, image, scene }}
+	preview="images/speaking-preview.png"
 	primary="Speaking"
 	title="Speaking"
 >
+	<!-- prettier-ignore -->
 	<Fragment slot="secondary">
-		I talk about static analysis and co-organize{" "}
-		<Anchor href="https://squiggleconf.com" target="_blank">
-			SquiggleConf
-		</Anchor>
-		.
+		I talk about static analysis and co-organize <Anchor href="https://squiggleconf.com" target="_blank">SquiggleConf</Anchor>.
 	</Fragment>
 	<BodyContents>
-		<SpeakingsTabbed client:load speakings={speakings} />
+		<SpeakingsTabbed client:load now={Date.now()} speakings={speakings} />
 	</BodyContents>
 </HeroLayout>
