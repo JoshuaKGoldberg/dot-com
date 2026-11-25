@@ -1,5 +1,8 @@
 import type { Rectangle } from "../geometry";
 
+/** Centers squiggles between their own line's text and the next line's. */
+const raise = 1.5;
+
 /**
  * Finds each line of a link's text, in viewport coordinates.
  *
@@ -25,7 +28,10 @@ export function measureLines(link: HTMLElement): Rectangle[] {
 	const [box] = boxes;
 	const below = box.bottom - last.bottom;
 
-	return lines.map((line) => ({ ...line, bottom: line.bottom + below }));
+	return lines.map((line) => ({
+		...line,
+		bottom: line.bottom + below - (line === last ? 0 : raise),
+	}));
 }
 
 function measureTextLines(link: HTMLElement) {
