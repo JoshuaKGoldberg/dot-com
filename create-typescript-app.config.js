@@ -1,0 +1,180 @@
+// 👋 Hi! This is an optional config file for create-typescript-app (CTA).
+// Repos created with CTA or its underlying framework Bingo don't use one by default.
+// A CTA config file allows automatic updates to the repo that preserve customizations.
+// For more information, see Bingo's docs:
+//   https://www.create.bingo/execution#transition-mode
+// Eventually these values should be inferable, making this config file unnecessary:
+//   https://github.com/JoshuaKGoldberg/bingo/issues/128
+import {
+	blockCodecov,
+	blockDevelopmentDocs,
+	blockESLint,
+	blockGitHubActionsCI,
+	blockKnip,
+	blockPrettier,
+	blockReleaseIt,
+	blockSideEffects,
+	blockTSDown,
+	blockTypeScript,
+	blockVitest,
+	blockVSCode,
+	createConfig,
+} from "create-typescript-app";
+
+export default createConfig({
+	refinements: {
+		blocks: {
+			exclude: [
+				// This is a website, not an npm package, and has no tests
+				blockCodecov,
+				blockReleaseIt,
+				blockSideEffects,
+				blockTSDown,
+				blockVitest,
+
+				// knip.config.ts needs to list worker/tsconfig.json,
+				// and all dependencies being in "dependencies" doesn't work with --production
+				blockKnip,
+
+				// tsconfig.json needs to extend from Astro's
+				blockTypeScript,
+			],
+		},
+		extensions: [
+			blockDevelopmentDocs({
+				sections: {
+					Linting: {
+						contents: {
+							items: [
+								"- `pnpm lint:knip` ([knip](https://github.com/webpro/knip)): Detects unused files, dependencies, and code exports",
+							],
+						},
+					},
+					"Type Checking": {
+						contents: `
+You should be able to see suggestions from [TypeScript](https://typescriptlang.org) in your editor for all open files.
+
+However, it can be useful to run the TypeScript command-line (\`tsc\`) to type check all files in \`src/\`:
+
+\`\`\`shell
+pnpm tsc
+\`\`\`
+
+Add \`--watch\` to keep the type checker running in a watch mode that updates the display as you save files:
+
+\`\`\`shell
+pnpm tsc --watch
+\`\`\`
+
+The Cloudflare Worker in \`worker/\` has its own TypeScript project:
+
+\`\`\`shell
+pnpm tsc --project worker
+\`\`\`
+`,
+					},
+				},
+			}),
+			blockESLint({
+				beforeLintSteps: [{ run: "pnpm astro sync" }],
+				extensions: [
+					{
+						extends: ["astro.configs.recommended"],
+						files: ["**/*.astro", "**/*.astro/*.{js,ts}"],
+					},
+					{
+						extends: [
+							"jsxA11y.flatConfigs.recommended",
+							'solid.configs["flat/recommended"]',
+						],
+						files: ["**/*.{js,ts,tsx}"],
+						languageOptions: { parserOptions: { projectService: true } },
+						rules: [
+							{
+								comment:
+									"TypeScript already checks imports, including Astro's virtual modules",
+								entries: { "n/no-missing-import": "off" },
+							},
+							{
+								comment: "TODO: Enable these :)",
+								entries: {
+									"solid/jsx-no-undef": "off",
+									"solid/no-unknown-namespaces": "off",
+									"solid/prefer-for": "off",
+									"solid/self-closing-comp": "off",
+									"solid/style-prop": "off",
+								},
+							},
+						],
+					},
+				],
+				imports: [
+					{
+						source: { packageName: "eslint-plugin-astro", version: "*" },
+						specifier: "astro",
+					},
+					{
+						source: { packageName: "eslint-plugin-jsx-a11y", version: "*" },
+						specifier: "jsxA11y",
+					},
+					{
+						source: { packageName: "eslint-plugin-solid", version: "*" },
+						specifier: "solid",
+					},
+				],
+				scriptFileExtensions: ["tsx"],
+			}),
+			blockGitHubActionsCI({
+				jobs: [
+					{ name: "Astro Check", steps: [{ run: "pnpm check" }] },
+					{ name: "Build", steps: [{ run: "pnpm build" }] },
+					{ name: "Lint Knip", steps: [{ run: "pnpm lint:knip" }] },
+					{
+						name: "Type Check",
+						steps: [
+							{ run: "pnpm astro sync" },
+							{ run: "pnpm tsc" },
+							{ run: "pnpm tsc --project worker" },
+						],
+					},
+				],
+			}),
+			blockPrettier({
+				overrides: [
+					{
+						files: "*.astro",
+						options: { parser: "astro" },
+					},
+				],
+				plugins: ["./node_modules/prettier-plugin-astro/dist/index.js"],
+			}),
+			blockVSCode({
+				debuggers: [
+					{
+						command: "./node_modules/.bin/astro dev",
+						name: "Development server",
+						request: "launch",
+						type: "node-terminal",
+					},
+				],
+				extensions: ["astro-build.astro-vscode", "webpro.vscode-knip"],
+				settings: {
+					"[astro]": {
+						"editor.defaultFormatter": "astro-build.astro-vscode",
+					},
+					"eslint.probe": ["astro"],
+					"js/ts.tsdk.path": "node_modules/typescript/lib",
+					"prettier.documentSelectors": ["**/*.astro"],
+				},
+				tasks: [
+					{
+						detail: "Build the project",
+						label: "build",
+						script: "build",
+						type: "npm",
+					},
+				],
+			}),
+		],
+	},
+});

@@ -29,9 +29,6 @@
 		"start": "astro dev",
 		"tsc": "tsc"
 	},
-	"lint-staged": {
-		"*": "prettier --ignore-unknown --write"
-	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.12",
 		"@astrojs/markdown-remark": "^7.3.10",
@@ -74,7 +71,6 @@
 		"joshuakgoldberg": "^0.26.0",
 		"knip": "^6.0.0",
 		"konami-emoji-blast": "^0.7.0",
-		"lint-staged": "^17.6.0",
 		"opentype.js": "^2.0.0",
 		"prettier": "^3.10.1",
 		"prettier-plugin-astro": "^1.1.2",
@@ -90,6 +86,11 @@
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.73.0",
 		"wrangler": "^4.165.0"
+	},
+	"devDependencies": {
+		"create-typescript-app": "2.87.23",
+		"jiti": "2.7.0",
+		"pretty-quick": "4.2.2"
 	},
 	"packageManager": "pnpm@12.22.0",
 	"engines": {
