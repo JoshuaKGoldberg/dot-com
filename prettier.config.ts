@@ -3,11 +3,10 @@ import type { Config } from "prettier";
 export default {
 	overrides: [
 		{ files: "*.astro", options: { parser: "astro" } },
-		{ files: ".*rc", options: { parser: "json" } },
 		{ files: ".nvmrc", options: { parser: "yaml" } },
 	],
 	plugins: [
-		"prettier-plugin-astro",
+		"./node_modules/prettier-plugin-astro/dist/index.js",
 		"prettier-plugin-curly",
 		"prettier-plugin-packagejson",
 		"prettier-plugin-padding-lines",

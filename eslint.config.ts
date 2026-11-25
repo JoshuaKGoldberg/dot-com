@@ -27,9 +27,10 @@ export default defineConfig(
 		],
 		"Global Ignores",
 	),
+	{ linterOptions: { reportUnusedDisableDirectives: "error" } },
 	{
-		linterOptions: { reportUnusedDisableDirectives: "error" },
-		settings: { tsconfigPath: "tsconfig.json" },
+		extends: [astro.configs.recommended],
+		files: ["**/*.astro", "**/*.astro/*.{js,ts}"],
 	},
 	{
 		extends: [
@@ -47,22 +48,8 @@ export default defineConfig(
 			tseslint.configs.stylisticTypeChecked,
 		],
 		files: ["**/*.{js,ts,tsx}"],
-		languageOptions: {
-			parserOptions: {
-				projectService: true,
-			},
-		},
+		languageOptions: { parserOptions: { projectService: true } },
 		rules: {
-			// Stylistic concerns that don't interfere with Prettier
-			"logical-assignment-operators": [
-				"error",
-				"always",
-				{ enforceForIfStatements: true },
-			],
-			"no-useless-rename": "error",
-			"object-shorthand": "error",
-			"operator-assignment": "error",
-
 			// TypeScript already checks imports, including Astro's virtual modules
 			"n/no-missing-import": "off",
 
@@ -72,10 +59,19 @@ export default defineConfig(
 			"solid/prefer-for": "off",
 			"solid/self-closing-comp": "off",
 			"solid/style-prop": "off",
+
+			// Stylistic concerns that don't interfere with Prettier
+			"logical-assignment-operators": [
+				"error",
+				"always",
+				{ enforceForIfStatements: true },
+			],
+			"no-useless-rename": "error",
+			"object-shorthand": "error",
+			"operator-assignment": "error",
 		},
 		settings: { perfectionist: { partitionByComment: true, type: "natural" } },
 	},
-	astro.configs.recommended,
 	{
 		extends: [jsonc.configs["flat/recommended-with-json"]],
 		files: ["**/*.json"],
@@ -89,11 +85,6 @@ export default defineConfig(
 		},
 	},
 	{
-		extends: [tseslint.configs.disableTypeChecked],
-		files: ["**/*.md/*.ts"],
-		rules: { "n/no-missing-import": "off" },
-	},
-	{
 		files: ["**/*.test.*", "eslint.config.*"],
 		rules: { "n/no-unsupported-features/node-builtins": "off" },
 	},
@@ -102,10 +93,7 @@ export default defineConfig(
 		files: ["**/*.{yml,yaml}"],
 		rules: {
 			"yml/file-extension": "error",
-			"yml/sort-keys": [
-				"error",
-				{ order: { type: "asc" }, pathPattern: "^.*$" },
-			],
+			"yml/sort-keys": "error",
 			"yml/sort-sequence-values": [
 				"error",
 				{ order: { type: "asc" }, pathPattern: "^.*$" },
