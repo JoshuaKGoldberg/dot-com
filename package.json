@@ -88,7 +88,7 @@
 		"wrangler": "^4.165.0"
 	},
 	"devDependencies": {
-		"create-typescript-app": "2.87.21",
+		"create-typescript-app": "2.87.23",
 		"jiti": "2.7.0",
 		"pretty-quick": "4.2.2"
 	},

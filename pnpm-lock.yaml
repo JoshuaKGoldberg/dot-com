@@ -345,8 +345,8 @@ importers:
         version: 4.165.0(@cloudflare/workers-types@5.20261120.1)(@types/node@26.6.6)
     devDependencies:
       create-typescript-app:
-        specifier: 2.87.21
-        version: 2.87.21(bingo-systems@0.9.1)(supports-color@10.2.2)(typescript@6.0.3)
+        specifier: 2.87.23
+        version: 2.87.23(bingo-systems@0.9.1)(supports-color@10.2.2)(typescript@6.0.3)
       jiti:
         specifier: 2.7.0
         version: 2.7.0
@@ -3004,8 +3004,8 @@ packages:
     resolution: {integrity: sha512-SL0cVuEdETEp7pN0FuZb01toc3vnODEfVUCooxG1SJN0yIirh7JMb9X9bvfCFf0vzzbT68RdbKDHYTiWy7a7iw==}
     engines: {node: '>=22'}
 
-  create-typescript-app@2.87.21:
-    resolution: {integrity: sha512-AlJX8E+BkIcYFpwIAlVpz5dP98dDeZYJYTIkIS6YwS+NRdgeurDazZUYbHLUMRGzvBPq2uVTy6GtObmOV1MiQw==}
+  create-typescript-app@2.87.23:
+    resolution: {integrity: sha512-JzKQXDelqPeDjyQM2dM0dpiRa4y1id9Dz/vFAtdnpZc5YzPoTTfda+8LFtuqOiLkFi4mgx68kbJiBrDuR3bK+w==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
     hasBin: true
 
@@ -8911,7 +8911,7 @@ snapshots:
 
   cookie@2.0.2: {}
 
-  create-typescript-app@2.87.21(bingo-systems@0.9.1)(supports-color@10.2.2)(typescript@6.0.3):
+  create-typescript-app@2.87.23(bingo-systems@0.9.1)(supports-color@10.2.2)(typescript@6.0.3):
     dependencies:
       '@prettier/sync': 0.6.1(prettier@3.10.1)
       '@typescript-eslint/typescript-estree': 8.73.0(supports-color@10.2.2)(typescript@6.0.3)

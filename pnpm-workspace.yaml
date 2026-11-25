@@ -3,4 +3,4 @@ allowBuilds:
   sharp: true
   workerd: true
 minimumReleaseAgeExclude:
-  - create-typescript-app@2.87.21
+  - create-typescript-app@2.87.23
