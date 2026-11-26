@@ -43,6 +43,9 @@ export default defineConfig({
 });
 ```
 
+Integrations that other integrations add for you, such as a sitemap added by a theme, always run after `checkLinks()`.
+List those yourself before `checkLinks()` instead.
+
 `astro-check-links` respects your Astro config's [`base`](https://docs.astro.build/en/reference/configuration-reference/#base), so root-relative links that leave it are reported as broken.
 Absolute links to your `site` outside of `base`, such as to other projects on the same GitHub Pages domain, are treated as links to other sites.
 Links to pages may leave out `.html`, as many hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
@@ -51,10 +54,12 @@ It only knows about files in the build, not your host's own rules, such as `_red
 That includes Astro's [`redirects`](https://docs.astro.build/en/reference/configuration-reference/#redirects) when [`build.redirects`](https://docs.astro.build/en/reference/configuration-reference/#buildredirects) is `false`, as some adapters set it.
 If a server adds other files or routes, such as [on-demand rendered pages](https://docs.astro.build/en/guides/on-demand-rendering) and endpoints, add them to [`ignore`](#ignore).
 
-A few links aren't checked:
+Some links aren't checked, including:
 
 - Fragments with a [text directive](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than only ids
 - Heading anchors on pages whose HTML contains both `content="noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
+- Fragments into files other than HTML pages, such as `/sprite.svg#icon`, and SVG `<use>` references
+- Links in files other than HTML and CSS, such as RSS feeds and JavaScript
 
 `astro-check-links` requires Node.js 22.19 or newer.
 
