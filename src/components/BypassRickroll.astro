@@ -1,15 +1,40 @@
+<template data-rickroll-template>
+	<dialog
+		aria-label="Never Gonna Give You Up - by Rick Astley"
+		class="rickroll"
+		data-rickroll
+	>
+		{/* Before the player, so it's read and reached first */}
+		<p class="explainer">
+			This is a "rickroll" easter egg for <strong>Josh Goldberg</strong>.
+			<br />
+			<strong>
+				<a data-astro-reload></a>
+			</strong>{" "}
+			is my <em>actual</em> page. 🙂
+		</p>
+		<iframe
+			allow="autoplay; fullscreen"
+			class="player"
+			title="Never Gonna Give You Up - by Rick Astley"
+		></iframe>
+	</dialog>
+</template>
+
 <script>
 	/**
 	 * With ?bypassRickroll=true, every link plays the same video as hi.joshuakgoldberg.com.
 	 * Never gonna let you down.
 	 */
 	function rickroll(event: KeyboardEvent | MouseEvent) {
-		// Right clicks and other buttons don't open links, so they're left alone
+		// Right clicks and other buttons don't open links, so they're left alone,
+		// and so is the explainer's link back to the page without the param
 		if (
 			(event instanceof MouseEvent && event.button > 1) ||
 			new URLSearchParams(location.search).get("bypassRickroll") !== "true" ||
 			!(event.target instanceof Element) ||
-			!event.target.closest("a[href], area[href]")
+			!event.target.closest("a[href], area[href]") ||
+			event.target.closest("[data-rickroll]")
 		) {
 			return;
 		}
@@ -20,25 +45,56 @@
 			return;
 		}
 
+		const template = document.querySelector<HTMLTemplateElement>(
+			"template[data-rickroll-template]",
+		);
+		const dialog = template?.content.firstElementChild?.cloneNode(true);
+		if (!(dialog instanceof HTMLDialogElement)) {
+			return;
+		}
+
 		// Visitors who've paused motion get to press play themselves
 		const autoplay =
 			document.documentElement.dataset.motion === "paused" ? "0" : "1";
-		const player = document.createElement("iframe");
+		const player = dialog.querySelector("iframe");
+		if (player) {
+			player.src = `https://player.vimeo.com/video/438334658?autoplay=${autoplay}&loop=1&title=0&byline=0&portrait=0`;
+		}
 
-		player.allow = "autoplay; fullscreen";
-		player.src = `https://player.vimeo.com/video/438334658?autoplay=${autoplay}&loop=1&title=0&byline=0&portrait=0`;
-		player.title = "Never Gonna Give You Up - by Rick Astley";
+		const back = dialog.querySelector("a");
+		if (back) {
+			back.href = withoutBypass();
+			// Like hi.joshuakgoldberg.com's joshuakgoldberg.com, without a trailing slash
+			back.textContent =
+				`${back.host}${back.pathname}${back.search}${back.hash}`.replace(
+					/\/$/,
+					"",
+				);
+		}
 
 		// A modal dialog covers the whole page and keeps focus out of what's behind it
-		const dialog = document.createElement("dialog");
-		dialog.ariaLabel = player.title;
-		dialog.dataset.rickroll = "";
 		dialog.addEventListener("close", () => {
 			dialog.remove();
 		});
-		dialog.append(player);
 		document.body.append(dialog);
 		dialog.showModal();
+	}
+
+	/** The page's URL with every other query param and its hash kept as they are */
+	function withoutBypass() {
+		const search = location.search
+			.slice(1)
+			.split("&")
+			.filter(
+				(pair) =>
+					pair &&
+					new URLSearchParams(`&${pair}`).keys().next().value !==
+						"bypassRickroll",
+			)
+			.join("&");
+
+		// The origin keeps paths such as //example.com on this site
+		return `${location.origin}${location.pathname}${search && `?${search}`}${location.hash}`;
 	}
 
 	// Capturing on the window comes before the router and any other link handlers,
@@ -48,9 +104,22 @@
 	addEventListener(
 		"keydown",
 		(event) => {
-			if (event.key === "Enter") {
-				rickroll(event);
+			if (event.key !== "Enter") {
+				return;
 			}
+
+			// Holding Enter on a page's link would otherwise go on to the explainer's,
+			// which the dialog focuses when it opens
+			if (
+				event.repeat &&
+				event.target instanceof Element &&
+				event.target.closest("[data-rickroll]")
+			) {
+				event.preventDefault();
+				return;
+			}
+
+			rickroll(event);
 		},
 		{ capture: true },
 	);
@@ -62,7 +131,7 @@
 		overflow: hidden;
 	}
 
-	:global([data-rickroll]) {
+	.rickroll {
 		border: 0;
 		height: 100%;
 		max-height: none;
@@ -71,10 +140,30 @@
 		width: 100%;
 	}
 
-	:global([data-rickroll] iframe) {
+	.player {
 		border: 0;
 		display: block;
 		height: 100%;
 		width: 100%;
+	}
+
+	/* Like hi.joshuakgoldberg.com's, it sits on the right, above the player's controls */
+	.explainer {
+		background: var(--colorBackground);
+		bottom: min(7rem, 30%);
+		box-sizing: border-box;
+		color: var(--colorForeground);
+		margin: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
+		padding: 2rem;
+		position: absolute;
+		right: 0;
+		width: 15rem;
+	}
+
+	.explainer a {
+		color: inherit;
+		text-decoration: underline;
 	}
 </style>
