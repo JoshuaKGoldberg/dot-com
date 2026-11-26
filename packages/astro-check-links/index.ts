@@ -1,10 +1,14 @@
 import type { AstroIntegration } from "astro";
 
 import { AstroError } from "astro/errors";
-import { LinkChecker, type LinkResult, LinkState } from "linkinator";
+import {
+	LinkChecker,
+	type LinkResult,
+	LinkState,
+	resetSharedAgents,
+} from "linkinator";
 import { once } from "node:events";
-import { createReadStream } from "node:fs";
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -92,7 +96,7 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 				const summary = `Found ${String(broken.length)} broken link(s).`;
 				const details = broken.map(({ link, page, text, why }) =>
 					[
-						`  On:   ${page}`,
+						...(page ? [`  On:   ${page}`] : []),
 						`  Link: ${link}`,
 						...(text ? [`  Text: ${text}`] : []),
 						`  Why:  ${why}`,
@@ -142,14 +146,22 @@ function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
 	return {
 		// linkinator reports links it couldn't parse as they were written
 		link: invalid ? link.url : toSitePath(link.url, local),
-		page: toSitePath(link.parent, local),
+		page: link.parent ? toSitePath(link.parent, local) : "",
 		text: link.displayText,
 		why: messages.length
 			? messages.join(", ")
 			: invalid
-				? "Invalid URL"
+				? describeInvalidLink(link.url)
 				: describeStatus(link),
 	};
+}
+
+function describeInvalidLink(url: string) {
+	const hash = /#.*/s.exec(url)?.[0] ?? "";
+
+	return safeDecode(hash) === undefined
+		? "Fragment has a % that isn't part of a valid escape, such as %25"
+		: "Invalid URL";
 }
 
 function describeStatus(link: LinkResult) {
@@ -160,9 +172,7 @@ function describeStatus(link: LinkResult) {
 			return "Path has an empty segment (//), which doesn't match a file in the build";
 		}
 
-		try {
-			decodeURIComponent(pathname);
-		} catch {
+		if (safeDecode(pathname) === undefined) {
 			return "Path has a % that isn't part of a valid escape, such as %25";
 		}
 	}
@@ -182,46 +192,52 @@ async function findBrokenLinks({
 	ignore: (RegExp | string)[];
 }) {
 	const files = await listFiles(directory);
-	const server = await serveBuild(directory, files, base);
-	const address = server.address();
-
-	if (!address || typeof address === "string") {
-		throw new Error("Could not start a local server for the build.");
-	}
-
-	const local = `http://127.0.0.1:${String(address.port)}`;
-	const prefix = base.replace(/\/*$/, "/");
+	const prefix = new URL(base.replace(/\/*$/, "/"), "http://localhost")
+		.pathname;
+	const server = await serveBuild(directory, files, prefix);
 
 	try {
-		const result = await new LinkChecker().check({
-			checkCss: true,
-			checkFragments: true,
-			// Text fragments, like #:~:text=hello, match text rather than ids
-			fragmentsToSkip: (fragment) =>
-				Promise.resolve(fragment.startsWith(":~:")),
-			// External links are out of scope, and would make builds depend on other sites
-			linksToSkip: (link) => Promise.resolve(shouldSkip(link)),
-			// Starting from every page and stylesheet also checks ones nothing links to
-			path: files
-				.filter((file) => /\.(?:css|html)$/.test(file))
-				.map(
-					(file) =>
-						local +
-						prefix +
-						file
-							.replace(/(?:^|(?<=\/))index\.html$/, "")
-							.split("/")
-							.map(encodeURIComponent)
-							.join("/"),
-				),
-			urlRewriteExpressions: [...hosts].map((host) => ({
-				pattern: new RegExp(
-					`^https?://${host.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")}(?=[/?#]|$)`,
-					"i",
-				),
-				replacement: local,
-			})),
-		});
+		const address = server.address();
+		if (!address || typeof address === "string") {
+			throw new Error("Could not start a local server for the build.");
+		}
+
+		const local = `http://127.0.0.1:${String(address.port)}`;
+
+		// Starting from every page and stylesheet also checks ones nothing links to
+		const path = files
+			.filter((file) => /\.(?:css|html)$/.test(file))
+			.map((file) => {
+				const url = new URL(local);
+				url.pathname =
+					prefix +
+					file.replace(/(?:^|(?<=\/))index\.html$/, "").replaceAll("%", "%25");
+				return url.href;
+			});
+
+		if (!path.length) {
+			return { broken: [], checked: 0 };
+		}
+
+		const result = await withoutProxyForLocalhost(() =>
+			new LinkChecker().check({
+				checkCss: true,
+				checkFragments: true,
+				// Text fragments, like #:~:text=hello, match text rather than ids
+				fragmentsToSkip: (fragment) =>
+					Promise.resolve(fragment.startsWith(":~:")),
+				// External links are out of scope, and would make builds depend on other sites
+				linksToSkip: (link) => Promise.resolve(shouldSkip(link, local)),
+				path,
+				urlRewriteExpressions: [...hosts].map((host) => ({
+					pattern: new RegExp(
+						`^https?://${host.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")}(?=[/?#]|$)`,
+						"i",
+					),
+					replacement: local,
+				})),
+			}),
+		);
 
 		const broken = result.links
 			.filter((link) => link.state === LinkState.BROKEN)
@@ -240,7 +256,7 @@ async function findBrokenLinks({
 		server.close();
 	}
 
-	function shouldSkip(link: string) {
+	function shouldSkip(link: string, local: string) {
 		const url = URL.parse(link);
 		if (!url) {
 			return false;
@@ -249,14 +265,22 @@ async function findBrokenLinks({
 		const internal =
 			url.origin === local ||
 			(/^https?:$/.test(url.protocol) && hosts.has(url.host));
+		if (!internal) {
+			return true;
+		}
 
-		return (
-			!internal ||
-			ignore.some((pattern) =>
-				typeof pattern === "string"
-					? url.pathname.startsWith(pattern)
-					: pattern.test(url.pathname),
-			)
+		const paths = [url.pathname, safeDecode(url.pathname) ?? url.pathname];
+
+		return ignore.some((pattern) =>
+			paths.some((path) => {
+				if (typeof pattern === "string") {
+					return path.startsWith(pattern);
+				}
+
+				// Global and sticky expressions would otherwise test from their last match
+				pattern.lastIndex = 0;
+				return pattern.test(path);
+			}),
 		);
 	}
 }
@@ -289,16 +313,20 @@ function resolveRequest(
 		return `${pathname}/` === prefix ? { redirect: prefix } : undefined;
 	}
 
-	let path: string;
-	try {
-		path = decodeURIComponent(pathname.slice(prefix.length));
-	} catch {
+	const segments = pathname
+		.slice(prefix.length)
+		.split("/")
+		.map((segment) => safeDecode(segment));
+
+	// Empty segments, encoded slashes, and invalid escapes don't match files
+	if (
+		segments.slice(0, -1).includes("") ||
+		segments.some((segment) => segment === undefined || segment.includes("/"))
+	) {
 		return undefined;
 	}
 
-	if (path.startsWith("/") || path.includes("//")) {
-		return undefined;
-	}
+	const path = segments.join("/");
 
 	if (path === "" || path.endsWith("/")) {
 		return files.has(`${path}index.html`)
@@ -317,10 +345,17 @@ function resolveRequest(
 		: undefined;
 }
 
-// Serves the build under its base path, the way most static hosts do
-async function serveBuild(directory: string, files: string[], base: string) {
+function safeDecode(text: string) {
+	try {
+		return decodeURIComponent(text);
+	} catch {
+		return undefined;
+	}
+}
+
+// Serves the build under its base path, much like static hosts do
+async function serveBuild(directory: string, files: string[], prefix: string) {
 	const known = new Set(files);
-	const prefix = base.replace(/\/*$/, "/");
 
 	const server = createServer((request, response) => {
 		const [pathname = "/", query] = (request.url ?? "/").split(/\?(.*)/s);
@@ -328,24 +363,32 @@ async function serveBuild(directory: string, files: string[], base: string) {
 
 		if (!resolved) {
 			response.writeHead(404).end();
-		} else if ("redirect" in resolved) {
+			return;
+		}
+
+		if ("redirect" in resolved) {
 			response
 				.writeHead(301, {
 					location: resolved.redirect + (query ? `?${query}` : ""),
 				})
 				.end();
-		} else {
-			response.writeHead(200, {
-				"content-type":
-					contentTypes[extname(resolved.file)] ?? "application/octet-stream",
-			});
-
-			if (request.method === "HEAD") {
-				response.end();
-			} else {
-				createReadStream(join(directory, resolved.file)).pipe(response);
-			}
+			return;
 		}
+
+		const headers = {
+			"content-type":
+				contentTypes[extname(resolved.file)] ?? "application/octet-stream",
+		};
+
+		if (request.method === "HEAD") {
+			response.writeHead(200, headers).end();
+			return;
+		}
+
+		readFile(join(directory, resolved.file)).then(
+			(body) => response.writeHead(200, headers).end(body),
+			() => response.writeHead(500).end(),
+		);
 	});
 
 	server.listen(0, "127.0.0.1");
@@ -355,8 +398,50 @@ async function serveBuild(directory: string, files: string[], base: string) {
 }
 
 // linkinator reports pages by their full local URL, like http://127.0.0.1:1234/blog/my-post/
-function toSitePath(url = "", local: string) {
-	return url.startsWith(`${local}/`)
-		? url.slice(local.length).replace(/(?<=\/)index\.html(?=[?#]|$)/, "")
-		: url;
+function toSitePath(url: string, local: string) {
+	if (!url.startsWith(`${local}/`)) {
+		return url;
+	}
+
+	const path = url
+		.slice(local.length)
+		.replace(/(?<=\/)index\.html(?=[?#]|$)/, "");
+
+	// Show characters such as spaces as written, but keep escapes like %2F
+	try {
+		return decodeURI(path);
+	} catch {
+		return path;
+	}
+}
+
+/**
+ * Runs linkinator without any proxy from the environment for its requests to
+ * the local server, which a proxy couldn't reach.
+ */
+async function withoutProxyForLocalhost<T>(run: () => Promise<T>) {
+	const original = {
+		NO_PROXY: process.env.NO_PROXY,
+		no_proxy: process.env.no_proxy,
+	};
+
+	for (const [key, value] of Object.entries(original)) {
+		process.env[key] = value ? `${value},127.0.0.1` : "127.0.0.1";
+	}
+
+	resetSharedAgents();
+
+	try {
+		return await run();
+	} finally {
+		for (const [key, value] of Object.entries(original)) {
+			if (value === undefined) {
+				Reflect.deleteProperty(process.env, key);
+			} else {
+				process.env[key] = value;
+			}
+		}
+
+		resetSharedAgents();
+	}
 }

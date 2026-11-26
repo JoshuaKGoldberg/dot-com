@@ -10,7 +10,8 @@ After each `astro build`, it reports links that would 404 or scroll to nothing:
 - Absolute links to your own site, using Astro's [`site`](https://docs.astro.build/en/reference/configuration-reference/#site)
 - Links on every built page, including pages nothing links to
 
-It serves your build on a local server the way static hosts do, matching paths' case exactly, so it needs no network connection.
+It serves your build from a local server, much like a static host would, so it needs no network connection.
+Paths have to match files' case exactly, as they do on most hosts.
 Links to other sites aren't checked.
 
 ```plaintext
@@ -42,15 +43,15 @@ export default defineConfig({
 ```
 
 `astro-check-links` respects your Astro config's [`base`](https://docs.astro.build/en/reference/configuration-reference/#base), so links that leave it are reported as broken.
-Links to pages may leave out `.html`, as most hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
+Links to pages may leave out `.html`, as many hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
 
-It only knows about files in the build.
-If a server adds other files or routes, such as [on-demand rendered pages](https://docs.astro.build/en/guides/on-demand-rendering), add them to [`ignore`](#ignore).
+It only knows about files in the build, not your host's own rules, such as `_redirects` files.
+If a server adds other files or routes, such as [on-demand rendered pages](https://docs.astro.build/en/guides/on-demand-rendering) and endpoints, add them to [`ignore`](#ignore).
 
 A few links aren't checked:
 
 - [Text fragments](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than ids
-- Heading anchors on pages marked both `noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
+- Heading anchors on pages whose HTML contains both `content="noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
 
 `astro-check-links` requires Node.js 22 or newer.
 
@@ -86,7 +87,9 @@ checkLinks({
 Links not to check, such as to files served by something other than the build.
 Defaults to `[]`.
 
-Strings match the start of a link's path, including any `base`, and regular expressions are tested against the path:
+Strings match the start of a link's path, including any `base`, and regular expressions are tested against the path.
+Paths are tested both as written and decoded, so `"/my files/"` and `"/my%20files/"` both match `/my%20files/notes.pdf`.
+Links on pages under ignored paths aren't checked either.
 
 ```ts
 checkLinks({
