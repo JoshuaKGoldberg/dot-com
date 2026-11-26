@@ -288,7 +288,7 @@ function formatDate(timestamp: string) {
 	}
 
 	:global(::view-transition-group(*.photo)) {
-		animation-duration: 600ms;
+		animation-duration: 400ms;
 		animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
 	}
 
@@ -298,11 +298,11 @@ function formatDate(timestamp: string) {
 	}
 
 	:global(::view-transition-new(*.photo-caption):only-child) {
-		animation: caption-in 360ms ease-out 360ms both;
+		animation: caption-in 250ms ease-out 250ms both;
 	}
 
 	:global(::view-transition-old(*.photo-caption):only-child) {
-		animation: caption-out 160ms ease-in both;
+		animation: caption-out 100ms ease-in both;
 	}
 
 	/* The rest of the page stays put, instead of playing its between-pages transitions */
