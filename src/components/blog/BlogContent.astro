@@ -4,6 +4,10 @@ import type { Render } from "astro:content";
 import BodyContents from "../BodyContents.astro";
 import styles from "./BlogContent.module.css";
 import BlogSeries, { type Props as BlogSeriesProps } from "./BlogSeries.astro";
+import Heading2 from "./headings/Heading2.astro";
+import Heading3 from "./headings/Heading3.astro";
+import Heading4 from "./headings/Heading4.astro";
+import Heading5 from "./headings/Heading5.astro";
 import Pre from "./Pre.astro";
 import Table from "./Table.astro";
 import "./code.css";
@@ -15,7 +19,16 @@ interface Props {
 ---
 
 <BodyContents as="article" class={styles.article}>
-	<Astro.props.rendered.Content components={{ pre: Pre, table: Table }} />
+	<Astro.props.rendered.Content
+		components={{
+			h2: Heading2,
+			h3: Heading3,
+			h4: Heading4,
+			h5: Heading5,
+			pre: Pre,
+			table: Table,
+		}}
+	/>
 	<slot />
 	{Astro.props.series && <BlogSeries {...Astro.props.series} />}
 </BodyContents>

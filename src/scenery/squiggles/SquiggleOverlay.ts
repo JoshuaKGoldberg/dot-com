@@ -21,7 +21,7 @@ const reach = 96;
 
 /** Links that have squiggles, other than those that show what's current. */
 const selector =
-	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img))";
+	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img), [data-heading-link])";
 
 /** Squiggles are inside of the page's scrolling content, so they stay with their links. */
 export class SquiggleOverlay {
