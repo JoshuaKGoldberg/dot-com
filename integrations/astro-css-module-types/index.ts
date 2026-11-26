@@ -65,27 +65,31 @@ export function cssModuleTypes(
 
 	// Vite's resolver remembers files that didn't exist, so adding or deleting a stylesheet
 	// means the next update needs a fresh config, and failures that saw an older one need retrying
-	let configRefresh: Promise<void> | undefined;
+	let configRefresh: Promise<ResolvedConfig> | undefined;
 	let configStale = false;
 	let stylesheetEvents = 0;
 
 	const getViteConfig = async () => {
 		if (configStale && resolveViteConfig) {
 			configStale = false;
-			const resolving = resolveViteConfig();
-			configRefresh = resolving.then(
+			const refresh: Promise<ResolvedConfig> = resolveViteConfig().then(
 				(refreshed) => {
-					viteConfig = refreshed;
+					// A slower, older refresh shouldn't replace a newer one
+					if (configRefresh === refresh) {
+						viteConfig = refreshed;
+					}
+
+					return refreshed;
 				},
 				(error: unknown) => {
 					configStale = true;
 					throw error;
 				},
 			);
+			configRefresh = refresh;
 		}
 
-		await configRefresh;
-		return viteConfig;
+		return configRefresh ? await configRefresh : viteConfig;
 	};
 
 	const isWatched = (file: string) =>
@@ -110,11 +114,6 @@ export function cssModuleTypes(
 			.some((part) => part.startsWith("_") || part.startsWith("."));
 
 	const update = async (file: string) => {
-		const config = await getViteConfig();
-		if (!config) {
-			return;
-		}
-
 		let code: string;
 		try {
 			code = await fs.readFile(file, "utf8");
@@ -132,8 +131,13 @@ export function cssModuleTypes(
 		if (isRoute(file)) {
 			await removeGenerated(`${file}.d.ts`);
 			throw new Error(
-				`${file} is in the pages directory, where Astro would make its .d.ts a route. Move it, or start its name or a directory's name with _.`,
+				"It's in the pages directory, where Astro would make its .d.ts a route. Move it, or start its name or a directory's name with _.",
 			);
+		}
+
+		const config = await getViteConfig();
+		if (!config) {
+			return;
 		}
 
 		// The same preprocessing and CSS modules options Vite uses for its imports
@@ -163,7 +167,7 @@ export function cssModuleTypes(
 				failed.delete(file);
 			})
 			.catch((error: unknown) => {
-				const message = String(error);
+				const message = errorMessage(error);
 				if (failed.get(file) !== message) {
 					logger.warn(
 						`Couldn't generate types for ${path.relative(process.cwd(), file)}: ${message}`,
@@ -262,9 +266,10 @@ export function cssModuleTypes(
 				const results = await Promise.allSettled([
 					...[...sources].map((file) =>
 						update(file).catch((error: unknown) => {
-							failed.set(file, String(error));
+							failed.set(file, errorMessage(error));
 							throw new Error(
-								`${path.relative(process.cwd(), file)}: ${String(error)}`,
+								`${path.relative(process.cwd(), file)}: ${errorMessage(error)}`,
+								{ cause: error },
 							);
 						}),
 					),
@@ -275,7 +280,7 @@ export function cssModuleTypes(
 				);
 
 				if (errors.length) {
-					const message = `Couldn't generate CSS module types:\n${errors.map(String).join("\n")}`;
+					const message = `Couldn't generate CSS module types:\n${errors.map(errorMessage).join("\n")}`;
 
 					// Only fail type checking, as dev and build report CSS errors themselves
 					if (command === "sync") {
@@ -344,6 +349,10 @@ export function cssModuleTypes(
 		},
 		name: "astro-css-module-types",
 	};
+}
+
+function errorMessage(error: unknown) {
+	return error instanceof Error ? error.message : String(error);
 }
 
 function isNotFound(error: unknown) {
