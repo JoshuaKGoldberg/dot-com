@@ -17,35 +17,54 @@ interface Props {
 	photos: Photo[];
 }
 
-/** Images near enough the top to show before any scrolling. */
+/** Images near enough the top to show before any scrolling, when no photo is linked. */
 const eagerCount = 3;
 
-/** How wide the gallery is: the page's width, within its padding. */
-const galleryWidth = "min(62rem, 100vw - 2 * clamp(0.5rem, 5vw, 2rem))";
-
 /**
- * How wide each lane is, matching the gallery's CSS: three once there's room for 15rem lanes, then two, then one.
+ * How wide the gallery is, and how many lanes it has, at each width the page has.
+ * These match the gallery's CSS: three lanes once there's room for 15rem ones, then two, then one.
  * Each step waits an extra rem for any scrollbar, so that photos are never fetched too small for their lanes.
  */
-const sizesClosed = [
-	`(width >= 52rem) calc((${galleryWidth} - 2rem) / 3)`,
-	`(width >= 36rem) calc((${galleryWidth} - 1rem) / 2)`,
-	galleryWidth,
-].join(", ");
+const layouts = [
+	// The page stops being padded here, so the gallery is its full width
+	{ lanes: 3, query: "(width >= 63.5625em)", width: "62rem" },
+	{ lanes: 3, query: "(width >= 52rem)", width: "(100vw - 4rem)" },
+	{
+		lanes: 2,
+		query: "(width >= 36rem)",
+		width: "(100vw - 2 * clamp(0.5rem, 5vw, 2rem))",
+	},
+	{ lanes: 1, query: "", width: "(100vw - 2 * clamp(0.5rem, 5vw, 2rem))" },
+];
 
-/** An opened photo takes the gallery's width, unless it's tall enough to be capped by height. */
+function getLaneWidth({ lanes, width }: (typeof layouts)[number]) {
+	return `(${width} - ${(lanes - 1).toString()}rem) / ${lanes.toString()}`;
+}
+
+const sizesClosed = layouts
+	.map((layout) => `${layout.query} calc(${getLaneWidth(layout)})`.trim())
+	.join(", ");
+
+/**
+ * An opened photo takes the gallery's width, unless it's tall enough to be capped by height.
+ * It never gets narrower than it was closed, though, even on the shortest screens.
+ */
 function getSizesOpen(photo: Photo) {
 	const byHeight = `(100vh - 14rem) * ${(photo.width / photo.height).toFixed(4)}`;
-	return `min(${galleryWidth}, ${byHeight})`;
+	return layouts
+		.map((layout) =>
+			`${layout.query} min(${layout.width}, max(${getLaneWidth(layout)}, ${byHeight}))`.trim(),
+		)
+		.join(", ");
 }
 
 /** Runs before the gallery is first painted, so that it never jumps into place. */
 const prepareInline = [
 	getLinkedPhoto,
-	openLinkedPhoto,
 	measure,
+	openLinkedPhoto,
 	prepareGallery,
-	`prepareGallery(document.currentScript.previousElementSibling);`,
+	`${prepareGallery.name}(document.currentScript.previousElementSibling);`,
 ].join("\n");
 
 const widths = [320, 480, 640, 960, 1280, 1600, 1984];
@@ -85,6 +104,7 @@ function formatDate(timestamp: string) {
 					<Image
 						alt={photo.alt}
 						class="image"
+						data-eager={index < eagerCount ? "" : undefined}
 						data-fades-in
 						data-sizes-open={getSizesOpen(photo)}
 						format="avif"
@@ -92,7 +112,7 @@ function formatDate(timestamp: string) {
 							(Math.min(displayWidth, photo.width) * photo.height) /
 								photo.width,
 						)}
-						loading={index < eagerCount ? "eager" : "lazy"}
+						loading="lazy"
 						quality={60}
 						sizes={sizesClosed}
 						src={getPhotoUrl(photo)}
@@ -141,7 +161,7 @@ function formatDate(timestamp: string) {
 	))}
 </ul>
 <script is:inline set:html={prepareInline} />
-<FadeImagesIn />
+<FadeImagesIn rerun />
 
 <script>
 	import { getLinkedPhoto, measure, prepareGallery } from "./prepareGallery";
@@ -161,23 +181,23 @@ function formatDate(timestamp: string) {
 		}
 	}
 
-	/** Whether photos waiting on their larger size to load will then be open. */
-	const pending = new Map<HTMLDetailsElement, boolean>();
+	/** Whether photos that are about to open or close will then be open. */
+	const intended = new Map<HTMLDetailsElement, boolean>();
 
 	/** Opens or closes a photo, morphing every photo into its new place. */
 	async function toggle(details: HTMLDetailsElement) {
-		// A second click while the first is still loading undoes it, as it would natively
-		const waiting = pending.get(details);
-		if (waiting !== undefined) {
-			pending.set(details, !waiting);
+		// Clicking again before it's changed undoes the first click, as it would natively
+		const already = intended.get(details);
+		if (already !== undefined) {
+			intended.set(details, !already);
 			return;
 		}
 
-		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
+		intended.set(details, !details.open);
 
 		// Loads the larger size first, briefly, so that the photo doesn't grow blurry
+		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
 		if (!details.open && image?.dataset.sizesOpen) {
-			pending.set(details, true);
 			const preload = new Image();
 			preload.sizes = image.dataset.sizesOpen;
 			preload.srcset = image.srcset;
@@ -187,14 +207,17 @@ function formatDate(timestamp: string) {
 			]);
 		}
 
-		const opening = pending.get(details) ?? !details.open;
-		pending.delete(details);
-		if (opening === details.open) {
+		if (intended.get(details) === details.open) {
+			intended.delete(details);
 			return;
 		}
 
 		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
 		const update = () => {
+			// Clicks until now still count, even once the transition has begun
+			const opening = intended.get(details) ?? details.open;
+			intended.delete(details);
+
 			// Photos sharing a name close each other, so only one is ever open
 			details.open = opening;
 			enlarge(details);
@@ -242,37 +265,44 @@ function formatDate(timestamp: string) {
 		}
 	}
 
-	// Pages the router swaps in are prepared before they're shown, as full loads are inline
-	document.addEventListener("astro:after-swap", () => {
-		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
-		if (gallery) {
-			prepareGallery(gallery);
-		}
-	});
+	/** Photos change height as their lanes resize, and as they open and close. */
+	let observer: ResizeObserver | undefined;
 
-	// Runs on every visit to the page, including ones the router swaps in
-	document.addEventListener("astro:page-load", () => {
+	function observe() {
+		observer?.disconnect();
+		observer = undefined;
+
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
 		if (usesLanes || !gallery) {
 			return;
 		}
 
-		// Photos change height as their lanes resize, and as they open and close
-		const observer = new ResizeObserver(() => {
+		observer = new ResizeObserver(() => {
 			measure(gallery);
 		});
 
 		for (const details of gallery.querySelectorAll("details")) {
 			observer.observe(details);
 		}
+	}
 
-		document.addEventListener(
-			"astro:before-swap",
-			() => {
-				observer.disconnect();
-			},
-			{ once: true },
-		);
+	// Full loads were already prepared inline, before the gallery was first painted
+	observe();
+
+	// Going back or forward keeps the scroll position the router restores
+	let traversing = false;
+	document.addEventListener("astro:before-preparation", (event) => {
+		traversing = event.navigationType === "traverse";
+	});
+
+	// Pages the router swaps in are prepared before they're shown
+	document.addEventListener("astro:after-swap", () => {
+		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
+		if (gallery) {
+			prepareGallery(gallery, !traversing);
+		}
+
+		observe();
 	});
 
 	// Opening a photo from a changed #hash, such as one typed into the address
@@ -317,12 +347,27 @@ function formatDate(timestamp: string) {
 	.gallery {
 		display: grid;
 		gap: 1rem;
-		grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+		--lanes: 1;
+
+		grid-template-columns: repeat(var(--lanes), minmax(0, 1fr));
 		list-style: none;
 		margin: 0 auto;
 		padding: 0;
 		width: var(--widthFull);
 		max-width: 100%;
+	}
+
+	/* Matching the image sizes given above */
+	@media (width >= 36rem) {
+		.gallery {
+			--lanes: 2;
+		}
+	}
+
+	@media (width >= 52rem) {
+		.gallery {
+			--lanes: 3;
+		}
 	}
 
 	/* Hidden until it's laid out, which only happens if scripts are running */
@@ -402,7 +447,13 @@ function formatDate(timestamp: string) {
 	/* As wide as the gallery, unless it and its caption wouldn't fit under the header */
 	[open] .image {
 		margin-inline: auto;
-		width: min(100%, calc((100svh - 14rem) * var(--ratio)));
+		width: min(
+			100%,
+			max(
+				(100% - (var(--lanes) - 1) * 1rem) / var(--lanes),
+				(100svh - 14rem) * var(--ratio)
+			)
+		);
 	}
 
 	:global(html[data-motion="paused"]) .image {
