@@ -4,7 +4,14 @@ import { Image } from "astro:assets";
 import { getPhotoUrl, type Photo } from "~/photos";
 
 import { Anchor } from "../Anchor";
+import FadeImagesIn from "../hero/FadeImagesIn.astro";
 import { Text } from "../Text";
+import {
+	getLinkedPhoto,
+	measure,
+	openLinkedPhoto,
+	prepareGallery,
+} from "./prepareGallery";
 
 interface Props {
 	photos: Photo[];
@@ -13,25 +20,33 @@ interface Props {
 /** Images near enough the top to show before any scrolling. */
 const eagerCount = 3;
 
+/** How wide the gallery is: the page's width, within its padding. */
+const galleryWidth = "min(62rem, 100vw - 2 * clamp(0.5rem, 5vw, 2rem))";
+
 /**
- * How wide each lane is, matching the gallery's CSS:
- * three once there's room for 15rem lanes, then two, then one.
+ * How wide each lane is, matching the gallery's CSS: three once there's room for 15rem lanes, then two, then one.
+ * Each step waits an extra rem for any scrollbar, so that photos are never fetched too small for their lanes.
  */
 const sizesClosed = [
-	"(width >= 63.5625em) 20rem",
-	"(width >= 51rem) calc((100vw - 6rem) / 3)",
-	"(width >= 35rem) calc((100vw - 5rem) / 2)",
-	"calc(100vw - 1rem)",
+	`(width >= 52rem) calc((${galleryWidth} - 2rem) / 3)`,
+	`(width >= 36rem) calc((${galleryWidth} - 1rem) / 2)`,
+	galleryWidth,
 ].join(", ");
 
 /** An opened photo takes the gallery's width, unless it's tall enough to be capped by height. */
 function getSizesOpen(photo: Photo) {
-	const byHeight = `calc((100vh - 14rem) * ${(photo.width / photo.height).toFixed(4)})`;
-	return [
-		`(width >= 63.5625em) min(62rem, ${byHeight})`,
-		`min(calc(100vw - 1rem), ${byHeight})`,
-	].join(", ");
+	const byHeight = `(100vh - 14rem) * ${(photo.width / photo.height).toFixed(4)}`;
+	return `min(${galleryWidth}, ${byHeight})`;
 }
+
+/** Runs before the gallery is first painted, so that it never jumps into place. */
+const prepareInline = [
+	getLinkedPhoto,
+	openLinkedPhoto,
+	measure,
+	prepareGallery,
+	`prepareGallery(document.currentScript.previousElementSibling);`,
+].join("\n");
 
 const widths = [320, 480, 640, 960, 1280, 1600, 1984];
 
@@ -70,6 +85,7 @@ function formatDate(timestamp: string) {
 					<Image
 						alt={photo.alt}
 						class="image"
+						data-fades-in
 						data-sizes-open={getSizesOpen(photo)}
 						format="avif"
 						height={Math.round(
@@ -110,43 +126,32 @@ function formatDate(timestamp: string) {
 							Open original
 							<span class="hint">(opens in a new tab)</span>
 						</Anchor>
+						<a
+							aria-label="Link to this photo"
+							class="link"
+							data-photo-link
+							href={`#${photo.name}`}
+						>
+							&#8288;#
+						</a>
 					</span>
 				</Text>
 			</details>
 		</li>
 	))}
 </ul>
+<script is:inline set:html={prepareInline} />
+<FadeImagesIn />
 
 <script>
+	import { getLinkedPhoto, measure, prepareGallery } from "./prepareGallery";
+
 	const usesLanes = CSS.supports("display", "grid-lanes");
 
-	/** Height of the rows that photos span, without grid-lanes: short enough to look exact. */
-	const rowHeight = 4;
-
-	/**
-	 * Browsers without grid-lanes get masonry from a grid of short rows instead,
-	 * with each photo spanning as many rows as it, and the gap after it, are tall.
-	 */
-	function measure(gallery: HTMLElement) {
-		if (usesLanes) {
-			return;
-		}
-
-		const gap = parseFloat(getComputedStyle(gallery).columnGap);
-		const items = [...gallery.children] as HTMLElement[];
-
-		// Reading every height before writing any lays the page out once, not per photo
-		const heights = items.map(
-			(item) => item.firstElementChild?.getBoundingClientRect().height ?? 0,
-		);
-
-		items.forEach((item, index) => {
-			const rows = Math.ceil((heights[index] + gap) / rowHeight);
-			item.style.setProperty("--rows", rows.toString());
-		});
-
-		gallery.dataset.masonry = "";
-	}
+	/** Without them, the photo transition's styles wouldn't apply, leaving the page's own to run. */
+	const supportsTypes = CSS.supports(
+		"selector(:active-view-transition-type(photo))",
+	);
 
 	/** Has an opened photo show the larger size it now needs. */
 	function enlarge(details: HTMLDetailsElement) {
@@ -156,13 +161,23 @@ function formatDate(timestamp: string) {
 		}
 	}
 
+	/** Whether photos waiting on their larger size to load will then be open. */
+	const pending = new Map<HTMLDetailsElement, boolean>();
+
 	/** Opens or closes a photo, morphing every photo into its new place. */
 	async function toggle(details: HTMLDetailsElement) {
-		const opening = !details.open;
+		// A second click while the first is still loading undoes it, as it would natively
+		const waiting = pending.get(details);
+		if (waiting !== undefined) {
+			pending.set(details, !waiting);
+			return;
+		}
+
 		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
 
 		// Loads the larger size first, briefly, so that the photo doesn't grow blurry
-		if (opening && image?.dataset.sizesOpen) {
+		if (!details.open && image?.dataset.sizesOpen) {
+			pending.set(details, true);
 			const preload = new Image();
 			preload.sizes = image.dataset.sizesOpen;
 			preload.srcset = image.srcset;
@@ -170,6 +185,12 @@ function formatDate(timestamp: string) {
 				preload.decode().catch(() => undefined),
 				new Promise((resolve) => setTimeout(resolve, 300)),
 			]);
+		}
+
+		const opening = pending.get(details) ?? !details.open;
+		pending.delete(details);
+		if (opening === details.open) {
+			return;
 		}
 
 		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
@@ -187,7 +208,11 @@ function formatDate(timestamp: string) {
 			details.scrollIntoView({ behavior: "instant", block: "nearest" });
 		};
 
-		if (document.documentElement.dataset.motion === "paused") {
+		if (
+			!supportsTypes ||
+			!("startViewTransition" in document) ||
+			document.documentElement.dataset.motion === "paused"
+		) {
 			update();
 			return;
 		}
@@ -195,38 +220,13 @@ function formatDate(timestamp: string) {
 		// Keeps the photo that's opening or closing over the others as they move
 		details.dataset.toggling = "";
 
-		try {
-			const transition = document.startViewTransition({
-				types: ["photo"],
-				update,
-			});
-			void transition.finished.finally(() => {
-				delete details.dataset.toggling;
-			});
-		} catch {
-			// Browsers without view transitions, or without their types
+		const transition = document.startViewTransition({
+			types: ["photo"],
+			update,
+		});
+		void transition.finished.finally(() => {
 			delete details.dataset.toggling;
-			update();
-		}
-	}
-
-	/** Finds the photo that the page's #hash links to, if there is one. */
-	function getLinkedPhoto() {
-		let id;
-		try {
-			id = decodeURIComponent(location.hash.slice(1));
-		} catch {
-			return undefined;
-		}
-
-		const details = id
-			? document.getElementById(id)?.querySelector(":scope > details")
-			: undefined;
-
-		return details instanceof HTMLDetailsElement &&
-			details.closest("[data-photo-gallery]")
-			? details
-			: undefined;
+		});
 	}
 
 	/** Has the address link to whichever photo is open, so it can be shared. */
@@ -242,29 +242,18 @@ function formatDate(timestamp: string) {
 		}
 	}
 
+	// Pages the router swaps in are prepared before they're shown, as full loads are inline
+	document.addEventListener("astro:after-swap", () => {
+		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
+		if (gallery) {
+			prepareGallery(gallery);
+		}
+	});
+
 	// Runs on every visit to the page, including ones the router swaps in
 	document.addEventListener("astro:page-load", () => {
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
-		if (!gallery) {
-			return;
-		}
-
-		// A link to one photo opens it straight away, without animating
-		const linked = getLinkedPhoto();
-		if (linked) {
-			const image = linked.querySelector<HTMLImageElement>(".image");
-			if (image) {
-				image.fetchPriority = "high";
-				image.loading = "eager";
-			}
-
-			linked.open = true;
-			enlarge(linked);
-			measure(gallery);
-			linked.scrollIntoView({ behavior: "instant", block: "start" });
-		}
-
-		if (usesLanes) {
+		if (usesLanes || !gallery) {
 			return;
 		}
 
@@ -336,6 +325,13 @@ function formatDate(timestamp: string) {
 		max-width: 100%;
 	}
 
+	/* Hidden until it's laid out, which only happens if scripts are running */
+	@media (scripting: enabled) {
+		.gallery:not([data-prepared]) {
+			visibility: hidden;
+		}
+	}
+
 	/* Masonry: each photo, newest first, goes to the top of whichever lane is shortest */
 	@supports (display: grid-lanes) {
 		.gallery {
@@ -359,7 +355,8 @@ function formatDate(timestamp: string) {
 		grid-column: 1 / -1;
 	}
 
-	/* The page's scroll padding already keeps opened photos clear of the header */
+	/* The page's scroll padding already keeps opened and linked photos clear of the header */
+	.item,
 	.details {
 		scroll-margin-block: 1rem;
 	}
@@ -439,6 +436,18 @@ function formatDate(timestamp: string) {
 		display: block;
 	}
 
+	.link {
+		color: var(--colorMuted);
+		margin-left: 0.5em;
+		text-decoration: none;
+		transition: var(--transitionMedium) color;
+		user-select: none;
+	}
+
+	.link:is(:focus-visible, :hover) {
+		color: var(--colorEmphasized);
+	}
+
 	.hint {
 		clip-path: inset(50%);
 		height: 1px;
@@ -472,6 +481,14 @@ function formatDate(timestamp: string) {
 		z-index: 1;
 	}
 
+	/* The header still goes over every photo, even the one opening or closing */
+	:global(
+		:active-view-transition-type(photo)::view-transition-group(header),
+		:active-view-transition-type(photo)::view-transition-group(fader)
+	) {
+		z-index: 2;
+	}
+
 	:global(::view-transition-image-pair(*.photo)) {
 		border-radius: 0.5rem;
 		overflow: hidden;
@@ -489,9 +506,13 @@ function formatDate(timestamp: string) {
 	:global(
 		:active-view-transition-type(photo)::view-transition-old(content),
 		:active-view-transition-type(photo)::view-transition-new(content),
+		:active-view-transition-type(photo)::view-transition-group(portrait),
+		:active-view-transition-type(photo)::view-transition-new(portrait),
+		:active-view-transition-type(photo)::view-transition-group(portrait-figure),
 		:active-view-transition-type(photo)::view-transition-image-pair(
 			portrait-figure
 		),
+		:active-view-transition-type(photo)::view-transition-new(portrait-figure),
 		:active-view-transition-type(photo)::view-transition-new(fader)
 	) {
 		animation: none;
@@ -500,6 +521,8 @@ function formatDate(timestamp: string) {
 
 	:global(
 		:active-view-transition-type(photo)::view-transition-old(content),
+		:active-view-transition-type(photo)::view-transition-old(portrait),
+		:active-view-transition-type(photo)::view-transition-old(portrait-figure),
 		:active-view-transition-type(photo)::view-transition-old(fader)
 	) {
 		display: none;

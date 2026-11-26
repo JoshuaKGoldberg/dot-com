@@ -5,7 +5,12 @@
 	 * Inline so that it hides them before then, and only if scripts are running.
 	 * It only runs on full page loads, as page transitions have fades of their own.
 	 */
-	for (const image of document.querySelectorAll("img[data-fades-in]")) {
+	for (const image of document.querySelectorAll(
+		"img[data-fades-in]:not([data-fades-in='handled'])",
+	)) {
+		// Pages with more than one of these only fade each image in once
+		image.dataset.fadesIn = "handled";
+
 		if (
 			image.complete ||
 			document.documentElement.dataset.motion === "paused"
