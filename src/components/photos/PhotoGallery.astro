@@ -602,12 +602,14 @@ function formatDate(timestamp: string) {
 	// Browsers send every pointer event to the page's root while a transition runs,
 	// so a press during one, or one that a transition then starts during, still clicks what it was on
 	let pressed: Element | undefined;
+	let pressedAt = { x: 0, y: 0 };
 	let pressedBefore = 0;
 	let pressedDuring = false;
 	document.addEventListener(
 		"pointerdown",
 		(event) => {
 			pressed = undefined;
+			pressedAt = { x: event.clientX, y: event.clientY };
 			pressedBefore = transitions;
 			pressedDuring = false;
 			if (event.button !== 0 || !(event.target instanceof Element)) {
@@ -652,6 +654,14 @@ function formatDate(timestamp: string) {
 
 			// Presses before any transition only lost their click if one started since
 			if (!pressedDuring && transitions === pressedBefore) {
+				return;
+			}
+
+			// Dragging away before letting go isn't a click, just as it wouldn't be otherwise
+			if (
+				Math.hypot(event.clientX - pressedAt.x, event.clientY - pressedAt.y) >
+				10
+			) {
 				return;
 			}
 
