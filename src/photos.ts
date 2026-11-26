@@ -18,7 +18,8 @@ export interface Photo {
 
 	/**
 	 * When the photo was taken, as an ISO timestamp in its camera's time zone.
-	 * Photos that lost their metadata use when they were first posted instead.
+	 * Photos that lost their metadata use when they were first posted instead,
+	 * or just their day when that's all that's known (keeping their order here).
 	 */
 	takenAt: string;
 
@@ -173,6 +174,54 @@ export const photos = (
 			name: "2022-05-04-headshot",
 			takenAt: "2022-05-04T11:31:13-04:00",
 			width: 1500,
+		},
+		{
+			alt: "Josh grinning and holding out his clicker in front of large pink LeadDev letters, in a white t-shirt",
+			event: "LeadDev Berlin 2022",
+			height: 2827,
+			name: "2022-11-04-leaddev-berlin-grinning",
+			takenAt: "2022-11-04T16:59:32+01:00",
+			width: 4241,
+		},
+		{
+			alt: "Josh laughing on a purple-lit stage with his clicker raised high, in a white t-shirt",
+			event: "LeadDev Berlin 2022",
+			height: 2540,
+			name: "2022-11-04-leaddev-berlin-clicker",
+			takenAt: "2022-11-04T16:58:01+01:00",
+			width: 3810,
+		},
+		{
+			alt: "Josh smiling on stage beside a giant LeadDev logo, in a white t-shirt and jeans",
+			event: "LeadDev Berlin 2022",
+			height: 2862,
+			name: "2022-11-04-leaddev-berlin-logo",
+			takenAt: "2022-11-04T17:27:37+01:00",
+			width: 4293,
+		},
+		{
+			alt: "Josh smiling warmly in golden evening light, in a pineapple-print shirt and conference badge, with leaves behind him",
+			event: "Prisma Day 2022",
+			height: 2400,
+			name: "2022-06-15-prisma-day-portrait",
+			takenAt: "2022-06-15",
+			width: 1602,
+		},
+		{
+			alt: "Josh giving a thumbs-up toward his slides beside a Prisma banner, in a pineapple-print shirt",
+			event: "Prisma Day 2022",
+			height: 1367,
+			name: "2022-06-15-prisma-day-thumbs-up",
+			takenAt: "2022-06-15",
+			width: 2048,
+		},
+		{
+			alt: "Josh mid-sentence and smiling at a Prisma podium in a pineapple-print shirt, wearing a headset microphone",
+			event: "Prisma Day 2022",
+			height: 1367,
+			name: "2022-06-15-prisma-day-podium",
+			takenAt: "2022-06-15",
+			width: 2048,
 		},
 	] satisfies Photo[]
 ).sort((a, b) => Date.parse(b.takenAt) - Date.parse(a.takenAt));
