@@ -230,6 +230,9 @@ importers:
       '@types/eslint-plugin-jsx-a11y':
         specifier: ^6.10.1
         version: 6.10.1(jiti@2.7.0)(supports-color@10.2.2)
+      '@types/hast':
+        specifier: ^3.0.5
+        version: 3.0.5
       '@types/node':
         specifier: ^26.6.2
         version: 26.6.6

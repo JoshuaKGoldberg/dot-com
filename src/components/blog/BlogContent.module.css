@@ -184,6 +184,190 @@
 	padding: 0 0.1rem 0 0.2rem;
 }
 
+/* Keeps references on the lines of the words before them */
+.article [data-footnote-reference] {
+	white-space: nowrap;
+}
+
+/* Links back from the bottom of the page focus references, without outlining them for pointers */
+.article [data-footnote-reference]:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* Narrow tables' cells fit better with references on their own lines */
+.article :is(td, th) [data-footnote-reference] {
+	white-space: normal;
+}
+
+.article button[data-footnote-ref] {
+	background: color-mix(in srgb, var(--colorEmphasized) 10%, transparent);
+	border: 1px solid color-mix(in srgb, var(--colorEmphasized) 30%, transparent);
+	border-radius: 0.75em;
+	color: var(--colorEmphasized);
+	cursor: pointer;
+	font-family: var(--fontLabel);
+	font-size: 0.7em;
+	line-height: 1;
+	margin-inline: 0.1em;
+	min-width: 1.75em;
+	padding: 0.2em 0.45em;
+	position: relative;
+	top: -0.45em;
+	transition: var(--transitionFast) background;
+}
+
+.article button[data-footnote-ref]:is(:focus-visible, :hover) {
+	background: color-mix(in srgb, var(--colorEmphasized) 22%, transparent);
+}
+
+.article
+	[data-footnote-reference]:has(> :popover-open)
+	> button[data-footnote-ref] {
+	background: var(--colorEmphasized);
+	border-color: var(--colorEmphasized);
+	color: var(--colorBackground);
+}
+
+@media (forced-colors: active) {
+	.article
+		[data-footnote-reference]:has(> :popover-open)
+		> button[data-footnote-ref] {
+		outline: 2px solid Highlight;
+	}
+}
+
+/* Makes the reference easier to tap, without spacing out its line */
+.article button[data-footnote-ref]::after {
+	content: "";
+	inset: -0.4em -0.15em;
+	position: absolute;
+}
+
+.article [data-footnote-popover] {
+	background: var(--colorBackgroundCenter);
+	border: 1px solid var(--colorMedium);
+	border-radius: 0.5rem;
+	box-shadow: 0 0.5rem 1.5rem
+		color-mix(in srgb, var(--colorForegroundExtra) 20%, transparent);
+	color: var(--colorForeground);
+	font-size: var(--fontSizeSmall);
+	font-style: normal;
+	font-weight: var(--fontWeightLight);
+	letter-spacing: normal;
+	line-height: var(--lineHeightParagraph);
+	max-width: min(30rem, 100% - 2rem);
+	overflow: visible;
+	padding: 0;
+	white-space: normal;
+}
+
+:global(html.dark) .article [data-footnote-popover] {
+	background: var(--colorSubtle);
+	box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 50%);
+}
+
+@supports (position-try-fallbacks: flip-block) {
+	.article [data-footnote-popover] {
+		inset: auto;
+		bottom: anchor(top);
+		justify-self: anchor-center;
+		margin: 0 1rem 0.5rem;
+		position-try-fallbacks: flip-block, --footnote-in-viewport;
+		position-visibility: anchors-visible;
+	}
+}
+
+/* Footnotes too tall for above or below their references fill what they can of the screen */
+@position-try --footnote-in-viewport {
+	bottom: 1rem;
+	height: fit-content;
+	justify-self: center;
+	left: 1rem;
+	margin: auto;
+	right: 1rem;
+	top: 1rem;
+}
+
+/* Browsers without popovers link to footnotes at the bottom of the page instead */
+.article [data-footnote-fallback] {
+	font-size: 0.75em;
+	padding: 0 0.1rem 0 0.2rem;
+	vertical-align: super;
+}
+
+@supports selector(:popover-open) {
+	.article [data-footnote-fallback] {
+		display: none;
+	}
+}
+
+@supports not selector(:popover-open) {
+	.article :is(button[data-footnote-ref], [data-footnote-popover]) {
+		display: none;
+	}
+}
+
+@supports not (position-try-fallbacks: flip-block) {
+	.article [data-footnote-popover]::backdrop {
+		background: rgb(0 0 0 / 30%);
+	}
+}
+
+:global(html[data-motion="playing"])
+	.article
+	[data-footnote-popover]:popover-open {
+	transition:
+		var(--transitionFast) opacity,
+		var(--transitionFast) translate;
+
+	@starting-style {
+		opacity: 0;
+		translate: 0 0.25rem;
+	}
+}
+
+/*
+ * Padding is inside the scrolling content, so focused links' outlines aren't cut off.
+ * It isn't focusable itself, as that'd add a stop for every footnote just for the few tall enough to scroll.
+ */
+.article [data-footnote-content] {
+	display: block;
+	max-height: calc(100dvh - 2rem - 2px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 0.75rem 2.5rem 0.75rem 1rem;
+}
+
+.article [data-footnote-paragraph] {
+	display: block;
+}
+
+.article [data-footnote-paragraph] + [data-footnote-paragraph] {
+	margin-top: 0.5rem;
+}
+
+.article [data-footnote-close] {
+	align-items: center;
+	background: none;
+	border: none;
+	border-radius: 0.25rem;
+	color: var(--colorMuted);
+	cursor: pointer;
+	display: flex;
+	font-size: 1.25rem;
+	height: 2rem;
+	justify-content: center;
+	line-height: 1;
+	position: absolute;
+	right: 0.25rem;
+	top: 0.25rem;
+	width: 2rem;
+}
+
+.article [data-footnote-close]:is(:focus-visible, :hover) {
+	color: var(--colorForegroundExtra);
+}
+
 .article table {
 	border-spacing: 0;
 	text-align: left;
