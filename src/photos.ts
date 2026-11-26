@@ -166,5 +166,13 @@ export const photos = (
 			takenAt: "2023-03-16T14:50:15-04:00",
 			width: 1915,
 		},
+		{
+			alt: "Josh smiling warmly outdoors in a grey zip-up fleece, in front of hedges and trees",
+			event: "Headshot",
+			height: 1000,
+			name: "2022-05-04-headshot",
+			takenAt: "2022-05-04T11:31:13-04:00",
+			width: 1500,
+		},
 	] satisfies Photo[]
 ).sort((a, b) => Date.parse(b.takenAt) - Date.parse(a.takenAt));
