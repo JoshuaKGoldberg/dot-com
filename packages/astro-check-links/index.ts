@@ -131,7 +131,7 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 				hosts = new Set(
 					[...(config.site ? [config.site] : []), ...aliases].map((url) => {
 						const parsed = URL.parse(url);
-						if (!parsed) {
+						if (!parsed?.host || !/^https?:$/.test(parsed.protocol)) {
 							throw new AstroError(
 								`Invalid URL in the aliases option of checkLinks(): ${url}`,
 								'Aliases are full URLs, such as "https://example.com".',
@@ -145,6 +145,36 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 		},
 		name: "astro-check-links",
 	};
+}
+
+/**
+ * Rewrites absolute links to the site within its base path to the local server,
+ * so they're checked against the build like any other link.
+ * Absolute links to the site outside its base path are left as other sites.
+ */
+function createSiteRewriter(
+	hosts: Set<string>,
+	base: string,
+	prefix: string,
+	local: string,
+) {
+	if (!hosts.size) {
+		return (text: string) => text;
+	}
+
+	const escape = (text: string) =>
+		text.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&");
+	const origins = `(?:https?:)?//(?:${[...hosts].map(escape).join("|")})`;
+	const paths = [...new Set([base.replace(/\/*$/, "/"), prefix])]
+		.map(escape)
+		.join("|");
+	const inBase = new RegExp(`${origins}(?=${paths})`, "gi");
+	const bare = new RegExp(`${origins}(?=[?#"'\\s<>)]|$)`, "gi");
+
+	return (text: string) =>
+		prefix === "/"
+			? text.replace(inBase, local).replace(bare, `${local}/`)
+			: text.replace(inBase, local);
 }
 
 function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
@@ -209,7 +239,7 @@ async function findBrokenLinks({
 	const files = await listFiles(directory);
 	const prefix = new URL(base.replace(/\/*$/, "/"), "http://localhost")
 		.pathname;
-	const server = await serveBuild(directory, files, prefix);
+	const server = await serveBuild({ base, directory, files, hosts, prefix });
 
 	try {
 		const address = server.address();
@@ -244,13 +274,6 @@ async function findBrokenLinks({
 				// External links are out of scope, and would make builds depend on other sites
 				linksToSkip: (link) => Promise.resolve(shouldSkip(link, local)),
 				path,
-				urlRewriteExpressions: [...hosts].map((host) => ({
-					pattern: new RegExp(
-						`^https?://${host.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")}(?=[/?#]|$)`,
-						"i",
-					),
-					replacement: local,
-				})),
 			}),
 		);
 
@@ -286,10 +309,7 @@ async function findBrokenLinks({
 			return false;
 		}
 
-		const internal =
-			url.origin === local ||
-			(/^https?:$/.test(url.protocol) && hosts.has(url.host));
-		if (!internal) {
+		if (url.origin !== local) {
 			return true;
 		}
 
@@ -378,8 +398,21 @@ function safeDecode(text: string) {
 }
 
 // Serves the build under its base path, much like static hosts do
-async function serveBuild(directory: string, files: string[], prefix: string) {
+async function serveBuild({
+	base,
+	directory,
+	files,
+	hosts,
+	prefix,
+}: {
+	base: string;
+	directory: string;
+	files: string[];
+	hosts: Set<string>;
+	prefix: string;
+}) {
 	const known = new Set(files);
+	let rewrite = (text: string) => text;
 
 	const server = createServer((request, response) => {
 		const [pathname = "/", query] = (request.url ?? "/").split(/\?(.*)/s);
@@ -410,13 +443,30 @@ async function serveBuild(directory: string, files: string[], prefix: string) {
 		}
 
 		readFile(join(directory, resolved.file)).then(
-			(body) => response.writeHead(200, headers).end(body),
+			(body) =>
+				response
+					.writeHead(200, headers)
+					.end(
+						/\.(?:css|html)$/.test(resolved.file)
+							? rewrite(body.toString())
+							: body,
+					),
 			() => response.writeHead(500).end(),
 		);
 	});
 
 	server.listen(0, "127.0.0.1");
 	await once(server, "listening");
+
+	const address = server.address();
+	if (address && typeof address !== "string") {
+		rewrite = createSiteRewriter(
+			hosts,
+			base,
+			prefix,
+			`http://127.0.0.1:${String(address.port)}`,
+		);
+	}
 
 	return server;
 }

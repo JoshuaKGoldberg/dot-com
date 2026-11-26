@@ -43,7 +43,8 @@ export default defineConfig({
 });
 ```
 
-`astro-check-links` respects your Astro config's [`base`](https://docs.astro.build/en/reference/configuration-reference/#base), so links that leave it are reported as broken.
+`astro-check-links` respects your Astro config's [`base`](https://docs.astro.build/en/reference/configuration-reference/#base), so root-relative links that leave it are reported as broken.
+Absolute links to your `site` outside of `base`, such as to other projects on the same GitHub Pages domain, are treated as links to other sites.
 Links to pages may leave out `.html`, as many hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
 
 It only knows about files in the build, not your host's own rules, such as `_redirects` files.
