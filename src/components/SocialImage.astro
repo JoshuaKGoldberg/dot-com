@@ -3,37 +3,27 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
-export interface DarkAdjustment {
-	brightness: number;
-	hueRotate: number;
-	saturate: number;
-}
-
 interface Props {
 	alt: string;
-	/** Filters the brand's color in dark themes, for brands that use another one there */
-	dark?: DarkAdjustment | undefined;
 	image: ImageMetadata;
+	/** What the light starts from when the pointer nears, such as the brand's color */
+	litColor: string;
 }
 ---
 
 <span
 	class="social-image"
 	data-lit-icon
-	style={{ "--icon": `url("${Astro.props.image.src}")` }}
+	style={{
+		"--icon": `url("${Astro.props.image.src}")`,
+		"--litColor": Astro.props.litColor,
+	}}
 >
 	<Image
 		alt={Astro.props.alt}
 		class="image"
 		loading="eager"
 		src={Astro.props.image}
-		style={
-			Astro.props.dark && {
-				"--brightness": Astro.props.dark.brightness,
-				"--hueRotate": `${Astro.props.dark.hueRotate}deg`,
-				"--saturate": Astro.props.dark.saturate,
-			}
-		}
 	/>
 </span>
 
@@ -49,12 +39,8 @@ interface Props {
 
 	.image {
 		display: block;
-		/* Fades along with the theme, as --iconDarkness does */
-		filter: brightness(
-				calc(1 + (var(--brightness, 1) - 1) * var(--iconDarkness))
-			)
-			saturate(calc(1 + (var(--saturate, 1) - 1) * var(--iconDarkness)))
-			hue-rotate(calc(var(--hueRotate, 0deg) * var(--iconDarkness)));
+		filter: invert(var(--iconInversion))
+			hue-rotate(calc(var(--iconInversion) * 180deg));
 		height: 100%;
 		width: 100%;
 	}
@@ -85,19 +71,16 @@ interface Props {
 		}
 	}
 
-	/* Brands' colors can be too faint on systems' colors, so it's drawn in the system's link color */
-	@media (forced-colors: active) {
-		.social-image::before {
-			background: LinkText;
-			content: "";
-			forced-color-adjust: none;
-			inset: 0;
-			mask: var(--icon) center / 100% 100% no-repeat;
-			position: absolute;
-		}
-
+	/* Those colors are the system's, rather than the chosen theme's */
+	@media (forced-colors: active) and (prefers-color-scheme: dark) {
 		.image {
-			opacity: 0;
+			filter: invert() hue-rotate(180deg);
+		}
+	}
+
+	@media (forced-colors: active) and (prefers-color-scheme: light) {
+		.image {
+			filter: none;
 		}
 	}
 </style>

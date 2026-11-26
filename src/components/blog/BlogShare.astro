@@ -3,7 +3,7 @@ import bluesky from "~/assets/icons/bluesky.svg";
 import email from "~/assets/icons/email.svg";
 import linkedin from "~/assets/icons/linkedin.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
-import { siteName } from "~/constants";
+import { brandColors, siteName } from "~/constants";
 
 import SocialImage from "../SocialImage.astro";
 
@@ -38,11 +38,13 @@ const channels = [
 			text: createText("@joshuakgoldberg.com"),
 		}),
 		bluesky,
+		brandColors.bluesky,
 	],
 	[
 		"Share on LinkedIn",
 		createLink("https://linkedin.com/sharing/share-offsite/", { url }),
 		linkedin,
+		brandColors.linkedin,
 	],
 	[
 		"Share on Mastodon",
@@ -50,6 +52,7 @@ const channels = [
 			text: createText("@JoshuaKGoldberg@fosstodon.org"),
 		}),
 		mastodon,
+		brandColors.mastodon,
 	],
 	[
 		"Share by email",
@@ -59,15 +62,16 @@ const channels = [
 			subject: title,
 		}),
 		email,
+		brandColors.email,
 	],
 ] as const;
 ---
 
 <span class="shares">
 	<slot />
-	{channels.map(([label, href, image]) => (
+	{channels.map(([label, href, image, litColor]) => (
 		<a class="share" href={href} target="_blank" title={label}>
-			<SocialImage alt={label} image={image} />
+			<SocialImage alt={label} image={image} litColor={litColor} />
 		</a>
 	))}
 </span>
