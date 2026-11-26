@@ -8,6 +8,7 @@ import FadeImagesIn from "../hero/FadeImagesIn.astro";
 import { Text } from "../Text";
 import {
 	getLinkedPhoto,
+	isTraversing,
 	measure,
 	openLinkedPhoto,
 	prepareGallery,
@@ -63,6 +64,7 @@ const prepareInline = [
 	getLinkedPhoto,
 	measure,
 	openLinkedPhoto,
+	isTraversing,
 	prepareGallery,
 	`${prepareGallery.name}(document.currentScript.previousElementSibling);`,
 ].join("\n");
@@ -300,11 +302,15 @@ function formatDate(timestamp: string) {
 			return;
 		}
 
+		// Photos that have since gone out of sight don't need to cross-fade, nor hold up the page to
 		const item = details.parentElement;
-		if (item) {
-			item.dataset.morphs = "";
+		const bounds = item?.getBoundingClientRect();
+		if (!item || !bounds || bounds.bottom < 0 || bounds.top > innerHeight) {
+			void update();
+			return;
 		}
 
+		item.dataset.morphs = "";
 		run(["photo", "sharpen"], update);
 	}
 
@@ -428,20 +434,7 @@ function formatDate(timestamp: string) {
 	document.addEventListener("astro:after-swap", () => {
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
 		if (gallery) {
-			prepareGallery(gallery, !traversing);
-
-			// The router restored this before the gallery was laid out, which can change its height
-			if (traversing) {
-				const state = history.state as {
-					scrollX?: number;
-					scrollY?: number;
-				} | null;
-				scrollTo({
-					behavior: "instant",
-					left: state?.scrollX ?? scrollX,
-					top: state?.scrollY ?? scrollY,
-				});
-			}
+			prepareGallery(gallery, traversing);
 		}
 
 		observe();
@@ -529,6 +522,40 @@ function formatDate(timestamp: string) {
 		clearTimeout(hovering);
 	});
 
+	// Browsers send every pointer event to the page's root while a transition runs,
+	// so pressing during one skips to its end, then clicks whatever's actually there
+	let redirecting = false;
+	document.addEventListener(
+		"pointerdown",
+		(event) => {
+			if (transitioning && event.target === document.documentElement) {
+				transitioning.skipTransition();
+				redirecting = true;
+			}
+		},
+		{ capture: true },
+	);
+	document.addEventListener(
+		"click",
+		(event) => {
+			if (!redirecting) {
+				return;
+			}
+
+			redirecting = false;
+			const target = document.elementFromPoint(event.clientX, event.clientY);
+			if (
+				event.target === document.documentElement &&
+				target instanceof HTMLElement &&
+				target !== document.documentElement
+			) {
+				event.stopImmediatePropagation();
+				target.click();
+			}
+		},
+		{ capture: true },
+	);
+
 	// Listening on the document keeps working after the router swaps pages
 	document.addEventListener("click", (event) => {
 		const details = (event.target as Element | null)?.closest?.(
@@ -569,8 +596,15 @@ function formatDate(timestamp: string) {
 		}
 	}
 
-	/* Hidden until it's laid out, which only happens if scripts are running */
+	/*
+	 * Hidden until it's laid out, which only happens if scripts are running.
+	 * Not even laid out until then, so that none of its photos start loading at the wrong size.
+	 */
 	@media (scripting: enabled) {
+		.gallery:not([data-preparing]) {
+			display: none;
+		}
+
 		.gallery:not([data-prepared]) {
 			visibility: hidden;
 		}
@@ -725,11 +759,6 @@ function formatDate(timestamp: string) {
 
 	:global(:active-view-transition-type(photo)) [data-toggling] .image {
 		view-transition-class: photo toggling;
-	}
-
-	/* Clicks still reach the page beneath, rather than being lost on the transition */
-	:global(:active-view-transition-type(photo)::view-transition) {
-		pointer-events: none;
 	}
 
 	/* Only cross-fading, from a photo's smaller size to its larger one, in place */

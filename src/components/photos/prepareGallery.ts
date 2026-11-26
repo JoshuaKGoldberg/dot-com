@@ -82,15 +82,30 @@ export function openLinkedPhoto(scroll: boolean) {
 		// Right away, rather than waiting for the browser to glide there once it's loaded
 		scrollToItem();
 
-		// Again once the rest of the page is parsed, as it may not have been long enough to,
-		// unless the visitor has already scrolled somewhere else themselves
 		if (document.readyState === "loading") {
+			// Again once the rest of the page is parsed, as it may not have been long enough to,
+			// unless the visitor has already scrolled somewhere else themselves
 			const scrolledTo = scrollY;
 			document.addEventListener(
 				"readystatechange",
 				() => {
 					if (Math.abs(scrollY - scrolledTo) < 2) {
 						scrollToItem();
+					}
+				},
+				{ once: true },
+			);
+
+			// The browser would otherwise also scroll there itself once loaded, even then,
+			// so the address only links to the photo again from that point on
+			const { href } = location;
+			const unlinked = href.replace(/#.*/, "");
+			history.replaceState(history.state, "", unlinked);
+			addEventListener(
+				"load",
+				() => {
+					if (location.href === unlinked) {
+						history.replaceState(history.state, "", href);
 					}
 				},
 				{ once: true },
@@ -102,25 +117,35 @@ export function openLinkedPhoto(scroll: boolean) {
 }
 
 /**
- * Lays the gallery out, then shows it, as it's hidden until then so as not to jump around.
- * Going back, forward, or reloading keeps the scroll position the browser restores,
- * rather than scrolling to any linked photo.
+ * Whether this visit is going back, forward, or reloading,
+ * which keep the scroll position they had rather than scrolling to any linked photo.
  */
+export function isTraversing() {
+	// Full loads, which the browser restores the scroll position of itself
+	if (document.readyState === "loading") {
+		const navigation = performance.getEntriesByType("navigation")[0] as
+			PerformanceNavigationTiming | undefined;
+		return navigation?.type === "back_forward" || navigation?.type === "reload";
+	}
+
+	// Pages the router swaps in, which only have a scroll position to go back to when traversing
+	return Boolean((history.state as null | { scrollY?: number })?.scrollY);
+}
+
+/** Lays the gallery out, then shows it, as it's hidden until then so as not to jump around. */
 export function prepareGallery(
 	gallery: HTMLElement,
-	scroll = !["back_forward", "reload"].includes(
-		(
-			performance.getEntriesByType("navigation")[0] as
-				PerformanceNavigationTiming | undefined
-		)?.type ?? "",
-	),
+	traversing = isTraversing(),
 ) {
 	if (gallery.hasAttribute("data-prepared")) {
 		return;
 	}
 
+	// Its photos start loading only from now on, once it can say which to load first
+	gallery.dataset.preparing = "";
+
 	// Without a linked photo to load first, the first few are the ones to see first
-	if (!openLinkedPhoto(scroll)) {
+	if (!openLinkedPhoto(!traversing)) {
 		for (const image of gallery.querySelectorAll("img[data-eager]")) {
 			if (image instanceof HTMLImageElement) {
 				image.loading = "eager";
@@ -129,5 +154,19 @@ export function prepareGallery(
 	}
 
 	measure(gallery);
+
+	// The router restores the scroll position before the gallery is laid out, which can change its height
+	if (traversing && document.readyState !== "loading") {
+		const state = history.state as null | {
+			scrollX?: number;
+			scrollY?: number;
+		};
+		scrollTo({
+			behavior: "instant",
+			left: state?.scrollX ?? scrollX,
+			top: state?.scrollY ?? scrollY,
+		});
+	}
+
 	gallery.dataset.prepared = "";
 }
