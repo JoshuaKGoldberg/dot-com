@@ -97,19 +97,31 @@ export function openLinkedPhoto(scroll: boolean) {
 			);
 
 			// The browser would otherwise also scroll there itself once loaded, even then,
-			// so the address only links to the photo again from that point on
-			const { href } = location;
-			const unlinked = href.replace(/#.*/, "");
-			history.replaceState(history.state, "", unlinked);
-			addEventListener(
-				"load",
-				() => {
-					if (location.href === unlinked) {
-						history.replaceState(history.state, "", href);
-					}
-				},
-				{ once: true },
-			);
+			// so the address only links to whichever photo is open from that point on
+			const gallery = details.closest("[data-photo-gallery]");
+			if (gallery instanceof HTMLElement) {
+				gallery.dataset.linksOnLoad = "";
+				history.replaceState(
+					history.state,
+					"",
+					location.href.replace(/#.*/, ""),
+				);
+				addEventListener(
+					"load",
+					() => {
+						delete gallery.dataset.linksOnLoad;
+						const open = gallery.querySelector(":scope > .item:has(> [open])");
+						if (open) {
+							history.replaceState(
+								history.state,
+								"",
+								`${location.href.replace(/#.*/, "")}#${encodeURIComponent(open.id)}`,
+							);
+						}
+					},
+					{ once: true },
+				);
+			}
 		}
 	}
 
@@ -128,8 +140,11 @@ export function isTraversing() {
 		return navigation?.type === "back_forward" || navigation?.type === "reload";
 	}
 
-	// Pages the router swaps in, which only have a scroll position to go back to when traversing
-	return Boolean((history.state as null | { scrollY?: number })?.scrollY);
+	// Pages the router swaps in, as the site's head remembers for scripts that load after it
+	return (
+		(globalThis as { routerNavigation?: { type?: string } }).routerNavigation
+			?.type === "traverse"
+	);
 }
 
 /** Lays the gallery out, then shows it, as it's hidden until then so as not to jump around. */
@@ -144,6 +159,16 @@ export function prepareGallery(
 	// Its photos start loading only from now on, once it can say which to load first
 	gallery.dataset.preparing = "";
 
+	// Whatever happens, it's shown, as no photo is worth hiding the rest
+	try {
+		layOutGallery(gallery, traversing);
+	} finally {
+		gallery.dataset.prepared = "";
+	}
+}
+
+/** Opens any linked photo, then lays the gallery out around it. */
+export function layOutGallery(gallery: HTMLElement, traversing: boolean) {
 	// Without a linked photo to load first, the first few are the ones to see first
 	if (!openLinkedPhoto(!traversing)) {
 		for (const image of gallery.querySelectorAll("img[data-eager]")) {
@@ -167,6 +192,4 @@ export function prepareGallery(
 			top: state?.scrollY ?? scrollY,
 		});
 	}
-
-	gallery.dataset.prepared = "";
 }

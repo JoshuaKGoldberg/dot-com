@@ -1,0 +1,13 @@
+<script is:inline>
+	/**
+	 * Remembers how the router last navigated, such as whether it went back or forward,
+	 * for scripts on the pages it swaps in that load too late to have heard it themselves.
+	 *
+	 * Inline in the head so that it's listening from the very first page.
+	 */
+	var routerNavigation = { type: undefined };
+
+	document.addEventListener("astro:before-preparation", (event) => {
+		routerNavigation.type = event.navigationType;
+	});
+</script>

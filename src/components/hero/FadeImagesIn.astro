@@ -32,6 +32,12 @@ const { rerun, within = "" } = Astro.props;
 
 		const show = () => {
 			image.style.removeProperty("opacity");
+
+			// Motion may have been paused since
+			if (document.documentElement.dataset.motion === "paused") {
+				return;
+			}
+
 			image.animate([{ offset: 0, opacity: 0 }], {
 				duration: 490,
 				easing: "ease-out",

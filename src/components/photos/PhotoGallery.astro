@@ -9,6 +9,7 @@ import { Text } from "../Text";
 import {
 	getLinkedPhoto,
 	isTraversing,
+	layOutGallery,
 	measure,
 	openLinkedPhoto,
 	prepareGallery,
@@ -65,8 +66,9 @@ const prepareInline = [
 	measure,
 	openLinkedPhoto,
 	isTraversing,
+	layOutGallery,
 	prepareGallery,
-	`${prepareGallery.name}(document.currentScript.previousElementSibling);`,
+	`${prepareGallery.name}(document.querySelector("[data-photo-gallery]"));`,
 ].join("\n");
 
 const widths = [320, 480, 640, 960, 1280, 1600, 1984];
@@ -384,6 +386,11 @@ function formatDate(timestamp: string) {
 
 	/** Has the address link to whichever photo is open, so it can be shared. */
 	function linkOpenPhoto(gallery: HTMLElement) {
+		// Until the page loads, it does this itself, so the browser doesn't also scroll to it
+		if (gallery.hasAttribute("data-links-on-load")) {
+			return;
+		}
+
 		const id = gallery.querySelector(":scope > .item:has(> [open])")?.id;
 		const url = new URL(location.href);
 		url.hash = id ? encodeURIComponent(id) : "";
@@ -421,20 +428,30 @@ function formatDate(timestamp: string) {
 		}
 	}
 
-	// Full loads were already prepared inline, before the gallery was first painted
+	// Full loads were already prepared inline, before the gallery was first painted,
+	// but photos can be opened natively before this script has loaded to do it for them
 	observe();
+	const initial = document.querySelector<HTMLElement>("[data-photo-gallery]");
+	if (initial) {
+		for (const details of initial.querySelectorAll("details")) {
+			if (details.open) {
+				void sharpen(details);
+			}
+		}
 
-	// Going back or forward keeps the scroll position the router restores
-	let traversing = false;
-	document.addEventListener("astro:before-preparation", (event) => {
-		traversing = event.navigationType === "traverse";
-	});
+		measure(initial);
+
+		// Leaving the address alone otherwise, as it may link to something else on the page
+		if (initial.querySelector("details[open]")) {
+			linkOpenPhoto(initial);
+		}
+	}
 
 	// Pages the router swaps in are prepared before they're shown
 	document.addEventListener("astro:after-swap", () => {
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
 		if (gallery) {
-			prepareGallery(gallery, traversing);
+			prepareGallery(gallery);
 		}
 
 		observe();
@@ -522,36 +539,73 @@ function formatDate(timestamp: string) {
 		clearTimeout(hovering);
 	});
 
+	/**
+	 * Finds which photo is drawn at a point mid-transition, from where each moving photo is at that moment,
+	 * starting with the one opening or closing, as it's drawn over the rest.
+	 */
+	function getMovingPhotoAt(x: number, y: number) {
+		const items = [
+			...document.querySelectorAll<HTMLElement>(
+				"[data-photo-gallery] > :has(> [data-toggling])",
+			),
+			...document.querySelectorAll<HTMLElement>(
+				"[data-photo-gallery] > [data-morphs]",
+			),
+		];
+
+		return items.find((item) => {
+			const group = getComputedStyle(
+				document.documentElement,
+				`::view-transition-group(${item.style.getPropertyValue("--photo").trim()})`,
+			);
+			const { m41: left, m42: top } = new DOMMatrix(group.transform);
+			return (
+				x >= left &&
+				x <= left + parseFloat(group.width) &&
+				y >= top &&
+				y <= top + parseFloat(group.height)
+			);
+		});
+	}
+
 	// Browsers send every pointer event to the page's root while a transition runs,
-	// so pressing during one skips to its end, then clicks whatever's actually there
-	let redirecting = false;
+	// so pressing during one skips to its end, then clicks whatever was drawn there
+	let redirecting: Element | undefined;
 	document.addEventListener(
 		"pointerdown",
 		(event) => {
-			if (transitioning && event.target === document.documentElement) {
-				transitioning.skipTransition();
-				redirecting = true;
+			if (!transitioning || event.target !== document.documentElement) {
+				return;
 			}
+
+			redirecting =
+				getMovingPhotoAt(event.clientX, event.clientY)?.querySelector(
+					"summary",
+				) ?? document.documentElement;
+			transitioning.skipTransition();
 		},
 		{ capture: true },
 	);
 	document.addEventListener(
 		"click",
 		(event) => {
-			if (!redirecting) {
+			const photo = redirecting;
+			redirecting = undefined;
+			if (!photo || event.target !== document.documentElement) {
 				return;
 			}
 
-			redirecting = false;
-			const target = document.elementFromPoint(event.clientX, event.clientY);
-			if (
-				event.target === document.documentElement &&
-				target instanceof HTMLElement &&
-				target !== document.documentElement
-			) {
-				event.stopImmediatePropagation();
-				target.click();
+			// Anything else is wherever it is now, as only photos move
+			const target =
+				photo === document.documentElement
+					? document.elementFromPoint(event.clientX, event.clientY)
+					: photo;
+			if (!target || target === document.documentElement) {
+				return;
 			}
+
+			event.stopImmediatePropagation();
+			target.dispatchEvent(new MouseEvent("click", event));
 		},
 		{ capture: true },
 	);
