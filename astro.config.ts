@@ -1,9 +1,12 @@
+import type { AstroIntegration } from "astro";
+
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import solidJs from "@astrojs/solid-js";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
+import { execFile } from "node:child_process";
 
 import { bookTitle, site } from "./src/constants";
 
@@ -71,7 +74,13 @@ export default defineConfig({
 		],
 		service: sharpImageService(),
 	},
-	integrations: [konamiEmojiBlast(), solidJs(), mdx(), sitemap()],
+	integrations: [
+		cssModuleTypes(),
+		konamiEmojiBlast(),
+		solidJs(),
+		mdx(),
+		sitemap(),
+	],
 	markdown: {
 		processor: unified(),
 		syntaxHighlight: "prism",
@@ -79,3 +88,57 @@ export default defineConfig({
 	prefetch: false,
 	site,
 });
+
+/** Keeps CSS modules' gitignored .d.ts files up to date while `astro dev` runs. */
+function cssModuleTypes(): AstroIntegration {
+	return {
+		hooks: {
+			"astro:server:setup": ({ logger, server }) => {
+				let running = false;
+				let queued = false;
+
+				// Runs one at a time, then once more if anything changed meanwhile
+				const generate = () => {
+					if (running) {
+						queued = true;
+						return;
+					}
+
+					running = true;
+					execFile(
+						"pnpm",
+						["build:css-types"],
+						// Windows' pnpm is a .cmd file, which only runs in a shell
+						{ shell: process.platform === "win32" },
+						(error) => {
+							if (error) {
+								logger.warn(
+									`Couldn't generate CSS module types: ${error.message}`,
+								);
+							}
+
+							running = false;
+							if (queued) {
+								queued = false;
+								generate();
+							}
+						},
+					);
+				};
+
+				// Branch switches and pulls may have changed CSS modules since the last run
+				generate();
+
+				server.watcher.on("all", (event, file) => {
+					if (
+						(event === "add" || event === "change" || event === "unlink") &&
+						file.endsWith(".module.css")
+					) {
+						generate();
+					}
+				});
+			},
+		},
+		name: "css-module-types",
+	};
+}

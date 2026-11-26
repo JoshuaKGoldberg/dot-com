@@ -4,7 +4,8 @@ import styles from "./ContentEntryImage.module.css";
 
 const variants = {
 	round: styles.round,
-	square: styles.square,
+	// Square is the default, so it needs no class
+	square: undefined,
 };
 
 export const largestEntryImagePixels = 80;

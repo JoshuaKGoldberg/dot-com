@@ -11,7 +11,8 @@ import {
 
 const widths = {
 	full: styles.widthsFull,
-	half: styles.widthsHalf,
+	// Half width is the default, so it needs no class
+	half: undefined,
 	third: styles.widthsThird,
 };
 

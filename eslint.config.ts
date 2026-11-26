@@ -18,6 +18,7 @@ import tseslint from "typescript-eslint";
 export default defineConfig(
 	globalIgnores(
 		[
+			"**/*.module.css.d.ts",
 			".astro",
 			"coverage",
 			"dist",
