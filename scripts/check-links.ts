@@ -32,51 +32,36 @@ const result = await new LinkChecker().check({
 	// Starting from every page and stylesheet also checks ones nothing links to
 	path: ["**/*.{css,html}"],
 	port,
-	recurse: true,
 	serverRoot: "dist",
 	urlRewriteExpressions: [{ pattern: site, replacement: local }],
 });
 
-interface BrokenLink {
-	link: string;
-	page: string;
-	text: string | undefined;
-	why: string;
-}
+const broken = result.links
+	.filter((link) => link.state === LinkState.BROKEN)
+	.map((link) => {
+		const messages = (link.failureDetails ?? [])
+			.map((detail) => ("message" in detail ? detail.message : ""))
+			.filter(Boolean);
+		const invalid = !messages.length && !link.status;
 
-const broken = new Map<string, BrokenLink>();
+		return {
+			// linkinator reports links it couldn't parse as they were written
+			link: invalid ? link.url : toSitePath(link.url),
+			page: toSitePath(link.parent),
+			text: link.displayText,
+			why: messages.length
+				? messages.join(", ")
+				: invalid
+					? "Invalid URL"
+					: `HTTP ${String(link.status)}`,
+		};
+	})
+	.sort((a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link));
 
-for (const link of result.links) {
-	if (link.state !== LinkState.BROKEN) {
-		continue;
-	}
+if (broken.length) {
+	console.error(`Found ${String(broken.length)} broken link(s):`);
 
-	const page = toPagePath(toSitePath(link.parent));
-	const url = toSitePath(link.url);
-	const messages = (link.failureDetails ?? [])
-		.map((detail) => ("message" in detail ? detail.message : ""))
-		.filter(Boolean);
-	const why = messages.length
-		? messages.join(", ")
-		: link.status
-			? `HTTP ${String(link.status)}`
-			: "Invalid URL";
-
-	// Pages can be crawled from several URLs, such as /page and /page/
-	broken.set(`${page} ${url}`, {
-		link: url,
-		page,
-		text: link.displayText,
-		why,
-	});
-}
-
-if (broken.size) {
-	console.error(`Found ${String(broken.size)} broken link(s):`);
-
-	for (const { link, page, text, why } of [...broken.values()].sort(
-		(a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link),
-	)) {
+	for (const { link, page, text, why } of broken) {
 		console.error(
 			[
 				`\n  On:   ${page}`,
@@ -87,7 +72,7 @@ if (broken.size) {
 		);
 	}
 
-	if ([...broken.values()].some(({ why }) => why === "HTTP 404")) {
+	if (broken.some(({ why }) => why === "HTTP 404")) {
 		console.error(
 			"\nIf a link is to a file in the R2 bucket, add its folder to servedFromBucket in scripts/check-links.ts.",
 		);
@@ -110,16 +95,6 @@ async function findOpenPort() {
 	}
 
 	return address.port;
-}
-
-function toPagePath(page: string) {
-	const pathname = page.replace(/[?#].*/, "").replace(/(?<=.)\/$/, "");
-
-	try {
-		return decodeURIComponent(pathname);
-	} catch {
-		return pathname;
-	}
 }
 
 // linkinator reports local URLs relative to dist/, like blog/my-post/index.html
