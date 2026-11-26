@@ -22,7 +22,6 @@
 		"format:write": "pnpm format --write",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
-		"lint:links": "node scripts/check-links.ts",
 		"lint:spelling": "cspell \"**\" \".github/**/*\"",
 		"prepare": "husky",
 		"preview": "astro preview",
