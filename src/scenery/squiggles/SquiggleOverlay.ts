@@ -19,9 +19,12 @@ const forcedColors = matchMedia("(forced-colors: active)");
 
 const reach = 96;
 
-/** Links that have squiggles, other than those that show what's current. */
+/**
+ * Links that have squiggles, other than those that show what's current.
+ * Footnotes' popovers are above the overlay, so their links keep their own squiggles.
+ */
 const selector =
-	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img), [data-heading-link])";
+	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img), [data-heading-link], [data-footnote-popover] a)";
 
 /** Squiggles are inside of the page's scrolling content, so they stay with their links. */
 export class SquiggleOverlay {

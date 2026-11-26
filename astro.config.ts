@@ -5,6 +5,7 @@ import solidJs from "@astrojs/solid-js";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 
+import { rehypeFootnotePopovers } from "./src/components/blog/rehypeFootnotePopovers";
 import { bookTitle, site } from "./src/constants";
 
 // https://astro.build/config
@@ -73,7 +74,7 @@ export default defineConfig({
 	},
 	integrations: [konamiEmojiBlast(), solidJs(), mdx(), sitemap()],
 	markdown: {
-		processor: unified(),
+		processor: unified({ rehypePlugins: [rehypeFootnotePopovers] }),
 		syntaxHighlight: "prism",
 	},
 	prefetch: false,
