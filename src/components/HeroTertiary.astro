@@ -1,8 +1,12 @@
 ---
 import { Text } from "~/components/Text";
+
+interface Props {
+	size?: "normal" | "wide" | undefined;
+}
 ---
 
-<Text as="p" class="tertiary">
+<Text as="p" class:list={["tertiary", Astro.props.size ?? "normal"]}>
 	<slot />
 </Text>
 
@@ -13,7 +17,16 @@ import { Text } from "~/components/Text";
 		font-size: var(--heroTertiarySize, var(--fontSizeMedium));
 		line-height: 1.35;
 		margin-top: 1rem;
-		max-width: calc(25rem * var(--heroScale, 1));
 		text-wrap: balance;
+	}
+
+	.tertiary.normal {
+		max-width: calc(25rem * var(--heroScale, 1));
+	}
+
+	/* Keeps each line whole, even on phones, where it reaches past the portrait above */
+	.tertiary.wide {
+		font-size: min(var(--heroTertiarySize, var(--fontSizeMedium)), 3.8vw);
+		white-space: nowrap;
 	}
 </style>

@@ -7,6 +7,7 @@ import { imageOrigin } from "~/previews/imageOrigin";
 import { previewSize } from "~/previews/previewSize";
 
 import RootSettings from "./RootSettings.astro";
+import RouterNavigation from "./RouterNavigation.astro";
 
 export interface Preview {
 	alt: string;
@@ -118,6 +119,7 @@ const properties = {
 		/>
 	))}
 	<RootSettings />
+	<RouterNavigation />
 	<link
 		href="/favicon-dark.svg"
 		media="(prefers-color-scheme: dark)"

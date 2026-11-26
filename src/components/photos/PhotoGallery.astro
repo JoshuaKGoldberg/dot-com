@@ -1,0 +1,958 @@
+---
+import { Image } from "astro:assets";
+
+import { getPhotoUrl, type Photo } from "~/photos";
+
+import { Anchor } from "../Anchor";
+import FadeImagesIn from "../hero/FadeImagesIn.astro";
+import { Text } from "../Text";
+import {
+	getLinkedPhoto,
+	isTraversing,
+	layOutGallery,
+	measure,
+	openLinkedPhoto,
+	prepareGallery,
+} from "./prepareGallery";
+
+interface Props {
+	photos: Photo[];
+}
+
+/** Images near enough the top to show before any scrolling, when no photo is linked. */
+const eagerCount = 3;
+
+/**
+ * How wide the gallery is, and how many lanes it has, at each width the page has.
+ * These match the gallery's CSS: three lanes once there's room for 15rem ones, then two, then one.
+ * Each step waits an extra rem for any scrollbar, so that photos are never fetched too small for their lanes.
+ */
+const layouts = [
+	// The page stops being padded here, so the gallery is its full width
+	{ lanes: 3, query: "(width >= 63.5625em)", width: "62rem" },
+	{ lanes: 3, query: "(width >= 52rem)", width: "(100vw - 4rem)" },
+	{
+		lanes: 2,
+		query: "(width >= 36rem)",
+		width: "(100vw - 2 * clamp(0.5rem, 5vw, 2rem))",
+	},
+	{ lanes: 1, query: "", width: "(100vw - 2 * clamp(0.5rem, 5vw, 2rem))" },
+];
+
+function getLaneWidth({ lanes, width }: (typeof layouts)[number]) {
+	return `(${width} - ${(lanes - 1).toString()}rem) / ${lanes.toString()}`;
+}
+
+const sizesClosed = layouts
+	.map((layout) => `${layout.query} calc(${getLaneWidth(layout)})`.trim())
+	.join(", ");
+
+/**
+ * An opened photo takes the gallery's width, unless it's tall enough to be capped by height.
+ * It never gets narrower than it was closed, though, even on the shortest screens.
+ */
+function getSizesOpen(photo: Photo) {
+	const byHeight = `(100vh - 14rem) * ${(photo.width / photo.height).toFixed(4)}`;
+	return layouts
+		.map((layout) =>
+			`${layout.query} min(${layout.width}, max(${getLaneWidth(layout)}, ${byHeight}))`.trim(),
+		)
+		.join(", ");
+}
+
+/** Runs before the gallery is first painted, so that it never jumps into place. */
+const prepareInline = [
+	getLinkedPhoto,
+	measure,
+	openLinkedPhoto,
+	isTraversing,
+	layOutGallery,
+	prepareGallery,
+	`${prepareGallery.name}(document.querySelector("[data-photo-gallery]"));`,
+].join("\n");
+
+const widths = [320, 480, 640, 960, 1280, 1600, 1984];
+
+/** Smaller originals are also offered at their own width, rather than stopping short of it. */
+function getWidths(photo: Photo) {
+	const smaller = widths.filter((width) => width < photo.width);
+	return smaller.length === widths.length ? smaller : [...smaller, photo.width];
+}
+
+const displayWidth = 640;
+
+/** Formats a timestamp's calendar date, as it was wherever the photo was taken. */
+function formatDate(timestamp: string) {
+	return new Date(timestamp.slice(0, 10)).toLocaleString("en-US", {
+		day: "numeric",
+		month: "long",
+		timeZone: "GMT",
+		year: "numeric",
+	});
+}
+---
+
+<ul class="gallery" data-photo-gallery>
+	{Astro.props.photos.map((photo, index) => (
+		<li
+			class="item"
+			id={photo.name}
+			style={{
+				"--caption": `photo-caption-${index.toString()}`,
+				"--photo": `photo-${index.toString()}`,
+				"--ratio": photo.width / photo.height,
+			}}
+		>
+			<details class="details" name="photo">
+				<summary class="summary" data-photo-toggle>
+					<Image
+						alt={photo.alt}
+						class="image"
+						data-eager={index < eagerCount ? "" : undefined}
+						data-fades-in
+						data-sizes-open={getSizesOpen(photo)}
+						format="avif"
+						height={Math.round(
+							(Math.min(displayWidth, photo.width) * photo.height) /
+								photo.width,
+						)}
+						loading="lazy"
+						quality={60}
+						sizes={sizesClosed}
+						src={getPhotoUrl(photo)}
+						width={Math.min(displayWidth, photo.width)}
+						widths={getWidths(photo)}
+					/>
+				</summary>
+				<Text
+					as="p"
+					class="caption"
+					font="label"
+					fontSize="smaller"
+					tone="muted"
+				>
+					<span class="event">{photo.event}</span>{" "}
+					<span aria-hidden="true" class="dot">
+						·
+					</span>{" "}
+					<time datetime={photo.takenAt}>{formatDate(photo.takenAt)}</time>
+					{photo.credit && (
+						<>
+							{" "}
+							<span aria-hidden="true" class="dot">
+								·
+							</span>{" "}
+							<span>Photo by {photo.credit}</span>
+						</>
+					)}{" "}
+					<span class="line">
+						<Anchor href={getPhotoUrl(photo)} target="_blank">
+							Open original
+							<span class="hint">(opens in a new tab)</span>
+						</Anchor>
+						<a
+							aria-label="Link to this photo"
+							class="link"
+							data-photo-link
+							href={`#${photo.name}`}
+						>
+							&#8288;#
+						</a>
+					</span>
+				</Text>
+			</details>
+		</li>
+	))}
+</ul>
+<script data-astro-rerun is:inline set:html={prepareInline} />
+<FadeImagesIn rerun within="[data-photo-gallery]" />
+
+<script>
+	import { getLinkedPhoto, measure, prepareGallery } from "./prepareGallery";
+
+	const usesLanes = CSS.supports("display", "grid-lanes");
+
+	/** Without them, the photo transition's styles wouldn't apply, leaving the page's own to run. */
+	const supportsTypes = CSS.supports(
+		"selector(:active-view-transition-type(photo))",
+	);
+
+	function isMotionPaused() {
+		return document.documentElement.dataset.motion === "paused";
+	}
+
+	function getImage(details: HTMLDetailsElement) {
+		return details.querySelector<HTMLImageElement>("img[data-sizes-open]");
+	}
+
+	/** Each photo's larger size, once it's started loading, and whether it's ready to show. */
+	const larger = new WeakMap<
+		HTMLDetailsElement,
+		{ image: HTMLImageElement; ready: Promise<boolean> }
+	>();
+
+	/** Starts loading a photo's larger size, if it hasn't yet, so that it's ready by the time it's opened. */
+	function load(details: HTMLDetailsElement) {
+		const existing = larger.get(details);
+		if (existing) {
+			return existing;
+		}
+
+		const image = getImage(details);
+		if (!image?.dataset.sizesOpen || image.sizes === image.dataset.sizesOpen) {
+			return undefined;
+		}
+
+		const preload = new Image();
+		preload.sizes = image.dataset.sizesOpen;
+		preload.srcset = image.srcset;
+
+		const loading = {
+			image: preload,
+			ready: preload.decode().then(
+				() => true,
+				() => false,
+			),
+		};
+		larger.set(details, loading);
+		return loading;
+	}
+
+	/** The photo transition that's running, if one is, and how many have run. */
+	let transitioning: ViewTransition | undefined;
+	let transitions = 0;
+
+	/** Runs a photo transition, tidying up after it once no newer one has started since. */
+	function run(types: string[], update: () => unknown) {
+		const transition = document.startViewTransition({ types, update });
+		transitioning = transition;
+		transitions += 1;
+
+		// Scrolling mid-transition would leave its photos behind, so it skips to the end instead
+		const skip = () => {
+			transition.skipTransition();
+		};
+
+		void transition.ready.then(
+			() => {
+				// From the next frame, after any scrolling the transition itself did
+				requestAnimationFrame(() => {
+					addEventListener("scroll", skip, { once: true, passive: true });
+				});
+			},
+			() => undefined,
+		);
+
+		void transition.finished.finally(() => {
+			removeEventListener("scroll", skip);
+			if (transitioning === transition) {
+				transitioning = undefined;
+				for (const item of document.querySelectorAll<HTMLElement>(
+					"[data-morphs]",
+				)) {
+					delete item.dataset.morphs;
+				}
+			}
+		});
+
+		return transition;
+	}
+
+	function canTransition() {
+		return (
+			supportsTypes && "startViewTransition" in document && !isMotionPaused()
+		);
+	}
+
+	/**
+	 * Has an opened photo show its larger size, without it ever flickering:
+	 * straight away if it's ready, or otherwise once it is, cross-fading from the smaller one.
+	 */
+	async function sharpen(details: HTMLDetailsElement) {
+		const image = getImage(details);
+		const loading = load(details);
+		if (!image?.dataset.sizesOpen || !loading) {
+			return;
+		}
+
+		const { sizesOpen } = image.dataset;
+
+		// Already decoded, so the photo can switch to it before it's even painted
+		if (loading.image.complete && loading.image.naturalWidth) {
+			image.sizes = sizesOpen;
+			return;
+		}
+
+		// Waiting for any move to finish first, as a new transition would cut it short
+		if (!(await loading.ready)) {
+			return;
+		}
+
+		while (transitioning) {
+			await transitioning.finished.catch(() => undefined);
+		}
+
+		if (!details.isConnected || !details.open || image.sizes === sizesOpen) {
+			return;
+		}
+
+		const update = async () => {
+			image.sizes = sizesOpen;
+			await image.decode().catch(() => undefined);
+		};
+
+		if (!canTransition()) {
+			void update();
+			return;
+		}
+
+		// Photos that have since gone out of sight don't need to cross-fade, nor hold up the page to
+		const item = details.parentElement;
+		const bounds = item?.getBoundingClientRect();
+		if (!item || !bounds || bounds.bottom < 0 || bounds.top > innerHeight) {
+			void update();
+			return;
+		}
+
+		item.dataset.morphs = "";
+		run(["photo", "sharpen"], update);
+	}
+
+	/** Whether photos that are about to open or close will then be open. */
+	const intended = new Map<HTMLDetailsElement, boolean>();
+
+	/**
+	 * Photos are only morphed while they're on screen, before or after,
+	 * as each one morphed has to be captured, and the rest would move out of sight anyway.
+	 */
+	function markOnScreen(gallery: HTMLElement) {
+		for (const item of gallery.children) {
+			const { bottom, top } = item.getBoundingClientRect();
+			if (bottom > 0 && top < innerHeight && item instanceof HTMLElement) {
+				item.dataset.morphs = "";
+			}
+		}
+	}
+
+	/** Opens or closes a photo, morphing every photo into its new place. */
+	function toggle(details: HTMLDetailsElement) {
+		// Clicking again before it's changed undoes the first click, as it would natively
+		const already = intended.get(details);
+		if (already !== undefined) {
+			intended.set(details, !already);
+			return;
+		}
+
+		intended.set(details, !details.open);
+
+		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
+		const update = () => {
+			// Clicks until now still count, even once the transition has begun
+			const opening = intended.get(details) ?? details.open;
+			intended.delete(details);
+
+			// Photos sharing a name close each other, so only one is ever open
+			details.open = opening;
+			if (opening) {
+				void sharpen(details);
+			}
+
+			// Right away, so that the transition morphs photos into their final places
+			if (gallery) {
+				measure(gallery);
+			}
+
+			// Instantly, as the transition itself animates the move
+			details.scrollIntoView({ behavior: "instant", block: "nearest" });
+
+			if (gallery && transitioning) {
+				markOnScreen(gallery);
+			}
+		};
+
+		if (!canTransition()) {
+			update();
+			return;
+		}
+
+		// Keeps the photo that's opening or closing over the others as they move
+		details.dataset.toggling = "";
+		if (gallery) {
+			markOnScreen(gallery);
+		}
+
+		void run(["photo"], update).finished.finally(() => {
+			delete details.dataset.toggling;
+		});
+	}
+
+	/** Has the address link to whichever photo is open, so it can be shared. */
+	function linkOpenPhoto(gallery: HTMLElement) {
+		// Until the page loads, it does this itself, so the browser doesn't also scroll to it
+		if (gallery.hasAttribute("data-links-on-load")) {
+			return;
+		}
+
+		const id = gallery.querySelector(":scope > .item:has(> [open])")?.id;
+		const url = new URL(location.href);
+		url.hash = id ? encodeURIComponent(id) : "";
+
+		// Replacing rather than pushing keeps opening photos out of the back button
+		const href = url.href.replace(/#$/, "");
+		if (href !== location.href) {
+			history.replaceState(history.state, "", href);
+		}
+	}
+
+	/** Photos change height as their lanes resize, and as they open and close. */
+	let observer: ResizeObserver | undefined;
+
+	function observe() {
+		observer?.disconnect();
+		observer = undefined;
+
+		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
+		if (usesLanes || !gallery) {
+			return;
+		}
+
+		// On the next frame, as measuring can itself resize photos, by changing whether there's a scrollbar
+		let frame = 0;
+		observer = new ResizeObserver(() => {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => {
+				measure(gallery);
+			});
+		});
+
+		for (const details of gallery.querySelectorAll("details")) {
+			observer.observe(details);
+		}
+	}
+
+	// Full loads were already prepared inline, before the gallery was first painted,
+	// but photos can be opened natively before this script has loaded to do it for them
+	observe();
+	const initial = document.querySelector<HTMLElement>("[data-photo-gallery]");
+	if (initial) {
+		for (const details of initial.querySelectorAll("details")) {
+			if (details.open) {
+				void sharpen(details);
+			}
+		}
+
+		measure(initial);
+
+		// Leaving the address alone otherwise, as it may link to something else on the page
+		if (initial.querySelector("details[open]")) {
+			linkOpenPhoto(initial);
+		}
+	}
+
+	// Pages the router swaps in are prepared before they're shown
+	document.addEventListener("astro:after-swap", () => {
+		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
+		if (gallery) {
+			prepareGallery(gallery);
+		}
+
+		observe();
+	});
+
+	// Opening a photo from a changed #hash, such as one typed into the address
+	window.addEventListener("hashchange", () => {
+		const linked = getLinkedPhoto();
+		if (linked && !linked.open) {
+			toggle(linked);
+			return;
+		}
+
+		// Going back to the page without any hash goes back to no photo being open
+		const open = document.querySelector<HTMLDetailsElement>(
+			"[data-photo-gallery] details[open]",
+		);
+		if (!location.hash && open) {
+			toggle(open);
+		}
+	});
+
+	// Photos can also open without a click, such as when the browser finds text in them
+	document.addEventListener(
+		"toggle",
+		(event) => {
+			if (!(event.target instanceof HTMLDetailsElement)) {
+				return;
+			}
+
+			const gallery = event.target.closest<HTMLElement>("[data-photo-gallery]");
+			if (gallery) {
+				if (event.target.open) {
+					void sharpen(event.target);
+				}
+
+				linkOpenPhoto(gallery);
+			}
+		},
+		{ capture: true },
+	);
+
+	function getToggled(event: Event) {
+		const details = (event.target as Element | null)?.closest?.(
+			"[data-photo-toggle]",
+		)?.parentElement;
+
+		return details instanceof HTMLDetailsElement && !details.open
+			? details
+			: undefined;
+	}
+
+	/** Visitors who've asked to save data only load larger sizes for photos they open. */
+	const savesData =
+		(navigator as { connection?: { saveData?: boolean } }).connection
+			?.saveData === true;
+
+	// Focusing or pressing on a photo comes just before opening it
+	for (const type of ["focusin", "pointerdown"]) {
+		document.addEventListener(type, (event) => {
+			const details = getToggled(event);
+			if (details && !savesData) {
+				load(details);
+			}
+		});
+	}
+
+	// Scrolling moves photos under the mouse without it being rested on any of them
+	let hovering: ReturnType<typeof setTimeout> | undefined;
+	let scrolled = 0;
+	addEventListener(
+		"scroll",
+		() => {
+			clearTimeout(hovering);
+			scrolled = performance.now();
+		},
+		{ passive: true },
+	);
+
+	// So does resting a mouse on one, rather than just passing over it
+	document.addEventListener("pointermove", (event) => {
+		clearTimeout(hovering);
+		const details = getToggled(event);
+		if (
+			details &&
+			!savesData &&
+			event.pointerType === "mouse" &&
+			performance.now() - scrolled > 300
+		) {
+			hovering = setTimeout(() => load(details), 150);
+		}
+	});
+	document.addEventListener("pointerout", () => {
+		clearTimeout(hovering);
+	});
+
+	/**
+	 * Finds which photo is drawn at a point mid-transition, from where each moving photo is at that moment,
+	 * starting with the one opening or closing, as it's drawn over the rest.
+	 */
+	function getMovingPhotoAt(x: number, y: number) {
+		const items = [
+			...document.querySelectorAll<HTMLElement>(
+				"[data-photo-gallery] > :has(> [data-toggling])",
+			),
+			...document.querySelectorAll<HTMLElement>(
+				"[data-photo-gallery] > [data-morphs]",
+			),
+		];
+
+		return items.find((item) => {
+			const group = getComputedStyle(
+				document.documentElement,
+				`::view-transition-group(${item.style.getPropertyValue("--photo").trim()})`,
+			);
+			const { m41: left, m42: top } = new DOMMatrix(group.transform);
+			return (
+				x >= left &&
+				x <= left + parseFloat(group.width) &&
+				y >= top &&
+				y <= top + parseFloat(group.height)
+			);
+		});
+	}
+
+	/**
+	 * Finds what's drawn at a point mid-transition: the header, which stays over everything,
+	 * else whichever photo is there at that moment, else whatever's there once it's done.
+	 */
+	function getDrawnAt(x: number, y: number) {
+		const header = document.querySelector("header")?.getBoundingClientRect();
+		const inHeader =
+			header &&
+			x >= header.left &&
+			x <= header.right &&
+			y >= header.top &&
+			y <= header.bottom;
+
+		return (
+			(!inHeader &&
+				getMovingPhotoAt(x, y)?.querySelector<HTMLElement>("summary")) ||
+			document.documentElement
+		);
+	}
+
+	// Browsers send every pointer event to the page's root while a transition runs,
+	// so a press during one, or one that a transition then starts during, still clicks what it was on
+	let pressed: Element | undefined;
+	let pressedAt = { x: 0, y: 0 };
+	let pressedBefore = 0;
+	let pressedDuring = false;
+	document.addEventListener(
+		"pointerdown",
+		(event) => {
+			pressed = undefined;
+			pressedAt = { x: event.clientX, y: event.clientY };
+			pressedBefore = transitions;
+			pressedDuring = false;
+			if (event.button !== 0 || !(event.target instanceof Element)) {
+				return;
+			}
+
+			if (event.target !== document.documentElement) {
+				pressed = event.target;
+			} else if (transitioning) {
+				pressed = getDrawnAt(event.clientX, event.clientY);
+				pressedDuring = true;
+				transitioning.skipTransition();
+			}
+		},
+		{ capture: true },
+	);
+
+	// Presses that don't end in a click, such as right clicks, aren't redirected later on
+	for (const type of ["auxclick", "contextmenu", "pointercancel"]) {
+		document.addEventListener(
+			type,
+			() => {
+				pressed = undefined;
+			},
+			{ capture: true },
+		);
+	}
+
+	document.addEventListener(
+		"click",
+		(event) => {
+			// Clicks made by scripts aren't the visitor's, so don't use up their press
+			if (!event.isTrusted) {
+				return;
+			}
+
+			const original = pressed;
+			pressed = undefined;
+			if (!original || event.target !== document.documentElement) {
+				return;
+			}
+
+			// Presses before any transition only lost their click if one started since
+			if (!pressedDuring && transitions === pressedBefore) {
+				return;
+			}
+
+			// Dragging away before letting go isn't a click, just as it wouldn't be otherwise
+			if (
+				Math.hypot(event.clientX - pressedAt.x, event.clientY - pressedAt.y) >
+				10
+			) {
+				return;
+			}
+
+			// The page's root itself stands for wherever the press was, now that nothing's moving
+			const target =
+				original === document.documentElement
+					? document.elementFromPoint(event.clientX, event.clientY)
+					: original;
+			if (!target || target === document.documentElement) {
+				return;
+			}
+
+			event.stopImmediatePropagation();
+			target.dispatchEvent(new MouseEvent("click", event));
+		},
+		{ capture: true },
+	);
+
+	// Listening on the document keeps working after the router swaps pages
+	document.addEventListener("click", (event) => {
+		const details = (event.target as Element | null)?.closest?.(
+			"[data-photo-toggle]",
+		)?.parentElement;
+
+		if (details instanceof HTMLDetailsElement) {
+			event.preventDefault();
+			toggle(details);
+		}
+	});
+</script>
+
+<style>
+	.gallery {
+		display: grid;
+		gap: 1rem;
+		--lanes: 1;
+
+		grid-template-columns: repeat(var(--lanes), minmax(0, 1fr));
+		list-style: none;
+		margin: 0 auto;
+		padding: 0;
+		width: var(--widthFull);
+		max-width: 100%;
+	}
+
+	/* Matching the image sizes given above */
+	@media (width >= 36rem) {
+		.gallery {
+			--lanes: 2;
+		}
+	}
+
+	@media (width >= 52rem) {
+		.gallery {
+			--lanes: 3;
+		}
+	}
+
+	/*
+	 * Hidden until it's laid out, which only happens if scripts are running.
+	 * Not even laid out until then, so that none of its photos start loading at the wrong size.
+	 */
+	@media (scripting: enabled) {
+		.gallery:not([data-preparing]) {
+			display: none;
+		}
+
+		.gallery:not([data-prepared]) {
+			visibility: hidden;
+		}
+	}
+
+	/* Masonry: each photo, newest first, goes to the top of whichever lane is shortest */
+	@supports (display: grid-lanes) {
+		.gallery {
+			display: grid-lanes;
+		}
+	}
+
+	/* Elsewhere, short rows that photos span the heights of do the same */
+	@supports not (display: grid-lanes) {
+		.gallery[data-masonry] {
+			grid-auto-rows: 4px;
+			row-gap: 0;
+		}
+
+		[data-masonry] > .item {
+			grid-row-end: span var(--rows);
+		}
+	}
+
+	.item:has(> [open]) {
+		grid-column: 1 / -1;
+	}
+
+	/* The page's scroll padding already keeps opened and linked photos clear of the header */
+	.item,
+	.details {
+		scroll-margin-block: 1rem;
+	}
+
+	.summary {
+		cursor: zoom-in;
+		display: block;
+		list-style: none;
+	}
+
+	.summary::-webkit-details-marker {
+		display: none;
+	}
+
+	[open] > .summary {
+		cursor: zoom-out;
+	}
+
+	.image {
+		border-radius: 0.5rem;
+		display: block;
+		height: auto;
+		transition: var(--transitionMedium) filter;
+		width: 100%;
+	}
+
+	/* The ring goes around the photo itself, which may be narrower than its row */
+	.summary:focus-visible {
+		outline: none;
+	}
+
+	.summary:focus-visible .image {
+		outline: 2px solid var(--colorEmphasized);
+		outline-offset: 3px;
+	}
+
+	/* Brightened rather than zoomed, so that no part of any photo is ever cut off */
+	.summary:hover .image,
+	.summary:focus-visible .image {
+		filter: brightness(1.08);
+	}
+
+	/* As wide as the gallery, unless it and its caption wouldn't fit under the header */
+	[open] .image {
+		margin-inline: auto;
+		width: min(
+			100%,
+			max(
+				(100% - (var(--lanes) - 1) * 1rem) / var(--lanes),
+				(100svh - 14rem) * var(--ratio)
+			)
+		);
+	}
+
+	:global(html[data-motion="paused"]) .image {
+		transition: none;
+	}
+
+	.caption {
+		letter-spacing: 0.04em;
+		line-height: 1.6;
+		margin: 0.75rem 0 0;
+
+		/* Padding, rather than margin, counts towards the height that masonry measures */
+		padding-bottom: 1rem;
+		text-align: center;
+		text-wrap: balance;
+	}
+
+	.event {
+		color: var(--colorForeground);
+	}
+
+	.dot {
+		padding: 0 0.15em;
+	}
+
+	time {
+		white-space: nowrap;
+	}
+
+	.line {
+		display: block;
+	}
+
+	.link {
+		color: var(--colorMuted);
+		margin-left: 0.5em;
+		text-decoration: none;
+		transition: var(--transitionMedium) color;
+		user-select: none;
+	}
+
+	.link:is(:focus-visible, :hover) {
+		color: var(--colorEmphasized);
+	}
+
+	.hint {
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	/* Each photo and caption morphs on its own, only while a photo opens or closes */
+	:global(:active-view-transition-type(photo)) [data-morphs] .image {
+		view-transition-class: photo;
+		view-transition-name: var(--photo);
+	}
+
+	:global(:active-view-transition-type(photo)) [open] .caption {
+		view-transition-class: photo-caption;
+		view-transition-name: var(--caption);
+	}
+
+	:global(::view-transition-group(*.photo)) {
+		animation-duration: 400ms;
+		animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
+	}
+
+	:global(:active-view-transition-type(photo)) [data-toggling] .image {
+		view-transition-class: photo toggling;
+	}
+
+	/* Only cross-fading, from a photo's smaller size to its larger one, in place */
+	:global(
+		:active-view-transition-type(sharpen)::view-transition-group(*.photo)
+	) {
+		animation-duration: 250ms;
+	}
+
+	:global(::view-transition-group(*.toggling)) {
+		z-index: 1;
+	}
+
+	/* The header still goes over every photo, even the one opening or closing */
+	:global(
+		:active-view-transition-type(photo)::view-transition-group(header),
+		:active-view-transition-type(photo)::view-transition-group(fader)
+	) {
+		z-index: 2;
+	}
+
+	:global(::view-transition-image-pair(*.photo)) {
+		border-radius: 0.5rem;
+		overflow: hidden;
+	}
+
+	:global(::view-transition-new(*.photo-caption):only-child) {
+		animation: caption-in 250ms ease-out 250ms both;
+	}
+
+	:global(::view-transition-old(*.photo-caption):only-child) {
+		animation: caption-out 100ms ease-in both;
+	}
+
+	/* The rest of the page stays put, instead of playing its between-pages transitions */
+	:global(
+		:active-view-transition-type(photo)::view-transition-old(content),
+		:active-view-transition-type(photo)::view-transition-new(content),
+		:active-view-transition-type(photo)::view-transition-group(portrait),
+		:active-view-transition-type(photo)::view-transition-new(portrait),
+		:active-view-transition-type(photo)::view-transition-group(portrait-figure),
+		:active-view-transition-type(photo)::view-transition-image-pair(
+			portrait-figure
+		),
+		:active-view-transition-type(photo)::view-transition-new(portrait-figure),
+		:active-view-transition-type(photo)::view-transition-new(fader)
+	) {
+		animation: none;
+		translate: none;
+	}
+
+	:global(
+		:active-view-transition-type(photo)::view-transition-old(content),
+		:active-view-transition-type(photo)::view-transition-old(portrait),
+		:active-view-transition-type(photo)::view-transition-old(portrait-figure),
+		:active-view-transition-type(photo)::view-transition-old(fader)
+	) {
+		display: none;
+	}
+
+	@keyframes caption-in {
+		from {
+			opacity: 0;
+			translate: 0 -0.5rem;
+		}
+	}
+
+	@keyframes caption-out {
+		to {
+			opacity: 0;
+		}
+	}
+</style>
