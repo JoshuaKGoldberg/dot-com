@@ -61,6 +61,7 @@ Property 'title' does not exist on type '{ readonly "No generated types: check t
 
 The same placeholder applies to relative imports of CSS modules that don't exist, are outside the `directories` option, or have never generated successfully.
 A CSS module whose types fail to update keeps its last generated types.
+`astro dev` tries failed ones again when a stylesheet is added, changed, or deleted, but not when a package in `node_modules` changes.
 Imports through path aliases, such as `~/components/New.module.css`, still fall back to the loose declaration until their types are generated.
 
 TypeScript reports relative module names in ambient declarations like these as errors in declaration files, which `skipLibCheck` hides.

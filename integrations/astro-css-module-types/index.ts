@@ -63,6 +63,31 @@ export function cssModuleTypes(
 	let retrying = false;
 	let retryAgain = false;
 
+	// Vite's resolver remembers files that didn't exist, so adding or deleting a stylesheet
+	// means the next update needs a fresh config, and failures that saw an older one need retrying
+	let configRefresh: Promise<void> | undefined;
+	let configStale = false;
+	let stylesheetEvents = 0;
+
+	const getViteConfig = async () => {
+		if (configStale && resolveViteConfig) {
+			configStale = false;
+			const resolving = resolveViteConfig();
+			configRefresh = resolving.then(
+				(refreshed) => {
+					viteConfig = refreshed;
+				},
+				(error: unknown) => {
+					configStale = true;
+					throw error;
+				},
+			);
+		}
+
+		await configRefresh;
+		return viteConfig;
+	};
+
 	const isWatched = (file: string) =>
 		cssModulePattern.test(file) &&
 		directories.some(
@@ -85,7 +110,8 @@ export function cssModuleTypes(
 			.some((part) => part.startsWith("_") || part.startsWith("."));
 
 	const update = async (file: string) => {
-		if (!viteConfig) {
+		const config = await getViteConfig();
+		if (!config) {
 			return;
 		}
 
@@ -111,7 +137,7 @@ export function cssModuleTypes(
 		}
 
 		// The same preprocessing and CSS modules options Vite uses for its imports
-		const { deps, modules } = await preprocessCSS(code, file, viteConfig);
+		const { deps, modules } = await preprocessCSS(code, file, config);
 		dependencies.set(
 			file,
 			new Set([...(deps ?? [])].map((dep) => path.resolve(dep))),
@@ -129,8 +155,10 @@ export function cssModuleTypes(
 
 	// One at a time per file, so a slow earlier update can't overwrite a newer one
 	const queue = (file: string, logger: AstroIntegrationLogger) => {
+		let eventsBefore = stylesheetEvents;
 		const next = (queues.get(file) ?? Promise.resolve())
 			.then(async () => {
+				eventsBefore = stylesheetEvents;
 				await update(file);
 				failed.delete(file);
 			})
@@ -143,6 +171,11 @@ export function cssModuleTypes(
 				}
 
 				failed.set(file, message);
+
+				// A stylesheet appeared or disappeared during the update, which might fix it
+				if (stylesheetEvents !== eventsBefore) {
+					retryFailed(logger);
+				}
 			});
 
 		queues.set(file, next);
@@ -155,10 +188,9 @@ export function cssModuleTypes(
 		return next;
 	};
 
-	// Vite's resolver remembers files that didn't exist, so retries need a fresh config.
-	// Only one retry runs at a time, with one more after it if stylesheets changed meanwhile.
+	// Only one retry of failed CSS modules runs at a time, with one more after it if stylesheets changed meanwhile
 	const retryFailed = (logger: AstroIntegrationLogger) => {
-		if (!failed.size || !resolveViteConfig) {
+		if (!failed.size) {
 			return;
 		}
 
@@ -168,13 +200,7 @@ export function cssModuleTypes(
 		}
 
 		retrying = true;
-		resolveViteConfig()
-			.then(async (refreshed) => {
-				viteConfig = refreshed;
-				await Promise.all(
-					[...failed.keys()].map((cssModule) => queue(cssModule, logger)),
-				);
-			})
+		Promise.all([...failed.keys()].map((cssModule) => queue(cssModule, logger)))
 			.catch((error: unknown) => {
 				logger.warn(`Couldn't retry generating types: ${String(error)}`);
 			})
@@ -237,7 +263,9 @@ export function cssModuleTypes(
 					...[...sources].map((file) =>
 						update(file).catch((error: unknown) => {
 							failed.set(file, String(error));
-							throw error;
+							throw new Error(
+								`${path.relative(process.cwd(), file)}: ${String(error)}`,
+							);
 						}),
 					),
 					...orphans.map(removeGenerated),
@@ -287,8 +315,22 @@ export function cssModuleTypes(
 						void queue(file, logger);
 					}
 
-					// A new or fixed stylesheet might be what a failed CSS module needed
-					if (event !== "unlink" && stylesheetPattern.test(file)) {
+					// A deleted declaration file, such as a hand-written one, should be regenerated
+					if (
+						event === "unlink" &&
+						file.endsWith(".d.ts") &&
+						isWatched(file.slice(0, -".d.ts".length))
+					) {
+						void queue(file.slice(0, -".d.ts".length), logger);
+					}
+
+					// An added, fixed, or deleted stylesheet might be what a failed CSS module needed
+					if (stylesheetPattern.test(file)) {
+						if (event !== "change") {
+							configStale = true;
+							stylesheetEvents += 1;
+						}
+
 						retryFailed(logger);
 					}
 
