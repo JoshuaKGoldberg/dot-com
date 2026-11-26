@@ -200,14 +200,6 @@ export const photos = (
 			width: 4293,
 		},
 		{
-			alt: "Josh smiling warmly in golden evening light, in a pineapple-print shirt and conference badge, with leaves behind him",
-			event: "Prisma Day 2022",
-			height: 2400,
-			name: "2022-06-15-prisma-day-portrait",
-			takenAt: "2022-06-15",
-			width: 1602,
-		},
-		{
 			alt: "Josh giving a thumbs-up toward his slides beside a Prisma banner, in a pineapple-print shirt",
 			event: "Prisma Day 2022",
 			height: 1367,
