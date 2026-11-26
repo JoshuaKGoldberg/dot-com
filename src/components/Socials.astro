@@ -8,15 +8,21 @@ import SocialImage from "./SocialImage.astro";
 
 const socials = [
 	["Bluesky", socialUrls.bluesky, bluesky],
-	["GitHub", socialUrls.github, github],
+	// GitHub's heaviest contribution squares: #216E39 in light themes, #39D353 in dark
+	[
+		"GitHub",
+		socialUrls.github,
+		github,
+		{ brightness: 1.88, hueRotate: -7, saturate: 1.14 },
+	],
 	["Mastodon", socialUrls.mastodon, mastodon],
 ] as const;
 ---
 
 <p class="socials">
-	{socials.map(([alt, href, image]) => (
+	{socials.map(([alt, href, image, dark]) => (
 		<a class="social" href={href} target="_blank">
-			<SocialImage alt={alt} image={image} />
+			<SocialImage alt={alt} dark={dark} image={image} />
 		</a>
 	))}
 </p>

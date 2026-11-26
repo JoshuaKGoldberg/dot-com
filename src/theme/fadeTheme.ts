@@ -9,8 +9,7 @@ const timing = `${fadeMilliseconds.toString()}ms ease-in-out`;
 /** Text is quicker, as partway through it's the same color as what's behind it. */
 const textTiming = "150ms linear 100ms";
 
-const textProperty =
-	/^--(?:astro-code|color(?!Background|Subtle)|font|icon|lit)/;
+const textProperty = /^--(?:astro-code|color(?!Background|Subtle)|font|lit)/;
 
 /** Only custom properties that are registered with their types can transition. */
 const types = [

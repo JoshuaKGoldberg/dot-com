@@ -41,7 +41,7 @@
 		--ringShine: #c5ecff;
 		--ringWisteria: #a56cf0;
 
-		--iconInversion: 0;
+		--iconDarkness: 0;
 
 		--squiggleStart: hsl(230 64% 30% / 74%);
 		--squiggleMiddle: hsl(170 64% 30% / 74%);
@@ -233,7 +233,7 @@
 		--ringShine: white;
 		--ringWisteria: #b98aff;
 
-		--iconInversion: 1;
+		--iconDarkness: 1;
 
 		--squiggleStart: hsl(230 44% 74% / 64%);
 		--squiggleMiddle: hsl(170 44% 74% / 64%);
