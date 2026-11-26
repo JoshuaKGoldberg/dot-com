@@ -82,7 +82,10 @@ export function cssModuleTypes(
 					return refreshed;
 				},
 				(error: unknown) => {
-					configStale = true;
+					if (configRefresh === refresh) {
+						configStale = true;
+					}
+
 					throw error;
 				},
 			);
@@ -206,7 +209,7 @@ export function cssModuleTypes(
 		retrying = true;
 		Promise.all([...failed.keys()].map((cssModule) => queue(cssModule, logger)))
 			.catch((error: unknown) => {
-				logger.warn(`Couldn't retry generating types: ${String(error)}`);
+				logger.warn(`Couldn't retry generating types: ${errorMessage(error)}`);
 			})
 			.finally(() => {
 				retrying = false;
