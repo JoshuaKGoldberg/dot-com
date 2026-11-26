@@ -173,16 +173,129 @@ function formatDate(timestamp: string) {
 		"selector(:active-view-transition-type(photo))",
 	);
 
-	/** Has an opened photo show the larger size it now needs. */
-	function enlarge(details: HTMLDetailsElement) {
-		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
-		if (details.open && image?.dataset.sizesOpen) {
-			image.sizes = image.dataset.sizesOpen;
+	function isMotionPaused() {
+		return document.documentElement.dataset.motion === "paused";
+	}
+
+	function getImage(details: HTMLDetailsElement) {
+		return details.querySelector<HTMLImageElement>("img[data-sizes-open]");
+	}
+
+	/** Each photo's larger size, once it's started loading, and whether it's ready to show. */
+	const larger = new WeakMap<
+		HTMLDetailsElement,
+		{ image: HTMLImageElement; ready: Promise<boolean> }
+	>();
+
+	/** Starts loading a photo's larger size, if it hasn't yet, so that it's ready by the time it's opened. */
+	function load(details: HTMLDetailsElement) {
+		const existing = larger.get(details);
+		if (existing) {
+			return existing;
 		}
+
+		const image = getImage(details);
+		if (!image?.dataset.sizesOpen || image.sizes === image.dataset.sizesOpen) {
+			return undefined;
+		}
+
+		const preload = new Image();
+		preload.sizes = image.dataset.sizesOpen;
+		preload.srcset = image.srcset;
+
+		const loading = {
+			image: preload,
+			ready: preload.decode().then(
+				() => true,
+				() => false,
+			),
+		};
+		larger.set(details, loading);
+		return loading;
+	}
+
+	/** The photo transition that's running, if one is. */
+	let transitioning: ViewTransition | undefined;
+
+	function canTransition() {
+		return (
+			supportsTypes && "startViewTransition" in document && !isMotionPaused()
+		);
+	}
+
+	/**
+	 * Has an opened photo show its larger size, without it ever flickering:
+	 * straight away if it's ready, or otherwise once it is, cross-fading from the smaller one.
+	 */
+	async function sharpen(details: HTMLDetailsElement) {
+		const image = getImage(details);
+		const loading = load(details);
+		if (!image?.dataset.sizesOpen || !loading) {
+			return;
+		}
+
+		const { sizesOpen } = image.dataset;
+
+		// Already decoded, so the photo can switch to it before it's even painted
+		if (loading.image.complete && loading.image.naturalWidth) {
+			image.sizes = sizesOpen;
+			return;
+		}
+
+		// Waiting for any move to finish first, as a new transition would cut it short
+		if (!(await loading.ready)) {
+			return;
+		}
+
+		await transitioning?.finished.catch(() => undefined);
+		if (!details.open || image.sizes === sizesOpen) {
+			return;
+		}
+
+		const update = async () => {
+			image.sizes = sizesOpen;
+			await image.decode().catch(() => undefined);
+		};
+
+		if (!canTransition()) {
+			void update();
+			return;
+		}
+
+		const item = details.parentElement;
+		if (item) {
+			item.dataset.morphs = "";
+		}
+
+		const transition = document.startViewTransition({
+			types: ["photo", "sharpen"],
+			update,
+		});
+		transitioning = transition;
+
+		void transition.finished.finally(() => {
+			if (transitioning === transition) {
+				transitioning = undefined;
+				delete item?.dataset.morphs;
+			}
+		});
 	}
 
 	/** Whether photos that are about to open or close will then be open. */
 	const intended = new Map<HTMLDetailsElement, boolean>();
+
+	/**
+	 * Photos are only morphed while they're on screen, before or after,
+	 * as each one morphed has to be captured, and the rest would move out of sight anyway.
+	 */
+	function markOnScreen(gallery: HTMLElement) {
+		for (const item of gallery.children) {
+			const { bottom, top } = item.getBoundingClientRect();
+			if (bottom > 0 && top < innerHeight && item instanceof HTMLElement) {
+				item.dataset.morphs = "";
+			}
+		}
+	}
 
 	/** Opens or closes a photo, morphing every photo into its new place. */
 	function toggle(details: HTMLDetailsElement) {
@@ -203,7 +316,9 @@ function formatDate(timestamp: string) {
 
 			// Photos sharing a name close each other, so only one is ever open
 			details.open = opening;
-			enlarge(details);
+			if (opening) {
+				void sharpen(details);
+			}
 
 			// Right away, so that the transition morphs photos into their final places
 			if (gallery) {
@@ -212,26 +327,37 @@ function formatDate(timestamp: string) {
 
 			// Instantly, as the transition itself animates the move
 			details.scrollIntoView({ behavior: "instant", block: "nearest" });
+
+			if (gallery && transitioning) {
+				markOnScreen(gallery);
+			}
 		};
 
-		if (
-			!supportsTypes ||
-			!("startViewTransition" in document) ||
-			document.documentElement.dataset.motion === "paused"
-		) {
+		if (!canTransition()) {
 			update();
 			return;
 		}
 
 		// Keeps the photo that's opening or closing over the others as they move
 		details.dataset.toggling = "";
+		if (gallery) {
+			markOnScreen(gallery);
+		}
 
 		const transition = document.startViewTransition({
 			types: ["photo"],
 			update,
 		});
+		transitioning = transition;
+
 		void transition.finished.finally(() => {
 			delete details.dataset.toggling;
+			if (transitioning === transition) {
+				transitioning = undefined;
+				for (const item of gallery?.querySelectorAll("[data-morphs]") ?? []) {
+					delete (item as HTMLElement).dataset.morphs;
+				}
+			}
 		});
 	}
 
@@ -306,54 +432,61 @@ function formatDate(timestamp: string) {
 
 			const gallery = event.target.closest<HTMLElement>("[data-photo-gallery]");
 			if (gallery) {
-				enlarge(event.target);
+				if (event.target.open) {
+					void sharpen(event.target);
+				}
+
 				linkOpenPhoto(gallery);
 			}
 		},
 		{ capture: true },
 	);
 
-	/** Photos whose larger size has already started loading. */
-	const warmed = new WeakSet<HTMLDetailsElement>();
-
-	/**
-	 * Starts loading a photo's larger size as soon as it might be opened,
-	 * so that it's sharp as it grows without having to wait for it first.
-	 */
-	function warm(details: HTMLDetailsElement) {
-		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
-		if (details.open || warmed.has(details) || !image?.dataset.sizesOpen) {
-			return;
-		}
-
-		warmed.add(details);
-		const preload = new Image();
-		preload.sizes = image.dataset.sizesOpen;
-		preload.srcset = image.srcset;
-	}
-
 	function getToggled(event: Event) {
 		const details = (event.target as Element | null)?.closest?.(
 			"[data-photo-toggle]",
 		)?.parentElement;
 
-		return details instanceof HTMLDetailsElement ? details : undefined;
+		return details instanceof HTMLDetailsElement && !details.open
+			? details
+			: undefined;
 	}
 
-	// Hovering, focusing, or touching a photo comes just before clicking it
-	for (const type of ["focusin", "pointerdown", "pointerover"]) {
+	/** Visitors who've asked to save data only load larger sizes for photos they open. */
+	const savesData =
+		(navigator as { connection?: { saveData?: boolean } }).connection
+			?.saveData === true;
+
+	// Focusing or pressing on a photo comes just before opening it
+	for (const type of ["focusin", "pointerdown"]) {
 		document.addEventListener(type, (event) => {
 			const details = getToggled(event);
-			if (details) {
-				warm(details);
+			if (details && !savesData) {
+				load(details);
 			}
 		});
 	}
 
+	// So does resting a mouse on one, rather than just passing over it, such as while scrolling
+	let hovering: ReturnType<typeof setTimeout> | undefined;
+	document.addEventListener("pointerover", (event) => {
+		clearTimeout(hovering);
+		const details = getToggled(event);
+		if (details && !savesData && event.pointerType === "mouse") {
+			hovering = setTimeout(() => load(details), 150);
+		}
+	});
+	document.addEventListener("pointerout", () => {
+		clearTimeout(hovering);
+	});
+
 	// Listening on the document keeps working after the router swaps pages
 	document.addEventListener("click", (event) => {
-		const details = getToggled(event);
-		if (details) {
+		const details = (event.target as Element | null)?.closest?.(
+			"[data-photo-toggle]",
+		)?.parentElement;
+
+		if (details instanceof HTMLDetailsElement) {
 			event.preventDefault();
 			toggle(details);
 		}
@@ -526,7 +659,7 @@ function formatDate(timestamp: string) {
 	}
 
 	/* Each photo and caption morphs on its own, only while a photo opens or closes */
-	:global(:active-view-transition-type(photo)) .image {
+	:global(:active-view-transition-type(photo)) [data-morphs] .image {
 		view-transition-class: photo;
 		view-transition-name: var(--photo);
 	}
@@ -543,6 +676,13 @@ function formatDate(timestamp: string) {
 
 	:global(:active-view-transition-type(photo)) [data-toggling] .image {
 		view-transition-class: photo toggling;
+	}
+
+	/* Only cross-fading, from a photo's smaller size to its larger one, in place */
+	:global(
+		:active-view-transition-type(sharpen)::view-transition-group(*.photo)
+	) {
+		animation-duration: 250ms;
 	}
 
 	:global(::view-transition-group(*.toggling)) {
