@@ -1,6 +1,7 @@
 ---
 import { SkipLink } from "accessible-astro-components";
 
+import BypassRickroll from "~/components/BypassRickroll.astro";
 import Footer from "~/components/Footer.astro";
 import Head, { type Preview } from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
@@ -42,6 +43,7 @@ const { class: className, fitsScreen, ...head } = Astro.props;
 		</div>
 
 		<Scenery />
+		<BypassRickroll />
 	</MainArea>
 </html>
 
