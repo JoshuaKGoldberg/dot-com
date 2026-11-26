@@ -129,19 +129,25 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 					);
 				}
 
-				const urls = [...(config.site ? [config.site] : []), ...aliases].map(
-					(url) => {
-						const parsed = URL.parse(url);
-						if (!parsed?.host || !/^https?:$/.test(parsed.protocol)) {
-							throw new AstroError(
-								`Invalid URL in the aliases option of checkLinks(): ${url}`,
-								'Aliases are full URLs, such as "https://example.com".',
-							);
-						}
+				const urls = aliases.map((url) => {
+					const parsed = URL.parse(url);
+					if (
+						!parsed?.host ||
+						!/^https?:$/.test(parsed.protocol) ||
+						parsed.href !== `${parsed.origin}/`
+					) {
+						throw new AstroError(
+							`Invalid URL in the aliases option of checkLinks(): ${url}`,
+							'Aliases are origins without a path, such as "https://example.com".',
+						);
+					}
 
-						return parsed;
-					},
-				);
+					return parsed;
+				});
+
+				if (config.site) {
+					urls.unshift(new URL(config.site));
+				}
 
 				base = config.base;
 				hosts = new Set(urls.map((url) => url.host));
@@ -217,7 +223,7 @@ function describeInvalidLink(url: string) {
 	const hash = /#.*/s.exec(url)?.[0] ?? "";
 
 	return safeDecode(hash) === undefined
-		? "Fragment has a % that isn't part of a valid escape, such as %25"
+		? "Fragment has a % that isn't part of an escape, so a literal % should be written as %25"
 		: "Invalid URL";
 }
 
@@ -230,7 +236,7 @@ function describeStatus(link: LinkResult) {
 		}
 
 		if (safeDecode(pathname) === undefined) {
-			return "Path has a % that isn't part of a valid escape, such as %25";
+			return "Path has a % that isn't part of an escape, so a literal % should be written as %25";
 		}
 	}
 
@@ -294,7 +300,7 @@ async function findBrokenLinks({
 		// Links that can't be parsed are reported once per time they appear
 		const broken = new Map<string, BrokenLink>();
 		for (const link of result.links) {
-			if (link.state === LinkState.BROKEN) {
+			if (link.state === LinkState.BROKEN && !isUnparsedExternal(link, local)) {
 				const described = describeBrokenLink(link, local, origin);
 				const key = JSON.stringify([described.page, described.link]);
 				const existing = broken.get(key);
@@ -341,6 +347,18 @@ async function findBrokenLinks({
 			}),
 		);
 	}
+}
+
+/**
+ * Finds links to other sites that linkinator reports anyway, because it
+ * couldn't decode their fragments before skipping them.
+ */
+function isUnparsedExternal(link: LinkResult, local: string) {
+	return (
+		!link.status &&
+		!link.failureDetails?.length &&
+		URL.parse(link.url.replace(/#.*/s, ""), link.parent)?.origin !== local
+	);
 }
 
 async function listFiles(directory: string) {
