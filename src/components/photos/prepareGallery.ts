@@ -59,10 +59,11 @@ export function openLinkedPhoto(scroll: boolean) {
 	}
 
 	const image = details.querySelector("img[data-sizes-open]");
+	// Sizes first, as making it eager starts it loading at whatever size it has then
 	if (image instanceof HTMLImageElement && image.dataset.sizesOpen) {
+		image.sizes = image.dataset.sizesOpen;
 		image.fetchPriority = "high";
 		image.loading = "eager";
-		image.sizes = image.dataset.sizesOpen;
 	}
 
 	details.open = true;
@@ -81,11 +82,19 @@ export function openLinkedPhoto(scroll: boolean) {
 		// Right away, rather than waiting for the browser to glide there once it's loaded
 		scrollToItem();
 
-		// Again once the rest of the page is there, as it may not yet be long enough to
+		// Again once the rest of the page is parsed, as it may not have been long enough to,
+		// unless the visitor has already scrolled somewhere else themselves
 		if (document.readyState === "loading") {
-			document.addEventListener("DOMContentLoaded", scrollToItem, {
-				once: true,
-			});
+			const scrolledTo = scrollY;
+			document.addEventListener(
+				"readystatechange",
+				() => {
+					if (Math.abs(scrollY - scrolledTo) < 2) {
+						scrollToItem();
+					}
+				},
+				{ once: true },
+			);
 		}
 	}
 

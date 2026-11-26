@@ -161,7 +161,7 @@ function formatDate(timestamp: string) {
 	))}
 </ul>
 <script is:inline set:html={prepareInline} />
-<FadeImagesIn rerun />
+<FadeImagesIn rerun within="[data-photo-gallery]" />
 
 <script>
 	import { getLinkedPhoto, measure, prepareGallery } from "./prepareGallery";
@@ -217,6 +217,41 @@ function formatDate(timestamp: string) {
 	/** The photo transition that's running, if one is. */
 	let transitioning: ViewTransition | undefined;
 
+	/** Runs a photo transition, tidying up after it once no newer one has started since. */
+	function run(types: string[], update: () => unknown) {
+		const transition = document.startViewTransition({ types, update });
+		transitioning = transition;
+
+		// Scrolling mid-transition would leave its photos behind, so it skips to the end instead
+		const skip = () => {
+			transition.skipTransition();
+		};
+
+		void transition.ready.then(
+			() => {
+				// From the next frame, after any scrolling the transition itself did
+				requestAnimationFrame(() => {
+					addEventListener("scroll", skip, { once: true, passive: true });
+				});
+			},
+			() => undefined,
+		);
+
+		void transition.finished.finally(() => {
+			removeEventListener("scroll", skip);
+			if (transitioning === transition) {
+				transitioning = undefined;
+				for (const item of document.querySelectorAll<HTMLElement>(
+					"[data-morphs]",
+				)) {
+					delete item.dataset.morphs;
+				}
+			}
+		});
+
+		return transition;
+	}
+
 	function canTransition() {
 		return (
 			supportsTypes && "startViewTransition" in document && !isMotionPaused()
@@ -247,8 +282,11 @@ function formatDate(timestamp: string) {
 			return;
 		}
 
-		await transitioning?.finished.catch(() => undefined);
-		if (!details.open || image.sizes === sizesOpen) {
+		while (transitioning) {
+			await transitioning.finished.catch(() => undefined);
+		}
+
+		if (!details.isConnected || !details.open || image.sizes === sizesOpen) {
 			return;
 		}
 
@@ -267,18 +305,7 @@ function formatDate(timestamp: string) {
 			item.dataset.morphs = "";
 		}
 
-		const transition = document.startViewTransition({
-			types: ["photo", "sharpen"],
-			update,
-		});
-		transitioning = transition;
-
-		void transition.finished.finally(() => {
-			if (transitioning === transition) {
-				transitioning = undefined;
-				delete item?.dataset.morphs;
-			}
-		});
+		run(["photo", "sharpen"], update);
 	}
 
 	/** Whether photos that are about to open or close will then be open. */
@@ -344,20 +371,8 @@ function formatDate(timestamp: string) {
 			markOnScreen(gallery);
 		}
 
-		const transition = document.startViewTransition({
-			types: ["photo"],
-			update,
-		});
-		transitioning = transition;
-
-		void transition.finished.finally(() => {
+		void run(["photo"], update).finished.finally(() => {
 			delete details.dataset.toggling;
-			if (transitioning === transition) {
-				transitioning = undefined;
-				for (const item of gallery?.querySelectorAll("[data-morphs]") ?? []) {
-					delete (item as HTMLElement).dataset.morphs;
-				}
-			}
 		});
 	}
 
@@ -386,8 +401,13 @@ function formatDate(timestamp: string) {
 			return;
 		}
 
+		// On the next frame, as measuring can itself resize photos, by changing whether there's a scrollbar
+		let frame = 0;
 		observer = new ResizeObserver(() => {
-			measure(gallery);
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => {
+				measure(gallery);
+			});
 		});
 
 		for (const details of gallery.querySelectorAll("details")) {
@@ -409,6 +429,19 @@ function formatDate(timestamp: string) {
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
 		if (gallery) {
 			prepareGallery(gallery, !traversing);
+
+			// The router restored this before the gallery was laid out, which can change its height
+			if (traversing) {
+				const state = history.state as {
+					scrollX?: number;
+					scrollY?: number;
+				} | null;
+				scrollTo({
+					behavior: "instant",
+					left: state?.scrollX ?? scrollX,
+					top: state?.scrollY ?? scrollY,
+				});
+			}
 		}
 
 		observe();
@@ -467,12 +500,28 @@ function formatDate(timestamp: string) {
 		});
 	}
 
-	// So does resting a mouse on one, rather than just passing over it, such as while scrolling
+	// Scrolling moves photos under the mouse without it being rested on any of them
 	let hovering: ReturnType<typeof setTimeout> | undefined;
-	document.addEventListener("pointerover", (event) => {
+	let scrolled = 0;
+	addEventListener(
+		"scroll",
+		() => {
+			clearTimeout(hovering);
+			scrolled = performance.now();
+		},
+		{ passive: true },
+	);
+
+	// So does resting a mouse on one, rather than just passing over it
+	document.addEventListener("pointermove", (event) => {
 		clearTimeout(hovering);
 		const details = getToggled(event);
-		if (details && !savesData && event.pointerType === "mouse") {
+		if (
+			details &&
+			!savesData &&
+			event.pointerType === "mouse" &&
+			performance.now() - scrolled > 300
+		) {
 			hovering = setTimeout(() => load(details), 150);
 		}
 	});
@@ -676,6 +725,11 @@ function formatDate(timestamp: string) {
 
 	:global(:active-view-transition-type(photo)) [data-toggling] .image {
 		view-transition-class: photo toggling;
+	}
+
+	/* Clicks still reach the page beneath, rather than being lost on the transition */
+	:global(:active-view-transition-type(photo)::view-transition) {
+		pointer-events: none;
 	}
 
 	/* Only cross-fading, from a photo's smaller size to its larger one, in place */
