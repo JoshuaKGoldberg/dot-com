@@ -5,17 +5,7 @@
     {
       "avatar_url": "https://avatars.githubusercontent.com/u/3335181?v=4",
       "contributions": [
-        "bug",
-        "code",
-        "doc",
-        "ideas",
-        "infra",
-        "maintenance",
-        "review",
-        "test",
-        "tool",
-        "content",
-        "projectManagement"
+        "doc"
       ],
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
