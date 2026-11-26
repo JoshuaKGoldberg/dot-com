@@ -185,7 +185,7 @@ function formatDate(timestamp: string) {
 	const intended = new Map<HTMLDetailsElement, boolean>();
 
 	/** Opens or closes a photo, morphing every photo into its new place. */
-	async function toggle(details: HTMLDetailsElement) {
+	function toggle(details: HTMLDetailsElement) {
 		// Clicking again before it's changed undoes the first click, as it would natively
 		const already = intended.get(details);
 		if (already !== undefined) {
@@ -194,23 +194,6 @@ function formatDate(timestamp: string) {
 		}
 
 		intended.set(details, !details.open);
-
-		// Loads the larger size first, briefly, so that the photo doesn't grow blurry
-		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
-		if (!details.open && image?.dataset.sizesOpen) {
-			const preload = new Image();
-			preload.sizes = image.dataset.sizesOpen;
-			preload.srcset = image.srcset;
-			await Promise.race([
-				preload.decode().catch(() => undefined),
-				new Promise((resolve) => setTimeout(resolve, 300)),
-			]);
-		}
-
-		if (intended.get(details) === details.open) {
-			intended.delete(details);
-			return;
-		}
 
 		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
 		const update = () => {
@@ -309,7 +292,7 @@ function formatDate(timestamp: string) {
 	window.addEventListener("hashchange", () => {
 		const linked = getLinkedPhoto();
 		if (linked && !linked.open) {
-			void toggle(linked);
+			toggle(linked);
 		}
 	});
 
@@ -330,15 +313,49 @@ function formatDate(timestamp: string) {
 		{ capture: true },
 	);
 
-	// Listening on the document keeps working after the router swaps pages
-	document.addEventListener("click", (event) => {
+	/** Photos whose larger size has already started loading. */
+	const warmed = new WeakSet<HTMLDetailsElement>();
+
+	/**
+	 * Starts loading a photo's larger size as soon as it might be opened,
+	 * so that it's sharp as it grows without having to wait for it first.
+	 */
+	function warm(details: HTMLDetailsElement) {
+		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
+		if (details.open || warmed.has(details) || !image?.dataset.sizesOpen) {
+			return;
+		}
+
+		warmed.add(details);
+		const preload = new Image();
+		preload.sizes = image.dataset.sizesOpen;
+		preload.srcset = image.srcset;
+	}
+
+	function getToggled(event: Event) {
 		const details = (event.target as Element | null)?.closest?.(
 			"[data-photo-toggle]",
 		)?.parentElement;
 
-		if (details instanceof HTMLDetailsElement) {
+		return details instanceof HTMLDetailsElement ? details : undefined;
+	}
+
+	// Hovering, focusing, or touching a photo comes just before clicking it
+	for (const type of ["focusin", "pointerdown", "pointerover"]) {
+		document.addEventListener(type, (event) => {
+			const details = getToggled(event);
+			if (details) {
+				warm(details);
+			}
+		});
+	}
+
+	// Listening on the document keeps working after the router swaps pages
+	document.addEventListener("click", (event) => {
+		const details = getToggled(event);
+		if (details) {
 			event.preventDefault();
-			void toggle(details);
+			toggle(details);
 		}
 	});
 </script>
