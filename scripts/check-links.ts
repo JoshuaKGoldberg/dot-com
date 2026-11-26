@@ -2,8 +2,12 @@
 // anchors that exist in it. Run `pnpm build` first to create dist/.
 import { LinkChecker, LinkState } from "linkinator";
 import { once } from "node:events";
-import { readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { createServer } from "node:net";
+
+if (!existsSync("dist")) {
+	throw new Error("Run `pnpm build` first to create dist/.");
+}
 
 const port = await findOpenPort();
 const local = `http://127.0.0.1:${String(port)}`;
@@ -13,12 +17,6 @@ const site = /^https?:\/\/(?:www\.)?joshuakgoldberg\.com(?=[/?#]|$)/;
 
 // The site's Worker serves these from its R2 bucket, outside of the build
 const servedFromBucket = ["/img/"];
-
-// Starting from every page also checks pages that nothing links to
-const pages = readdirSync("dist", { recursive: true })
-	.map((file) => file.toString().replaceAll("\\", "/"))
-	.filter((file) => file.endsWith(".html"))
-	.map((file) => file.replace(/(?:^|(?<=\/))index\.html$/, ""));
 
 const result = await new LinkChecker().check({
 	checkCss: true,
@@ -31,14 +29,22 @@ const result = await new LinkChecker().check({
 					new URL(link).pathname.startsWith(prefix),
 				),
 		),
-	path: pages,
+	// Starting from every page and stylesheet also checks ones nothing links to
+	path: ["**/*.{css,html}"],
 	port,
 	recurse: true,
 	serverRoot: "dist",
 	urlRewriteExpressions: [{ pattern: site, replacement: local }],
 });
 
-const broken = new Map<string, { link: string; page: string; why: string }>();
+interface BrokenLink {
+	link: string;
+	page: string;
+	text: string | undefined;
+	why: string;
+}
+
+const broken = new Map<string, BrokenLink>();
 
 for (const link of result.links) {
 	if (link.state !== LinkState.BROKEN) {
@@ -57,21 +63,35 @@ for (const link of result.links) {
 			: "Invalid URL";
 
 	// Pages can be crawled from several URLs, such as /page and /page/
-	broken.set(`${page} ${url}`, { link: url, page, why });
+	broken.set(`${page} ${url}`, {
+		link: url,
+		page,
+		text: link.displayText,
+		why,
+	});
 }
 
 if (broken.size) {
 	console.error(`Found ${String(broken.size)} broken link(s):`);
 
-	for (const { link, page, why } of [...broken.values()].sort(
+	for (const { link, page, text, why } of [...broken.values()].sort(
 		(a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link),
 	)) {
-		console.error(`\n  On:   ${page}\n  Link: ${link}\n  Why:  ${why}`);
+		console.error(
+			[
+				`\n  On:   ${page}`,
+				`  Link: ${link}`,
+				...(text ? [`  Text: ${text}`] : []),
+				`  Why:  ${why}`,
+			].join("\n"),
+		);
 	}
 
-	console.error(
-		`\nIf a link is to a file in the R2 bucket, add its folder to servedFromBucket in scripts/check-links.ts.`,
-	);
+	if ([...broken.values()].some(({ why }) => why === "HTTP 404")) {
+		console.error(
+			"\nIf a link is to a file in the R2 bucket, add its folder to servedFromBucket in scripts/check-links.ts.",
+		);
+	}
 
 	process.exitCode = 1;
 } else {
@@ -102,7 +122,15 @@ function toPagePath(page: string) {
 	}
 }
 
-// linkinator reports local URLs relative to dist/, like blog/my-post
+// linkinator reports local URLs relative to dist/, like blog/my-post/index.html
 function toSitePath(url = "") {
-	return /^[a-z][\w+.-]*:/i.test(url) ? url : `/${url.replace(/^\.?\//, "")}`;
+	if (/^[a-z][\w+.-]*:/i.test(url)) {
+		return url;
+	}
+
+	const path = url
+		.replace(/^\.?\//, "")
+		.replace(/(?:^|(?<=\/))index\.html(?=[?#]|$)/, "");
+
+	return `/${path}`;
 }
