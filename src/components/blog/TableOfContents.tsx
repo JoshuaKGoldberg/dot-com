@@ -5,6 +5,7 @@ import { createSignal, For, onCleanup, onMount } from "solid-js";
 
 import { Squiggly } from "../Squiggly";
 import { Text } from "../Text";
+import { getActiveHeading, getLinkedHeading } from "./getActiveHeading";
 import styles from "./TableOfContents.module.css";
 
 export interface TableOfContentsProps {
@@ -61,52 +62,105 @@ export function TableOfContents(props: TableOfContentsProps) {
 	const [getActiveSlug, setActiveSlug] = createSignal<string | undefined>(
 		undefined,
 	);
+	let pointing = false;
+	let root!: HTMLOListElement;
 
-	// TODO: Is this available on npm? If not, perhaps I should publish it?
-	function updateActiveHeading() {
-		const headings = Array.from(
-			document.querySelectorAll<HTMLElement>("h2, h3, h4"),
-		);
-
-		// Case: no headings at all!
-		if (!headings.length) {
-			return;
-		}
-
-		// Case: If the first heading is within the top half of the screen, we're at the beginning
-		if (scrollY < headings[0].offsetTop / 2) {
-			setActiveSlug(undefined);
-			return;
-		}
-
-		// Case: if the last heading is within the top half of the screen, the article is done
+	/**
+	 * Long tables of contents scroll on their own, so this keeps the active
+	 * link in view there, without moving the page.
+	 * It leaves them alone while someone is pointing at or tabbing through them.
+	 */
+	function revealLink(slug: string | undefined) {
+		const { clientHeight, scrollHeight, scrollTop } = root;
 		if (
-			headings[headings.length - 1].getBoundingClientRect().top <
-			innerHeight / 2
+			pointing ||
+			scrollHeight <= clientHeight ||
+			root.matches(":has(:focus-visible)")
 		) {
-			setActiveSlug(headings[headings.length - 1].id);
 			return;
 		}
 
-		// Case: if a next (i + 1) heading is beyond the 2/3 point of the screen, we're at i
-		const threshold = innerHeight / 3;
-
-		for (let i = 0; i < headings.length - 1; i += 1) {
-			if (headings[i + 1].getBoundingClientRect().top > threshold) {
-				setActiveSlug(headings[i].id);
-				return;
-			}
+		const link = root.querySelector<HTMLElement>(
+			slug ? `a[href="#${CSS.escape(slug)}"]` : "a",
+		);
+		if (!link) {
+			return;
 		}
 
-		// Fallback: we've passed all other headings, so we're at the last one
-		setActiveSlug(headings[headings.length - 1].id);
+		const linkTop =
+			link.getBoundingClientRect().top -
+			root.getBoundingClientRect().top +
+			scrollTop;
+		const linkBottom = linkTop + link.offsetHeight;
+		if (linkTop >= scrollTop && linkBottom <= scrollTop + clientHeight) {
+			return;
+		}
+
+		root.scrollTop = linkTop - (clientHeight - link.offsetHeight) / 2;
 	}
 
 	onMount(() => {
-		updateActiveHeading();
-		addEventListener("scroll", updateActiveHeading, { passive: true });
+		const headings = props.headings
+			.filter(({ depth }) => depth >= 2 && depth <= 4)
+			.map(({ slug }) => document.getElementById(slug))
+			.filter((heading) => heading !== null);
+
+		/**
+		 * Whether a link to a heading was followed, and if so, whether the page
+		 * has reached it yet. Once the reader scrolls away, or a scroll ends
+		 * without reaching it, it's no longer used.
+		 */
+		let following: "arrived" | "arriving" | undefined;
+
+		function followLink() {
+			following = location.hash ? "arriving" : undefined;
+			updateActiveHeading();
+		}
+
+		function updateActiveHeading() {
+			let active: HTMLElement | undefined;
+
+			if (following) {
+				active = getLinkedHeading(headings);
+
+				if (active) {
+					following = "arrived";
+				} else if (following === "arrived") {
+					following = undefined;
+				}
+			}
+
+			const slug = (active ?? getActiveHeading(headings))?.id;
+			if (slug === getActiveSlug()) {
+				return;
+			}
+
+			revealLink(slug);
+			setActiveSlug(slug);
+		}
+
+		followLink();
+
+		const listeners = {
+			hashchange: followLink,
+			popstate: followLink,
+			resize: updateActiveHeading,
+			scroll: updateActiveHeading,
+			scrollend: () => {
+				if (following === "arriving") {
+					following = undefined;
+				}
+			},
+		};
+
+		for (const [event, listener] of Object.entries(listeners)) {
+			addEventListener(event, listener, { passive: true });
+		}
+
 		onCleanup(() => {
-			removeEventListener("scroll", updateActiveHeading);
+			for (const [event, listener] of Object.entries(listeners)) {
+				removeEventListener(event, listener);
+			}
 		});
 	});
 
@@ -119,7 +173,16 @@ export function TableOfContents(props: TableOfContentsProps) {
 				</Squiggly>
 			</label>
 			<nav aria-label="Table of contents" class={styles.tableOfContents}>
-				<ol class={clsx(styles.ol, styles.tableRoot)}>
+				<ol
+					class={clsx(styles.ol, styles.tableRoot)}
+					onPointerEnter={(event) => {
+						pointing = event.pointerType !== "touch";
+					}}
+					onPointerLeave={() => {
+						pointing = false;
+					}}
+					ref={root}
+				>
 					<li class={styles.li}>
 						<Text
 							as="a"
