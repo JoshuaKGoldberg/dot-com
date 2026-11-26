@@ -42,7 +42,7 @@ function formatDate(timestamp: string) {
 }
 ---
 
-<ul class="gallery">
+<ul class="gallery" data-photo-gallery>
 	{Astro.props.photos.map((photo, index) => (
 		<li
 			class="item"
@@ -106,6 +106,24 @@ function formatDate(timestamp: string) {
 </ul>
 
 <script>
+	const usesLanes = CSS.supports("display", "grid-lanes");
+
+	/**
+	 * Browsers without grid-lanes get masonry from a grid of one pixel rows instead,
+	 * with each photo spanning as many rows as it, and the gap after it, are tall.
+	 */
+	function measure(details: Element) {
+		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
+		if (usesLanes || !gallery) {
+			return;
+		}
+
+		const gap = parseFloat(getComputedStyle(gallery).columnGap);
+		const rows = Math.ceil(details.getBoundingClientRect().height + gap);
+		details.parentElement?.style.setProperty("--rows", rows.toString());
+		gallery.dataset.masonry = "";
+	}
+
 	/** Opens or closes a photo, morphing every photo into its new place. */
 	function toggle(details: HTMLDetailsElement) {
 		const update = () => {
@@ -121,6 +139,13 @@ function formatDate(timestamp: string) {
 				if (sizes) {
 					image.sizes = sizes;
 				}
+			}
+
+			// Right away, so that the transition morphs photos into their final places
+			for (const other of document.querySelectorAll(
+				"[data-photo-gallery] details",
+			)) {
+				measure(other);
 			}
 
 			if (details.open) {
@@ -142,6 +167,33 @@ function formatDate(timestamp: string) {
 		}
 	}
 
+	// Runs on every visit to the page, including ones the router swaps in
+	document.addEventListener("astro:page-load", () => {
+		const photos = document.querySelectorAll("[data-photo-gallery] details");
+		if (usesLanes || !photos.length) {
+			return;
+		}
+
+		// Photos change height as their lanes resize, and as they open and close
+		const observer = new ResizeObserver((entries) => {
+			for (const { target } of entries) {
+				measure(target);
+			}
+		});
+
+		for (const photo of photos) {
+			observer.observe(photo);
+		}
+
+		document.addEventListener(
+			"astro:before-swap",
+			() => {
+				observer.disconnect();
+			},
+			{ once: true },
+		);
+	});
+
 	// Listening on the document keeps working after the router swaps pages
 	document.addEventListener("click", (event) => {
 		const details = (event.target as Element | null)?.closest?.(
@@ -157,7 +209,9 @@ function formatDate(timestamp: string) {
 
 <style>
 	.gallery {
+		display: grid;
 		gap: 1rem;
+		grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
 		list-style: none;
 		margin: 0 auto;
 		padding: 0;
@@ -165,33 +219,27 @@ function formatDate(timestamp: string) {
 		max-width: 100%;
 	}
 
-	/* Masonry, where it's supported, which fills whichever lane is shortest */
+	/* Masonry: each photo, newest first, goes to the top of whichever lane is shortest */
 	@supports (display: grid-lanes) {
 		.gallery {
 			display: grid-lanes;
-			grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
-		}
-
-		.item:has(> [open]) {
-			grid-column: 1 / -1;
 		}
 	}
 
-	/* Elsewhere, columns look the same, but fill one column before the next */
+	/* Elsewhere, rows a pixel tall that photos span the heights of do the same */
 	@supports not (display: grid-lanes) {
-		.gallery {
-			columns: 3 15rem;
+		.gallery[data-masonry] {
+			grid-auto-rows: 1px;
+			row-gap: 0;
 		}
 
-		.item {
-			break-inside: avoid;
-			margin-bottom: 1rem;
+		[data-masonry] > .item {
+			grid-row-end: span var(--rows);
 		}
+	}
 
-		.item:has(> [open]) {
-			column-span: all;
-			margin-block: 0.5rem 1.5rem;
-		}
+	.item:has(> [open]) {
+		grid-column: 1 / -1;
 	}
 
 	/* The page's scroll padding already keeps opened photos clear of the header */

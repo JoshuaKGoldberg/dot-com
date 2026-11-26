@@ -158,15 +158,6 @@ export const photos = (
 			width: 2048,
 		},
 		{
-			alt: "Josh beaming and waving at the audience from beside the podium, with code on the projector screen behind him",
-			credit: "Tiffany Marie Photo",
-			event: "KCDC 2023",
-			height: 3523,
-			name: "2023-06-22-kcdc-waving",
-			takenAt: "2023-06-22T16:11:30-06:00",
-			width: 5285,
-		},
-		{
 			alt: "Josh smiling with his hands spread wide on a bright pink stage, in a dark patterned t-shirt",
 			credit: "K. Adam White",
 			event: "StaffPlus NYC 2023",
