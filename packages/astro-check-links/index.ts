@@ -117,6 +117,16 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 				throw new AstroError(summary, hint);
 			},
 			"astro:config:done": ({ config }) => {
+				const invalidIgnore = ignore.find(
+					(pattern) => typeof pattern === "string" && !pattern.startsWith("/"),
+				);
+				if (invalidIgnore !== undefined) {
+					throw new AstroError(
+						`Invalid path in the ignore option of checkLinks(): ${String(invalidIgnore)}`,
+						'Ignored paths start with a /, such as "/downloads/".',
+					);
+				}
+
 				base = config.base;
 				hosts = new Set(
 					[...(config.site ? [config.site] : []), ...aliases].map((url) => {
@@ -146,7 +156,12 @@ function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
 	return {
 		// linkinator reports links it couldn't parse as they were written
 		link: invalid ? link.url : toSitePath(link.url, local),
-		page: link.parent ? toSitePath(link.parent, local) : "",
+		page: link.parent
+			? toSitePath(link.parent, local).replace(
+					/(?<=\/)index\.html(?=[?#]|$)/,
+					"",
+				)
+			: "",
 		text: link.displayText,
 		why: messages.length
 			? messages.join(", ")
@@ -223,9 +238,9 @@ async function findBrokenLinks({
 			new LinkChecker().check({
 				checkCss: true,
 				checkFragments: true,
-				// Text fragments, like #:~:text=hello, match text rather than ids
+				// Text fragments, like #:~:text=hello, match text rather than only ids
 				fragmentsToSkip: (fragment) =>
-					Promise.resolve(fragment.startsWith(":~:")),
+					Promise.resolve(fragment.includes(":~:")),
 				// External links are out of scope, and would make builds depend on other sites
 				linksToSkip: (link) => Promise.resolve(shouldSkip(link, local)),
 				path,
@@ -403,9 +418,7 @@ function toSitePath(url: string, local: string) {
 		return url;
 	}
 
-	const path = url
-		.slice(local.length)
-		.replace(/(?<=\/)index\.html(?=[?#]|$)/, "");
+	const path = url.slice(local.length);
 
 	// Show characters such as spaces as written, but keep escapes like %2F
 	try {

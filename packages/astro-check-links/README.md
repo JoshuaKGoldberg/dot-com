@@ -13,6 +13,7 @@ After each `astro build`, it reports links that would 404 or scroll to nothing:
 It serves your build from a local server, much like a static host would, so it needs no network connection.
 Paths have to match files' case exactly, as they do on most hosts.
 Links to other sites aren't checked.
+Broken absolute links to your own site are reported by their path.
 
 ```plaintext
 [astro-check-links] Found 2 broken link(s).
@@ -50,7 +51,7 @@ If a server adds other files or routes, such as [on-demand rendered pages](https
 
 A few links aren't checked:
 
-- [Text fragments](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than ids
+- Fragments with a [text directive](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than only ids
 - Heading anchors on pages whose HTML contains both `content="noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
 
 `astro-check-links` requires Node.js 22 or newer.
