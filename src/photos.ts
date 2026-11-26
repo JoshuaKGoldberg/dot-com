@@ -1,6 +1,6 @@
 /** Where the photos' originals are hosted, so they don't bloat this repository. */
 const photosOrigin =
-	"https://raw.githubusercontent.com/JoshuaKGoldberg/talk-files/main/photos/";
+	"https://raw.githubusercontent.com/JoshuaKGoldberg/files/main/photos/";
 
 export interface Photo {
 	alt: string;

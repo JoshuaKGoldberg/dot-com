@@ -65,7 +65,7 @@ export default defineConfig({
 		remotePatterns: [
 			{
 				hostname: "raw.githubusercontent.com",
-				pathname: "/JoshuaKGoldberg/talk-files/main/photos/**",
+				pathname: "/JoshuaKGoldberg/files/main/photos/**",
 				protocol: "https",
 			},
 		],
