@@ -4,6 +4,8 @@ date: 2023-09-21
 href: https://www.offerzen.com/community/typescript-origins-documentary
 event: TypeScript Origins
 links:
-  Video: https://www.youtube.com/watch?v=U6s2pdxebSo&ab_channel=OfferZenOrigins
+  Video:
+    href: https://www.youtube.com/watch?v=U6s2pdxebSo&ab_channel=OfferZenOrigins
+    timestamps: ["0:28:20", "1:14:20"]
 title: Documentary Interviewee
 ---

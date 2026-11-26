@@ -30,6 +30,14 @@
 	gap: 0.5rem;
 }
 
+/* Raised about 2/3 as far as a regular superscript */
+.parts {
+	font-size: calc(var(--fontSizeSmaller) * 0.75);
+	line-height: 0;
+	margin-left: 0.1em;
+	vertical-align: 0.3em;
+}
+
 .anchorAlone {
 	margin-top: 0.5rem;
 }

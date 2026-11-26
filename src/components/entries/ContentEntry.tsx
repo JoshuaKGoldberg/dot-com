@@ -15,13 +15,25 @@ const widths = {
 	third: styles.widthsThird,
 };
 
+/** Text, href, and optionally links to parts of it, such as timestamps */
+export type ContentEntryLink = [
+	text: string,
+	href: string,
+	parts?: ContentEntryLinkPart[],
+];
+
+export interface ContentEntryLinkPart {
+	href: string;
+	label: string;
+}
+
 export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
 	description?: string | undefined;
 	descriptionSize?: "medium" | "small";
 	image?: ContentEntryImageProps | undefined;
-	links?: [string, string][] | undefined;
+	links?: ContentEntryLink[] | undefined;
 	subtitle: JSX.Element;
 	title: string;
 	url: string;
@@ -63,16 +75,46 @@ export function ContentEntry(props: ContentEntryProps) {
 					{props.links && (
 						<Text as="p" class={styles.links} font="label">
 							<For each={props.links.sort(([a], [b]) => a.localeCompare(b))}>
-								{([text, href]) => (
-									<Anchor
-										class={props.description ? undefined : styles.anchorAlone}
-										fontSize="smaller"
-										href={href}
-										variant="onHover"
-									>
-										{text}
-									</Anchor>
-								)}
+								{([text, href, parts]) => {
+									const anchor = (
+										<Anchor
+											class={
+												props.description || parts
+													? undefined
+													: styles.anchorAlone
+											}
+											fontSize="smaller"
+											href={href}
+											variant="onHover"
+										>
+											{text}
+										</Anchor>
+									);
+
+									return parts ? (
+										<span
+											class={props.description ? undefined : styles.anchorAlone}
+										>
+											{anchor}
+											<sup class={styles.parts}>
+												<For each={parts}>
+													{(part, index) => (
+														<Anchor
+															aria-label={part.label}
+															href={part.href}
+															title={part.label}
+															variant="onHover"
+														>
+															[{index() + 1}]
+														</Anchor>
+													)}
+												</For>
+											</sup>
+										</span>
+									) : (
+										anchor
+									);
+								}}
 							</For>
 						</Text>
 					)}

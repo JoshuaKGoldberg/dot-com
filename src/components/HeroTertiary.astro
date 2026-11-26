@@ -2,7 +2,12 @@
 import { Text } from "~/components/Text";
 
 interface Props {
-	size?: "normal" | "wide" | undefined;
+	/**
+	 * - normal: capped to a readable width
+	 * - unlimited: as wide as its container
+	 * - wide: as wide as its container, with each line kept whole
+	 */
+	size?: "normal" | "unlimited" | "wide" | undefined;
 }
 ---
 

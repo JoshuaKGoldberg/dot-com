@@ -1,7 +1,9 @@
 ---
 import bluesky from "~/assets/icons/bluesky.svg";
+import email from "~/assets/icons/email.svg";
 import linkedin from "~/assets/icons/linkedin.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
+import { siteName } from "~/constants";
 
 import SocialImage from "../SocialImage.astro";
 
@@ -31,32 +33,41 @@ function createText(author: string) {
 
 const channels = [
 	[
-		"Bluesky",
+		"Share on Bluesky",
 		createLink("https://bsky.app/intent/compose", {
 			text: createText("@joshuakgoldberg.com"),
 		}),
 		bluesky,
 	],
 	[
-		"LinkedIn",
+		"Share on LinkedIn",
 		createLink("https://linkedin.com/sharing/share-offsite/", { url }),
 		linkedin,
 	],
 	[
-		"Mastodon",
+		"Share on Mastodon",
 		createLink("https://fosstodon.org/share", {
 			text: createText("@JoshuaKGoldberg@fosstodon.org"),
 		}),
 		mastodon,
+	],
+	[
+		"Share by email",
+		createLink("mailto:", {
+			// Line breaks in email bodies are specified to be CRLF
+			body: createText(siteName).replaceAll("\n", "\r\n"),
+			subject: title,
+		}),
+		email,
 	],
 ] as const;
 ---
 
 <span class="shares">
 	<slot />
-	{channels.map(([network, href, image]) => (
-		<a class="share" href={href} target="_blank" title={`Share on ${network}`}>
-			<SocialImage alt={`Share on ${network}`} image={image} />
+	{channels.map(([label, href, image]) => (
+		<a class="share" href={href} target="_blank" title={label}>
+			<SocialImage alt={label} image={image} />
 		</a>
 	))}
 </span>
