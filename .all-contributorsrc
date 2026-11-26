@@ -198,6 +198,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "dimitropoulos",
+      "name": "Dimitri Mitropoulos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15232461?v=4",
+      "profile": "http://youtube.com/@MichiganTypeScript",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -207,5 +216,6 @@
   ],
   "projectName": "dot-com",
   "projectOwner": "JoshuaKGoldberg",
-  "repoType": "github"
+  "repoType": "github",
+  "commitConvention": "angular"
 }
