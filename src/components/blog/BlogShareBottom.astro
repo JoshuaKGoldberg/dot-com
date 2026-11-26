@@ -12,3 +12,16 @@ interface Props {
 <BlogShare {...Astro.props}>
 	Liked this post? Thanks! Let the world know:
 </BlogShare>
+<p class="feed">
+	Want to see new posts? They're shared to an RSS feed at{" "}
+	<a href="/rss.xml" target="_blank">
+		/rss.xml
+	</a>
+	.
+</p>
+
+<style>
+	.feed {
+		margin: 0;
+	}
+</style>
