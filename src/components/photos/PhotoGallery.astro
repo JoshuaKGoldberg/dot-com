@@ -24,10 +24,22 @@ const sizesClosed = [
 	"calc(100vw - 1rem)",
 ].join(", ");
 
-/** An opened photo takes the gallery's whole width. */
-const sizesOpen = "(width >= 63.5625em) 62rem, calc(100vw - 1rem)";
+/** An opened photo takes the gallery's width, unless it's tall enough to be capped by height. */
+function getSizesOpen(photo: Photo) {
+	const byHeight = `calc((100vh - 14rem) * ${(photo.width / photo.height).toFixed(4)})`;
+	return [
+		`(width >= 63.5625em) min(62rem, ${byHeight})`,
+		`min(calc(100vw - 1rem), ${byHeight})`,
+	].join(", ");
+}
 
 const widths = [320, 480, 640, 960, 1280, 1600, 1984];
+
+/** Smaller originals are also offered at their own width, rather than stopping short of it. */
+function getWidths(photo: Photo) {
+	const smaller = widths.filter((width) => width < photo.width);
+	return smaller.length === widths.length ? smaller : [...smaller, photo.width];
+}
 
 const displayWidth = 640;
 
@@ -57,8 +69,7 @@ function formatDate(timestamp: string) {
 					<Image
 						alt={photo.alt}
 						class="image"
-						data-sizes-closed={sizesClosed}
-						data-sizes-open={sizesOpen}
+						data-sizes-open={getSizesOpen(photo)}
 						format="avif"
 						height={Math.round(
 							(Math.min(displayWidth, photo.width) * photo.height) /
@@ -69,7 +80,7 @@ function formatDate(timestamp: string) {
 						sizes={sizesClosed}
 						src={getPhotoUrl(photo)}
 						width={Math.min(displayWidth, photo.width)}
-						widths={widths.filter((width) => width <= photo.width)}
+						widths={getWidths(photo)}
 					/>
 				</summary>
 				<Text
@@ -94,7 +105,7 @@ function formatDate(timestamp: string) {
 						</>
 					)}{" "}
 					<span class="line">
-						<Anchor href={getPhotoUrl(photo)} rel="noopener" target="_blank">
+						<Anchor href={getPhotoUrl(photo)} target="_blank">
 							Open original
 							<span class="hint">(opens in a new tab)</span>
 						</Anchor>
@@ -108,50 +119,71 @@ function formatDate(timestamp: string) {
 <script>
 	const usesLanes = CSS.supports("display", "grid-lanes");
 
+	/** Height of the rows that photos span, without grid-lanes: short enough to look exact. */
+	const rowHeight = 4;
+
 	/**
-	 * Browsers without grid-lanes get masonry from a grid of one pixel rows instead,
+	 * Browsers without grid-lanes get masonry from a grid of short rows instead,
 	 * with each photo spanning as many rows as it, and the gap after it, are tall.
 	 */
-	function measure(details: Element) {
-		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
-		if (usesLanes || !gallery) {
+	function measure(gallery: HTMLElement) {
+		if (usesLanes) {
 			return;
 		}
 
 		const gap = parseFloat(getComputedStyle(gallery).columnGap);
-		const rows = Math.ceil(details.getBoundingClientRect().height + gap);
-		details.parentElement?.style.setProperty("--rows", rows.toString());
+		const items = [...gallery.children] as HTMLElement[];
+
+		// Reading every height before writing any lays the page out once, not per photo
+		const heights = items.map(
+			(item) => item.firstElementChild?.getBoundingClientRect().height ?? 0,
+		);
+
+		items.forEach((item, index) => {
+			const rows = Math.ceil((heights[index] + gap) / rowHeight);
+			item.style.setProperty("--rows", rows.toString());
+		});
+
 		gallery.dataset.masonry = "";
 	}
 
+	/** Has an opened photo show the larger size it now needs. */
+	function enlarge(details: HTMLDetailsElement) {
+		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
+		if (details.open && image?.dataset.sizesOpen) {
+			image.sizes = image.dataset.sizesOpen;
+		}
+	}
+
 	/** Opens or closes a photo, morphing every photo into its new place. */
-	function toggle(details: HTMLDetailsElement) {
+	async function toggle(details: HTMLDetailsElement) {
+		const opening = !details.open;
+		const image = details.querySelector<HTMLImageElement>("[data-sizes-open]");
+
+		// Loads the larger size first, briefly, so that the photo doesn't grow blurry
+		if (opening && image?.dataset.sizesOpen) {
+			const preload = new Image();
+			preload.sizes = image.dataset.sizesOpen;
+			preload.srcset = image.srcset;
+			await Promise.race([
+				preload.decode().catch(() => undefined),
+				new Promise((resolve) => setTimeout(resolve, 300)),
+			]);
+		}
+
+		const gallery = details.closest<HTMLElement>("[data-photo-gallery]");
 		const update = () => {
 			// Photos sharing a name close each other, so only one is ever open
-			details.open = !details.open;
-
-			for (const image of document.querySelectorAll<HTMLImageElement>(
-				"[data-sizes-open]",
-			)) {
-				const sizes = image.closest("details")?.open
-					? image.dataset.sizesOpen
-					: image.dataset.sizesClosed;
-				if (sizes) {
-					image.sizes = sizes;
-				}
-			}
+			details.open = opening;
+			enlarge(details);
 
 			// Right away, so that the transition morphs photos into their final places
-			for (const other of document.querySelectorAll(
-				"[data-photo-gallery] details",
-			)) {
-				measure(other);
+			if (gallery) {
+				measure(gallery);
 			}
 
-			if (details.open) {
-				// Instantly, as the transition itself animates the move
-				details.scrollIntoView({ behavior: "instant", block: "nearest" });
-			}
+			// Instantly, as the transition itself animates the move
+			details.scrollIntoView({ behavior: "instant", block: "nearest" });
 		};
 
 		if (document.documentElement.dataset.motion === "paused") {
@@ -159,30 +191,38 @@ function formatDate(timestamp: string) {
 			return;
 		}
 
+		// Keeps the photo that's opening or closing over the others as they move
+		details.dataset.toggling = "";
+
 		try {
-			document.startViewTransition({ types: ["photo"], update });
+			const transition = document.startViewTransition({
+				types: ["photo"],
+				update,
+			});
+			void transition.finished.finally(() => {
+				delete details.dataset.toggling;
+			});
 		} catch {
 			// Browsers without view transitions, or without their types
+			delete details.dataset.toggling;
 			update();
 		}
 	}
 
 	// Runs on every visit to the page, including ones the router swaps in
 	document.addEventListener("astro:page-load", () => {
-		const photos = document.querySelectorAll("[data-photo-gallery] details");
-		if (usesLanes || !photos.length) {
+		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
+		if (usesLanes || !gallery) {
 			return;
 		}
 
 		// Photos change height as their lanes resize, and as they open and close
-		const observer = new ResizeObserver((entries) => {
-			for (const { target } of entries) {
-				measure(target);
-			}
+		const observer = new ResizeObserver(() => {
+			measure(gallery);
 		});
 
-		for (const photo of photos) {
-			observer.observe(photo);
+		for (const details of gallery.querySelectorAll("details")) {
+			observer.observe(details);
 		}
 
 		document.addEventListener(
@@ -194,6 +234,20 @@ function formatDate(timestamp: string) {
 		);
 	});
 
+	// Photos can also open without a click, such as when the browser finds text in them
+	document.addEventListener(
+		"toggle",
+		(event) => {
+			if (
+				event.target instanceof HTMLDetailsElement &&
+				event.target.closest("[data-photo-gallery]")
+			) {
+				enlarge(event.target);
+			}
+		},
+		{ capture: true },
+	);
+
 	// Listening on the document keeps working after the router swaps pages
 	document.addEventListener("click", (event) => {
 		const details = (event.target as Element | null)?.closest?.(
@@ -202,7 +256,7 @@ function formatDate(timestamp: string) {
 
 		if (details instanceof HTMLDetailsElement) {
 			event.preventDefault();
-			toggle(details);
+			void toggle(details);
 		}
 	});
 </script>
@@ -226,10 +280,10 @@ function formatDate(timestamp: string) {
 		}
 	}
 
-	/* Elsewhere, rows a pixel tall that photos span the heights of do the same */
+	/* Elsewhere, short rows that photos span the heights of do the same */
 	@supports not (display: grid-lanes) {
 		.gallery[data-masonry] {
-			grid-auto-rows: 1px;
+			grid-auto-rows: 4px;
 			row-gap: 0;
 		}
 
@@ -314,6 +368,10 @@ function formatDate(timestamp: string) {
 		padding: 0 0.15em;
 	}
 
+	time {
+		white-space: nowrap;
+	}
+
 	.line {
 		display: block;
 	}
@@ -341,6 +399,14 @@ function formatDate(timestamp: string) {
 	:global(::view-transition-group(*.photo)) {
 		animation-duration: 400ms;
 		animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
+	}
+
+	:global(:active-view-transition-type(photo)) [data-toggling] .image {
+		view-transition-class: photo toggling;
+	}
+
+	:global(::view-transition-group(*.toggling)) {
+		z-index: 1;
 	}
 
 	:global(::view-transition-image-pair(*.photo)) {

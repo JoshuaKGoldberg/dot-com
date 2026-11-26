@@ -23,4 +23,10 @@ interface Props {
 	.tertiary.normal {
 		max-width: calc(25rem * var(--heroScale, 1));
 	}
+
+	/* Keeps each line whole, even on phones, where it reaches past the portrait above */
+	.tertiary.wide {
+		font-size: min(var(--heroTertiarySize, var(--fontSizeMedium)), 3.8vw);
+		white-space: nowrap;
+	}
 </style>

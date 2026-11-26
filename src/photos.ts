@@ -43,7 +43,7 @@ export const photos = (
 			width: 3593,
 		},
 		{
-			alt: "Josh smiling and pointing at the camera in a purple Tinky Winky costume, holding his sticker-covered laptop",
+			alt: "Josh smiling and pointing off to the side in a purple Tinky Winky costume, holding his sticker-covered laptop",
 			credit: "Ramsey Chappell Photography",
 			event: "MagnoliaConf 2025",
 			height: 5204,
@@ -61,7 +61,7 @@ export const photos = (
 			width: 5472,
 		},
 		{
-			alt: "Josh on stage in a blue sweater covered in geese, grinning up at the screen while raising his clicker and holding a microphone",
+			alt: "Josh on stage in a blue sweater covered in geese, grinning up toward the room while raising his clicker and holding a microphone",
 			credit: "Vita Phoenix Events",
 			event: "React Summit US 2026",
 			height: 683,
@@ -97,7 +97,7 @@ export const photos = (
 			width: 1024,
 		},
 		{
-			alt: "Josh in a silver space suit, microphone in hand, smirking at the camera during an on-stage conversation",
+			alt: "Josh in a silver space suit, microphone in hand, smirking at the host beside him during an on-stage conversation",
 			credit: "Vita Phoenix Events",
 			event: "React Summit US 2024",
 			height: 683,
