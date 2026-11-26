@@ -1,0 +1,27 @@
+<script is:inline>
+	/**
+	 * Fades in images that weren't loaded by the time they'd first be painted.
+	 *
+	 * Inline so that it hides them before then, and only if scripts are running.
+	 * It only runs on full page loads, as page transitions have fades of their own.
+	 */
+	for (const image of document.querySelectorAll("img[data-fades-in]")) {
+		if (
+			image.complete ||
+			document.documentElement.dataset.motion === "paused"
+		) {
+			continue;
+		}
+
+		const show = () => {
+			image.style.removeProperty("opacity");
+			image.animate([{ offset: 0, opacity: 0 }], {
+				duration: 490,
+				easing: "ease-out",
+			});
+		};
+
+		image.style.opacity = "0";
+		image.decode().then(show, show);
+	}
+</script>
