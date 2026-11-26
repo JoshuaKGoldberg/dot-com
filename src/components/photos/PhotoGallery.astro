@@ -1,0 +1,159 @@
+---
+import { Image } from "astro:assets";
+
+import { getPhotoUrl, type Photo } from "~/photos";
+
+import { Text } from "../Text";
+
+interface Props {
+	photos: Photo[];
+}
+
+/** Images near enough the top to show before any scrolling. */
+const eagerCount = 3;
+
+/**
+ * How wide each column is, matching the gallery's CSS columns:
+ * three once there's room for 15rem columns, then two, then one.
+ */
+const sizes = [
+	"(width >= 63.5625em) 20rem",
+	"(width >= 51rem) calc((100vw - 6rem) / 3)",
+	"(width >= 35rem) calc((100vw - 5rem) / 2)",
+	"calc(100vw - 1rem)",
+].join(", ");
+
+const widths = [320, 480, 640, 960, 1280];
+
+const displayWidth = 640;
+
+function formatDate(date: string) {
+	return new Date(date).toLocaleString("en-US", {
+		day: "numeric",
+		month: "long",
+		timeZone: "GMT",
+		year: "numeric",
+	});
+}
+---
+
+<ul class="gallery">
+	{Astro.props.photos.map((photo, index) => (
+		<li class="item">
+			<figure>
+				<a
+					class="link"
+					href={getPhotoUrl(photo)}
+					rel="noopener"
+					target="_blank"
+				>
+					<Image
+						alt={photo.alt}
+						class="image"
+						format="avif"
+						height={Math.round(
+							(Math.min(displayWidth, photo.width) * photo.height) /
+								photo.width,
+						)}
+						loading={index < eagerCount ? "eager" : "lazy"}
+						quality={60}
+						sizes={sizes}
+						src={getPhotoUrl(photo)}
+						width={Math.min(displayWidth, photo.width)}
+						widths={widths.filter((width) => width <= photo.width)}
+					/>{" "}
+					<span class="hint">(original size, opens in a new tab)</span>
+				</a>
+				<Text
+					as="figcaption"
+					class="caption"
+					font="label"
+					fontSize="smaller"
+					tone="muted"
+				>
+					<span class="event">{photo.event}</span>{" "}
+					<span aria-hidden="true" class="dot">
+						·
+					</span>{" "}
+					<time datetime={photo.date}>{formatDate(photo.date)}</time>
+					{photo.credit && (
+						<>
+							{" "}
+							<span class="credit">Photo by {photo.credit}</span>
+						</>
+					)}
+				</Text>
+			</figure>
+		</li>
+	))}
+</ul>
+
+<style>
+	.gallery {
+		column-gap: 1rem;
+		columns: 3 15rem;
+		list-style: none;
+		margin: 0 auto;
+		padding: 0;
+		width: var(--widthFull);
+		max-width: 100%;
+	}
+
+	.item {
+		break-inside: avoid;
+		margin-bottom: 1.5rem;
+	}
+
+	figure {
+		margin: 0;
+	}
+
+	.link {
+		border-radius: 0.5rem;
+		display: block;
+		overflow: hidden;
+	}
+
+	.image {
+		display: block;
+		height: auto;
+		transition: var(--transitionMedium) scale;
+		width: 100%;
+	}
+
+	.link:hover .image,
+	.link:focus-visible .image {
+		scale: 1.02;
+	}
+
+	:global(html[data-motion="paused"]) .image {
+		transition: none;
+	}
+
+	.hint {
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap;
+		width: 1px;
+	}
+
+	.caption {
+		letter-spacing: 0.04em;
+		line-height: 1.6;
+		margin-top: 0.5rem;
+	}
+
+	.event {
+		color: var(--colorForeground);
+	}
+
+	.dot {
+		padding: 0 0.15em;
+	}
+
+	.credit {
+		display: block;
+	}
+</style>

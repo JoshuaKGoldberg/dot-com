@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
 import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
+import { Text } from "~/components/Text";
 
 import { speakingDescription } from "../constants";
 import HeroLayout from "../layouts/HeroLayout.astro";
@@ -23,5 +24,16 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 	</Fragment>
 	<BodyContents>
 		<SpeakingsTabbed client:load now={Date.now()} speakings={speakings} />
+		<Text as="p" class="photos" tone="muted">
+			Need a photo of me for your event? See my{" "}
+			<Anchor href="/photos">speaker photos</Anchor>.
+		</Text>
 	</BodyContents>
 </HeroLayout>
+
+<style>
+	.photos {
+		margin: 3rem auto 0;
+		text-align: center;
+	}
+</style>

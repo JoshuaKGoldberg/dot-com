@@ -3,6 +3,7 @@ import Hero from "~/components/Hero.astro";
 import HeroSecondary from "~/components/HeroSecondary.astro";
 import { siteName } from "~/constants";
 import { type PortraitName, portraits } from "~/portraits";
+import type { ExtraPreviewName } from "~/previews/extraPreviews";
 
 import BaseLayout from "./BaseLayout.astro";
 
@@ -11,12 +12,17 @@ interface Props {
 	description: string;
 	fitsScreen?: boolean;
 	portrait: PortraitName;
+
+	/** Name of the image under /previews, if not the portrait's own. */
+	preview?: ExtraPreviewName;
+
 	primary: string;
 	secondarySize?: "normal" | "wide";
 	title?: string;
 }
 
-const { description, portrait, primary, secondarySize, title } = Astro.props;
+const { description, portrait, preview, primary, secondarySize, title } =
+	Astro.props;
 ---
 
 <BaseLayout
@@ -25,7 +31,7 @@ const { description, portrait, primary, secondarySize, title } = Astro.props;
 	fitsScreen={Astro.props.fitsScreen}
 	preview={{
 		alt: `${title ?? siteName}: ${portraits[portrait].alt}`,
-		name: portrait,
+		name: preview ?? portrait,
 	}}
 	shortTitle={title ?? siteName}
 	title={title ? `${title} | ${siteName}` : siteName}

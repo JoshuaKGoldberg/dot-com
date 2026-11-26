@@ -61,6 +61,14 @@ export default defineConfig({
 		},
 	],
 	image: {
+		// Photos' originals are hosted there, then resized here at build time
+		remotePatterns: [
+			{
+				hostname: "raw.githubusercontent.com",
+				pathname: "/JoshuaKGoldberg/talk-files/main/photos/**",
+				protocol: "https",
+			},
+		],
 		service: sharpImageService(),
 	},
 	integrations: [konamiEmojiBlast(), solidJs(), mdx(), sitemap()],
