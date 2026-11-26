@@ -6,7 +6,7 @@ export const blogDescription =
 export const homeTagline = "I’m good at TypeScript.";
 
 export const photosDescription =
-	"Photos of me speaking at conferences and meetups.";
+	"My favorite shots of me speaking at conferences and meetups.";
 
 export const projectsDescription =
 	"I work primarily on open source tooling for TypeScript projects.";

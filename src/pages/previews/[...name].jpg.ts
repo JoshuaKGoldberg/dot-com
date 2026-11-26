@@ -9,6 +9,7 @@ import {
 import {
 	blogDescription,
 	homeTagline,
+	photosDescription,
 	projectsDescription,
 	siteName,
 	speakingDescription,
@@ -16,7 +17,6 @@ import {
 import { type PortraitName, portraits } from "~/portraits";
 import { drawPortrait, type Picture } from "~/previews/drawPicture";
 import { drawPreview } from "~/previews/drawPreview";
-import { extraPreviews } from "~/previews/extraPreviews";
 import { getPostPicture } from "~/previews/getPostPicture";
 
 interface Props {
@@ -28,6 +28,7 @@ interface Props {
 const pages: Record<PortraitName, { subtitle: string; title: string }> = {
 	blog: { subtitle: blogDescription, title: "Goldblog" },
 	home: { subtitle: homeTagline, title: siteName },
+	photos: { subtitle: photosDescription, title: "Photos" },
 	projects: { subtitle: projectsDescription, title: "Projects" },
 	speaking: { subtitle: speakingDescription, title: "Speaking" },
 };
@@ -41,14 +42,6 @@ export const getStaticPaths = (async () => {
 			props: {
 				...pages[name as PortraitName],
 				drawPicture: () => drawPortrait(portrait),
-			} satisfies Props,
-		})),
-		...Object.entries(extraPreviews).map(([name, preview]) => ({
-			params: { name },
-			props: {
-				drawPicture: () => drawPortrait(portraits[preview.portrait]),
-				subtitle: preview.subtitle,
-				title: preview.title,
 			} satisfies Props,
 		})),
 		...posts.map((post) => ({
