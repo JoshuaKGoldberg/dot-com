@@ -33,13 +33,31 @@ export function cssModuleTypes(
 ): AstroIntegration {
 	let command: string | undefined;
 	let directories: string[] = [];
+	let pagesDirectory: string | undefined;
 	let viteConfig: ResolvedConfig | undefined;
 
 	const queues = new Map<string, Promise<void>>();
 
 	const isWatched = (file: string) =>
 		cssModulePattern.test(file) &&
-		directories.some((directory) => isWithin(directory, file));
+		directories.some(
+			(directory) =>
+				isWithin(directory, file) &&
+				!path
+					.relative(directory, file)
+					.split(path.sep)
+					.slice(0, -1)
+					.some((part) => part === "node_modules" || part.startsWith(".")),
+		);
+
+	// Astro would treat a .d.ts in src/pages as an endpoint, unless a part of its path starts with _
+	const isRoute = (file: string) =>
+		!!pagesDirectory &&
+		isWithin(pagesDirectory, file) &&
+		!path
+			.relative(pagesDirectory, file)
+			.split(path.sep)
+			.some((part) => part.startsWith("_"));
 
 	const update = async (file: string) => {
 		if (!viteConfig) {
@@ -56,6 +74,12 @@ export function cssModuleTypes(
 			}
 
 			throw error;
+		}
+
+		if (isRoute(file)) {
+			throw new Error(
+				`${file} is in the pages directory, where Astro would make its .d.ts a route. Move it, or put it in a directory whose name starts with _.`,
+			);
 		}
 
 		// The same preprocessing and CSS modules options Vite uses for its imports
@@ -81,6 +105,12 @@ export function cssModuleTypes(
 			});
 
 		queues.set(file, next);
+		void next.then(() => {
+			if (queues.get(file) === next) {
+				queues.delete(file);
+			}
+		});
+
 		return next;
 	};
 
@@ -97,6 +127,7 @@ export function cssModuleTypes(
 							path.resolve(root, directory),
 						)
 					: [fileURLToPath(config.srcDir)];
+				pagesDirectory = path.join(fileURLToPath(config.srcDir), "pages");
 				viteConfig = await resolveConfig(
 					{
 						configFile: false,
@@ -166,7 +197,12 @@ function isNotFound(error: unknown) {
 
 function isWithin(directory: string, file: string) {
 	const relative = path.relative(directory, file);
-	return !!relative && !relative.startsWith("..") && !path.isAbsolute(relative);
+	return (
+		!!relative &&
+		relative !== ".." &&
+		!relative.startsWith(`..${path.sep}`) &&
+		!path.isAbsolute(relative)
+	);
 }
 
 function printDeclarations(fileName: string, classNames: string[]) {

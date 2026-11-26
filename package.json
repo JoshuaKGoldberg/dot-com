@@ -27,7 +27,7 @@
 		"preview": "astro preview",
 		"preview:worker": "wrangler dev",
 		"start": "astro dev",
-		"tsc": "tsc"
+		"tsc": "astro sync && tsc"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.12",
