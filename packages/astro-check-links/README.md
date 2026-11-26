@@ -2,7 +2,7 @@
 
 An [Astro integration](https://docs.astro.build/en/guides/integrations-guide) that checks links in your built site point to pages, files, and heading anchors that exist in it.
 
-After each `astro build`, it reports any link that would 404 or scroll to nothing:
+After each `astro build`, it reports links that would 404 or scroll to nothing:
 
 - Links to pages and files, from `<a>`, `<img>` and `srcset`, `<link>`, `<script>`, `<source>`, `<video>`, and other elements
 - Heading anchors, such as `/blog/my-post#some-heading` and `#some-heading`
@@ -10,7 +10,7 @@ After each `astro build`, it reports any link that would 404 or scroll to nothin
 - Absolute links to your own site, using Astro's [`site`](https://docs.astro.build/en/reference/configuration-reference/#site)
 - Links on every built page, including pages nothing links to
 
-It checks your build on its own, without a network connection.
+It serves your build on a local server the way static hosts do, matching paths' case exactly, so it needs no network connection.
 Links to other sites aren't checked.
 
 ```plaintext
@@ -42,16 +42,23 @@ export default defineConfig({
 ```
 
 `astro-check-links` respects your Astro config's [`base`](https://docs.astro.build/en/reference/configuration-reference/#base), so links that leave it are reported as broken.
-It also works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat), including `"file"` and `"preserve"`, where links to pages may leave out `.html`.
+Links to pages may leave out `.html`, as most hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
 
 It only knows about files in the build.
 If a server adds other files or routes, such as [on-demand rendered pages](https://docs.astro.build/en/guides/on-demand-rendering), add them to [`ignore`](#ignore).
+
+A few links aren't checked:
+
+- [Text fragments](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than ids
+- Heading anchors on pages marked both `noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
+
+`astro-check-links` requires Node.js 22 or newer.
 
 ## Options
 
 ### `aliases`
 
-Other URLs your site is served from, whose absolute links should be checked like links to `site`.
+Other origins your site is served from, whose absolute links should be checked like links to `site`.
 Defaults to `[]`.
 
 ```ts

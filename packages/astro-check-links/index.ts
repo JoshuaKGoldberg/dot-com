@@ -3,10 +3,10 @@ import type { AstroIntegration } from "astro";
 import { AstroError } from "astro/errors";
 import { LinkChecker, type LinkResult, LinkState } from "linkinator";
 import { once } from "node:events";
-import { mkdir, mkdtemp, rm, symlink } from "node:fs/promises";
-import { createServer } from "node:net";
-import { tmpdir } from "node:os";
-import { dirname, join, posix } from "node:path";
+import { createReadStream } from "node:fs";
+import { readdir } from "node:fs/promises";
+import { createServer } from "node:http";
+import { extname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 /**
@@ -14,8 +14,8 @@ import { fileURLToPath } from "node:url";
  */
 export interface CheckLinksOptions {
 	/**
-	 * Other URLs the site is served from, such as `"https://example.com"` for a
-	 * `site` of `"https://www.example.com"`.
+	 * Other origins the site is served from, such as `"https://example.com"`
+	 * for a `site` of `"https://www.example.com"`.
 	 * Absolute links to them are checked against the build, like links to `site`.
 	 */
 	aliases?: string[];
@@ -41,6 +41,11 @@ interface BrokenLink {
 	why: string;
 }
 
+const contentTypes: Record<string, string | undefined> = {
+	".css": "text/css",
+	".html": "text/html; charset=utf-8",
+};
+
 /**
  * Checks that links in the built site point to pages, files, and heading
  * anchors that exist in the build.
@@ -50,19 +55,32 @@ interface BrokenLink {
 export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 	const { aliases = [], failOnBrokenLinks = true, ignore = [] } = options;
 	let base = "/";
-	let cleanUrls = false;
 	let hosts = new Set<string>();
 
 	return {
 		hooks: {
 			"astro:build:done": async ({ dir, logger }) => {
-				const { broken, checked } = await findBrokenLinks({
-					base,
-					cleanUrls,
-					directory: fileURLToPath(dir),
-					hosts,
-					ignore,
-				});
+				let results: Awaited<ReturnType<typeof findBrokenLinks>>;
+
+				try {
+					results = await findBrokenLinks({
+						base,
+						directory: fileURLToPath(dir),
+						hosts,
+						ignore,
+					});
+				} catch (error) {
+					if (failOnBrokenLinks) {
+						throw error;
+					}
+
+					logger.warn(
+						`Could not check links: ${error instanceof Error ? error.message : String(error)}`,
+					);
+					return;
+				}
+
+				const { broken, checked } = results;
 
 				if (!broken.length) {
 					logger.info(
@@ -96,11 +114,18 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 			},
 			"astro:config:done": ({ config }) => {
 				base = config.base;
-				cleanUrls = config.build.format !== "directory";
 				hosts = new Set(
-					[...(config.site ? [config.site] : []), ...aliases].map(
-						(url) => new URL(url).host,
-					),
+					[...(config.site ? [config.site] : []), ...aliases].map((url) => {
+						const parsed = URL.parse(url);
+						if (!parsed) {
+							throw new AstroError(
+								`Invalid URL in the aliases option of checkLinks(): ${url}`,
+								'Aliases are full URLs, such as "https://example.com".',
+							);
+						}
+
+						return parsed.host;
+					}),
 				);
 			},
 		},
@@ -108,7 +133,7 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 	};
 }
 
-function describeBrokenLink(link: LinkResult): BrokenLink {
+function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
 	const messages = (link.failureDetails ?? [])
 		.map((detail) => ("message" in detail ? detail.message : ""))
 		.filter(Boolean);
@@ -116,56 +141,79 @@ function describeBrokenLink(link: LinkResult): BrokenLink {
 
 	return {
 		// linkinator reports links it couldn't parse as they were written
-		link: invalid ? link.url : toSitePath(link.url),
-		page: toSitePath(link.parent),
+		link: invalid ? link.url : toSitePath(link.url, local),
+		page: toSitePath(link.parent, local),
 		text: link.displayText,
 		why: messages.length
 			? messages.join(", ")
 			: invalid
 				? "Invalid URL"
-				: `HTTP ${String(link.status)}`,
+				: describeStatus(link),
 	};
+}
+
+function describeStatus(link: LinkResult) {
+	const pathname = URL.parse(link.url)?.pathname ?? "";
+
+	if (link.status === 404) {
+		if (pathname.includes("//")) {
+			return "Path has an empty segment (//), which doesn't match a file in the build";
+		}
+
+		try {
+			decodeURIComponent(pathname);
+		} catch {
+			return "Path has a % that isn't part of a valid escape, such as %25";
+		}
+	}
+
+	return `HTTP ${String(link.status)}`;
 }
 
 async function findBrokenLinks({
 	base,
-	cleanUrls,
 	directory,
 	hosts,
 	ignore,
 }: {
 	base: string;
-	cleanUrls: boolean;
 	directory: string;
 	hosts: Set<string>;
 	ignore: (RegExp | string)[];
 }) {
-	const port = await findOpenPort();
-	const local = `http://127.0.0.1:${String(port)}`;
+	const files = await listFiles(directory);
+	const server = await serveBuild(directory, files, base);
+	const address = server.address();
 
-	// Serving the build at its base path makes links outside of it fail, as on a host
-	const basePath = base.replace(/^\/+|\/+$/g, "");
-	const serverRoot = basePath
-		? await mkdtemp(join(tmpdir(), "astro-check-links-"))
-		: directory;
+	if (!address || typeof address === "string") {
+		throw new Error("Could not start a local server for the build.");
+	}
+
+	const local = `http://127.0.0.1:${String(address.port)}`;
+	const prefix = base.replace(/\/*$/, "/");
 
 	try {
-		if (basePath) {
-			const served = join(serverRoot, ...basePath.split("/"));
-			await mkdir(dirname(served), { recursive: true });
-			await symlink(directory, served, "junction");
-		}
-
 		const result = await new LinkChecker().check({
 			checkCss: true,
 			checkFragments: true,
-			cleanUrls,
+			// Text fragments, like #:~:text=hello, match text rather than ids
+			fragmentsToSkip: (fragment) =>
+				Promise.resolve(fragment.startsWith(":~:")),
 			// External links are out of scope, and would make builds depend on other sites
 			linksToSkip: (link) => Promise.resolve(shouldSkip(link)),
 			// Starting from every page and stylesheet also checks ones nothing links to
-			path: [posix.join(basePath, "**/*.{css,html}")],
-			port,
-			serverRoot,
+			path: files
+				.filter((file) => /\.(?:css|html)$/.test(file))
+				.map(
+					(file) =>
+						local +
+						prefix +
+						file
+							.replace(/(?:^|(?<=\/))index\.html$/, "")
+							.split("/")
+							.map(encodeURIComponent)
+							.join("/"),
+				),
 			urlRewriteExpressions: [...hosts].map((host) => ({
 				pattern: new RegExp(
 					`^https?://${host.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&")}(?=[/?#]|$)`,
@@ -176,23 +224,8 @@ async function findBrokenLinks({
 		});
 
 		const broken = result.links
-			.flatMap((link) => {
-				if (link.state === LinkState.BROKEN) {
-					return [describeBrokenLink(link)];
-				}
-
-				// The local server ignores empty path segments, but most hosts don't
-				if (link.state === LinkState.OK && hasEmptySegment(link.url)) {
-					return [
-						{
-							...describeBrokenLink(link),
-							why: "Path has an empty segment (//), which doesn't match a file in the build",
-						},
-					];
-				}
-
-				return [];
-			})
+			.filter((link) => link.state === LinkState.BROKEN)
+			.map((link) => describeBrokenLink(link, local))
 			.sort(
 				(a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link),
 			);
@@ -203,10 +236,8 @@ async function findBrokenLinks({
 				.length,
 		};
 	} finally {
-		if (basePath) {
-			// This removes the link to the build, not the build itself
-			await rm(serverRoot, { force: true, recursive: true });
-		}
+		server.closeAllConnections();
+		server.close();
 	}
 
 	function shouldSkip(link: string) {
@@ -230,32 +261,102 @@ async function findBrokenLinks({
 	}
 }
 
-async function findOpenPort() {
-	const server = createServer().listen(0, "127.0.0.1");
+async function listFiles(directory: string) {
+	const entries = await readdir(directory, {
+		recursive: true,
+		withFileTypes: true,
+	});
+
+	return entries
+		.filter((entry) => entry.isFile())
+		.map((entry) =>
+			relative(directory, join(entry.parentPath, entry.name))
+				.split(sep)
+				.join("/"),
+		);
+}
+
+/**
+ * Finds the file a static host would serve for a request's path, matching
+ * case exactly, or the path it would redirect to.
+ */
+function resolveRequest(
+	files: Set<string>,
+	prefix: string,
+	pathname: string,
+): undefined | { file: string } | { redirect: string } {
+	if (!pathname.startsWith(prefix)) {
+		return `${pathname}/` === prefix ? { redirect: prefix } : undefined;
+	}
+
+	let path: string;
+	try {
+		path = decodeURIComponent(pathname.slice(prefix.length));
+	} catch {
+		return undefined;
+	}
+
+	if (path.startsWith("/") || path.includes("//")) {
+		return undefined;
+	}
+
+	if (path === "" || path.endsWith("/")) {
+		return files.has(`${path}index.html`)
+			? { file: `${path}index.html` }
+			: undefined;
+	}
+
+	for (const file of [path, `${path}.html`]) {
+		if (files.has(file)) {
+			return { file };
+		}
+	}
+
+	return files.has(`${path}/index.html`)
+		? { redirect: `${pathname}/` }
+		: undefined;
+}
+
+// Serves the build under its base path, the way most static hosts do
+async function serveBuild(directory: string, files: string[], base: string) {
+	const known = new Set(files);
+	const prefix = base.replace(/\/*$/, "/");
+
+	const server = createServer((request, response) => {
+		const [pathname = "/", query] = (request.url ?? "/").split(/\?(.*)/s);
+		const resolved = resolveRequest(known, prefix, pathname);
+
+		if (!resolved) {
+			response.writeHead(404).end();
+		} else if ("redirect" in resolved) {
+			response
+				.writeHead(301, {
+					location: resolved.redirect + (query ? `?${query}` : ""),
+				})
+				.end();
+		} else {
+			response.writeHead(200, {
+				"content-type":
+					contentTypes[extname(resolved.file)] ?? "application/octet-stream",
+			});
+
+			if (request.method === "HEAD") {
+				response.end();
+			} else {
+				createReadStream(join(directory, resolved.file)).pipe(response);
+			}
+		}
+	});
+
+	server.listen(0, "127.0.0.1");
 	await once(server, "listening");
-	const address = server.address();
-	server.close();
 
-	if (!address || typeof address === "string") {
-		throw new Error("Could not find an open port for the link checker.");
-	}
-
-	return address.port;
+	return server;
 }
 
-function hasEmptySegment(url: string) {
-	return URL.parse(url, "http://localhost")?.pathname.includes("//") ?? false;
-}
-
-// linkinator reports local URLs relative to the server root, like blog/my-post/index.html
-function toSitePath(url = "") {
-	if (/^[a-z][\w+.-]*:/i.test(url)) {
-		return url;
-	}
-
-	const path = url
-		.replace(/^\.?\//, "")
-		.replace(/(?:^|(?<=\/))index\.html(?=[?#]|$)/, "");
-
-	return `/${path}`;
+// linkinator reports pages by their full local URL, like http://127.0.0.1:1234/blog/my-post/
+function toSitePath(url = "", local: string) {
+	return url.startsWith(`${local}/`)
+		? url.slice(local.length).replace(/(?<=\/)index\.html(?=[?#]|$)/, "")
+		: url;
 }
