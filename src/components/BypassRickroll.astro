@@ -1,0 +1,80 @@
+<script>
+	/**
+	 * With ?bypassRickroll=true, every link plays the same video as hi.joshuakgoldberg.com.
+	 * Never gonna let you down.
+	 */
+	function rickroll(event: KeyboardEvent | MouseEvent) {
+		// Right clicks and other buttons don't open links, so they're left alone
+		if (
+			(event instanceof MouseEvent && event.button > 1) ||
+			new URLSearchParams(location.search).get("bypassRickroll") !== "true" ||
+			!(event.target instanceof Element) ||
+			!event.target.closest("a[href], area[href]")
+		) {
+			return;
+		}
+
+		event.preventDefault();
+
+		if (document.querySelector("[data-rickroll]")) {
+			return;
+		}
+
+		// Visitors who've paused motion get to press play themselves
+		const autoplay =
+			document.documentElement.dataset.motion === "paused" ? "0" : "1";
+		const player = document.createElement("iframe");
+
+		player.allow = "autoplay; fullscreen";
+		player.src = `https://player.vimeo.com/video/438334658?autoplay=${autoplay}&loop=1&title=0&byline=0&portrait=0`;
+		player.title = "Never Gonna Give You Up - by Rick Astley";
+
+		// A modal dialog covers the whole page and keeps focus out of what's behind it
+		const dialog = document.createElement("dialog");
+		dialog.ariaLabel = player.title;
+		dialog.dataset.rickroll = "";
+		dialog.addEventListener("close", () => {
+			dialog.remove();
+		});
+		dialog.append(player);
+		document.body.append(dialog);
+		dialog.showModal();
+	}
+
+	// Capturing on the window comes before the router and any other link handlers,
+	// including ones that handle Enter themselves, such as the skip link's
+	addEventListener("auxclick", rickroll, { capture: true });
+	addEventListener("click", rickroll, { capture: true });
+	addEventListener(
+		"keydown",
+		(event) => {
+			if (event.key === "Enter") {
+				rickroll(event);
+			}
+		},
+		{ capture: true },
+	);
+</script>
+
+<style>
+	/* Like hi.joshuakgoldberg.com, nothing else shows or scrolls */
+	:global(:root:has([data-rickroll]:modal)) {
+		overflow: hidden;
+	}
+
+	:global([data-rickroll]) {
+		border: 0;
+		height: 100%;
+		max-height: none;
+		max-width: none;
+		padding: 0;
+		width: 100%;
+	}
+
+	:global([data-rickroll] iframe) {
+		border: 0;
+		display: block;
+		height: 100%;
+		width: 100%;
+	}
+</style>
