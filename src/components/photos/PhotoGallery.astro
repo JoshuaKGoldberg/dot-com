@@ -58,6 +58,7 @@ function formatDate(timestamp: string) {
 	{Astro.props.photos.map((photo, index) => (
 		<li
 			class="item"
+			id={photo.name}
 			style={{
 				"--caption": `photo-caption-${index.toString()}`,
 				"--photo": `photo-${index.toString()}`,
@@ -209,10 +210,61 @@ function formatDate(timestamp: string) {
 		}
 	}
 
+	/** Finds the photo that the page's #hash links to, if there is one. */
+	function getLinkedPhoto() {
+		let id;
+		try {
+			id = decodeURIComponent(location.hash.slice(1));
+		} catch {
+			return undefined;
+		}
+
+		const details = id
+			? document.getElementById(id)?.querySelector(":scope > details")
+			: undefined;
+
+		return details instanceof HTMLDetailsElement &&
+			details.closest("[data-photo-gallery]")
+			? details
+			: undefined;
+	}
+
+	/** Has the address link to whichever photo is open, so it can be shared. */
+	function linkOpenPhoto(gallery: HTMLElement) {
+		const id = gallery.querySelector(":scope > .item:has(> [open])")?.id;
+		const url = new URL(location.href);
+		url.hash = id ? encodeURIComponent(id) : "";
+
+		// Replacing rather than pushing keeps opening photos out of the back button
+		const href = url.href.replace(/#$/, "");
+		if (href !== location.href) {
+			history.replaceState(history.state, "", href);
+		}
+	}
+
 	// Runs on every visit to the page, including ones the router swaps in
 	document.addEventListener("astro:page-load", () => {
 		const gallery = document.querySelector<HTMLElement>("[data-photo-gallery]");
-		if (usesLanes || !gallery) {
+		if (!gallery) {
+			return;
+		}
+
+		// A link to one photo opens it straight away, without animating
+		const linked = getLinkedPhoto();
+		if (linked) {
+			const image = linked.querySelector<HTMLImageElement>(".image");
+			if (image) {
+				image.fetchPriority = "high";
+				image.loading = "eager";
+			}
+
+			linked.open = true;
+			enlarge(linked);
+			measure(gallery);
+			linked.scrollIntoView({ behavior: "instant", block: "start" });
+		}
+
+		if (usesLanes) {
 			return;
 		}
 
@@ -234,15 +286,26 @@ function formatDate(timestamp: string) {
 		);
 	});
 
+	// Opening a photo from a changed #hash, such as one typed into the address
+	window.addEventListener("hashchange", () => {
+		const linked = getLinkedPhoto();
+		if (linked && !linked.open) {
+			void toggle(linked);
+		}
+	});
+
 	// Photos can also open without a click, such as when the browser finds text in them
 	document.addEventListener(
 		"toggle",
 		(event) => {
-			if (
-				event.target instanceof HTMLDetailsElement &&
-				event.target.closest("[data-photo-gallery]")
-			) {
+			if (!(event.target instanceof HTMLDetailsElement)) {
+				return;
+			}
+
+			const gallery = event.target.closest<HTMLElement>("[data-photo-gallery]");
+			if (gallery) {
 				enlarge(event.target);
+				linkOpenPhoto(gallery);
 			}
 		},
 		{ capture: true },
