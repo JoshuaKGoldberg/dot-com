@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 
 import { Anchor } from "~/components/Anchor";
 import BodyContents from "~/components/BodyContents.astro";
+import HeroTertiary from "~/components/HeroTertiary.astro";
 import { SpeakingsTabbed } from "~/components/speaking/SpeakingsTabbed";
 
 import { speakingDescription } from "../constants";
@@ -21,6 +22,12 @@ const speakings = (await getCollection("speaking")).map(({ data }) => data);
 	<Fragment slot="secondary">
 		I talk about static analysis and co-organize <Anchor href="https://squiggleconf.com" target="_blank">SquiggleConf</Anchor>.
 	</Fragment>
+	<!-- prettier-ignore -->
+	<HeroTertiary slot="tertiary">
+		For publicity and vanity stills of me,
+		<br />
+		see my <Anchor href="/photos">photos</Anchor> page.
+	</HeroTertiary>
 	<BodyContents>
 		<SpeakingsTabbed client:load now={Date.now()} speakings={speakings} />
 	</BodyContents>

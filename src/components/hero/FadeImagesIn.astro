@@ -1,0 +1,50 @@
+---
+interface Props {
+	/** Also runs after page transitions, for images that load well after them, such as lazy ones. */
+	rerun?: boolean;
+
+	/** Only fades in images within elements matching this selector. */
+	within?: string;
+}
+
+const { rerun, within = "" } = Astro.props;
+---
+
+<script data-astro-rerun={rerun} define:vars={{ within }}>
+	/**
+	 * Fades in images that weren't loaded by the time they'd first be painted.
+	 *
+	 * Inline so that it hides them before then, and only if scripts are running.
+	 * Unless told to rerun, it only runs on full page loads, as page transitions have fades of their own.
+	 */
+	for (const image of document.querySelectorAll(
+		`${within} img[data-fades-in]:not([data-fades-in='handled'])`.trim(),
+	)) {
+		// Pages with more than one of these only fade each image in once
+		image.dataset.fadesIn = "handled";
+
+		if (
+			image.complete ||
+			document.documentElement.dataset.motion === "paused"
+		) {
+			continue;
+		}
+
+		const show = () => {
+			image.style.removeProperty("opacity");
+
+			// Motion may have been paused since
+			if (document.documentElement.dataset.motion === "paused") {
+				return;
+			}
+
+			image.animate([{ offset: 0, opacity: 0 }], {
+				duration: 490,
+				easing: "ease-out",
+			});
+		};
+
+		image.style.opacity = "0";
+		image.decode().then(show, show);
+	}
+</script>

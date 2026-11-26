@@ -8,7 +8,7 @@
 	text-wrap: pretty;
 }
 
-.article a:not(:has(img)) {
+.article a:not(:has(img), :where([data-heading-link])) {
 	--squiggleOpacity: 70%;
 	--squiggleThickness: 2px;
 
@@ -41,7 +41,11 @@
 	padding-bottom: 0.1em;
 }
 
-.article a:is(:focus-visible, :hover):not(:global([data-squiggle-live])) {
+.article
+	a:is(:focus-visible, :hover):not(
+		:global([data-squiggle-live]),
+		[data-heading-link]
+	) {
 	background: none;
 	text-decoration: underline wavy var(--squiggleThickness)
 		color-mix(
@@ -58,7 +62,7 @@
 
 /* Backgrounds aren't shown in either of these */
 @media print, (forced-colors: active) {
-	.article a:not(:has(img)) {
+	.article a:not(:has(img), :where([data-heading-link])) {
 		text-decoration: underline;
 	}
 }

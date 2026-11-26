@@ -21,14 +21,12 @@
 			]
 		},
 		{
-			"description": "The Engines Check job installs on the minimum Node.js version from package.json's engines, so keep the two in sync manually.",
+			"description": "The Engines Check job's Node.js version is the minimum from engines.node.",
 			"enabled": false,
 			"matchDepNames": ["node"],
 			"matchFileNames": [".github/workflows/ci.yaml"]
 		}
 	],
-	"patch": {
-		"enabled": false
-	},
+	"patch": { "enabled": false },
 	"postUpdateOptions": ["pnpmDedupe"]
 }

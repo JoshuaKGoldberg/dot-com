@@ -5,6 +5,9 @@ import blogScene from "~/assets/heroes/blog-scene.webp";
 import blog from "~/assets/heroes/blog.webp";
 import homeHalo from "~/assets/heroes/home-halo.webp";
 import home from "~/assets/heroes/home.webp";
+import photosHalo from "~/assets/heroes/photos-halo.webp";
+import photosScene from "~/assets/heroes/photos-scene.webp";
+import photos from "~/assets/heroes/photos.webp";
 import projectsHalo from "~/assets/heroes/projects-halo.webp";
 import projectsScene from "~/assets/heroes/projects-scene.webp";
 import projects from "~/assets/heroes/projects.webp";
@@ -27,7 +30,7 @@ export interface Portrait {
 	scene?: ImageMetadata;
 }
 
-export type PortraitName = "blog" | "home" | "projects" | "speaking";
+export type PortraitName = "blog" | "home" | "photos" | "projects" | "speaking";
 
 export const portraits: Record<PortraitName, Portrait> = {
 	blog: {
@@ -41,6 +44,12 @@ export const portraits: Record<PortraitName, Portrait> = {
 		halo: homeHalo,
 		image: home,
 	},
+	photos: {
+		alt: "Josh speaking excitedly into a microphone while wearing a shiny silver space suit",
+		halo: photosHalo,
+		image: photos,
+		scene: photosScene,
+	},
 	projects: {
 		alt: "Josh smiling warmly in a grey zip-up fleece",
 		halo: projectsHalo,
@@ -49,7 +58,7 @@ export const portraits: Record<PortraitName, Portrait> = {
 		scene: projectsScene,
 	},
 	speaking: {
-		alt: "Josh speaking excitedly into a microphone while wearing a shiny silver space suit",
+		alt: "Josh grinning up from the stage in a blue goose-patterned sweater, holding a microphone",
 		halo: speakingHalo,
 		image: speaking,
 		scene: speakingScene,

@@ -9,6 +9,7 @@ import {
 import {
 	blogDescription,
 	homeTagline,
+	photosDescription,
 	projectsDescription,
 	siteName,
 	speakingDescription,
@@ -27,6 +28,7 @@ interface Props {
 const pages: Record<PortraitName, { subtitle: string; title: string }> = {
 	blog: { subtitle: blogDescription, title: "Goldblog" },
 	home: { subtitle: homeTagline, title: siteName },
+	photos: { subtitle: photosDescription, title: "Photos" },
 	projects: { subtitle: projectsDescription, title: "Projects" },
 	speaking: { subtitle: speakingDescription, title: "Speaking" },
 };

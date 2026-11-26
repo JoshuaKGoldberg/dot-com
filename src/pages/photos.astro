@@ -1,0 +1,27 @@
+---
+import BodyContents from "~/components/BodyContents.astro";
+import HeroTertiary from "~/components/HeroTertiary.astro";
+import PhotoGallery from "~/components/photos/PhotoGallery.astro";
+import { photos } from "~/photos";
+
+import { photosDescription } from "../constants";
+import HeroLayout from "../layouts/HeroLayout.astro";
+---
+
+<HeroLayout
+	description={photosDescription}
+	portrait="photos"
+	primary="Photos"
+	title="Photos"
+>
+	<Fragment slot="secondary">{photosDescription}</Fragment>
+	<HeroTertiary size="wide" slot="tertiary">
+		I mostly use this page for my own ego and reference.
+		<br />
+		Please enjoy.
+	</HeroTertiary>
+
+	<BodyContents>
+		<PhotoGallery photos={photos} />
+	</BodyContents>
+</HeroLayout>

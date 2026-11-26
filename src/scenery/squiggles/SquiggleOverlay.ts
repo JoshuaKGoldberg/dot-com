@@ -1,13 +1,16 @@
 import { cacheLayout } from "../cacheLayout";
 import { createFrameTask } from "../frameLoop";
-import { getDistance } from "../geometry";
+import { getDistance, type Rectangle } from "../geometry";
 import { clamp } from "../math";
 import { onPageScroll, pageScroll } from "../pageScroll";
 import { onPointer, pointer } from "../pointer";
 import { onPause } from "../rootState";
+import { measureLines } from "./measureLines";
 import { type LinkLine, Squiggle } from "./Squiggle";
 
 interface MeasuredLink {
+	/** What's hovered, which can extend past the ends of lines. */
+	boxes: Rectangle[];
 	lines: LinkLine[];
 	link: HTMLElement;
 }
@@ -18,7 +21,7 @@ const reach = 96;
 
 /** Links that have squiggles, other than those that show what's current. */
 const selector =
-	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img))";
+	"[data-squiggle]:not([data-squiggle=current]), article a:not(:has(img), [data-heading-link])";
 
 /** Squiggles are inside of the page's scrolling content, so they stay with their links. */
 export class SquiggleOverlay {
@@ -49,6 +52,11 @@ export class SquiggleOverlay {
 			},
 			{ signal },
 		);
+		addEventListener("resize", markWrapped, { signal });
+		document.addEventListener("focusin", markWrapped, { signal });
+		// Taps only start hovering links after their pointerover
+		document.addEventListener("mouseover", markWrapped, { signal });
+		void document.fonts.ready.then(markWrapped);
 		document.addEventListener("focusin", scan, { signal });
 		document.addEventListener("focusout", scan, { signal });
 		onPageScroll(() => {
@@ -94,8 +102,8 @@ export class SquiggleOverlay {
 		// Links keep their own underlines then, as these aren't shown
 		const isPresent = pointer.isPresent && !forcedColors.matches;
 
-		for (const { lines, link } of this.#measureLinks()) {
-			const nearness = isPresent ? clamp(1 - getNearest(lines) / reach) : 0;
+		for (const { boxes, link } of this.#measureLinks()) {
+			const nearness = isPresent ? clamp(1 - getNearest(boxes) / reach) : 0;
 			let squiggle = this.#squiggles.get(link);
 
 			if (!squiggle && nearness) {
@@ -135,37 +143,51 @@ export class SquiggleOverlay {
 	}
 }
 
-function getNearest(lines: readonly LinkLine[]) {
+function getNearest(boxes: readonly Rectangle[]) {
 	const { x, y } = pointer;
 
 	return Math.min(
-		...lines.map((line) => getDistance({ x, y: y + pageScroll.top }, line)),
+		...boxes.map((box) => getDistance({ x, y: y + pageScroll.top }, box)),
 	);
+}
+
+/** Static squiggles can't follow lines themselves, so links that have one are marked. */
+function markWrapped() {
+	for (const link of document.querySelectorAll<HTMLElement>(
+		"[data-squiggle=onHover]:is(:focus, :hover)",
+	)) {
+		link.toggleAttribute("data-wrapped", measureLines(link).length > 1);
+	}
 }
 
 /** Finds each line of each link that's on screen, or almost, in the page's coordinates. */
 function measureLinks(): MeasuredLink[] {
 	const scroll = pageScroll.top;
+	const isOnScreen = ({ bottom, left, right, top }: Rectangle) =>
+		right - left > 1 && bottom > -reach && top < innerHeight + reach;
+	const toPage = ({ bottom, left, right, top }: Rectangle) => ({
+		bottom: bottom + scroll,
+		left,
+		right,
+		top: top + scroll,
+	});
 
 	return Array.from(
 		document.querySelectorAll<HTMLElement>(selector),
-		(link) => ({
-			lines: Array.from(link.getClientRects())
-				.filter(
-					({ bottom, top, width }) =>
-						width > 1 && bottom > -reach && top < innerHeight + reach,
-				)
-				.map(({ bottom, left, right, top }) => ({
-					bottom: bottom + scroll,
-					left,
-					right,
-					top: top + scroll,
-				})),
-			link,
-		}),
+		(link) => {
+			const boxes = Array.from(link.getClientRects()).filter(isOnScreen);
+
+			return {
+				boxes: boxes.map(toPage),
+				lines: boxes.length
+					? measureLines(link).filter(isOnScreen).map(toPage)
+					: [],
+				link,
+			};
+		},
 	).filter(
-		({ lines, link }) =>
+		({ boxes, link }) =>
 			// Contents of closed details still have positions, despite not being visible
-			lines.length && link.checkVisibility({ visibilityProperty: true }),
+			boxes.length && link.checkVisibility({ visibilityProperty: true }),
 	);
 }

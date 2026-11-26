@@ -28,7 +28,18 @@ export const collections = {
 			date: z.date(),
 			event: z.string(),
 			href: z.string(),
-			links: z.record(z.string(), z.string()).optional(),
+			links: z
+				.record(
+					z.string(),
+					z.union([
+						z.string(),
+						z.object({
+							href: z.string(),
+							timestamps: z.array(z.string()),
+						}),
+					]),
+				)
+				.optional(),
 			location: z.string().optional(),
 			title: z.string().optional(),
 		}),

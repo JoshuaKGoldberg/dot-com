@@ -91,6 +91,20 @@
 	}
 }
 
+/* Images would only be below the last of multiple lines */
+.squiggly[data-wrapped]::after {
+	visibility: hidden;
+}
+
+.squiggly[data-wrapped]:is(:focus-visible, :hover):not([data-squiggle-live]) {
+	text-decoration-color: var(--squiggleMiddle);
+	text-decoration-line: underline;
+	text-decoration-skip-ink: none;
+	text-decoration-style: wavy;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
 /* While the pointer is close, <squiggle-overlay> draws this link's squiggle instead */
 .squiggly[data-squiggle-live]::after {
 	visibility: hidden;
