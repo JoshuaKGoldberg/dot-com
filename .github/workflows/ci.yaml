@@ -22,6 +22,8 @@ jobs:
               annotations: "true"
           - name: Lint Knip
             run: pnpm lint:knip
+          - name: Lint Links
+            run: pnpm lint:links
           - name: Lint Spelling
             run: pnpm lint:spelling
 
