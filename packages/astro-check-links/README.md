@@ -47,6 +47,7 @@ export default defineConfig({
 Links to pages may leave out `.html`, as many hosts serve `/about.html` for `/about`, so it works with any [`build.format`](https://docs.astro.build/en/reference/configuration-reference/#buildformat).
 
 It only knows about files in the build, not your host's own rules, such as `_redirects` files.
+That includes Astro's [`redirects`](https://docs.astro.build/en/reference/configuration-reference/#redirects) when [`build.redirects`](https://docs.astro.build/en/reference/configuration-reference/#buildredirects) is `false`, as some adapters set it.
 If a server adds other files or routes, such as [on-demand rendered pages](https://docs.astro.build/en/guides/on-demand-rendering) and endpoints, add them to [`ignore`](#ignore).
 
 A few links aren't checked:

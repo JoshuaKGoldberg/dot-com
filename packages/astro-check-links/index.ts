@@ -254,15 +254,24 @@ async function findBrokenLinks({
 			}),
 		);
 
-		const broken = result.links
-			.filter((link) => link.state === LinkState.BROKEN)
-			.map((link) => describeBrokenLink(link, local))
-			.sort(
-				(a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link),
-			);
+		// Absolute links to the site can repeat links that were written as paths
+		const broken = new Map<string, BrokenLink>();
+		for (const link of result.links) {
+			if (link.state === LinkState.BROKEN) {
+				const described = describeBrokenLink(link, local);
+				const key = JSON.stringify([described.page, described.link]);
+				const existing = broken.get(key);
+				broken.set(key, {
+					...described,
+					text: existing?.text ?? described.text,
+				});
+			}
+		}
 
 		return {
-			broken,
+			broken: [...broken.values()].sort(
+				(a, b) => a.page.localeCompare(b.page) || a.link.localeCompare(b.link),
+			),
 			checked: result.links.filter((link) => link.state === LinkState.OK)
 				.length,
 		};
