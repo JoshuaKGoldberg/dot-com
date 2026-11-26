@@ -40,15 +40,6 @@ const channels = [
 		bluesky,
 	],
 	[
-		"Share by email",
-		createLink("mailto:", {
-			// Line breaks in email bodies are specified to be CRLF
-			body: createText(siteName).replaceAll("\n", "\r\n"),
-			subject: title,
-		}),
-		email,
-	],
-	[
 		"Share on LinkedIn",
 		createLink("https://linkedin.com/sharing/share-offsite/", { url }),
 		linkedin,
@@ -59,6 +50,15 @@ const channels = [
 			text: createText("@JoshuaKGoldberg@fosstodon.org"),
 		}),
 		mastodon,
+	],
+	[
+		"Share by email",
+		createLink("mailto:", {
+			// Line breaks in email bodies are specified to be CRLF
+			body: createText(siteName).replaceAll("\n", "\r\n"),
+			subject: title,
+		}),
+		email,
 	],
 ] as const;
 ---
