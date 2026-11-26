@@ -38,9 +38,9 @@ const settled = { nearness: 0.005, shift: 0.2 };
 const currentSelector =
 	"[data-header-link][aria-current], [role=tab][aria-selected=true] > *";
 
-const selector = `[data-header-link], ${currentSelector}`;
+const selector = `[data-header-link], [data-lit-icon], ${currentSelector}`;
 
-/** Lights up header links and current tabs where the pointer is near them. */
+/** Lights up header links, icons, and current tabs where the pointer is near them. */
 export class LitLinks {
 	readonly #colorings = new Map<HTMLElement, Coloring>();
 	readonly #measureLinks: () => MeasuredLink[];
