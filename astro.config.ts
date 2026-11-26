@@ -5,7 +5,7 @@ import solidJs from "@astrojs/solid-js";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 
-import { cssModuleTypes } from "./integrations/astro-css-module-types";
+import { cssModuleTypes } from "./packages/astro-css-module-types";
 import { bookTitle, site } from "./src/constants";
 
 // https://astro.build/config

@@ -27,7 +27,7 @@ Each of those also deletes generated files whose CSS modules no longer exist.
 // astro.config.ts
 import { defineConfig } from "astro/config";
 
-import { cssModuleTypes } from "./integrations/astro-css-module-types";
+import { cssModuleTypes } from "./packages/astro-css-module-types";
 
 export default defineConfig({
 	integrations: [cssModuleTypes()],
