@@ -110,6 +110,12 @@ export function openLinkedPhoto(scroll: boolean) {
 					"load",
 					() => {
 						delete gallery.dataset.linksOnLoad;
+
+						// The router may have swapped in another page since
+						if (!gallery.isConnected) {
+							return;
+						}
+
 						const open = gallery.querySelector(":scope > .item:has(> [open])");
 						if (open) {
 							history.replaceState(

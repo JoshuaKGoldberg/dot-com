@@ -164,7 +164,7 @@ function formatDate(timestamp: string) {
 		</li>
 	))}
 </ul>
-<script is:inline set:html={prepareInline} />
+<script data-astro-rerun is:inline set:html={prepareInline} />
 <FadeImagesIn rerun within="[data-photo-gallery]" />
 
 <script>
@@ -218,13 +218,15 @@ function formatDate(timestamp: string) {
 		return loading;
 	}
 
-	/** The photo transition that's running, if one is. */
+	/** The photo transition that's running, if one is, and how many have run. */
 	let transitioning: ViewTransition | undefined;
+	let transitions = 0;
 
 	/** Runs a photo transition, tidying up after it once no newer one has started since. */
 	function run(types: string[], update: () => unknown) {
 		const transition = document.startViewTransition({ types, update });
 		transitioning = transition;
+		transitions += 1;
 
 		// Scrolling mid-transition would leave its photos behind, so it skips to the end instead
 		const skip = () => {
@@ -462,6 +464,15 @@ function formatDate(timestamp: string) {
 		const linked = getLinkedPhoto();
 		if (linked && !linked.open) {
 			toggle(linked);
+			return;
+		}
+
+		// Going back to the page without any hash goes back to no photo being open
+		const open = document.querySelector<HTMLDetailsElement>(
+			"[data-photo-gallery] details[open]",
+		);
+		if (!location.hash && open) {
+			toggle(open);
 		}
 	});
 
@@ -568,38 +579,87 @@ function formatDate(timestamp: string) {
 		});
 	}
 
+	/**
+	 * Finds what's drawn at a point mid-transition: the header, which stays over everything,
+	 * else whichever photo is there at that moment, else whatever's there once it's done.
+	 */
+	function getDrawnAt(x: number, y: number) {
+		const header = document.querySelector("header")?.getBoundingClientRect();
+		const inHeader =
+			header &&
+			x >= header.left &&
+			x <= header.right &&
+			y >= header.top &&
+			y <= header.bottom;
+
+		return (
+			(!inHeader &&
+				getMovingPhotoAt(x, y)?.querySelector<HTMLElement>("summary")) ||
+			document.documentElement
+		);
+	}
+
 	// Browsers send every pointer event to the page's root while a transition runs,
-	// so pressing during one skips to its end, then clicks whatever was drawn there
-	let redirecting: Element | undefined;
+	// so a press during one, or one that a transition then starts during, still clicks what it was on
+	let pressed: Element | undefined;
+	let pressedBefore = 0;
+	let pressedDuring = false;
 	document.addEventListener(
 		"pointerdown",
 		(event) => {
-			if (!transitioning || event.target !== document.documentElement) {
+			pressed = undefined;
+			pressedBefore = transitions;
+			pressedDuring = false;
+			if (event.button !== 0 || !(event.target instanceof Element)) {
 				return;
 			}
 
-			redirecting =
-				getMovingPhotoAt(event.clientX, event.clientY)?.querySelector(
-					"summary",
-				) ?? document.documentElement;
-			transitioning.skipTransition();
+			if (event.target !== document.documentElement) {
+				pressed = event.target;
+			} else if (transitioning) {
+				pressed = getDrawnAt(event.clientX, event.clientY);
+				pressedDuring = true;
+				transitioning.skipTransition();
+			}
 		},
 		{ capture: true },
 	);
+
+	// Presses that don't end in a click, such as right clicks, aren't redirected later on
+	for (const type of ["auxclick", "contextmenu", "pointercancel"]) {
+		document.addEventListener(
+			type,
+			() => {
+				pressed = undefined;
+			},
+			{ capture: true },
+		);
+	}
+
 	document.addEventListener(
 		"click",
 		(event) => {
-			const photo = redirecting;
-			redirecting = undefined;
-			if (!photo || event.target !== document.documentElement) {
+			// Clicks made by scripts aren't the visitor's, so don't use up their press
+			if (!event.isTrusted) {
 				return;
 			}
 
-			// Anything else is wherever it is now, as only photos move
+			const original = pressed;
+			pressed = undefined;
+			if (!original || event.target !== document.documentElement) {
+				return;
+			}
+
+			// Presses before any transition only lost their click if one started since
+			if (!pressedDuring && transitions === pressedBefore) {
+				return;
+			}
+
+			// The page's root itself stands for wherever the press was, now that nothing's moving
 			const target =
-				photo === document.documentElement
+				original === document.documentElement
 					? document.elementFromPoint(event.clientX, event.clientY)
-					: photo;
+					: original;
 			if (!target || target === document.documentElement) {
 				return;
 			}
