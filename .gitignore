@@ -4,3 +4,4 @@
 .wrangler/
 /node_modules
 dist/
+*.module.css.d.ts
