@@ -1,0 +1,183 @@
+---
+import { Text } from "./Text";
+
+interface Props {
+	href: string;
+	text: string;
+}
+
+const { href, text } = Astro.props;
+---
+
+<aside aria-label="Draft preview" class="previewNotice" data-preview-notice>
+	<Text as="p" class="text" fontSize="small" tone="strong">
+		<strong>This is a draft preview.</strong> It may change before it’s
+		published, so please share{" "}
+		<a class="link" href={href}>
+			{text}
+		</a>{" "}
+		instead.
+	</Text>
+</aside>
+
+<script>
+	const getNotice = () =>
+		document.querySelector<HTMLElement>("[data-preview-notice]");
+
+	let previousTop = 0;
+
+	/** Like skipOffscreen's elements, it only comes or goes with pages it's in view on. */
+	function skipIfOffscreen(notice: HTMLElement) {
+		const { bottom, top } = notice.getBoundingClientRect();
+
+		notice.style.viewTransitionName =
+			bottom > 0 && top < innerHeight ? "" : "none";
+	}
+
+	// After the whole loader runs, just before the previous page is captured
+	document.addEventListener("astro:after-preparation", () => {
+		const notice = getNotice();
+		if (notice) {
+			skipIfOffscreen(notice);
+		}
+	});
+
+	// Just after it's captured, as it's swapped out
+	document.addEventListener("astro:before-swap", () => {
+		previousTop = getNotice()?.getBoundingClientRect().top ?? 0;
+	});
+
+	// Keeps the previous page's notice where it was as it fades out, like the page's content
+	document.addEventListener("astro:after-swap", () => {
+		const notice = getNotice();
+		if (notice) {
+			const shift = previousTop - notice.getBoundingClientRect().top;
+			document.documentElement.style.setProperty(
+				"--previewNoticeShift",
+				`${shift.toString()}px`,
+			);
+			skipIfOffscreen(notice);
+		}
+	});
+</script>
+
+<style>
+	/* First in reading order, and first on the page, above the header */
+	.previewNotice {
+		margin: 1rem var(--widthPagePadding) 0;
+		position: relative;
+		view-transition-name: preview-notice;
+		z-index: 1;
+	}
+
+	/* Wider screens fix the header to the top, so it goes just under the header instead,
+	   leaving whatever comes next a little farther below it than it'd be below the header */
+	@media screen and (width >= 43.75em) {
+		.previewNotice {
+			margin-bottom: -5rem;
+			margin-top: 6rem;
+		}
+
+		/* The home page's portrait reaches up into the room it would've had under the header */
+		:global([data-fits-screen]) > .previewNotice {
+			margin-bottom: -4rem;
+		}
+
+		/* Without scroll timelines, the header's fader is always there, so this goes below it */
+		@supports not (animation-timeline: scroll()) {
+			.previewNotice {
+				margin-top: var(--heightMinimumFromHeader);
+			}
+		}
+
+		/* The header's fader fades in as the page scrolls, so this fades out before it's beneath it */
+		@supports (animation-timeline: scroll()) {
+			.previewNotice {
+				animation-fill-mode: both;
+				animation-name: preview-notice-out;
+				animation-range: 0 2.5rem;
+				animation-timeline: --page;
+				animation-timing-function: linear;
+			}
+		}
+	}
+
+	/* Once it's gone, it can't be clicked where it was */
+	@keyframes preview-notice-out {
+		99% {
+			pointer-events: auto;
+		}
+
+		to {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
+
+	/* Beside the table of contents on blog posts, so it keeps to the column beside it */
+	@media screen and (width >= 63.5625em) {
+		.previewNotice {
+			margin-inline: 0;
+			max-width: var(--widthSlim);
+		}
+	}
+
+	/* Like the page's content, it leaves before the next page arrives, never drawn over */
+	:global(::view-transition-group(preview-notice)) {
+		animation: none;
+	}
+
+	:global(::view-transition-old(preview-notice)) {
+		animation: page-out var(--transitionPageOut) ease-in both;
+		translate: 0 var(--previewNoticeShift, 0px);
+	}
+
+	/* Without a new one, it's already where it was */
+	:global(::view-transition-old(preview-notice):only-child) {
+		translate: none;
+	}
+
+	:global(::view-transition-new(preview-notice)) {
+		animation: page-in 320ms ease-out var(--transitionPageOut) both;
+	}
+
+	/* Like the page's content, it stays put while photos open and close */
+	:global(
+		:active-view-transition-type(photo)::view-transition-old(preview-notice)
+	) {
+		display: none;
+	}
+
+	:global(
+		:active-view-transition-type(photo)::view-transition-new(preview-notice)
+	) {
+		animation: none;
+	}
+
+	.text {
+		background: var(--colorSubtle);
+		border: 2px solid var(--colorEmphasized);
+		border-radius: 0.5rem;
+		line-height: var(--lineHeightParagraph);
+		margin: 0;
+		padding: 0.75rem 1rem;
+		text-align: center;
+		text-wrap: balance;
+	}
+
+	strong {
+		font-weight: var(--fontWeightBold);
+	}
+
+	/* Focusing it scrolls all the way back up, where it's not faded */
+	.link {
+		color: inherit;
+		scroll-margin-top: 5rem;
+		text-decoration: underline wavy var(--colorEmphasized) 1px;
+		text-underline-offset: 0.3em;
+
+		&:hover {
+			color: var(--colorEmphasized);
+		}
+	}
+</style>
