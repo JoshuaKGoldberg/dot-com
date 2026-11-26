@@ -56,7 +56,7 @@ A few links aren't checked:
 - Fragments with a [text directive](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments), like `#:~:text=hello`, as they match text rather than only ids
 - Heading anchors on pages whose HTML contains both `content="noindex` and `nofollow`, which [linkinator](https://github.com/JustinBeckwith/linkinator) treats as "not found" pages
 
-`astro-check-links` requires Node.js 22 or newer.
+`astro-check-links` requires Node.js 22.19 or newer.
 
 ## Options
 

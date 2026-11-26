@@ -60,6 +60,7 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 	const { aliases = [], failOnBrokenLinks = true, ignore = [] } = options;
 	let base = "/";
 	let hosts = new Set<string>();
+	let origin: string | undefined;
 
 	return {
 		hooks: {
@@ -72,6 +73,7 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 						directory: fileURLToPath(dir),
 						hosts,
 						ignore,
+						origin,
 					});
 				} catch (error) {
 					if (failOnBrokenLinks) {
@@ -127,9 +129,8 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 					);
 				}
 
-				base = config.base;
-				hosts = new Set(
-					[...(config.site ? [config.site] : []), ...aliases].map((url) => {
+				const urls = [...(config.site ? [config.site] : []), ...aliases].map(
+					(url) => {
 						const parsed = URL.parse(url);
 						if (!parsed?.host || !/^https?:$/.test(parsed.protocol)) {
 							throw new AstroError(
@@ -138,9 +139,13 @@ export function checkLinks(options: CheckLinksOptions = {}): AstroIntegration {
 							);
 						}
 
-						return parsed.host;
-					}),
+						return parsed;
+					},
 				);
+
+				base = config.base;
+				hosts = new Set(urls.map((url) => url.host));
+				origin = urls[0]?.origin;
 			},
 		},
 		name: "astro-check-links",
@@ -165,19 +170,26 @@ function createSiteRewriter(
 	const escape = (text: string) =>
 		text.replaceAll(/[$()*+.?[\\\]^{|}]/g, "\\$&");
 	const origins = `(?:https?:)?//(?:${[...hosts].map(escape).join("|")})`;
-	const paths = [...new Set([base.replace(/\/*$/, "/"), prefix])]
+	const roots = [...new Set([base.replace(/\/*$/, ""), prefix.slice(0, -1)])]
 		.map(escape)
 		.join("|");
-	const inBase = new RegExp(`${origins}(?=${paths})`, "gi");
-	const bare = new RegExp(`${origins}(?=[?#"'\\s<>)]|$)`, "gi");
+	const inBase = new RegExp(
+		`${origins}(?=(?:${roots})(?:/|[?#"'\\s<>)]|$))`,
+		"gi",
+	);
 
-	return (text: string) =>
-		prefix === "/"
-			? text.replace(inBase, local).replace(bare, `${local}/`)
-			: text.replace(inBase, local);
+	return (text: string) => text.replace(inBase, local);
 }
 
-function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
+function describeBrokenLink(
+	link: LinkResult,
+	local: string,
+	origin: string | undefined,
+): BrokenLink {
+	// Text from the served build has the local server in place of the site
+	const restoreSite = (text: string) =>
+		origin ? text.replaceAll(local, origin) : text;
+
 	const messages = (link.failureDetails ?? [])
 		.map((detail) => ("message" in detail ? detail.message : ""))
 		.filter(Boolean);
@@ -185,18 +197,18 @@ function describeBrokenLink(link: LinkResult, local: string): BrokenLink {
 
 	return {
 		// linkinator reports links it couldn't parse as they were written
-		link: invalid ? link.url : toSitePath(link.url, local),
+		link: invalid ? restoreSite(link.url) : toSitePath(link.url, local),
 		page: link.parent
 			? toSitePath(link.parent, local).replace(
 					/(?<=\/)index\.html(?=[?#]|$)/,
 					"",
 				)
 			: "",
-		text: link.displayText,
+		text: link.displayText && restoreSite(link.displayText),
 		why: messages.length
 			? messages.join(", ")
 			: invalid
-				? describeInvalidLink(link.url)
+				? describeInvalidLink(restoreSite(link.url))
 				: describeStatus(link),
 	};
 }
@@ -230,11 +242,13 @@ async function findBrokenLinks({
 	directory,
 	hosts,
 	ignore,
+	origin,
 }: {
 	base: string;
 	directory: string;
 	hosts: Set<string>;
 	ignore: (RegExp | string)[];
+	origin: string | undefined;
 }) {
 	const files = await listFiles(directory);
 	const prefix = new URL(base.replace(/\/*$/, "/"), "http://localhost")
@@ -277,11 +291,11 @@ async function findBrokenLinks({
 			}),
 		);
 
-		// Absolute links to the site can repeat links that were written as paths
+		// Links that can't be parsed are reported once per time they appear
 		const broken = new Map<string, BrokenLink>();
 		for (const link of result.links) {
 			if (link.state === LinkState.BROKEN) {
-				const described = describeBrokenLink(link, local);
+				const described = describeBrokenLink(link, local, origin);
 				const key = JSON.stringify([described.page, described.link]);
 				const existing = broken.get(key);
 				broken.set(key, {
