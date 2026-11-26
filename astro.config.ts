@@ -5,7 +5,8 @@ import solidJs from "@astrojs/solid-js";
 import { konamiEmojiBlast } from "@konami-emoji-blast/astro";
 import { defineConfig, fontProviders, sharpImageService } from "astro/config";
 
-import { bookTitle, site } from "./src/constants";
+import { checkLinks } from "./packages/astro-check-links";
+import { bookTitle, feedSite, site } from "./src/constants";
 
 // https://astro.build/config
 export default defineConfig({
@@ -71,7 +72,19 @@ export default defineConfig({
 		],
 		service: sharpImageService(),
 	},
-	integrations: [konamiEmojiBlast(), solidJs(), mdx(), sitemap()],
+	integrations: [
+		konamiEmojiBlast(),
+		solidJs(),
+		mdx(),
+		sitemap(),
+		checkLinks({
+			aliases: [feedSite],
+			// Only CI fails on broken links, so they don't block deploys
+			failOnBrokenLinks: !!process.env.GITHUB_ACTIONS,
+			// The site's Worker serves these from its R2 bucket, outside of the build
+			ignore: ["/img/"],
+		}),
+	],
 	markdown: {
 		processor: unified(),
 		syntaxHighlight: "prism",
