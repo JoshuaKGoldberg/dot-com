@@ -50,6 +50,9 @@ export function cssModuleTypes(
 
 	const queues = new Map<string, Promise<void>>();
 
+	// Files each CSS module @imports, so dev can update it when they change
+	const dependencies = new Map<string, Set<string>>();
+
 	const isWatched = (file: string) =>
 		cssModulePattern.test(file) &&
 		directories.some(
@@ -81,6 +84,7 @@ export function cssModuleTypes(
 			code = await fs.readFile(file, "utf8");
 		} catch (error) {
 			if (isNotFound(error)) {
+				dependencies.delete(file);
 				await removeGenerated(`${file}.d.ts`);
 				return;
 			}
@@ -89,13 +93,19 @@ export function cssModuleTypes(
 		}
 
 		if (isRoute(file)) {
+			await removeGenerated(`${file}.d.ts`);
 			throw new Error(
 				`${file} is in the pages directory, where Astro would make its .d.ts a route. Move it, or start its name or a directory's name with _.`,
 			);
 		}
 
 		// The same preprocessing and CSS modules options Vite uses for its imports
-		const { modules } = await preprocessCSS(code, file, viteConfig);
+		const { deps, modules } = await preprocessCSS(code, file, viteConfig);
+		dependencies.set(
+			file,
+			new Set([...(deps ?? [])].map((dep) => path.resolve(dep))),
+		);
+
 		if (modules) {
 			await writeIfChanged(
 				`${file}.d.ts`,
@@ -195,11 +205,18 @@ export function cssModuleTypes(
 			},
 			"astro:server:setup": ({ logger, server }) => {
 				server.watcher.on("all", (event, file) => {
-					if (
-						(event === "add" || event === "change" || event === "unlink") &&
-						isWatched(file)
-					) {
+					if (event !== "add" && event !== "change" && event !== "unlink") {
+						return;
+					}
+
+					if (isWatched(file)) {
 						void queue(file, logger);
+					}
+
+					for (const [cssModule, deps] of dependencies) {
+						if (deps.has(path.resolve(file))) {
+							void queue(cssModule, logger);
+						}
 					}
 				});
 			},
@@ -245,7 +262,7 @@ function printMissingDeclarations() {
 			["./", "../"].map((prefix) =>
 				[
 					`declare module "${prefix}*.module.${extension}" {`,
-					'\tconst styles: { readonly "Run astro sync to generate this CSS module\'s types": never };',
+					'\tconst styles: { readonly "No generated types: check that this CSS module exists, then run astro sync": never };',
 					"\texport default styles;",
 					"}",
 				].join("\n"),

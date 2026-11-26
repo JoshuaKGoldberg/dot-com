@@ -21,6 +21,8 @@ Each of those also deletes generated files whose CSS modules no longer exist.
 
 ## Usage
 
+`vite` needs to be resolvable from your project, as it is when it's a dependency.
+
 ```ts
 // astro.config.ts
 import { defineConfig } from "astro/config";
@@ -54,11 +56,14 @@ Otherwise a stale generated file can keep a deleted CSS module's imports type ch
 Relative imports of CSS modules that don't have generated types yet, such as `./New.module.css`, get a placeholder type that fails on any class name, instead of `astro/client`'s loose `*.module.css` declaration:
 
 ```plaintext
-Property 'title' does not exist on type '{ readonly "Run astro sync to generate this CSS module's types": never; }'.
+Property 'title' does not exist on type '{ readonly "No generated types: check that this CSS module exists, then run astro sync": never; }'.
 ```
 
-Those placeholder declarations rely on `skipLibCheck`, which Astro's `tsconfig.json` presets turn on.
+The same placeholder applies to relative imports of CSS modules that don't exist, are outside the `directories` option, or failed to generate.
 Imports through path aliases, such as `~/components/New.module.css`, still fall back to the loose declaration until their types are generated.
+
+TypeScript reports relative module names in ambient declarations like these as errors in declaration files, which `skipLibCheck` hides.
+Astro's `tsconfig.json` presets turn on `skipLibCheck`; without it, those errors show up.
 
 ## Options
 
