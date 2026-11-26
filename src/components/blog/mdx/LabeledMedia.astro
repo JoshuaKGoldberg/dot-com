@@ -1,4 +1,6 @@
 ---
+import { InlineMarkdown } from "~/components/InlineMarkdown";
+
 import MediaOriginalNote, {
 	type MediaOriginal,
 } from "./MediaOriginalNote.astro";
@@ -22,7 +24,9 @@ const descriptions =
 	<small class="labeled-media-small">
 		{descriptions?.map((description) => (
 			<>
-				<span class="labeled-media-description">{description}</span>{" "}
+				<span class="labeled-media-description">
+					<InlineMarkdown text={description} />
+				</span>{" "}
 			</>
 		))}
 		{Astro.props.original && (

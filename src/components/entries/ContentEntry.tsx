@@ -30,12 +30,12 @@ export interface ContentEntryLinkPart {
 export interface ContentEntryProps {
 	children?: JSX.Element;
 	class?: string | undefined;
-	description?: string | undefined;
+	description?: JSX.Element | undefined;
 	descriptionSize?: "medium" | "small";
 	image?: ContentEntryImageProps | undefined;
 	links?: ContentEntryLink[] | undefined;
 	subtitle: JSX.Element;
-	title: string;
+	title: JSX.Element;
 	url: string;
 	widths: ContentEntryWidths;
 }

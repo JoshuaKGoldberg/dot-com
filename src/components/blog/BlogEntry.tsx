@@ -1,4 +1,5 @@
 import { ContentEntry } from "../entries/ContentEntry";
+import { InlineMarkdown } from "../InlineMarkdown";
 import { DateAndMinutes } from "./DateAndMinutes";
 
 export interface BlogEntryData {
@@ -17,12 +18,12 @@ export interface BlogEntryProps {
 export function BlogEntry(props: BlogEntryProps) {
 	return (
 		<ContentEntry
-			description={props.blog.description}
+			description={<InlineMarkdown text={props.blog.description} />}
 			image={{ ...props.blog.image, variant: "round" }}
 			subtitle={
 				<DateAndMinutes date={props.blog.date} minutes={props.blog.minutes} />
 			}
-			title={props.blog.title}
+			title={<InlineMarkdown insideLink text={props.blog.title} />}
 			url={`/blog/${props.blog.id}`}
 			widths="full"
 		/>

@@ -3,6 +3,8 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import { InlineMarkdown } from "~/components/InlineMarkdown";
+
 import LabeledMedia from "./LabeledMedia.astro";
 
 export interface LabeledImage {
@@ -37,7 +39,9 @@ const displayWidth = 372;
 					)}
 				/>
 				{image.description && (
-					<div class="labeled-image-description">{image.description}</div>
+					<div class="labeled-image-description">
+						<InlineMarkdown text={image.description} />
+					</div>
 				)}
 				{image.original && (
 					<span class="labeled-image-original">
