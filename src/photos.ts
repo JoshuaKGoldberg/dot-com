@@ -81,7 +81,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh on stage in a blue sweater covered in geese, grinning up toward the room while raising his clicker and holding a microphone",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2026",
 			height: 683,
 			name: "2026-11-17-react-summit-us-pointing",
@@ -90,7 +90,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh mid-sentence into a microphone in a blue goose-patterned sweater, in front of a softly lit backdrop",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2026",
 			height: 1536,
 			name: "2026-11-17-react-summit-us-speaking",
@@ -99,7 +99,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh smiling as he speaks into a microphone, clicker in hand, wearing a blue goose-patterned sweater",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2026",
 			height: 683,
 			name: "2026-11-17-react-summit-us-smiling",
@@ -108,7 +108,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh seated on stage in a blue goose-patterned sweater, smiling during a Q&A beside a host in a yellow beanie",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2026",
 			height: 683,
 			name: "2026-11-17-react-summit-us-q-and-a",
@@ -117,7 +117,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh in a silver space suit, microphone in hand, smirking at the host beside him during an on-stage conversation",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2024",
 			height: 683,
 			name: "2024-11-19-react-summit-us-q-and-a",
@@ -126,7 +126,7 @@ export const photos = (
 		},
 		{
 			alt: "Josh in a shiny silver space suit speaking into a microphone on a dark stage, with a host standing beside him",
-			credit: "Vita Phoenix Events",
+			credit: "GitNation",
 			event: "React Summit US 2024",
 			height: 683,
 			name: "2024-11-19-react-summit-us-space-suit",
