@@ -16,19 +16,18 @@
 	"scripts": {
 		"astro": "astro",
 		"build": "astro build",
-		"build:css-types": "node scripts/clean-css-module-types.ts && vite-css-modules \"src/**/*.module.css\" --config css-modules.config.ts --silent",
-		"check": "pnpm build:css-types && astro check",
+		"check": "astro check",
 		"dev": "astro dev",
 		"format": "prettier .",
 		"format:write": "pnpm format --write",
 		"lint": "eslint . --max-warnings 0",
 		"lint:knip": "knip",
 		"lint:spelling": "cspell \"**\" \".github/**/*\"",
-		"prepare": "husky && (pnpm build:css-types || echo Could not generate CSS module types.)",
+		"prepare": "husky",
 		"preview": "astro preview",
 		"preview:worker": "wrangler dev",
 		"start": "astro dev",
-		"tsc": "pnpm build:css-types && tsc"
+		"tsc": "tsc"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.12",
@@ -87,7 +86,7 @@
 		"solid-js": "^1.9.19",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.73.0",
-		"vite-css-modules": "^1.16.1",
+		"vite": "^8.3.8",
 		"wrangler": "^4.165.0"
 	},
 	"devDependencies": {
