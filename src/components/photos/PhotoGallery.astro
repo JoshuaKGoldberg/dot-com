@@ -17,14 +17,17 @@ const eagerCount = 3;
  * How wide each lane is, matching the gallery's CSS:
  * three once there's room for 15rem lanes, then two, then one.
  */
-const sizes = [
+const sizesClosed = [
 	"(width >= 63.5625em) 20rem",
 	"(width >= 51rem) calc((100vw - 6rem) / 3)",
 	"(width >= 35rem) calc((100vw - 5rem) / 2)",
 	"calc(100vw - 1rem)",
 ].join(", ");
 
-const widths = [320, 480, 640, 960, 1280];
+/** An opened photo takes the gallery's whole width. */
+const sizesOpen = "(width >= 63.5625em) 62rem, calc(100vw - 1rem)";
+
+const widths = [320, 480, 640, 960, 1280, 1600, 1984];
 
 const displayWidth = 640;
 
@@ -41,12 +44,21 @@ function formatDate(timestamp: string) {
 
 <ul class="gallery">
 	{Astro.props.photos.map((photo, index) => (
-		<li class="item">
-			<details class="details">
-				<summary class="summary">
+		<li
+			class="item"
+			style={{
+				"--caption": `photo-caption-${index.toString()}`,
+				"--photo": `photo-${index.toString()}`,
+				"--ratio": photo.width / photo.height,
+			}}
+		>
+			<details class="details" name="photo">
+				<summary class="summary" data-photo-toggle>
 					<Image
 						alt={photo.alt}
 						class="image"
+						data-sizes-closed={sizesClosed}
+						data-sizes-open={sizesOpen}
 						format="avif"
 						height={Math.round(
 							(Math.min(displayWidth, photo.width) * photo.height) /
@@ -54,7 +66,7 @@ function formatDate(timestamp: string) {
 						)}
 						loading={index < eagerCount ? "eager" : "lazy"}
 						quality={60}
-						sizes={sizes}
+						sizes={sizesClosed}
 						src={getPhotoUrl(photo)}
 						width={Math.min(displayWidth, photo.width)}
 						widths={widths.filter((width) => width <= photo.width)}
@@ -75,7 +87,10 @@ function formatDate(timestamp: string) {
 					{photo.credit && (
 						<>
 							{" "}
-							<span class="line">Photo by {photo.credit}</span>
+							<span aria-hidden="true" class="dot">
+								·
+							</span>{" "}
+							<span>Photo by {photo.credit}</span>
 						</>
 					)}{" "}
 					<span class="line">
@@ -89,6 +104,56 @@ function formatDate(timestamp: string) {
 		</li>
 	))}
 </ul>
+
+<script>
+	/** Opens or closes a photo, morphing every photo into its new place. */
+	function toggle(details: HTMLDetailsElement) {
+		const update = () => {
+			// Photos sharing a name close each other, so only one is ever open
+			details.open = !details.open;
+
+			for (const image of document.querySelectorAll<HTMLImageElement>(
+				"[data-sizes-open]",
+			)) {
+				const sizes = image.closest("details")?.open
+					? image.dataset.sizesOpen
+					: image.dataset.sizesClosed;
+				if (sizes) {
+					image.sizes = sizes;
+				}
+			}
+
+			if (details.open) {
+				// Instantly, as the transition itself animates the move
+				details.scrollIntoView({ behavior: "instant", block: "nearest" });
+			}
+		};
+
+		if (document.documentElement.dataset.motion === "paused") {
+			update();
+			return;
+		}
+
+		try {
+			document.startViewTransition({ types: ["photo"], update });
+		} catch {
+			// Browsers without view transitions, or without their types
+			update();
+		}
+	}
+
+	// Listening on the document keeps working after the router swaps pages
+	document.addEventListener("click", (event) => {
+		const details = (event.target as Element | null)?.closest?.(
+			"[data-photo-toggle]",
+		)?.parentElement;
+
+		if (details instanceof HTMLDetailsElement) {
+			event.preventDefault();
+			toggle(details);
+		}
+	});
+</script>
 
 <style>
 	.gallery {
@@ -106,6 +171,10 @@ function formatDate(timestamp: string) {
 			display: grid-lanes;
 			grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
 		}
+
+		.item:has(> [open]) {
+			grid-column: 1 / -1;
+		}
 	}
 
 	/* Elsewhere, columns look the same, but fill one column before the next */
@@ -118,66 +187,72 @@ function formatDate(timestamp: string) {
 			break-inside: avoid;
 			margin-bottom: 1rem;
 		}
+
+		.item:has(> [open]) {
+			column-span: all;
+			margin-block: 0.5rem 1.5rem;
+		}
+	}
+
+	/* The page's scroll padding already keeps opened photos clear of the header */
+	.details {
+		scroll-margin-block: 1rem;
 	}
 
 	.summary {
-		border-radius: 0.5rem;
-		cursor: pointer;
+		cursor: zoom-in;
 		display: block;
 		list-style: none;
-		overflow: hidden;
 	}
 
 	.summary::-webkit-details-marker {
 		display: none;
 	}
 
+	[open] > .summary {
+		cursor: zoom-out;
+	}
+
 	.image {
+		border-radius: 0.5rem;
 		display: block;
 		height: auto;
-		transition: var(--transitionMedium) scale;
+		transition: var(--transitionMedium) filter;
 		width: 100%;
 	}
 
+	/* The ring goes around the photo itself, which may be narrower than its row */
+	.summary:focus-visible {
+		outline: none;
+	}
+
+	.summary:focus-visible .image {
+		outline: 2px solid var(--colorEmphasized);
+		outline-offset: 3px;
+	}
+
+	/* Brightened rather than zoomed, so that no part of any photo is ever cut off */
 	.summary:hover .image,
 	.summary:focus-visible .image {
-		scale: 1.02;
+		filter: brightness(1.08);
+	}
+
+	/* As wide as the gallery, unless it and its caption wouldn't fit under the header */
+	[open] .image {
+		margin-inline: auto;
+		width: min(100%, calc((100svh - 14rem) * var(--ratio)));
 	}
 
 	:global(html[data-motion="paused"]) .image {
 		transition: none;
 	}
 
-	.details {
-		position: relative;
-	}
-
-	/* Over the photo, so that opening one never moves any others */
 	.caption {
-		/* Light text, as on the dark theme, over a scrim that's dark in either theme */
-		--colorForeground: #f4f9fd;
-		--colorMuted: #d3deea;
-		--squiggleStart: hsl(230 44% 74% / 64%);
-		--squiggleMiddle: hsl(170 44% 74% / 64%);
-		--squiggleEnd: hsl(266 44% 74% / 64%);
-		--squiggleGray: hsl(0 0% 74% / 64%);
-		--squiggleHighlight: rgb(198 222 255 / 95%);
-
-		background: linear-gradient(
-			to top,
-			rgb(8 14 28 / 88%),
-			rgb(8 14 28 / 72%) 70%,
-			transparent
-		);
-		border-radius: 0 0 0.5rem 0.5rem;
-		bottom: 0;
-		left: 0;
 		letter-spacing: 0.04em;
 		line-height: 1.6;
-		margin: 0;
-		padding: 2.5rem 0.85rem 0.7rem;
-		position: absolute;
-		right: 0;
+		margin: 0.75rem 0 0;
+		text-align: center;
+		text-wrap: balance;
 	}
 
 	.event {
@@ -199,5 +274,67 @@ function formatDate(timestamp: string) {
 		position: absolute;
 		white-space: nowrap;
 		width: 1px;
+	}
+
+	/* Each photo and caption morphs on its own, only while a photo opens or closes */
+	:global(:active-view-transition-type(photo)) .image {
+		view-transition-class: photo;
+		view-transition-name: var(--photo);
+	}
+
+	:global(:active-view-transition-type(photo)) [open] .caption {
+		view-transition-class: photo-caption;
+		view-transition-name: var(--caption);
+	}
+
+	:global(::view-transition-group(*.photo)) {
+		animation-duration: 600ms;
+		animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
+	}
+
+	:global(::view-transition-image-pair(*.photo)) {
+		border-radius: 0.5rem;
+		overflow: hidden;
+	}
+
+	:global(::view-transition-new(*.photo-caption):only-child) {
+		animation: caption-in 360ms ease-out 360ms both;
+	}
+
+	:global(::view-transition-old(*.photo-caption):only-child) {
+		animation: caption-out 160ms ease-in both;
+	}
+
+	/* The rest of the page stays put, instead of playing its between-pages transitions */
+	:global(
+		:active-view-transition-type(photo)::view-transition-old(content),
+		:active-view-transition-type(photo)::view-transition-new(content),
+		:active-view-transition-type(photo)::view-transition-image-pair(
+			portrait-figure
+		),
+		:active-view-transition-type(photo)::view-transition-new(fader)
+	) {
+		animation: none;
+		translate: none;
+	}
+
+	:global(
+		:active-view-transition-type(photo)::view-transition-old(content),
+		:active-view-transition-type(photo)::view-transition-old(fader)
+	) {
+		display: none;
+	}
+
+	@keyframes caption-in {
+		from {
+			opacity: 0;
+			translate: 0 -0.5rem;
+		}
+	}
+
+	@keyframes caption-out {
+		to {
+			opacity: 0;
+		}
 	}
 </style>

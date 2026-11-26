@@ -34,15 +34,6 @@ export function getPhotoUrl(photo: Photo) {
 export const photos = (
 	[
 		{
-			alt: "Josh smiling warmly against a plain wall in a black shirt covered in white ghosts, holding his sticker-covered laptop",
-			credit: "Ramsey Chappell Photography",
-			event: "MagnoliaConf 2025",
-			height: 5472,
-			name: "2025-10-22-magnolia-conf-portrait",
-			takenAt: "2025-10-22T13:17:20-06:00",
-			width: 3648,
-		},
-		{
 			alt: "Josh grinning and waving in a purple Tinky Winky costume, holding his sticker-covered laptop",
 			credit: "Ramsey Chappell Photography",
 			event: "MagnoliaConf 2025",
