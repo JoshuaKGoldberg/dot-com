@@ -46,12 +46,16 @@ export function cssModuleTypes(
 	let command: string | undefined;
 	let directories: string[] = [];
 	let pagesDirectory: string | undefined;
+	let resolveViteConfig: (() => Promise<ResolvedConfig>) | undefined;
 	let viteConfig: ResolvedConfig | undefined;
 
 	const queues = new Map<string, Promise<void>>();
 
 	// Files each CSS module @imports, so dev can update it when they change
 	const dependencies = new Map<string, Set<string>>();
+
+	// CSS modules whose last update failed, such as by @importing a file that doesn't exist yet
+	const failed = new Set<string>();
 
 	const isWatched = (file: string) =>
 		cssModulePattern.test(file) &&
@@ -100,7 +104,16 @@ export function cssModuleTypes(
 		}
 
 		// The same preprocessing and CSS modules options Vite uses for its imports
-		const { deps, modules } = await preprocessCSS(code, file, viteConfig);
+		let result;
+		try {
+			result = await preprocessCSS(code, file, viteConfig);
+		} catch (error) {
+			failed.add(file);
+			throw error;
+		}
+
+		failed.delete(file);
+		const { deps, modules } = result;
 		dependencies.set(
 			file,
 			new Set([...(deps ?? [])].map((dep) => path.resolve(dep))),
@@ -156,17 +169,18 @@ export function cssModuleTypes(
 							path.resolve(root, directory),
 						)
 					: [fileURLToPath(config.srcDir)];
-				pagesDirectory = path.join(fileURLToPath(config.srcDir), "pages");
-				viteConfig = await resolveConfig(
-					{
-						configFile: false,
-						css: config.vite.css,
-						logLevel: "silent",
-						resolve: config.vite.resolve,
-						root,
-					},
-					"build",
-				);
+				resolveViteConfig = () =>
+					resolveConfig(
+						{
+							configFile: false,
+							css: config.vite.css,
+							logLevel: "silent",
+							resolve: config.vite.resolve,
+							root,
+						},
+						"build",
+					);
+				viteConfig = await resolveViteConfig();
 
 				const files = (
 					await Promise.all(directories.map((directory) => walk(directory)))
@@ -200,8 +214,25 @@ export function cssModuleTypes(
 					logger.warn(message);
 				}
 			},
-			"astro:config:setup": (params) => {
+			"astro:config:setup": async (params) => {
 				command = params.command;
+				if (command === "preview") {
+					return;
+				}
+
+				pagesDirectory = path.join(
+					fileURLToPath(params.config.srcDir),
+					"pages",
+				);
+
+				// Builds find routes before astro:config:done, so stale ones need removing first
+				const routes = (await walk(pagesDirectory)).filter(
+					(file) =>
+						file.endsWith(".d.ts") &&
+						cssModulePattern.test(file.slice(0, -".d.ts".length)) &&
+						isRoute(file),
+				);
+				await Promise.all(routes.map(removeGenerated));
 			},
 			"astro:server:setup": ({ logger, server }) => {
 				server.watcher.on("all", (event, file) => {
@@ -211,6 +242,17 @@ export function cssModuleTypes(
 
 					if (isWatched(file)) {
 						void queue(file, logger);
+					}
+
+					// A new file might be what a failed CSS module was missing,
+					// and Vite's resolver remembers files that didn't exist
+					if (event === "add" && failed.size && resolveViteConfig) {
+						void resolveViteConfig().then((refreshed) => {
+							viteConfig = refreshed;
+							for (const cssModule of failed) {
+								void queue(cssModule, logger);
+							}
+						});
 					}
 
 					for (const [cssModule, deps] of dependencies) {

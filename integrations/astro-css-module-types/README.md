@@ -59,7 +59,8 @@ Relative imports of CSS modules that don't have generated types yet, such as `./
 Property 'title' does not exist on type '{ readonly "No generated types: check that this CSS module exists, then run astro sync": never; }'.
 ```
 
-The same placeholder applies to relative imports of CSS modules that don't exist, are outside the `directories` option, or failed to generate.
+The same placeholder applies to relative imports of CSS modules that don't exist, are outside the `directories` option, or have never generated successfully.
+A CSS module whose types fail to update keeps its last generated types.
 Imports through path aliases, such as `~/components/New.module.css`, still fall back to the loose declaration until their types are generated.
 
 TypeScript reports relative module names in ambient declarations like these as errors in declaration files, which `skipLibCheck` hides.
