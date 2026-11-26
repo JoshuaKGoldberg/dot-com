@@ -2,21 +2,21 @@
 import bluesky from "~/assets/icons/bluesky.svg";
 import github from "~/assets/icons/github.svg";
 import mastodon from "~/assets/icons/mastodon.svg";
-import { socialUrls } from "~/constants";
+import { brandColors, socialUrls } from "~/constants";
 
 import SocialImage from "./SocialImage.astro";
 
 const socials = [
-	["Bluesky", socialUrls.bluesky, bluesky],
-	["GitHub", socialUrls.github, github],
-	["Mastodon", socialUrls.mastodon, mastodon],
+	["Bluesky", socialUrls.bluesky, bluesky, brandColors.bluesky],
+	["GitHub", socialUrls.github, github, brandColors.github],
+	["Mastodon", socialUrls.mastodon, mastodon, brandColors.mastodon],
 ] as const;
 ---
 
 <p class="socials">
-	{socials.map(([alt, href, image]) => (
+	{socials.map(([alt, href, image, litColor]) => (
 		<a class="social" href={href} target="_blank">
-			<SocialImage alt={alt} image={image} />
+			<SocialImage alt={alt} image={image} litColor={litColor} />
 		</a>
 	))}
 </p>

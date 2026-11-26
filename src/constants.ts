@@ -23,6 +23,17 @@ export const siteName = "Josh Goldberg";
 
 export const colorsBackground = { dark: "#0b1220", light: "#f4f9fd" };
 
+/** Each network's own color, which its icon's light starts from */
+export const brandColors = {
+	bluesky: "#1185FE",
+	email: "#EA4335",
+	// GitHub's heaviest contribution squares, in light and dark themes
+	github:
+		"color-mix(in srgb, #39D353 calc(var(--iconInversion) * 100%), #216E39)",
+	linkedin: "#0A66C2",
+	mastodon: "#6364FF",
+};
+
 export const socialUrls = {
 	bluesky: "https://bsky.app/profile/joshuakgoldberg.com",
 	github: "https://github.com/JoshuaKGoldberg",

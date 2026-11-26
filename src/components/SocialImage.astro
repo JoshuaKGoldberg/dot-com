@@ -6,24 +6,43 @@ import { Image } from "astro:assets";
 interface Props {
 	alt: string;
 	image: ImageMetadata;
+	/** What the light starts from when the pointer nears, such as the brand's color */
+	litColor: string;
 }
 ---
 
-<Image
-	alt={Astro.props.alt}
+<span
 	class="social-image"
-	loading="eager"
-	src={Astro.props.image}
-/>
+	data-lit-icon
+	style={{
+		"--icon": `url("${Astro.props.image.src}")`,
+		"--litColor": Astro.props.litColor,
+	}}
+>
+	<Image
+		alt={Astro.props.alt}
+		class="image"
+		loading="eager"
+		src={Astro.props.image}
+	/>
+</span>
 
 <style>
 	.social-image {
-		filter: invert(var(--iconInversion))
-			hue-rotate(calc(var(--iconInversion) * 180deg));
+		display: inline-block;
 		height: var(--socialSize, 1.25rem);
+		position: relative;
 		transition: var(--transitionMedium) scale;
 		width: var(--socialSize, 1.25rem);
 		vertical-align: text-bottom;
+	}
+
+	.image {
+		display: block;
+		filter: invert(var(--iconInversion))
+			hue-rotate(calc(var(--iconInversion) * 180deg));
+		height: 100%;
+		width: 100%;
 	}
 
 	@media (hover: hover) {
@@ -32,15 +51,35 @@ interface Props {
 		}
 	}
 
+	/* Keeps base.css's fade out, which this element's own transition would replace */
+	:global([data-motion="paused"]) .social-image[data-lit] {
+		transition:
+			var(--transitionMedium) scale,
+			var(--transitionMedium) --nearness;
+	}
+
+	/* Fades in over the icon, like lit links' text fades out over their gradient */
+	@media (forced-colors: none) {
+		.social-image[data-lit]::after {
+			background: var(--litGradient);
+			content: "";
+			inset: 0;
+			mask: var(--icon) center / 100% 100% no-repeat;
+			opacity: var(--nearness);
+			pointer-events: none;
+			position: absolute;
+		}
+	}
+
 	/* Those colors are the system's, rather than the chosen theme's */
 	@media (forced-colors: active) and (prefers-color-scheme: dark) {
-		.social-image {
+		.image {
 			filter: invert() hue-rotate(180deg);
 		}
 	}
 
 	@media (forced-colors: active) and (prefers-color-scheme: light) {
-		.social-image {
+		.image {
 			filter: none;
 		}
 	}

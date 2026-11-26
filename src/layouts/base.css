@@ -280,6 +280,7 @@
 
 /* Contrast rises with light, to make up for harder to read hues and brighter auroras */
 @supports (color: oklch(from red l c h)) {
+	/* --litColor lets elements start from their own color, such as icons' brands' */
 	[data-lit] {
 		--litReach: 56px;
 		--softening: calc(var(--glare) * var(--litGlare));
@@ -289,18 +290,20 @@
 			l + (var(--litLift) - var(--litDimming) + 0.11 * var(--softening)) *
 				var(--nearness)
 		);
-		--colorLit: oklch(from var(--colorEmphasized) var(--lightness) c h);
+		--colorLit: oklch(
+			from var(--litColor, var(--colorEmphasized)) var(--lightness) c h
+		);
 		--colorLitStart: oklch(
-			from var(--colorEmphasized) var(--litLightness) var(--chroma)
-				calc(h + var(--hueShift) - 50 * var(--nearness))
+			from var(--litColor, var(--colorEmphasized)) var(--litLightness)
+				var(--chroma) calc(h + var(--hueShift) - 50 * var(--nearness))
 		);
 		--colorLitMiddle: oklch(
-			from var(--colorEmphasized) var(--litLightness) var(--chroma)
-				calc(h + var(--hueShift))
+			from var(--litColor, var(--colorEmphasized)) var(--litLightness)
+				var(--chroma) calc(h + var(--hueShift))
 		);
 		--colorLitEnd: oklch(
-			from var(--colorEmphasized) var(--litLightness) var(--chroma)
-				calc(h + var(--hueShift) + 50 * var(--nearness))
+			from var(--litColor, var(--colorEmphasized)) var(--litLightness)
+				var(--chroma) calc(h + var(--hueShift) + 50 * var(--nearness))
 		);
 		--litGradient: linear-gradient(
 			to right,
