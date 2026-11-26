@@ -30,7 +30,7 @@ Broken absolute links to your own site are reported by their path.
 
 ## Usage
 
-Add `checkLinks()` to your Astro config's `integrations`, after any integrations that change built pages:
+Add `checkLinks()` to your Astro config's `integrations`, after any integrations that add or change files in the build, such as [`@astrojs/sitemap`](https://docs.astro.build/en/guides/integrations-guide/sitemap):
 
 ```ts
 import { defineConfig } from "astro/config";

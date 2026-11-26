@@ -203,7 +203,9 @@ function describeBrokenLink(
 
 	return {
 		// linkinator reports links it couldn't parse as they were written
-		link: invalid ? restoreSite(link.url) : toSitePath(link.url, local),
+		link: invalid
+			? restoreSite(link.url)
+			: restoreSite(toSitePath(link.url, local)),
 		page: link.parent
 			? toSitePath(link.parent, local).replace(
 					/(?<=\/)index\.html(?=[?#]|$)/,
@@ -354,10 +356,13 @@ async function findBrokenLinks({
  * couldn't decode their fragments before skipping them.
  */
 function isUnparsedExternal(link: LinkResult, local: string) {
+	const url = URL.parse(link.url.replace(/#.*/s, ""), link.parent);
+
 	return (
 		!link.status &&
 		!link.failureDetails?.length &&
-		URL.parse(link.url.replace(/#.*/s, ""), link.parent)?.origin !== local
+		url !== null &&
+		url.origin !== local
 	);
 }
 
@@ -511,9 +516,9 @@ function toSitePath(url: string, local: string) {
 
 	const path = url.slice(local.length);
 
-	// Show characters such as spaces as written, but keep escapes like %2F
+	// Show characters such as spaces as written, but keep escapes like %2F and %25
 	try {
-		return decodeURI(path);
+		return decodeURI(path.replaceAll("%25", "%2525"));
 	} catch {
 		return path;
 	}
