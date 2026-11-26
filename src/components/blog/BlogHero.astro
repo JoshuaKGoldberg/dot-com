@@ -5,6 +5,7 @@ import HeroImage from "../HeroImage.astro";
 import HeroSecondary from "../HeroSecondary.astro";
 import HeroTertiary from "../HeroTertiary.astro";
 import HeroTitle from "../HeroTitle.astro";
+import { InlineMarkdown, inlineMarkdownToText } from "../InlineMarkdown";
 import BlogShare from "./BlogShare.astro";
 import { DateAndMinutes } from "./DateAndMinutes";
 
@@ -15,10 +16,12 @@ export interface BlogImage {
 
 interface Props {
 	date: Date;
+	/** Markdown, as only inline syntax such as `code` */
 	description: string;
 	download?: string | undefined;
 	image: BlogImage;
 	minutes: number;
+	/** Markdown, as only inline syntax such as `code` */
 	title: string;
 }
 ---
@@ -30,7 +33,9 @@ interface Props {
 				<HeroImage {...Astro.props.image} />
 			</div>
 			<div class="hero-title">
-				<HeroTitle>{Astro.props.title}</HeroTitle>
+				<HeroTitle>
+					<InlineMarkdown text={Astro.props.title} />
+				</HeroTitle>
 			</div>
 			<div class="hero-tertiary">
 				<HeroTertiary size="unlimited">
@@ -40,15 +45,17 @@ interface Props {
 						year="numeric"
 					>
 						<BlogShare
-							description={Astro.props.description}
-							title={Astro.props.title}
+							description={inlineMarkdownToText(Astro.props.description)}
+							title={inlineMarkdownToText(Astro.props.title)}
 							url={Astro.url}
 						/>
 					</DateAndMinutes>
 				</HeroTertiary>
 			</div>
 		</div>
-		<HeroSecondary size="wide">{Astro.props.description}</HeroSecondary>
+		<HeroSecondary size="wide">
+			<InlineMarkdown text={Astro.props.description} />
+		</HeroSecondary>
 	</div>
 	{Astro.props.download && (
 		<div class="download">

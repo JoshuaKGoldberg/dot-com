@@ -3,6 +3,8 @@ import type { ImageMetadata } from "astro";
 
 import { Image } from "astro:assets";
 
+import { inlineMarkdownToText } from "~/components/InlineMarkdown";
+
 import type { MediaOriginal } from "./MediaOriginalNote.astro";
 
 import LabeledMedia from "./LabeledMedia.astro";
@@ -22,9 +24,11 @@ interface Props {
 
 const alt =
 	Astro.props.alt ??
-	(Array.isArray(Astro.props.description)
-		? Astro.props.description.join(" ")
-		: Astro.props.description);
+	inlineMarkdownToText(
+		Array.isArray(Astro.props.description)
+			? Astro.props.description.join(" ")
+			: Astro.props.description,
+	);
 
 const { height, width } = Astro.props.src;
 

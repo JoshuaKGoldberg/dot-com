@@ -308,6 +308,9 @@ importers:
       konami-emoji-blast:
         specifier: ^0.7.0
         version: 0.7.0
+      marked:
+        specifier: ^18.2.1
+        version: 18.2.1
       opentype.js:
         specifier: ^2.0.0
         version: 2.0.0

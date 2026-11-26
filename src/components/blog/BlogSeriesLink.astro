@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
 
+import { InlineMarkdown } from "../InlineMarkdown";
+
 interface Props {
 	entry: CollectionEntry<"blog">;
 	label: string;
@@ -9,5 +11,7 @@ interface Props {
 
 <div>
 	{Astro.props.label} post:{" "}
-	<a href={`/blog/${Astro.props.entry.id}`}>{Astro.props.entry.data.title}</a>
+	<a href={`/blog/${Astro.props.entry.id}`}>
+		<InlineMarkdown insideLink text={Astro.props.entry.data.title} />
+	</a>
 </div>

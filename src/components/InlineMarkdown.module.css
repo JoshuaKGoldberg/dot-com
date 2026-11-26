@@ -1,0 +1,9 @@
+.code {
+	background: color-mix(in srgb, var(--colorForeground) 9%, transparent);
+	border-radius: 0.28em;
+	font-family: var(--fontCode);
+	font-size: 0.8em;
+	font-weight: 400;
+	letter-spacing: normal;
+	padding: 0.08em 0.34em;
+}

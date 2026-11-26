@@ -48,11 +48,11 @@ const title = createBlogTitle(entry);
 	<BodyContents class="top">
 		<BlogHero
 			date={entry.data.pubDate}
-			description={description}
+			description={entry.data.description}
 			download={entry.data.download}
 			image={entry.data.image}
 			minutes={getReadingMinutes(entry.body)}
-			title={title}
+			title={entry.data.title}
 		/>
 		<TableOfContents client:idle headings={rendered.headings} />
 	</BodyContents>
