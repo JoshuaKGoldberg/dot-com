@@ -6,7 +6,9 @@ import Footer from "~/components/Footer.astro";
 import Head, { type Preview } from "~/components/Head.astro";
 import Header from "~/components/Header.astro";
 import MainArea from "~/components/MainArea.astro";
+import PreviewNotice from "~/components/PreviewNotice.astro";
 import Scenery from "~/components/scenery/Scenery.astro";
+import { draftPreviewLink } from "~/draftPreview";
 
 import "./normalize.css";
 import "./base.css";
@@ -33,6 +35,7 @@ const { class: className, fitsScreen, ...head } = Astro.props;
 	<Head {...head} />
 	<MainArea as="body" class={className} data-fits-screen={fitsScreen}>
 		<SkipLink />
+		{draftPreviewLink && <PreviewNotice {...draftPreviewLink} />}
 		<Header />
 
 		<div class="content" data-content>
